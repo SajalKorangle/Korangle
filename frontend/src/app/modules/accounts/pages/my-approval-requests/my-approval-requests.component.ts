@@ -3,6 +3,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
+import { SchoolService } from './../../../../services/modules/school/school.service'
 import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/use-for-transaction-dialog.component'
@@ -14,6 +15,7 @@ import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/u
     providers: [
         AccountsService,
         EmployeeService,
+        SchoolService,
     ]
     
 })
@@ -35,6 +37,9 @@ export class MyApprovalRequestsComponent implements OnInit {
     employeeList: any;
 
     
+    minimumDate: any;
+    maximumDate: any;
+    
     loadMoreApprovals: any;
     isLoadingApproval: any;
 
@@ -42,6 +47,7 @@ export class MyApprovalRequestsComponent implements OnInit {
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
         public dialog: MatDialog,
+        public schoolService: SchoolService,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -120,6 +126,19 @@ export class MyApprovalRequestsComponent implements OnInit {
             this.serviceAdapter.loadMoreApprovals();
         }
     } 
+
+    getDisplayDateFormat(str :any){
+        // return str;
+        let d = new Date(str);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear();
+  
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+  
+        return [day, month, year].join('/');
+    }
 
 
 }

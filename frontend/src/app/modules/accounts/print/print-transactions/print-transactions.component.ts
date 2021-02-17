@@ -40,4 +40,17 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
         }
     }
 
+    getDisplayDateFormat(str :any){
+        // return str;
+        let d = new Date(str);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear();
+  
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+  
+        return [day, month, year].join('/');
+      }
+
 }

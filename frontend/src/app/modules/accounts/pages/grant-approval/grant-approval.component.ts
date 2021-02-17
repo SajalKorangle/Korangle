@@ -2,6 +2,7 @@ import {Component, OnInit, Inject, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { GrantApprovalServiceAdapter } from './grant-approval.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
+import { SchoolService } from './../../../../services/modules/school/school.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
 import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
@@ -13,6 +14,7 @@ import { ImagePreviewDialogComponent } from './../../components/image-preview-di
     providers: [
         AccountsService,
         EmployeeService,
+        SchoolService,
     ]
 })
 
@@ -33,10 +35,15 @@ export class GrantApprovalComponent implements OnInit {
     isLoadingApproval: any;
 
     
+    minimumDate: any;
+    maximumDate: any;
+
+    
     constructor( 
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
         public dialog: MatDialog,
+        public schoolService: SchoolService,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -109,6 +116,19 @@ export class GrantApprovalComponent implements OnInit {
             this.serviceAdapter.loadMoreApprovals();
         }
     } 
+
+    getDisplayDateFormat(str :any){
+        // return str;
+        let d = new Date(str);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        let year = d.getFullYear();
+  
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+  
+        return [day, month, year].join('/');
+      }
 
 
 }

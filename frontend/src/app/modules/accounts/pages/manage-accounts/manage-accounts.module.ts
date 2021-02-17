@@ -6,6 +6,7 @@ import {ComponentsModule} from "../../../../components/components.module";
 import { AddAccountDialogComponent } from './add-account-dialog/add-account-dialog.component'
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component'   
 import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.component'
+import { AccountsComponentsModule } from './../../components/component.module'
 
 @NgModule({
     declarations: [
@@ -18,6 +19,7 @@ import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.com
     imports: [
         ManageAccountsRoutingModule,
         ComponentsModule,
+        AccountsComponentsModule,
     ],
     exports: [
         AddAccountDialogComponent, 

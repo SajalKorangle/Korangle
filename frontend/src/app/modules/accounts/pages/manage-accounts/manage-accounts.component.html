@@ -1,8 +1,26 @@
 
 
 <div class="card-content table-responsive" *ngIf="!noPermission">
-    <button (click)="openAddAccountDialog()" class="custom-button">Create Account</button>
-    <button (click)="openAddGroupDialog()" class="custom-button">Create Group</button>
+    <div class="row">
+        <div class="col-md-9">
+            <!-- <account-search [user]="user"
+                            (onSelection)="handleSelection($event)"></account-search> -->
+            <mat-form-field style="width: 50%;">
+                <input type="text" matInput (input)="handleSearch($event)"
+                    placeholder="Account, Group Name">
+            </mat-form-field>
+        </div>
+        <div class="col-md-3">
+            <button (click)="openAddAccountDialog()" class="custom-button">Create Account</button>
+            <button (click)="openAddGroupDialog()" class="custom-button" style="margin-left: 10px;">Create Group</button>
+
+        </div>
+    </div>
+    <div class="row col-md-12" >
+        <div *ngFor = "let account of searchList" >
+            <span>{{account.title}} , {{account.balance}}</span>
+        </div>
+    </div>
     
 </div>
 

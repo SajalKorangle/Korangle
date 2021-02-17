@@ -7,8 +7,8 @@ import { CommonFunctions } from './../../../../classes/common-functions'
 import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_TRANSACTIONS } from '../../../../print/print-routes.constants';
 import {ExcelService} from '../../../../excel/excel-service';
+import { SchoolService } from './../../../../services/modules/school/school.service'
 
 
 
@@ -19,6 +19,7 @@ import {ExcelService} from '../../../../excel/excel-service';
   providers: [
     AccountsService,
     EmployeeService,
+    SchoolService,
   ]
 })
 
@@ -29,12 +30,17 @@ export class ViewTransactionsComponent implements OnInit {
     serviceAdapter: ViewTransactionsServiceAdapter;
 
     
+    minimumDate: any;
+    maximumDate: any;
+
+    
     constructor( 
       public accountsService: AccountsService,
       public employeeService: EmployeeService,
       public dialog: MatDialog,
       public printService: PrintService,
       public excelService: ExcelService,
+      public schoolService: SchoolService,
     ){ }
 
     isLoading: any;
@@ -306,6 +312,18 @@ export class ViewTransactionsComponent implements OnInit {
       });
     }
 
+    getDisplayDateFormat(str :any){
+      // return str;
+      let d = new Date(str);
+      let month = '' + (d.getMonth() + 1);
+      let day = '' + d.getDate();
+      let year = d.getFullYear();
+
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
+
+      return [day, month, year].join('/');
+    }
 
 
 }

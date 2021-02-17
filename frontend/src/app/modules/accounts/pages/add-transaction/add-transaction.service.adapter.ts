@@ -24,18 +24,15 @@ export class AddTransactionServiceAdapter {
         }
         this.vm.isLoading = true;
 
-        let granted_approval_data = {
-            'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
-            'requestStatus': 'APPROVED',
-            'parentTransaction': 'null__korangle',
-        }
-
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_data),
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
         ]).then(value =>{
             console.log(value);
+            
+            this.vm.minimumDate = value[2].find(session => session.id == 4).startDate;  // change for current session
+            this.vm.maximumDate = value[2].find(session => session.id == 4).endDate;
             this.vm.accountsList = value[0];
             if(value[1].length > 0){
                 this.vm.maximumPermittedAmount = value[1][0].restrictedAmount;
@@ -43,23 +40,36 @@ export class AddTransactionServiceAdapter {
             else{
                 this.vm.maximumPermittedAmount = null;
             }
-            let approval_id = [];
-            value[2].forEach(approval =>{
-                if(approval.parentTransaction == null){
-                    approval_id.push(approval.id);
-                }
-            })
-            let approval_details_data = {
-                'parentApproval__in': approval_id,
+            let granted_approval_data = {
+                'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
+                'requestStatus': 'APPROVED',
+                'parentTransaction': 'null__korangle',
+                'requestedGenerationDateTime__gte': this.vm.minimumDate,
+                'requestedGenerationDateTime__lte': this.vm.maximumDate,
             }
             Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
-            ]).then(data =>{
-                console.log(data);
-                this.initialiseApprovalData(value[2], data[0], data[1]);
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
+
+            ]).then(val =>{let approval_id = [];
+                val[0].forEach(approval =>{
+                    if(approval.parentTransaction == null){
+                        approval_id.push(approval.id);
+                    }
+                })
+                let approval_details_data = {
+                    'parentApproval__in': approval_id,
+                }
+                Promise.all([
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                ]).then(data =>{
+                    console.log(data);
+                    this.initialiseApprovalData(val[0], data[0], data[1]);
+                })
+                this.vm.isLoading = false;
+
             })
-            this.vm.isLoading = false;
+            
             
         },error =>{
             this.vm.isLoading = false;
@@ -131,6 +141,8 @@ export class AddTransactionServiceAdapter {
         console.log(this.vm.transactions);
         let data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
+            'transactionDate__gte': this.vm.minimumDate,
+            'transactionDate__lte': this.vm.maximumDate,
             'korangle__order': '-voucherNumber',
             'korangle__count': '0,1',
         }
@@ -178,7 +190,7 @@ export class AddTransactionServiceAdapter {
                             toUpdateAccountBalanceList.push(tempData1);
                         }
                         else{
-                            tempAccount.balance += account.debitAccount;
+                            tempAccount.balance += account.debitAmount;
                         }
                     });
                     this.vm.transactions[index].creditAccounts.forEach(account =>{
@@ -190,11 +202,11 @@ export class AddTransactionServiceAdapter {
                         }
                         toCreateAccountList.push(tempData);
                         
-                        let tempAccount = toUpdateAccountBalanceList.find(acccount => acccount.id == account.debitAccount.id);
+                        let tempAccount = toUpdateAccountBalanceList.find(acccount => acccount.id == account.creditAccount.id);
                         if(tempAccount == undefined){
                             let tempData1 = {
-                                id: account.debitAccount.id,
-                                balance: account.debitAccount.balance - account.creditAmount
+                                id: account.creditAccount.id,
+                                balance: account.creditAccount.balance - account.creditAmount
                             }
                             toUpdateAccountBalanceList.push(tempData1);
                         }
@@ -273,6 +285,8 @@ export class AddTransactionServiceAdapter {
         // this.vm.transactions = tempList;
         let data = {
             'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
+            'requestedGenerationDateTime__gte': this.vm.minimumDate,
+            'requestedGenerationDateTime__lte': this.vm.maximumDate,
             'korangle__order': '-approvalId',
             'korangle__count': '0,1',
         }

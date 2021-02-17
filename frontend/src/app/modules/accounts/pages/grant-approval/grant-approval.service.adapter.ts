@@ -15,11 +15,7 @@ export class GrantApprovalServiceAdapter {
         this.vm.loadMoreApprovals = true;
         this.vm.isLoadingApproval = true;
 
-        let approval_request_data = {
-            parentEmployeeRequestedBy__parentSchool: this.vm.user.activeSchool.dbId,
-            'korangle__order': '-id',
-            'korangle__count': this.vm.approvalsList.length.toString() + ',' + this.vm.loadingCount.toString(),
-        }
+        
 
         let request_account_session_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
@@ -32,31 +28,46 @@ export class GrantApprovalServiceAdapter {
         };
 
         Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
         ]).then(value =>{
-            this.vm.accountsList = value[1];
-            this.vm.employeeList = value[2];
+            this.vm.accountsList = value[0];
+            this.vm.employeeList = value[1];
+            
+            this.vm.minimumDate = value[2].find(session => session.id == 4).startDate;  // change for current session
+            this.vm.maximumDate = value[2].find(session => session.id == 4).endDate;
             let approval_id = [];
-            value[0].forEach(approval =>{
-                approval_id.push(approval.id);
-            })
-            let approval_details_data = {
-                'parentApproval__in': approval_id,
+            let approval_request_data = {
+                'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
+                'requestedGenerationDateTime__gte': this.vm.minimumDate,
+                'requestedGenerationDateTime__lte': this.vm.maximumDate,
+                'korangle__order': '-id',
+                'korangle__count': this.vm.approvalsList.length.toString() + ',' + this.vm.loadingCount.toString(),
             }
             Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
-            ]).then(data =>{
-                this.initialiseApprovalData(value[0], data[0], data[1]);
-                this.vm.isLoadingApproval = false;
-                if(value[0].length < this.vm.loadingCount){
-                    this.vm.loadMoreApprovals = false;
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
+            ]).then(val =>{
+                val[0].forEach(approval =>{
+                    approval_id.push(approval.id);
+                })
+                let approval_details_data = {
+                    'parentApproval__in': approval_id,
                 }
-            },error =>{
-                this.vm.isLoadingApproval = false;
+                Promise.all([
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                ]).then(data =>{
+                    this.initialiseApprovalData(val[0], data[0], data[1]);
+                    this.vm.isLoadingApproval = false;
+                    if(value[0].length < this.vm.loadingCount){
+                        this.vm.loadMoreApprovals = false;
+                    }
+                },error =>{
+                    this.vm.isLoadingApproval = false;
+                })
             })
+            
         }, error =>{
             this.vm.isLoadingApproval = false;
         })
@@ -68,6 +79,8 @@ export class GrantApprovalServiceAdapter {
 
         let approval_request_data = {
             parentEmployeeRequestedBy__parentSchool: this.vm.user.activeSchool.dbId,
+            'requestedGenerationDateTime__gte': this.vm.minimumDate,
+            'requestedGenerationDateTime__lte': this.vm.maximumDate,
             'korangle__order': '-id',
             'korangle__count': this.vm.approvalsList.length.toString() + ',' + (this.vm.approvalsList.length + this.vm.loadingCount).toString(),
         }
@@ -181,6 +194,8 @@ export class GrantApprovalServiceAdapter {
             if(approval.autoAdd && status=='APPROVED'){
                 let data = {
                     'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
+                    'transactionDate__gte': this.vm.minimumDate,
+                    'transactionDate__lte': this.vm.maximumDate,
                     'korangle__order': '-voucherNumber',
                     'korangle__count': '0,1',
                 }
@@ -298,14 +313,11 @@ export class GrantApprovalServiceAdapter {
                             console.log(data);
                             alert('Request Status Changed Successfully');
                         })
-        
                     })
-        
                 })
             }
             else{
                 alert('Request Status Changed Successfully');
-
             }
         })
     }

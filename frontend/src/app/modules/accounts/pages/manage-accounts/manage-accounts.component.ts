@@ -30,6 +30,8 @@ export class ManageAccountsComponent{
         public dialog: MatDialog,
         public accountsService: AccountsService,
     ){ }
+
+    searchList = [];
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -60,6 +62,33 @@ export class ManageAccountsComponent{
         });
     
         dialogRef.afterClosed();
+    }
+
+    handleSearch(event: any){
+        console.log(event.target.value);
+        let str = event.target.value.trim();
+        if(str.length == 0){
+            this.searchList = [];
+        }
+        else{
+            this.searchList = this.getAccountListFromString(str);
+        }
+        console.log(this.searchList);
+    }
+
+    getAccountListFromString(str: any){
+        let temp = [];
+        this.accountsList.forEach(account =>{
+            if(account.title.includes(str)){
+                temp.push(account);
+            }
+        })
+        this.groupsList.forEach(group =>{
+            if(group.title.includes(str)){
+                temp.push(group);
+            }
+        })
+        return temp;
     }
     
 } 

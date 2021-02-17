@@ -5,6 +5,7 @@ import { AccountsService } from './../../../../services/modules/accounts/account
 import { CommonFunctions } from './../../../../classes/common-functions'
 import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+import { SchoolService } from './../../../../services/modules/school/school.service'
 
 @Component({
   selector: 'add-transaction',
@@ -12,6 +13,7 @@ import { ImagePreviewDialogComponent } from './../../components/image-preview-di
   styleUrls: ['./add-transaction.component.css'],
   providers: [
     AccountsService,
+    SchoolService,
   ]
     
 })
@@ -38,10 +40,14 @@ export class AddTransactionComponent implements OnInit {
     approvalsList: any;
     moreTransaction: any;
     maximumPermittedAmount: any;
+    
+    minimumDate: any;
+    maximumDate: any;
 
     constructor( 
       public accountsService: AccountsService,
       public dialog: MatDialog,
+      public schoolService: SchoolService,
     ){ }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -252,7 +258,7 @@ export class AddTransactionComponent implements OnInit {
             }
           }
           for(let j=0;j<transaction.debitAccounts.length; j++){
-            if(transaction.debitAccounts[j].debitAmount == transaction.creditAccounts[i].creditAccount){
+            if(transaction.debitAccounts[j].debitAccount == transaction.creditAccounts[i].creditAccount){
               temp = true;
             }
           }
@@ -339,5 +345,6 @@ export class AddTransactionComponent implements OnInit {
     });
   }
 
+  
 
 }

@@ -80,6 +80,8 @@ export class UseFortransactionDialogComponent implements OnInit {
   addTransaction(): any{
     let data = {
       'parentEmployee__parentSchool': this.data.vm.user.activeSchool.dbId,
+      'transactionDate__gte': this.data.vm.minimumDate,
+      'transactionDate__lte': this.data.vm.maximumDate,
       'korangle__order': '-voucherNumber',
       'korangle__count': '0,1',
     }

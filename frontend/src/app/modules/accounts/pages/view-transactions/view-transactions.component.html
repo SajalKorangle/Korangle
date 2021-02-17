@@ -97,7 +97,7 @@
             <tr *ngFor="let transaction of getFilteredTransactionList()">
                 
                 <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
-                <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{transaction.transactionDate}}</span></td>
+                <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
                 <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top;" >
                     <div *ngFor="let account of transaction.debitAccounts;" style="margin-bottom: 10px;">
                         <span>{{account.account}}</span><br>
