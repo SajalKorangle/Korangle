@@ -29,10 +29,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         let nodes, node;
 
         // Typing Receipt Number And click Get button
-        await page.waitForXPath('//input');
-        [node] = await page.$x('//input');
+        node = await containsFirst('input','');
         await node.type('1');
-        [node] = await page.$x('//button[contains(text(),\'Get\')]');
+        node = await containsFirst('button','Get');
         await node.click();
 
         // Checking Mat Card ( Fee receipts ) Count
@@ -41,15 +40,14 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
 
 
         // Clicking Cancel Button to show modal
-        await page.waitForXPath('//button[contains(text(),\'Cancel\')]');
-        node = await getNode('button', 'Cancel');
+        node = await containsFirst('button', 'Cancel');
         await node.click();
 
         // Typing the Cancel remark and clicking cancel in modal
         await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
-        [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
         await node.type('Invalid Receipt 1');
-        [node] = await page.$x('//mat-dialog-container//following::button[2]');  // click show subject filter button
+        node = await containsFirst('mat-dialog-container//following::button[2]','');  // click show subject filter button
         await node.click();
 
         // Checking the cancelled text exists in the mat card
@@ -57,9 +55,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         expect(nodes.length).toBe(1);
 
         // Typing Cheque no.
-        [node]=await page.$x("//input");
+        node=await containsFirst("input",'');
         await page.evaluate(el => el.value = '12345',node);
-        [node] = await page.$x('//button[contains(text(),\'Get\')]');
+        node = await containsFirst('button','Get');
         await node.click();
 
         // Checking Mat Card ( Fee receipts ) Count
@@ -72,15 +70,14 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         let nodes, node;
 
         // Selecting search using Student Name
-        nodes = await containsFirst('mat-select', '');
-        await nodes.click();
-        await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[contains(.,\'Student\')]');
+        node = await containsFirst('mat-select', '');
+        await node.click();
+
+        node = await containsFirst('mat-option','Student');
         await node.click();
 
         // Entering the student name and selecting a student
-        await page.waitForXPath('//input');
-        [node] = await page.$x('//input');
+        node = await containsFirst('input','');
         await node.type('Falak');
         node = await containsFirst('span', 'FALAK KHAN');
         await node.click();
@@ -91,15 +88,14 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         expect(nodes.length).toBe(2);
 
         // Clicking Cancel Button to show modal
-        await page.waitForXPath('//button[contains(text(),\'Cancel\')]');
-        node = await getNode('button', 'Cancel');
+        node = await containsFirst('button', 'Cancel');
         await node.click();
 
         // Typing the Cancel remark and clicking cancel in modal
-        await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
-        [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
         await node.type('Invalid Receipt 2');
-        [node]= await page.$x('//mat-dialog-container//following::button[2]'); 
+        
+        node = await containsFirst('mat-dialog-container//following::button[2]','Cancel'); 
         await node.click();
 
         // Checking the cancelled text exists in the mat cards
@@ -117,9 +113,8 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await nodes.click();
         nodes = await containsFirst('mat-option', 'Parent');
         await nodes.click();
-        // [node] = await page.$x('//mat-option[contains(.,\'Parent\')]')
-        // node.click();
-
+        
+        
         // Entering the Parent Number and selecting the parent
         
         node = await containsFirst('input','');
@@ -128,22 +123,18 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await node.click();
 
         // Checking mat card is only one
-        await page.waitForXPath('//mat-card');
         nodes = await containsAll('mat-card', '');  //count check
         expect(nodes.length).toBe(1);
 
         // Clicking Cancel Button to show modal
-        await page.waitForXPath('//button[contains(.,\'Cancel\')]');
-        node = await getNode('button', 'Cancel');
+        node = await containsFirst('button', 'Cancel');
         await node.click();
 
         // Typing the Cancel remark and clicking cancel in modal
-        await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
-         [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
         await node.type('Invalid Receipt 3');
 
-         await page.waitForXPath('//mat-dialog-container//following::button[2]');
-         [node] = await page.$x('//mat-dialog-container//following::button[2]');  // click show subject filter button
+         node = await containsFirst('mat-dialog-container//following::button[2]','Cancel');  // click show subject filter button
          await node.click();
 
         // Checking the cancelled text exists in the mat cards

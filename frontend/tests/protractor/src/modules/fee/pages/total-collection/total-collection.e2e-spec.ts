@@ -67,7 +67,7 @@ describe('Fees 3.0 -> Total Collection', () => {
         nodes = await containsFirst('mat-select', 'Valid Receipts');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-         [node] = await page.$x('//mat-option[2]');
+         node = await containsFirst('mat-option[2]','');
         await node.click();
 
         // Checking the number of rows to be equals to 2 -> 1 CANCELLED Receipts, 1 header row
@@ -80,8 +80,7 @@ describe('Fees 3.0 -> Total Collection', () => {
 
         nodes = await containsFirst('mat-select', 'Cancelled Receipts');
         await nodes.click();
-        await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[3]');
+        node = await containsFirst('mat-option[3]','');
         await node.click();
         await page.waitForXPath('//mat-select//following::mat-select[4]');
         // Checking the number of rows to be equals to 5 -> All 4 Receipts, 1 header row
@@ -92,10 +91,10 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(7);
 
         // again selecting only valid receipts
-        [node] = await page.$x('//mat-select//following::mat-select[4]');
+        node = await  containsFirst('mat-select//following::mat-select[4]','');
         await node.click();
-        await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[1]');
+        //await page.waitForXPath('//mat-option');
+        node = await containsFirst('mat-option[1]','Valid Receipts');
         await node.click();
 
     });
@@ -108,14 +107,13 @@ describe('Fees 3.0 -> Total Collection', () => {
             await dialog.dismiss();
         });
 
-        [node] = await page.$x('//a[contains(text(),\'Cancel Receipt\')]');
+        node = await containsFirst('a','Cancel Receipt');
         await node.click();
-        await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
 
         //wait for modal to load
-        [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
         await node.type('Invalid Receipt');
-        node = await getNode('button', 'Cancel Receipt');
+        node = await containsFirst('button', 'Cancel Receipt');
         await node.click();
         await page.waitForTimeout(1000);
         nodes = await containsAll('tr', '');  //count check again 1 should be cancelled from 4 list
