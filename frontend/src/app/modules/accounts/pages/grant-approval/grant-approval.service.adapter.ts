@@ -35,8 +35,8 @@ export class GrantApprovalServiceAdapter {
             this.vm.accountsList = value[0];
             this.vm.employeeList = value[1];
             
-            this.vm.minimumDate = value[2].find(session => session.id == 4).startDate;  // change for current session
-            this.vm.maximumDate = value[2].find(session => session.id == 4).endDate;
+            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             let approval_id = [];
             let approval_request_data = {
                 'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
@@ -60,7 +60,7 @@ export class GrantApprovalServiceAdapter {
                 ]).then(data =>{
                     this.initialiseApprovalData(val[0], data[0], data[1]);
                     this.vm.isLoadingApproval = false;
-                    if(value[0].length < this.vm.loadingCount){
+                    if(val[0].length < this.vm.loadingCount){
                         this.vm.loadMoreApprovals = false;
                     }
                 },error =>{
@@ -162,6 +162,7 @@ export class GrantApprovalServiceAdapter {
             approvalImages.forEach(image =>{
                 if(image.parentApproval == approval.id){
                     if(image.imageType == 'BILL'){
+                        // console.log(this.getBase64FromUrl(image.imageURL))
                         tempData.billImages.push(image);
                     }
                     else{
@@ -178,7 +179,7 @@ export class GrantApprovalServiceAdapter {
         this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
     }
 
-    changeApprovalStatus(approval, status){
+    async changeApprovalStatus(approval, status){
         approval.requestStatus = status;
         let tempData = {
             id: approval.dbId,
@@ -186,11 +187,11 @@ export class GrantApprovalServiceAdapter {
             parentEmployeeApprovedBy: this.vm.user.activeSchool.employeeId,
             approvedGenerationDateTime: CommonFunctions.formatDate(new Date(), ''),
         }
-        console.log(approval);
+        // console.log(approval);
         Promise.all([
             this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.approval, tempData),
         ]).then(value =>{
-            console.log(value);
+            // console.log(value);
             if(approval.autoAdd && status=='APPROVED'){
                 let data = {
                     'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
@@ -217,7 +218,7 @@ export class GrantApprovalServiceAdapter {
                     Promise.all([
                         this.vm.accountsService.createObject(this.vm.accountsService.transaction, transaction_data),
                     ]).then(value1 =>{
-                        console.log(value1);
+                        // console.log(value1);
                         let toCreateAccountList = [];
                         let toUpdateAccountBalanceList = [];
                         const service = [];
@@ -255,24 +256,56 @@ export class GrantApprovalServiceAdapter {
                             
                             
                         let i=1;
-                        approval.billImages.forEach(image =>{
-                        let tempData = {
-                            parentTransaction: value1[0].id,
-                            imageURL: image.imageURL,
-                            orderNumber: i,
-                            imageType: 'BILL',
-                        }
-                        let temp_form_data = new FormData();
-                        const layout_data = { ...tempData,};
-                        Object.keys(layout_data).forEach(key => {
-                            if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                            } else {
-                                temp_form_data.append(key, layout_data[key]);
+                        approval.billImages.forEach(async image =>{
+                            let tempData = {
+                                parentTransaction: value1[0].id,
+                                imageURL: image.imageURL,
+                                orderNumber: i,
+                                imageType: 'BILL',
                             }
-                        });
-                        i = i + 1;
-                        service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
+                            let temp_form_data = new FormData();
+                            const layout_data = { ...tempData,};
+
+                            for(let key in layout_data){
+                                console.log(key);
+                                if (key === 'imageURL' ) {
+                                    console.log(layout_data[key].substring(0,6));
+                                    if(layout_data[key].substring(0,6) == 'https:'){
+                                        let url = layout_data[key]
+                                        await this.getBase64FromUrl(layout_data[key]).then(data64URL =>{
+                                            layout_data[key] = data64URL; 
+                                            console.log(layout_data[key]);
+                                            temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                                        })
+                                    }
+                                    else{
+                                        temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                                    }
+                                } else {
+                                    temp_form_data.append(key, layout_data[key]);
+                                }
+                            }
+
+                            // Object.keys(layout_data).forEach(async key => {
+                            //     if (key === 'imageURL' ) {
+                            //         console.log(layout_data[key].substring(0,6));
+                            //         if(layout_data[key].substring(0,6) == 'https:'){
+                            //             let url = layout_data[key]
+                            //             await this.getBase64FromUrl(layout_data[key]).then(data64URL =>{
+                            //                 layout_data[key] = data64URL; 
+                            //                 console.log(layout_data[key]);
+                            //                 temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                            //             })
+                            //         }
+                            //         else{
+                            //             temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                            //         }
+                            //     } else {
+                            //         temp_form_data.append(key, layout_data[key]);
+                            //     }
+                            // });
+                            i = i + 1;
+                            service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
     
                         })
                             
@@ -322,4 +355,16 @@ export class GrantApprovalServiceAdapter {
         })
     }
 
+    getBase64FromUrl = async (url) => {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(blob); 
+          reader.onloadend = function() {
+            const base64data = reader.result;   
+            resolve(base64data);
+          }
+        })
+    }
 }

@@ -38,9 +38,12 @@ export class ViewTransactionsServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
         ]).then(value =>{
-            console.log(value);
-            this.vm.minimumDate = value[4].find(session => session.id == 4).startDate;  // change for current session
-            this.vm.maximumDate = value[4].find(session => session.id == 4).endDate;
+            // console.log(value);
+            this.vm.minimumDate = value[4].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[4].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
+            console.log(this.vm.minimumDate, this.vm.maximumDate);
+            // this.vm.minimumDate = value[4].find(session => session.id == 4).startDate;  // change for current session
+            // this.vm.maximumDate = value[4].find(session => session.id == 4).endDate;
             this.initialiseGroupsAndAccountList(value[0], value[3])
             this.vm.headsList = value[2];
             this.vm.isInitialLoading = false;

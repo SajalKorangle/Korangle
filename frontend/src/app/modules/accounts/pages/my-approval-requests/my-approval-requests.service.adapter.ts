@@ -34,8 +34,8 @@ export class MyApprovalRequestsServiceAdapter {
             this.vm.accountsList = value[0];
             this.vm.employeeList = value[1];
             
-            this.vm.minimumDate = value[2].find(session => session.id == 4).startDate;  // change for current session
-            this.vm.maximumDate = value[2].find(session => session.id == 4).endDate;
+            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             let approval_id = [];
             let approval_request_data = {
                 'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
@@ -59,7 +59,7 @@ export class MyApprovalRequestsServiceAdapter {
                 ]).then(data =>{
                     this.initialiseApprovalData(val[0], data[0], data[1]);
                     this.vm.isLoadingApproval = false;
-                    if(value[0].length < this.vm.loadingCount){
+                    if(val[0].length < this.vm.loadingCount){
                         this.vm.loadMoreApprovals = false;
                     }
                 },error =>{

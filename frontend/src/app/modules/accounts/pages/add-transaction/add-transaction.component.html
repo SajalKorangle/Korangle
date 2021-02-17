@@ -1,8 +1,10 @@
-<div class="card-content table-responsive">
+<div class="card-content table-responsive" *ngIf="!isLoading">
     <div class="row col-md-12">
         <mat-form-field style="margin-top: 5px ; margin-right: 15px; margin-bottom: 5px; width: 150px">
             <input type="date" matInput
                 onkeydown="return false"
+                [min] ="minimumDate"
+                [max] = "maximumDate"
                 [ngModel]="selectedDate"
                 (ngModelChange)="selectedDate=$event; func();" placeholder="Choose Date ">
         </mat-form-field>
@@ -190,6 +192,6 @@
     
 </div>
 
-<ng-container *ngIf="isLoading || isInitialLoading">
+<ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

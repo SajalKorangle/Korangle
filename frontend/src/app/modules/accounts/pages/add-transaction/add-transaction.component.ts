@@ -152,7 +152,7 @@ export class AddTransactionComponent implements OnInit {
     }
 
     isApprovalRequired(transaction): boolean{
-      if(transaction.approvalId != null){
+      if(transaction.approvalId != null || this.maximumPermittedAmount == null){
         return false;
       }
       let totalCreditAmount = 0;
@@ -294,6 +294,7 @@ export class AddTransactionComponent implements OnInit {
       console.log(str);
       if (event.target.files && event.target.files[0]) {
           let image = event.target.files[0];
+          console.log(image);
           if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
               alert('File type should be either jpg, jpeg, or png');
               return;

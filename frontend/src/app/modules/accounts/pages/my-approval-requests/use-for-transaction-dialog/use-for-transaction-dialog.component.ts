@@ -69,6 +69,21 @@ export class UseFortransactionDialogComponent implements OnInit {
     return false;
   }
 
+  isAmountUnequal(): boolean{
+    let totalCreditAmount = 0;
+    this.data.approval.creditAccounts.forEach(account =>{
+      totalCreditAmount += account.amount;
+    })
+    let totalDebitAmount = 0;
+    this.data.approval.debitAccounts.forEach(account =>{
+      totalDebitAmount += account.amount;
+    })
+    if(totalCreditAmount != totalDebitAmount){
+      return true;
+    }
+    return false;
+  }
+
   getMaximumApprovedAmount(){
     let maxAmount = 0;
     this.data.originalApproval.creditAccounts.forEach(account =>{

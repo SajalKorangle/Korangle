@@ -36,8 +36,8 @@ export class UpdateTransactionServiceAdapter {
             if(value[2].length > 0){
                 this.vm.maximumPermittedAmount = value[2][0].restrictedAmount;
             }
-            this.vm.minimumDate = value[1].find(session => session.id == 4).startDate;  // change for current session
-            this.vm.maximumDate = value[1].find(session => session.id == 4).endDate;
+            this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             console.log(this.vm.minimumDate, this.vm.maximumDate);
             this.vm.accountsList = value[0];
             this.vm.isLoading = false;

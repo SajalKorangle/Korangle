@@ -30,9 +30,8 @@ export class AddTransactionServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
         ]).then(value =>{
             console.log(value);
-            
-            this.vm.minimumDate = value[2].find(session => session.id == 4).startDate;  // change for current session
-            this.vm.maximumDate = value[2].find(session => session.id == 4).endDate;
+            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             this.vm.accountsList = value[0];
             if(value[1].length > 0){
                 this.vm.maximumPermittedAmount = value[1][0].restrictedAmount;
@@ -65,8 +64,8 @@ export class AddTransactionServiceAdapter {
                 ]).then(data =>{
                     console.log(data);
                     this.initialiseApprovalData(val[0], data[0], data[1]);
+                    this.vm.isLoading = false;
                 })
-                this.vm.isLoading = false;
 
             })
             
@@ -138,7 +137,8 @@ export class AddTransactionServiceAdapter {
 
     
     addTransactions():any{
-        console.log(this.vm.transactions);
+        // console.log(this.vm.transactions);
+        this.vm.isLoading = true;
         let data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
             'transactionDate__gte': this.vm.minimumDate,
@@ -168,7 +168,7 @@ export class AddTransactionServiceAdapter {
             Promise.all([
                 this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateList),
             ]).then(value =>{
-                console.log(value);
+                // console.log(value);
                 let toCreateAccountList = [];
                 let toUpdateAccountBalanceList = [];
                 const service = [];
@@ -224,8 +224,10 @@ export class AddTransactionServiceAdapter {
                             orderNumber: i,
                             imageType: 'BILL',
                         }
+                        console.log(tempData);
                         let temp_form_data = new FormData();
                         const layout_data = { ...tempData,};
+                        console.log(layout_data);
                         Object.keys(layout_data).forEach(key => {
                             if (key === 'imageURL' ) {
                                 temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
@@ -233,6 +235,7 @@ export class AddTransactionServiceAdapter {
                                 temp_form_data.append(key, layout_data[key]);
                             }
                         });
+                        console.log(temp_form_data);
                         i = i + 1;
                         service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
 
@@ -263,10 +266,11 @@ export class AddTransactionServiceAdapter {
                 service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
                 service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
                 Promise.all(service).then(data =>{
-                    console.log(data);
+                    // console.log(data);
                     this.vm.transactions = [];
                     this.vm.addNewTransaction();
                     alert('Transaction Recorded Successfully');
+                    this.vm.isLoading = false;
                 })
 
             })
@@ -276,13 +280,7 @@ export class AddTransactionServiceAdapter {
     }
 
     requestApprovals(): any{
-        // let tempList = [];
-        // this.vm.transactions.forEach(transaction =>{
-        //     if(transaction.approvalId == null){
-        //         tempList.push(transaction);
-        //     }
-        // })
-        // this.vm.transactions = tempList;
+        this.vm.isLoading  = true;
         let data = {
             'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
             'requestedGenerationDateTime__gte': this.vm.minimumDate,
@@ -389,6 +387,7 @@ export class AddTransactionServiceAdapter {
                     this.vm.transactions = [];
                     this.vm.addNewTransaction();
                     alert('Approval Request Generated Successfully');
+                    this.vm.isLoading  = false;
                 })
 
             })
