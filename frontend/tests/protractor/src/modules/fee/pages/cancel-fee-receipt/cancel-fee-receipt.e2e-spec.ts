@@ -119,8 +119,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         node.click();
 
         // Entering the Parent Number and selecting the parent
-        await page.waitForXPath('//input');
-        [node] = await page.$x('//input');
+        // await page.waitForXPath('//input');
+        // [node] = await page.$x('//input');
+        node = await containsFirst('input','');
         await node.type('9617159429');
         node = await containsFirst('mat-option', 'VIJAY PARCHHE');
         await node.click();

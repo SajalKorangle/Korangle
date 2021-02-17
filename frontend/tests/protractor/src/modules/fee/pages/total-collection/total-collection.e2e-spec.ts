@@ -17,13 +17,30 @@ describe('Fees 3.0 -> Total Collection', () => {
         await openModuleAndPage('Fees 3.0', 'Total Collection');
         await page.waitForTimeout(1000);
         // clicking on datepicker icon
-        await page.waitForXPath('//mat-datepicker-toggle');
-        const [datePicker] = await page.$x('//mat-datepicker-toggle');
+        //const datePicker = await containsFirst('input','');
+        // let node=await containsFirst('input','');
+        // await page.evaluate(el => el.value = '1 - Jan - 2021',node);
+        // await page.keyboard.type('20191026');
+        const datePicker = await containsFirst('mat-datepicker-toggle','');
         datePicker.click();
-        await page.waitForXPath('//tr[2]//following::td[2]');
-        // clicking on the particular date
-        const [date] = await page.$x('//tr[2]//following::td[2]');
+        // await page.waitForXPath('//tr[2]//following::td[2]');
+        // // clicking on the particular date
+        await page.waitForXPath('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
+        let [date] = await page.$x('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
         date.click();
+      
+        await page.waitForXPath('//*[@id="mat-datepicker-0"]/div/mat-multi-year-view/table/tbody/tr[2]/td[2]/div');
+        [date] = await page.$x('//*[@id="mat-datepicker-0"]/div/mat-multi-year-view/table/tbody/tr[2]/td[2]/div');
+        date.click();
+       
+        await page.waitForXPath('//*[@id="mat-datepicker-0"]/div/mat-year-view/table/tbody/tr[2]/td[1]/div');
+        [date] = await page.$x('//*[@id="mat-datepicker-0"]/div/mat-year-view/table/tbody/tr[2]/td[1]/div');
+        date.click();
+
+        await page.waitForXPath('//*[@id="mat-datepicker-0"]/div/mat-month-view/table/tbody/tr[1]/td[2]/div');
+        [date] = await page.$x('//*[@id="mat-datepicker-0"]/div/mat-month-view/table/tbody/tr[1]/td[2]/div');
+        date.click();
+
         // clicking on search button
         await page.waitForSelector('button[type="button"]');
         const [search] = await page.$x('//button[@class=\'btn btn-warning\']');
@@ -36,7 +53,7 @@ describe('Fees 3.0 -> Total Collection', () => {
         let nodes;
 
         // checking the default type is valid
-        await page.waitForXPath('//mat-select//following::mat-select[4]');
+        // nodes = await containsAll('//mat-select//following::mat-select[4]');
         nodes = await containsAll('mat-select', 'Valid Receipts');
         expect(nodes.length).toBe(1);
         // Checking the number of rows to be equals to 4 -> 3 Receipts, 1 header row
@@ -50,7 +67,7 @@ describe('Fees 3.0 -> Total Collection', () => {
 
     it('Total Collection: Fee receipt Type Toggle', async () => {
         let nodes,node;
-        await page.waitForXPath('//mat-select//following::mat-select[4]');
+        // await page.waitForXPath('//mat-select//following::mat-select[4]');
         nodes = await containsFirst('mat-select', 'Valid Receipts');
         await nodes.click();
         await page.waitForXPath('//mat-option');
