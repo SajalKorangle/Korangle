@@ -71,6 +71,8 @@ export class DesignReportCardCanvasAdapter {
 
     documentEventListners: { keydown: any } = { keydown: null };
     layerClickEvents: any[] = [];
+
+    metaDrawings: boolean = true;   // meta drawings includes things like hilighter, assistance etc.
     
     constructor() {
         console.log(this)
@@ -497,7 +499,7 @@ export class DesignReportCardCanvasAdapter {
             if (!status)
                 return;
         }
-        if (this.activeLayer) {
+        if (this.activeLayer && this.metaDrawings) {
             this.activeLayer.highlightLayer(this.virtualContext);
         }
         clearTimeout(this.pendingReDrawId);
@@ -610,12 +612,13 @@ export class DesignReportCardCanvasAdapter {
         // }
     }
 
-    downloadPDF() { // apply a loading spinner and block the canvas user interaction while saving(to be done)
+    downloadPDF() { // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background
         let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
         this.canvas.width = this.actualresolution.getWidthInPixel(this.dpi);
         this.canvas.height = this.actualresolution.getHeightInPixel(this.dpi);
 
         this.vm.htmlAdapter.isSaving = true;
+        this.metaDrawings = false;
         this.canvasSizing();
         setTimeout(() => {
             let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
@@ -624,6 +627,7 @@ export class DesignReportCardCanvasAdapter {
             doc.save(this.vm.currentLayout.name + '.pdf');
             this.canvas.width = actualCanavsWidth;
             this.canvas.height = actualCanavsHeight;
+            this.metaDrawings = true;
             this.canvasSizing();
             this.vm.htmlAdapter.isSaving = false;
         },1000);    // bad design of waiting for canvas loading
