@@ -434,7 +434,7 @@ export interface Layer{
     layerDataUpdate(): void;    // gets data of layer if dataSourceType is 'DATA', 
     updatePosition(dx: number, dy: number): void;
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;  // draws layer to canavs or schedules redraw after some time if layer is not ready yet
-    isClicked(mouseX: number, mouseY: number): boolean; // given clicked x and y if this layer is clicked or not
+    isClicked(mouseX: number, mouseY: number, shiftKey: boolean): boolean; // given clicked x and y if this layer is clicked or not
     scale(scaleFactor: number): void;   // scales all parameters of layer by given scale factor, used while zooming, fullscreen etc.
     getDataToSave(): {[object:string]:any};   // retunn data to be saved to database
 
@@ -535,7 +535,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         }
     }
 
-    isClicked(mouseX: number, mouseY: number): boolean {
+    isClicked(mouseX: number, mouseY: number, shiftKey:boolean = false): boolean {
         return (mouseX > this.x - permissibleClickError
             && mouseX < this.x + this.width + permissibleClickError
             && mouseY > this.y - permissibleClickError
@@ -693,7 +693,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     columnsList: Array<TableColumn> = [];
     rowCount: number = 0;
     columnCount: number = 0;
-    selectedCells: any;
+    selectedCells: any[];
 
     height: number = 0; // computed from rowsList and columnsList
     width: number = 0;
@@ -714,8 +714,8 @@ export class CanvasTable extends BaseLayer implements Layer{
         this.tableStyle.lineWidth = 0.5 / ca.pixelTommFactor;
         this.selectedCells = [];
         this.selectedCells.push({
-            'row': 0,
-            'column': 0,
+            row: 0,
+            column: 0,
         })
 
         this.initilizeSelf(attributes);
@@ -774,7 +774,7 @@ export class CanvasTable extends BaseLayer implements Layer{
         }
         else{
             this.cells = attributes['cells'];
-            for(let i=0;i<this.rowCount; i++){
+            for(let i=0;i<this.rowCount; i++){  // check this part again
                 for(let j=0;j<this.columnCount; j++){
                     this.cells[i][j].topBorder.lineWidth *= this.ca.pixelTommFactor;
                     this.cells[i][j].bottomBorder.lineWidth *= this.ca.pixelTommFactor;
@@ -935,11 +935,36 @@ export class CanvasTable extends BaseLayer implements Layer{
         return true;    // Drawn successfully on canvas
     }
 
-    isClicked(mouseX: number, mouseY: number): boolean {
-        let result = (mouseX > this.x - permissibleClickError
-            && mouseX < this.x + this.width + permissibleClickError
-            && mouseY > this.y - permissibleClickError
-            && mouseY < this.y + this.height + permissibleClickError);
+    isClicked(mouseX: number, mouseY: number, shiftKey:boolean = false): boolean {
+        let result = super.isClicked(mouseX, mouseY, shiftKey);
+        if (result && shiftKey) {
+            let clickedRow, clickedColumn, sumColumnsWidth, sumRowsHeights;
+            let x = mouseX - this.x;
+            let y = mouseY - this.y;
+            sumColumnsWidth = 0;
+            sumRowsHeights = 0;
+            this.rowsList.every((row, index) => {
+                sumRowsHeights += row.height;
+                if (y < sumRowsHeights) {
+                    clickedRow = index
+                    return false;
+                }
+                return true;
+            });
+            this.columnsList.every((col, index) => {
+                sumColumnsWidth += col.width;
+                if (x < sumColumnsWidth) {
+                    clickedColumn = index
+                    return false;
+                }
+                return true;
+            });
+            let index = this.selectedCells.findIndex(cell => cell.row == clickedRow && cell.column == clickedColumn);
+            if (index == -1)
+                this.selectedCells.push({ row: clickedRow, column: clickedColumn });
+            else
+                this.selectedCells.splice(index, 1);
+        }
         return result;
     }
 

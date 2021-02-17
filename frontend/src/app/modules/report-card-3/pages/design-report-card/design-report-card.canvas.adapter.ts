@@ -177,6 +177,7 @@ export class DesignReportCardCanvasAdapter {
         this.applyDefaultbackground();
 
         this.canvas.addEventListener('mousedown', (event) => {
+            event.preventDefault();
             let clickedX, clickedY;
             clickedX = event.offsetX;
             clickedY = event.offsetY;
@@ -186,7 +187,7 @@ export class DesignReportCardCanvasAdapter {
             this.currentMouseDown = false;
 
             for (let i = this.layers.length - 1; i >= 0; i--) {
-                if (this.layers[i].isClicked(clickedX, clickedY)) {
+                if (this.layers[i].isClicked(clickedX, clickedY, event.shiftKey)) {
                     this.updateActiveLayer(i, event);
                     this.lastMouseX = clickedX;
                     this.lastMouseY = clickedY;
@@ -214,6 +215,7 @@ export class DesignReportCardCanvasAdapter {
         this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
             if (!this.currentMouseDown)
                 return;
+            event.preventDefault();
             let mouseX = event.offsetX, mouseY = event.offsetY, dx, dy;
             dx = mouseX - this.lastMouseX;  // Change in x
             dy = mouseY - this.lastMouseY;  // Change in y
@@ -224,6 +226,7 @@ export class DesignReportCardCanvasAdapter {
         });
 
         this.canvas.addEventListener('mouseup', (event) => {
+            event.preventDefault();
             this.currentMouseDown = false;
         });
 
