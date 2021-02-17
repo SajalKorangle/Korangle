@@ -95,7 +95,7 @@ export class ViewAllComponent implements OnInit {
 
     /* TC Options */
     noTC = true;
-    yesTC = false;
+    yesTC = true;
 
     displayStudentNumber = 0;
 
