@@ -17,11 +17,11 @@ describe('Fees 3.0 -> Total Collection', () => {
         await openModuleAndPage('Fees 3.0', 'Total Collection');
         await page.waitForTimeout(1000);
         // clicking on datepicker icon
-        
+
         const datePicker = await containsFirst('mat-datepicker-toggle','');
         datePicker.click();
-
-        // // clicking on the particular date
+        
+        // clicking on the particular date
         await page.waitForXPath('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
         let [date] = await page.$x('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
         date.click();
@@ -50,7 +50,6 @@ describe('Fees 3.0 -> Total Collection', () => {
         let nodes;
 
         // checking the default type is valid
-        // nodes = await containsAll('//mat-select//following::mat-select[4]');
         nodes = await containsAll('mat-select', 'Valid Receipts');
         expect(nodes.length).toBe(1);
         // Checking the number of rows to be equals to 4 -> 3 Receipts, 1 header row
@@ -64,7 +63,7 @@ describe('Fees 3.0 -> Total Collection', () => {
 
     it('Total Collection: Fee receipt Type Toggle', async () => {
         let nodes,node;
-        // await page.waitForXPath('//mat-select//following::mat-select[4]');
+
         nodes = await containsFirst('mat-select', 'Valid Receipts');
         await nodes.click();
         await page.waitForXPath('//mat-option');
