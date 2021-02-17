@@ -31,14 +31,12 @@ export class MyCollectionServiceAdapter {
             this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
             this.vm.classService.getObjectList(this.vm.classService.division,{}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
         ]).then(value => {
 
             this.vm.feeTypeList = value[0]
             this.vm.employeeList = [value[1]];
             this.vm.classList = value[2];
             this.vm.sectionList = value[3];
-            this.vm.sessionList = value[4];
 
             this.vm.isInitialLoading = false;
         }, error => {
@@ -74,7 +72,7 @@ export class MyCollectionServiceAdapter {
 
             this.vm.feeReceiptList = value[0].sort((a,b) => {return b.receiptNumber-a.receiptNumber});;
             this.vm.subFeeReceiptList = value[1];
-            
+
             let service_list = [];
 
             let student_list = {
