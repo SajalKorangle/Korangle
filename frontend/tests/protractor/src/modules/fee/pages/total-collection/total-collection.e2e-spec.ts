@@ -17,13 +17,10 @@ describe('Fees 3.0 -> Total Collection', () => {
         await openModuleAndPage('Fees 3.0', 'Total Collection');
         await page.waitForTimeout(1000);
         // clicking on datepicker icon
-        //const datePicker = await containsFirst('input','');
-        // let node=await containsFirst('input','');
-        // await page.evaluate(el => el.value = '1 - Jan - 2021',node);
-        // await page.keyboard.type('20191026');
+        
         const datePicker = await containsFirst('mat-datepicker-toggle','');
         datePicker.click();
-        // await page.waitForXPath('//tr[2]//following::td[2]');
+
         // // clicking on the particular date
         await page.waitForXPath('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
         let [date] = await page.$x('//*[@id="mat-datepicker-0"]/mat-calendar-header/div/div/button[1]');
