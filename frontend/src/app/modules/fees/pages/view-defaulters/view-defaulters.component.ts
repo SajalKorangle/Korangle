@@ -93,10 +93,6 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    totalFees: number =0;
-    totalFeesDue: number =0;
-    totalFeesPaid: number =0;
-    totalDiscount: number =0;
 
 
     constructor(public schoolService: SchoolService,
@@ -328,10 +324,6 @@ export class ViewDefaultersComponent implements OnInit {
                 };
                 this.parentList.push(newParentObject);
             }
-            this.totalFeesDue += student.feesDueOverall;
-            this.totalFees += student.totalFeesThisSession;
-            this.totalFeesPaid += student.feesPaidThisSession;
-            this.totalDiscount += student.discountThisSession;
             
         });
 
@@ -575,12 +567,27 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
+    getFilteredParentFeesDueOverall(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['feesDueOverall'];
+            }, 0);
+        }, 0);
+    }
 
     getParentFeesPaid(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['feesPaidThisSession'];
         }, 0);
     }
+    getFilteredParentTotalFeesPaid(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['feesPaidThisSession'];
+            }, 0);
+        }, 0);
+    }
+
 
     getParentDiscount(parent: any): any {
         return parent.studentList.reduce((total, student) => {
@@ -588,9 +595,48 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
+    getFilteredParentTotalDiscount(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['discountThisSession'];
+            }, 0);
+        }, 0);
+    }
+
     getParentTotalFees(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['totalFeesThisSession'];
+        }, 0);
+    }
+
+    getFilteredParentTotalFees(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['totalFeesThisSession'];
+            }, 0);
+        }, 0);
+    }
+
+    getFilteredStudentListTotalFeesDue(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['feesDueOverall'];
+        }, 0);
+    }
+    getFilteredStudentListTotalFeesDemand(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['totalFeesThisSession'];
+        }, 0);
+    }
+
+    getFilteredStudentListTotalFeesPaid(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['feesPaidThisSession'];
+        }, 0);
+    }
+
+    getFilteredStudentListTotalDiscount(): any{
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['discountThisSession'];
         }, 0);
     }
 
