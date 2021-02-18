@@ -4,12 +4,6 @@
     </div>
     <div style="margin: 4px; padding: 4px;">
 
-        <mat-form-field> 
-            <mat-label>Prefix</mat-label>
-            <input matInput [(ngModel)]="layer.format.prefix"
-                (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate);">
-        </mat-form-field>
-
         <mat-form-field>
             <mat-label>Start Date</mat-label>
             <mat-select [(ngModel)]="layer.format.date1" (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate);">

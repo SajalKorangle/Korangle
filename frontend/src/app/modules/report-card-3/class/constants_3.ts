@@ -493,7 +493,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     displayName: string; 
     LAYER_TYPE: string;
     parameterToolPannels: string[] = ['position', 'settings'];  // position right toolbar pannel is present in all layers
-    isLocked: boolean;
+    isLocked: boolean = false;
     dataSourceType: string = 'N/A';
     source?: {[key:string]: any};
 
@@ -503,7 +503,6 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         this.ca = ca;
         BaseLayer.maxID += 1;
         this.id = BaseLayer.maxID;
-        this.isLocked = false;
     }
 
     initilizeSelf(attributes:object): void{ // initilizes all class variables according to provided initial parameters data as object
@@ -550,6 +549,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
             x: this.x * this.ca.pixelTommFactor,  // converting pixels to mm
             y: this.y * this.ca.pixelTommFactor,
             dataSourceType: this.dataSourceType,
+            isLocked: this.isLocked
         }
         return savingData;
     }
@@ -1042,6 +1042,7 @@ class ShapeBaseLayer extends BaseLayer{
             ...savingData,
             shapeStyle: this.shapeStyle
         }
+        savingData.shapeStyle.lineWidth *= this.ca.pixelTommFactor;
         return savingData;
     }
 
@@ -1386,7 +1387,8 @@ export class CanvasSquare extends CanvasRectangle implements Layer{
 
 export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
-    text: string = 'Lorem Ipsum';    
+    text: string = 'Lorem Ipsum'; 
+    prefix: string = '';
 
     font: string = 'Arial';
     fontSize: number = 12;
@@ -1478,7 +1480,7 @@ export class CanvasText extends BaseLayer implements Layer{
         canvasTxt.vAlign = this.textBaseline;
         canvasTxt.fontStyle = this.italics;
         canvasTxt.fontWeight = this.fontWeight;
-        this.lastHeight = canvasTxt.drawText(ctx, this.text, this.x, this.y, this.maxWidth, this.minHeight).height;
+        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text, this.x, this.y, this.maxWidth, this.minHeight).height;
         // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
@@ -1496,6 +1498,7 @@ export class CanvasText extends BaseLayer implements Layer{
 
         savingData = {
             ...savingData,
+            prefix: this.prefix,
             fontSize: this.fontSize*this.ca.pixelTommFactor,
             italics: this.italics,
             fontWeight: this.fontWeight,
@@ -2158,12 +2161,10 @@ export class CurrentSession extends CanvasText implements Layer{
     endDate: Date= new Date();
 
     format: {
-        prefix: string,
         date1: string,
         seperator: string,
         date2: string
     } = {
-            prefix: '',
             date1: '<yyy>',
             seperator: '-',
             date2: '<yy>'
@@ -2196,12 +2197,11 @@ export class CurrentSession extends CanvasText implements Layer{
         Object.entries(dateReplacementsForEndDate).forEach(([dataReplacementKey, dateReplacementvalue]) => {
             dateValue2 = dateValue2.replace(dataReplacementKey, dateReplacementvalue);
         });
-        this.text = this.format.prefix+dateValue1+this.format.seperator+dateValue2
+        this.text = dateValue1+this.format.seperator+dateValue2
     }
 
     getDataToSave(): { [object: string]: any } {
         let savingData = super.getDataToSave();
-        delete savingData.text;
         savingData = {
             ...savingData,
             format: this.format

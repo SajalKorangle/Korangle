@@ -3,6 +3,9 @@
         <i class="material-icons" style="margin-top: 4px;">backup_table</i>
     </div>
     <div style="margin: 4px; padding: 4px;">
+        <div style="text-align: center;" *ngIf="layer.selectedCells.length>0">
+            <span>(X, Y): ({{getCellX()}},{{getCellY()}})</span>
+        </div>
 
         <div style="display: flex; flex-direction: column; margin: 6px; margin-bottom: 12px;">
             <div style="width: 100%; display: flex; flex-direction: row;"
