@@ -46,10 +46,65 @@ export class EditGroupDialogComponent implements OnInit {
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.group),
     ]).then(val =>{
+      for(let i=0;i<this.data.vm.groupsList.length ;i++){
+        if(this.data.vm.groupsList[i].id == this.group.id){
+          this.data.vm.groupsList[i].title = this.group.title;
+          this.data.vm.groupsList[i].parentHead = this.group.parentHead;
+          this.data.vm.groupsList[i].parentGroup = this.group.parentGroup;
+          break;
+        }
+      }
+      
+      for(let i=0;i<this.data.vm.serviceAdapter.accountsSessionList.length ;i++){
+        if(this.data.vm.serviceAdapter.accountsSessionList[i].id == this.group.id){
+          this.data.vm.serviceAdapter.accountsSessionList[i].title = this.group.title;
+          this.data.vm.serviceAdapter.accountsSessionList[i].parentHead = this.group.parentHead;
+          this.data.vm.serviceAdapter.accountsSessionList[i].parentGroup = this.group.parentGroup;
+          break;
+        }
+      }
+      this.data.vm.serviceAdapter.initialiseDisplayData();
       console.log(val);
       alert('Group Updated Successfully');
       this.dialogRef.close();
     })
   }
+
+  deleteGroup(){
+    if(!confirm('Are you sure you want to delete this group')){
+      return ;
+    }
+    console.log(this.group);
+    Promise.all([
+      this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.group),
+    ]).then(val =>{
+      console.log(val);
+      
+      for(let i=0;i<this.data.vm.groupsList.length ;i++){
+        if(this.data.vm.groupsList[i].id == this.group.id){
+          this.data.vm.groupsList.splice(i, 1);
+          break;
+        }
+      }
+      for(let i=0;i<this.data.vm.serviceAdapter.accountsSessionList.length ;i++){
+        if(this.data.vm.serviceAdapter.accountsSessionList[i].id == this.group.id){
+          this.data.vm.serviceAdapter.accountsSessionList.splice(i, 1);
+          break;
+        }
+      }
+      this.data.vm.serviceAdapter.initialiseDisplayData();
+      alert('Group Deleted Successfully');
+      this.dialogRef.close();
+    })
+  }
+
+  isGroupDeletable(): boolean{
+    if(this.group.childs == undefined || this.group.childs.length == 0){
+      return true;
+    }
+    return false;
+  }
+
+  
 
 }

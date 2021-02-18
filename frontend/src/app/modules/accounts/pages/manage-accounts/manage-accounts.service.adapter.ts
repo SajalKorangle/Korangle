@@ -10,6 +10,9 @@ export class ManageAccountsServiceAdapter {
         this.vm = vm;
     }
 
+    accountsSessionList: any;
+    accountsList: any;
+
     //initialize data
     initializeData(): void {
         let request_account_data = {
@@ -18,13 +21,16 @@ export class ManageAccountsServiceAdapter {
         this.vm.isLoading = true;
 
 
-        this.vm.toDisplayList = [];
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.heads, {}),
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
 
         ]).then(value =>{
+            
+            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             this.vm.headsList = value[0];
             console.log(value);
             let account_id_list = [];
@@ -38,8 +44,10 @@ export class ManageAccountsServiceAdapter {
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
             ]).then(data =>{
-                this.initialiseAccountList(value[1], data[0]);
-                this.initialiseDisplayData(value[1], data[0]);
+                this.accountsList = value[1];
+                this.accountsSessionList = data[0];
+                this.initialiseAccountGroupList();
+                this.initialiseDisplayData();
                 this.vm.isLoading = false;
             }, error =>{
                 this.vm.isLoading = false;
@@ -50,11 +58,12 @@ export class ManageAccountsServiceAdapter {
 
     }
 
-    initialiseAccountList(accountList: any, accountSessionList: any){
+    initialiseAccountGroupList(){
         this.vm.accountsList = [];
         this.vm.groupsList = [];
-        accountSessionList.forEach(account =>{
-            let type = accountList.find(accounts => accounts.id == account.parentAccount).accountType;
+        this.accountsSessionList.forEach(account =>{
+            let type = this.accountsList.find(accounts => accounts.id == account.parentAccount).accountType;
+            account['type'] = type;
             if(type == 'ACCOUNT'){
                 this.vm.accountsList.push(account);
             }
@@ -68,13 +77,13 @@ export class ManageAccountsServiceAdapter {
     }
 
 
-    initialiseDisplayData(accountsList: any, accountsSessionList: any){
-        this.vm.toDisplayList = [];
+    initialiseDisplayData(){
+        let accountsSessionList = JSON.parse(JSON.stringify(this.accountsSessionList));
         let parentGroupsList = [];
         let individualAccountList = [];
         // while(accountsSessionList.length > 0){
             for(let i=0;i<accountsSessionList.length; i++){
-                let type = accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
+                let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
                 accountsSessionList[i]['type'] = type;
                 if(type == 'ACCOUNT'){
                     // console.log('account' , accountsSessionList[i].title);
@@ -131,14 +140,14 @@ export class ManageAccountsServiceAdapter {
                 i--;
             }
         }
-        this.populateHeadDisplayList(parentGroupsList, individualAccountList);
+        this.populateHeadWiseDisplayList(parentGroupsList, individualAccountList);
 
     }
 
-    populateHeadDisplayList(groupsList, accountList){
+    populateHeadWiseDisplayList(groupsList, individualAccountList){
         this.vm.expensesList = [];
         this.vm.incomeList = [];
-        this.vm.assestsList = [];
+        this.vm.assetsList = [];
         this.vm.liabilityList = [];
         groupsList.forEach(group =>{
             let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
@@ -149,14 +158,14 @@ export class ManageAccountsServiceAdapter {
                 this.vm.incomeList.push(group);
             }
             else if(head == 'Assests'){
-                this.vm.assestsList.push(group);
+                this.vm.assetsList.push(group);
             }
             else if(head == 'Liabilities'){
                 this.vm.liabilityList.push(group);
             }
 
         })
-        accountList.forEach(account =>{
+        individualAccountList.forEach(account =>{
             let head = this.vm.headsList.find(head => head.id == account.parentHead).title;
             if(head == 'Expenses'){
                 this.vm.expensesList.push(account);
@@ -165,7 +174,7 @@ export class ManageAccountsServiceAdapter {
                 this.vm.incomeList.push(account);
             }
             else if(head == 'Assests'){
-                this.vm.assestsList.push(account);
+                this.vm.assetsList.push(account);
             }
             else if(head == 'Liabilities'){
                 this.vm.liabilityList.push(account);
@@ -174,7 +183,7 @@ export class ManageAccountsServiceAdapter {
         })
         console.log(this.vm.expensesList);
         console.log(this.vm.incomeList);
-        console.log(this.vm.assestsList);
+        console.log(this.vm.assetsList);
         console.log(this.vm.liabilityList);
 
     }

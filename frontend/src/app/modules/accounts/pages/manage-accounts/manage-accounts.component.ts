@@ -7,6 +7,7 @@ import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.
 import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.component'
 import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
+import { SchoolService } from './../../../../services/modules/school/school.service'
 
  
 @Component({
@@ -15,6 +16,7 @@ import { AccountsService } from './../../../../services/modules/accounts/account
     styleUrls: ['./manage-accounts.component.css'],
     providers: [
         AccountsService,
+        SchoolService,
     ]
 })
 
@@ -30,14 +32,19 @@ export class ManageAccountsComponent{
     constructor( 
         public dialog: MatDialog,
         public accountsService: AccountsService,
+        public schoolService: SchoolService,
     ){ }
 
 
-    toDisplayList: any;
     expensesList = [];
-    assestsList = [];
+    assetsList = [];
     liabilityList = [];
     incomeList = [];
+    displayWholeList: boolean;
+
+    minimumDate: any;
+    maximumDate: any;
+    specificGroup: any;
 
     searchList = [];
     // Server Handling - Initial
@@ -46,6 +53,7 @@ export class ManageAccountsComponent{
         this.serviceAdapter = new ManageAccountsServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        this.displayWholeList = true;
     }
 
 
@@ -78,7 +86,7 @@ export class ManageAccountsComponent{
                 width: '300px',
                 data: {
                     vm: this,
-                    account: element,
+                    account: JSON.parse(JSON.stringify(element)),
                 }
             });
         
@@ -89,7 +97,7 @@ export class ManageAccountsComponent{
                 width: '300px',
                 data: {
                     vm: this,
-                    group: element,
+                    group: JSON.parse(JSON.stringify(element)),
                 }
             });
         
@@ -122,6 +130,12 @@ export class ManageAccountsComponent{
             }
         })
         return temp;
+    }
+
+    displayWholeGroup(group: any){
+        console.log(group);
+        this.displayWholeList = false;
+        this.specificGroup = group;
     }
     
 } 

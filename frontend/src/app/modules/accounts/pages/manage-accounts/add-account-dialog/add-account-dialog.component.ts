@@ -36,6 +36,9 @@ export class AddAccountDialogComponent implements OnInit {
   addAccount():any{
     // console.log('added');
     // return ;
+    if(this.openingBalance == null){
+      this.openingBalance = 0;
+    }
     let account_data = {
       parentSchool: this.data.vm.user.activeSchool.dbId,
       accountType: 'ACCOUNT',
@@ -44,6 +47,8 @@ export class AddAccountDialogComponent implements OnInit {
     Promise.all([
       this.data.vm.accountsService.createObject(this.data.vm.accountsService.accounts, account_data),
     ]).then(value =>{
+      this.data.vm.serviceAdapter.accountsList.push(value[0]);
+
       let account_session_data = {
         parentAccount: value[0].id,
         parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
@@ -59,10 +64,15 @@ export class AddAccountDialogComponent implements OnInit {
       Promise.all([
         this.data.vm.accountsService.createObject(this.data.vm.accountsService.account_session, account_session_data),
       ]).then(data =>{
+        this.data.vm.serviceAdapter.accountsSessionList.push(data[0]);
+        data[0]['type']='ACCOUNT';
+        this.data.vm.accountsList.push(data[0]);
+        this.data.vm.serviceAdapter.initialiseDisplayData();
         alert('Account Created Successfully');
-        this.accountName = null;
+        this.accountName = '';
         this.parentGroup = null;
         this.parentHead = null;
+        this.openingBalance = 0;
         console.log(data);
       })
 
