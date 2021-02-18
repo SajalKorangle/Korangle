@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Layer } from './../../class/constants_3';
+import { MarksLayer } from './../../class/constants_3';
 
 @Component({
   selector: 'app-marks-parameters-pannel',
@@ -8,7 +8,7 @@ import { Layer } from './../../class/constants_3';
 })
 export class MarksParametersPannelComponent implements OnInit {
 
-  @Input() layer: Layer;
+  @Input() layer: MarksLayer;
   @Input() canvasRefresh: any;
 
   constructor() { }

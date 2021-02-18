@@ -199,17 +199,16 @@
         </mat-card>
 
 
-
-
+        
         <div class="flex-row" style="margin-top: 8px; width: 100%; height: calc(100vh - 90px); justify-content: space-between; position: relative;" id="canvasDesigningWrapper">
 
             <!--Custom Context Menu-->
             <ng-container *ngIf="htmlAdapter.customMenuDisplay">
-                <app-custom-menu [left]="htmlAdapter.customMenuLeft"
+                <app-custom-menu [left]="htmlAdapter.customMenuLeft" style="position: absolute;"
                         [top]="htmlAdapter.customMenuTop"
                         [layer]="canvasAdapter.activeLayer" 
                         [ca]="canvasAdapter" 
-                        [layerIndex]="canvasAdapter.activeLayerIndexes[0]"
+                        [layerIndexes]="canvasAdapter.activeLayerIndexes"
                         (closeMenu)="htmlAdapter.closeContextMenu()">
                     </app-custom-menu>
             </ng-container>
@@ -280,7 +279,7 @@
             
             
             <!-- column 2: Canvas -->
-            <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 510px); position: relative; text-align: center; overflow: auto;" id="canvasWrapper">
+            <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 510px); position: relative; text-align: center; overflow: hidden;" id="canvasWrapper">
                 <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute; z-index: 2;"></mat-progress-bar></ng-container>
                 <div style="position: absolute; right: 2px; top: 4px; display: flex; flex-direction: column;" *ngIf="currentLayout.content.length>1">
                     <button *ngFor="let dummy of currentLayout.content; let ind = index;" 
@@ -290,7 +289,9 @@
                         {{ind+1}}
                     </button>
                 </div>
-                <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
+                <div style="overflow: auto; max-height: 100%;">
+                    <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
+                </div>
             </mat-card>
 
 

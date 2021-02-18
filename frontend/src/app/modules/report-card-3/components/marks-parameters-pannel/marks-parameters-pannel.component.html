@@ -46,9 +46,9 @@
 
         <mat-form-field appearence="fill">
             <mat-label>
-                Factor
+                Out Of
             </mat-label>
-            <input matInput type="number" min="0" [(ngModel)]="layer.factor" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
+            <input matInput type="number" min="0" [(ngModel)]="layer.outOf" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
         </mat-form-field>
 
         <button class="btn" style="padding: 6px 12px; width: 100%;" (click)="layer.ca.vm.htmlAdapter.openMarksDialog(layer)">More ...</button>

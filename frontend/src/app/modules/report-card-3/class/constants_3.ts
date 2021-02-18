@@ -644,8 +644,8 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         if (this.error)    // id error the don't draw
             return true;
-        
-        if (this.image.complete && this.image.naturalHeight > 0) {
+
+        if (this.image.complete && this.image.naturalHeight != 0) {
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             return true;    // Drawn successfully on canvas
         }
@@ -1409,7 +1409,7 @@ export class CanvasText extends BaseLayer implements Layer{
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
         this.maxWidth = Math.round(7500 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(5000 / ca.pixelTommFactor) / 100;
+        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
         this.underline = false;
         this.fontSize = 6 / ca.pixelTommFactor;
 
@@ -1641,6 +1641,10 @@ export class CanvasGroup extends BaseLayer implements Layer{
         }
     }
 
+    highlightLayer(ctx: CanvasRenderingContext2D): void{
+        this.layers.forEach(l => l.highlightLayer(ctx));
+    }
+
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         let result = true;
         this.layers.forEach(layer => result = result && layer.drawOnCanvas(ctx, scheduleReDraw));
@@ -1649,6 +1653,14 @@ export class CanvasGroup extends BaseLayer implements Layer{
 
     scale(scaleFactor: number): void {
         this.layers.forEach(layer => layer.scale(scaleFactor));
+    }
+
+    isClicked(mouseX: number, mouseY: number, shiftKey:boolean = false): boolean {
+        let res: boolean = false;
+        this.layers.forEach(layer => {
+            res = res || layer.isClicked(mouseX, mouseY, shiftKey);
+        });
+        return res;
     }
 
     getDataToSave():object {
@@ -1849,7 +1861,7 @@ export class MarksLayer extends CanvasText implements Layer{
 
     marks: number = null;
     decimalPlaces: number = 1;
-    factor: number = 1;
+    outOf: number = 100;
     parentExamination: any = null;
     parentSubject: any = null;
     testType: string = null;
@@ -1878,7 +1890,12 @@ export class MarksLayer extends CanvasText implements Layer{
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
-                this.marksType) * this.factor;
+                this.marksType) * (this.outOf/this.source.getValueFunc(
+                    this.ca.vm.DATA,
+                    this.parentExamination,
+                    this.parentSubject,
+                    this.testType,
+                    MARKS_TYPE_LIST[1]));
             if (this.gradeRuleSet) {
                 this.gradeRuleSet.gradeRules.forEach((gradeRule: GradeRule) => {
                     if (gradeRule.belongsToGrade(this.marks))
@@ -1908,7 +1925,7 @@ export class MarksLayer extends CanvasText implements Layer{
         savingData = {
             ...savingData,
             decimalPlaces: this.decimalPlaces,
-            factor: this.factor,
+            outOf: this.outOf,
             parentExamination: this.parentExamination,
             parentSubject: this.parentSubject,
             testType: this.testType,

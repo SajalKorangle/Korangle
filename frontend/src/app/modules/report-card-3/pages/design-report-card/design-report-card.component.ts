@@ -164,19 +164,35 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
 
   downloadFont(): void {
     this.fontFamilyList.forEach(fontFamily => {
-        const newStyle = document.createElement('style');
+      const newStyle = document.createElement('style');
+      fontFamily.styleList.forEach(style => {
+        let fontStyle = '', fontWeight = '';
+        switch (style) {
+          case 'Bold':
+            fontWeight = 'font-weight: bold;';
+            break;
+          case 'Italic':
+            fontStyle = 'font-style: italic;';
+            break;
+          case 'BoldItalic':
+            fontWeight = 'font-weight: bold;';
+            fontStyle = 'font-style: italic;';
+        }
         newStyle.appendChild(document.createTextNode(
-            '@font-face {' +
-            'font-family: ' + fontFamily.displayName + ';' +
-            'src: url("'
-                + 'https://korangleplus.s3.amazonaws.com/'
-                + this.encodeURIComponent('assets/fonts/' +
-                    fontFamily.displayName +
-                    '/' + fontFamily.displayName + '-' + this.getFontStyleList(fontFamily.displayName)[0] + '.ttf')
-            + '");' +
-            '}'
-        ));
-        document.head.appendChild(newStyle);
+          '@font-face {' +
+          'font-family: ' + fontFamily.displayName + ';' +
+          'src: url("'
+              + 'https://korangleplus.s3.amazonaws.com/'
+              + this.encodeURIComponent('assets/fonts/' +
+                  fontFamily.displayName +
+                  '/' + fontFamily.displayName + '-' + style + '.ttf')
+          + '");' +
+          fontStyle+fontWeight+
+          '}'
+      ));
+      document.head.appendChild(newStyle);
+      });
+      
     });
   }
 

@@ -58,6 +58,8 @@ export class DesignReportCardCanvasAdapter {
     lastMouseX: number;
     lastMouseY: number;
     currentMouseDown: boolean = false;
+    selectDragedOverLayers: boolean = false;
+    selectionAssistanceRef: HTMLDivElement;
 
     pixelTommFactor: number;    // width(height) in mm / Canvas width(height) in pixel
     isSaved = true;    // if canvas is not saved then give warning; to be implemented
@@ -69,41 +71,48 @@ export class DesignReportCardCanvasAdapter {
     originalHeight: any;
     originalWidth: any;
 
-    documentEventListners: { keydown: any } = { keydown: null };
+    documentEventListners: { keydown: any, mouseup: any } = {
+        keydown: (event) => {
+            if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
+                return;
+            if (event.key == 'ArrowUp') {
+                this.activeLayer.updatePosition(0, -1)
+                event.preventDefault();
+                this.scheduleCanvasReDraw(0); 
+            }
+            if (event.key == 'ArrowDown') {
+                this.activeLayer.updatePosition(0, 1);
+                event.preventDefault();
+                this.scheduleCanvasReDraw(0); 
+            }
+            if (event.key == 'ArrowLeft') {
+                this.activeLayer.updatePosition(-1, 0);
+                event.preventDefault();
+                this.scheduleCanvasReDraw(0); 
+            }
+            if (event.key == 'ArrowRight') {
+                this.activeLayer.updatePosition(1, 0);
+                event.preventDefault();
+                this.scheduleCanvasReDraw(0); 
+            } 
+        },
+        mouseup: (event) => {
+            if (this.selectionAssistanceRef) {
+                document.body.removeChild(this.selectionAssistanceRef);
+            }
+        }
+    };
     layerClickEvents: any[] = [];
 
     metaDrawings: boolean = true;   // meta drawings includes things like hilighter, assistance etc.
     
     constructor() {
         console.log('canvas Adapter: ', this);
-        this.documentEventListners.keydown = (event) => {
-            if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
-                return;
-            if (event.key == 'ArrowUp') {
-                this.activeLayer.updatePosition(0, -1)
-                event.preventDefault();
-                this.scheduleCanvasReDraw(); 
-            }
-            if (event.key == 'ArrowDown') {
-                this.activeLayer.updatePosition(0, 1);
-                event.preventDefault();
-                this.scheduleCanvasReDraw(); 
-            }
-            if (event.key == 'ArrowLeft') {
-                this.activeLayer.updatePosition(-1, 0);
-                event.preventDefault();
-                this.scheduleCanvasReDraw(); 
-            }
-            if (event.key == 'ArrowRight') {
-                this.activeLayer.updatePosition(1, 0);
-                event.preventDefault();
-                this.scheduleCanvasReDraw(); 
-            } 
-        }
     }
 
     destructor() {
         document.removeEventListener('keydown', this.documentEventListners.keydown);
+        document.removeEventListener('mouseup', this.documentEventListners.mouseup);
     }
 
     getEmptyLayoutPage(): { [key: string]: any }{
@@ -128,13 +137,14 @@ export class DesignReportCardCanvasAdapter {
     }
 
     removeCurretPage(): void{
-        let lastPage = this.activePageIndex;
-        if (this.activePageIndex == 0)
-            this.updatePage(1);
-        else
-            this.updatePage(this.activePageIndex - 1);
-        this.vm.currentLayout.content.splice(lastPage, 1);
-        console.log(this.vm.currentLayout.content)
+        if (confirm('This Page will be deleted permanently')) {
+            let lastPage = this.activePageIndex;
+            if (this.activePageIndex == 0)
+                this.updatePage(1);
+            else
+                this.updatePage(this.activePageIndex - 1);
+            this.vm.currentLayout.content.splice(lastPage, 1);
+        }
     }
 
     updatePage(pageIndex: number): void{
@@ -182,32 +192,51 @@ export class DesignReportCardCanvasAdapter {
             clickedX = event.offsetX;
             clickedY = event.offsetY;
             console.log('clicked point = ', clickedX, clickedY);
-            this.currentMouseDown = false;
-
-            for (let i = this.layers.length - 1; i >= 0; i--) {
-                if (this.layers[i].isClicked(clickedX, clickedY, event.shiftKey)) {
-                    this.updateActiveLayer(i, event.shiftKey);
-                    this.lastMouseX = clickedX;
-                    this.lastMouseY = clickedY;
-                    this.currentMouseDown = true;
-                    break;
+            let flag = !event.shiftKey;    // if any layer is selectd on this mouse down event
+            
+            if (!event.shiftKey) {
+                if (this.activeLayer && this.activeLayer.id == -1 &&    // if active layer is group, check if it is clicked
+                    this.activeLayer.isClicked(clickedX, clickedY, false)) {
+                    flag = false;
+                }
+                else {
+                    for (let i = this.layers.length - 1; i >= 0; i--) {
+                        if (this.layers[i].isClicked(clickedX, clickedY, false)) {
+                            this.updateActiveLayer(i, false);
+                            flag = false
+                            break;
+                        }
+                    }
                 }
             }
 
-            if (!this.currentMouseDown) {
+            this.selectDragedOverLayers = event.shiftKey // if shift key, select dragged over layers
+            if (flag) { // if shift key not pressed and no layer resides at mouse down clicked point
                 this.activeLayer = null;
                 this.activeLayerIndexes = [];
+                this.selectDragedOverLayers = true; // if no layer is present on mousedown pont, select draged over layers
             }
 
             this.scheduleCanvasReDraw(0);
+            this.currentMouseDown = true
+            this.lastMouseX = clickedX;
+            this.lastMouseY = clickedY;
 
+            if (this.selectDragedOverLayers) {  // selection assistance
+                let div = document.createElement('div');
+                div.id = 'selection_asistance';
+                div.style.position = 'fixed';
+                div.style.zIndex = '9999';
+                div.style.background = 'rgba(0,120,255, 0.3)';
+                document.body.appendChild(div);
+                this.selectionAssistanceRef = div;
+            }
         });
 
         this.canvas.addEventListener('contextmenu', (event) => {
             event.preventDefault();
             if (this.activeLayer) {
                 this.vm.htmlAdapter.openContextMenu(event);
-                this.currentMouseDown = false;
             }
         })
 
@@ -215,19 +244,57 @@ export class DesignReportCardCanvasAdapter {
             if (!this.currentMouseDown)
                 return;
             event.preventDefault();
-            let mouseX = event.offsetX, mouseY = event.offsetY, dx, dy;
-            dx = mouseX - this.lastMouseX;  // Change in x
-            dy = mouseY - this.lastMouseY;  // Change in y
-            this.activeLayer.updatePosition(dx, dy);  // Update x and y of layer
-            this.lastMouseX = mouseX;
-            this.lastMouseY = mouseY;
-            this.drawAllLayers();
+            if (this.selectDragedOverLayers) {
+                let height = event.offsetY - this.lastMouseY;
+                let width = event.offsetX - this.lastMouseX;
+                if (height < 0) {
+                    this.selectionAssistanceRef.style.top = event.clientY + 'px';
+                }
+                else {
+                    this.selectionAssistanceRef.style.top = (event.clientY - height) + 'px';
+                }
+                if (width < 0) {
+                    this.selectionAssistanceRef.style.left = event.screenX + 'px';
+                }
+                else {
+                    this.selectionAssistanceRef.style.left = (event.screenX - width) + 'px';
+                }
+                this.selectionAssistanceRef.style.height = Math.abs(height) + 'px';
+                this.selectionAssistanceRef.style.width = Math.abs(width) + 'px';
+            }
+            else if (this.activeLayer) {
+                let mouseX = event.offsetX, mouseY = event.offsetY, dx, dy;
+                dx = mouseX - this.lastMouseX;  // Change in x
+                dy = mouseY - this.lastMouseY;  // Change in y
+                this.activeLayer.updatePosition(dx, dy);  // Update x and y of layer
+                this.lastMouseX = mouseX;
+                this.lastMouseY = mouseY;
+                this.drawAllLayers();
+            }
         });
 
         this.canvas.addEventListener('mouseup', (event) => {
             event.preventDefault();
+            if (this.selectDragedOverLayers) {
+                let x1, y1, x2, y2;
+                x1 = Math.min(event.offsetX, this.lastMouseX);
+                y1 = Math.min(event.offsetY, this.lastMouseY);
+                x2 = Math.max(event.offsetX, this.lastMouseX);
+                y2 = Math.max(event.offsetY, this.lastMouseY);
+                let selectedLayers = [];
+                this.layers.forEach((layer, index) => {
+                    if ((x2>layer.x && (layer.x+layer.width)>x1) && (y2>layer.y && (layer.y + layer.height)>y1)) {
+                        selectedLayers.push(index);
+                    }
+                });
+                selectedLayers.forEach(i => this.updateActiveLayer(i, true));
+                document.body.removeChild(this.selectionAssistanceRef);
+            }
             this.currentMouseDown = false;
+            this.selectDragedOverLayers = false;
         });
+
+        document.addEventListener('mouseup', this.documentEventListners.mouseup);
 
         document.addEventListener('keydown', this.documentEventListners.keydown);
     }
@@ -606,8 +673,9 @@ export class DesignReportCardCanvasAdapter {
                 this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.layers[activeLayerIndex]));
             }
             else {
-                this.activeLayerIndexes.splice(currIndex, 1);
-                console.log('slplicing active layer Indexes : ', activeLayerIndex);
+                delete this.activeLayerIndexes[currIndex]
+                this.activeLayerIndexes.filter(Boolean);
+                console.log('slplicing active layer Indexes : ', [...this.activeLayerIndexes]);
             }
 
             // updating active layer accoding to activeLayerIndexes
@@ -718,9 +786,6 @@ export class DesignReportCardCanvasAdapter {
 
     newLayerInitilization(layer: Layer): void{
         this.layers.push(layer);
-        let status = layer.drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);
-        if (status)
-            this.context.drawImage(this.virtualCanvas, 0, 0);
         this.updateActiveLayer(this.layers.length - 1)
     }
 
