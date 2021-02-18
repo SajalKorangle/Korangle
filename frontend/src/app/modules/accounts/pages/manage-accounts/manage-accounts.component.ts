@@ -3,6 +3,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { AddAccountDialogComponent } from './add-account-dialog/add-account-dialog.component'
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component'   
+import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
 import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.component'
 import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
@@ -30,6 +31,13 @@ export class ManageAccountsComponent{
         public dialog: MatDialog,
         public accountsService: AccountsService,
     ){ }
+
+
+    toDisplayList: any;
+    expensesList = [];
+    assestsList = [];
+    liabilityList = [];
+    incomeList = [];
 
     searchList = [];
     // Server Handling - Initial
@@ -62,6 +70,31 @@ export class ManageAccountsComponent{
         });
     
         dialogRef.afterClosed();
+    }
+
+    openEditDialog(element){
+        if(element.type == 'ACCOUNT'){
+            const dialogRef = this.dialog.open(EditAccountDialogComponent, {
+                width: '300px',
+                data: {
+                    vm: this,
+                    account: element,
+                }
+            });
+        
+            dialogRef.afterClosed();
+        }
+        else{
+            const dialogRef = this.dialog.open(EditGroupDialogComponent, {
+                width: '300px',
+                data: {
+                    vm: this,
+                    group: element,
+                }
+            });
+        
+            dialogRef.afterClosed();
+        }
     }
 
     handleSearch(event: any){

@@ -102,7 +102,6 @@ export class UpdateTransactionServiceAdapter {
             value[0].forEach(ele =>{
                 this.transaction_id_list.push(ele.parentTransaction);
             })
-            // this.transaction_id_list = value[0];
             this.transaction_id_list = this.transaction_id_list.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })

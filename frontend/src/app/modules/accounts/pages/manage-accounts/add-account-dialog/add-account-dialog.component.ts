@@ -19,10 +19,23 @@ export class AddAccountDialogComponent implements OnInit {
   { }
 
   ngOnInit() {
+    this.openingBalance = 0;
+    this.accountName = '';
+    this.parentHead = null;
+    this.parentGroup = null;
     console.log(this.data.vm.headsList);
   }
 
+  assignHeadFromGroup(){
+    if(this.parentGroup == null){
+      return ;
+    }
+    this.parentHead = this.data.vm.headsList.find(head => head.id == this.parentGroup.parentHead);
+  }
+
   addAccount():any{
+    // console.log('added');
+    // return ;
     let account_data = {
       parentSchool: this.data.vm.user.activeSchool.dbId,
       accountType: 'ACCOUNT',

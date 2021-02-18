@@ -1,18 +1,18 @@
-<h2 mat-dialog-title>Edit Account</h2>
+<h2 mat-dialog-title>Edit Group</h2>
 <mat-dialog-content style="overflow: hidden;">
 
     <div class="row col-md-12">
         <mat-form-field style="width: 100%;">
-            <input type="text" matInput [ngModel]="account.title" (ngModelChange)="account.title=$event;" placeholder="Change Account Name *">
+            <input type="text" matInput [ngModel]="group.title" (ngModelChange)="group.title=$event;" placeholder="Change Group Name *">
         </mat-form-field>
     </div>
-    <div class="col-md-12" *ngIf="account.title.trim().length == 0" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Account Name Can Not Be Blank</span>
+    <div class="col-md-12" *ngIf="group.title.trim().length == 0" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
+        <span style="font-size: 11px; color:red">Group Name Can Not Be Blank</span>
     </div>
 
     <div class="row col-md-12">
         <mat-form-field style="width: 100%;">
-            <mat-select placeholder="Change Group" [ngModel]="getGroup()">
+            <mat-select placeholder="Change Parent Group" [ngModel]="getGroup()">
                 <mat-option (click)="assignGroup(null)">
                     None
                 </mat-option>
@@ -29,31 +29,24 @@
     <div class="row col-md-12">
         <mat-form-field style="width: 100%;">
             <mat-select placeholder="Change Head *" [ngModel]="getHead()"
-                [disabled]="account.parentGroup != null">
+                [disabled]="group.parentGroup != null">
                 <mat-option *ngFor="let head of data.vm.headsList"
-                    (click)="account.parentHead = head.id"
+                    (click)="group.parentHead = head.id"
                     [value]="head">
                     {{head.title}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
-    <div class="col-md-12" *ngIf="account.parentHead == null" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
+    <div class="col-md-12" *ngIf="group.parentHead == null" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
         <span style="font-size: 11px; color:red">Head Can Not Be Empty</span>
     </div>
 
-    
-
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <input type="number" matInput [ngModel]="account.balance" (ngModelChange)="account.balance=$event;" placeholder="Change Balance">
-        </mat-form-field>
-    </div>
 
 
 </mat-dialog-content>
 <div mat-dialog-actions>
     <div class="row col-md-12">
-        <span *ngIf="account.title.trim().length > 0 && account.parentHead != null" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="editAccount()">Edit Account</span>
+        <span *ngIf="group.title.trim().length > 0 && group.parentHead != null" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="editGroup()">Edit group</span>
     </div>
 </div>

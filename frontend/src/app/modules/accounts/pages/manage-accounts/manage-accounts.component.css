@@ -20,5 +20,11 @@
 span {
     font-family: 'Roboto';
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
+}
+
+.aligned-with-icon{
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 5px; /* optional */
 }

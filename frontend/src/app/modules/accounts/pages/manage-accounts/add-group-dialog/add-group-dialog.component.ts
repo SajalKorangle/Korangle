@@ -11,7 +11,6 @@ export class AddGroupDialogComponent implements OnInit {
   groupName: any;
   parentGroup: any;
   parentHead: any;
-  openingBalance: any;
   constructor(@Inject(MAT_DIALOG_DATA) 
     public data: {
         [key: string]: any,
@@ -19,9 +18,20 @@ export class AddGroupDialogComponent implements OnInit {
   { }
 
   ngOnInit() {
+    this.groupName = '';
+    this.parentGroup = null;
+    this.parentHead = null;
     console.log(this.data.vm.headsList);
     console.log(this.data.vm.accountsList);
     console.log(this.data.vm.groupsList);
+  }
+
+
+  assignHeadFromGroup(){
+    if(this.parentGroup == null){
+      return ;
+    }
+    this.parentHead = this.data.vm.headsList.find(head => head.id == this.parentGroup.parentHead);
   }
 
   addGroup():any{
