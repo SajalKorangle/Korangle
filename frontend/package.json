@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host $(hostname -I | awk '{print $1}')",
+    "start": "ng serve",
+    "start-lan": "ng serve --host $(hostname -I | awk '{print $1}') --port 4200",
     "build": "ng build",
     "lint": "ng lint",
     "test": "ng test --code-coverage --no-watch",
