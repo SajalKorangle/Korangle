@@ -124,11 +124,11 @@ export class ManageAccountsComponent{
                 temp.push(account);
             }
         })
-        this.groupsList.forEach(group =>{
-            if(group.title.includes(str)){
-                temp.push(group);
-            }
-        })
+        // this.groupsList.forEach(group =>{
+        //     if(group.title.includes(str)){
+        //         temp.push(group);
+        //     }
+        // })
         return temp;
     }
 

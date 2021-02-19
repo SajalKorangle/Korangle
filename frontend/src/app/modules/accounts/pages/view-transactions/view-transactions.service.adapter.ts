@@ -27,23 +27,29 @@ export class ViewTransactionsServiceAdapter {
         }
 
         
-        let employee_data = {
+        let employee_all_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
+        
+        let employee_data = {
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        }
 
         Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.heads, {}),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data), //0
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_all_data),  //1 
+            this.vm.accountsService.getObjectList(this.vm.accountsService.heads, {}),   // 2
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),    //3
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),    //4
+            this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
         ]).then(value =>{
+            if(value[5].length > 0){
+                this.vm.maximumPermittedAmount = value[5][0].restrictedAmount;
+            }
             // console.log(value);
             this.vm.minimumDate = value[4].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
             this.vm.maximumDate = value[4].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             console.log(this.vm.minimumDate, this.vm.maximumDate);
-            // this.vm.minimumDate = value[4].find(session => session.id == 4).startDate;  // change for current session
-            // this.vm.maximumDate = value[4].find(session => session.id == 4).endDate;
             this.initialiseGroupsAndAccountList(value[0], value[3])
             this.vm.headsList = value[2];
             this.vm.isInitialLoading = false;
@@ -149,8 +155,6 @@ export class ViewTransactionsServiceAdapter {
             'transactionDate__lte': this.vm.endDate,
             'korangle__order': '-id',
             'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
-
-            
         }
         console.log(transaction_data);
 
@@ -249,6 +253,7 @@ export class ViewTransactionsServiceAdapter {
     initialiseTransactionData(transactionList, transactionAccounts, transactionImages){
         transactionList.forEach(transaction =>{
             let tempData = {
+                dbId: transaction.id,
                 debitAccounts: [],
                 creditAccounts: [],
                 remark: transaction.remark,
@@ -267,9 +272,11 @@ export class ViewTransactionsServiceAdapter {
                 if(account.parentTransaction == transaction.id){
                     let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
                     let temp = {
+                        dbId: tempAccount.id,
                         accountDbId: tempAccount.parentAccount,
                         account: tempAccount.title,
                         amount: account.amount,
+                        transactionAccountDbId: account.id,
                         parentHead: tempAccount.parentHead,
                         parentGroup: tempAccount.parentGroup,
                     }

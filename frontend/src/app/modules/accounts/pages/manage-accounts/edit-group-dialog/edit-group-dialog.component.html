@@ -47,7 +47,7 @@
 </mat-dialog-content>
 <div mat-dialog-actions>
     <div class="row col-md-12" style="margin-bottom: 10px;">
-        <span *ngIf="isGroupDeletable()" mat-button style="font-size:14px;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="deleteGroup()">Delete Group</span>
+        <span *ngIf="isGroupDeletable()" mat-button style="font-size:14px;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="deleteGroup()"><u>Delete Group</u></span>
     </div>
     <div class="row col-md-12">
         <span *ngIf="group.title.trim().length > 0 && group.parentHead != null" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="editGroup()">Edit Group</span>

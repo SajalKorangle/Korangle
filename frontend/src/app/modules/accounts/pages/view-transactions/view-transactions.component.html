@@ -82,7 +82,7 @@
     </div>
 
     <table class="table table-hover" *ngIf="!isLoading">
-        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+        <thead style="color: rgba(255, 152, 0, 1);">
             <tr> 
                 <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
                 <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
@@ -133,8 +133,8 @@
                         No Image
                     </i>
                 </td>
-                <!-- <td *ngIf="columnFilter.update" class="text-center">Update</td>
-                <td *ngIf="columnFilter.delete" class="text-center">Delete</td> -->
+                 <td *ngIf="canUserUpdate && transaction.approvalId == null" style="color: rgba(255, 152, 0, 1);cursor: pointer" class="text-center" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></td>
+                <!--<td *ngIf="columnFilter.delete" class="text-center">Delete</td> -->
             </tr>
             
         </tbody>

@@ -1,0 +1,202 @@
+
+
+<div class="card-content table-responsive" *ngIf="!isLoading">
+    
+    <div *ngIf="!displayLedger">
+        <div *ngIf="displayWholeList">
+            <div class="row">
+                <div class="col-md-12">
+                    <mat-form-field style="width: 50%;">
+                        <input type="text" matInput (input)="handleSearch($event)"
+                            placeholder="Enter Account Name">
+                    </mat-form-field>
+                </div>
+                
+            </div>
+            <div *ngIf="searchList.length > 0">
+                <div class="row col-md-12">
+                    <div *ngFor = "let account of searchList">
+                        <div class="col-md-3">
+                            <mat-card style="margin-bottom:10px;" *ngIf="account.type=='ACCOUNT'">
+                                <mat-card-title><span style="cursor: pointer;" (click)="displayLedgerAccount(account)">{{account.title}}</span>
+                                    <span *ngIf="account.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
+                                    <span *ngIf="account.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
+                                </mat-card-title>
+                            </mat-card>
+                            <mat-card *ngIf="account.type == 'GROUP'" style="margin-bottom: 10px">
+                                <mat-card-title>
+                                    <span style="cursor: pointer;" >{{account.title}}</span>
+                                    <i class="material-icons" style="vertical-align: -7px;float:right;cursor: pointer;">keyboard_arrow_right</i>
+                                </mat-card-title>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-12">
+                    <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
+                </div>
+    
+            </div>
+            <div class="row">
+                <div class="row col-md-12" style="margin-bottom: 10px;">
+                    <div class="col-md-12"><span><strong>Expenses</strong></span></div>
+                </div>
+                <div class="row col-md-12">
+                    <div *ngFor="let element of expensesList">
+                        <div class="col-md-3">
+                            <mat-card style="margin-bottom: 10px;">
+                                <mat-card-title style="width: 100%;">
+                                    <span style="cursor: pointer;" (click)="displayLedgerAccount(element)">{{element.title}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
+                                    <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
+                                </mat-card-title>
+                                <mat-card-content *ngIf="element.type == 'GROUP'">
+                                    <div *ngFor="let child of element.childs">
+                                        <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                        <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
+                                            <mat-card-title style="width: 100%;">
+                                                <span style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}</span>
+                                                <hr style="margin-top:4px;margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
+                                            </mat-card-title>
+                                            <mat-card-content>
+                                                <div *ngFor="let grandchild of child.childs">
+                                                    
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                    <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
+                                                        <mat-card-title>
+                                                            <span style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}</span>
+                                                            <i class="material-icons" style="vertical-align: -7px;float:right;cursor: pointer;" (click)="displayWholeGroup(grandchild)">keyboard_arrow_right</i>
+                                                        </mat-card-title>
+                                                    </mat-card>
+                                                </div>
+                                            </mat-card-content>
+                                        </mat-card>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+    
+                </div>
+                <div class="row col-md-12" >
+                    <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!displayWholeList">
+            <div class="row col-md-12">
+                <i class="material-icons" style="vertical-align: -7px;cursor:pointer" (click)="displayWholeList = true">keyboard_arrow_left</i><span>Back</span>
+            </div>
+            <div class="row col-md-12">
+                <group-hierarchy [group]="specificGroup"
+                                [vm]="this"
+                                [sourcePage]=" 'View' "></group-hierarchy>
+            </div>
+        </div>
+    
+    </div>
+
+    <div *ngIf="displayLedger">
+
+        <div class="row col-md-12" style="margin-bottom: 10px;">
+            <i class="material-icons" style="vertical-align: -7px;cursor:pointer" (click)="displayLedger = false">keyboard_arrow_left</i><span>Back</span>            
+        </div>
+
+        <div class="row col-md-12" *ngIf="!isLedgerLoading">
+            <span>{{ledgerAccount.title}}</span>
+            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 20px">Print<i class="material-icons" style="vertical-align: -7px; padding-left:4px;">print</i></button>
+            <mat-form-field style="float: right;">
+                <mat-select placeholder="Select Columns">
+                    <mat-option *ngFor="let filter of filterColumnsList">
+                        <mat-checkbox [(ngModel)]="filter.value" (click)="$event.stopPropagation()">{{filter.displayName}}</mat-checkbox>
+                    </mat-option>   
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="row col-md-12" *ngIf="!isLedgerLoading">
+            <span>Current Balance: </span>
+            <span *ngIf="ledgerAccount.balance < 0" style="color:rgba(76, 175, 80, 1);">&nbsp;{{ledgerAccount.balance}}</span>
+            <span *ngIf="ledgerAccount.balance >= 0" style="color:rgba(86, 142, 174, 1);">&nbsp;{{ledgerAccount.balance}}</span>
+
+        </div>
+        
+        <table class="table table-hover" *ngIf="!isLedgerLoading">
+            <thead style="color: rgba(255, 152, 0, 1);">
+                <tr> 
+                    <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
+                    <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
+                    <th *ngIf="columnFilter.accounts.value" class="text-left"><span>Account</span></th>
+                    <th *ngIf="columnFilter.debitAmount.value" class="text-left"><span>Debit Amount</span></th>
+                    <th *ngIf="columnFilter.creditAmount.value" class="text-left"><span>Credit Amount</span></th>
+                    <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
+                    <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
+                    <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
+                    <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
+                    <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th>
+                    <th *ngIf="canUserUpdate" class="text-center"></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let transaction of transactionsList">
+                    
+                    <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
+                    <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
+                    <td *ngIf="columnFilter.accounts.value" class="text-left" style="vertical-align: top;" >
+                        <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
+                            <span>{{account.accountTitle}}</span><br>
+                        </div>
+                    </td>
+                    <td *ngIf="columnFilter.debitAmount.value" class="text-left" style="vertical-align: top;" >
+                        <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
+                            <span style="color: rgba(76, 175, 80, 1);" *ngIf="account.type == 'DEBIT'">{{account.amount}}</span><br>
+                        </div>
+                    </td>
+                    <td *ngIf="columnFilter.creditAmount.value" class="text-left" style="vertical-align: top;" >
+                        <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
+                            <span style="color:rgba(86, 142, 174, 1)" *ngIf="account.type == 'CREDIT'">{{account.amount}}</span><br>
+                        </div>
+                    </td>
+                    <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
+                    <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
+                    <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
+                    <td *ngIf="columnFilter.quotation.value" class="text-center">
+                        <i *ngIf="transaction.quotationImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.quotationImages, 0, 0);">
+                            insert_photo
+                        </i>
+                        <i *ngIf="transaction.quotationImages.length == 0">
+                            No Image
+                        </i>
+                    </td>
+                    <td *ngIf="columnFilter.bill.value" class="text-center">  
+                        <i *ngIf="transaction.billImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.billImages, 0, 0)">
+                            insert_photo
+                        </i>
+                        <i *ngIf="transaction.billImages.length == 0">
+                            No Image
+                        </i>
+                    </td>
+                    <td *ngIf="canUserUpdate && transaction.approvalId == null"  class="text-center" ><span style="color: rgba(255, 152, 0, 1);cursor: pointer" *ngIf="transaction.approvalId == null" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></span></td>
+                    
+                </tr>
+                
+            </tbody>
+
+        </table>
+        <div *ngIf="isLedgerLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </div>
+
+    </div>
+    
+    
+</div>
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

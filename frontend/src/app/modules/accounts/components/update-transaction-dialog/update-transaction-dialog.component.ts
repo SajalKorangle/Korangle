@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { PricingComponent } from 'app/frontpage/pricing/pricing.component';
 import { CommonFunctions } from './../../../../classes/common-functions'
 
 @Component({
@@ -15,7 +16,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
   vm: any;
   accountsList: any;
   maximumPermittedAmount: any;
-  constructor(@Inject(MAT_DIALOG_DATA) 
+  constructor(
+    public dialogRef: MatDialogRef<UpdateTransactionDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) 
     public data: {
         [key: string]: any,
      }) 
@@ -27,6 +30,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
     this.accountsList = this.data.vm.accountsList;
     this.maximumPermittedAmount = this.data.vm.maximumPermittedAmount;
     this.originalTransaction = this.data.originalTransaction;
+    console.log(this.transaction);
   }
 
   addNewDebitAccount(): void{
@@ -91,7 +95,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
   }
 
   isApprovalRequired(): boolean{
-    
+    if(this.maximumPermittedAmount == null){
+      return false;
+    }
     let totalCreditAmount = 0;
     this.transaction.creditAccounts.forEach(account =>{
       if(account.amount!= null)
@@ -241,7 +247,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
         id: this.transaction.dbId,
         remark: this.transaction.remark,
         transactionDate: CommonFunctions.formatDate(new Date(), ''),
-
     }
     Promise.all([
         this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.transaction, transaction_data),
@@ -359,18 +364,70 @@ export class UpdateTransactionDialogComponent implements OnInit {
         console.log(toUpdateAccountBalanceList);
         service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction_account_details, toUpdateAccountList));
-        service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_account_details, delete_data));
+        if(toDeleteAccountList.length > 0){
+          service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_account_details, delete_data));
+        }
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
         Promise.all(service).then(data =>{
             console.log(data);
-            this.originalTransaction = JSON.parse(JSON.stringify(this.transaction));
+            this.populateOriginalTransaction();
             alert('Transaction Updated Successfully');
+            this.dialogRef.close();
         })
-
     })
+  }
 
-   
-    
+  populateOriginalTransaction(){
+    this.originalTransaction.transactionDate = CommonFunctions.formatDate(new Date(), '');
+    this.originalTransaction.remark = this.transaction.remark;
+    this.originalTransaction.billImages = [];
+    this.originalTransaction.quotationImages = [];
+    this.originalTransaction.debitAccounts = [];
+    this.originalTransaction.creditAccounts = [];
+    this.transaction.billImages.forEach(element =>{
+      this.originalTransaction.billImages.push(element);
+    })
+    this.transaction.quotationImages.forEach(element =>{
+      this.originalTransaction.quotationImages.push(element);
+    })
+    this.transaction.debitAccounts.forEach(element =>{
+      this.originalTransaction.debitAccounts.push(element);
+    })
+    this.transaction.creditAccounts.forEach(element =>{
+      this.originalTransaction.creditAccounts.push(element);
+    })
+  }
+
+  deleteTransaction(){
+    if(!confirm('Are you sure you want to delete this transaction?')){
+      return ;
+    }
+    let transaction_data = {
+      id: this.transaction.dbId,
+    }
+    let toUpdateAccountBalanceList = [];
+    this.originalTransaction.debitAccounts.forEach(account =>{
+      let tempData = {
+        id: account.dbId,
+        balance: account.balance - account.amount
+      }
+      toUpdateAccountBalanceList.push(tempData);
+    })
+    this.originalTransaction.creditAccounts.forEach(account =>{
+      let tempData = {
+        id: account.dbId,
+        balance: account.balance + account.amount
+      }
+      toUpdateAccountBalanceList.push(tempData);
+    })
+    Promise.all([
+      this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
+      this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList),
+    ]).then(val =>{
+      console.log(val);
+      alert('Transaction Updated Successfully');
+      this.dialogRef.close();
+    })
   }
 
   

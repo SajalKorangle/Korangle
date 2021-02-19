@@ -22,9 +22,3 @@ span {
     font-weight: 450;
     font-size: 14px;
 }
-
-.aligned-with-icon{
-    position: absolute;
-    margin-top: 5px;
-    margin-left: 5px; /* optional */
-}

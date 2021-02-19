@@ -4,6 +4,7 @@ import { ViewBalanceComponent } from "./view-balance.component";
 
 import {ViewBalanceRoutingModule } from './view-balance.routing';
 import {ComponentsModule} from "../../../../components/components.module";
+import { AccountsComponentsModule } from './../../components/component.module'
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {ComponentsModule} from "../../../../components/components.module";
     imports: [
         ViewBalanceRoutingModule,
         ComponentsModule,
+        AccountsComponentsModule,
     ],
     providers: [],
     

@@ -17,6 +17,7 @@ export class GroupHierarchyComponent implements OnInit {
 
     @Input() group;
     @Input() vm;
+    @Input() sourcePage;
 
     constructor (
         public accountsService: AccountsService,
@@ -25,6 +26,15 @@ export class GroupHierarchyComponent implements OnInit {
     ngOnInit(): void {
         console.log(this.group);
 
+    }
+
+    handleClick(element){
+        if(this.sourcePage == 'Manage'){
+            this.vm.openEditDialog(element);
+        }
+        else{
+            this.vm.displayLedgerAccount(element);
+        }
     }
 
     

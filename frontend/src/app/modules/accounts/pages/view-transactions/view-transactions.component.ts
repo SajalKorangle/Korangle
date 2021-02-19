@@ -9,6 +9,7 @@ import { ImagePreviewDialogComponent } from './../../components/image-preview-di
 import { PrintService } from '../../../../print/print-service';
 import {ExcelService} from '../../../../excel/excel-service';
 import { SchoolService } from './../../../../services/modules/school/school.service'
+import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component'
 
 
 
@@ -28,12 +29,9 @@ export class ViewTransactionsComponent implements OnInit {
     // @Input() user;
     user: any;
     serviceAdapter: ViewTransactionsServiceAdapter;
-
-    
     minimumDate: any;
     maximumDate: any;
 
-    
     constructor( 
       public accountsService: AccountsService,
       public employeeService: EmployeeService,
@@ -144,6 +142,7 @@ export class ViewTransactionsComponent implements OnInit {
     isInitialLoading: any;
 
     showSelectedOnly: boolean;
+    maximumPermittedAmount: any;
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -325,5 +324,19 @@ export class ViewTransactionsComponent implements OnInit {
       return [day, month, year].join('/');
     }
 
+    canUserUpdate(){
+      const module = this.user.activeSchool.moduleList.find(module => module.title === 'Accounts');
+      return module.taskList.some(task => task.title === 'Update Transaction');
+    }
+
+    openUpdateTransactionDialog(transaction): void {
+      if(transaction.approvalId != null){
+        return ;
+      }
+      const dialogRef = this.dialog.open(UpdateTransactionDialogComponent, {
+          data: {transaction: JSON.parse(JSON.stringify(transaction)), vm: this, originalTransaction: transaction}
+      });
+  
+    }
 
 }
