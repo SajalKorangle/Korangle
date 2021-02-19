@@ -58,4 +58,32 @@ export class GroupParametersPannelComponent implements OnInit {
     });
   }
 
+  verticalAlignBelow(): void{ // all layers vertically afeter the first one
+    let commonEndY = this.layer.layers[0].y + this.layer.layers[0].height;
+    this.layer.layers.slice(1).forEach(l => {
+      l.y = commonEndY;
+    });
+  }
+
+  verticalAlignAbove(): void{ // all layers vertically before the first one
+    let commonY = this.layer.layers[0].y;
+    this.layer.layers.slice(1).forEach(l => {
+      l.y = commonY - l.height;
+    });
+  }
+
+  horizntallyAlignAfter(): void{
+    let commonEndX = this.layer.layers[0].x + this.layer.layers[0].width;
+    this.layer.layers.slice(1).forEach(l => {
+      l.x = commonEndX;
+    });
+  }
+
+  horizntallyAlignBefore(): void{
+    let commonX = this.layer.layers[0].x;
+    this.layer.layers.slice(1).forEach(l => {
+      l.x = commonX-l.width;
+    });
+  }
+
 }

@@ -358,7 +358,7 @@ export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
 export const CUSTOM_PAGE_RESOLUTION_INDEX: number = PAGE_RESOLUTIONS.length-1;
 
 export const permissibleClickError = 4;    // in pixels
-export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 1; // in pixels
+export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 2; // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';
 export const LINE_PADDING = 20;
 
@@ -529,8 +529,8 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         if (this.height && this.width) {
             ctx.strokeStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR
             ctx.lineWidth = ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH;
-            ctx.strokeRect(this.x - permissibleClickError, this.y - permissibleClickError,
-                this.width + 2*permissibleClickError, this.height + 2*permissibleClickError);
+            ctx.strokeRect(this.x - permissibleClickError/4, this.y - permissibleClickError/4,
+                this.width + permissibleClickError/2, this.height + permissibleClickError/2);
         }
     }
 
