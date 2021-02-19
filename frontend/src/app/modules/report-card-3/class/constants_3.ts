@@ -1389,6 +1389,7 @@ export class CanvasText extends BaseLayer implements Layer{
     displayName: string = 'Text';
     text: string = 'Lorem Ipsum'; 
     prefix: string = '';
+    suffix: string = '';
 
     font: string = 'Arial';
     fontSize: number = 12;
@@ -1480,7 +1481,7 @@ export class CanvasText extends BaseLayer implements Layer{
         canvasTxt.vAlign = this.textBaseline;
         canvasTxt.fontStyle = this.italics;
         canvasTxt.fontWeight = this.fontWeight;
-        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text, this.x, this.y, this.maxWidth, this.minHeight).height;
+        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, this.maxWidth, this.minHeight).height;
         // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
@@ -1498,7 +1499,6 @@ export class CanvasText extends BaseLayer implements Layer{
 
         savingData = {
             ...savingData,
-            prefix: this.prefix,
             fontSize: this.fontSize*this.ca.pixelTommFactor,
             italics: this.italics,
             fontWeight: this.fontWeight,
@@ -1513,6 +1513,8 @@ export class CanvasText extends BaseLayer implements Layer{
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
         } else {
+            savingData.prefix = this.prefix;
+            savingData.suffix = this.suffix;
             savingData.source = { ...this.source };
             delete savingData.source.layerType;
         }

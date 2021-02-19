@@ -11,12 +11,21 @@
             <textarea matInput [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
         </mat-form-field>
         
+        <ng-container *ngIf="layer.dataSourceType=='DATA'">
         <mat-form-field appearence="fill">
             <mat-label>
                 Prefix
             </mat-label>
-            <textarea matInput [(ngModel)]="layer.prefix" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();" matTextareaAutosize="true"></textarea>
+            <textarea matInput [(ngModel)]="layer.prefix" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
         </mat-form-field>
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Suffix
+            </mat-label>
+            <textarea matInput [(ngModel)]="layer.suffix" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
+        </mat-form-field>
+        </ng-container>
 
         <div style="text-align: center;">
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">

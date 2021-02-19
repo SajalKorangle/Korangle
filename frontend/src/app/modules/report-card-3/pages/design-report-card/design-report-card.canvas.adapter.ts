@@ -23,7 +23,8 @@ import {
     CanvasCircle,
     CanvasRoundedRectangle,
     GradeRuleSet,
-    CanvasGroup
+    CanvasGroup,
+    CurrentSession
 } from './../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -243,7 +244,6 @@ export class DesignReportCardCanvasAdapter {
         this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
             if (!this.currentMouseDown)
                 return;
-            event.preventDefault();
             if (this.selectDragedOverLayers) {
                 let height = event.offsetY - this.lastMouseY;
                 let width = event.offsetX - this.lastMouseX;
@@ -274,7 +274,7 @@ export class DesignReportCardCanvasAdapter {
         });
 
         this.canvas.addEventListener('mouseup', (event) => {
-            event.preventDefault();
+            console.log('selected Draged Over layers: ', this.selectDragedOverLayers);
             if (this.selectDragedOverLayers) {
                 let x1, y1, x2, y2;
                 x1 = Math.min(event.offsetX, this.lastMouseX);
@@ -288,11 +288,16 @@ export class DesignReportCardCanvasAdapter {
                     }
                 });
                 selectedLayers.forEach(i => this.updateActiveLayer(i, true));
-                document.body.removeChild(this.selectionAssistanceRef);
             }
             this.currentMouseDown = false;
             this.selectDragedOverLayers = false;
         });
+
+        this.canvas.addEventListener('mouseout', (event) => {
+            if (this.currentMouseDown) {
+                console.log('mouse out happened');
+            }
+        })
 
         document.addEventListener('mouseup', this.documentEventListners.mouseup);
 
@@ -480,6 +485,9 @@ export class DesignReportCardCanvasAdapter {
                         }
                         newLayerFromLayerData = new MarksLayer(layerData, this);
                         break;
+                    case 'CURRENT_SESSION':
+                        newLayerFromLayerData = new CurrentSession(layerData, this);
+                        break;
                     case 'FORMULA':
                         this.layers.push(null); // This null will be replaces during formula layer initilization
                             continue;
@@ -487,6 +495,7 @@ export class DesignReportCardCanvasAdapter {
                         this.layers.push(null); // This null will be replaces during result layer initilization
                         continue;      
                 }
+                console.log('layer Data: ', layerData);
                 newLayerFromLayerData.scale(mmToPixelScaleFactor);
                 this.layers.push(newLayerFromLayerData);
             }
