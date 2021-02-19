@@ -937,7 +937,7 @@ export class CanvasTable extends BaseLayer implements Layer{
 
     isClicked(mouseX: number, mouseY: number, shiftKey:boolean = false): boolean {
         let result = super.isClicked(mouseX, mouseY, shiftKey);
-        if (result && shiftKey) {
+        if (result) {
             let clickedRow, clickedColumn, sumColumnsWidth, sumRowsHeights;
             let x = mouseX - this.x;
             let y = mouseY - this.y;
