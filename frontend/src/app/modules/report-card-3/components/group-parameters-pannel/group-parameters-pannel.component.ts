@@ -19,70 +19,80 @@ export class GroupParametersPannelComponent implements OnInit {
   alignHorizontalLeft(): void{
     let commonX = this.layer.layers[0].x;
     this.layer.layers.forEach(l => {
-      l.x = commonX;
+      let dx = commonX - l.x;
+      l.updatePosition(dx, 0);
     });
   }
 
   alignHorizontalCenter(): void{
     let commonCenterX = this.layer.layers[0].x +this.layer.layers[0].width/2;
     this.layer.layers.forEach(l => {
-      l.x = commonCenterX-l.width/2;
+      let dx = (commonCenterX - l.width / 2) - l.x;
+      l.updatePosition(dx, 0);
     });
   }
 
   alignHorizontalRight(): void{
     let commonXPlusWidth = this.layer.layers[0].x + this.layer.layers[0].width;
     this.layer.layers.forEach(l => {
-      l.x = commonXPlusWidth - l.width;
+      let dx = commonXPlusWidth - l.width - l.x;
+      l.updatePosition(dx, 0);
     });
   }
 
   alignVerticalTop(): void{
     let commonY = this.layer.layers[0].y;
     this.layer.layers.forEach(l => {
-      l.y = commonY;
+      let dy = commonY - l.y;
+      l.updatePosition(0, dy);
     });
   }
 
   alignVerticalCenter(): void{
     let commonCenterY = this.layer.layers[0].y + this.layer.layers[0].height/2;
     this.layer.layers.forEach(l => {
-      l.y = commonCenterY-l.height/2;
+      let dy = (commonCenterY - l.height / 2) - l.y;
+      l.updatePosition(0, dy);
     });
   }
 
   alignVerticalBottom(): void{
     let commonEndY = this.layer.layers[0].y+this.layer.layers[0].height;
     this.layer.layers.forEach(l => {
-      l.y = commonEndY - l.height;
+      let dy = commonEndY - l.height - l.y;
+      l.updatePosition(0, dy);
     });
   }
 
   verticalAlignBelow(): void{ // all layers vertically afeter the first one
     let commonEndY = this.layer.layers[0].y + this.layer.layers[0].height;
     this.layer.layers.slice(1).forEach(l => {
-      l.y = commonEndY;
+      let dy = commonEndY - l.y;
+      l.updatePosition(0, dy);
     });
   }
 
   verticalAlignAbove(): void{ // all layers vertically before the first one
     let commonY = this.layer.layers[0].y;
     this.layer.layers.slice(1).forEach(l => {
-      l.y = commonY - l.height;
+      let dy = commonY - l.height - l.y;
+      l.updatePosition(0, dy);
     });
   }
 
   horizntallyAlignAfter(): void{
     let commonEndX = this.layer.layers[0].x + this.layer.layers[0].width;
     this.layer.layers.slice(1).forEach(l => {
-      l.x = commonEndX;
+      let dx = commonEndX - l.x;
+      l.updatePosition(dx, 0);
     });
   }
 
   horizntallyAlignBefore(): void{
     let commonX = this.layer.layers[0].x;
     this.layer.layers.slice(1).forEach(l => {
-      l.x = commonX-l.width;
+      let dx = commonX - l.width - l.x;
+      l.updatePosition(dx, 0);
     });
   }
 
