@@ -3,8 +3,7 @@
 export const environment = {
     production: false,
     versionCheckURL: 'www.korangle.com/version.json',
-    //DJANGO_SERVER: 'http://localhost:8000', // normal
-    // DJANGO_SERVER: 'http://10.0.2.2:8000', // for mobile debugging
-    DJANGO_SERVER: 'http://192.168.29.79:8000',
+    //DJANGO_SERVER: 'http://localhost:8000', // normal debugging only (localhost)
+    DJANGO_SERVER: 'http://192.168.29.79:8000', //for mobile + normal debugging (LAN)
     api_version: '/v2.0',
 };
