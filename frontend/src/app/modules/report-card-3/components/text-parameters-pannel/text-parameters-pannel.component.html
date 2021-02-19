@@ -11,7 +11,7 @@
             <textarea matInput [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
         </mat-form-field>
         
-        <ng-container *ngIf="layer.LAYER_TYPE != 'TEXT'">
+        <ng-container *ngIf="layer.LAYER_TYPE != 'TEXT' || layer.dataSourceType=='DATA'">
             <mat-form-field appearence="fill">
                 <mat-label>
                     Prefix

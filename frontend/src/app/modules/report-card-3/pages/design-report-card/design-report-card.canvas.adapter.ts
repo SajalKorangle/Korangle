@@ -100,7 +100,7 @@ export class DesignReportCardCanvasAdapter {
         mouseup: (event) => {
             if (this.selectionAssistanceRef) {
                 document.body.removeChild(this.selectionAssistanceRef);
-                console.log('target mouse out = ', event.target);
+                this.selectionAssistanceRef = null;
             }
         }
     };
@@ -194,29 +194,28 @@ export class DesignReportCardCanvasAdapter {
             clickedX = event.offsetX;
             clickedY = event.offsetY;
             console.log('clicked point = ', clickedX, clickedY);
-            let flag = !event.shiftKey;    // if any layer is selectd on this mouse down event
+            let flag = true;    // true: no layer is at clicked position
             
-            if (!event.shiftKey) {
-                if (this.activeLayer && this.activeLayer.id == -1 &&    // if active layer is group, check if it is clicked
-                    this.activeLayer.isClicked(clickedX, clickedY, false)) {
-                    flag = false;
-                }
-                else {
-                    for (let i = this.layers.length - 1; i >= 0; i--) {
-                        if (this.layers[i].isClicked(clickedX, clickedY, false)) {
-                            this.updateActiveLayer(i, false);
-                            flag = false
-                            break;
-                        }
+            if (this.activeLayer && this.activeLayer.id == -1 &&    // if active layer is group, check if it is clicked
+                this.activeLayer.isClicked(clickedX, clickedY, event.shiftKey)) {
+                flag = false;
+            }
+            if (flag || event.shiftKey) {
+                for (let i = this.layers.length - 1; i >= 0; i--) {
+                    if (this.layers[i].isClicked(clickedX, clickedY, event.shiftKey)) {
+                        this.updateActiveLayer(i, event.shiftKey);
+                        flag = false
+                        break;
                     }
                 }
             }
 
-            this.selectDragedOverLayers = event.shiftKey // if shift key, select dragged over layers
-            if (flag) { // if shift key not pressed and no layer resides at mouse down clicked point
+
+
+            this.selectDragedOverLayers = event.shiftKey || flag // if shift key or empty area, select dragged over layers
+            if (!event.shiftKey && flag) { // if shift key not pressed and no layer resides at mouse down clicked point
                 this.activeLayer = null;
                 this.activeLayerIndexes = [];
-                this.selectDragedOverLayers = true; // if no layer is present on mousedown pont, select draged over layers
             }
 
             this.scheduleCanvasReDraw(0);
@@ -246,7 +245,7 @@ export class DesignReportCardCanvasAdapter {
         this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
             if (!this.currentMouseDown)
                 return;
-            if (this.selectDragedOverLayers) {
+            if (this.selectDragedOverLayers && this.selectionAssistanceRef) {
                 let height = event.offsetY - this.lastMouseY;
                 let width = event.offsetX - this.lastMouseX;
                 if (height < 0) {
@@ -276,30 +275,25 @@ export class DesignReportCardCanvasAdapter {
         });
 
         this.canvas.addEventListener('mouseup', (event) => {
-            console.log('selected Draged Over layers: ', this.selectDragedOverLayers);
             if (this.selectDragedOverLayers) {
                 let x1, y1, x2, y2;
                 x1 = Math.min(event.offsetX, this.lastMouseX);
                 y1 = Math.min(event.offsetY, this.lastMouseY);
                 x2 = Math.max(event.offsetX, this.lastMouseX);
                 y2 = Math.max(event.offsetY, this.lastMouseY);
-                let selectedLayers = [];
-                this.layers.forEach((layer, index) => {
-                    if ((x2>layer.x && (layer.x+layer.width)>x1) && (y2>layer.y && (layer.y + layer.height)>y1)) {
-                        selectedLayers.push(index);
-                    }
-                });
-                selectedLayers.forEach(i => this.updateActiveLayer(i, true));
+                if (!(x2 - x1 < 2 && y2 - y1 < 2)) {    // if mouse was clicked and dragged
+                    let selectedLayers = [];
+                    this.layers.forEach((layer, index) => {
+                        if ((x2 > layer.x && (layer.x + layer.width) > x1) && (y2 > layer.y && (layer.y + layer.height) > y1)) {
+                            selectedLayers.push(index);
+                        }
+                    });
+                    selectedLayers.forEach(i => this.updateActiveLayer(i, true));
+                }
             }
             this.currentMouseDown = false;
             this.selectDragedOverLayers = false;
         });
-
-        this.canvas.addEventListener('mouseout', (event) => {
-            if (this.currentMouseDown) {
-                console.log('mouse out happened');
-            }
-        })
 
         document.addEventListener('mouseup', this.documentEventListners.mouseup);
 
@@ -678,15 +672,13 @@ export class DesignReportCardCanvasAdapter {
     updateActiveLayer(activeLayerIndex:number, shiftKey:boolean = false): void{   // used by left layer pannel
         
         if (shiftKey && this.activeLayerIndexes.length>0) {
-            let currIndex = this.activeLayerIndexes.find(i => i == activeLayerIndex);
-            if (!currIndex) {
+            let currIndex = this.activeLayerIndexes.findIndex(i => i == activeLayerIndex);
+            if (currIndex == -1) {
                 this.activeLayerIndexes.push(activeLayerIndex);
                 this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.layers[activeLayerIndex]));
             }
             else {
-                delete this.activeLayerIndexes[currIndex]
-                this.activeLayerIndexes.filter(Boolean);
-                console.log('slplicing active layer Indexes : ', [...this.activeLayerIndexes]);
+                this.activeLayerIndexes.splice(currIndex, 1);
             }
 
             // updating active layer accoding to activeLayerIndexes
@@ -799,8 +791,6 @@ export class DesignReportCardCanvasAdapter {
         this.layers.push(layer);
         this.updateActiveLayer(this.layers.length - 1)
     }
-
-    
 
 }
 
