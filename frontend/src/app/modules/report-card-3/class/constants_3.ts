@@ -1499,6 +1499,8 @@ export class CanvasText extends BaseLayer implements Layer{
 
         savingData = {
             ...savingData,
+            prefix: this.prefix,
+            suffix: this.suffix,
             fontSize: this.fontSize*this.ca.pixelTommFactor,
             italics: this.italics,
             fontWeight: this.fontWeight,
@@ -1513,8 +1515,6 @@ export class CanvasText extends BaseLayer implements Layer{
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.text = this.text;
         } else {
-            savingData.prefix = this.prefix;
-            savingData.suffix = this.suffix;
             savingData.source = { ...this.source };
             delete savingData.source.layerType;
         }

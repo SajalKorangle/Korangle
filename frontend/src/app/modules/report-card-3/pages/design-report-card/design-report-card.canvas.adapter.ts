@@ -100,6 +100,7 @@ export class DesignReportCardCanvasAdapter {
         mouseup: (event) => {
             if (this.selectionAssistanceRef) {
                 document.body.removeChild(this.selectionAssistanceRef);
+                console.log('target mouse out = ', event.target);
             }
         }
     };
@@ -226,6 +227,7 @@ export class DesignReportCardCanvasAdapter {
             if (this.selectDragedOverLayers) {  // selection assistance
                 let div = document.createElement('div');
                 div.id = 'selection_asistance';
+                div.style.pointerEvents = 'None';
                 div.style.position = 'fixed';
                 div.style.zIndex = '9999';
                 div.style.background = 'rgba(0,120,255, 0.3)';
