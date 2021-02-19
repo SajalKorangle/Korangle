@@ -7,6 +7,8 @@ import { ViewBalanceServiceAdapter } from './view-balance.service.adapter'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component'
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_LEDGER } from './../../../../print/print-routes.constants'
 
 @Component({
     selector: 'view-balance',
@@ -34,6 +36,7 @@ export class ViewBalanceComponent implements OnInit {
         public accountsService: AccountsService,
         public schoolService: SchoolService,
         public employeeService: EmployeeService,
+        public printService: PrintService,
     ){ }
 
     displayLedger: any;
@@ -247,6 +250,15 @@ export class ViewBalanceComponent implements OnInit {
             data: {transaction: JSON.parse(JSON.stringify(transaction)), vm: this, originalTransaction: transaction}
         });
     
+    }
+
+    printTransactionsList(){
+        let value = {
+            transactionsList: this.transactionsList,
+            account: this.ledgerAccount,
+            columnFilter: this.columnFilter,
+        };
+        this.printService.navigateToPrintRoute(PRINT_LEDGER, {user: this.user, value});
     }
 
 }

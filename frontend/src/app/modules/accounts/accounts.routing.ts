@@ -4,7 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AccountsComponent } from './accounts.component';
 import { PRINT_TRANSACTIONS } from './../../print/print-routes.constants';
+import { PRINT_LEDGER } from './../../print/print-routes.constants';
 import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component' 
+import { PrintLedgerComponent } from './print/print-ledger/print-ledger.component' 
 
 const routes: Routes = [
     {
@@ -61,6 +63,10 @@ const routes: Routes = [
     {
         path: PRINT_TRANSACTIONS,
         component: PrintTransactionsListComponent,
+    },
+    {
+        path: PRINT_LEDGER,
+        component: PrintLedgerComponent,
     },
     
     {

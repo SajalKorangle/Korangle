@@ -10,13 +10,14 @@ import { ImagePreviewDialogComponent } from './components/image-preview-dialog/i
 import { UpdateTransactionDialogComponent } from './components/update-transaction-dialog/update-transaction-dialog.component'
 import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component'
 import {ExcelService} from "../../excel/excel-service";
-import { UseFortransactionDialogComponent } from './pages/my-approval-requests/use-for-transaction-dialog/use-for-transaction-dialog.component';
+import { PrintLedgerComponent } from './print/print-ledger/print-ledger.component'
 
 
 @NgModule({
     declarations: [
         AccountsComponent,
         PrintTransactionsListComponent,
+        PrintLedgerComponent,
     ],
 
     imports: [

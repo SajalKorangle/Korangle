@@ -313,6 +313,9 @@ export class ViewBalanceServiceAdapter {
             tempData.quotationImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
             this.vm.transactionsList.push(tempData);
         }
+        this.vm.transactionsList.sort((a,b) => {
+            return Date.parse(a.transactionDate) - Date.parse(b.transactionDate);
+        })
 
         console.log(this.vm.transactionsList);
     }

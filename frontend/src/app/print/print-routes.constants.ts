@@ -47,3 +47,7 @@ export const PRINT_CUSTOM_REPORTCARD = 'print-custom-report-card';
 
 // Transactions
 export const PRINT_TRANSACTIONS = 'print-transactions';
+
+
+// Ledger
+export const PRINT_LEDGER = 'print-ledger';
