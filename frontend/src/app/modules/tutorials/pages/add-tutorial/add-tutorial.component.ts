@@ -38,11 +38,8 @@ export class AddTutorialComponent implements OnInit {
     previewBeforeAddTutorialUrl: string;
     classSectionSubjectList: any;
     selectedSection: any;
-    isAddDisabled = true;
     tutorialUpdating = false;
     editedTutorial: any;
-    showPreview = false;
-    topicAlreadyPresent = false;
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher=/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -124,15 +121,20 @@ export class AddTutorialComponent implements OnInit {
         });
     }
 
-
-     checkEnableAddButton() {
+    topicAlreadyPresent() : boolean {
         const tutorial = this.newTutorial;
-        this.topicAlreadyPresent = tutorial.topic && this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
+        let temp = tutorial.topic && this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
+
+        if(temp == null)return false;
+        else return temp;
+
+    }
+
+    youTubeLinkValid() : boolean {
+        const tutorial = this.newTutorial;
 
         if (!tutorial.link || tutorial.link.trim() == '') {
-            this.isAddDisabled = true;
-            this.showPreview = false;
-            return;
+            return false;
         }
 
         if (this.youtubeRegex.test(tutorial.link.trim())) {
@@ -141,37 +143,40 @@ export class AddTutorialComponent implements OnInit {
             }
             if(tutorial.link.match(this.youtubeIdMatcher) === null)
             {
-                
-                this.showPreview = false;
-                this.isAddDisabled = true;
-                alert('Please enter a valid link');
-                return; 
+                return false;
             }
-            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
-            this.showPreview = true;
-            if (!tutorial.chapter || tutorial.chapter.trim() == '') {
-                this.isAddDisabled = true;
-                return;
-            } else if (!tutorial.topic || tutorial.topic.trim() == '' || this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim())) {
-                this.isAddDisabled = true;
-                return;
-            } else {
-                this.topicAlreadyPresent = false;
-                this.isAddDisabled = false;
-                this.topicAlreadyPresent = false;
-            }
-        } else {
-            this.showPreview = false;
-            this.isAddDisabled = true;
+            return true;
         }
+        else
+        return false;
+    }
+    checkEnableAddButton(): boolean {
+        const tutorial = this.newTutorial;
+
+        if (!tutorial.topic || tutorial.topic.trim() == '' || this.topicAlreadyPresent() || !this.youTubeLinkValid())
+            return false;
+
+        return true;
     }
 
-    handleEditYouTubeLink(editedTutorial, $event) : void {
-        editedTutorial.link = $event;
-        if($event.match(this.youtubeIdMatcher) === null)
-        {
-            alert('Please enter a valid link');
-            return; 
+    handleEditYouTubeLink(tutorial, $event) : void {
+        tutorial.link = $event;
+
+        if (!tutorial.link || tutorial.link.trim() == '') {
+            return ;
+        }
+
+        if (this.youtubeRegex.test(tutorial.link.trim())) {
+            if (tutorial.link.startsWith('www.')) {
+                tutorial.link = 'https://' + tutorial.link;
+            }
+            if(tutorial.link.match(this.youtubeIdMatcher) === null)
+            {   
+                alert('Please enter valid link')
+                return ;
+            }
+            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
+            return ;
         }
     }
 }

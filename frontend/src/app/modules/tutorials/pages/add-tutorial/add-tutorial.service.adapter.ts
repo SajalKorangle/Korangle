@@ -146,7 +146,6 @@ export class AddTutorialServiceAdapter {
         ]).then(value => {
             this.populateTutorialList(value[0]);
             this.vm.showTutorialDetails = true;
-            this.vm.isAddDisabled = true;
         }, error => {
         });
         this.vm.initializeNewTutorial();
@@ -195,8 +194,6 @@ export class AddTutorialServiceAdapter {
         }, error =>{
             this.vm.isLoading = false;
         })
-        this.vm.isAddDisabled = true;
-        this.vm.showPreview = false;
     }
 
     makeEditableOrSave(tutorial: any): void {
