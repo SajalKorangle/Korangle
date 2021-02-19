@@ -391,6 +391,13 @@
                             ></app-session-parameter-pannel>
                 </div>
 
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('group')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-group-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-group-parameters-pannel>
+                </div>
+
                 <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('settings')" class="parameters-tool" style="margin:0; width: 100%;">
                     <app-settings-parameters-pannel
                             [layer]="canvasAdapter.activeLayer"

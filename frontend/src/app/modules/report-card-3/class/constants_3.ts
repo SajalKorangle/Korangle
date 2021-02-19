@@ -425,6 +425,8 @@ export interface Layer{
     error: boolean;
     x: number;  // distance in pixels from left edge of canvas
     y: number;  // distance in pixels from top edge of canvas
+    height: number; // box model height
+    width: number;  // box model width
     isLocked: boolean; // if element is locked on the canvas 
     parameterToolPannels: string[]; // list of right pannel parameter toolbar
     dataSourceType: string;    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data 
@@ -453,8 +455,6 @@ export interface Layer{
     selectedCells?: any;
 
     text?: string;  // for CanvasText Layer
-    height?: number;
-    width?: number;
     verticalAlignment?: string;
     horizontalAlighment?: string;
     textBoxMetrx?: {    // text bounding box nformation

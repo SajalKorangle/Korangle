@@ -283,11 +283,13 @@ export class DesignReportCardCanvasAdapter {
                 y2 = Math.max(event.offsetY, this.lastMouseY);
                 if (!(x2 - x1 < 2 && y2 - y1 < 2)) {    // if mouse was clicked and dragged
                     let selectedLayers = [];
-                    this.layers.forEach((layer, index) => {
+                    let layer;
+                    for (let index = this.layers.length - 1; index >= 0; index--) {
+                        layer = this.layers[index];
                         if ((x2 > layer.x && (layer.x + layer.width) > x1) && (y2 > layer.y && (layer.y + layer.height) > y1)) {
                             selectedLayers.push(index);
                         }
-                    });
+                    }
                     selectedLayers.forEach(i => this.updateActiveLayer(i, true));
                 }
             }

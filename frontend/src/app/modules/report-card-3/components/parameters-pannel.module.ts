@@ -24,6 +24,7 @@ import { InventoryDialogComponent } from './inventory-dialog/inventory-dialog.co
 import { LayerReplacementDialogComponent } from './layer-replacement-dialog/layer-replacement-dialog.component';
 import { SettingsParametersPannelComponent } from './settings-parameter-pannel/settings-parameters-pannel.component';
 import { SessionParameterPannelComponent } from './session-parameter-pannel/session-parameter-pannel.component';
+import { GroupParametersPannelComponent } from './group-parameters-pannel/group-parameters-pannel.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { SessionParameterPannelComponent } from './session-parameter-pannel/sess
     LayerReplacementDialogComponent,
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
+    GroupParametersPannelComponent,
   ],
   imports: [
     ComponentsModule,
@@ -76,7 +78,8 @@ import { SessionParameterPannelComponent } from './session-parameter-pannel/sess
     InventoryDialogComponent,
     LayerReplacementDialogComponent,
     SettingsParametersPannelComponent,
-    SessionParameterPannelComponent
+    SessionParameterPannelComponent,
+    GroupParametersPannelComponent
   ]
 })
 export class ParametersPannelModule { }

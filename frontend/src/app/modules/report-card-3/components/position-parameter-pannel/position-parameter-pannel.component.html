@@ -19,7 +19,7 @@
                 <input matInput type="number" [ngModel]="getYCoordinate()" (ngModelChange)="layer.y=$event/getPixelTommFactor(); canvasRefresh();">
             </mat-form-field>
 
-            <mat-button-toggle [checked]="layer.isLocked" (change)="lockToggle($event);"><span class="material-icons" >lock</span></mat-button-toggle>
+            <mat-button-toggle [checked]="layer.isLocked" (change)="lockToggle($event);"><span class="material-icons" >{{layer.isLocked?'lock':'lock_open'}}</span></mat-button-toggle>
         </div>
 
         
