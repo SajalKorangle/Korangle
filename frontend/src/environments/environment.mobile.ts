@@ -12,7 +12,7 @@ exec("hostname -I | awk '{print $1}'", (error, stdout, stderr) => {
 export const environment = {
     production: false,
     versionCheckURL: 'www.korangle.com/version.json',
-    DJANGO_SERVER: 'http://localhost:8000', // normal debugging only (localhost)
-    //DJANGO_SERVER: 'http://192.168.29.79:8000', //for mobile + normal debugging (LAN)
+    //DJANGO_SERVER: 'http://localhost:8000', // normal debugging only (localhost)
+    DJANGO_SERVER: 'http://192.168.29.79:8000', //for mobile + normal debugging (LAN)
     api_version: '/v2.0',
 };
