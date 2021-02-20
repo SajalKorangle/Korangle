@@ -161,8 +161,12 @@ export class GrantApprovalServiceAdapter {
             })
             approvalImages.forEach(image =>{
                 if(image.parentApproval == approval.id){
+                    if(approval.parentTransaction == null && approval.autoAdd){                
+                        this.getBase64FromUrl(image.imageURL).then(data64URL =>{
+                            image.imageURL = data64URL; 
+                        })
+                    }
                     if(image.imageType == 'BILL'){
-                        // console.log(this.getBase64FromUrl(image.imageURL))
                         tempData.billImages.push(image);
                     }
                     else{
@@ -177,6 +181,7 @@ export class GrantApprovalServiceAdapter {
 
         })
         this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
+        console.log(this.vm.approvalsList);
     }
 
     async changeApprovalStatus(approval, status){
@@ -256,7 +261,9 @@ export class GrantApprovalServiceAdapter {
                             
                             
                         let i=1;
-                        approval.billImages.forEach(async image =>{
+                    
+                        i=1;
+                        approval.billImages.forEach(image =>{
                             let tempData = {
                                 parentTransaction: value1[0].id,
                                 imageURL: image.imageURL,
@@ -265,48 +272,15 @@ export class GrantApprovalServiceAdapter {
                             }
                             let temp_form_data = new FormData();
                             const layout_data = { ...tempData,};
-
-                            for(let key in layout_data){
-                                console.log(key);
+                            Object.keys(layout_data).forEach(key => {
                                 if (key === 'imageURL' ) {
-                                    console.log(layout_data[key].substring(0,6));
-                                    if(layout_data[key].substring(0,6) == 'https:'){
-                                        let url = layout_data[key]
-                                        await this.getBase64FromUrl(layout_data[key]).then(data64URL =>{
-                                            layout_data[key] = data64URL; 
-                                            console.log(layout_data[key]);
-                                            temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                                        })
-                                    }
-                                    else{
-                                        temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                                    }
+                                    temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
                                 } else {
                                     temp_form_data.append(key, layout_data[key]);
                                 }
-                            }
-
-                            // Object.keys(layout_data).forEach(async key => {
-                            //     if (key === 'imageURL' ) {
-                            //         console.log(layout_data[key].substring(0,6));
-                            //         if(layout_data[key].substring(0,6) == 'https:'){
-                            //             let url = layout_data[key]
-                            //             await this.getBase64FromUrl(layout_data[key]).then(data64URL =>{
-                            //                 layout_data[key] = data64URL; 
-                            //                 console.log(layout_data[key]);
-                            //                 temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                            //             })
-                            //         }
-                            //         else{
-                            //             temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                            //         }
-                            //     } else {
-                            //         temp_form_data.append(key, layout_data[key]);
-                            //     }
-                            // });
+                            });
                             i = i + 1;
                             service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
-    
                         })
                             
                         i=1;
@@ -358,7 +332,7 @@ export class GrantApprovalServiceAdapter {
     getBase64FromUrl = async (url) => {
         const data = await fetch(url);
         const blob = await data.blob();
-        return new Promise((resolve) => {
+        return await new Promise((resolve) => {
           const reader = new FileReader();
           reader.readAsDataURL(blob); 
           reader.onloadend = function() {
@@ -368,3 +342,4 @@ export class GrantApprovalServiceAdapter {
         })
     }
 }
+

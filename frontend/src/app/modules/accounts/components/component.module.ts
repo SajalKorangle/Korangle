@@ -4,6 +4,7 @@ import { ComponentsModule } from './../../../components/components.module'
 import { AccountSearchComponent } from './account-search/account-search.component'
 import { UpdateTransactionDialogComponent } from './update-transaction-dialog/update-transaction-dialog.component'
 import { GroupHierarchyComponent } from './group-hierarchy/group-hierarchy.component'
+import { GroupHierarchyListComponent } from './group-hierarchy-list/group-hierarchy-list.component'
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { GroupHierarchyComponent } from './group-hierarchy/group-hierarchy.compo
     AccountSearchComponent,
     UpdateTransactionDialogComponent,
     GroupHierarchyComponent,
+    GroupHierarchyListComponent,
   ],
   imports: [
     ComponentsModule,
@@ -20,6 +22,7 @@ import { GroupHierarchyComponent } from './group-hierarchy/group-hierarchy.compo
     AccountSearchComponent,
     UpdateTransactionDialogComponent,
     GroupHierarchyComponent,
+    GroupHierarchyListComponent,
   ]
 })
 export class AccountsComponentsModule { }

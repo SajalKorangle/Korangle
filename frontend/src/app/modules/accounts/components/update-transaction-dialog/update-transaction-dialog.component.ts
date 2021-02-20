@@ -193,8 +193,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = e => {
             let tempImageData = {
+                id: null,
                 orderNumber: null,
-                imageURL: reader.result,
+                imageURL: reader.result,  
             }
             if(str == 'bill'){
               this.transaction.billImages.push(tempImageData);
@@ -256,6 +257,8 @@ export class UpdateTransactionDialogComponent implements OnInit {
         let toUpdateAccountList = [];
         let toDeleteAccountList = [];
         let toUpdateAccountBalanceList = [];
+        let toDeleteImageList = [];
+        let toUpdateImageList = [];
         const service = [];
 
         this.transaction.debitAccounts.forEach(account =>{
@@ -361,13 +364,100 @@ export class UpdateTransactionDialogComponent implements OnInit {
         let delete_data = {
           'id__in': toDeleteAccountList,
         }
+        let i=1;
+        this.transaction.billImages.forEach(image =>{
+          let index = -1;
+          if(image.id != null){
+            index = this.originalTransaction.billImages.map(function(e) { return e.id; }).indexOf(image.id);
+          }
+          console.log(index);
+          if(index == -1){
+            let tempData = {
+                parentTransaction: this.transaction.dbId,
+                imageURL: image.imageURL,
+                orderNumber: i,
+                imageType: 'BILL',
+            }
+            let temp_form_data = new FormData();
+            const layout_data = { ...tempData,};
+            Object.keys(layout_data).forEach(key => {
+                if (key === 'imageURL' ) {
+                    temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                } else {
+                    temp_form_data.append(key, layout_data[key]);
+                }
+            });
+            i = i + 1;
+            service.push(this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction_images, temp_form_data))
+          }
+          else{
+            if(this.originalTransaction.billImages[index].orderNumber != i){
+              let tempData = {
+                id: this.originalTransaction.billImages[index].id,
+                orderNumber: i,
+              }
+              toUpdateImageList.push(tempData);
+            }
+            i = i+1;
+            this.originalTransaction.billImages.splice(index, 1);
+          }
+        })
+        i=1;
+        this.transaction.quotationImages.forEach(image =>{
+          let index = -1;
+          if(image.id != null){
+            index = this.originalTransaction.quotationImages.map(function(e) { return e.id; }).indexOf(image.id);
+          }
+          if(index == -1){
+            let tempData = {
+                parentTransaction: this.transaction.dbId,
+                imageURL: image.imageURL,
+                orderNumber: i,
+                imageType: 'QUOTATION',
+            }
+            let temp_form_data = new FormData();
+            const layout_data = { ...tempData,};
+            Object.keys(layout_data).forEach(key => {
+                if (key === 'imageURL' ) {
+                    temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                } else {
+                    temp_form_data.append(key, layout_data[key]);
+                }
+            });
+            i = i + 1;
+            service.push(this.data.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
+          }
+          else{
+            if(this.originalTransaction.quotationImages[index].orderNumber != i){
+              let tempData = {
+                id: this.originalTransaction.billquotationImagesImages[index].id,
+                orderNumber: i,
+              }
+              toUpdateImageList.push(tempData);
+            }
+            i = i+1;
+            this.originalTransaction.billImages.splice(index, 1);
+          }
+        })
+        this.originalTransaction.billImages.forEach(image =>{
+          toDeleteImageList.push(image.id);
+        })
+        this.originalTransaction.quotationImages.forEach(image =>{
+          toDeleteImageList.push(image.id);
+        })
         console.log(toUpdateAccountBalanceList);
+
         service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction_account_details, toUpdateAccountList));
         if(toDeleteAccountList.length > 0){
           service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_account_details, delete_data));
         }
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
+        service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction_images, toUpdateImageList));
+        let image_delete_data = {
+          id__in: toDeleteImageList,
+        }
+        service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_images, image_delete_data));
         Promise.all(service).then(data =>{
             console.log(data);
             this.populateOriginalTransaction();

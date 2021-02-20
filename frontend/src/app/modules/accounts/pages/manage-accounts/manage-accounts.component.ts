@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog,} from '@angular/material';
 import { AddAccountDialogComponent } from './add-account-dialog/add-account-dialog.component'
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component'   
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
@@ -8,6 +8,7 @@ import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.com
 import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { SchoolService } from './../../../../services/modules/school/school.service'
+import { HEADS_LIST } from './../../classes/constants'
 
  
 @Component({
@@ -27,7 +28,7 @@ export class ManageAccountsComponent{
 
     accountsList: any;
     groupsList: any;
-    headsList: any;
+    headsList = HEADS_LIST;
     isLoading: any;
     constructor( 
         public dialog: MatDialog,

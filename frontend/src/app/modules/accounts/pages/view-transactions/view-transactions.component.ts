@@ -10,6 +10,7 @@ import { PrintService } from '../../../../print/print-service';
 import {ExcelService} from '../../../../excel/excel-service';
 import { SchoolService } from './../../../../services/modules/school/school.service'
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component'
+import { HEADS_LIST } from './../../classes/constants'
 
 
 
@@ -131,7 +132,7 @@ export class ViewTransactionsComponent implements OnInit {
     employeeList = [];
     accountsList: any;
     groupsList: any;
-    headsList: any;
+    headsList = HEADS_LIST;
 
     filterColumnsList: any;
     filterAccountsList: any;

@@ -26,19 +26,17 @@ export class ViewBalanceServiceAdapter {
 
 
         Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.heads, {}),
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
 
         ]).then(value =>{
-            this.vm.employeeList = value[3];
-            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            this.vm.headsList = value[0];
+            this.vm.employeeList = value[2];
+            this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+            this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             console.log(value);
             let account_id_list = [];
-            value[1].forEach(account =>{
+            value[0].forEach(account =>{
                 account_id_list.push(account.id);
             })
             let request_account_session_data = {
@@ -48,7 +46,7 @@ export class ViewBalanceServiceAdapter {
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
             ]).then(data =>{
-                this.accountsList = value[1];
+                this.accountsList = value[0];
                 this.accountsSessionList = data[0];
                 this.initialiseAccountGroupList();
                 this.initialiseDisplayData();

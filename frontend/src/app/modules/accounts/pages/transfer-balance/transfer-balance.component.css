@@ -1,0 +1,37 @@
+
+span {
+    font-family: 'Roboto';
+    font-weight: 450;
+    font-size: 16px;
+}
+
+
+.custom-button {
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    border:2px solid rgba(196, 196, 196, 1); 
+    color:rgb(160, 160, 160);
+    background: white;
+    padding: 4px 20px;
+}
+
+.custom-button:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}
+
+.nav-item{
+    background: #F9F9F9;
+    border-radius: 16px 16px 0px 0px;
+    padding: 4px 20px;
+    border:2px solid rgba(196, 196, 196, 1); 
+    color:rgb(160, 160, 160);
+    height: 45px;
+}
+
+.nav-item:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}
+

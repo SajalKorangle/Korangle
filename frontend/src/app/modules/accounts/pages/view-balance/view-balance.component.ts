@@ -9,6 +9,7 @@ import { UpdateTransactionDialogComponent } from './../../components/update-tran
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_LEDGER } from './../../../../print/print-routes.constants'
+import { HEADS_LIST } from './../../classes/constants'
 
 @Component({
     selector: 'view-balance',
@@ -29,7 +30,7 @@ export class ViewBalanceComponent implements OnInit {
 
     accountsList: any;
     groupsList: any;
-    headsList: any;
+    headsList = HEADS_LIST;
     isLoading: any;
     constructor( 
         public dialog: MatDialog,
