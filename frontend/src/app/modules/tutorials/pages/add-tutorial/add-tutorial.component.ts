@@ -121,12 +121,20 @@ export class AddTutorialComponent implements OnInit {
         });
     }
 
-    topicAlreadyPresent() : boolean {
-        const tutorial = this.newTutorial;
-        let temp = tutorial.topic && this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
-
-        if(temp == null)return false;
-        else return temp;
+    topicAlreadyPresent(tutorial) : boolean {
+        let ownIdx = -1;
+        if(tutorial != undefined && tutorial.chapter!=null && tutorial.topic!=null)
+        {
+            ownIdx=  this.tutorialList.findIndex(tempTutorial => tutorial.id ===  tempTutorial.id)
+            for(let i=0;i<this.tutorialList.length;i++)
+            {
+                let temp = this.tutorialList[i];
+                if(temp.chapter === tutorial.chapter && temp.topic === tutorial.topic.trim() && i != ownIdx)
+                return true;
+            }
+        }
+        
+        return false;
 
     }
 
@@ -153,7 +161,7 @@ export class AddTutorialComponent implements OnInit {
     checkEnableAddButton(): boolean {
         const tutorial = this.newTutorial;
 
-        if (!tutorial.topic || tutorial.topic.trim() == '' || this.topicAlreadyPresent() || !this.youTubeLinkValid())
+        if (!tutorial.topic || tutorial.topic.trim() == '' || this.topicAlreadyPresent(tutorial) || !this.youTubeLinkValid())
             return false;
 
         return true;
