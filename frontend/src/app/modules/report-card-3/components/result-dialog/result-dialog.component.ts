@@ -44,6 +44,13 @@ export class ResultDialogComponent implements OnInit {
     }
   }
 
+  removeMarksLayer(index: number): void{
+    this.marksLayers.splice(index, 1);
+    this.rules.remarks.splice(index + 1, 1);
+    this.rules.colorRule.splice(index + 1, 1);
+    this.rules.passingMarks.splice(index, 1);
+  }
+
   getRemarksLengthKeys(): any{
     return this.rules.remarks.map((e,i)=>i);
   }

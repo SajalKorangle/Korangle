@@ -3,14 +3,21 @@
         
     <div style="display: flex; flex-wrap: wrap; width: calc(100% - 200px);">
         <ng-container *ngFor="let pageResolution of pageResolutionsList; let i=index;">
-            <div style="margin: 12px; padding: 8px; background-color: grey; height: 220px; width: 150px; text-align: center; cursor: pointer; border-radius: 5px;" (click)="selectPageResolution(i)" [style.border]="activePageResolution==pageResolution?'5px solid blue':'none'">
+            <div style="margin: 12px; padding: 8px; background-color: grey; height: 220px; width: 150px; text-align: center; cursor: pointer; border-radius: 5px;" (click)="selectPageResolution(i)" [style.border]="activePageResolution.resolutionName==pageResolution.resolutionName?'5px solid blue':'none'">
                 <div style="height: calc(100% - 24px); display: flex; flex-direction: row; align-items: center; justify-content: center;">
-                    <div style="background-color: white; margin:auto;" [style.height.px]="pageResolution.mm.height*scaleFactor" [style.width.px]="pageResolution.mm.width*scaleFactor">
+                    <div style="background-color: white; margin:auto;" [style.height.px]="pageResolution.getmmHeight()*scaleFactor" [style.width.px]="pageResolution.getmmWidth()*scaleFactor">
                     </div>
                 </div>
                 <span>{{pageResolution.resolutionName}}</span>
             </div>
         </ng-container>
+        <div style="margin: 12px; padding: 8px; background-color: grey; height: 220px; width: 150px; text-align: center; cursor: pointer; border-radius: 5px;" (click)="activePageResolution=customPageResolution" [style.border]="activePageResolution.resolutionName=='Custom'?'5px solid blue':'none'">
+            <div style="height: calc(100% - 24px); display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                <div style="background-color: white; margin:auto;" [style.height.px]="customPageResolution.getmmHeight()*scaleFactor" [style.width.px]="customPageResolution.getmmWidth()*scaleFactor">
+                </div>
+            </div>
+            <span>Custom</span>
+        </div>
     </div>
 
     <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
@@ -22,8 +29,8 @@
                 <input matInput placeholder="Width(mm)" type="number" [ngModel]="activePageResolution.mm.width" (ngModelChange)="selectCustomPageResolution(); activePageResolution.mm.width = $event;">
             </mat-form-field>
             <div style="margin-top: 12px;">
-                <button class="btn" style="padding: 8px;" [style.backgroundColor]="activePageResolution.orientation=='p'?'blue':''" (click)="potraitOrientation()">potrait</button>
-                <button class="btn" style="padding: 8px;" [style.backgroundColor]="activePageResolution.orientation=='l'?'blue':''" (click)="landscapeOrientation()" >landscape</button>
+                <button class="btn" style="padding: 8px;" [style.backgroundColor]="activePageResolution.orientation=='p'?'blue':''" (click)="activePageResolution.orientation='p'">potrait</button>
+                <button class="btn" style="padding: 8px;" [style.backgroundColor]="activePageResolution.orientation=='l'?'blue':''" (click)="activePageResolution.orientation='l'" >landscape</button>
             </div>
     </div>
     

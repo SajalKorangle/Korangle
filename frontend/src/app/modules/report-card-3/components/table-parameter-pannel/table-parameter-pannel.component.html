@@ -3,7 +3,7 @@
         <i class="material-icons" style="margin-top: 4px;">backup_table</i>
     </div>
     <div style="margin: 4px; padding: 4px;">
-        <div style="text-align: center;" *ngIf="layer.selectedCells.length>0">
+        <div style="text-align: center;">
             <span>(X, Y): ({{getCellX()}},{{getCellY()}})</span>
         </div>
 
@@ -18,6 +18,8 @@
                 </ng-container>
             </div>
         </div>
+
+        <button mat-stroked-button style="width: calc(100% - 8px); margin: 4px;">Reset Selection</button>
 
         <div class="row col-md-12" style="margin-top: 2px; margin-bottom: 2px; padding-right: 0px">
             Row : 

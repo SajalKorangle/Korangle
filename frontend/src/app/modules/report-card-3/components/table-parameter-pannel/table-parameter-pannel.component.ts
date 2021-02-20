@@ -19,7 +19,7 @@ export class TableParameterPannelComponent implements OnInit {
   ngOnInit() {
   }
 
-  getCellX(): number{
+  getCellX(): string{ // get x of the seleced cell
     if (this.layer.selectedCells.length > 0) {
       let colIndex = this.layer.selectedCells[0].column
       let x = this.layer.x, i = 0;
@@ -27,12 +27,12 @@ export class TableParameterPannelComponent implements OnInit {
         x += this.layer.columnsList[i].width;
         i++;
       }
-      return Math.round(x*this.layer.ca.pixelTommFactor*100)/100;
+      return (x*this.layer.ca.pixelTommFactor).toFixed(1);
     }
-    return -1;
+    return this.layer.x.toFixed(1); // if no cell is selected
   }
 
-  getCellY(): number{
+  getCellY(): string{ // get y of the selected cell
     if (this.layer.selectedCells.length > 0) {
       console.log('selection list: ', this.layer.selectedCells);
       console.log('row List: ', this.layer.rowsList);
@@ -42,9 +42,9 @@ export class TableParameterPannelComponent implements OnInit {
         y += this.layer.rowsList[i].height;
         i++;
       }
-      return Math.round(y*this.layer.ca.pixelTommFactor*100)/100;
+      return (y*this.layer.ca.pixelTommFactor).toFixed(1);
     }
-    return -1;
+    return this.layer.y.toFixed(1); // if no cell is selected
   }
 
   checkCell(i: any, j: any): any{                            

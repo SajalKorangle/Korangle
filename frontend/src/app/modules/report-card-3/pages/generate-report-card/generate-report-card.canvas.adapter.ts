@@ -11,7 +11,6 @@ import {
     GradeRule,
     CanvasTable,
     BaseLayer,
-    getStructeredPageResolution,
     AttendanceLayer,
     GradeLayer,
     RemarkLayer,

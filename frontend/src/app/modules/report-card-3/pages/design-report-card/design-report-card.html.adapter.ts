@@ -248,5 +248,12 @@ export class DesignReportCardHtmlAdapter {
         return resultArray;
     }
 
+    canvasWrapperClickHandler(event) {
+        if (event.target != this.vm.canvasAdapter.canvas) {
+            this.vm.canvasAdapter.resetActiveLayer();
+            this.vm.canvasAdapter.scheduleCanvasReDraw(0);
+        }
+    }
+
 }
 

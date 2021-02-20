@@ -12,7 +12,6 @@ import {
     GradeRule,
     CanvasTable,
     BaseLayer,
-    getStructeredPageResolution,
     AttendanceLayer,
     GradeLayer,
     RemarkLayer,
@@ -120,7 +119,7 @@ export class DesignReportCardCanvasAdapter {
     getEmptyLayoutPage(): { [key: string]: any }{
         return {
             actualresolution: {
-                resolutionName: PAGE_RESOLUTIONS[1].resolutionName,
+                resolutionName: PAGE_RESOLUTIONS[1].resolutionName, // a4 page
                 orientation: 'p',
             },
             backgroundColor: DEFAULT_BACKGROUND_COLOR,
@@ -162,8 +161,8 @@ export class DesignReportCardCanvasAdapter {
 
     storeThumbnail(): void{
         let canavs:any = document.createElement('canvas');
-        canavs.height = this.actualresolution.mm.height;
-        canavs.width = this.actualresolution.mm.width;
+        canavs.height = this.actualresolution.getmmHeight();
+        canavs.width = this.actualresolution.getmmWidth();
         let ctx = canavs.getContext('2d');
         ctx.drawImage(this.virtualCanvas, 0, 0, canavs.width, canavs.height);
         this.vm.currentLayout.thumbnail = canavs.toDataURL();
@@ -214,8 +213,7 @@ export class DesignReportCardCanvasAdapter {
 
             this.selectDragedOverLayers = event.shiftKey || flag // if shift key or empty area, select dragged over layers
             if (!event.shiftKey && flag) { // if shift key not pressed and no layer resides at mouse down clicked point
-                this.activeLayer = null;
-                this.activeLayerIndexes = [];
+                this.resetActiveLayer();
             }
 
             this.scheduleCanvasReDraw(0);
@@ -303,7 +301,8 @@ export class DesignReportCardCanvasAdapter {
     }
 
     updateResolution(newResolution: PageResolution): void{
-        this.actualresolution = newResolution;
+        this.actualresolution = new PageResolution(newResolution.resolutionName,
+            newResolution.mm.height, newResolution.mm.width, newResolution.orientation);    // copy of standard resolution
         this.canvasWidth = null;
         this.canvasWidth = null;
         this.canvasSizing();
@@ -345,7 +344,7 @@ export class DesignReportCardCanvasAdapter {
     
     canvasSizing(): void{
         let canvasPreviousWidth = this.canvasWidth;
-        if (this.canvas.width / this.canvas.height > this.actualresolution.aspectRatio) {
+        if (this.canvas.width / this.canvas.height > this.actualresolution.getAspectRatio()) {
             this.canvasHeight = this.canvas.height;
             this.canvasWidth = this.actualresolution.getCorrospondingWidth(this.canvasHeight);
             this.canvas.width = this.canvasWidth;
@@ -356,7 +355,7 @@ export class DesignReportCardCanvasAdapter {
             this.canvas.height = this.canvasHeight;
         }
 
-        this.pixelTommFactor = this.actualresolution.mm.width / this.canvasWidth;
+        this.pixelTommFactor = this.actualresolution.getmmWidth() / this.canvasWidth;
         
         this.virtualCanvas.height = this.canvasHeight;
         this.virtualCanvas.width = this.canvasWidth;
@@ -386,7 +385,7 @@ export class DesignReportCardCanvasAdapter {
             layers: layers
         };
 
-        if (this.actualresolution.resolutionName == PAGE_RESOLUTIONS[4].resolutionName) {   //custom resolution
+        if (this.actualresolution.resolutionName == 'Custom') {   //custom resolution
             dataToSave.actualresolution.mmHeight = this.actualresolution.mm.height;
             dataToSave.actualresolution.mmWidth = this.actualresolution.mm.width;
         }
@@ -402,10 +401,12 @@ export class DesignReportCardCanvasAdapter {
         try {
             
             // loading resolution
-            let resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
-            if (!resolution) {
-                PAGE_RESOLUTIONS[4] = getStructeredPageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation)
-                resolution = PAGE_RESOLUTIONS[4];
+            let resolution;
+            if (Data.actualresolution.resolutionName == 'Custom') {
+                resolution = new PageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation)
+            } else {
+                resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
+                resolution.orientation = Data.actualresolution.orientation;
             }
 
             // apply resolution
@@ -488,7 +489,7 @@ export class DesignReportCardCanvasAdapter {
                         break;
                     case 'FORMULA':
                         this.layers.push(null); // This null will be replaces during formula layer initilization
-                            continue;
+                        continue;
                     case 'RESULT':
                         this.layers.push(null); // This null will be replaces during result layer initilization
                         continue;      
@@ -519,7 +520,8 @@ export class DesignReportCardCanvasAdapter {
                 this.activeLayer = this.layers[this.layers.length - 1];
                 this.activeLayerIndexes = [this.layers.length - 1];
             }
-            this.drawAllLayers();
+            // this.drawAllLayers();
+            this.fullCanavsRefresh();
             // console.log('canvas layers: ', this.layers);
             this.isSaved = false;
         } catch (err) {
@@ -544,7 +546,9 @@ export class DesignReportCardCanvasAdapter {
                 if (layerData.gradeRuleSet) {
                     layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
                 }
-                break;    
+                break;
+            case'RESULT':
+                layerData.marksLayers = layerData.marksLayers.map(layerId => this.layers.find(layer => layer && layer.id == layerId));
         }
         return new constructor(layerData, this);
     }
@@ -671,8 +675,12 @@ export class DesignReportCardCanvasAdapter {
         return layoutContent;
     }
 
+    resetActiveLayer(): void{
+        this.activeLayer = null;
+        this.activeLayerIndexes = [];
+    }
+
     updateActiveLayer(activeLayerIndex:number, shiftKey:boolean = false): void{   // used by left layer pannel
-        
         if (shiftKey && this.activeLayerIndexes.length>0) {
             let currIndex = this.activeLayerIndexes.findIndex(i => i == activeLayerIndex);
             if (currIndex == -1) {

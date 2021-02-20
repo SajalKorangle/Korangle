@@ -253,7 +253,7 @@
                 <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
                     <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow-y: auto; overflow-x: hidden;">
                         <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
-                            <hr style="margin:0; background-color: gray; height: 3px; display: none;" [id]="layer.id"/>
+                            <hr style="margin:0; background-color: rgb(80, 80, 80); height: 3px; display: none;" [id]="layer.id"/> <!-- Layer Reorder Drop Assistance -->
                             <span *ngIf="layer" draggable="true" 
                                     (dragover)="$event.preventDefault(); htmlAdapter.dropAssistanceDisplay(layer.id);"
                                     (dragleave)="htmlAdapter.dropAssistanceHide(layer.id)"
@@ -279,7 +279,7 @@
             
             
             <!-- column 2: Canvas -->
-            <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 510px); position: relative; text-align: center; overflow: hidden;" id="canvasWrapper">
+            <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 510px); position: relative; text-align: center; overflow: hidden;" id="canvasWrapper" (click)="htmlAdapter.canvasWrapperClickHandler($event)">
                 <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute; z-index: 2;"></mat-progress-bar></ng-container>
                 <div style="position: absolute; right: 2px; top: 4px; display: flex; flex-direction: column;" *ngIf="currentLayout.content.length>1">
                     <button *ngFor="let dummy of currentLayout.content; let ind = index;" 

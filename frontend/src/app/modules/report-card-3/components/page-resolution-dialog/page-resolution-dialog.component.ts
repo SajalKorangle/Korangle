@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PAGE_RESOLUTIONS, PageResolution, CUSTOM_PAGE_RESOLUTION_INDEX, getStructeredPageResolution} from './../../class/constants_3';
+import { PAGE_RESOLUTIONS, PageResolution} from './../../class/constants_3';
 
 @Component({
   selector: 'app-page-resolution-dialog',
@@ -12,11 +12,24 @@ export class PageResolutionDialogComponent implements OnInit {
   pageResolutionsList: PageResolution[] = PAGE_RESOLUTIONS;
 
   activePageResolution: PageResolution;
+  customPageResolution: PageResolution = new PageResolution('Custom', 100, 100);
 
   scaleFactor: number = 0.4;
 
   constructor(public dialogRef: MatDialogRef<PageResolutionDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) { 
-    this.activePageResolution = data.activePageResolution;
+    if (data.activePageResolution.resolutionName == 'Custom') {
+      this.activePageResolution = data.activePageResolution;
+      this.customPageResolution = this.activePageResolution;
+    } else {
+      this.pageResolutionsList.forEach(pr => {
+        if (pr.resolutionName == data.activePageResolution.resolutionName) {
+          this.activePageResolution = pr;
+          pr.orientation == data.activePageResolution.orientation;
+        } else {
+          pr.orientation = 'p';
+        }
+      });
+    }
   }
 
   ngOnInit() {
@@ -28,32 +41,12 @@ export class PageResolutionDialogComponent implements OnInit {
 
   selectCustomPageResolution() {
     if (this.activePageResolution.resolutionName != 'Custom') {
-      this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX] = getStructeredPageResolution('Cusotm', this.activePageResolution.mm.height, this.activePageResolution.mm.width, this.activePageResolution.orientation);
-      this.activePageResolution = this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX];
-    }
-  }
-
-  potraitOrientation(): void{
-    if (this.activePageResolution.orientation != 'p') {
-      const index = this.pageResolutionsList.findIndex((resolution: PageResolution) => resolution.resolutionName == this.activePageResolution.resolutionName)
-      this.pageResolutionsList[index] = getStructeredPageResolution(this.activePageResolution.resolutionName, this.activePageResolution.mm.width, this.activePageResolution.mm.height, 'p');
-      this.activePageResolution = this.pageResolutionsList[index];
-    }
-  }
-
-  landscapeOrientation(): void{
-    if (this.activePageResolution.orientation != 'l') {
-      const index = this.pageResolutionsList.findIndex((resolution: PageResolution) => resolution.resolutionName == this.activePageResolution.resolutionName)
-      this.pageResolutionsList[index] = getStructeredPageResolution(this.activePageResolution.resolutionName, this.activePageResolution.mm.width, this.activePageResolution.mm.height, 'l');
-      this.activePageResolution = this.pageResolutionsList[index];
+      this.customPageResolution = new PageResolution('Cusotm', this.activePageResolution.mm.height, this.activePageResolution.mm.width, this.activePageResolution.orientation);
+      this.activePageResolution = this.customPageResolution; // ref to custom page resolution
     }
   }
 
   apply():void {
-    if (this.activePageResolution.resolutionName == 'Custom') {
-      this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX] = getStructeredPageResolution('Custom', this.activePageResolution.mm.height, this.activePageResolution.mm.width);
-      this.activePageResolution = this.pageResolutionsList[CUSTOM_PAGE_RESOLUTION_INDEX];
-    }
     this.dialogRef.close(this.activePageResolution);
   }
 

@@ -1,5 +1,5 @@
 <div (mousedown)="menuClickHandler()" style="position: absolute; z-index: 100; width: 160px; box-shadow: 0 0 6px grey;" [style.left.px]="left" [style.top.px]="top">
     <span (mousedown)="deleteLayer()" class="menuButton">Delete Layer</span>
-    <span *ngIf="layer && layer.id!=-1" (mousedown)="duplicateLayer()" class="menuButton">Duplicate Layer</span>
+    <span (mousedown)="duplicateLayer()" class="menuButton">Duplicate Layer</span>
     <span *ngIf="layer && layer.id!=-1" (mousedown)="replaceLayer()" class="menuButton">Replace Layer</span>
 </div>

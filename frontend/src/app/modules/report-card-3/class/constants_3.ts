@@ -312,50 +312,96 @@ export const DPI_LIST: number[] = [ // standard DPIs
     50
 ];
 
-export interface PageResolution{    
+export class PageResolution {
     resolutionName: string;
-    orientation: string  // p: potrait, l:landscape
-    aspectRatio: number;    // width/height
+    orientation: string; // p: potrait, l:landscape
+    aspectRatio: number;    // width/height(actual, not orientation dependent)
     mm: {
         height: number;
         width: number;
+    } = {
+        height: 0,
+        width: 0,
+        }
+    
+    constructor(name:string, mmHeight:number, mmWidth:number, orientation:string = 'p') {
+        this.resolutionName = name;
+        this.mm.height = mmHeight;
+        this.mm.width = mmWidth;
+        this.orientation = orientation;
+        this.aspectRatio = mmWidth / mmHeight;
     }
-    getHeightInPixel(dpi: number): number;  // returns height in pixels given dpi as argument
-    getWidthInPixel(dpi: number): number;
-    getCorrospondingWidth(height: number): number;  // returns width given height while maintaining aspect ratio
-    getCorrospondingHeight(width: number): number;
-}
+    
+    getmmHeight(): number{
+        if (this.orientation == 'p') {
+            return this.mm.height;
+        } else if (this.orientation = 'l') {
+            return this.mm.width;
+        }
+        return -1;
+    }
 
-export function getStructeredPageResolution(resolutionName:string, mmHeight:number, mmWidth:number, orientation:string='p'): PageResolution {
-    let aspectRatio = mmWidth / mmHeight;
-    return {
-        resolutionName,
-        aspectRatio,
-        orientation,
-        mm: {
-            height: mmHeight,
-            width: mmWidth,
-        },
-        getHeightInPixel: (dpi: number) => {
-            return (mmHeight * dpi) / mm_IN_ONE_INCH;
-        },
-        getWidthInPixel: (dpi: number):number=> {
-            return (mmWidth * dpi) / mm_IN_ONE_INCH;
-        },
-        getCorrospondingHeight: (width: number) => width/aspectRatio,
-        getCorrospondingWidth: (height: number) => height*aspectRatio,
+    getmmWidth(): number{
+        if (this.orientation == 'p') {
+            return this.mm.width;
+        } else if (this.orientation = 'l') {
+            return this.mm.height;
+        }
+        return -1;
+    }
+
+    getAspectRatio(): number{
+        if (this.orientation == 'p') {
+            return this.aspectRatio;
+        } else if (this.orientation = 'l') {
+            return 1/this.aspectRatio;
+        }
+        return -1;
+    }
+    
+    getHeightInPixel(dpi: number): number{  // returns height in pixels given dpi as argument
+        if (this.orientation == 'p') {
+            return (this.mm.height * dpi) / mm_IN_ONE_INCH;
+        } else if (this.orientation = 'l') {
+            return (this.mm.width * dpi) / mm_IN_ONE_INCH;
+        }
+        return -1;
+    }
+
+    getWidthInPixel(dpi: number): number {  // returns width in pixels given dpi as argument
+        if (this.orientation == 'p') {
+            return (this.mm.width * dpi) / mm_IN_ONE_INCH;
+        } else if (this.orientation = 'l') {
+            return (this.mm.height * dpi) / mm_IN_ONE_INCH;
+        }
+        return -1;
+    }
+
+    getCorrospondingHeight(width: number): number { // returns height while maintaining aspect ratio
+        if (this.orientation == 'p') {
+            return (width / this.aspectRatio);
+        } else if (this.orientation = 'l') {
+            return (width * this.aspectRatio);  
+        }
+        return -1;
+    }
+
+    getCorrospondingWidth(height: number): number{  // returns width while maintaining aspect ratio
+        if (this.orientation == 'p') {
+            return (height * this.aspectRatio);
+        } else if (this.orientation = 'l') {
+            return (height / this.aspectRatio);
+        }
+        return -1; 
     }
 }
 
 export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
-    getStructeredPageResolution('A3', 420, 297),
-    getStructeredPageResolution('A4', 297, 210),
-    getStructeredPageResolution('A5', 210, 148),
-    getStructeredPageResolution('A6', 148, 105),
-    getStructeredPageResolution('Custom', 100, 100)
+    new PageResolution('A3', 420, 297),
+    new PageResolution('A4', 297, 210),
+    new PageResolution('A5', 210, 148),
+    new PageResolution('A6', 148, 105),
 ];
-
-export const CUSTOM_PAGE_RESOLUTION_INDEX: number = PAGE_RESOLUTIONS.length-1;
 
 export const permissibleClickError = 4;    // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 2; // in pixels
@@ -1040,7 +1086,7 @@ class ShapeBaseLayer extends BaseLayer{
         let savingData = super.getDataToSave();
         savingData = {
             ...savingData,
-            shapeStyle: this.shapeStyle
+            shapeStyle: { ...this.shapeStyle }
         }
         savingData.shapeStyle.lineWidth *= this.ca.pixelTommFactor;
         return savingData;
@@ -2003,8 +2049,16 @@ export function getParser(layers: Layer[]) {
     const PARSER = new FormulaParser();
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
-        if (layer && (layer.LAYER_TYPE == 'MARKS')) {
-            PARSER.setVariable(numberToVariable(layer.id), layer.marks);
+        if (layer) {
+            if ((layer.LAYER_TYPE == 'MARKS')) {
+                PARSER.setVariable(numberToVariable(layer.id), layer.marks);
+            }
+            else if (layer instanceof CanvasText) {
+                let parsedValue = parseFloat(layer.text);
+                if (!isNaN(parsedValue)) {
+                    PARSER.setVariable(numberToVariable(layer.id), parsedValue);
+                }
+            }
         }
     });
     setCustomFunctionsInParser(PARSER);
@@ -2032,7 +2086,7 @@ export class Formula extends CanvasText implements Layer{
         this.layerDataUpdate();          
     }
 
-    layerDataUpdate(dependents: number[] = []): void {
+    layerDataUpdate(dependents: number[] = [], parser?:any): void {
         dependents.push(this.id);
         if (this.formula.length > 0) {
             let formulaCopy: string = this.formula;
@@ -2055,7 +2109,7 @@ export class Formula extends CanvasText implements Layer{
                     this.text = '!ERROR';
                     return;
                 }
-                let layer = this.ca.layers.find(l => l.id == layerId);
+                let layer = this.ca.layers.find(l => l && l.id == layerId);
                 if (layer && layer.LAYER_TYPE == 'FORMULA') {
                     formulaDependencies.push(layer);
                 }
@@ -2063,7 +2117,9 @@ export class Formula extends CanvasText implements Layer{
                 indexOfLayerIdNextDigit = formulaCopy.search(/#[0-9]+/)
             }
 
-            const parser = getParser(this.ca.layers);
+            if (!parser)
+                parser = getParser(this.ca.layers)
+            // const parser = getParser(this.ca.layers);
             formulaDependencies.forEach(formulaLayer => {
                 formulaLayer.layerDataUpdate([...dependents]);
                 parser.setVariable(numberToVariable(formulaLayer.id), formulaLayer.marks);

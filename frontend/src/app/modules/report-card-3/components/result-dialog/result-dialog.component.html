@@ -10,6 +10,7 @@
                             <th>Layer ID</th>
                             <th>Name</th>
                             <th>Passing Marks</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -18,6 +19,7 @@
                             <td>#{{marksLayer.id}}</td>
                             <td>{{marksLayer.displayName}}</td>
                             <td><input matInput type="number" [(ngModel)]="rules.passingMarks[i]" style="background-color: lightgrey; width:fit-content; padding: 3px;"></td>
+                            <td><button mat-button- (click)="removeMarksLayer(i);"><mat-icon>delete</mat-icon></button></td>
                         </tr>
                     </ng-container>
                     </tbody>

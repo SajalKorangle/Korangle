@@ -45,7 +45,7 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
   }
 
   duplicateLayer(): void{
-    this.ca.duplicateLayer(this.layer);
+    this.layerIndexes.forEach(i => this.ca.duplicateLayer(this.ca.layers[i]));
   }
 
   replaceLayer(): void{
