@@ -153,6 +153,7 @@ export class AddTutorialComponent implements OnInit {
             {
                 return false;
             }
+            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
             return true;
         }
         else
@@ -180,10 +181,8 @@ export class AddTutorialComponent implements OnInit {
             }
             if(tutorial.link.match(this.youtubeIdMatcher) === null)
             {   
-                alert('Please enter valid link')
                 return ;
             }
-            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
             return ;
         }
     }

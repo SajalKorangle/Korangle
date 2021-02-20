@@ -77,12 +77,12 @@
 
                     <div class="row">
                         <mat-form-field style="width: 100%;">
-                            <mat-label>Youtube Link*<span *ngIf="youTubeLinkValid()" style="color: red">(Invalid Link)</span> </mat-label>
+                            <mat-label>Youtube Link*<span *ngIf="!youTubeLinkValid() && newTutorial.link != null" style="color: red">(Invalid Link)</span> </mat-label>
                             <textarea matInput
                                       type="text"
                                       cdkTextareaAutosize
                                       [(ngModel)]="newTutorial.link" style="overflow: hidden;min-height: 17px"
-                                      (ngModelChange)="handleEditYouTubeLink(newTutorial,$event)">
+                                      (ngModelChange)="youTubeLinkValid()">
                     </textarea>
                         </mat-form-field>
 
