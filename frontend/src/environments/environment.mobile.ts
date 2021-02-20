@@ -6,18 +6,6 @@ frontend/test_mobile_frontend.sh    //start frontend for mobile testing
 */
 
 
-/*
-// npx ts-node environment.mobile.ts
-
-const { exec } = require("child_process");
-
-var IP = exec('hostname -I | awk \'{print $1}\'');
-
-IP = `http://:${IP}:8000`;
-
-console.log(IP);
-*/
-
 export const environment = {
     production: false,
     versionCheckURL: 'www.korangle.com/version.json',
