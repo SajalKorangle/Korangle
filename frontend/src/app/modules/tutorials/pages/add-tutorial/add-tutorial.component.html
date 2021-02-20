@@ -77,7 +77,7 @@
 
                     <div class="row">
                         <mat-form-field style="width: 100%;">
-                            <mat-label>Youtube Link*</mat-label>
+                            <mat-label>Youtube Link*<span *ngIf="youTubeLinkValid()" style="color: red">(Invalid Link)</span> </mat-label>
                             <textarea matInput
                                       type="text"
                                       cdkTextareaAutosize
@@ -169,7 +169,7 @@
                             <input
                                     matInput
                                     type="text"
-                                    [ngModel]="editedTutorial.topic"
+                                    [(ngModel)]="editedTutorial.topic"
                                     (ngModelChange)="editedTutorial.topic=$event">
                         </mat-form-field>
                     </td>
