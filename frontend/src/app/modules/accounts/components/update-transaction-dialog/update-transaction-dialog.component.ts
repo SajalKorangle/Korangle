@@ -169,10 +169,24 @@ export class UpdateTransactionDialogComponent implements OnInit {
     return temp;
   }
 
+  isAmountLessThanMinimum(): boolean{
+    for(let i=0;i<this.transaction.debitAccounts.length; i++){
+      if(this.transaction.debitAccounts[i].amount < 0.01 && this.transaction.debitAccounts[i].dbId != null){
+        return true;
+      }
+    }
+    for(let i=0;i<this.transaction.creditAccounts.length; i++){
+      if(this.transaction.creditAccounts[i].amount < 0.01 && this.transaction.creditAccounts[i].dbId != null){
+        return true;
+      }
+    }
+    return false;
+  }
+
   isAddButtonDisabled(): boolean{
     
     if(this.isApprovalRequired() || this.isAmountUnEqual() || 
-    this.isAccountNotMentioned() || this.isAccountRepeated()){
+    this.isAccountNotMentioned() || this.isAccountRepeated() || this.isAmountLessThanMinimum()){
       return true;
     }
     return false;

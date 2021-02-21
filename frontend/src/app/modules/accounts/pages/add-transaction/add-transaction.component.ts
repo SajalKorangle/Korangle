@@ -172,6 +172,20 @@ export class AddTransactionComponent implements OnInit {
       }
     }
 
+    isAmountLessThanMinimum(transaction): boolean{
+      for(let i=0;i<transaction.debitAccounts.length; i++){
+        if(transaction.debitAccounts[i].debitAmount < 0.01 && transaction.debitAccounts[i].debitAccount != null){
+          return true;
+        }
+      }
+      for(let i=0;i<transaction.creditAccounts.length; i++){
+        if(transaction.creditAccounts[i].creditAmount < 0.01 && transaction.creditAccounts[i].creditAccount != null){
+          return true;
+        }
+      }
+      return false;
+    }
+
     isAmountMoreThanApproval(transaction): boolean{
       if(transaction.approvalId == null){
         return false;
@@ -272,7 +286,7 @@ export class AddTransactionComponent implements OnInit {
       for(let i=0;i<this.transactions.length; i++){
         if(this.isApprovalRequired(this.transactions[i]) || this.isAmountUnEqual(this.transactions[i]) || 
         this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i]) || 
-        this.isAmountMoreThanApproval(this.transactions[i]) ){
+        this.isAmountMoreThanApproval(this.transactions[i]) || this.isAmountLessThanMinimum(this.transactions[i])){
           return true;
         }
       }
@@ -283,7 +297,7 @@ export class AddTransactionComponent implements OnInit {
       for(let i=0;i<this.transactions.length; i++){
         if(this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || 
         this.isAccountRepeated(this.transactions[i]) || this.isAmountMoreThanApproval(this.transactions[i]) ||
-        this.isApprovalAttached(this.transactions[i])){
+        this.isApprovalAttached(this.transactions[i]) || this.isAmountLessThanMinimum(this.transactions[i])){
           return true;
         }
       }

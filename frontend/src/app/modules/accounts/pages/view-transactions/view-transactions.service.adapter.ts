@@ -7,7 +7,6 @@ export class ViewTransactionsServiceAdapter {
     
     vm: ViewTransactionsComponent;
 
-    percent_download_comlpleted ;
     download;
     totalFiles;
     downloadedFiles;
@@ -397,7 +396,6 @@ export class ViewTransactionsServiceAdapter {
         }
         else{
 		    const reader = response.body.getReader();
-		    const contentLength = response.headers.get('Content-Length');
 		    let receivedLength = 0;
 		    let chunks = [];
 		    while(true) {
@@ -407,8 +405,6 @@ export class ViewTransactionsServiceAdapter {
 		        }
 		        chunks.push(value);
 		        receivedLength += value.length;
-		        console.log(`Received ${receivedLength} of ${contentLength}`)
-		        console.log(`now total received is ${this.percent_download_comlpleted} %`)
 		    }
 		    let blob = new Blob(chunks);
 		    return blob;
@@ -431,9 +427,9 @@ export class ViewTransactionsServiceAdapter {
 		    let check1 = 0;
 		    this.downloadedFiles = 0;
 		    let flag = 1;
+            var Folder = zip.folder('Documents')
 		    // this.studentParameterDocumentList.forEach(parameter => {
 		        if (this.vm.columnFilter.bill.value){
-		            var Folder = zip.folder('Bills');
 		            this.vm.getFilteredTransactionList().forEach(transaction => {
                         transaction.billImages.forEach(image =>{
                             let document_url = image.imageURL;
@@ -444,7 +440,8 @@ export class ViewTransactionsServiceAdapter {
                                         let type = document_url.split(".");
                                         type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-                                        Folder.file('transaction_'+transaction.voucherNumber+"_bill_" + image.orderNumber, file);
+                                        console.log(file, 'bill');
+                                        Folder.file('transaction_'+transaction.voucherNumber+"_bill_" + image.orderNumber+'.'+type, file);
                                         this.downloadedFiles=this.downloadedFiles+1;
                                         console.log(check1,this.downloadedFiles)
                                     }
@@ -458,14 +455,12 @@ export class ViewTransactionsServiceAdapter {
                                         this.download='END'
                                         this.downloadedFiles=0
                                         this.totalFiles=0
-                                        this.percent_download_comlpleted=0
                                     }
 		                        },error=>{
 		                            this.download="FAIL"
 		                            this.vm.isLoading = false;
 		                            this.downloadedFiles=0
 		                            this.totalFiles=0
-		                            this.percent_download_comlpleted=0
 		                        });
 		                    };
                         })
@@ -473,7 +468,6 @@ export class ViewTransactionsServiceAdapter {
 		            });
 		        };
                 if (this.vm.columnFilter.quotation.value){
-		            var Folder = zip.folder('Quotations');
 		            this.vm.getFilteredTransactionList().forEach(transaction => {
                         transaction.quotationImages.forEach(image =>{
                             let document_url = image.imageURL;
@@ -484,7 +478,8 @@ export class ViewTransactionsServiceAdapter {
                                         let type = document_url.split(".");
                                         type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-                                        Folder.file('transaction_'+transaction.voucherNumber+"_quotation_" + image.orderNumber, file);
+                                        console.log(file, 'quo');
+                                        Folder.file('transaction_'+transaction.voucherNumber+'_quotation_' + image.orderNumber+'.'+type, file);
                                         this.downloadedFiles=this.downloadedFiles+1;
                                         console.log(check1,this.downloadedFiles)
                                     }
@@ -498,14 +493,12 @@ export class ViewTransactionsServiceAdapter {
                                         this.download='END'
                                         this.downloadedFiles=0
                                         this.totalFiles=0
-                                        this.percent_download_comlpleted=0
                                     }
 		                        },error=>{
 		                            this.download="FAIL"
 		                            this.vm.isLoading = false;
 		                            this.downloadedFiles=0
 		                            this.totalFiles=0
-		                            this.percent_download_comlpleted=0
 		                        });
 		                    };
                         })

@@ -81,6 +81,11 @@
                 </span>
             </div>
             <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                <span *ngIf="isAmountLessThanMinimum() == true" style="color: rgb(243, 59, 59); font-weight: 550">
+                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Minimum Amount should be 0.01</span>
+                </span>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
                 <span *ngIf="isAccountRepeated() == true" style="color: rgb(243, 59, 59); font-weight: 550">
                     <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Same Account Can Not Be Used In The Same Transaction</span>
                 </span>
@@ -137,5 +142,5 @@
         <button mat-button *ngIf="!isAddButtonDisabled()" class="custom-button" (click)="addTransaction()">Update</button>
         <span style="font-size:14px;color: rgba(255, 152, 0, 1); cursor: pointer; float: right" (click)="deleteTransaction()"><u>Delete</u></span>
     </div>
-    
+
 </div>
