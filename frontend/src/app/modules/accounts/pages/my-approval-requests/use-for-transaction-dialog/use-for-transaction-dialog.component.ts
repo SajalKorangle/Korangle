@@ -215,6 +215,7 @@ export class UseFortransactionDialogComponent implements OnInit {
             Promise.all(service).then(data =>{
                 console.log(data);
                 this.data.originalApproval = this.data.approval;
+                this.data.originalApproval.parentTransaction = value1[0].id;
                 alert('Transaction Recorded Successfully');
                 this.dialogRef.close();
             })
@@ -223,5 +224,6 @@ export class UseFortransactionDialogComponent implements OnInit {
 
     })
   }
+
   
 }

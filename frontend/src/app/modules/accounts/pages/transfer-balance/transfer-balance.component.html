@@ -8,7 +8,7 @@
             <button class="nav-item" style="margin-right: 10px;" (click)="selectedSession = currentSession" *ngIf="selectedSession != currentSession"><span>From : {{currentSession.name}}</span></button>
             <button class="nav-item" style="margin-right: 10px; background:rgba(196, 196, 196, 1); color: white; border:2px solid rgba(196, 196, 196, 1);" *ngIf="selectedSession == nextSession"><span>To : {{nextSession.name}}</span></button>
             <button class="nav-item" style="margin-right: 20px;" (click)="selectedSession = nextSession" *ngIf="selectedSession != nextSession"><span>To : {{nextSession.name}}</span></button>
-            <mat-checkbox style="font-size: 13px;">Split View</mat-checkbox>
+            <!-- <mat-checkbox style="font-size: 13px;">Split View</mat-checkbox> -->
             <button class="custom-button" style="float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
         </div>
         <div class="row col-md-12" *ngIf="selectedSession == currentSession">
