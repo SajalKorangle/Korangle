@@ -6,8 +6,8 @@ import * as FileSaver from 'file-saver';
 export class ViewTransactionsServiceAdapter { 
     
     vm: ViewTransactionsComponent;
+
     percent_download_comlpleted ;
-    totalDownloadSize;
     download;
     totalFiles;
     downloadedFiles;
@@ -407,7 +407,6 @@ export class ViewTransactionsServiceAdapter {
 		        }
 		        chunks.push(value);
 		        receivedLength += value.length;
-		        this.percent_download_comlpleted+=(value.length*1.0)/(this.totalDownloadSize*1.0)*100;
 		        console.log(`Received ${receivedLength} of ${contentLength}`)
 		        console.log(`now total received is ${this.percent_download_comlpleted} %`)
 		    }
@@ -427,24 +426,25 @@ export class ViewTransactionsServiceAdapter {
             this.totalFiles += this.getQuotationTotalFile();
         }
         if (this.totalFiles){
-		    alert("You are about to download "+ (this.totalFiles) + ' file(s)');
+		    alert("You are about to download "+ (this.totalFiles) + 'files');
 		    let zip = new JSZip();
 		    let check1 = 0;
 		    this.downloadedFiles = 0;
 		    let flag = 1;
-		    this.vm.getFilteredTransactionList().forEach(transaction => {
-                var Folder = zip.folder('Bills');
+		    // this.studentParameterDocumentList.forEach(parameter => {
 		        if (this.vm.columnFilter.bill.value){
-		            transaction.billImages.forEach(image => {
-		                    let document_url = image.imageURL;
-		                    if (document_url){
+		            var Folder = zip.folder('Bills');
+		            this.vm.getFilteredTransactionList().forEach(transaction => {
+                        transaction.billImages.forEach(image =>{
+                            let document_url = image.imageURL;
+                            if (document_url){
 		                        check1=check1+1;
 		                        this.download_each_file(document_url).then(blob => {
 		                            if (blob){
                                         let type = document_url.split(".");
                                         type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-                                        Folder.file('transaction_bill' + transaction.voucherNumber.toString(), file);
+                                        Folder.file('transaction_'+transaction.voucherNumber+"_bill_" + image.orderNumber, file);
                                         this.downloadedFiles=this.downloadedFiles+1;
                                         console.log(check1,this.downloadedFiles)
                                     }
@@ -459,7 +459,6 @@ export class ViewTransactionsServiceAdapter {
                                         this.downloadedFiles=0
                                         this.totalFiles=0
                                         this.percent_download_comlpleted=0
-                                        this.totalDownloadSize =0
                                     }
 		                        },error=>{
 		                            this.download="FAIL"
@@ -467,26 +466,25 @@ export class ViewTransactionsServiceAdapter {
 		                            this.downloadedFiles=0
 		                            this.totalFiles=0
 		                            this.percent_download_comlpleted=0
-		                            this.totalDownloadSize =0
 		                        });
 		                    };
+                        })
 		                
 		            });
 		        };
-                var Folder = zip.folder('Quotations');
-		        
                 if (this.vm.columnFilter.quotation.value){
-		            transaction.quotationImages.forEach(image => {
-		                
-		                    let document_url = image.imageURL;
-		                    if (document_url){
+		            var Folder = zip.folder('Quotations');
+		            this.vm.getFilteredTransactionList().forEach(transaction => {
+                        transaction.quotationImages.forEach(image =>{
+                            let document_url = image.imageURL;
+                            if (document_url){
 		                        check1=check1+1;
 		                        this.download_each_file(document_url).then(blob => {
 		                            if (blob){
                                         let type = document_url.split(".");
                                         type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-                                        Folder.file('transaction_quotation' + transaction.voucherNumber.toString(), file);
+                                        Folder.file('transaction_'+transaction.voucherNumber+"_quotation_" + image.orderNumber, file);
                                         this.downloadedFiles=this.downloadedFiles+1;
                                         console.log(check1,this.downloadedFiles)
                                     }
@@ -501,7 +499,6 @@ export class ViewTransactionsServiceAdapter {
                                         this.downloadedFiles=0
                                         this.totalFiles=0
                                         this.percent_download_comlpleted=0
-                                        this.totalDownloadSize =0
                                     }
 		                        },error=>{
 		                            this.download="FAIL"
@@ -509,13 +506,13 @@ export class ViewTransactionsServiceAdapter {
 		                            this.downloadedFiles=0
 		                            this.totalFiles=0
 		                            this.percent_download_comlpleted=0
-		                            this.totalDownloadSize =0
 		                        });
 		                    };
+                        })
 		                
 		            });
 		        };
-		    });
+		    // });
 	    } else{
 	    alert("No documents are available for download.");
 		this.download="NOT";
