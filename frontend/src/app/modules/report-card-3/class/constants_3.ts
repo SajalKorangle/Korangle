@@ -457,6 +457,9 @@ export const DEFAULT_PASSING_MARKS = 40;
 export interface CanvasAdapterInterface{
     vm: any;
 
+    currentLayout: { name: string, thumbnail?:any, publiclyShared:boolean, content: any };
+    DATA: any;
+
     virtualCanvas: HTMLCanvasElement;
     virtualContext: CanvasRenderingContext2D;
 
@@ -673,7 +676,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     layerDataUpdate(): void{
         this.error = false;
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
-            const DATA = this.ca.vm.DATA;
+            const DATA = this.ca.DATA;
             this.uri = this.source.getValueFunc(DATA)+'?javascript=';
         }
        
@@ -1524,7 +1527,7 @@ export class CanvasText extends BaseLayer implements Layer{
     }
 
     layerDataUpdate(): void {
-        const DATA = this.ca.vm.DATA;
+        const DATA = this.ca.DATA;
         if (this.dataSourceType == 'DATA') {
             if (this.error) {
                 this.text = this.alternateText;
@@ -1632,7 +1635,7 @@ export class CanvasDate extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         if (this.dataSourceType == 'DATA') {
-            const DATA = this.ca.vm.DATA;
+            const DATA = this.ca.DATA;
             this.date = new Date(this.source.getValueFunc(DATA));
         }
 
@@ -1782,7 +1785,7 @@ export class AttendanceLayer extends CanvasText implements Layer{
     }
 
     layerDataUpdate(): void {
-        const DATA = this.ca.vm.DATA;
+        const DATA = this.ca.DATA;
         this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate);   // check PARAMETER_LIST with field = attendance
     }
 
@@ -1819,9 +1822,9 @@ export class GradeLayer extends CanvasText implements Layer{
     }
 
     layerDataUpdate(): void {
-        const DATA = this.ca.vm.DATA;
+        const DATA = this.ca.DATA;
         if (this.parentExamination && this.subGradeId) {
-            this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination, this.subGradeId);
+            this.text = this.source.getValueFunc(this.ca.DATA, this.parentExamination, this.subGradeId);
             this.error = false;
         } else {
             this.text = this.alternateText;
@@ -1861,9 +1864,9 @@ export class RemarkLayer extends CanvasText implements Layer{
     }
 
     layerDataUpdate(): void {
-        const DATA = this.ca.vm.DATA;
+        const DATA = this.ca.DATA;
         if (this.parentExamination) {
-            this.text = this.source.getValueFunc(this.ca.vm.DATA, this.parentExamination);
+            this.text = this.source.getValueFunc(this.ca.DATA, this.parentExamination);
             this.error = false;
         } else {
             this.text = this.alternateText;
@@ -1978,12 +1981,12 @@ export class MarksLayer extends CanvasText implements Layer{
         if (this.parentExamination && this.parentSubject) {
             let gradeValue:string = null;
             this.marks = this.source.getValueFunc(
-                this.ca.vm.DATA,
+                this.ca.DATA,
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
                 this.marksType) * (this.outOf/this.source.getValueFunc(
-                    this.ca.vm.DATA,
+                    this.ca.DATA,
                     this.parentExamination,
                     this.parentSubject,
                     this.testType,
@@ -2283,7 +2286,7 @@ export class CurrentSession extends CanvasText implements Layer{
     }
 
     layerDataUpdate = (): void=> {
-        let sessionData = this.source.getValueFunc(this.ca.vm.DATA)
+        let sessionData = this.source.getValueFunc(this.ca.DATA)
         this.startDate = new Date(sessionData.startDate);
         this.endDate = new Date(sessionData.endDate);
         let dateReplacementsForStartDate = getDateReplacements(this.startDate);

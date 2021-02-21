@@ -1,27 +1,15 @@
 import {
     CanvasAdapterInterface,
     DEFAULT_BACKGROUND_COLOR,
-    Layer, CanvasImage, CanvasText,
-    CanvasDate,
+    Layer,
     Formula,
     PageResolution,
     PAGE_RESOLUTIONS,
     Result,
     GradeRule,
-    CanvasTable,
     BaseLayer,
-    AttendanceLayer,
-    GradeLayer,
-    RemarkLayer,
-    MarksLayer,
-    CanvasLine,
-    CanvasRectangle,
-    CanvasSquare,
-    CanvasCircle,
-    CanvasRoundedRectangle,
     GradeRuleSet,
     CanvasGroup,
-    CurrentSession,
     LayersMappedByType
 } from './constants_3';
 import {reportError, ERROR_SOURCES } from './../../../services/modules/errors/error-reporting.service'

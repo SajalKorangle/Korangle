@@ -54,8 +54,9 @@ export class GenerateReportCardComponent implements OnInit {
   filteredStudentSectionList: any[] = [];
 
 
-  DATA: {   // Data for generating report cards
+  DATA: {
     studentId: number,
+    currentSession: number,
     data: {
       school: any,
       studentList: any[],
@@ -74,9 +75,11 @@ export class GenerateReportCardComponent implements OnInit {
       subGradeList: any[],
       studentSubGradeList: any[],
       studentExaminationRemarksList: any[],
+      classSectionSignatureList: any[],
     }
   } = {
     studentId: null,
+    currentSession: null,
     data: {
       school: null,
       studentList: [],
@@ -95,6 +98,7 @@ export class GenerateReportCardComponent implements OnInit {
       subGradeList: [],
       studentSubGradeList: [],
       studentExaminationRemarksList: [],
+      classSectionSignatureList: [],
     }
   }
 
