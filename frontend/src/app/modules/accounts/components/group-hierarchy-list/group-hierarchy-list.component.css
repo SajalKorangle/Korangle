@@ -19,7 +19,7 @@ div.mat-expansion-panel-body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0 0px;
+    padding-right: 2px;
     border-radius: inherit;
 }
 

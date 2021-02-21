@@ -125,6 +125,7 @@ export class ViewBalanceServiceAdapter {
         // }
 
         for(let i=0;i<accountsSessionList.length; i++){
+            accountsSessionList[i]['childs'] = [];
             parentGroupsList.push(accountsSessionList[i]);
         }
         
@@ -159,7 +160,7 @@ export class ViewBalanceServiceAdapter {
             else if(head == 'Income'){
                 this.vm.incomeList.push(group);
             }
-            else if(head == 'Assests'){
+            else if(head == 'Assets'){
                 this.vm.assetsList.push(group);
             }
             else if(head == 'Liabilities'){
@@ -175,7 +176,7 @@ export class ViewBalanceServiceAdapter {
             else if(head == 'Income'){
                 this.vm.incomeList.push(account);
             }
-            else if(head == 'Assests'){
+            else if(head == 'Assets'){
                 this.vm.assetsList.push(account);
             }
             else if(head == 'Liabilities'){

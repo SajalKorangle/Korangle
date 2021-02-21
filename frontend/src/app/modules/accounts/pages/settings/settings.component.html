@@ -18,13 +18,14 @@
                 <div *ngIf="isUpdating" class="loader-custom"></div>
                 <span *ngIf="selectedEmployeeAmount == null"  
                         style="color: rgb(221, 160, 27); margin-left: 10px">
-                <i class="material-icons">error_outline</i>
+                <i class="material-icons" style="vertical-align: -6px;">error_outline</i>
                     No Restriction Given Yet</span>
             </div>
         </div>
         
         <div class="col-md-6">
             <button class="custom-button" style="margin-top: 10px;background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.regenerateVoucherNumber(); ">Regenerate Voucher Number</button>
+            <div *ngIf="isUpdating" class="loader-custom"></div>
         </div>
         
     </div>

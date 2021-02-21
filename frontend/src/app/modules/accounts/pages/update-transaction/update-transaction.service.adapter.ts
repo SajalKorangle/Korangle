@@ -14,6 +14,7 @@ export class UpdateTransactionServiceAdapter {
 
     //initialize data
     initializeData(): void {
+        this.vm.isLoadingTransaction = false;
         this.vm.isLoading = true;
         this.vm.transactionsList = [];
         this.vm.maximumPermittedAmount = null;

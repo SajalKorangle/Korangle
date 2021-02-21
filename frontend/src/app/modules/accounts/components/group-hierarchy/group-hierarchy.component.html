@@ -9,7 +9,7 @@
                 <div *ngIf="child.type == 'ACCOUNT'">
                     <span  style="cursor: pointer;" (click)="handleClick(child)">{{child.title}}</span>
                     <span *ngIf="child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Cr Bal {{child.balance}}</span>
-                    <span *ngIf="child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Dr Bal {{child.balance}}</span>
+                    <span *ngIf="child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Cr Bal {{child.balance}}</span>
                 </div>
             </div>
             <div *ngFor="let child of group.childs">

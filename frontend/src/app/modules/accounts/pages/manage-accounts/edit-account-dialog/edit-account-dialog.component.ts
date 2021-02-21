@@ -49,10 +49,11 @@ export class EditAccountDialogComponent implements OnInit {
     ]).then(val =>{
       
       for(let i=0;i<this.data.vm.accountsList.length ;i++){
-        if(this.data.vm.groupsList[i].id == this.account.id){
-          this.data.vm.groupsList[i].title = this.account.title;
-          this.data.vm.groupsList[i].parentHead = this.account.parentHead;
-          this.data.vm.groupsList[i].parentGroup = this.account.parentGroup;
+        if(this.data.vm.accountsList[i].id == this.account.id){
+          this.data.vm.accountsList[i].title = this.account.title;
+          this.data.vm.accountsList[i].parentHead = this.account.parentHead;
+          this.data.vm.accountsList[i].parentGroup = this.account.parentGroup;
+          this.data.vm.accountsList[i].balance = this.account.balance;
           break;
         }
       }
@@ -62,6 +63,7 @@ export class EditAccountDialogComponent implements OnInit {
           this.data.vm.serviceAdapter.accountsSessionList[i].title = this.account.title;
           this.data.vm.serviceAdapter.accountsSessionList[i].parentHead = this.account.parentHead;
           this.data.vm.serviceAdapter.accountsSessionList[i].parentGroup = this.account.parentGroup;
+          this.data.vm.serviceAdapter.accountsSessionList[i].balance = this.account.balance;
           break;
         }
       }

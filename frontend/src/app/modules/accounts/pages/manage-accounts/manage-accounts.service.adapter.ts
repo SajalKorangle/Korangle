@@ -30,7 +30,7 @@ export class ManageAccountsServiceAdapter {
             
             this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
             this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            console.log(value);
+            
             let account_id_list = [];
             value[0].forEach(account =>{
                 account_id_list.push(account.id);
@@ -42,6 +42,7 @@ export class ManageAccountsServiceAdapter {
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
             ]).then(data =>{
+                console.log(data);
                 this.accountsList = value[0];
                 this.accountsSessionList = data[0];
                 this.initialiseAccountGroupList();
@@ -121,6 +122,7 @@ export class ManageAccountsServiceAdapter {
         // }
 
         for(let i=0;i<accountsSessionList.length; i++){
+            accountsSessionList[i]['childs'] = [];
             parentGroupsList.push(accountsSessionList[i]);
         }
         
@@ -143,6 +145,7 @@ export class ManageAccountsServiceAdapter {
     }
 
     populateHeadWiseDisplayList(groupsList, individualAccountList){
+        console.log(individualAccountList);
         this.vm.expensesList = [];
         this.vm.incomeList = [];
         this.vm.assetsList = [];
@@ -155,7 +158,7 @@ export class ManageAccountsServiceAdapter {
             else if(head == 'Income'){
                 this.vm.incomeList.push(group);
             }
-            else if(head == 'Assests'){
+            else if(head == 'Assets'){
                 this.vm.assetsList.push(group);
             }
             else if(head == 'Liabilities'){
@@ -171,7 +174,7 @@ export class ManageAccountsServiceAdapter {
             else if(head == 'Income'){
                 this.vm.incomeList.push(account);
             }
-            else if(head == 'Assests'){
+            else if(head == 'Assets'){
                 this.vm.assetsList.push(account);
             }
             else if(head == 'Liabilities'){

@@ -1,4 +1,7 @@
 import { TransferBalanceComponent } from './transfer-balance.component' 
+import { HEADS_LIST } from './../../classes/constants'
+import { element } from 'protractor';
+import { copyFileSync } from 'fs';
 
 export class TransferBalanceServiceAdapter{
 
@@ -43,7 +46,6 @@ export class TransferBalanceServiceAdapter{
             this.currentAccountsSessionList = value[2];
             this.nextAccountsSessionList = value[3];
             this.populateAccountSessionList(value[2], value[3]);
-            // this.populateAccountsSessionList(value[1], value[3], this.vm.nextSessionAccountsList);
             this.initialiseDisplayData(this.currentAccountsSessionList, this.vm.currentSessionAccountsList);
             this.initialiseDisplayData(this.nextAccountsSessionList, this.vm.nextSessionAccountsList);
             this.vm.isLoading =  false;
@@ -57,7 +59,7 @@ export class TransferBalanceServiceAdapter{
             let type = this.accountsList.find(accounts => accounts.id == account.parentAccount).accountType;
             account['type'] = type;
             account['selected'] = false;
-            account['disabled'] = true;
+            account['disabled'] = false;
             let nextSessionAccount = nextAccountsSessionList.find(acc => acc.parentAccount == account.parentAccount);
             if(nextSessionAccount != undefined && type == 'ACCOUNT'){
                 if(account.parentHead == 1 || account.parentHead == 2){
@@ -67,8 +69,12 @@ export class TransferBalanceServiceAdapter{
                     account['disabled'] = true;
                 }
             }
+            else if(nextSessionAccount != undefined && type == 'GROUP'){
+                account['disabled'] = true;
+            }
             this.vm.currentSessionSelectedAccountsList.push(account);
         }
+        console.log(this.vm.currentSessionSelectedAccountsList);
     }
 
 
@@ -76,57 +82,51 @@ export class TransferBalanceServiceAdapter{
         let accountsSessionList = JSON.parse(JSON.stringify(toPopulateAccountsSessionList));
         let parentGroupsList = [];
         let individualAccountList = [];
-        // while(accountsSessionList.length > 0){
-            for(let i=0;i<accountsSessionList.length; i++){
-                let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
-                accountsSessionList[i]['type'] = type;
-                accountsSessionList[i]['selected'] = true;
-                if(type == 'ACCOUNT'){
-                    if(accountsSessionList[i].parentGroup == null){
-                        individualAccountList.push(accountsSessionList[i]);
+        for(let i=0;i<accountsSessionList.length; i++){
+            let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
+            accountsSessionList[i]['type'] = type;
+            if(type == 'ACCOUNT'){
+                if(accountsSessionList[i].parentGroup == null){
+                    individualAccountList.push(accountsSessionList[i]);
+                    accountsSessionList.splice(i,1);
+                    i--;
+                }
+                else{
+                    let tempGroup = parentGroupsList.find(group => group.parentAccount == accountsSessionList[i].parentGroup);
+                    if(tempGroup == undefined){
+                        let parentGroupIndex =  accountsSessionList.map(function(e) { return e.parentAccount; }).indexOf(accountsSessionList[i].parentGroup);
+                        let parentGroupData = JSON.parse(JSON.stringify(accountsSessionList[parentGroupIndex]));
+                        
+                        parentGroupData['childs'] = [];
+                        parentGroupData.childs.push(accountsSessionList[i]);
+                        parentGroupsList.push(parentGroupData);
+                        accountsSessionList.splice(parentGroupIndex, 1);
+                        if(parentGroupIndex <= i){
+                            i--;
+                        }
                         accountsSessionList.splice(i,1);
                         i--;
                     }
                     else{
-                        let tempGroup = parentGroupsList.find(group => group.parentAccount == accountsSessionList[i].parentGroup);
-                        if(tempGroup == undefined){
-                            let parentGroupIndex =  accountsSessionList.map(function(e) { return e.parentAccount; }).indexOf(accountsSessionList[i].parentGroup);
-                            let parentGroupData = JSON.parse(JSON.stringify(accountsSessionList[parentGroupIndex]));
-                            
-                            parentGroupData['childs'] = [];
-                            parentGroupData.childs.push(accountsSessionList[i]);
-                            parentGroupsList.push(parentGroupData);
-                            accountsSessionList.splice(parentGroupIndex, 1);
-                            if(parentGroupIndex <= i){
-                                i--;
-                            }
-                            accountsSessionList.splice(i,1);
-                            i--;
-                        }
-                        else{
-                            tempGroup.childs.push(accountsSessionList[i]);
-                            accountsSessionList.splice(i,1);
-                            i--;
-                        }
+                        tempGroup.childs.push(accountsSessionList[i]);
+                        accountsSessionList.splice(i,1);
+                        i--;
                     }
                 }
             }
-        // }
-
-        for(let i=0;i<accountsSessionList.length; i++){    // the left out data in accountsSessionList are those groups which have no child
-            accountsSessionList[i]['selected'] = false;
+        }
+        for(let i=0;i<accountsSessionList.length; i++){    // the left out data in accountsSessionList are those groups which have no account as child
+            accountsSessionList[i]['childs'] = [];
             parentGroupsList.push(accountsSessionList[i]);
         }
-        
         for(let i=0; i<parentGroupsList.length; i++){      // populating groups in their parent group to create hierarchial data 
            
             if(parentGroupsList[i].parentGroup != null){
                 parentGroupsList.find(gro => gro.parentAccount == parentGroupsList[i].parentGroup).childs.push(parentGroupsList[i]);
             }
-            
         }
 
-        for(let i=0; i<parentGroupsList.length; i++){          // we need only those groups/accounts that have no parent group, as they are populated inside them
+        for(let i=0; i<parentGroupsList.length; i++){          // we need only those groups/accounts that have no parent group, as the rest are populated inside them
             if(parentGroupsList[i].parentGroup != null){
                 parentGroupsList.splice(i, 1);
                 i--;
@@ -137,10 +137,7 @@ export class TransferBalanceServiceAdapter{
     }
 
     populateHeadWiseDisplayList(groupsList, individualAccountList, list){
-        list['Expenses'] = [];
-        list['Income'] = [];
-        list['Assets'] = [];
-        list['Liabilities'] = [];
+        
         groupsList.forEach(group =>{
             let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
             if(head == 'Expenses'){
@@ -173,7 +170,89 @@ export class TransferBalanceServiceAdapter{
             }
 
         })
+        console.log('res', list);
+    }
 
+    transferAccounts(){
+        this.vm.isLoading = true;
+        let toCreateList = [];
+        let toUpdateList = [];
+        this.vm.currentSessionSelectedAccountsList.forEach(element =>{
+            if(element.selected){
+                let nextSessionAccount = this.nextAccountsSessionList.find(acc => acc.parentAccount == element.parentAccount);
+                if(nextSessionAccount == undefined){
+                    let temp_data = {
+                        parentAccount: element.parentAccount,
+                        parentGroup: element.parentGroup,
+                        parentHead: element.parentHead,
+                        title: element.title,
+                        parentSession: this.vm.user.activeSchool.currentSessionDbId+1,
+                        balance: null,
+                    }
+                    if(element.type == 'ACCOUNT'){
+                        if(element.parentHead == 1 || element.parentHead == 2){
+                            temp_data.balance = 0;
+                        }
+                        else if(element.parentHead == 3 || element.parentHead == 4){
+                            temp_data.balance = element.balance;
+                        }
+                    }
+                    toCreateList.push(temp_data);
+                }
+                else{
+                    if(!element.disabled){
+                        let temp_data = {
+                            id: nextSessionAccount.id,
+                            balance: element.balance,
+                        }
+                        toUpdateList.push(temp_data);
+                    }
+                }
+
+            }
+            
+        })
+        Promise.all([
+            this.vm.accountsService.createObjectList(this.vm.accountsService.account_session, toCreateList),
+            this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateList),
+        ]).then(val =>{
+            this.initialiseDisplayData(val[0], this.vm.nextSessionAccountsList);
+            for(let i=0;i<val[1].length; i++){
+                let account;
+                if(val[1][i].parentHead == 1){
+                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Expenses, val[1][i]);
+                }
+                if(val[1][i].parentHead == 2){
+                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Income, val[1][i]);
+                }
+                if(val[1][i].parentHead == 3){
+                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Assets, val[1][i]);
+                }
+                if(val[1][i].parentHead == 4){
+                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Liabilities, val[1][i]);
+                }
+                account.balance = val[1][i].balance;
+            }
+            alert('Balance Transferred Successfully')
+            this.vm.isLoading = false;
+            
+        },error =>{
+            this.vm.isLoading = false;
+        })
+
+    }
+
+    searchAccountInList(list, account){
+        for(let i=0;i<list.length; i++){
+            console.log(list[i]);
+            if(list[i].parentAccount == account.parentAccount){
+                return list[i];
+            }
+            else if(list[i].childs != undefined){
+                return this.searchAccountInList(list[i].childs, account);
+            }
+        }
+        return;
     }
 
 }

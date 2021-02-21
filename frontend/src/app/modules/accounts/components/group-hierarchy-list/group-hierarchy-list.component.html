@@ -3,10 +3,10 @@
         <div style="width: 100%;">
             <span class="group-font">{{group.title}}</span>
             <mat-checkbox  *ngIf="displayCheckBox"
-            [checked]="vm.isElementSelected(group)" 
-            (change)="vm.changeElementStatus(group, $event.checked); vm.selectParentGroups(group, $event.checked); vm.changeChildStatus(group, $event.checked)" 
-            style="float:right; margin-top:2px;  margin-right: 10px" 
-            (click)="$event.stopPropagation()"></mat-checkbox>
+                    [checked]="vm.isElementSelected(group)" 
+                    (change)="vm.changeElementStatus(group, $event.checked); vm.selectParentGroups(group, $event.checked); vm.changeChildStatus(group, $event.checked)" 
+                    style="float:right; margin-top:2px;  margin-right: 10px" 
+                    (click)="$event.stopPropagation()"></mat-checkbox>
         </div>
     </mat-expansion-panel-header>
     <div *ngFor="let child of group.childs" >

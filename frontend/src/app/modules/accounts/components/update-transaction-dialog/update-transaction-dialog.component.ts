@@ -30,7 +30,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
     this.accountsList = this.data.vm.accountsList;
     this.maximumPermittedAmount = this.data.vm.maximumPermittedAmount;
     this.originalTransaction = this.data.originalTransaction;
-    console.log(this.transaction);
   }
 
   addNewDebitAccount(): void{
@@ -119,7 +118,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
 
   isAccountNotMentioned(): boolean{
-    // console.log(transaction);
     let temp = false;
     this.transaction.debitAccounts.forEach(account =>{
       if(account.dbId == null){
@@ -182,7 +180,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
   
   readURL(event, str): void {
-    console.log(str);
     if (event.target.files && event.target.files[0]) {
         let image = event.target.files[0];
         if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
@@ -213,7 +210,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
   }
 
   assignAccount(account, index, str){
-    console.log(account);
     if(str == 'debit'){
       this.transaction.debitAccounts[index] = {
         account: account.title,
@@ -233,17 +229,12 @@ export class UpdateTransactionDialogComponent implements OnInit {
       }
     }
 
-    console.log(this.transaction);
   }
 
 
 
 
   addTransaction(){
-    
-    console.log(this.accountsList);
-    console.log(this.transaction);
-    // console.log(this.)
     let transaction_data = {
         id: this.transaction.dbId,
         remark: this.transaction.remark,
@@ -252,7 +243,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
     Promise.all([
         this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.transaction, transaction_data),
     ]).then(value1 =>{
-        console.log(value1);
         let toCreateAccountList = [];
         let toUpdateAccountList = [];
         let toDeleteAccountList = [];
@@ -263,7 +253,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
         this.transaction.debitAccounts.forEach(account =>{
           let index =  this.originalTransaction.debitAccounts.map(function(e) { return e.dbId; }).indexOf(account.dbId);
-          console.log(index);
           if(index == -1){
             let tempData = {
               parentTransaction: this.transaction.dbId,
@@ -297,7 +286,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
         })
         this.transaction.creditAccounts.forEach(account =>{
           let index =  this.originalTransaction.creditAccounts.map(function(e) { return e.dbId; }).indexOf(account.dbId);
-          console.log(index);
           if(index == -1){
             let tempData = {
               parentTransaction: this.transaction.dbId,
@@ -358,26 +346,20 @@ export class UpdateTransactionDialogComponent implements OnInit {
             tempAccount.balance += account.amount;
           }
         })
-        console.log(toCreateAccountList);
-        console.log(toUpdateAccountList);
-        console.log(toDeleteAccountList);
         let delete_data = {
           'id__in': toDeleteAccountList,
         }
         let i=1;
         this.transaction.billImages.forEach(image =>{
           let index = -1;
+          image.orderNumber = i;
+          image.imageType = 'BILL';
           if(image.id != null){
             index = this.originalTransaction.billImages.map(function(e) { return e.id; }).indexOf(image.id);
           }
-          console.log(index);
           if(index == -1){
-            let tempData = {
-                parentTransaction: this.transaction.dbId,
-                imageURL: image.imageURL,
-                orderNumber: i,
-                imageType: 'BILL',
-            }
+            image.parentTransaction = this.transaction.dbId;
+            let tempData = JSON.parse(JSON.stringify(image));
             let temp_form_data = new FormData();
             const layout_data = { ...tempData,};
             Object.keys(layout_data).forEach(key => {
@@ -405,16 +387,14 @@ export class UpdateTransactionDialogComponent implements OnInit {
         i=1;
         this.transaction.quotationImages.forEach(image =>{
           let index = -1;
+          image.orderNumber = i;
+          image.imageType = 'QUOTATION';
           if(image.id != null){
             index = this.originalTransaction.quotationImages.map(function(e) { return e.id; }).indexOf(image.id);
           }
           if(index == -1){
-            let tempData = {
-                parentTransaction: this.transaction.dbId,
-                imageURL: image.imageURL,
-                orderNumber: i,
-                imageType: 'QUOTATION',
-            }
+            image.parentTransaction = this.transaction.dbId;
+            let tempData = JSON.parse(JSON.stringify(image));
             let temp_form_data = new FormData();
             const layout_data = { ...tempData,};
             Object.keys(layout_data).forEach(key => {
@@ -445,7 +425,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
         this.originalTransaction.quotationImages.forEach(image =>{
           toDeleteImageList.push(image.id);
         })
-        console.log(toUpdateAccountBalanceList);
 
         service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction_account_details, toUpdateAccountList));
@@ -458,8 +437,8 @@ export class UpdateTransactionDialogComponent implements OnInit {
           id__in: toDeleteImageList,
         }
         service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_images, image_delete_data));
+        
         Promise.all(service).then(data =>{
-            console.log(data);
             this.populateOriginalTransaction();
             alert('Transaction Updated Successfully');
             this.dialogRef.close();
@@ -514,7 +493,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
       this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
       this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList),
     ]).then(val =>{
-      console.log(val);
       alert('Transaction Updated Successfully');
       this.dialogRef.close();
     })

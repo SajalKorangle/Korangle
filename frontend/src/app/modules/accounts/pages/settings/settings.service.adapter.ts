@@ -75,6 +75,7 @@ export class SettingsServiceAdapter {
     }
 
     regenerateVoucherNumber(): any{
+        this.vm.isUpdating = true;
         let voucherNumber = 1;
         let transaction_data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
@@ -104,6 +105,7 @@ export class SettingsServiceAdapter {
                 this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction, toUpdateList),
             ]).then(val =>{
                 console.log(val);
+                this.vm.isUpdating = false;
                 alert('Voucher Number Regenerated Successfully');
             })
         })
