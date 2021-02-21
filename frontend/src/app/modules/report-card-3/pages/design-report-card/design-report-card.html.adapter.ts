@@ -7,7 +7,6 @@ import { MarksDialogComponent } from './../../components/marks-dialog/marks-dial
 import {LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component'
 import { InventoryDialogComponent } from './../../components/inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
-import { async } from '@angular/core/testing';
 
 export class DesignReportCardHtmlAdapter {
 
@@ -56,14 +55,15 @@ export class DesignReportCardHtmlAdapter {
         })
     }
 
-    canvasSetUp():void {    // Setting canvas height and width to according to parent div
+    canvasSetUp(doScale:boolean=false):void {    // Setting canvas height and width to according to parent div
         let canvasWrapper = document.getElementById('canvasWrapper');
         let wrapperBoundingDimensions = canvasWrapper.getBoundingClientRect();
-        let computedCavasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
+        let computedCanvasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
         let computedCanvasHeight = wrapperBoundingDimensions.height - 2 * this.canvasMargin;
-        
-        this.vm.canvas.width = computedCavasWidth;
-        this.vm.canvas.height = computedCanvasHeight;
+
+        this.vm.canvasAdapter.maxVisibleHeight = computedCanvasHeight;
+        this.vm.canvasAdapter.maxVisibleWidth = computedCanvasWidth;
+        this.vm.canvasAdapter.canvasSizing(computedCanvasHeight, computedCanvasWidth, doScale);
     }
 
     getFieldKeys(): any{
@@ -91,8 +91,7 @@ export class DesignReportCardHtmlAdapter {
             if (document.fullscreenElement && document.exitFullscreen) {
                 document.exitFullscreen()
                     .then(() => setTimeout(() => {
-                    this.canvasSetUp();
-                    this.vm.canvasAdapter.canvasSizing();
+                    this.canvasSetUp(true);
                     },500))
                     .catch(err=>console.log(err));
             }
@@ -103,8 +102,7 @@ export class DesignReportCardHtmlAdapter {
             if (document.body.requestFullscreen)
                 document.body.requestFullscreen()
                     .then(() => setTimeout(() => {
-                        this.canvasSetUp();
-                        this.vm.canvasAdapter.canvasSizing();
+                        this.canvasSetUp(true);
                     }, 500))    // bad design f we specify the time, is there is any way to wait until the css styles are loaded?
                 .catch(err=>console.log(err));
             this.isFullScreen = true;

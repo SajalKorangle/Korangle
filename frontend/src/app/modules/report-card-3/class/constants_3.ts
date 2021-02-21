@@ -1,10 +1,5 @@
-// import { DesignReportCardCanvasAdapter } from './../report-card-3/pages/design-report-card/design-report-card.canvas.adapter'; // this is causing cyclic dependency, solve later by moving common things at upper level
 import { ATTENDANCE_STATUS_LIST } from '@modules/attendance/classes/constants';
-import canvasTxt from 'canvas-txt'
-
-interface DesignReportCardCanvasAdapter{
-    [key: string]: any;
-}
+import canvasTxt from 'canvas-txt';
 
 const FormulaParser = require('hot-formula-parser').Parser;
 
@@ -458,6 +453,47 @@ export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
 export var DEFAULT_MAXIMUM_MARKS = 100;
 export const DEFAULT_PASSING_MARKS = 40;
 
+// Canvas Adapter Interface
+export interface CanvasAdapterInterface{
+    vm: any;
+
+    virtualCanvas: HTMLCanvasElement;
+    virtualContext: CanvasRenderingContext2D;
+
+    canvasHeight: number;   // current height and width are in pixels
+    canvasWidth: number;
+
+    actualresolution: PageResolution;
+    dpi: number;
+
+    pixelTommFactor: number;    // width(height) in mm / Canvas width(height) in pixel
+
+    layers: Array<Layer>;  // layers in thier order from back to front
+    activeLayer: Layer;
+    activeLayerIndexes: Array<number>;
+
+    activePageIndex: number;
+
+    gradeRuleSetList: Array<GradeRuleSet>;
+
+    backgroundColor: string ;
+
+    virtualPendingReDrawId: any;
+    
+    currentZoom: number;
+    originalHeight: number;
+    originalWidth: number;
+
+    metaDrawings: boolean;
+
+    getEmptyLayoutPage(): { [key: string]: any };
+    getEmptyLayout(): any[];
+    storeThumbnail(): void;
+    canvasSizing(maxHeight:number, maxWidth:number, doScale:boolean): void
+    scheduleCanvasReDraw(duration: number, preCallback: any, postCallback: any): Promise<any>;
+    updateResolution(newResolution: PageResolution): void;
+}
+
 
 //Layers--------------------------------------
 
@@ -477,7 +513,7 @@ export interface Layer{
     parameterToolPannels: string[]; // list of right pannel parameter toolbar
     dataSourceType: string;    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data 
     source?: { [key: string]: any };   // object containing information about the source of data, stores reference of element from PARAMETER_LIST
-    ca: DesignReportCardCanvasAdapter;  // canvas adapter,
+    ca: CanvasAdapterInterface;  // canvas adapter,
     highlightLayer(ctx: CanvasRenderingContext2D): void;
     layerDataUpdate(): void;    // gets data of layer if dataSourceType is 'DATA', 
     updatePosition(dx: number, dy: number): void;
@@ -543,9 +579,9 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     dataSourceType: string = 'N/A';
     source?: {[key:string]: any};
 
-    ca: DesignReportCardCanvasAdapter;  // canvas adapter
+    ca: CanvasAdapterInterface;  // canvas adapter
 
-    constructor(ca: DesignReportCardCanvasAdapter) { 
+    constructor(ca: CanvasAdapterInterface) { 
         this.ca = ca;
         BaseLayer.maxID += 1;
         this.id = BaseLayer.maxID;
@@ -612,7 +648,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(ca);  // parent constructor
         this.parameterToolPannels.push('image');
 
@@ -751,7 +787,7 @@ export class CanvasTable extends BaseLayer implements Layer{
         lineWidth: 2,
     };
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(ca);
         this.parameterToolPannels.push('table');
         
@@ -1072,7 +1108,7 @@ class ShapeBaseLayer extends BaseLayer{
             strokeStyle: '#000000',
     }
 
-    constructor(ca: DesignReportCardCanvasAdapter) { 
+    constructor(ca: CanvasAdapterInterface) { 
         super(ca);
         this.shapeStyle.lineWidth = 0.5 / ca.pixelTommFactor;
     }
@@ -1100,7 +1136,7 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
     length: number = 40;
     orientation: number = 0;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(ca);
         this.parameterToolPannels.push('shape');
         
@@ -1174,11 +1210,11 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
 export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     displayName: string = 'Rectangle';    
     
-    ca: DesignReportCardCanvasAdapter;
+    ca: CanvasAdapterInterface;
     length: any = 20;
     width: any = 30;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean = true) {
+    constructor(attributes: object, ca: CanvasAdapterInterface, initilize:boolean = true) {
         super(ca);
         this.parameterToolPannels.push('shape');
         
@@ -1249,7 +1285,7 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
     
     radius: number = 20;
     
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: CanvasAdapterInterface, initilize:boolean=true) {
         super(ca);
         this.parameterToolPannels.push('shape');
 
@@ -1327,7 +1363,7 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
     width: number;
     radius: number;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(ca);
         this.parameterToolPannels.push('shape');
 
@@ -1409,7 +1445,7 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
 export class CanvasSquare extends CanvasRectangle implements Layer{
     displayName: string = 'Square';    
     
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
 
 
@@ -1451,7 +1487,7 @@ export class CanvasText extends BaseLayer implements Layer{
     underline: boolean = false;
 
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: CanvasAdapterInterface, initilize:boolean=true) {
         super(ca);
         this.parameterToolPannels.push('text');
         
@@ -1527,7 +1563,8 @@ export class CanvasText extends BaseLayer implements Layer{
         canvasTxt.vAlign = this.textBaseline;
         canvasTxt.fontStyle = this.italics;
         canvasTxt.fontWeight = this.fontWeight;
-        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, this.maxWidth, this.minHeight).height;
+        canvasTxt.yLimit = 'top';
+        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, this.maxWidth, Math.max(1,this.minHeight)).height;
         // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
@@ -1577,7 +1614,7 @@ export class CanvasDate extends CanvasText implements Layer{
     date: Date = new Date();
     dateFormat: string = '<dd>/<mm>/<yyy>';
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('date');
 
@@ -1628,7 +1665,7 @@ export class CanvasGroup extends BaseLayer implements Layer{
 
     parameterToolPannels = ['position']
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter, initilize:boolean=true) {
+    constructor(attributes: object, ca: CanvasAdapterInterface, initilize:boolean=true) {
         super(ca);
         this.parameterToolPannels.push('group');
 
@@ -1728,7 +1765,7 @@ export class AttendanceLayer extends CanvasText implements Layer{
     dataSourceType: string = 'DATA';
     source: {[key:string]: any};    // required attribute
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('attendance');
 
@@ -1765,7 +1802,7 @@ export class GradeLayer extends CanvasText implements Layer{
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute
     
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('grade');
 
@@ -1808,7 +1845,7 @@ export class RemarkLayer extends CanvasText implements Layer{
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute
     
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('remark');
 
@@ -1921,7 +1958,7 @@ export class MarksLayer extends CanvasText implements Layer{
     
     gradeRuleSet: GradeRuleSet;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('marks');
 
@@ -2074,7 +2111,7 @@ export class Formula extends CanvasText implements Layer{
     inWords: boolean = false;
     gradeRuleSet: GradeRuleSet;
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('formula');
 
@@ -2173,7 +2210,7 @@ export class Result extends CanvasText implements Layer{
     marksLayers: (MarksLayer|Formula)[] = []; 
     rules: {passingMarks: number[], remarks: string[], colorRule:any[]} = {passingMarks:[], remarks:['PASS'], colorRule:['#008000']};
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('result');
 
@@ -2229,7 +2266,7 @@ export class CurrentSession extends CanvasText implements Layer{
     };
     
 
-    constructor(attributes: object, ca: DesignReportCardCanvasAdapter) {
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('currentSession');
 

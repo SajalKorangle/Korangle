@@ -1,5 +1,5 @@
 import { GenerateReportCardComponent } from './generate-report-card.component';
-
+import { CanvasAdapterBase } from './../../class/canvas.adapter'
 import {
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
@@ -22,6 +22,7 @@ import {
     CanvasCircle,
     CanvasRoundedRectangle,
     GradeRuleSet,
+    CanvasAdapterInterface
 } from './../../class/constants_3';
 
 
@@ -32,35 +33,19 @@ function sleep(ms) {
   
 
 
-export class GenerateReportCardCanvasAdapter {
+export class GenerateReportCardCanvasAdapter extends CanvasAdapterBase implements CanvasAdapterInterface{
 
     vm: GenerateReportCardComponent;
 
-    virtualCanvas: HTMLCanvasElement;
-    virtualContext: CanvasRenderingContext2D;
-
-    actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
     dpi: number = DPI_LIST[4];
  
 
-    layers: Array<Layer> = [];  // layers in thier order from back to front
-
-    activePageIndex: number = 0;
-
-    gradeRuleSetList: Array<GradeRuleSet> = [];
-
-    backgroundColor: string = null;
-
-    virtualPendingReDrawId: any;
-    layersFullyDrawnPromiseList:any[] = [];
-
     constructor() {
+        super();
     }
 
     initilizeAdapter(vm: GenerateReportCardComponent) {
         this.vm = vm;
-        this.virtualCanvas = document.createElement('canvas');
-        this.virtualContext = this.virtualCanvas.getContext('2d');
     }
 
     clearCanvas(): void {
@@ -81,15 +66,15 @@ export class GenerateReportCardCanvasAdapter {
 
         BaseLayer.maxID = 0;
             
-            // loading resolution
-            let resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
-            if (!resolution) {
-                PAGE_RESOLUTIONS[4] = getStructeredPageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation)
-                resolution = PAGE_RESOLUTIONS[4];
-            }
+            // // loading resolution
+            // let resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
+            // if (!resolution) {
+            //     PAGE_RESOLUTIONS[4] = getStructeredPageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation)
+            //     resolution = PAGE_RESOLUTIONS[4];
+            // }
 
             // apply resolution
-            this.canvasSizing();
+            // this.canvasSizing(); // check here
 
             // loding Grade Rules
             Data.gradeRuleSetList.forEach(gradeRuleSet => {
@@ -211,34 +196,6 @@ export class GenerateReportCardCanvasAdapter {
             });
 
         return this.scheduleCanvasReDraw(0);
-    }
-
-    private drawAllLayers(): void {
-        this.virtualContext.clearRect(0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
-        this.virtualContext.fillStyle = this.backgroundColor;
-        this.virtualContext.fillRect(0, 0, this.virtualCanvas.width, this.virtualCanvas.height);   // Applying background color
-
-        for (let i = 0; i < this.layers.length; i++){
-            if (!this.layers[i])
-                continue;
-            let status = this.layers[i].drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);    // check for redundant iterations
-            if (!status)
-                return;
-        }
-        this.layersFullyDrawnPromiseList.forEach(resolve => resolve());
-        this.layersFullyDrawnPromiseList = [];
-    }
-
-    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { }):Promise<any>=>{
-        clearTimeout(this.virtualPendingReDrawId);
-        return new Promise(resolve => {
-            this.layersFullyDrawnPromiseList.push(resolve);
-            this.virtualPendingReDrawId = setTimeout(() => {
-                preCallback();
-                this.drawAllLayers();
-                postCallback();
-            }, duration);
-        });
     }
 
     async downloadPDF(doc:any) { 

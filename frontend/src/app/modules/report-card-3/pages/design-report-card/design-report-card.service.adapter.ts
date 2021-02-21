@@ -233,7 +233,7 @@ export class DesignReportCardServiceAdapter {
 
     async uploadCurrentLayout() {
         const layoutToUpload:{[key:string]:any} = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
-        if (this.vm.thumbnailUpdated) { // converting data uri to blob
+        if (this.vm.currentLayout.thumbnail.startsWith('data')) { // converting data uri to blob
             layoutToUpload.thumbnail = await fetch(this.vm.currentLayout.thumbnail).then(response => response.blob());
         } else {
             delete layoutToUpload.thumbnail
@@ -263,20 +263,6 @@ export class DesignReportCardServiceAdapter {
             })
         }
     }
-
-    // async uploadThumbnail() {
-    //     if (this.vm.thumbnailUpdated) {
-    //         let thumbnailBlob = await fetch(this.vm.currentLayout.thumbnail).then(response => response.blob());
-    //         let form = new FormData();
-    //         form.append('id', this.vm.currentLayout.id);
-    //         form.append('thumbnail', thumbnailBlob, `${this.vm.currentLayout.parentSchool}-${this.vm.currentLayout.name}.png`);
-    //         return this.vm.reportCardService.partiallyUpdateObjectFile(this.vm.reportCardService.report_card_layout_new, form).then(savedLayout => {
-    //             let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
-    //             this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = { ...this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList], ...savedLayout };
-    //             this.vm.thumbnailUpdated = false;
-    //         });
-    //     }
-    // }
 
     uploadImageForCurrentLayout(image, file_name) {
         let formdata = new FormData();

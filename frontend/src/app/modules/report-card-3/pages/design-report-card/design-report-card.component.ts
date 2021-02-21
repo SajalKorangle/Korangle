@@ -40,7 +40,6 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
   canvas: any;
 
   currentLayout: { id?: any, parentSchool: string, name: string, thumbnail?:string, publiclyShared:boolean, content: any };
-  thumbnailUpdated = false;
 
   ADD_LAYOUT_STRING = '<Add New Layout>';
 
@@ -218,8 +217,8 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       let mainCanavs = document.getElementById('mainCanvas');
       if (mainCanavs) {
         this.canvas = mainCanavs;
-        this.htmlAdapter.canvasSetUp();
         this.canvasAdapter.initilizeCanvas(this.canvas);
+        this.htmlAdapter.canvasSetUp();
       }
       else {
         // if canvs is not already rendered subscribe to mutations while canvas is rendered
@@ -227,8 +226,8 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
           let canvas = document.getElementById('mainCanvas');
           if (canvas) {
             this.canvas = canvas;
-            this.htmlAdapter.canvasSetUp();
             this.canvasAdapter.initilizeCanvas(this.canvas);
+            this.htmlAdapter.canvasSetUp();
             this.canvasAdapter.loadData(this.currentLayout.content[0]);
             me.disconnect();
           }

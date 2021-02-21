@@ -1,7 +1,9 @@
 import { DesignReportCardComponent } from './design-report-card.component';
+import {CanvasAdapterHTML } from './../../class/canvas.adapter';
 import {reportError, ERROR_SOURCES } from './../../../../services/modules/errors/error-reporting.service'
 
 import {
+    CanvasAdapterInterface,
     DEFAULT_BACKGROUND_COLOR,
     Layer, CanvasImage, CanvasText,
     CanvasDate,
@@ -29,107 +31,25 @@ import {
 import * as jsPDF from 'jspdf'
 
 
-export class DesignReportCardCanvasAdapter {
+export class DesignReportCardCanvasAdapter extends CanvasAdapterHTML implements CanvasAdapterInterface {
 
-    vm: DesignReportCardComponent;
-
-    virtualCanvas: HTMLCanvasElement;
-    virtualContext: CanvasRenderingContext2D;
-
-    actualresolution: PageResolution = PAGE_RESOLUTIONS[1] // A4 size by default
-    dpi: number = 72;
-
-    canvas: HTMLCanvasElement;  // html canvas rendered on screen
-    context: CanvasRenderingContext2D;
-    canvasHeight: number = null;   // current height and width are in pixels
-    canvasWidth: number = null;    
-
-    layers: Array<Layer> = [];  // layers in thier order from back to front
-    activeLayer:Layer = null;
-    activeLayerIndexes: Array<number> = [];
-
-
-    activePageIndex: number = 0;
-
-    gradeRuleSetList: Array<GradeRuleSet> = [];
-
-    backgroundColor: string = null;
-
-    lastMouseX: number;
-    lastMouseY: number;
-    currentMouseDown: boolean = false;
-    selectDragedOverLayers: boolean = false;
-    selectionAssistanceRef: HTMLDivElement;
-
-    pixelTommFactor: number;    // width(height) in mm / Canvas width(height) in pixel
-    isSaved = true;    // if canvas is not saved then give warning; to be implemented
-
-    virtualPendingReDrawId: any;
-    pendingReDrawId: any;
-    shape: any;
-    currentZoom = 100;
-    originalHeight: any;
-    originalWidth: any;
-
-    documentEventListners: { keydown: any, mouseup: any } = {
-        keydown: (event) => {
-            if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
-                return;
-            if (event.key == 'ArrowUp') {
-                this.activeLayer.updatePosition(0, -1)
-                event.preventDefault();
-                this.scheduleCanvasReDraw(0); 
-            }
-            if (event.key == 'ArrowDown') {
-                this.activeLayer.updatePosition(0, 1);
-                event.preventDefault();
-                this.scheduleCanvasReDraw(0); 
-            }
-            if (event.key == 'ArrowLeft') {
-                this.activeLayer.updatePosition(-1, 0);
-                event.preventDefault();
-                this.scheduleCanvasReDraw(0); 
-            }
-            if (event.key == 'ArrowRight') {
-                this.activeLayer.updatePosition(1, 0);
-                event.preventDefault();
-                this.scheduleCanvasReDraw(0); 
-            } 
-        },
-        mouseup: (event) => {
-            if (this.selectionAssistanceRef) {
-                document.body.removeChild(this.selectionAssistanceRef);
-                this.selectionAssistanceRef = null;
-            }
-        }
-    };
-    layerClickEvents: any[] = [];
-
-    metaDrawings: boolean = true;   // meta drawings includes things like hilighter, assistance etc.
+    vm: DesignReportCardComponent;    
+    
     
     constructor() {
+        super();
         console.log('canvas Adapter: ', this);
-    }
+        Object.defineProperty(this, 'currentLayout', {
+            get: function () {
+                return this.vm.currentLayout;   // // reference to vm.currentLayout and there is no setter function
+            }
+        });
 
-    destructor() {
-        document.removeEventListener('keydown', this.documentEventListners.keydown);
-        document.removeEventListener('mouseup', this.documentEventListners.mouseup);
-    }
-
-    getEmptyLayoutPage(): { [key: string]: any }{
-        return {
-            actualresolution: {
-                resolutionName: PAGE_RESOLUTIONS[1].resolutionName, // a4 page
-                orientation: 'p',
-            },
-            backgroundColor: DEFAULT_BACKGROUND_COLOR,
-            gradeRuleSetList:[],
-            layers: []
-        };
-    }
-
-    getEmptyLayout(): any[] {
-        return [this.getEmptyLayoutPage()];
+        Object.defineProperty(this, 'DATA', {
+            get: function () {
+                return this.vm.DATA;    // reference to vm.DATA and there is no setter function
+            }
+        });
     }
     
     addEmptyPage(): void{
@@ -159,31 +79,13 @@ export class DesignReportCardCanvasAdapter {
         this.activePageIndex = pageIndex;
     }
 
-    storeThumbnail(): void{
-        let canavs:any = document.createElement('canvas');
-        canavs.height = this.actualresolution.getmmHeight();
-        canavs.width = this.actualresolution.getmmWidth();
-        let ctx = canavs.getContext('2d');
-        ctx.drawImage(this.virtualCanvas, 0, 0, canavs.width, canavs.height);
-        this.vm.currentLayout.thumbnail = canavs.toDataURL();
-        this.vm.thumbnailUpdated = true;
-    }
-
     initilizeAdapter(vm: DesignReportCardComponent) {
         this.vm = vm;
-        this.virtualCanvas = document.createElement('canvas');
-        this.virtualContext = this.virtualCanvas.getContext('2d');
     }
 
     initilizeCanvas(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
-
-        this.canvasSizing();
-        
-        this.originalWidth = this.canvas.width;
-        this.originalHeight = this.canvas.height;
-        this.currentZoom = 100;
  
         this.applyDefaultbackground();
 
@@ -303,25 +205,8 @@ export class DesignReportCardCanvasAdapter {
     updateResolution(newResolution: PageResolution): void{
         this.actualresolution = new PageResolution(newResolution.resolutionName,
             newResolution.mm.height, newResolution.mm.width, newResolution.orientation);    // copy of standard resolution
-        this.canvasWidth = null;
-        this.canvasWidth = null;
-        this.canvasSizing();
+        this.canvasSizing(this.maxVisibleHeight, this.maxVisibleWidth);
         this.scheduleCanvasReDraw(0);
-    }
-
-    increaseCanvasSize():any{
-        this.currentZoom += 25;
-        this.canvas.height = this.currentZoom*this.originalHeight/100;
-        this.canvas.width = this.currentZoom*this.originalWidth/100;
-        this.canvasSizing();
-        
-    }
-    decreaseCanvasSize():any{
-        this.currentZoom -= 25;
-        this.canvas.height = this.currentZoom*this.originalHeight/100;
-        this.canvas.width = this.currentZoom*this.originalWidth/100;
-        this.canvasSizing();
-        
     }
 
     maximumCanvasSize():any{
@@ -332,39 +217,10 @@ export class DesignReportCardCanvasAdapter {
         return this.actualresolution.getHeightInPixel(this.dpi)*(0.1);
     }
 
-    changeZoomLevel(event: any): any{
-        this.currentZoom = event.value;
-        this.canvas.height = event.value;
-        this.canvas.width = event.value;
-        this.canvasSizing();
-        // this.canvas.height = this.currentZoom*this.originalHeight/100;
-        // this.canvas.width = this.currentZoom*this.originalWidth/100;
-
-    }
-    
-    canvasSizing(): void{
-        let canvasPreviousWidth = this.canvasWidth;
-        if (this.canvas.width / this.canvas.height > this.actualresolution.getAspectRatio()) {
-            this.canvasHeight = this.canvas.height;
-            this.canvasWidth = this.actualresolution.getCorrospondingWidth(this.canvasHeight);
-            this.canvas.width = this.canvasWidth;
-        }
-        else {
-            this.canvasWidth = this.canvas.width;
-            this.canvasHeight = this.actualresolution.getCorrospondingHeight(this.canvasWidth);
-            this.canvas.height = this.canvasHeight;
-        }
-
-        this.pixelTommFactor = this.actualresolution.getmmWidth() / this.canvasWidth;
-        
-        this.virtualCanvas.height = this.canvasHeight;
-        this.virtualCanvas.width = this.canvasWidth;
-
-        if (canvasPreviousWidth) {
-            let scaleFactor = this.canvasWidth / canvasPreviousWidth;
-            this.layers.forEach((layer: Layer) => layer.scale(scaleFactor));
-            this.scheduleCanvasReDraw(0);
-        }
+    changeZoomLevel(event: any): any{   // check here
+        let newHeight = event.value;
+        let newWidth = event.value;
+        this.canvasSizing(newHeight, newWidth, true);
     }
 
     getDataToSave() {   // updating required
@@ -567,34 +423,6 @@ export class DesignReportCardCanvasAdapter {
         this.scheduleCanvasReDraw();
     }
 
-    private drawAllLayers(): void {
-        this.virtualContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.virtualContext.fillStyle = this.backgroundColor;
-        this.virtualContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);   // Applying background color
-
-        for (let i = 0; i < this.layers.length; i++){
-            if (!this.layers[i])
-                continue;
-            let status = this.layers[i].drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);    // check for redundant iterations
-            if (!status)
-                return;
-        }
-        if (this.activeLayer && this.metaDrawings) {
-            this.activeLayer.highlightLayer(this.virtualContext);
-        }
-        clearTimeout(this.pendingReDrawId);
-        this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
-    }
-
-    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { })=>{
-        clearTimeout(this.virtualPendingReDrawId);
-        this.virtualPendingReDrawId = setTimeout(() => {
-            preCallback();
-            this.drawAllLayers();
-            postCallback();
-        }, duration);
-    }
-
     fullCanavsRefresh():void {
         this.layers.forEach((layer: Layer) => {
             layer.layerDataUpdate();
@@ -711,21 +539,19 @@ export class DesignReportCardCanvasAdapter {
 
     downloadPDF() { // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background
         let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
-        this.canvas.width = this.actualresolution.getWidthInPixel(this.dpi);
-        this.canvas.height = this.actualresolution.getHeightInPixel(this.dpi);
+        let fullWidth = this.actualresolution.getWidthInPixel(this.dpi);
+        let fullHeight = this.actualresolution.getHeightInPixel(this.dpi);
 
         this.vm.htmlAdapter.isSaving = true;
         this.metaDrawings = false;
-        this.canvasSizing();
+        this.canvasSizing(fullHeight, fullWidth, true);
         setTimeout(() => {
             let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
             let dataurl = this.canvas.toDataURL()
             doc.addImage(dataurl, 'PNG', 0, 0, this.canvasWidth, this.canvasHeight);
             doc.save(this.vm.currentLayout.name + '.pdf');
-            this.canvas.width = actualCanavsWidth;
-            this.canvas.height = actualCanavsHeight;
             this.metaDrawings = true;
-            this.canvasSizing();
+            this.canvasSizing(actualCanavsHeight, actualCanavsWidth);
             this.vm.htmlAdapter.isSaving = false;
         },1000);    // bad design of waiting for canvas loading
     }
