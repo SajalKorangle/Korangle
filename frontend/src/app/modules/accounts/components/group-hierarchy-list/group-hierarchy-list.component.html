@@ -10,7 +10,7 @@
         </div>
     </mat-expansion-panel-header>
     <div *ngFor="let child of group.childs" >
-        <div *ngIf="child.type == 'ACCOUNT'" style="margin: 5px 0px;">
+        <div *ngIf="child.type == 'ACCOUNT'" style="margin: 5px 0px; padding-left: 24px">
             <span class="account-font">{{child.title}}</span>
             <mat-checkbox   *ngIf="displayCheckBox"
                             [checked]="vm.isElementSelected(child)" 

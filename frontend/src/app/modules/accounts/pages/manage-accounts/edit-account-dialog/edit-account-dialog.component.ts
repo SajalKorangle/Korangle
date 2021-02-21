@@ -116,11 +116,31 @@ export class EditAccountDialogComponent implements OnInit {
           break;
         }
       }
-      this.data.vm.serviceAdapter.initialiseDisplayData();
+      let account_session_data = {
+        parentAccount: this.account.parentAccount,
+      }
+      Promise.all([
+        this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.account_session,account_session_data),
+      ]).then(data =>{
+        if(data[0].length > 0){
+          let account_data = {
+            id: this.account.parentAccount,
+          }
+          Promise.all([
+            this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.accounts, account_data),
+          ]).then(value =>{
+            this.data.vm.serviceAdapter.initialiseDisplayData();
+            alert('Account Deleted Successfully');
+            this.dialogRef.close();
 
-      console.log(val);
-      alert('Account Deleted Successfully');
-      this.dialogRef.close();
+          })
+        }
+        else{
+            this.data.vm.serviceAdapter.initialiseDisplayData();
+            alert('Account Deleted Successfully');
+            this.dialogRef.close();
+        }
+      })
     })
   }
 
