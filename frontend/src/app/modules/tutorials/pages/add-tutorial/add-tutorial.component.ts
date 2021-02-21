@@ -168,22 +168,4 @@ export class AddTutorialComponent implements OnInit {
         return true;
     }
 
-    handleEditYouTubeLink(tutorial, $event) : void {
-        tutorial.link = $event;
-
-        if (!tutorial.link || tutorial.link.trim() == '') {
-            return ;
-        }
-
-        if (this.youtubeRegex.test(tutorial.link.trim())) {
-            if (tutorial.link.startsWith('www.')) {
-                tutorial.link = 'https://' + tutorial.link;
-            }
-            if(tutorial.link.match(this.youtubeIdMatcher) === null)
-            {   
-                return ;
-            }
-            return ;
-        }
-    }
 }

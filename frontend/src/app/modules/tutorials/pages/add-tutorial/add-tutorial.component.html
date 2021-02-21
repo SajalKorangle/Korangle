@@ -181,8 +181,8 @@
                                       type="text"
                                       style="overflow: hidden;min-height: 17px"
                                       cdkTextareaAutosize
-                                      [ngModel]="editedTutorial.link"
-                                      (ngModelChange)="handleEditYouTubeLink(editedTutorial,$event)">
+                                      [(ngModel)]="editedTutorial.link"
+                                      >
                             </textarea>
                         </mat-form-field>
                     </td>
