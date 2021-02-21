@@ -479,19 +479,23 @@ export interface CanvasAdapterInterface{
     backgroundColor: string ;
 
     virtualPendingReDrawId: any;
-    
-    currentZoom: number;
-    originalHeight: number;
-    originalWidth: number;
 
     metaDrawings: boolean;
 
-    getEmptyLayoutPage(): { [key: string]: any };
-    getEmptyLayout(): any[];
+    clearCanvas(): void
     storeThumbnail(): void;
+    updatePage(pageIndex: number): Promise<any>;
     canvasSizing(maxHeight:number, maxWidth:number, doScale:boolean): void
+    applyDefaultbackground(): void;
     scheduleCanvasReDraw(duration: number, preCallback: any, postCallback: any): Promise<any>;
-    updateResolution(newResolution: PageResolution): void;
+    fullCanavsRefresh():void
+    updateResolution(newResolution: PageResolution): Promise<any>;
+    getLayerFromLayerData(layerData: any, constructor: any): Layer;
+    loadData(Data): Promise<any>;
+    getDataToSave(): { [object: string]: any };
+    resetActiveLayer(): Promise<any>;
+    updateActiveLayer(activeLayerIndex: number, shiftKey: boolean): Promise<any>;
+    newLayerInitilization(layer: Layer): Promise<any>;
 }
 
 
@@ -2306,6 +2310,25 @@ export class CurrentSession extends CanvasText implements Layer{
 
 }
 
+
+export const LayersMappedByType: {[key:string]: any} = {
+    'IMAGE': CanvasImage,
+    'TABLE': CanvasTable,
+    'LINE': CanvasLine,
+    'RECTANGLE': CanvasRectangle,
+    'CIRCLE': CanvasCircle,
+    'ROUNDED-RECTANGLE': CanvasRoundedRectangle,
+    'SQUARE': CanvasSquare,
+    'TEXT': CanvasText,
+    'DATE': CanvasDate,
+    'ATTENDANCE': AttendanceLayer,
+    'GRADE': GradeLayer,
+    'REMARK': RemarkLayer,
+    'MARKS': MarksLayer,
+    'CURRENT_SESSION': CurrentSession,
+    'FORMULA': Formula,
+    'RESULT': Result
+}
 
 
 

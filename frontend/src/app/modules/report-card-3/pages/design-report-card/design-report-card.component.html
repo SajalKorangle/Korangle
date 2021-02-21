@@ -98,7 +98,7 @@
                 <button class="btn material-icons" matTooltip="Zoom Level"
                         [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
                 <mat-menu #zoomMenu="matMenu">
-                        <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvasHeight}}" (input)="canvasAdapter.changeZoomLevel($event)" (click)="$event.stopPropagation()"></mat-slider>
+                        <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvasHeight}}" (input)="canvasAdapter.zoomToHeight($event.value)" (click)="$event.stopPropagation()"></mat-slider>
                 </mat-menu>
             </div>
 
