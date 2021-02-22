@@ -1622,7 +1622,6 @@ export class CanvasDate extends CanvasText implements Layer{
         this.parameterToolPannels.push('date');
 
         this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'DATE';
@@ -1773,7 +1772,6 @@ export class AttendanceLayer extends CanvasText implements Layer{
         this.parameterToolPannels.push('attendance');
 
         this.maxWidth = Math.round(2000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'ATTENDANCE';
@@ -1810,7 +1808,6 @@ export class GradeLayer extends CanvasText implements Layer{
         this.parameterToolPannels.push('grade');
 
         this.maxWidth = Math.round(3000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'GRADE';
@@ -1851,8 +1848,6 @@ export class RemarkLayer extends CanvasText implements Layer{
     constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('remark');
-
-        this.minHeight = Math.round(2500 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'REMARK';
@@ -1966,7 +1961,6 @@ export class MarksLayer extends CanvasText implements Layer{
         this.parameterToolPannels.push('marks');
 
         this.maxWidth = Math.round(2500 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'MARKS';
@@ -2119,7 +2113,6 @@ export class Formula extends CanvasText implements Layer{
         this.parameterToolPannels.push('formula');
 
         this.maxWidth = Math.round(4000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'FORMULA';
@@ -2218,7 +2211,6 @@ export class Result extends CanvasText implements Layer{
         this.parameterToolPannels.push('result');
 
         this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'RESULT';
@@ -2274,7 +2266,6 @@ export class CurrentSession extends CanvasText implements Layer{
         this.parameterToolPannels.push('currentSession');
 
         this.maxWidth = Math.round(5000 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'CURRENT_SESSION';
