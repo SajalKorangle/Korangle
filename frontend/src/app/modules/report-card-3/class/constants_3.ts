@@ -520,6 +520,7 @@ export interface Layer{
     parameterToolPannels: string[]; // list of right pannel parameter toolbar
     dataSourceType: string;    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data 
     source?: { [key: string]: any };   // object containing information about the source of data, stores reference of element from PARAMETER_LIST
+    alternateText: string;
     ca: CanvasAdapterInterface;  // canvas adapter,
     highlightLayer(ctx: CanvasRenderingContext2D): void;
     layerDataUpdate(): void;    // gets data of layer if dataSourceType is 'DATA', 
@@ -544,15 +545,19 @@ export interface Layer{
     selectedCells?: any;
 
     text?: string;  // for CanvasText Layer
-    verticalAlignment?: string;
-    horizontalAlighment?: string;
-    textBoxMetrx?: {    // text bounding box nformation
-        boundingBoxLeft: number,
-        boundingBoxRight: number,
-        boundingBoxTop: number,
-        boundingBoxBottom: number,
-    };
+    prefix?: string;
+    suffix?: string;
+    font?: string;
+    fontSize?: number;
+    fontWeight?: string;
+    italics?:string;
+    fillStyle?: string;
+    textBaseline?: string;
+    textAlign?: string;
+    maxWidth?: number;
+    minHeight?: number;
     underline?: boolean;
+
     dateFormat?: string; // for Canavs Date   // format of date, check getDateReplacements(date) function for details 
     date?: Date;
     startDate?: Date;   // for Attendance 
@@ -562,7 +567,7 @@ export interface Layer{
     testType?: string;
     marksType?: string;
     decimalPlaces?: number;
-    factor?: number;
+    outOf?: number;
     marks?: number;
     formula?:string;
 };

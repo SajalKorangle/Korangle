@@ -202,6 +202,11 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                     layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
                 }
                 break;
+            case 'FORMULA':
+                if (layerData.gradeRuleSet) {
+                    layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
+                }
+                break;
             case'RESULT':
                 layerData.marksLayers = layerData.marksLayers.map(layerId => this.layers.find(layer => layer && layer.id == layerId));
         }
@@ -258,7 +263,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
             Data.layers.forEach((layerData, index) => { // For Formula layers
                 if (layerData.LAYER_TYPE == 'FORMULA') {
-                    let newLayerFromLayerData = new Formula(layerData, this);
+                    let newLayerFromLayerData = this.getLayerFromLayerData(layerData, Formula);
                     newLayerFromLayerData.scale(mmToPixelScaleFactor);
                     this.layers[index] = newLayerFromLayerData;
                 }
@@ -266,8 +271,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
             Data.layers.forEach((layerData, index) => { // For Result layers
                 if (layerData.LAYER_TYPE == 'RESULT') {
-                    layerData.marksLayers = layerData.marksLayers.map(layerId => this.layers.find(layer => layer && layer.id == layerId));
-                    let newLayerFromLayerData = new Result(layerData, this);
+                    let newLayerFromLayerData = this.getLayerFromLayerData(layerData, Result);
                     newLayerFromLayerData.scale(mmToPixelScaleFactor);
                     this.layers[index] = newLayerFromLayerData;
                 }
