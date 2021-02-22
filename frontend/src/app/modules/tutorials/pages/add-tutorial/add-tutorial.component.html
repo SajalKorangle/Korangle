@@ -168,7 +168,7 @@
                             <input
                                     matInput
                                     type="text"
-                                    [(ngModel)]="editedTutorial.topic"
+                                    [ngModel]="editedTutorial.topic"
                                     (ngModelChange)="editedTutorial.topic=$event">
                         </mat-form-field>
                     </td>
@@ -180,8 +180,8 @@
                                       type="text"
                                       style="overflow: hidden;min-height: 17px"
                                       cdkTextareaAutosize
-                                      [(ngModel)]="editedTutorial.link"
-                                      >
+                                      [ngModel]="editedTutorial.link"
+                                      (ngModelChange)="editedTutorial.link=$event">
                             </textarea>
                         </mat-form-field>
                     </td>
@@ -197,7 +197,7 @@
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 3px 8px;"
-                                [disabled]="(tutorialEditing && !tutorial.editable == true || tutorialUpdating)"
+                                [disabled]="tutorialEditing && !tutorial.editable == true || tutorialUpdating"
                                 (click)="serviceAdapter.makeEditableOrSave(tutorial)"><span *ngIf="tutorial.editable">Save</span><span
                                 *ngIf="!tutorial.editable">Edit</span>
                         </button>
