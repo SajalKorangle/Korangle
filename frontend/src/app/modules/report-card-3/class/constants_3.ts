@@ -1992,9 +1992,9 @@ export class MarksLayer extends CanvasText implements Layer{
             }
             else {
                 if (this.inWords) {
-                    this.text = this.marks != -1 ? getMarksInWords(this.marks) : this.alternateText;
+                    this.text = this.marks >= -1 ? getMarksInWords(this.marks) : this.alternateText;
                 } else {
-                    this.text = this.marks != -1 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
+                    this.text = this.marks >= 0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
             }
             this.error = false;
@@ -2085,7 +2085,7 @@ export function getParser(layers: Layer[]) {
     layers.forEach((layer: Layer) => {
         if (layer) {
             if ((layer.LAYER_TYPE == 'MARKS')) {
-                PARSER.setVariable(numberToVariable(layer.id), layer.marks);
+                PARSER.setVariable(numberToVariable(layer.id), layer.marks>=0?layer.marks:0);
             }
             else if (layer instanceof CanvasText) {
                 let parsedValue = parseFloat(layer.text);
