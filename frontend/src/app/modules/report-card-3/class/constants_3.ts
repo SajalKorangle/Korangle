@@ -1559,6 +1559,8 @@ export class CanvasText extends BaseLayer implements Layer{
         canvasTxt.fontStyle = this.italics;
         canvasTxt.fontWeight = this.fontWeight;
         canvasTxt.yLimit = 'top';
+        canvasTxt.underline = this.underline;
+        ctx.strokeStyle = this.fillStyle;
         // canvasTxt.debug = true;
         this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, Math.max(1,this.maxWidth), Math.max(1,this.minHeight)).height;
         // this.drawUnderline();

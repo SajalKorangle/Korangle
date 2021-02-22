@@ -29,9 +29,9 @@
 
         <div style="text-align: center;">
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
-            <mat-button-toggle value="bold" [checked]="layer.fontWeight=='bold'" (change)="boldToggle($event); canvasRefresh(0);"><span class="material-icons">format_bold</span></mat-button-toggle>
-            <mat-button-toggle value="italic" [checked]="layer.italics=='italic'" (change)="italicToggle($event); canvasRefresh(0);"><span class="material-icons">format_italic</span></mat-button-toggle>
-            <!-- <mat-button-toggle value="true" [checked]="isUnderline()" (change)="underlineToggle($event); canvasRefresh(0);"><span class="material-icons">format_underline</span></mat-button-toggle> -->
+            <mat-button-toggle [checked]="layer.fontWeight=='bold'" (change)="boldToggle($event); canvasRefresh(0);"><span class="material-icons">format_bold</span></mat-button-toggle>
+            <mat-button-toggle [checked]="layer.italics=='italic'" (change)="italicToggle($event); canvasRefresh(0);"><span class="material-icons">format_italic</span></mat-button-toggle>
+            <mat-button-toggle [checked]="layer.underline" (change)="underlineToggle(); canvasRefresh(0);"><span class="material-icons">format_underline</span></mat-button-toggle>
         </mat-button-toggle-group>
         </div>
 

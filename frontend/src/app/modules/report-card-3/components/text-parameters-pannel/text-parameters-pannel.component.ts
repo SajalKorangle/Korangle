@@ -52,9 +52,9 @@ export class TextParametersPannelComponent implements OnInit, AfterViewInit, OnC
     this.layer.italics = this.layer.italics=='italic' ? '': 'italic';
   }
 
-  // underlineToggle(event): any{
-  //   this.layer.underline = event.source.checked? true : false;
-  // }
+  underlineToggle(): any{
+    this.layer.underline = this.layer.underline? false : true;
+  }
 
 
   getVerticalAlignmentKeys(): Array<string>{
