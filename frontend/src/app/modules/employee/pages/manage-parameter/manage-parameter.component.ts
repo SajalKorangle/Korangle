@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import { ManageParameterServiceAdapter } from './manage-parameter.service.adapter';
 import {DataStorage} from '../../../../classes/data-storage';
+import { EmployeeService } from 'app/services/modules/employee/employee.service';
 //import {StudentService} from './../../../../services/modules/student/student.service'
 
 
@@ -9,7 +10,7 @@ import {DataStorage} from '../../../../classes/data-storage';
   selector: 'manage-parameter',
   templateUrl: './manage-parameter.component.html',
   styleUrls: ['./manage-parameter.component.css'],
-   // providers: [ StudentService ],
+  providers: [ EmployeeService ],
 })
 
 export class ManageParameterComponent implements OnInit {
@@ -62,13 +63,14 @@ export class ManageParameterComponent implements OnInit {
 
     constructor (
         //public studentService: StudentService
+        public employeeService: EmployeeService
     ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new ManageParameterServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        //this.serviceAdapter.initializeData();
+        this.serviceAdapter.initializeData();
     }
 
     chooseParameter(value: any): void {

@@ -15,4 +15,8 @@ export class EmployeeService extends ServiceObject {
 
     public employee_session_detail = '/employee-session-detail'
 
+    public employee_parameter = '/employee-parameter';
+
+    public employee_parameter_value = '/employee-parameter-value';
+
 }

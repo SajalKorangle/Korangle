@@ -8,7 +8,7 @@
         </span>
         <br/><br/>
         <b>Custom Parameters:-</b>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-md-6">
                 <mat-form-field style="width: 100%;">
                     <mat-select placeholder="Choose to add/edit/delete parameter/s"
@@ -20,6 +20,7 @@
                 </mat-form-field>
             </div>
         </div>
+        
         <div class="row">
             <div class="col-md-6" *ngIf="currentParameter">
                 <mat-card>
@@ -64,6 +65,7 @@
                         </ng-container>
 
                     </ng-container>
+                    
                     <div>
                         <button *ngIf="isValidParameterName()&&currentParameter.name" style="padding: 12px 15px; margin-right: 17px;" type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 (click)="serviceAdapter.saveParameter()">
@@ -78,7 +80,7 @@
 
                 </mat-card>
             </div>
-        </div> -->
+        </div>
     </ng-container>
 
 </div>
