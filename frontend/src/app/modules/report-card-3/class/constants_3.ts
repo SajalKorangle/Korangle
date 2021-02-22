@@ -787,12 +787,7 @@ export class CanvasTable extends BaseLayer implements Layer{
     height: number = 0; // computed from rowsList and columnsList
     width: number = 0;
 
-    cells: any;
-
-    tableStyle:{[key:string]: any} = {
-        strokeStyle: 'black',
-        lineWidth: 2,
-    };
+    cells:Array<any> = null;
 
     constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(ca);
@@ -800,7 +795,6 @@ export class CanvasTable extends BaseLayer implements Layer{
         
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
-        this.tableStyle.lineWidth = 0.5 / ca.pixelTommFactor;
         this.selectedCells = [];
         this.selectedCells.push({
             row: 0,
@@ -816,7 +810,6 @@ export class CanvasTable extends BaseLayer implements Layer{
 
     initilizeSelf(attributes:object): void {
         super.initilizeSelf(attributes);
-        console.log(attributes);
         this.rowCount = Math.max(this.rowCount, this.rowsList.length);  // if rowCount is less that this.rowList.length that update rowCount accordingly
         this.columnCount = Math.max(this.columnCount, this.columnsList.length);
         while (this.rowsList.length < this.rowCount) {  // rowCount is greater that the rows in rowsList then add rows in rowList
@@ -830,7 +823,7 @@ export class CanvasTable extends BaseLayer implements Layer{
             this.columnsList.push(newTableRowColumn);
         }
 
-        if(attributes['cells'] == undefined){
+        if(!this.cells){
             this.cells = new Array(this.rowCount);
             for(let i=0;i<this.rowCount; i++){
                 this.cells[i] = new Array(this.columnCount);
@@ -858,17 +851,6 @@ export class CanvasTable extends BaseLayer implements Layer{
                         },
                         'cellBackground': '#ffffff',
                     }
-                }
-            }
-        }
-        else{
-            this.cells = attributes['cells'];
-            for(let i=0;i<this.rowCount; i++){  // check this part again
-                for(let j=0;j<this.columnCount; j++){
-                    this.cells[i][j].topBorder.lineWidth *= this.ca.pixelTommFactor;
-                    this.cells[i][j].bottomBorder.lineWidth *= this.ca.pixelTommFactor;
-                    this.cells[i][j].leftBorder.lineWidth *= this.ca.pixelTommFactor;
-                    this.cells[i][j].rightBorder.lineWidth *= this.ca.pixelTommFactor;
                 }
             }
         }
@@ -1060,7 +1042,6 @@ export class CanvasTable extends BaseLayer implements Layer{
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
         this.y *= scaleFactor;
-        this.tableStyle.lineWidth *= scaleFactor;
 
         this.rowsList.forEach(row => {
             row.height *= scaleFactor;
@@ -1088,10 +1069,8 @@ export class CanvasTable extends BaseLayer implements Layer{
             ...savingData,
             rowsList: [],
             columnsList: [],
-            tableStyle: {...this.tableStyle},
             cells: JSON.parse(JSON.stringify(this.cells)),
         };
-        savingData.tableStyle.lineWidth *= this.ca.pixelTommFactor;
         this.rowsList.forEach(row => {
             let rowCopy = { ...row };
             rowCopy.height *= this.ca.pixelTommFactor;
@@ -1101,6 +1080,15 @@ export class CanvasTable extends BaseLayer implements Layer{
             let columnCopy = { ...columns };
             columnCopy.width *= this.ca.pixelTommFactor;
             savingData.columnsList.push(columnCopy);
+        });
+
+        savingData.cells.forEach(row => {
+            row.forEach(cell => {
+                cell.topBorder.lineWidth *= this.ca.pixelTommFactor;
+                cell.bottomBorder.lineWidth *= this.ca.pixelTommFactor;
+                cell.leftBorder.lineWidth *= this.ca.pixelTommFactor;
+                cell.rightBorder.lineWidth *= this.ca.pixelTommFactor;
+            });
         });
         return savingData;
     }
@@ -1489,7 +1477,7 @@ export class CanvasText extends BaseLayer implements Layer{
     textAlign: string = 'center';
     
     maxWidth: number = 100;
-    minHeight: number = 100;
+    minHeight: number = 0;
     lastHeight: number = 0;
     underline: boolean = false;
 
@@ -1501,7 +1489,7 @@ export class CanvasText extends BaseLayer implements Layer{
         this.x = 50 / ca.pixelTommFactor;
         this.y = 50 / ca.pixelTommFactor;
         this.maxWidth = Math.round(7500 / ca.pixelTommFactor) / 100;
-        this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
+        // this.minHeight = Math.round(1000 / ca.pixelTommFactor) / 100;
         this.underline = false;
         this.fontSize = 6 / ca.pixelTommFactor;
 
@@ -1571,7 +1559,8 @@ export class CanvasText extends BaseLayer implements Layer{
         canvasTxt.fontStyle = this.italics;
         canvasTxt.fontWeight = this.fontWeight;
         canvasTxt.yLimit = 'top';
-        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, this.maxWidth, Math.max(1,this.minHeight)).height;
+        // canvasTxt.debug = true;
+        this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, Math.max(1,this.maxWidth), Math.max(1,this.minHeight)).height;
         // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }

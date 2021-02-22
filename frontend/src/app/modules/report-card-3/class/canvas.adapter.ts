@@ -181,7 +181,9 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
     updateResolution(newResolution: PageResolution): Promise<any>{
         this.actualresolution = new PageResolution(newResolution.resolutionName,
             newResolution.mm.height, newResolution.mm.width, newResolution.orientation);    // copy of standard resolution
+        this.layers.forEach(l => l.scale(this.pixelTommFactor)); // to convert all pixel data to mm
         this.canvasSizing(this.actualresolution.getHeightInPixel(this.dpi), this.actualresolution.getWidthInPixel(this.dpi));
+        this.layers.forEach(l => l.scale(1 / this.pixelTommFactor));
         return this.scheduleCanvasReDraw(0);
     }
 
@@ -233,7 +235,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             this.gradeRuleSetList = Data.gradeRuleSetList.map(gradeRuleSet => new GradeRuleSet(gradeRuleSet));  // creating GradeRuleSet 
 
 
-            let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
+            let mmToPixelScaleFactor = 1 / this.pixelTommFactor;
 
             this.backgroundColor = Data.backgroundColor;
 
@@ -628,7 +630,9 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
     updateResolution(newResolution: PageResolution): Promise<any>{
         this.actualresolution = new PageResolution(newResolution.resolutionName,
             newResolution.mm.height, newResolution.mm.width, newResolution.orientation);    // copy of standard resolution
+        this.layers.forEach(l => l.scale(this.pixelTommFactor)); // to convert all pixel data to mm
         this.canvasSizing(this.maxVisibleHeight, this.maxVisibleWidth);
+        this.layers.forEach(l => l.scale(1 / this.pixelTommFactor));    // back to pixel according to new resolution
         return this.scheduleCanvasReDraw(0);
     }
 
