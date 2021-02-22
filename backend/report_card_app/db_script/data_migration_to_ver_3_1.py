@@ -13,7 +13,7 @@ def dataMigration(apps, schema_editor):
                     layer['textAlign'] = 'left'
                     layer['textBaseline'] = 'top'
                     layer['maxWidth'] = 200
-                else if (layer['LAYER_TYPE'] == 'TABLE'):
+                elif (layer['LAYER_TYPE'] == 'TABLE'):
                     strokeStyle = layer['strokeStyle']
                     lineWidth = layer['lineWidth']
                     rowCount = len(layer['rowsList'])
@@ -49,5 +49,5 @@ def dataMigration(apps, schema_editor):
                         cells.append(rowCells)
                     layer['cells'] = cells
         layout.content = json.dumps(content)
-        layouts.save()            
+        layout.save()            
 

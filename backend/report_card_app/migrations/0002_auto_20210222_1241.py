@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
+from report_card_app.db_script.data_migration_to_ver_3_1 import dataMigration
 
 
 class Migration(migrations.Migration):
@@ -12,4 +13,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(dataMigration)
     ]
