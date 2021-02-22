@@ -104,19 +104,19 @@ export class SendSmsServiceAdapter {
 
             let service_list = [];
 
-            let iterationCount = Math.ceil(stringMobileNumberList.length/700);
+            let iterationCount = Math.ceil(stringMobileNumberList.length/this.vm.NUM_OF_MOBILE_NO);
 
             let loopVariable = 0;
             while(loopVariable<iterationCount) {
 
                 let gcm_device_data = {
-                    'user__username__in': stringMobileNumberList.slice(700*loopVariable,700*(loopVariable+1)),
+                    'user__username__in': stringMobileNumberList.slice(this.vm.NUM_OF_MOBILE_NO*loopVariable,this.vm.NUM_OF_MOBILE_NO*(loopVariable+1)),
                     'active': 'true__boolean',
                 };
 
                 let user_data = {
                     'fields__korangle': 'username,id',
-                    'username__in': stringMobileNumberList.slice(700*loopVariable,700*(loopVariable+1)),
+                    'username__in': stringMobileNumberList.slice(this.vm.NUM_OF_MOBILE_NO*loopVariable,this.vm.NUM_OF_MOBILE_NO*(loopVariable+1)),
                 };
 
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
@@ -125,26 +125,26 @@ export class SendSmsServiceAdapter {
                 loopVariable = loopVariable + 1;
             }
 
-            /*if(stringMobileNumberList.length>700) {
+            /*if(stringMobileNumberList.length>this.vm.NUM_OF_MOBILE_NO) {
 
                 let gcm_device_data_1 = {
-                    'user__username__in': stringMobileNumberList.slice(0,700),
+                    'user__username__in': stringMobileNumberList.slice(0,this.vm.NUM_OF_MOBILE_NO),
                     'active': 'true__boolean',
                 };
 
                 let gcm_device_data_2 = {
-                    'user__username__in': stringMobileNumberList.slice(700),
+                    'user__username__in': stringMobileNumberList.slice(this.vm.NUM_OF_MOBILE_NO),
                     'active': 'true__boolean',
                 };
 
                 let user_data_1 = {
                     'fields__korangle': 'username,id',
-                    'username__in': stringMobileNumberList.slice(0,700),
+                    'username__in': stringMobileNumberList.slice(0,this.vm.NUM_OF_MOBILE_NO),
                 };
 
                 let user_data_2 = {
                     'fields__korangle': 'username,id',
-                    'username__in': stringMobileNumberList.slice(700),
+                    'username__in': stringMobileNumberList.slice(this.vm.NUM_OF_MOBILE_NO),
                 };
 
                 service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data_1));
