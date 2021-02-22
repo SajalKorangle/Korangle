@@ -14,8 +14,8 @@ def dataMigration(apps, schema_editor):
                     layer['textBaseline'] = 'top'
                     layer['maxWidth'] = 200
                 elif (layer['LAYER_TYPE'] == 'TABLE'):
-                    strokeStyle = layer['strokeStyle']
-                    lineWidth = layer['lineWidth']
+                    strokeStyle = layer['tableStyle']['strokeStyle']
+                    lineWidth = layer['tableStyle']['lineWidth']
                     rowCount = len(layer['rowsList'])
                     columnCount = len(layer['columnsList'])
                     cells = []
@@ -24,22 +24,22 @@ def dataMigration(apps, schema_editor):
                         for cell in range(columnCount):
                             cellDict = {
                                 'topBorder': {
-                                    'visible': true,
+                                    'visible': True,
                                     'lineWidth': lineWidth,
                                     'strokeStyle': strokeStyle,
                                 },
                                 'bottomBorder': {
-                                    'visible': true,
+                                    'visible': True,
                                     'lineWidth': lineWidth,
                                     'strokeStyle': strokeStyle,
                                 },
                                 'leftBorder': {
-                                    'visible': true,
+                                    'visible': True,
                                     'lineWidth': lineWidth,
                                     'strokeStyle': strokeStyle,
                                 },
                                 'rightBorder': {
-                                    'visible': true,
+                                    'visible': True,
                                     'lineWidth': lineWidth,
                                     'strokeStyle': strokeStyle,
                                 },
