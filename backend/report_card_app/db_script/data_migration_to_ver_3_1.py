@@ -14,6 +14,7 @@ def dataMigration(apps, schema_editor):
                     layer['textAlign'] = 'left'
                     layer['textBaseline'] = 'top'
                     layer['maxWidth'] = 200
+                    layer['y'] -= layer['fontSize']*0.9
                     if (layer['LAYER_TYPE'] == 'MARKS'):
                         outOf = 100
                         if (layer['parentExamination'] and layer['parentSubject'] and layer['testType'] and layer['marksType']):
