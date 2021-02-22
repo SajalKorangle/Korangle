@@ -252,7 +252,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
     let transaction_data = {
         id: this.transaction.dbId,
         remark: this.transaction.remark,
-        transactionDate: CommonFunctions.formatDate(new Date(), ''),
     }
     Promise.all([
         this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.transaction, transaction_data),

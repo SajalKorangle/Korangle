@@ -138,6 +138,11 @@ export class TransferBalanceServiceAdapter{
 
     populateHeadWiseDisplayList(groupsList, individualAccountList, list){
         
+        list['Expenses'] = [];
+        list['Income'] = [];
+        list['Assets'] = [];
+        list['Liabilities'] = [];
+
         groupsList.forEach(group =>{
             let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
             if(head == 'Expenses'){
@@ -216,23 +221,16 @@ export class TransferBalanceServiceAdapter{
             this.vm.accountsService.createObjectList(this.vm.accountsService.account_session, toCreateList),
             this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateList),
         ]).then(val =>{
-            this.initialiseDisplayData(val[0], this.vm.nextSessionAccountsList);
-            for(let i=0;i<val[1].length; i++){
-                let account;
-                if(val[1][i].parentHead == 1){
-                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Expenses, val[1][i]);
-                }
-                if(val[1][i].parentHead == 2){
-                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Income, val[1][i]);
-                }
-                if(val[1][i].parentHead == 3){
-                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Assets, val[1][i]);
-                }
-                if(val[1][i].parentHead == 4){
-                    account = this.searchAccountInList(this.vm.nextSessionAccountsList.Liabilities, val[1][i]);
-                }
-                account.balance = val[1][i].balance;
+
+            for(let i=0;i<val[0].length ; i++){
+                this.nextAccountsSessionList.push(val[0][i]);
             }
+            for(let i=0;i<val[1].length; i++){
+                this.nextAccountsSessionList.find(element => element.id == val[1][i].id ).balance = val[1][i].balance;
+            }
+
+            this.initialiseDisplayData(this.nextAccountsSessionList, this.vm.nextSessionAccountsList);
+            this.vm.deSelectAllAccounts();
             alert('Balance Transferred Successfully')
             this.vm.isLoading = false;
             
@@ -242,17 +240,5 @@ export class TransferBalanceServiceAdapter{
 
     }
 
-    searchAccountInList(list, account){
-        for(let i=0;i<list.length; i++){
-            console.log(list[i]);
-            if(list[i].parentAccount == account.parentAccount){
-                return list[i];
-            }
-            else if(list[i].childs != undefined){
-                return this.searchAccountInList(list[i].childs, account);
-            }
-        }
-        return;
-    }
 
 }
