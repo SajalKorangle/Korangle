@@ -33,10 +33,11 @@
         </div>
     </div>
     
-<ng-container *ngIf="selectedEvent && !isEventLoading">
-    <div *ngIf="isEventLoading" class="loader-cont">
+    <div *ngIf="isEventLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </div>
+    
+<ng-container *ngIf="selectedEvent && !isEventLoading">
     <div class="row">
         <div class="col-md-4" style="font-weight: 400;">
             <span style="font-size: 12px;">Title</span><br>
@@ -62,44 +63,66 @@
                 <div class="col-md-12">
           <span  style="font-size: 14px;font-weight:400;">Tags</span><br>
             <button class="btn"  id="generate-tags-btn" (click)="generateNewTag()" style="background-color:#ABABAB;width: 20px;height: 28px;padding:0;">+</button>
-<!--            <div *ngFor="eventTagData"></div>-->
-            <button class="btn btn-{{getButtonColor()}}" (click)="assignSelectedTags()" [disabled]="getButtonColor()=='inactive'" style="float: right;">Assign Tag</button>
+                    <div class="btn" id="new-tag" style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none;display: none;" (blur)="createTag($event)" (paste)="onPaste($event)" (keydown)="onKeyDown($event)" contenteditable></div>
+                    <div *ngIf="isTagCreating" class="loader-custom"></div>
+            <ng-container *ngFor="let eventTag of eventTagList">
+                <div class="btn" style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"  [ngClass]="{'selectedTag' : eventTag.selected}" (click)="selectTag($event,eventTag)" (blur)="saveTag($event,eventTag)" (paste)="onPaste($event)" (keydown)="onKeyDown($event)" >{{eventTag.tagName}}</div>
+            </ng-container>
+                    <button *ngIf="eventTagList.length>0" class="btn btn-{{checkTagEditable() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}" (click)="assignSelectedTags()" [disabled]="(checkTagEditable()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning" style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span *ngIf="!isAssigning">Assign Tag</span> <div *ngIf="isAssigning" class="loader-custom"></div></button>
                 </div>
             </div>
-        <div class="row" >
-            <div class="col-md-5 {{checkTagEditable()}}">
-           <mat-icon style="font-size:20px;">edit</mat-icon><a href="javascript:void(0)" (click)="editSelectedTag()" class="editTag {{checkTagEditable()}}">Edit Tag</a>
-           <mat-icon style="font-size:20px;margin-left:5px;">delete_outline</mat-icon><a href="javascript:void(0)" (click)="deleteSelectedTag()" class="editTag {{checkTagEditable()}}">Delete Tag</a>
+<!--            <button [ngClass]="'sticky'" *ngIf="eventTagList.length>0 && isMobile()"-->
+<!--                    class="btn btn-{{checkTagSelected() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}"-->
+<!--                    (click)="assignSelectedTags()"-->
+<!--                    [disabled]="(checkTagSelected()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning">-->
+<!--                Assign Tag-->
+<!--            </button>-->
+<!--            <div class="clearfix"></div>-->
+
+        <div class="row" *ngIf="eventTagList.length>0">
+            <div class="col-md-5">
+                    <mat-icon style="font-size:20px;position: relative;top: 4px;" [ngStyle]="{'color':checkTagEditable()=='active'?'#ff9800':'#ABABAB'}">edit</mat-icon><a href="javascript:void(0)" (click)="editSelectedTag()" class="editTag {{checkTagEditable()}}">Edit Tag</a>
+                <mat-icon style="font-size:20px;margin-left:15px;position: relative;top: 4px;" [ngStyle]="{'color':checkTagSelected()=='active'?'#ff9800':'#ABABAB'}">delete_outline</mat-icon><a href="javascript:void(0)" (click)="deleteSelectedTag()" class="editTag {{checkTagSelected()}}" >Delete Tag</a>
         </div>
         </div>
     </div>
     </div>
+           
     
      <mat-card style="margin-top: 20px;">
-         <div class="row" *ngIf="eventImageData.length>0">
+         <div class="row" *ngIf="eventImageList.length>0">
              <div class="col-md-12">
-                 <mat-checkbox><span class="editTag" style="color: orange"> Select All Media </span></mat-checkbox>
-                 <mat-icon style="margin-left:20px;">delete_outline</mat-icon><a href="javascript:void(0)" (click)="deleteSelectedMedia()" class="editTag {{checkTagEditable()}}">Delete Media</a>
-                 <span style="float: right">{{selectedImagesCount}} Selected</span>
+                 <mat-checkbox (change)="selectAllMedia($event)" [checked]="getSelectedImagesCount() == eventImageList.length"  [disabled]="isDeletingImages || isImageUploading"><span class="editTag" style="color: orange"> Select All Media </span></mat-checkbox>
+                 <mat-icon style="margin-left:20px;position: relative;top: 4px;" [ngStyle]="{'color':checkMediaSelected()=='active'?'#ff9800':'#ABABAB'}">delete_outline</mat-icon><a href="javascript:void(0)"  (click)="deleteSelectedMedia()" class="editTag {{checkMediaSelected()}}"><span *ngIf="!isDeletingImages" >Delete Media</span></a><ng-container *ngIf="isDeletingImages"><div class="loader__dot" style="display: inline-block;color:#ff9800">Deleting Media<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span></div></ng-container>
+                 <span style="float: right">{{getSelectedImagesCount()}} Selected</span>
              </div>
          </div>
          <mat-card-content style="max-height: 400px;overflow: auto">
-         <!--                            (dragenter)="dragEnter($event)"-->
-<!--                           (drop)="onDrop($event)"-->
-<!--                           (dragleave)="onDrop($event)"-->
+
                <div class="image-row">
                    <button type="submit" class="image-column"
                     style="cursor: pointer;margin-left:8px;">
-                         <input type='file' class="dropinput"  [style.top]="eventImageData.length > 0 ? '65px' : '22px'" title="" (input)="readURL($event);imageInput.value = null"  (click)="imageInput.value = null"   [disabled]="isImageUploading" multiple="false"
-                            accept="image/jpeg,image/png" #imageInput />
+                         <input type='file' class="dropinput" [style.top]="eventImageList.length > 0 ? '65px' : '22px'" title="" (input)="readURL($event);imageInput.value = null" (click)="imageInput.value = null" [disabled]="isImageUploading || isDeletingImages" multiple="multiple"
+                                accept="image/jpeg,image/png" #imageInput />
                 <span style="font-size:35px;font-weight: 400;">+</span><br>
-                <span style="font-weight: 400;" *ngIf="!isMobile() && !isImageUploading">Upload media or drop it here</span><span *ngIf="isImageUploading">Uploading</span></button>
-                    <ng-container *ngFor="let images of eventImageData; let i = index" style="display: inline-block">
-                    <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(eventImageData, i, 1)">
+                <span style="font-weight: 400;" *ngIf="!isMobile() && !isImageUploading">Upload media or drop it here</span><ng-container *ngIf="isImageUploading"><div class="loader__dot">Uploading<span class="loader__dot">.</span><span class="loader__dot">.</span><span class="loader__dot">.</span></div></ng-container></button>
+                   <ng-container *ngFor="let image of eventImageList; let i = index" style="display: inline-block">
+                       <div class="image-column">
+                                <input type="checkbox" id="myCheckbox{{i}}"  [disabled]="isDeletingImages || isImageUploading" [checked]="image.selected" (change)="image.selected = !image.selected"/>
+                                <label for="myCheckbox{{i}}">
+                                    <img src="{{image.eventImage}}" title="Select" class="hover-shadow cursor">
+                                    <div class="view-image-icon-container">
+                                    <mat-icon class="view-eye" (click)="showPreview($event,image,i)">remove_red_eye</mat-icon>
+                                    </div>
+                                </label>
+                            </div>
+                       
                 </ng-container>
              </div>
              </mat-card-content>
      </mat-card>
+<!--    <button *ngIf="eventTagList.length>0 && isMobile()"  class="btn sticky btn-{{checkTagSelected() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}" (click)="assignSelectedTags()" [disabled]="(checkTagSelected()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning" >Assign Tag <div *ngIf="isAssigning" class="loader-custom"></div></button>-->
 </ng-container>
+
 </ng-container>
 </div>

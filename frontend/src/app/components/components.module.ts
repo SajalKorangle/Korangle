@@ -40,6 +40,7 @@ import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.compon
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
+import {EventImageModalComponent} from '@modules/event-gallery/components/event-image-modal/event-image-modal.component';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
+        EventImageModalComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -101,7 +103,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
-
+        EventImageModalComponent,
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,

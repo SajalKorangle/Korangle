@@ -1,0 +1,88 @@
+<div *ngIf="!data.isMobile">
+    <mat-dialog-actions>
+        <div class="row" style="width: 100%; margin: 0px">
+            <div class="col-md-1" style="padding: 0px;">
+                <span style="font-size: 15px; float:left">Media Gallery</span>
+            </div>
+            <div class="col-md-10" style="text-align: center;">
+                <strong>{{counter + 1 }}/{{data.eventImages.length}}</strong>
+                <mat-form-field *ngIf="data.editable === 1" style="width: 1.5cm; margin-left:15px;">
+                    <mat-select placeholder="Move To" [ngModel]="moveToIndex"
+                        (ngModelChange)="moveToIndex = $event; moveImage()">
+                        <mat-option *ngFor="let item of data.eventImages; let i = index" style="width: 100%;" [value]="i">
+                            {{i+1}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-1" style="padding: 0px;">
+                <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 35px; float:right">clear</span>
+            </div>
+        </div>
+    </mat-dialog-actions>
+
+    <mat-dialog-content  class="row">
+        
+        <div style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;" [@animImageSlider]="counter">
+            <ng-container *ngFor="let img of data.eventImages; let i=index">
+                <img *ngIf="data.eventImages.length>0 && data.eventImages[counter].eventImage != undefined && i===counter" [src]="img.eventImage" [ngStyle]="imageStyle"/>
+            </ng-container>
+        </div>
+    </mat-dialog-content>
+
+
+
+    <mat-dialog-actions>
+        <div class="row" style="width: 100%; margin: 0px">
+            <div class="col-md-1" style="padding: 0px;">
+                <span class="material-icons cursor" style="font-size: 30px; float: left" (click)="onPrevious()">keyboard_arrow_left</span>
+            </div>
+            <div class="col-md-10" style="text-align: center;">
+                Zoom<mat-slider min="50" max="150" step="1" value="50" thumbLabel (input)=changeImageSize($event)></mat-slider>
+            </div>
+            <div class="col-md-1" style="padding: 0px;">
+                <span class="material-icons cursor" style="font-size: 30px; float: right" (click)="onNext()">keyboard_arrow_right</span>
+            </div>
+        </div>
+    </mat-dialog-actions>
+</div>
+
+<!-- Mobile Image Preview Code -->
+<div *ngIf="data.isMobile">
+    <mat-dialog-actions>
+        <div class="row" style="width: 100%; margin: 0px">
+            <div class="col-xs-1" style="padding: 0px;">
+                <span *ngIf="data.editable === 1" class="material-icons cursor" (click)="removeImage(data.index);" style="font-size: 25px; float:left">delete</span>
+            </div>
+            <div class="col-xs-10" style="text-align: center; padding: 0px">
+                <mat-form-field *ngIf="data.editable === 1" style="width: 1.5cm; margin-left:15px;">
+                    <mat-select placeholder="Move To" [ngModel]="moveToIndex"
+                        (ngModelChange)="moveToIndex = $event; moveImage()">
+                        <mat-option *ngFor="let item of data.eventImages; let i = index" [value]="i">
+                            {{i+1}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-xs-1" style="padding: 0px;">
+                <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 25px; float:right">clear</span>
+            </div>
+        </div>
+    </mat-dialog-actions>
+
+    <mat-dialog-content class="row" >
+        
+        <div style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;" [@animImageSlider]="counter">
+            <ng-container *ngFor="let img of data.eventImages; let i=index" style="margin: 15px; height: 80vh; overflow: auto; display: flex; justify-content: center; align-items: center;">
+                <img (swipeleft)="onNext()" (swiperight)="onPrevious()" (tap)="showImageInGallery(data.eventImages[counter])" *ngIf="data.eventImages.length>0 && data.eventImages[counter].eventImage != undefined && i===counter" [src]="img.eventImage" [ngStyle]="imageStyleMobile"/>
+            </ng-container>
+        </div>
+        
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <div class="row" style="width: 100%; margin: 0px; text-align: center">
+            <strong>{{counter + 1 }}/{{data.eventImages.length}}</strong>
+            <span class="material-icons" style="float: right;" (click)="showImageInGallery(data.eventImages[counter])">crop_free</span>
+        </div>
+    </mat-dialog-actions>
+</div>

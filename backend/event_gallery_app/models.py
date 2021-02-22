@@ -11,7 +11,7 @@ from school_app.model.models import School
 
 def upload_event_images_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'events/%s/images/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
+    return 'events/%s/images/%s%s' % (instance.parentEvent.id, now().timestamp(), filename_ext.lower())
 
 
 class Event(models.Model):
@@ -51,7 +51,6 @@ class EventImage(models.Model):
                                     verbose_name='parentEvent')
     eventImage = models.ImageField('event_image', upload_to=upload_event_images_to, blank=True, null=True)
     imageSize = models.TextField(null=True, blank=True,verbose_name='imageSize')
-    orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
 
     class Meta:
         db_table = 'event_images'

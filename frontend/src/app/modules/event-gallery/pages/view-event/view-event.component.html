@@ -1,1 +1,152 @@
-<p>View-event works!</p>
+<div *ngIf="isLoading" class="loader-cont">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</div>
+<div class="card-content table-responsive" *ngIf="!isLoading">
+
+
+    <div class="row" *ngIf="!selectedEvent">
+        <div class="col-md-4">
+            <mat-form-field style="width: 100%" [floatLabel]="'never'">
+                <input matInput
+                       [(ngModel)]="searchString"
+                       type="text"
+                       placeholder="search event title">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div *ngIf="isEventListLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+
+    <ng-container *ngIf="!isEventListLoading">
+
+        <ng-container *ngIf="selectedEvent">
+            <mat-icon
+                    style="float:left;cursor: pointer;margin-left:15px;"
+                    (click)="selectedEvent = null;">arrow_back
+            </mat-icon>
+            <span style="font-size:14px;float:left;margin-top:3px;margin-left: 5px;">Back</span>
+            <br>
+            <br>
+        </ng-container>
+        <ng-container *ngIf="!selectedEvent">
+            <mat-card style="margin-top: 10px;" *ngFor="let event of htmlAdapter.getEventList()"
+                      (click)="viewSelectedEvent(event)">
+                <div class="row">
+                    <div class="col-md-5">
+                        <mat-card-title>
+                            <strong style="font-size: 16px;">
+                                {{event.title}}
+                            </strong>
+                            <span class="eventDate">{{event.heldOn | date: 'dd MMM yyyy'}}</span>
+                        </mat-card-title>
+                        <mat-card-content
+                                style="font-weight:400;font-size: 16px; white-space: pre-line; margin-top: 5px;line-height: 19px;word-wrap: break-word;">
+                            {{event.description.length > 300 ? event.description.substring(0, 300) + "...." : event.description}} </mat-card-content>
+                    </div>
+                    <div class="col-md-5" style="padding-right:0;">
+                        <img [src]=htmlAdapter.getEventImageUrl(event,0)
+                             alt="Event Images"
+                             class="eventImage">
+                        <img [src]=htmlAdapter.getEventImageUrl(event,1)
+                             alt="Event Images"
+                             class="eventImage">
+                    </div>
+                    <div class="col-md-2" style="padding:0">
+                        <div style="background:#C4C4C4;width: 130px;height: 150px;line-height: 150px;text-align: center;display: inline-block;margin-top: 30px;vertical-align: middle;justify-content: center;align-items: center;"
+                             *ngIf="htmlAdapter.getImageLength(event) > 2">
+                            <span style="flex: 0 0 120px;font-weight: 400;"> +{{htmlAdapter.getImageLength(event) - 2}}
+                                More Media</span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </ng-container>
+
+        <ng-container *ngIf="selectedEvent">
+
+            <div class="row">
+                <div class="col-md-4" style="font-weight: 400;">
+                    <span style="font-size: 12px;">Title</span><br>
+                    <span style="font-size: 16px;display:block;margin-top:6px;">{{selectedEvent.title}}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;font-weight: 400;">
+                <div class="col-md-11">
+                    <span style="font-size: 12px;">Text</span><br>
+                    <span style="font-size: 16px;display:block;margin-top:6px;white-space: pre-line;line-height: 19px;word-wrap: break-word;">{{selectedEvent.description}}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin:20px 5px 30px;">
+                <div class="col-md-12"
+                     style="border-bottom: 1px solid lightgrey;"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span style="font-size: 14px;font-weight:400;">Search By Tags</span><br>
+                            <ng-container *ngFor="let eventTag of tagList">
+                                <div class="btn"
+                                     style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"
+                                     [ngClass]="{'selectedTag' : eventTag.selected}"
+                                     (click)="selectTag($event,eventTag)">{{eventTag.tagName}}</div>
+                            </ng-container>
+                            <!--                    <button *ngIf="eventTagList.length>0" class="btn btn-{{checkTagEditable() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}" (click)="assignSelectedTags()" [disabled]="(checkTagEditable()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning" style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span *ngIf="!isAssigning">Assign Tag</span> <div *ngIf="isAssigning" class="loader-custom"></div></button>-->
+                        </div>
+                    </div>
+                    <!--            <button [ngClass]="'sticky'" *ngIf="eventTagList.length>0 && isMobile()"-->
+                    <!--                    class="btn btn-{{checkTagSelected() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}"-->
+                    <!--                    (click)="assignSelectedTags()"-->
+                    <!--                    [disabled]="(checkTagSelected()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning">-->
+                    <!--                Assign Tag-->
+                    <!--            </button>-->
+                    <!--            <div class="clearfix"></div>-->
+                </div>
+            </div>
+
+
+            <mat-card style="margin-top: 20px;">
+                <div class="row" *ngIf="imageList.length>0">
+                    <div class="col-md-12">
+                        <mat-checkbox (change)="selectAllMedia($event)"
+                                      [checked]="getSelectedImagesCount() == imageList.length"
+                                      [disabled]="isImageDownloading"><span class="editTag" style="color: orange"> Select All Media </span>
+                        </mat-checkbox>
+                        <span style="float: right"><a href="javascript:void(0);" (click)="downloadSelectedImages()"> <i
+                                class="material-icons">save_alt</i>Download </a></span>
+                        <ng-container *ngIf="isImageDownloading">
+                            <div class="loader__dot"
+                                 style="display: inline-block;color:#ff9800;text-decoration: underline">Deleting
+                                Media<span class="loader__dot">.</span><span class="loader__dot">.</span><span
+                                        class="loader__dot">.</span></div>
+                        </ng-container>
+                    </div>
+                </div>
+                <mat-card-content style="max-height: 400px;overflow: auto">
+                    <div class="image-row">
+                        <ng-container *ngFor="let image of imageList; let i = index" style="display: inline-block">
+                            <div class="image-column">
+                                <input type="checkbox" id="myCheckbox{{i}}" [disabled]="isImageDownloading"
+                                       [checked]="image.selected" (change)="image.selected = !image.selected"/>
+                                <label for="myCheckbox{{i}}">
+                                    <img src="{{image.eventImage}}" title="Select" class="hover-shadow cursor">
+                                    <div class="view-image-icon-container">
+                                        <mat-icon class="view-eye" (click)="showPreview($event,image,i)">
+                                            remove_red_eye
+                                        </mat-icon>
+                                    </div>
+                                </label>
+                            </div>
+                        </ng-container>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+        </ng-container>
+    </ng-container>
+</div>

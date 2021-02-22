@@ -14,19 +14,19 @@ export class AddEventHtmlAdapter {
 
 
     unSelectAll(): void {
-        this.vm.notifySelectionList.forEach(
-            selection => {
-                selection.selected = false;
-            }
-        );
+        if(this.vm.editing) {
+            this.vm.editingNotificationList.forEach(selection => selection.selected = false);
+        }else{
+            this.vm.notifySelectionList.forEach(selection => selection.selected = false);
+        }
     };
 
     selectAll(): void {
-        this.vm.notifySelectionList.forEach(
-            selection => {
-                selection.selected = true;
-            }
-        );
+        if(this.vm.editing) {
+            this.vm.editingNotificationList.forEach(selection => selection.selected = true);
+        }else{
+            this.vm.notifySelectionList.forEach(selection => selection.selected = true);
+        }
     };
 
     editEvent(event): void {
@@ -36,11 +36,10 @@ export class AddEventHtmlAdapter {
         Object.keys(event).forEach(key => {
             this.vm.editingEvent[key] = event[key];
         });
-
         this.vm.notifySelectionList.forEach(notifyTo => {
             notifyTo.selected = (!!this.vm.eventNotifyList.find(eventNotify => eventNotify.parentEvent === event.id && eventNotify.parentClass === notifyTo.id)) || (notifyTo.name == 'Employees' && event.notifyEmployees);
         });
-
+        this.vm.editingNotificationList = JSON.parse(JSON.stringify(this.vm.notifySelectionList))
     }
 
 
@@ -53,7 +52,8 @@ export class AddEventHtmlAdapter {
     }
 
     getPlaceHolder(): any {
-        let notifyList = this.vm.notifySelectionList.filter(list => {
+        let actualList = this.vm.editing ? this.vm.editingNotificationList : this.vm.notifySelectionList;
+        let notifyList = actualList.filter(list => {
             if (list.selected === true) {
                 return true
             }
@@ -70,8 +70,8 @@ export class AddEventHtmlAdapter {
     }
 
 
-    getEventImageUrl(event: any, orderNumber: number): string {
-        let url = this.vm.imageList.find(img => img.parentEvent == event.id && img.orderNumber == orderNumber);
+    getEventImageUrl(event: any, index: number): string {
+        let url = this.vm.imageList.filter(img => img.parentEvent == event.id)[index];
         return url ? url.eventImage : '/assets/img/noImageAvailable.jpg';
     }
 
@@ -95,6 +95,10 @@ export class AddEventHtmlAdapter {
         if (this.isMobile()) {
             this.editEvent(event);
         }
+    }
+
+    getNotificationList() {
+        return this.vm.editing ? this.vm.editingNotificationList : this.vm.notifySelectionList;
     }
 
 }

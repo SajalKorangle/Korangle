@@ -4,6 +4,7 @@ import {ManageEventRoutingModule} from '@modules/event-gallery/pages/manage-even
 import {ReactiveFormsModule} from '@angular/forms';
 import {ComponentsModule} from '@components/components.module';
 import {ImagePreviewDialogComponent} from '@components/modal/image-preview-dialog.component';
+import {EventImageModalComponent} from '@modules/event-gallery/components/event-image-modal/event-image-modal.component';
 
 
 
@@ -15,7 +16,7 @@ import {ImagePreviewDialogComponent} from '@components/modal/image-preview-dialo
         ComponentsModule
     ],
    bootstrap: [ManageEventComponent],
-   entryComponents: [ImagePreviewDialogComponent]
+   entryComponents: [EventImageModalComponent]
 })
 
 export class ManageEventModule { }

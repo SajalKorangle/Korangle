@@ -7,7 +7,7 @@ import {FormControl} from '@angular/forms';
 import {EventGalleryService} from '@services/modules/event-gallery/event-gallery.service';
 import {map} from 'rxjs/operators';
 import {ManageEventServiceAdapter} from '@modules/event-gallery/pages/manage-event/manage-event.service.adapter';
-declare const $: any;
+import {EventImageModalComponent} from '@modules/event-gallery/components/event-image-modal/event-image-modal.component';
 
 
 
@@ -25,16 +25,19 @@ export class ManageEventComponent implements OnInit {
  isLoading:boolean;
  user:any;
  selectedImagesCount=0;
- eventImageData:any;
+ eventImageList:any;
  isImageUploading=false;
  eventList:any;
  filteredEventList:any;
  eventFormControl=new FormControl();
  selectedEvent:any;
  notifyToList:any;
+ isTagCreating:boolean;
  isEventLoading:boolean;
- eventTagData:any;
- eventImageTagData:any;
+ eventTagList:any;
+ eventImageTagList:any;
+ isDeletingImages:boolean;
+ isAssigning:boolean;
     
  
   constructor(public dialog:MatDialog,
@@ -46,7 +49,7 @@ export class ManageEventComponent implements OnInit {
        this.serviceAdapter=new ManageEventServiceAdapter();
        this.serviceAdapter.initializeAdapter(this);
        this.serviceAdapter.initializeData();
-       this.eventImageData=[];
+       this.eventImageList=[];
        
        this.filteredEventList = this.eventFormControl.valueChanges.pipe(
             map(value => typeof value === 'string' ? value: (value as any).title),
@@ -64,73 +67,20 @@ export class ManageEventComponent implements OnInit {
     }
 
     generateNewTag():void{
-        var generateHere = document.getElementById("generate-tags-btn");
-        
-        function saveTag(event) {
-            console.log('I am Called');
-            let tag = event.target.childNodes[0];
-            if (tag) {
-                console.log(tag.data);
-                if (event.target.childNodes[0].data != '') {
-                    event.target.attributes[0].value = 'false';
-                }
-            }
-        }
-
-        if(!generateHere.nextElementSibling || generateHere.nextElementSibling.innerHTML !== '') {
-            var div = document.createElement('div');
-            div.contentEditable = 'true';
-            div.style.background = '#ABABAB';
-            div.style.height = '28px';
-            div.style.padding = '5px';
-            div.style.marginLeft = '5px';
-            div.style.textTransform='none';
-            div.onkeydown=function (event){
-                if(event.key === 'Enter'){
-                    event.preventDefault();
-                    div.contentEditable='false';
-                    saveTag(event);
-                }
-                
-            }
-            div.onpaste=function (event){
-                event.preventDefault()
-                var text = event.clipboardData.getData('text/plain')
-                text =text.replace(/(\r\n|\n|\r)/gm," ");
-                document.execCommand('insertText', false, text)
-            }
-            // div.ondblclick=function (event){
-            //     div.contentEditable = 'true';
-            // };
-            div.onblur= function(event) { 
-                console.log(event);
-                saveTag(event);
-            };
-            div.onclick=function (event){
-                if(div.innerHTML!='' && div.contentEditable=='false') {
-                    div.classList.toggle("selectedTag");
-                    if (div.style.background === 'rgb(171, 171, 171)') {
-                        div.style.background = '#3BB847';
-                    } else {
-                        div.style.background = '#ABABAB';
-                    }
-                }
-            };
-            div.classList.add("btn");
-            generateHere.parentNode.insertBefore(div, generateHere.nextElementSibling);
-            div.focus();
-        }
+        var newTag = document.getElementById("new-tag");
+        newTag.style.display='inline-block';
+        newTag.focus();
     }
 
 
     assignSelectedTags() {
-        
+        this.serviceAdapter.assignImageTags();
     }
 
-    getButtonColor():string {
-        let selectedTags = document.getElementsByClassName("selectedTag");
-        if(selectedTags.length>0){
-            return 'warning';
+    checkTagSelected():string {
+        let selectedTagsLength = this.eventTagList.filter(tag=>tag.selected == true).length;
+        if(selectedTagsLength > 0 ){
+            return 'active';
         }else{
              return 'inactive';
         }
@@ -147,8 +97,8 @@ export class ManageEventComponent implements OnInit {
     }
 
     checkTagEditable():string {
-        let selectedTags = document.getElementsByClassName("selectedTag");
-        if(selectedTags.length==1){
+        let selectedTagsLength = this.eventTagList.filter(tag=>tag.selected == true).length;
+        if(selectedTagsLength==1){
             return 'active';
         }else{
              return 'inactive';
@@ -156,59 +106,58 @@ export class ManageEventComponent implements OnInit {
     }
 
     deleteSelectedTag():void {
-        if(this.checkTagEditable()=='active'){
-            let selectedTag = document.getElementsByClassName("selectedTag");
-            selectedTag[0].remove();
+        if(this.checkTagSelected()=='active'){
+            this.serviceAdapter.deleteSelectedTagList();
+        }
+    }
+
+
+    readURL(event): void {
+        if (event.target.files && event.target.files[0] && !this.isImageUploading) {
+            this.isImageUploading = true;
+            let files = []
+            for (let i = 0; i < event.target.files.length; i++) {
+                if (event.target.files[i].type !== 'image/jpeg' && event.target.files[i].type !== 'image/png') {
+                    alert('File type should be either jpg, jpeg, or png');
+                    this.isImageUploading = false;
+                } else {
+                    files.push(event.target.files[i]);
+                }
+            }
+
+            files.forEach(image => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    let tempImageData = {
+                        parentEvent: this.selectedEvent.id,
+                        eventImage: reader.result,
+                        imageSize:image.size,
+                    }
+                    this.serviceAdapter.uploadImage(tempImageData);
+                };
+                reader.readAsDataURL(image);
+            });
         }
     }
     
-    
-    dragEnter(value){
-        $(".dropinput").css({"z-index":"6"})
-    }
-
-    onDrop(value){
-        $('.dropinput').css({"z-index":"-1"})
-    }
-    
-
-
-    readURL(event):void {
-       if (event.target.files && event.target.files[0]) {
-           this.isImageUploading=true;
-           let image = event.target.files[0];
-           if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-               alert('File type should be either jpg, jpeg, or png');
-               return;
-           }
-           console.log(image);
-           const reader = new FileReader();
-           reader.onload = e => {
-               let tempImageData = {
-                   orderNumber: null,
-                   parentEvent: null,
-                   questionImage: reader.result,
-               }
-               this.eventImageData.push(tempImageData);
-           };
-           reader.readAsDataURL(image);
-           this.isImageUploading=false;
-       }
-    }
-    
-    openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
-        const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+    openImagePreviewDialog(eventImages: any, index: any, editable: any): void {
+        const dialogRef = this.dialog.open(EventImageModalComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
+            data: {'eventImages': eventImages, 'index': index, 'editable': false, 'isMobile': this.isMobile()}
         });
         dialogRef.afterClosed();
     }
 
     deleteSelectedMedia() {
-        
+        if(this.checkMediaSelected()=='active' && !this.isDeletingImages){
+            let images = this.eventImageList.filter(image=> image.selected == true);
+            images.forEach(image=> {
+                this.serviceAdapter.deleteSelectedImage(image);
+            });
+        }
     }
     
     isMobile(): boolean {
@@ -230,4 +179,80 @@ export class ManageEventComponent implements OnInit {
         }
         return '';
     }
+    
+
+    onPaste($event: any) {
+        console.log($event);
+    }
+
+    selectTag($event: any,eventTag:any) {
+      console.log($event);
+         if($event.target.innerHTML!='' && ($event.target.contentEditable=='false'||$event.target.contentEditable=='inherit') ) {
+                    eventTag.selected = !eventTag.selected;
+                    this.selectTaggedImages(eventTag);
+                }
+    }
+
+    saveTag($event: any,eventTag:any) {
+      if($event.target.innerHTML != eventTag.tagName) {
+          this.serviceAdapter.updateTag(eventTag,$event.target.innerHTML);
+          $event.target.contentEditable='false';
+      }else if($event.target.innerHTML == '' || $event.target.innerHTML.trim() == ''){
+          $event.target.innerHTML=eventTag.tagName;
+          $event.target.contentEditable='false';
+      }
+    }
+
+    onKeyDown($event: any) {
+      console.log($event);
+        if ($event.key === 'Enter') {
+            $event.preventDefault();
+        }
+    }
+
+    createTag($event: any) {
+        console.log($event);
+        if ($event.target.innerHTML != '' && $event.target.innerHTML.trim() != '') {
+            this.serviceAdapter.createTag($event.target.innerHTML);
+            $event.target.innerHTML='';
+            $event.target.style.display='none';
+        }
+    }
+    
+
+    selectAllMedia($event) {
+      if($event.checked) {
+          this.eventImageList.forEach(image => image.selected = true);
+      }else{
+          this.eventImageList.forEach(image => image.selected = false);
+      }
+    }
+
+    getSelectedImagesCount():any{
+        return this.eventImageList.filter(img=> img.selected==true).length;
+    }
+
+    checkMediaSelected():any { 
+         if(this.eventImageList.filter(img=> img.selected==true).length>0){
+             return 'active';
+         }else{
+             return 'inactive';
+         }
+    }
+
+    showPreview($event: any, image: any, i: number) {
+        $event.preventDefault();
+        this.openImagePreviewDialog(this.eventImageList,i,true)
+    }
+
+    selectTaggedImages(eventTag: any) {
+        this.eventImageList.forEach(img => {
+            img.tagList.some(tag => {
+                if (tag === eventTag.id) {
+                    img.selected = eventTag.selected;
+                }
+            });
+        });
+    }
+    
 }

@@ -1,9 +1,13 @@
 import {AddEventComponent} from '@modules/event-gallery/pages/add-event/add-event.component';
+import {not} from 'rxjs/internal-compatibility';
+import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
 
 export class AddEventServiceAdapter {
     vm: AddEventComponent;
 
     classList: any;
+    notifyPersonData:any;
+     informationMessageType: any;
 
     constructor() {
     }
@@ -11,6 +15,8 @@ export class AddEventServiceAdapter {
 
     initializeAdapter(vm: AddEventComponent): void {
         this.vm = vm;
+        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('General')+1;
+
     }
 
     initializeData(): void {
@@ -20,6 +26,7 @@ export class AddEventServiceAdapter {
         this.vm.eventNotifyList = [];
         this.vm.loadMoreEvents = true;
         this.fetchLoadingCount();
+        this.getNotificationPersonData();
     }
 
     fetchLoadingCount() {
@@ -34,7 +41,6 @@ export class AddEventServiceAdapter {
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),//0
             this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data),//1
-
         ]).then(value => {
             this.classList = value[0];
             value[1].forEach(event => {
@@ -48,6 +54,7 @@ export class AddEventServiceAdapter {
 
             let image_data = {
                 'parentEvent__in': value[1].map(e => e.id).join(),
+                'korangle__order':'-id',
             }
             let notify_class_data = {
                 'parentEvent__in': value[1].map(e => e.id).join(),
@@ -56,7 +63,6 @@ export class AddEventServiceAdapter {
             Promise.all([
                 this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_notify_class, notify_class_data),//2
                 this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image, image_data),//3
-
             ]).then(value2 => {
 
                 value2[0].forEach(val => {
@@ -66,6 +72,7 @@ export class AddEventServiceAdapter {
                 value2[1].forEach(val => {
                     this.vm.imageList.push(val);
                 });
+                console.log(this.vm.imageList)
 
                 this.vm.isEventListLoading = false;
                 this.vm.isLoading = false;
@@ -82,12 +89,29 @@ export class AddEventServiceAdapter {
             this.vm.notifySelectionList.push(classs);
         });
     }
+    
+    populateNotifyPersonData(studentData: any, employeeData: any) {
+        this.notifyPersonData = [];
+        studentData.forEach(student => {
+            student['student'] = true;
+            // if (!this.notifyPersonData.find(person => person.mobileNumber === student.mobileNumber)) {
+                this.notifyPersonData.push(student);
+            // }
+        });
+        employeeData.forEach(employee => {
+            employee['employee'] = true;
+            // if (!this.notifyPersonData.find(person => person.mobileNumber === employee.mobileNumber)) {
+            // }
+            this.notifyPersonData.push(employee);
 
+        });
+    }
 
+    
     postEvent() {
         this.vm.isLoading = true;
-        let notifyList = this.vm.notifySelectionList.filter(notify => notify.selected == true && notify.name != 'Employees');
-
+        let notifyList = this.vm.notifySelectionList.filter(notify => notify.selected == true);
+        this.vm.notifyPersonData=[];
         let event_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'title': this.vm.newEvent.title,
@@ -101,71 +125,87 @@ export class AddEventServiceAdapter {
         ]).then(value1 => {
             let notify_list_data = [];
             notifyList.forEach(notifyToClass => {
-                let notify_data = {'parentEvent': value1[0].id, 'parentClass': notifyToClass.id}
-                notify_list_data.push(notify_data);//0
+                if(notifyToClass.name!=='Employees') {
+                    let notify_data = {'parentEvent': value1[0].id, 'parentClass': notifyToClass.id}
+                    notify_list_data.push(notify_data);//0
+                }
             });
             Promise.all([this.vm.eventGalleryService.createObjectList(this.vm.eventGalleryService.event_notify_class, notify_list_data)]).then(value2 => {
                 this.vm.eventList.push(value1[0]);
                 value2[0].forEach(eachVal => {
                     this.vm.eventNotifyList.push(eachVal);
                 });
+                this.vm.notifyPersonData = this.notifyPersonData.filter(person=> notifyList.some(notify => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)));
+                this.vm.notifyPersonData =this.vm.notifyPersonData.filter((v,i,a)=>a.findIndex(t=>(t.mobileNumber === v.mobileNumber))===i);
+                this.attachEventTitle(this.vm.notifyPersonData,value1[0]);
+                this.vm.updateService.sendSMSNotificationNew(this.vm.notifyPersonData, this.vm.eventPostedMessage, this.informationMessageType, 3, this.vm.user.activeSchool.dbId, 0);
                 this.vm.initializeNewEvent();
-                this.vm.htmlAdapter.unSelectAll();
                 this.vm.eventList = this.vm.eventList.sort((a, b) => {
                     // @ts-ignore
                     return new Date(b.heldOn) - new Date(a.heldOn)
                 });
+                this.vm.htmlAdapter.unSelectAll();
                 this.vm.isLoading = false;
             });
         });
     }
 
+    attachEventTitle(notifyPersonList: any, event: any): any {
+        notifyPersonList.forEach(person => {
+            person.eventTitle = event.title;
+        });
+    }
+
     saveChanges() {
         this.vm.isLoading = true;
-        let notifyList = this.vm.notifySelectionList.filter(notify => notify.selected == true && notify.name != 'Employees');
-
+        let editedNotifyList = this.vm.editingNotificationList.filter(notify => notify.selected == true && notify.name != 'Employees');
+        let actualNotifyList = this.vm.notifySelectionList.filter(notify => notify.selected == true && notify.name != 'Employees');
         let data = {'parentEvent': this.vm.editingEvent.id};
 
+        let event_data = {
+            'id': this.vm.editingEvent.id,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'title': this.vm.editingEvent.title,
+            'description': this.vm.editingEvent.description,
+            'heldOn': this.vm.editingEvent.heldOn,
+            'notifyEmployees': this.vm.editingNotificationList.some(x => x.name == 'Employees' && x.selected == true),
+        }
+
         Promise.all([
-            this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_notify_class, data),//0
+            this.vm.eventGalleryService.updateObject(this.vm.eventGalleryService.event, event_data),//0
         ]).then(value => {
-            let notify_list_data = [];
-            this.vm.eventNotifyList = this.vm.eventNotifyList.filter(element => element.parentEvent != this.vm.editingEvent.id);
-            notifyList.forEach(notifyToClass => {
-                let notify_data = {'parentEvent': this.vm.editingEvent.id, 'parentClass': notifyToClass.id}
-                notify_list_data.push(notify_data);//0
+            Object.assign(this.vm.eventList.find(t => t.id === this.vm.editingEvent.id), JSON.parse(JSON.stringify(value[0])));
+            this.vm.eventList = this.vm.eventList.sort((a, b) => {
+                // @ts-ignore
+                return new Date(b.heldOn) - new Date(a.heldOn)
             });
-            Promise.all([this.vm.eventGalleryService.createObjectList(this.vm.eventGalleryService.event_notify_class, notify_list_data)]).then(value2 => {
 
-                value2[0].forEach(eachVal => {
-                    this.vm.eventNotifyList.push(eachVal);
-                });
-
-                let event_data = {
-                    'id': this.vm.editingEvent.id,
-                    'parentSchool': this.vm.user.activeSchool.dbId,
-                    'title': this.vm.editingEvent.title,
-                    'description': this.vm.editingEvent.description,
-                    'heldOn': this.vm.editingEvent.heldOn,
-                    'notifyEmployees': this.vm.notifySelectionList.some(x => x.name == 'Employees' && x.selected == true),
-                }
-
+            if (!(JSON.stringify(editedNotifyList) === JSON.stringify(actualNotifyList))) {
+                console.log('Different');
                 Promise.all([
-                    this.vm.eventGalleryService.updateObject(this.vm.eventGalleryService.event, event_data),//0
+                    this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_notify_class, data),//0
                 ]).then(value => {
-                    Object.assign(this.vm.eventList.find(t => t.id === this.vm.editingEvent.id), JSON.parse(JSON.stringify(value[0])));
-                    this.vm.htmlAdapter.unSelectAll();
-                    this.vm.eventList = this.vm.eventList.sort((a, b) => {
-                        // @ts-ignore
-                        return new Date(b.heldOn) - new Date(a.heldOn)
+                    let notify_list_data = [];
+
+                    this.vm.eventNotifyList = this.vm.eventNotifyList.filter(element => element.parentEvent != this.vm.editingEvent.id);
+                    editedNotifyList.forEach(notifyToClass => {
+                        let notify_data = {'parentEvent': this.vm.editingEvent.id, 'parentClass': notifyToClass.id}
+                        notify_list_data.push(notify_data);//0
+                    });
+
+                    Promise.all([this.vm.eventGalleryService.createObjectList(this.vm.eventGalleryService.event_notify_class, notify_list_data)]).then(value2 => {
+                        value2[0].forEach(eachVal => {
+                            this.vm.eventNotifyList.push(eachVal);
+                        });
                     });
                     this.vm.editing = false;
+                    this.vm.htmlAdapter.unSelectAll();
                     this.vm.isLoading = false;
                 });
-            });
+            }
         });
-
     }
+    
 
     deleteEvent(editingEvent: any) {
         if (confirm('Are you sure want to delete this Event?')) {
@@ -175,10 +215,57 @@ export class AddEventServiceAdapter {
             ]).then(value => {
                 this.vm.eventList = this.vm.eventList.filter(event => event.id != editingEvent.id);
                 this.vm.editing = false;
-                this.vm.isLoading = false;
+                this.vm.notifySelectionList.forEach(notifyTo => {
+                    notifyTo.selected = (!!this.vm.eventNotifyList.find(eventNotify => eventNotify.parentEvent === editingEvent.id && eventNotify.parentClass === notifyTo.id)) || (notifyTo.name == 'Employees' && editingEvent.notifyEmployees);
+                });
+                let notifyList = this.vm.notifySelectionList.filter(notify => notify.selected == true);
+                this.vm.notifyPersonData = this.notifyPersonData.filter(person=> notifyList.some(notify => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)));
+                this.vm.notifyPersonData =this.vm.notifyPersonData.filter((v,i,a)=>a.findIndex(t=>(t.mobileNumber === v.mobileNumber))===i);
+                this.attachEventTitle(this.vm.notifyPersonData,editingEvent);
+                console.log(this.vm.notifyPersonData);
+                this.vm.updateService.sendSMSNotificationNew(this.vm.notifyPersonData, this.vm.eventDeletedMessage, this.informationMessageType, 3, this.vm.user.activeSchool.dbId, 0);
+                this.vm.initializeNewEvent();
                 this.vm.htmlAdapter.unSelectAll();
+                this.vm.isLoading = false;
             });
         }
     }
 
+    
+     getNotificationPersonData() {
+         let student_data = {
+             'parentSchool': this.vm.user.activeSchool.dbId,
+         }
+         
+         let employee_data={
+             'parentSchool': this.vm.user.activeSchool.dbId,
+             'fields__korangle': 'id,name,mobileNumber',
+         }
+
+         Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_data)]).then(value1 => {
+
+             let data = {
+                 'id__in': value1[0].map(section => section.parentStudent).join(),
+                 'fields__korangle': 'id,name,mobileNumber',
+             }
+             
+             Promise.all([
+                 this.vm.studentService.getObjectList(this.vm.studentService.student, data),
+                 this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
+             ]).then(value2 => {
+                 this.populateNotifyPersonData(value2[0], value2[1]);
+                 this.populateStudentClassList(this.notifyPersonData, value1[0])
+                 this.vm.updateService.fetchGCMDevicesNew(this.notifyPersonData);
+             });
+         });
+    }
+
+    populateStudentClassList(notifyPersonData: any, studentSection: any) {
+        notifyPersonData.forEach(person =>{
+            if(person.student==true) {
+                person['parentClass'] = studentSection.find(studSec => studSec.parentStudent == person.id).parentClass;
+            }
+        });
+    }
+    
 }

@@ -58,7 +58,7 @@
         </div>
         <div class="row">
             <div class="col-md-1" style="width: 230px;margin-top: 20px">
-                <span style="font-size: 16px">Send Media update Notify to</span>
+                <span style="font-size: 16px">Event Visible to </span>
             </div>
             <div class="col-md-3">
                 <mat-form-field style="width: 100%;" appearance="none">
@@ -76,7 +76,7 @@
                             </button>
                         </mat-option>
 
-                        <ng-container *ngFor="let notifyTo of notifySelectionList">
+                        <ng-container *ngFor="let notifyTo of htmlAdapter.getNotificationList()">
                             <mat-option style="width: 100%;">
                                 <mat-checkbox [(ngModel)]="notifyTo.selected"
                                               (click)="$event.stopPropagation();">
@@ -158,10 +158,10 @@
                                 {{event.description.length>300?event.description.substring(0,300)+"....":event.description}} </mat-card-content>
                         </div>
                         <div class="col-md-5">
-                            <img [src]=htmlAdapter.getEventImageUrl(event,1)
+                            <img [src]=htmlAdapter.getEventImageUrl(event,0)
                                  alt="Event Images"
                                  class="eventImage">
-                            <img [src]=htmlAdapter.getEventImageUrl(event,2)
+                            <img [src]=htmlAdapter.getEventImageUrl(event,1)
                                  alt="Event Images"
                                  class="eventImage">
                         </div>
