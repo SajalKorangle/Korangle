@@ -252,7 +252,7 @@ export class AddTutorialServiceAdapter {
             alert('Tutorial topic should not be empty');
             return false;
         }
-        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && !t.id === tutorial.id)) {
+        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && t.id != tutorial.id)) {
             alert('The Topic already exists');
             return false;
         }

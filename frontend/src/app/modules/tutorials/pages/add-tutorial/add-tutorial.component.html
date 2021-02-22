@@ -165,7 +165,6 @@
                     <td>
                         <span *ngIf="!tutorial.editable || !tutorialEditing">{{tutorial.topic}}</span>
                         <mat-form-field *ngIf="tutorial.editable && tutorialEditing">
-                            <mat-label><span *ngIf="topicAlreadyPresent(editedTutorial)" style="color: red">(Topic Already Present)</span> </mat-label>
                             <input
                                     matInput
                                     type="text"
@@ -198,7 +197,7 @@
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 3px 8px;"
-                                [disabled]="(tutorialEditing && !tutorial.editable == true || tutorialUpdating) || topicAlreadyPresent(editedTutorial)"
+                                [disabled]="(tutorialEditing && !tutorial.editable == true || tutorialUpdating)"
                                 (click)="serviceAdapter.makeEditableOrSave(tutorial)"><span *ngIf="tutorial.editable">Save</span><span
                                 *ngIf="!tutorial.editable">Edit</span>
                         </button>
