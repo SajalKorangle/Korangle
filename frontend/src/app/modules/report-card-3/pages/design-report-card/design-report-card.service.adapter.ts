@@ -70,7 +70,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //13
         ]).then(data => { 
-            console.log(data);
+            // console.log(data);
             this.vm.reportCardLayoutList = data[0];
             this.vm.DATA.data.studentSectionList = data[1];
             this.vm.DATA.data.studentParameterList = data[2];
@@ -84,7 +84,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.DATA.data.subGradeList = data[10];
             this.vm.publicLayoutList = data[11];
             this.vm.DATA.data.classSectionSignatureList = data[13];
-            console.log('DATA: ', this.vm.DATA);
+            // console.log('DATA: ', this.vm.DATA);
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
@@ -129,7 +129,7 @@ export class DesignReportCardServiceAdapter {
                 this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, request_layout_sharing_data),//6
                 this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, shared_layout_data), //7
             ]).then(value => {
-                console.log(value);
+                // console.log(value);
                 this.vm.DATA.data.studentList = value[0];
                 this.vm.DATA.data.studentParameterValueList = value[1];
                 this.vm.DATA.data.studentTestList = value[2];
@@ -203,7 +203,7 @@ export class DesignReportCardServiceAdapter {
             this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
             
         ]).then (value =>{
-            console.log(value);
+            // console.log(value);
             this.vm.DATA.data.studentSectionList.push(value[0][0]);
             this.vm.DATA.data.studentList.push(value[1][0]);
             this.vm.DATA.data.studentParameterValueList.push(value[2][0]);
@@ -293,7 +293,7 @@ export class DesignReportCardServiceAdapter {
     shareCurrentLayoutWithSchool(schoolKID: number) {
         if (schoolKID != this.vm.user.activeSchool.dbId) {
             const layoutSharingData = { parentSchool: schoolKID, parentLayout: this.vm.currentLayout.id };
-            console.log(layoutSharingData);
+            // console.log(layoutSharingData);
             return this.vm.reportCardService.createObject(this.vm.reportCardService.layout_sharing, layoutSharingData);
         }
     }

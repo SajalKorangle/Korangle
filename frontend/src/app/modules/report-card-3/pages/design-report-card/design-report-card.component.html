@@ -267,7 +267,7 @@
                                     [id]="'layer_#'+layer.id"> 
                                 <span *ngIf="layer.error" style="color: red; float: left; font-size: x-large;">•</span>
                                 <span *ngIf="layer.isLocked" class="material-icons" style="float: left; font-size: small; margin-top: 3px;">lock</span>
-                                <span (blur)="layer.displayName=$event.target.innerText" style="display: inline-block;" contenteditable="true"> {{layer.displayName}} </span>   <!--this is layer name-->
+                                <span style="display: inline-block;"> {{layer.displayName}} </span>   <!--this is layer name-->
                                 <span style="float: right; margin-right: 12px;">#{{layer.id}}</span>   <!-- i is id which is the array index no.of layers -->
                             </span>
                         </ng-container>

@@ -34,8 +34,6 @@ export class TableParameterPannelComponent implements OnInit {
 
   getCellY(): string{ // get y of the selected cell
     if (this.layer.selectedCells.length > 0) {
-      console.log('selection list: ', this.layer.selectedCells);
-      console.log('row List: ', this.layer.rowsList);
       let rowIndex = this.layer.selectedCells[0].row
       let y = this.layer.y, i = 0;
       while (i < rowIndex) {

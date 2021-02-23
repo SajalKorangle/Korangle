@@ -1468,7 +1468,6 @@ export class CanvasSquare extends CanvasRectangle implements Layer{
 }
 
 export class CanvasText extends BaseLayer implements Layer{
-    displayName: string = 'Text';
     text: string = 'Lorem Ipsum'; 
     prefix: string = '';
     suffix: string = '';
@@ -1517,6 +1516,17 @@ export class CanvasText extends BaseLayer implements Layer{
             }
         });
 
+        Object.defineProperty(this, 'displayName', {
+            get: function () {
+                let displayName = this.text.toString().substr(0, 15);
+                if (this.text.length > 15) {
+                    displayName = displayName.substr(0, 12) + '...';
+                }
+                return displayName;
+            },
+            set: function (v) { }   // dummy set function
+        });
+
     }
 
     layerDataUpdate(): void {
@@ -1529,31 +1539,8 @@ export class CanvasText extends BaseLayer implements Layer{
                 this.text = value ? value : this.alternateText;
             }
         }
-        this.changeLayerName();
     }
 
-    changeLayerName(): void{
-        if(this.text != this.alternateText){
-            let maxLength = Math.min(this.text.length, 10);
-            this.displayName = '';
-            for(let i=0;i<maxLength; i++){
-                this.displayName += this.text[i];
-            }
-            if(maxLength < this.text.length){
-                this.displayName += '...';
-            }
-        }
-    }
-
-    drawUnderline():void{
-        // if(this.underline){
-        //     this.ctx.beginPath()
-        //     this.ctx.moveTo(this.x + this.textBoxMetrx.boundingBoxLeft, this.y);
-        //     this.ctx.lineTo(this.x + this.textBoxMetrx.boundingBoxRight, this.y);
-        //     this.ctx.stroke();
-        // }
-        // return ;
-    }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         ctx.fillStyle = this.fillStyle;
@@ -1568,7 +1555,6 @@ export class CanvasText extends BaseLayer implements Layer{
         ctx.strokeStyle = this.fillStyle;
         // canvasTxt.debug = true;
         this.lastHeight = canvasTxt.drawText(ctx, this.prefix+this.text+this.suffix, this.x, this.y, Math.max(1,this.maxWidth), Math.max(1,this.minHeight)).height;
-        // this.drawUnderline();
         return true;    // Drawn successfully on canvas
     }
 
@@ -1604,6 +1590,7 @@ export class CanvasText extends BaseLayer implements Layer{
             savingData.source = { ...this.source };
             delete savingData.source.layerType;
         }
+        delete savingData.displayName;
         return savingData;
     }
 
@@ -1613,7 +1600,6 @@ export class CanvasText extends BaseLayer implements Layer{
 
 
 export class CanvasDate extends CanvasText implements Layer{
-    displayName: string = 'Date';
     date: Date = new Date();
     dateFormat: string = '<dd>/<mm>/<yyy>';
 
@@ -1635,7 +1621,6 @@ export class CanvasDate extends CanvasText implements Layer{
         }
 
         this.dateFormatting();
-        this.changeLayerName();
     }
 
     dateFormatting(): void{
@@ -1760,7 +1745,6 @@ export class CanvasGroup extends BaseLayer implements Layer{
 }
 
 export class AttendanceLayer extends CanvasText implements Layer{
-    displayName: string = 'Attendance';
     startDate: Date = new Date();
     endDate: Date = new Date();
 
@@ -1796,7 +1780,6 @@ export class AttendanceLayer extends CanvasText implements Layer{
 }
 
 export class GradeLayer extends CanvasText implements Layer{
-    displayName: string = 'Grade';
     parentExamination: any = null;
     subGradeId: any = null;
 
@@ -1839,7 +1822,6 @@ export class GradeLayer extends CanvasText implements Layer{
 }
 
 export class RemarkLayer extends CanvasText implements Layer{
-    displayName: string = 'Examination Remark';
     parentExamination: any = null;
 
     dataSourceType: string = 'DATA';
@@ -1940,7 +1922,6 @@ export class GradeRuleSet{
 }
 
 export class MarksLayer extends CanvasText implements Layer{
-    displayName: string = 'Marks';
 
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute
@@ -2062,17 +2043,17 @@ function setCustomFunctionsInParser(parser: any): void {
         let result = 0;
         params.slice(minList.length, params.length - 1).forEach(number => {
             result += Number(number);
-            console.log(result);
+            // console.log(result);
             minList.every((minNumber, index, list) => {
                 if (minNumber > number) {
                     result += Number(minNumber - number);
-                    console.log(result);
+                    // console.log(result);
                     list[index] = number;
                     return false;
                 }
                 return true;
             });
-            console.log(minList);
+            // console.log(minList);
         });
         return result;
 
@@ -2084,14 +2065,18 @@ export function getParser(layers: Layer[]) {
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
         if (layer) {
-            if ((layer.LAYER_TYPE == 'MARKS')) {
-                PARSER.setVariable(numberToVariable(layer.id), layer.marks>=0?layer.marks:0);
-            }
-            else if (layer instanceof CanvasText) {
+            // if ((layer.LAYER_TYPE == 'MARKS')) {
+            //     PARSER.setVariable(numberToVariable(layer.id), layer.marks>=0?layer.marks:0);
+            // }
+            // else
+                if (layer instanceof CanvasText) {
                 let parsedValue = parseFloat(layer.text);
                 if (!isNaN(parsedValue)) {
                     PARSER.setVariable(numberToVariable(layer.id), parsedValue);
                 }
+                else {
+                    PARSER.setVariable(numberToVariable(layer.id), 0);
+                    }
             }
         }
     });
@@ -2100,7 +2085,6 @@ export function getParser(layers: Layer[]) {
 }
 
 export class Formula extends CanvasText implements Layer{
-    displayName: string = 'Formula';
 
     formula: string= '';
     decimalPlaces: number = 1;
@@ -2150,13 +2134,13 @@ export class Formula extends CanvasText implements Layer{
                 indexOfLayerIdNextDigit = formulaCopy.search(/#[0-9]+/)
             }
 
-            if (!parser)
-                parser = getParser(this.ca.layers)
             // const parser = getParser(this.ca.layers);
             formulaDependencies.forEach(formulaLayer => {
                 formulaLayer.layerDataUpdate([...dependents]);
-                parser.setVariable(numberToVariable(formulaLayer.id), formulaLayer.marks);
+                // parser.setVariable(numberToVariable(formulaLayer.id), formulaLayer.marks);
             })
+            if (!parser)
+                parser = getParser(this.ca.layers)
 
             let result = parser.parse(formulaCopy);
             if (result.error) {
@@ -2201,7 +2185,6 @@ export class Formula extends CanvasText implements Layer{
 }
 
 export class Result extends CanvasText implements Layer{
-    displayName: string = 'Result';
 
     marksLayers: (MarksLayer|Formula)[] = []; 
     rules: {passingMarks: number[], remarks: string[], colorRule:any[]} = {passingMarks:[], remarks:['PASS'], colorRule:['#008000']};
@@ -2242,7 +2225,6 @@ export class Result extends CanvasText implements Layer{
 }
 
 export class CurrentSession extends CanvasText implements Layer{
-    displayName: string = 'Current Session';
 
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute

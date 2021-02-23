@@ -284,7 +284,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             return this.fullCanavsRefresh();
         } catch (err) {
             console.error(err);
-            reportError(ERROR_SOURCES[1], location.pathname + location.search, err, 'error in loading saved layout page; data croupted');
+            reportError(ERROR_SOURCES[1], location.pathname + location.search, err.toString(), 'error in loading saved layout page; data croupted');
             alert('data corupted');
             this.clearCanvas();
         }
@@ -403,7 +403,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase{
         let layer1Index: number = this.layers.findIndex(l => l.id == id1);
         let layer2Index: number = this.layers.findIndex(l => l.id == id2);
         let layerToMove = this.layers[layer2Index];
-        delete this.layers[layer2Index];    // check here
+        delete this.layers[layer2Index]; 
         this.layers.splice(layer1Index, 0, layerToMove);
         this.layers = this.layers.filter(Boolean);
         this.activeLayer = layerToMove;
@@ -523,7 +523,7 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
             let clickedX, clickedY;
             clickedX = event.offsetX;
             clickedY = event.offsetY;
-            console.log('clicked point = ', clickedX, clickedY);
+            // console.log('clicked point = ', clickedX, clickedY);
             let flag = true;    // true: no layer is at clicked position
             
             if (this.activeLayer && this.activeLayer.id == -1 &&    // if active layer is group, check if it is clicked

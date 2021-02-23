@@ -117,7 +117,7 @@ export class DesignReportCardHtmlAdapter {
         });
         this.openedDialog.afterClosed().subscribe((result: PageResolution) => {
             if (result) {
-                console.log('activePageResolution acalled, result = ', result);
+                // console.log('activePageResolution acalled, result = ', result);
                 this.canvasSetUp();
                 this.vm.canvasAdapter.updateResolution(result);
             }
