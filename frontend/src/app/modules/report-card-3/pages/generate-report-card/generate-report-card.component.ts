@@ -105,7 +105,8 @@ export class GenerateReportCardComponent implements OnInit {
   canvasAdapter: GenerateReportCardCanvasAdapter;
   serviceAdapter: GenerateReportCardServiceAdapter;
 
-  generatedReportCards:number = 0;
+  generatedReportCards: number = 0;
+  estimatedTime: any = null;
   isLoading:boolean = false
 
   constructor(
@@ -184,6 +185,7 @@ export class GenerateReportCardComponent implements OnInit {
   async generateReportCard() {
     this.isLoading = true;
     this.generatedReportCards = 0;
+    this.estimatedTime = null;
     let selectedLayutContent = JSON.parse(this.selectedLayout.content);
     this.DATA.data.studentSectionList = this.getSelectedStudentList();
     this.DATA.data.studentList = this.DATA.data.studentSectionList.map(ss => this.studentList.find(s => s.id == ss.parentStudent));
@@ -195,6 +197,7 @@ export class GenerateReportCardComponent implements OnInit {
     
     let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
     doc.deletePage(1);
+    let stratTime:any = new Date();
     for (let si = 0; si < this.DATA.data.studentList.length; si++){
       this.DATA.studentId = this.DATA.data.studentList[si].id;
       for (let i = 0; i < selectedLayutContent.length;i++){
@@ -203,7 +206,13 @@ export class GenerateReportCardComponent implements OnInit {
         await this.canvasAdapter.downloadPDF(doc);
       }
       this.generatedReportCards++;
-      await sleep(10);
+      let currTime:any = new Date();
+      let timeTakenPerStudent: any = ((currTime - stratTime) + 20) / (1000*(si+1));  // converting to seconds
+      let estimatedTime = timeTakenPerStudent * (this.DATA.data.studentList.length - si - 1); // in seconds
+      let secLeft = Math.ceil((estimatedTime) % 60);
+      let minutesleft = Math.floor(estimatedTime / 60);
+      this.estimatedTime = { minutes: minutesleft, seconds: secLeft };
+      await sleep(20);
     }
 
     doc.save(this.selectedLayout.name + '.pdf');

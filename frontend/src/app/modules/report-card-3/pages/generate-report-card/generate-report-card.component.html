@@ -113,6 +113,8 @@
     <app-loading-spinner [user]="user"></app-loading-spinner>
     <div style="text-align: center;" *ngIf="generatedReportCards!=0">
         <mat-progress-bar mode="determinate" [value]="generatedReportCards*100/getSelectedStudentList().length"></mat-progress-bar>
-        {{generatedReportCards}}/{{getSelectedStudentList().length}}
+        {{generatedReportCards}}/{{getSelectedStudentList().length}}<br/>
+        <ng-container *ngIf="estimatedTime">Estimated Time: {{estimatedTime.minutes}} minutes {{estimatedTime.seconds}} seconds</ng-container>
+        <ng-container *ngIf="!estimatedTime">Processing ...</ng-container>
     </div>
 </ng-template>
