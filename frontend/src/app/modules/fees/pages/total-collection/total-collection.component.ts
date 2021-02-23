@@ -129,22 +129,30 @@ export class TotalCollectionComponent implements OnInit {
 
     getClass(studentId: any, sessionId: any): any {
         return  this.classList.find(classs => {
-            return classs.id == this.studentSectionList.find(studentSection => {
+            let tempStudentSection = this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
-            }).parentClass;
+            });
+            // checking tempStudentSection because cancelled receipt student could also be deleted.
+            return tempStudentSection && classs.id == tempStudentSection.parentClass;
         });
     }
 
     getSection(studentId: any, sessionId: any): any {
         return this.sectionList.find(section => {
-            return section.id == this.studentSectionList.find(studentSection => {
+            let tempStudentSection = this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
-            }).parentDivision;
+            });
+            // checking tempStudentSeciton because cancelled receipt student could also be deleted.
+            return tempStudentSection && section.id == tempStudentSection.parentDivision;
         });
     }
 
     getClassAndSection(studentId: any, sessionId: any): any {
         const classs=this.getClass(studentId,sessionId);
+        // because cancelled receipt student could also be deleted.
+        if (classs === undefined) {
+            return undefined;
+        }
         const section=this.getSection(studentId,sessionId);
         return {
             'classs': classs,
@@ -180,8 +188,9 @@ export class TotalCollectionComponent implements OnInit {
         }
         if (this.selectedClassSection) {
             tempList = tempList.filter(feeReceipt => {
-                let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
-                return classSection.classs.id == this.selectedClassSection.classs.id
+            let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
+            // checking classSection because cancelled receipt student could also be deleted.
+            return classSection && classSection.classs.id == this.selectedClassSection.classs.id
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
         }
