@@ -11,7 +11,7 @@ import {
   MatOptionModule,
 } from '@angular/material'; 
 
-import { ComponentsModule } from '../../../components/components.module';
+import { ComponentsModule } from '../components.module';
   
 import { MultipleFileDialogComponent } from './multiple-file-dialog.component'; 
   

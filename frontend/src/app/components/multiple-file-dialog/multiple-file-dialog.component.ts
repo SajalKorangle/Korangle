@@ -1,7 +1,7 @@
 import { OnInit,Component, Inject } from '@angular/core'; 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PARAMETER_LIST } from 'app/modules/id-card/class/constants';
-import {DataStorage} from '../../../classes/data-storage';
+import {DataStorage} from '../../classes/data-storage';
 
 
   

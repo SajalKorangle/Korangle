@@ -241,6 +241,64 @@
             </div>
         </div>
 
+        <div class="row">
+            <div *ngFor="let parameter of employeeParameterList">
+                <div *ngIf="parameter.parameterType!=='DOCUMENT'" class="col-md-3">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
+                        <input matInput *ngIf="parameter.parameterType==='TEXT'" type="text" (ngModelChange)="updateParameterValue(parameter,$event)" [ngModel]="getParameterValue(parameter)">
+                        <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                            <mat-select placeholder="{{parameter.name}}" [ngModel]="getParameterValue(parameter)" (ngModelChange)="updateParameterValue(parameter,$event)">
+                                <mat-option [value]="nullValue">None</mat-option>
+                                <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+                            </mat-select>
+                        </ng-container>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div *ngFor="let parameter of employeeParameterList">
+                <div *ngIf="parameter.parameterType==='DOCUMENT'" class="col-md-5" style="margin-top: 10px;margin-right:10px">
+                    <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
+                        <input class="dropinput" type="file" multiple="false" (input)="updateDocuments(parameter, $event,imageInput)" #imageInput>
+                        <label class="documentLabel">{{parameter.name}}</label>
+                        <div *ngIf="getParameterDocumentType(parameter)=='none'">
+                            <div class="documentIcon">
+                                <img src="/assets/img/nofile.png" (click)="openFilePreviewDialog(parameter)">
+                            </div>
+                            <div class="documentText">
+                                <p class="documentName">Select a file or Drag it here</p>
+                                <button (click)="imageInput.click()" class="documentButton">Upload</button>
+                            </div>
+                        </div>
+                        <div *ngIf="getParameterDocumentType(parameter)=='img'">
+                            <div class="documentIcon">
+                                <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
+                            </div>
+                            <div class="documentText">
+                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                            </div>
+                        </div>
+                        <div *ngIf="getParameterDocumentType(parameter)=='pdf'">
+                            <div class="documentIcon">
+                                <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
+                            </div>
+                            <div class="documentText">
+                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <mat-accordion>
             <mat-expansion-panel style="margin-bottom: 8px">
 <!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-bottom: 8px"></mat-divider>-->
@@ -282,7 +340,7 @@
             </mat-expansion-panel>
         </mat-accordion>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="createNewEmployee()">Create Profile</button>
+        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.createNewEmployee()">Create Profile</button>
 
     </ng-container>
 

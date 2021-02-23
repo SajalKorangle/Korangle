@@ -16,8 +16,8 @@ import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service"
 import {BankService} from '../../../../services/bank.service';
 
-import {MultipleFileDialogComponent} from '../../multiple-file-dialog/multiple-file-dialog.component';
-import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import {MultipleFileDialogComponent} from '../../../../components/multiple-file-dialog/multiple-file-dialog.component';
+import {ImagePdfPreviewDialogComponent} from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import {MatDialog} from '@angular/material';
 
 declare const $: any;
