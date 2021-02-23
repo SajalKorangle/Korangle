@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
         if (BuildConfig.DEBUG) {
-            webview.loadUrl("http://192.168.29.79:4200");
+            webview.loadUrl("http://192.168.29.79:4200");   // YOUR SYSTEM IP GOES HERE (frontend server's)
         } else {
             volleyFace.checkingUpdates();
         }
