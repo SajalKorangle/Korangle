@@ -149,59 +149,83 @@ export class User {
         let module: any;
         let task: any ;
         
-        if (this.checkUserSchoolSessionPermission(urlParams)) { // checking the school id  and session id in the url is valid for this user
-            switch (modulePath) { // from here i am population module
-                // if the user refreshes the notification or user - settings
-                // (i.e) we dont have these two in our user's active school module list
+        if(this.checkNewClient()){
+            this.populateNewClient()
+        }
+        else{
+            if (this.checkUserSchoolSessionPermission(urlParams)) { // checking the school id  and session id in the url is valid for this user
+                switch (modulePath) { // from here i am population module
+                    // if the user refreshes the notification or user - settings
+                    // (i.e) we dont have these two in our user's active school module list
 
-                case '/':
-                    module=undefined;
-                    break;
-                case 'user-settings':
-                    module = this.settings;
-                    break;
-                case 'notification':
-                    module = this.notification;
-                    break;
+                    case '/':
+                        module=undefined;
+                        break;
+                    case 'user-settings':
+                        module = this.settings;
+                        break;
+                    case 'notification':
+                        module = this.notification;
+                        break;
 
-                // Review: You have written down that refreshing of student task list is not handled yet.
-                // Ye comment puraana hai, ya functionality abhi bhi nahi handle hui hai.
+                    // Review: You have written down that refreshing of student task list is not handled yet.
+                    // Ye comment puraana hai, ya functionality abhi bhi nahi handle hui hai.
 
-                // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
-                case 'parent':
-                    // Review: Agar woh employee ke role se parent ke role me aa raha hai to? Permission hai dono ki uske paas.
-                     // if only the active school has student list then we can change the role
-                    if(this.activeSchool.studentList.length > 0) {
-                        this.activeSchool.role='Parent';
-                        if (urlParams.get('student_id') != undefined) {
-                            module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
-                        } else {
-                            // Review: agar path view_fee receipt ka nahi hua aur student id bhi undefined hai to?
-                            // Aisa case is line tak pahunch sakta hai kya?
-                            module = this.activeSchool.parentModuleList[0].taskList.some(t => t.path == taskPath) ? this.activeSchool.parentModuleList[0] : undefined;
+                    // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
+                    case 'parent':
+                        // Review: Agar woh employee ke role se parent ke role me aa raha hai to? Permission hai dono ki uske paas.
+                        // if only the active school has student list then we can change the role
+                        if(this.activeSchool.studentList.length > 0) {
+                            this.activeSchool.role='Parent';
+                            if (urlParams.get('student_id') != undefined) {
+                                module = this.activeSchool.studentList.find(s => s.id == Number(urlParams.get('student_id')));
+                            } else {
+                                // Review: agar path view_fee receipt ka nahi hua aur student id bhi undefined hai to?
+                                // Aisa case is line tak pahunch sakta hai kya?
+                                module = this.activeSchool.parentModuleList[0].taskList.some(t => t.path == taskPath) ? this.activeSchool.parentModuleList[0] : undefined;
+                            }
                         }
-                    }
-                    break;
-                // for employee
-                default:
-                    module = this.activeSchool.moduleList.find(m => m.path == modulePath);
+                        break;
+                    // for employee
+                    default:
+                        module = this.activeSchool.moduleList.find(m => m.path == modulePath);
+                }
+                if (module) { // if module doesn't exist redirect to default school notification page
+                    task = module.taskList.find(t => t.path == taskPath);
+                }
             }
-            if (module) { // if module doesn't exist redirect to default school notification page
-                task = module.taskList.find(t => t.path == taskPath);
+
+            if (!module || !task) {
+                module = this.notification;
+                task = this.notification.taskList[0];
             }
-        }
 
-        if (!module || !task) {
-            module = this.notification;
-            task = this.notification.taskList[0];
+            module.showTaskList = true;
+            this.populateSectionAndRoute(task, module);
         }
-
-        module.showTaskList = true;
-        this.populateSectionAndRoute(task, module);
 
     }
-
     
+    checkNewClient():boolean{
+        if (this.schoolList.length==0){
+            return true;
+        }  
+        else{
+            return false;
+        }
+    }
+  
+    populateNewClient(){
+          this.section = {
+              route: 'user-settings',
+              subRoute: 'update_profile',
+              title: 'Settings',
+              subTitle: 'Update Profile',
+          };
+          EmitterService.get('initialize-router').emit('');
+      }
+
+
     checkUserSchoolSessionPermission(urlParams:any): boolean {
         const school = this.schoolList.find(s => s.dbId == Number(urlParams.get('school_id')));
         if (school != undefined
@@ -228,37 +252,50 @@ export class User {
     }
 
     populateSectionAndRoute(task: any, module: any): void {
-        let queryParams={school_id: this.activeSchool.dbId, session: this.activeSchool.currentSessionDbId};
-        if (module.path === 'user-settings' || module.path === 'notification') {
-            this.section = {
-                route: module.path,
-                subRoute: task.path,
-                title: module.title,
-                subTitle: task.title,
-            };
-        } else if (this.activeSchool.role === 'Parent') {
-            this.section = {
-                route: 'parent',
-                subRoute: task.path,
-                title: module.name,
-                subTitle: task.title,
-                student: module,
-            };
-            if(!this.activeSchool.parentModuleList[0].taskList.some(t => t.path == task.path)){
-                queryParams['student_id']=module.id;
-            }
-        } else if (this.activeSchool.role === 'Employee') {
-            this.section = {
-                route: module.path,
-                subRoute: task.path,
-                title: module.title,
-                subTitle: task.title,
-            };
-            if (task.videoUrl) {
-                this.section['videoUrl'] = task.videoUrl;
+        if (this.checkNewClient()){
+            if (module.path === 'user-settings'){
+                this.section = {
+                    route: module.path,
+                    subRoute: task.path,
+                    title: module.title,
+                    subTitle: task.title,
+                };
+                EmitterService.get('initialize-router').emit("");
             }
         }
-         EmitterService.get('initialize-router').emit({queryParams: queryParams});
+        else{  
+            let queryParams={school_id: this.activeSchool.dbId, session: this.activeSchool.currentSessionDbId};
+            if (module.path === 'user-settings' || module.path === 'notification') {
+                this.section = {
+                    route: module.path,
+                    subRoute: task.path,
+                    title: module.title,
+                    subTitle: task.title,
+                };
+            } else if (this.activeSchool.role === 'Parent') {
+                this.section = {
+                    route: 'parent',
+                    subRoute: task.path,
+                    title: module.name,
+                    subTitle: task.title,
+                    student: module,
+                };
+                if(!this.activeSchool.parentModuleList[0].taskList.some(t => t.path == task.path)){
+                    queryParams['student_id']=module.id;
+                }
+            } else if (this.activeSchool.role === 'Employee') {
+                this.section = {
+                    route: module.path,
+                    subRoute: task.path,
+                    title: module.title,
+                    subTitle: task.title,
+                };
+                if (task.videoUrl) {
+                    this.section['videoUrl'] = task.videoUrl;
+                }
+            }
+            EmitterService.get('initialize-router').emit({queryParams: queryParams});
+        }
     }
 
 }
