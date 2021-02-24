@@ -162,7 +162,7 @@ export class AddTutorialComponent implements OnInit {
     checkEnableAddButton(): boolean {
         const tutorial = this.newTutorial;
 
-        if (!tutorial.topic || tutorial.topic.trim() == '' || this.topicAlreadyPresent(tutorial) || !this.youTubeLinkValid())
+        if (!tutorial.chapter || tutorial.chapter.trim() == '' ||  !tutorial.topic || tutorial.topic.trim() == '' || this.topicAlreadyPresent(tutorial) || !this.youTubeLinkValid())
             return false;
 
         return true;
