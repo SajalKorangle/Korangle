@@ -190,10 +190,6 @@ export class GenerateReportCardComponent implements OnInit {
     this.DATA.data.studentSectionList = this.getSelectedStudentList();
     this.DATA.data.studentList = this.DATA.data.studentSectionList.map(ss => this.studentList.find(s => s.id == ss.parentStudent));
     await this.serviceAdapter.getDataForGeneratingeportCard();
-
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
     
     let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
     doc.deletePage(1);

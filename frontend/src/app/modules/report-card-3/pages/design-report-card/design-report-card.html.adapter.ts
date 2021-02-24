@@ -1,12 +1,12 @@
 import { DesignReportCardComponent } from './design-report-card.component';
 import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer, CanvasImage, sleep} from './../../class/constants_3';
-import { PageResolutionDialogComponent } from './../../components/page-resolution-dialog/page-resolution-dialog.component';
-import {ResultDialogComponent } from './../../components/result-dialog/result-dialog.component'
-import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
-import { MarksDialogComponent } from './../../components/marks-dialog/marks-dialog.component';
-import {LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component'
-import { InventoryDialogComponent } from './../../components/inventory-dialog/inventory-dialog.component';
-import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
+import { PageResolutionDialogComponent } from '../../components/dialogs/page-resolution-dialog/page-resolution-dialog.component';
+import {ResultDialogComponent } from '../../components/dialogs/result-dialog/result-dialog.component'
+import { GradeRulesDialogComponent } from '../../components/dialogs/grade-rules-dialog/grade-rules-dialog.component';
+import { MarksDialogComponent } from '../../components/dialogs/marks-dialog/marks-dialog.component';
+import {LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component'
+import { InventoryDialogComponent } from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
 
 export class DesignReportCardHtmlAdapter {
 
