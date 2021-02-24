@@ -6,7 +6,7 @@ import {StudentService} from '../../../../services/modules/student/student.servi
 import { ChangeDetectorRef } from '@angular/core';
 import {DataStorage} from '../../../../classes/data-storage';
 import { UpdateAllServiceAdapter } from './update-all.service.adapter';
-import { PARAMETER_TYPE_LIST } from '../../classes/parameter';
+import { PARAMETER_TYPE_LIST } from '../../../../classes/constants/parameter';
 
 class ColumnHandle {
     name: any;

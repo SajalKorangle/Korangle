@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {DataStorage} from '../../../../classes/data-storage';
 import {UpdateAllServiceAdapter} from './update-all.service.adapter';
 import {EmployeeService} from '../../../../services/modules/employee/employee.service';
-import { PARAMETER_TYPE_LIST } from 'app/modules/students/classes/parameter';
+import { PARAMETER_TYPE_LIST } from 'app/classes/constants/parameter';
 
 class ColumnHandle {
   name: any;

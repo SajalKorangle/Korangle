@@ -10,6 +10,7 @@ import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
 import { EmployeeService } from 'app/services/modules/employee/employee.service';
 import { CommonFunctions } from 'app/classes/common-functions';
 import { MultipleFileDialogComponent } from 'app/components/multiple-file-dialog/multiple-file-dialog.component';
+declare const $: any;
 
 @Component({
   selector: 'update-profile',
