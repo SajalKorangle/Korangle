@@ -237,6 +237,8 @@ export class UpdateProfileServiceAdapter {
 
             // Copying the student parameter values for reference
             this.vm.studentParameterValueList = value[1];
+            console.log('student parameter value list')
+            console.dir(this.vm.studentParameterValueList)
             this.vm.currentStudentParameterValueList = [];
             this.vm.studentParameterValueList.filter(x => x.parentStudent===studentId).forEach(item=>{
                 if (item.document_value){
@@ -246,10 +248,12 @@ export class UpdateProfileServiceAdapter {
                 }
             });
 
-            console.log(this.vm.studentParameterValueList)
+            
             this.vm.studentParameterValueList.filter(x => x.parentStudent===studentId).forEach(item => {
                 this.vm.currentStudentParameterValueList.push(this.vm.commonFunctions.copyObject(item))
             });
+            console.log('current filtered  parameter value list')
+            console.dir(this.vm.currentStudentParameterValueList)
             this.vm.isLoading = false;
         });
     }

@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {DataStorage} from '../../../../classes/data-storage';
 import {UpdateAllServiceAdapter} from './update-all.service.adapter';
 import {EmployeeService} from '../../../../services/modules/employee/employee.service';
+import { PARAMETER_TYPE_LIST } from 'app/modules/students/classes/parameter';
 
 class ColumnHandle {
   name: any;
@@ -35,6 +36,14 @@ export class UpdateAllComponent implements OnInit {
 
   user;
   employeeFullProfileList = [];
+
+  employeeParameterList: any[] = [];
+  employeeParameterValueList: any[] = [];
+  parameter_type_list = PARAMETER_TYPE_LIST;
+  NULL_CONSTANT = null;
+  noFileIcon ="/assets/img/noFileIcon.png";
+  pdfIcon ="/assets/img/pdfIcon.png";
+  imageIcon ="/assets/img/imageIcon.png";
 
   COLUMNHANDLES: ColumnHandle[] = [
     // value, key, inputType, show, selectedList
@@ -88,6 +97,55 @@ export class UpdateAllComponent implements OnInit {
       item.show = false;
     });
   }
+
+
+  getParameterValue = (employee, parameter) => {
+    try {
+        return this.employeeParameterValueList.find(x => x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).value;
+    } catch {
+        return this.NULL_CONSTANT;
+    }
+}
+
+getDocumentName(employee, parameter){
+    let item =  this.employeeParameterValueList.find(x =>x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id);
+    if (item) {
+        if (item.document_name){
+            return item.document_name;
+        }else{
+             let document_name = item.document_value.split("/")
+             document_name = document_name[document_name.length-1];
+             return document_name.substring(document_name.indexOf("_")+1,document_name.length);
+        }
+    }
+    return "No File Chosen";
+}
+
+getDocumentIcon(employee,parameter){
+  try {
+        let value =  this.employeeParameterValueList.find(x =>x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).document_value;
+        if (value){
+            if (value ==="" || value===undefined){
+                return this.NULL_CONSTANT;
+            }
+            else{
+                let type = value.split(".")
+                type = type[type.length-1]
+                if (type=="pdf"){
+                    return this.pdfIcon;
+                }
+                else if (type=="jpg"|| type=="jpeg" || type=="png"){
+                    return this.imageIcon;
+                }
+            }
+        } else{
+            return this.noFileIcon;
+        }
+    }
+    catch{
+        return this.noFileIcon;
+    }
+}
 
 
 }

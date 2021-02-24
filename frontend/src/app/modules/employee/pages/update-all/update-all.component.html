@@ -19,6 +19,13 @@
                     </mat-checkbox>
                 </mat-option>
             </ng-container>
+            <ng-container *ngFor="let parameter of employeeParameterList">
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation();">
+                        {{parameter.name}}
+                    </mat-checkbox>
+                </mat-option>
+            </ng-container>
             <mat-option>
                 <button class="btn"
                         style="padding: 4px 7px"
@@ -42,6 +49,9 @@
                         [class.hidden]="!column.show">
                         {{column.name}}
                     </th>
+                    <th style="min-width: 150px;" *ngFor="let parameter of employeeParameterList" [class.hidden]="!parameter.show">
+                        {{parameter.name}}
+                    <th>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,6 +82,38 @@
                                        [ngModel]="employee[column.key]"/>
                             </ng-container>
                         </td>
+                        <ng-container *ngFor="let parameter of employeeParameterList" >
+                            <td *ngIf="parameter.show"
+                                [attr.id]="parameter.id+'-'+employee.id">
+                                <input matInput *ngIf="parameter.parameterType===parameter_type_list[0]"
+                                    type="text"
+                                    class="customInput"
+                                    [attr.id]="employee.id+'-'+parameter.id"
+                                    (blur)="serviceAdapter.updateParameterValue(employee, parameter, $event.target.value)"
+                                    [ngModel]="getParameterValue(employee, parameter)">
+                                <ng-container *ngIf="parameter.parameterType===parameter_type_list[1]">
+                                    <mat-select placeholder="{{parameter.name}}"
+                                                [attr.id]="employee.id+'-'+parameter.id"
+                                                [ngModel]="getParameterValue(employee, parameter)"
+                                                (ngModelChange)="serviceAdapter.updateParameterValue(employee, parameter, $event)">
+                                            <mat-option [value]="NULL_CONSTANT">None</mat-option>
+                                            <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+                                    </mat-select>
+                                </ng-container>
+                                <ng-container *ngIf="parameter.parameterType===parameter_type_list[2]">
+                                    <div class="text-center">
+                                        <input class="dropinput" type="file"
+                                               [attr.id]="employee.id+'-'+parameter.id"
+                                               title="{{getDocumentName(employee, parameter)}}"
+                                               (input)="serviceAdapter.updateParameterDocumentValue(employee,parameter,$event)">
+                                            <img [src]="getDocumentIcon(employee, parameter)"
+                                                 class="documenticon"
+                                                 [id]="employee.id+'-'+parameter.id+'-icon'">
+                                            <p [id]="employee.id+'-'+parameter.id+'-text'"></p>
+                                        </div>
+                                </ng-container>
+                            </td>
+                            </ng-container>
                     </tr>
                 </ng-container>
                 </tbody>

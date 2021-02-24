@@ -319,6 +319,77 @@
             </div>
         </div>
 
+        <!-- Custom Text/Filter Parameter -->
+        <div class="row">
+            <div *ngFor="let parameter of employeeParameterList">
+                <div *ngIf="parameter.parameterType!=='DOCUMENT'" class="col-md-3"
+                     [class.fieldChanged]="checkCustomFieldChanged(parameter)">
+		            <mat-form-field  style="width: 100%;">
+		                <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
+		                <input matInput  *ngIf="parameter.parameterType==='TEXT'"
+		                    type="text"
+		                    (ngModelChange)="updateParameterValue(parameter, $event)"
+		                    [ngModel]="getParameterValue(parameter)">
+		                <ng-container *ngIf="parameter.parameterType==='FILTER'">
+		                    <mat-select placeholder="{{parameter.name}}"
+		                        [ngModel]="getParameterValue(parameter)"
+		                        (ngModelChange)="updateParameterValue(parameter, $event)">
+		                            <mat-option [value]="NULL_CONSTANT">None</mat-option>
+		                            <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
+		                    </mat-select>
+		                </ng-container>
+		            </mat-form-field>
+	            </div>
+            </div>
+        </div>
+        
+        <!-- Custom Documents Parameter -->
+        <div class="row">
+            <div *ngFor="let parameter of employeeParameterList">
+            	<div *ngIf="parameter.parameterType=='DOCUMENT'" class="col-md-5" style="margin-top: 10px;margin-right:10px" [class.fieldChanged]="checkCustomFieldChanged(parameter)">
+                    <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
+                    	<input id="{{parameter.id}}" class="dropinput"
+                    		type="file"
+                    		multiple="true"
+                    		(input)="updateDocuments(parameter,$event,imageInput)" #imageInput>
+                        <label class="documentLabel">{{parameter.name}}</label>
+                        <div *ngIf="getParameterDocumentType(parameter)=='none'">
+                            <div class="documentIcon">
+                                <img src="/assets/img/nofile.png">
+                            </div>
+                            <div class="documentText">
+                                <p class="documentName">Select a file or Drag it here</p>
+                                <button (click)="imageInput.click()" class="documentButton">Upload</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
+                            </div>
+                        </div>
+                        <div *ngIf="getParameterDocumentType(parameter)=='img'">
+                            <div class="documentIcon">
+                                <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
+                            </div>
+                            <div class="documentText">
+                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
+                            </div>
+                        </div>
+                        <div *ngIf="getParameterDocumentType(parameter)=='pdf'">
+                            <div class="documentIcon">
+                                <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
+                            </div>
+                            <div class="documentText">
+                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateEmployeeProfile();">Update</button>
         <div class="clearfix"></div>
 

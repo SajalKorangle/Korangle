@@ -4,11 +4,18 @@ import { EmployeeOldService } from '../../../../services/modules/employee/employ
 
 import {FormControl} from '@angular/forms';
 import {DataStorage} from "../../../../classes/data-storage";
+import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import { MatDialog } from '@angular/material';
+import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
+import { EmployeeService } from 'app/services/modules/employee/employee.service';
+import { CommonFunctions } from 'app/classes/common-functions';
+import { MultipleFileDialogComponent } from 'app/components/multiple-file-dialog/multiple-file-dialog.component';
 
 @Component({
   selector: 'update-profile',
   templateUrl: './update-profile.component.html',
   styleUrls: ['./update-profile.component.css'],
+  providers: [EmployeeService]
 })
 
 export class UpdateProfileComponent implements OnInit {
@@ -16,7 +23,7 @@ export class UpdateProfileComponent implements OnInit {
     user;
 
     employeeList: any;
-
+    NULL_CONSTANT = null;
     selectedEmployeeProfile: any;
     currentEmployeeProfile: any;
 
@@ -27,10 +34,31 @@ export class UpdateProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService) { }
+    employeeSectionList: any;
+    employeeParameterList: any[] = [];
+    employeeParameterValueList: any[] = [];
+    currentEmployeeParameterValueList: any[] = [];
+    
+    deleteList :any[]=[];
+    profileImage=null;
+
+    selectedEmployee: any;
+    currentEmployee: any;
+
+    commonFunctions: CommonFunctions;
+
+    serviceAdapter: UpdateProfileServiceAdapter
+
+
+    constructor (public employeeOldService: EmployeeOldService,
+                public employeeService: EmployeeService,
+                public dialog:MatDialog,) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.serviceAdapter = new UpdateProfileServiceAdapter()
+        this.serviceAdapter.initializeAdapter(this)
+        this.serviceAdapter.initializeData()
 
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};
@@ -52,19 +80,46 @@ export class UpdateProfileComponent implements OnInit {
         };
 
         this.isLoading = true;
+        let service_list = [];
         Promise.all([
-            this.employeeService.getEmployeeProfile(data, this.user.jwt),
-            this.employeeService.getEmployeeSessionDetail(session_data, this.user.jwt),
+            this.employeeOldService.getEmployeeProfile(data, this.user.jwt),
+            this.employeeOldService.getEmployeeSessionDetail(session_data, this.user.jwt),
+            this.employeeService.getObjectList(this.employeeService.employee_parameter_value, {
+                parentEmployee: employee.id,
+            })
         ]).then(value => {
-            this.isLoading = false;
             this.selectedEmployeeProfile = value[0];
             Object.keys(this.selectedEmployeeProfile).forEach(key => {
                 this. currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
+
             });
             this.selectedEmployeeSessionProfile = value[1];
             Object.keys(this.selectedEmployeeSessionProfile).forEach(key => {
                 this.currentEmployeeSessionProfile[key] = this.selectedEmployeeSessionProfile[key];
             });
+
+           
+
+           
+                this.employeeParameterValueList = value[2];
+                this.currentEmployeeParameterValueList = [];
+                this.employeeParameterValueList.forEach(item=>{
+                    if (item.document_value){
+                        let document_name = item.document_value.split("/")
+                        document_name = document_name[document_name.length-1]
+                        item.document_name = document_name
+                    }
+                });
+
+                this.employeeParameterValueList.forEach(item => {                 
+                    let tempObject = {}
+                    Object.keys(item).forEach(key => {
+                        tempObject[key] = item[key];
+                    });
+                    this.currentEmployeeParameterValueList.push(tempObject)
+                });
+                this.isLoading = false;
+            
         }, error => {
             this.isLoading = false;
         });
@@ -158,13 +213,71 @@ export class UpdateProfileComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.employeeService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt),
+            this.employeeOldService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt),
             (this.currentEmployeeSessionProfile.id==null?
-                this.employeeService.createEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
-                    :this.employeeService.updateEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
+                this.employeeOldService.createEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
+                    :this.employeeOldService.updateEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
             )
         ]).then(value => {
             this.isLoading = false;
+
+
+        let generateList = [];
+        let updateList = [];
+        let service_list = [];
+        this.currentEmployeeParameterValueList.forEach(x => {
+            x.parentEmployee = this.currentEmployeeProfile.id;
+        });
+        this.employeeParameterList.forEach(parameter => {
+            console.log('parameter')
+            console.dir(parameter)
+            if (this.checkCustomFieldChanged(parameter)) {
+                let temp_obj = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+                if (temp_obj){
+                    const data = { ...temp_obj}
+                    const form_data = new FormData();
+                    Object.keys(data).forEach(key => {
+                        if (data[key]){
+                            if (key =="document_name"|| key=="document_size"){}
+                            else if (key=='document_value'){
+                                form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
+                                form_data.append('document_size',data['document_size'])
+                            }
+                            else {
+                                form_data.append(key,data[key])   
+                            }
+                        }
+                        else{
+                            form_data.append(key,"")
+                        } 
+                    })
+                    if (temp_obj.id) {
+                        updateList.push(form_data)
+                    } else if (!temp_obj.id) {
+                        generateList.push(form_data)
+                    }
+                }
+            }
+        });
+        
+        if (generateList.length) {
+            generateList.forEach(x => {
+                service_list.push(this.employeeService.createObject(this.employeeService.employee_parameter_value,x))
+            })
+        }
+
+        if (updateList.length) {
+            updateList.forEach(x => {
+                service_list.push(this.employeeService.updateObject(this.employeeService.employee_parameter_value,x))
+
+            })
+        }
+
+        if(this.deleteList.length){
+            this.deleteList.forEach(x =>{
+                service_list.push(this.employeeService.deleteObject(this.employeeService.employee_parameter_value,{'id':x.id}))
+            })
+        }
             alert('Employee profile updated successfully');
             this.selectedEmployeeProfile = this.currentEmployeeProfile;
             this.selectedEmployeeSessionProfile = this.currentEmployeeSessionProfile;
@@ -172,6 +285,24 @@ export class UpdateProfileComponent implements OnInit {
             this.isLoading = false;
         });
 
+    }
+
+    dataURLtoFile(dataurl, filename) {
+    	try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, {type: mime});
+        } catch (e) {
+            return null;
+        }
     }
     cropImage(file: File, aspectRatio: any): Promise<Blob> {
         return new Promise((resolve, reject) => {
@@ -236,7 +367,7 @@ export class UpdateProfileComponent implements OnInit {
             id: this.selectedEmployeeProfile.id,
         };
         this.isLoading = true;
-        this.employeeService.uploadProfileImage(image, data, this.user.jwt).then( response => {
+        this.employeeOldService.uploadProfileImage(image, data, this.user.jwt).then( response => {
             this.isLoading = false;
             alert(response.message);
             if (response.status === 'success') {
@@ -285,6 +416,270 @@ export class UpdateProfileComponent implements OnInit {
                 canvas.toBlob(resolve, file.type);
             };
             image.onerror = reject;
+        });
+    }
+
+
+    getParameterValue = (parameter) => {
+        try {
+            return this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).value
+        } catch {
+            return null;
+        }
+    }
+
+    updateParameterValue = (parameter, value) => {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (!item) {
+            item = {parentEmployee: this.currentEmployeeProfile.id, parentEmployeeParameter: parameter.id, value: value};
+            this.currentEmployeeParameterValueList.push(item);
+        } else {
+            item.value = value;
+        }
+    }
+
+    checkCustomFieldChanged = (parameter) => {
+        const item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        const old_item = this.employeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (!item && old_item){
+            return true
+        }
+        if (old_item){
+            if (old_item.value===null){
+                return item && (!old_item || item.document_value != old_item.document_value);
+            }
+        }
+        return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
+    }
+
+
+
+    
+    
+    isMobile():boolean{
+        if (window.innerWidth > 991) {
+            return false
+        }
+        return true
+    };
+
+    getParameterDocumentType(parameter){
+    	try{
+        	let document_value= this.currentEmployeeParameterValueList.find(x =>x.parentEmployeeParameter === parameter.id).document_value
+        	if (document_value){
+        		let document_name = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).document_name
+        		let urlList=[]
+		        if (document_name){
+		            urlList = document_name.split(".")
+		        }
+		        else{
+		            urlList = document_value.split(".")
+		        }
+		        let type = urlList[urlList.length-1]
+		        if (type=='pdf'){
+		            return 'pdf'
+		        }
+		        else{
+		            return 'img'
+		        }
+		    } else{
+		    	return 'none'
+		    }
+	    }
+	    catch{
+        	return 'none'
+        }
+    }
+
+    getParameterDocumentValue(parameter){
+        try{
+        	let document_value= this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).document_value
+		    if (document_value){
+		        return document_value
+		    }
+		    else{
+		        return null
+		    }
+        }
+        catch{
+            return null
+        }
+    }
+    
+    deleteDocument(parameter) {
+        if (confirm('Are you sure want to delete this document?')) {
+            let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id)
+            if (item) {
+                if (item.id) {
+                    this.deleteList.push(item)
+                }
+                this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList.filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter)
+            }
+        }
+    }
+    
+
+    resetDocument(parameter) {
+        if (confirm('Are you sure want to reset this document?')) {
+            let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id)
+            let old_item = this.employeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id)
+            if (item) {
+                if (old_item) {
+                    item.id = old_item.id;
+                    item.document_value = old_item.document_value
+                    item.document_size = old_item.document_size
+                    item.document_name = old_item.document_name
+                    this.deleteList = this.deleteList.filter(x => x.id !== old_item.id)
+                } else {
+                    this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList.filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter)
+                }
+            } else if (old_item) {
+                item = {
+                    id:old_item.id,
+                    parentEmployeeParameter: parameter.id,
+                    document_value: old_item.document_value,
+                    document_name: old_item.document_name,
+                    document_size: old_item.document_size
+                };
+                this.currentEmployeeParameterValueList.push(item);
+                this.deleteList = this.deleteList.filter(x => x.id !== old_item.id)
+            }
+        }
+    }
+    
+    check_document(value): boolean {
+    	let type = value.type
+        if (type !== 'image/jpeg' && type !== 'image/jpg' && type !== 'image/png' && type!='application/pdf' ) {
+            alert('Uploaded File should be either in jpg,jpeg,png or in pdf format')
+            return false
+        }
+        else{
+            if (value.size/1000000.0 > 5){
+                alert ("File size should not exceed 5MB")
+                return false
+            }
+            else{
+            	return true
+            }
+        }
+    }
+    
+    getDocumentName(parameter){
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id)
+        if (item) {
+            if (item.document_name){
+                return item.document_name
+            }
+            else{
+                let document_name = item.document_value.split("/")
+                document_name = document_name[document_name.length-1]
+                return document_name.substring(document_name.indexOf("_")+1,document_name.length);
+            }
+        }
+    }
+    
+    updateDocuments = (parameter, value,element) => {
+        const options = this.employeeParameterList.filter(parameter=>(parameter.parameterType=="DOCUMENT"))
+        if (value.target.files.length>1){
+            if (value.target.files.length<=options.length){
+                let files=[]
+                for (let i=0;i<value.target.files.length;i++){
+                    if (this.check_document(value.target.files[i])){
+                        files.push(value.target.files[i])
+                    }
+                };
+                if (files.length){
+                    let choiceList = [];
+                    options.forEach(x=>(
+                        choiceList.push({'name':x.name,'id':x.id})
+                    ));
+                    console.log(choiceList);
+                    let dialogRef = this.dialog.open(MultipleFileDialogComponent,{
+                    width:'580px',
+                    data:{files:files,options:options,choiceList:choiceList}  
+                    });
+                    dialogRef.afterClosed().subscribe(result=>{
+                        if (result){
+                            for (let i=0;i<result.files.length;i++){
+                                let item = options.find(x=>(x.id===result.list[i].id))
+                                if (item){
+                                    this.updateDocumentValue(item,result.files[i])
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            else{
+                console.log("Please select only "+value.target.files.length+" files");
+            }
+        }
+        else{
+            let check = this.check_document(value.target.files[0])
+            if (check==true){
+                this.updateDocumentValue(parameter,value.target.files[0])
+            }
+        }
+        element.value='';
+    }
+
+    updateDocumentValue=(parameter,file)=>{
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        let inDeletedList=this.deleteList.find(x=> x.parentEmployeeParameter === parameter.id);
+        let document_value =file;
+            let document_size = document_value.size;
+            let document_name = document_value.name;
+            const reader = new FileReader();
+            reader.onload = e => {
+                document_value = reader.result
+                if (!item && !inDeletedList){
+                item = {parentEmployeeParameter: parameter.id, document_value: document_value,document_name:document_name,document_size:document_size};
+                this.currentEmployeeParameterValueList.push(item);
+                } else if (inDeletedList) {
+                    this.deleteList = this.deleteList.filter(x => x.id !== inDeletedList.id);
+                    console.log(this.deleteList)
+                    let Item = {
+                        id:inDeletedList.id,
+                        parentEmployeeParameter: inDeletedList.parentEmployeeParameter,
+                        document_value: document_value,
+                        document_name: document_name,
+                        document_size: document_size
+                    };
+                    console.log(Item)
+                    this.currentEmployeeParameterValueList.push(Item);
+                }
+                else{
+                    item.document_value = document_value;
+                    item.document_name = document_name;
+                    item.document_size= document_size;
+                }
+            };
+            reader.readAsDataURL(document_value);
+    }
+    
+    dragEnter(value){
+        $(".dropinput").css({"z-index":"6"})
+        $(value.path[1]).css({"background":"rgba(182, 224, 184, 0.1)","border": "1px dashed #7db580"})
+    }
+
+    onDrop(value){
+        $('.dropinput').css({"z-index":"-1"})
+        $(value.path[1]).css({"background":"","border": ""})
+    }
+
+    dragLeave(value){
+        $(value.path[1]).css({"background":"","border": ""})
+    }
+    
+    openFilePreviewDialog(parameter): void {
+        let type=this.getParameterDocumentType(parameter)
+        let file = this.getParameterDocumentValue(parameter)
+        const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
+            width: '600px',
+            data: {'file': file, 'type': type}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
         });
     }
 

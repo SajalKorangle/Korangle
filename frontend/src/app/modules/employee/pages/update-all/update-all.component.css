@@ -104,3 +104,27 @@ i.material-icons.column {
     75%  {background: lightgreen;}
     100% {background: lightpink;}
 }
+
+.example-viewport {
+    height: 80vh;
+    width: 100%;
+    border: none;
+    border-top: 2px solid #909090;
+}
+
+td {
+    position: relative;
+}
+
+.documenticon {
+    width: 25px;
+}
+
+.dropinput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
