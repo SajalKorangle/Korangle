@@ -1794,6 +1794,8 @@ export class GradeLayer extends CanvasText implements Layer{
     parentExamination: any = null;
     subGradeId: any = null;
 
+    examinationName: string;    // explicitly added for sharing, not a good archtecture
+
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute
     
@@ -1826,6 +1828,7 @@ export class GradeLayer extends CanvasText implements Layer{
             ...savingData,
             parentExamination: this.parentExamination,
             subGradeId: this.subGradeId,
+            examinationName: this.source.getExaminationName(this.ca.DATA, this.parentExamination),
         }
         return savingData;
     }
@@ -1834,6 +1837,8 @@ export class GradeLayer extends CanvasText implements Layer{
 
 export class RemarkLayer extends CanvasText implements Layer{
     parentExamination: any = null;
+
+    examinationName: string;    // explicitly added for sharing, not a good archtecture
 
     dataSourceType: string = 'DATA';
     source: { [key: string]: any };    // required attribute
@@ -1864,6 +1869,7 @@ export class RemarkLayer extends CanvasText implements Layer{
         savingData = {
             ...savingData,
             parentExamination: this.parentExamination,
+            examinationName: this.source.getExaminationName(this.ca.DATA, this.parentExamination),
         }
         return savingData;
     }
@@ -1945,6 +1951,8 @@ export class MarksLayer extends CanvasText implements Layer{
     testType: string = null;
     marksType: string = MARKS_TYPE_LIST[0];
     inWords: boolean = false;
+
+    examinationName: string;    // explicitly added for sharing, not a good archtecture
     
     gradeRuleSet: GradeRuleSet;
 
@@ -2008,6 +2016,7 @@ export class MarksLayer extends CanvasText implements Layer{
             testType: this.testType,
             marksType: this.marksType,
             inWords: this.inWords,
+            examinationName: this.source.getExaminationName(this.ca.DATA, this.parentExamination),
         }
         if (this.gradeRuleSet) {
             savingData.gradeRuleSet = this.gradeRuleSet.id;
@@ -2498,15 +2507,26 @@ class ExaminationParameterStructure {
 
     static getStructure(variableType: any, getValueFunc:any, layerType:any = CanvasText): any {
 
-        return ParameterStructure.getStructure(
-            variableType,
-            FIELDS.EXAMINATION,
-            layerType,
-            (dataObject) => {
-                return variableType;
-            },
-            getValueFunc
-        );
+        return {
+            ...ParameterStructure.getStructure(
+                variableType,
+                FIELDS.EXAMINATION,
+                layerType,
+                (dataObject) => {
+                    return variableType;
+                },
+                getValueFunc,
+            ),
+            getExaminationName: ExaminationParameterStructure.getExaminationName
+        };
+    }
+
+    static getExaminationName(dataObject:any, parentExamination:number) {
+        let exam = dataObject.data.examinationList.find(e => e.id == parentExamination);
+        if (exam) {
+            return exam.name;
+        }
+        return 'N/A';
     }
 
     static getMarks(dataObject:any, parentExamination:any, parentSubject:any, testType:string):number {  
