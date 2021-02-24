@@ -128,7 +128,7 @@ function getNumberInWords(numerical: number): string {  // mapping of 1 to 99 in
     }
 }
 
-function getMarksInWords(num: number): string{  // converts numbers from 0 to 99999 in words
+function getMarksInWords(num: number, decimalPlaces:number = 0): string{  // converts numbers from 0 to 99999 in words
     // used in conversion of marks to words
     let floorNum = Math.floor(num);
     if (floorNum == 0) {
@@ -136,16 +136,19 @@ function getMarksInWords(num: number): string{  // converts numbers from 0 to 99
     }
     let unitTens = getNumberInWords(floorNum % 100);
     floorNum = Math.floor(floorNum/100);
-    let hundreds = getNumberInWords(num % 10);
+    let hundreds = getNumberInWords(floorNum % 10);
     floorNum = Math.floor(floorNum/10);
     let thousands = getNumberInWords(floorNum % 100);
     let result = `${thousands ? thousands + ' Thousand ' : ''}${hundreds ? hundreds + ' Hundred ' : ''}${unitTens}`
     let decimalValue = num - floorNum;
-    if (decimalValue > 0) {
-        // let decimalValue = Math.
-        // getMarksInWords()
+    if (decimalPlaces > 0) {
+        result = result.trim() + ' Point';
+        while (decimalPlaces--) {
+            decimalValue *= 10;
+            result += ` ${getMarksInWords(Math.floor(decimalValue%10))}`
+        }
     }
-    return result
+    return result.trim();
 }
 
 function getYear(year: number): string {   // converts year number in words
@@ -1981,7 +1984,7 @@ export class MarksLayer extends CanvasText implements Layer{
             }
             else {
                 if (this.inWords) {
-                    this.text = this.marks >= -1 ? getMarksInWords(this.marks) : this.alternateText;
+                    this.text = this.marks >= -1 ? getMarksInWords(Math.round(this.marks*Math.pow(10, this.decimalPlaces))/Math.pow(10, this.decimalPlaces), this.decimalPlaces) : this.alternateText;
                 } else {
                     this.text = this.marks >= 0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
@@ -2108,7 +2111,7 @@ export class Formula extends CanvasText implements Layer{
 
         this.initilizeSelf(attributes);
         this.LAYER_TYPE = 'FORMULA';
-        this.layerDataUpdate();          
+        this.layerDataUpdate();
     }
 
     layerDataUpdate(dependents: number[] = [], parser?:any): void {
@@ -2167,7 +2170,7 @@ export class Formula extends CanvasText implements Layer{
                     this.text = gradeValue;
                 }
                 else if(this.inWords){
-                    this.text = this.marks >=0 ? getMarksInWords(this.marks) : this.alternateText;
+                    this.text = this.marks >=0 ? getMarksInWords(Math.round(this.marks*Math.pow(10,this.decimalPlaces))/Math.pow(10, this.decimalPlaces), this.decimalPlaces) : this.alternateText;
                 }
                 else{
                     this.text = this.marks >=0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;

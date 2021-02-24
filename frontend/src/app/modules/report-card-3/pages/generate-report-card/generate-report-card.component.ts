@@ -130,8 +130,6 @@ export class GenerateReportCardComponent implements OnInit {
 
     this.canvasAdapter = new GenerateReportCardCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
-    console.log('jsPDF: ', jsPDF);
-    console.log('streamsaver: ', streamsaver);
   }
 
   populateClassSectionList(classList, divisionList):void {
