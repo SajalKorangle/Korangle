@@ -9,6 +9,8 @@ import {
 export class GenerateReportCardCanvasAdapter extends CanvasAdapterBase implements CanvasAdapterInterface{
 
     vm: GenerateReportCardComponent;
+
+    dpi: number = 150;
  
 
     constructor() {

@@ -130,16 +130,22 @@ function getNumberInWords(numerical: number): string {  // mapping of 1 to 99 in
 
 function getMarksInWords(num: number): string{  // converts numbers from 0 to 99999 in words
     // used in conversion of marks to words
-    num = Math.floor(num);
-    if (num == 0) {
+    let floorNum = Math.floor(num);
+    if (floorNum == 0) {
         return 'Zero';
     }
-    let unitTens = getNumberInWords(num % 100);
-    num = Math.floor(num/100);
+    let unitTens = getNumberInWords(floorNum % 100);
+    floorNum = Math.floor(floorNum/100);
     let hundreds = getNumberInWords(num % 10);
-    num = Math.floor(num/10);
-    let thousands = getNumberInWords(num % 100);
-    return `${thousands?thousands+' Thousand ':''}${hundreds?hundreds+' Hundred ':''}${unitTens}`
+    floorNum = Math.floor(floorNum/10);
+    let thousands = getNumberInWords(floorNum % 100);
+    let result = `${thousands ? thousands + ' Thousand ' : ''}${hundreds ? hundreds + ' Hundred ' : ''}${unitTens}`
+    let decimalValue = num - floorNum;
+    if (decimalValue > 0) {
+        // let decimalValue = Math.
+        // getMarksInWords()
+    }
+    return result
 }
 
 function getYear(year: number): string {   // converts year number in words
@@ -299,12 +305,16 @@ function getDateReplacements(date: any): { [key: string]: string } {
 //Page Resolutions ---------------------------------------------
 export const mm_IN_ONE_INCH: number = 24.5;
 export const DPI_LIST: number[] = [ // standard DPIs
-    600,
-    300,
-    200,
-    100,
+    50,
     72,
-    50
+    100,
+    150,
+    200,
+    250,
+    300,
+    400,
+    500,
+    600,    
 ];
 
 export class PageResolution {
@@ -401,7 +411,7 @@ export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
 export const permissibleClickError = 4;    // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 2; // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';
-export const LINE_PADDING = 20;
+
 
 export const DATA_SOUCE_TYPE = [    // used in all canvas layers
     'N/A',  // no data source, constant eement
@@ -1151,13 +1161,13 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
         // functinal height and width; used for drawing highlighter
         Object.defineProperty(this, 'height', {
             get: function () {
-                return (this.length * Math.sin((this.orientation * Math.PI) / 180))+this.shapeStyle.lineWidth + LINE_PADDING;
+                return (this.length * Math.sin((this.orientation * Math.PI) / 180))+this.shapeStyle.lineWidth;
             }
         });
 
         Object.defineProperty(this, 'width', {
             get: function () {
-                return (this.length * Math.cos((this.orientation * Math.PI) / 180))+this.shapeStyle.lineWidth + LINE_PADDING;
+                return (this.length * Math.cos((this.orientation * Math.PI) / 180))+this.shapeStyle.lineWidth;
             }
         });
         
@@ -1177,11 +1187,9 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         super.drawOnCanvas(ctx, scheduleReDraw);
-        const x = this.x + this.shapeStyle.lineWidth / 2 + LINE_PADDING / 2;
-        const y = this.y + this.shapeStyle.lineWidth / 2 + LINE_PADDING / 2;
         ctx.beginPath()
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + (this.length*Math.cos((this.orientation*Math.PI)/180)), y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
         ctx.stroke();
         return true;    // Drawn successfully on canvas
     }

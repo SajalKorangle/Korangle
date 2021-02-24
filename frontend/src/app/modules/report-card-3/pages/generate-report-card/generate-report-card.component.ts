@@ -130,6 +130,8 @@ export class GenerateReportCardComponent implements OnInit {
 
     this.canvasAdapter = new GenerateReportCardCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
+    console.log('jsPDF: ', jsPDF);
+    console.log('streamsaver: ', streamsaver);
   }
 
   populateClassSectionList(classList, divisionList):void {
@@ -197,8 +199,24 @@ export class GenerateReportCardComponent implements OnInit {
     
     let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
     doc.deletePage(1);
-    let stratTime:any = new Date();
+    let stratTime: any = new Date();
+    // let intervalId = setInterval(() => {
+    //   if (this.estimatedTime) {
+    //     let timeLeftInSec = this.estimatedTime.minutes * 60 + this.estimatedTime.seconds;
+    //     timeLeftInSec--;
+    //     if (timeLeftInSec > 2) {
+    //       this.estimatedTime = { minutes: Math.floor(timeLeftInSec / 60), seconds: Math.ceil(timeLeftInSec % 60) };
+    //     }
+    //   }
+    //  }, 1000);
+    let part = 0;
     for (let si = 0; si < this.DATA.data.studentList.length; si++){
+      if (doc.output('blob').size > (300 * 1024*1024)) {
+        part++;
+        doc.save(this.selectedLayout.name + `(part-${part})` + '.pdf');
+        doc = new jsPDF({ orientation: 'p', unit: 'pt' });
+        doc.deletePage(1);
+      }
       this.DATA.studentId = this.DATA.data.studentList[si].id;
       for (let i = 0; i < selectedLayutContent.length;i++){
         let layoutPage = selectedLayutContent[i];
@@ -207,15 +225,19 @@ export class GenerateReportCardComponent implements OnInit {
       }
       this.generatedReportCards++;
       let currTime:any = new Date();
-      let timeTakenPerStudent: any = ((currTime - stratTime) + 20) / (1000*(si+1));  // converting to seconds
+      let timeTakenPerStudent: any = ((currTime - stratTime)) / (1000*(si+1));  // converting to seconds
       let estimatedTime = timeTakenPerStudent * (this.DATA.data.studentList.length - si - 1); // in seconds
       let secLeft = Math.ceil((estimatedTime) % 60);
       let minutesleft = Math.floor(estimatedTime / 60);
       this.estimatedTime = { minutes: minutesleft, seconds: secLeft };
-      await sleep(20);
     }
 
-    doc.save(this.selectedLayout.name + '.pdf');
+    if (part != 0) {
+      doc.save(this.selectedLayout.name+`(part-${part+1})` + '.pdf');
+    } else {
+      doc.save(this.selectedLayout.name + '.pdf');
+    }
+   
     this.isLoading = false;
   }
 }
