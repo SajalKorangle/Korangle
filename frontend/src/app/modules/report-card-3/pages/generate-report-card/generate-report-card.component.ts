@@ -194,25 +194,26 @@ export class GenerateReportCardComponent implements OnInit {
     let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
     doc.deletePage(1);
     let stratTime: any = new Date();
-    // let intervalId = setInterval(() => {
-    //   if (this.estimatedTime) {
-    //     let timeLeftInSec = this.estimatedTime.minutes * 60 + this.estimatedTime.seconds;
-    //     timeLeftInSec--;
-    //     if (timeLeftInSec > 2) {
-    //       this.estimatedTime = { minutes: Math.floor(timeLeftInSec / 60), seconds: Math.ceil(timeLeftInSec % 60) };
-    //     }
-    //   }
-    //  }, 1000);
-    let part = 0;
-    for (let si = 0; si < this.DATA.data.studentList.length; si++){
-      if (doc.output('blob').size > (300 * 1024*1024)) {
-        part++;
-        doc.save(this.selectedLayout.name + `(part-${part})` + '.pdf');
-        doc = new jsPDF({ orientation: 'p', unit: 'pt' });
-        doc.deletePage(1);
-      }
+    let startSerialNo
+    if(this.DATA.data.studentSectionList.length>0)
+      startSerialNo = this.filteredStudentSectionList.findIndex(ss=>ss.id == this.DATA.data.studentSectionList[0].id)+1;
+    let si;
+    for (si = 0; si < this.DATA.data.studentList.length; si++){
       this.DATA.studentId = this.DATA.data.studentList[si].id;
-      for (let i = 0; i < selectedLayutContent.length;i++){
+      for (let i = 0; i < selectedLayutContent.length; i++){
+
+        if (doc.output('blob').size > (300 * 1024*1024)) {
+          let endSerialNo;
+          if (i == 0) // last iteration serial no
+            endSerialNo = this.filteredStudentSectionList.findIndex(ss => ss.id == this.DATA.data.studentSectionList[si - 1].id)+1;
+          else
+            endSerialNo = this.filteredStudentSectionList.findIndex(ss => ss.id == this.DATA.data.studentSectionList[si].id)+1;
+          doc.save(this.selectedLayout.name + `(${startSerialNo}-${endSerialNo})` + '.pdf');
+          doc = new jsPDF({ orientation: 'p', unit: 'pt' });
+          doc.deletePage(1);
+          startSerialNo = this.filteredStudentSectionList.findIndex(ss => ss.id == this.DATA.data.studentSectionList[si].id)+1;
+        }
+
         let layoutPage = selectedLayutContent[i];
         await this.canvasAdapter.loadData(layoutPage);
         await this.canvasAdapter.downloadPDF(doc);
@@ -226,8 +227,9 @@ export class GenerateReportCardComponent implements OnInit {
       this.estimatedTime = { minutes: minutesleft, seconds: secLeft };
     }
 
-    if (part != 0) {
-      doc.save(this.selectedLayout.name+`(part-${part+1})` + '.pdf');
+    if (startSerialNo != this.filteredStudentSectionList.findIndex(ss => ss.id == this.DATA.data.studentSectionList[0].id)+1) {
+      let endSerialNo = this.filteredStudentSectionList.findIndex(ss => ss.id == this.DATA.data.studentSectionList[si-1].id)
+      doc.save(this.selectedLayout.name+`(${startSerialNo}-${endSerialNo})` + '.pdf');
     } else {
       doc.save(this.selectedLayout.name + '.pdf');
     }
