@@ -424,7 +424,6 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase{
     }
 
     mapExamination(examMap: { [key: number]: any }): void{
-        console.log('exam map form ca: ', examMap);
         this.layers.forEach(layer => {
             switch (layer.LAYER_TYPE) {
                 case 'MARKS':

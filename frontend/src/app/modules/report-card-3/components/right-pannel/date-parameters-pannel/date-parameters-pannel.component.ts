@@ -108,7 +108,7 @@ export class DateParametersPannelComponent implements OnInit {
       }
     }
     this.secondSeparator = temp;
-    console.log(temp);
+    // console.log(temp);
     return temp;
   }
 
@@ -143,7 +143,7 @@ export class DateParametersPannelComponent implements OnInit {
     else{
       currentDateFormat += this.yearFormat;
     }
-    console.log(currentDateFormat);
+    // console.log(currentDateFormat);
     this.layer.dateFormat = currentDateFormat;
     this.layer.dateFormatting();
   }

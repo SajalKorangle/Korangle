@@ -29,7 +29,6 @@ export class ExamMappingDialogComponent implements OnInit {
           break;
       }
     })
-    console.log('exam mapping: ', this.examMappedByLayoutExamName)
   }
 
   getLayoutExaminationNames(): Array<any>{
