@@ -42,40 +42,162 @@ export class UpdateProfileServiceAdapter {
         }
     }
 
-    updateProfile(): void {
-        
+    getEmployeeProfile(employee: any): void {
+
+        const data = {
+            id: employee.id,
+        };
+
+        const session_data = {
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentEmployee: employee.id,
+        };
+
         this.vm.isLoading = true;
-        let service_list = [];
-        
-        const employee_form_data= new FormData()
-        const data = { ...this.vm.currentEmployee,content: JSON.stringify(this.vm.currentEmployee.content) };
-        console.log(data)
-        Object.keys(data).forEach(key => {
-                if (key === 'profileImage') {
-                    if(this.vm.profileImage!==null){
-                    	employee_form_data.append(key, this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'));
+        Promise.all([
+            this.vm.employeeService.getObject(this.vm.employeeService.employees,data),
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_session_detail, session_data),
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value,{parentEmployee: employee.id,})
+        ]).then(value => {
+            console.dir(value[0])
+            this.vm.selectedEmployeeProfile = value[0];
+            Object.keys(this.vm.selectedEmployeeProfile).forEach(key => {
+                this.vm.currentEmployeeProfile[key] = this.vm.selectedEmployeeProfile[key];
+
+            });
+            this.vm.selectedEmployeeSessionProfile = value[1];
+            Object.keys(this.vm.selectedEmployeeSessionProfile).forEach(key => {
+                this.vm.currentEmployeeSessionProfile[key] = this.vm.selectedEmployeeSessionProfile[key];
+            });
+            console.log('session rofle')
+            console.dir(this.vm.currentEmployeeSessionProfile)
+
+           
+
+           
+                this.vm.employeeParameterValueList = value[2];
+                this.vm.currentEmployeeParameterValueList = [];
+                this.vm.employeeParameterValueList.forEach(item=>{
+                    if (item.document_value){
+                        let document_name = item.document_value.split("/")
+                        document_name = document_name[document_name.length-1]
+                        item.document_name = document_name
                     }
-                }
-                else {
-                    if (data[key]==null){
-                        employee_form_data.append(key,"");
-                    }
-                    else{
-                        employee_form_data.append(key,data[key]);
-                    }
+                });
+
+                this.vm.employeeParameterValueList.forEach(item => {                 
+                    let tempObject = {}
+                    Object.keys(item).forEach(key => {
+                        tempObject[key] = item[key];
+                    });
+                    this.vm.currentEmployeeParameterValueList.push(tempObject)
+                });
+                this.vm.isLoading = false;
+            
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
+    }
+
+    updateEmployeeProfile(): void {
+
+        if (this.vm.currentEmployeeProfile.name === undefined || this.vm.currentEmployeeProfile.name === '') {
+            alert('Name should be populated');
+            return;
+        }
+
+        if (this.vm.currentEmployeeProfile.fatherName === undefined || this.vm.currentEmployeeProfile.fatherName === '') {
+            alert('Father\'s Name should be populated');
+            return;
+        }
+
+        if (this.vm.currentEmployeeProfile.dateOfBirth === undefined || this.vm.currentEmployeeProfile.dateOfBirth === '') {
+            this.vm.currentEmployeeProfile.dateOfBirth = null;
+        }
+
+        if (this.vm.currentEmployeeProfile.dateOfJoining === undefined || this.vm.currentEmployeeProfile.dateOfJoining === '') {
+            this.vm.currentEmployeeProfile.dateOfJoining = null;
+        }
+
+        if (this.vm.currentEmployeeProfile.dateOfLeaving === undefined || this.vm.currentEmployeeProfile.dateOfLeaving === '') {
+            this.vm.currentEmployeeProfile.dateOfLeaving = null;
+        }
+
+        if (this.vm.currentEmployeeProfile.mobileNumber === undefined || this.vm.currentEmployeeProfile.mobileNumber === '') {
+            this.vm.currentEmployeeProfile.mobileNumber = null;
+            alert('Mobile number is required.');
+            return;
+        } else if (this.vm.currentEmployeeProfile.mobileNumber.toString().length != 10) {
+            alert('Mobile number should be 10 digits');
+            return;
+        } else {
+            let selectedEmployee = null;
+            this.vm.employeeList.forEach(employee => {
+                if (employee.mobileNumber === this.vm.currentEmployeeProfile.mobileNumber
+                    && employee.id !== this.vm.currentEmployeeProfile.id) {
+                    selectedEmployee = employee;
                 }
             });
+            if (selectedEmployee) {
+                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                return;
+            }
+        }
 
-        //service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee,Employee_form_data));
-
+        if (this.vm.currentEmployeeProfile.aadharNumber != null
+            && this.vm.currentEmployeeProfile.aadharNumber.toString().length != 12) {
+            alert("Aadhar No. should be 12 digits");
+            return;
+        }
+        // const employee_form_data= new FormData()
+        // //const data = { ...this.vm.currentEmployeeProfile};
        
+        // const data = { ...this.vm.currentEmployeeProfile,content: JSON.stringify(this.vm.currentEmployeeProfile.content) };
+        // console.log('data')
+        // console.log(data)
+        // Object.keys(data).forEach(key => {
+        //         if (key === 'profileImage' ) {
+        //             if(this.vm.selectedEmployeeProfile.profileImage){
+        //                 //employee_form_data.append(key, this.dataURLtoFile(this.vm.selectedEmployeeProfile.profileImage, 'profileImage.jpeg'));
+        //             }
+        //         } else {
+        //             if (data[key]==this.vm.NULL_CONSTANT){
+        //                 employee_form_data.append(key,"");
+        //             }
+        //             else{
+        //                 employee_form_data.append(key,data[key]);
+        //             }
+        //         }
+        //     }); 
+        console.log('event image')
+        console.log(this.dataURLtoFile(this.vm.selectedEmployeeProfile.profileImage, 'profileImage.jpeg') )
+        this.vm.currentEmployeeProfile.profileImage = this.dataURLtoFile(this.vm.selectedEmployeeProfile.profileImage, 'profileImage.jpeg') 
+        console.log('curernt employee')
+        console.log(this.vm.currentEmployeeProfile)   
+        this.vm.isLoading = true;
+        Promise.all([
+            this.vm.employeeService.updateObject(this.vm.employeeService.employees,this.vm.currentEmployeeProfile),
+            (this.vm.currentEmployeeSessionProfile.id==null?
+                this.vm.employeeService.createObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])
+                    :this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])
+            )
+        ]).then(value => {
+            this.vm.isLoading = false;
+            console.log('e')
+            console.log(value[0])
+            this.vm.selectedEmployeeProfile.profileImage = value[0].profileImage;
+            this.vm.currentEmployeeProfile.profileImage = value[0].profileImage;
 
         let generateList = [];
         let updateList = [];
+        let service_list = [];
         this.vm.currentEmployeeParameterValueList.forEach(x => {
-            x.parentEmployee = this.vm.selectedEmployee.id;
+            x.parentEmployee = this.vm.currentEmployeeProfile.id;
         });
         this.vm.employeeParameterList.forEach(parameter => {
+            console.log('parameter')
+            console.dir(parameter)
             if (this.vm.checkCustomFieldChanged(parameter)) {
                 let temp_obj = this.vm.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
                 if (temp_obj){
@@ -85,7 +207,7 @@ export class UpdateProfileServiceAdapter {
                         if (data[key]){
                             if (key =="document_name"|| key=="document_size"){}
                             else if (key=='document_value'){
-                                form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
+                                form_data.append(key,this.vm.dataURLtoFile(data[key],data['document_name']))
                                 form_data.append('document_size',data['document_size'])
                             }
                             else {
@@ -123,61 +245,14 @@ export class UpdateProfileServiceAdapter {
                 service_list.push(this.vm.employeeService.deleteObject(this.vm.employeeService.employee_parameter_value,{'id':x.id}))
             })
         }
-
-        Promise.all(service_list).then(value =>{
-            Object.keys(value[0]).forEach(key =>{
-                this.vm.selectedEmployee[key] = value[0][key];
-            });
-           
-            
-            this.vm.currentEmployeeParameterValueList = [];
-            this.vm.employeeParameterValueList.filter(x => x.parentEmployee === this.vm.currentEmployee.id).forEach(item => {
-                this.vm.currentEmployeeParameterValueList.push(this.vm.commonFunctions.copyObject(item))
-            });
-            
-            this.vm.deleteList=[]
-            this.vm.profileImage=null;
-            alert('Employee: ' + this.vm.selectedEmployee.name + ' updated successfully');
-            this.vm.isLoading = false;
-
-        },error => {
-            this.vm.profileImage=null;
+            alert('Employee profile updated successfully');
+            this.vm.selectedEmployeeProfile = this.vm.currentEmployeeProfile;
+            this.vm.selectedEmployeeSessionProfile = this.vm.currentEmployeeSessionProfile;
+        }, error => {
             this.vm.isLoading = false;
         });
+
     }
 
-    getEmployeeProfile(employeeId : any): void {
-        this.vm.isLoading = true;
-        let service_list = [];
-        service_list.push(this.vm.employeeService.getObject(this.vm.employeeService.employees, {
-            'id': employeeId,
-        }));
-        service_list.push(this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, {
-            parentemployee: employeeId,
-        }));
-        Promise.all(service_list).then(value => {
-
-            this.vm.currentEmployee = this.vm.commonFunctions.copyObject(value[0]);
-            Object.keys(value[0]).forEach(key => {
-                this.vm.selectedEmployee[key] = value[0][key];
-            });
-
-            // Copying the employee parameter values for reference
-            this.vm.employeeParameterValueList = value[1];
-            this.vm.currentEmployeeParameterValueList = [];
-            this.vm.employeeParameterValueList.filter(x => x.parentemployee===employeeId).forEach(item=>{
-                if (item.document_value){
-                    let document_name = item.document_value.split("/")
-                    document_name = document_name[document_name.length-1]
-                    item.document_name = document_name
-                }
-            });
-
-            console.log(this.vm.employeeParameterValueList)
-            this.vm.employeeParameterValueList.filter(x => x.parentEmployee===employeeId).forEach(item => {
-                this.vm.currentEmployeeParameterValueList.push(this.vm.commonFunctions.copyObject(item))
-            });
-            this.vm.isLoading = false;
-        });
-    }
+   
 }

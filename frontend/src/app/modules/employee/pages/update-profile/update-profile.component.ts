@@ -69,65 +69,6 @@ export class UpdateProfileComponent implements OnInit {
         this.employeeList = employeeList;
     }
 
-    getEmployeeProfile(employee: any): void {
-
-        const data = {
-            id: employee.id,
-        };
-
-        const session_data = {
-            sessionId: this.user.activeSchool.currentSessionDbId,
-            parentEmployee: employee.id,
-        };
-
-        this.isLoading = true;
-        let service_list = [];
-        Promise.all([
-            this.employeeOldService.getEmployeeProfile(data, this.user.jwt),
-            this.employeeOldService.getEmployeeSessionDetail(session_data, this.user.jwt),
-            this.employeeService.getObjectList(this.employeeService.employee_parameter_value, {
-                parentEmployee: employee.id,
-            })
-        ]).then(value => {
-            this.selectedEmployeeProfile = value[0];
-            Object.keys(this.selectedEmployeeProfile).forEach(key => {
-                this. currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
-
-            });
-            this.selectedEmployeeSessionProfile = value[1];
-            Object.keys(this.selectedEmployeeSessionProfile).forEach(key => {
-                this.currentEmployeeSessionProfile[key] = this.selectedEmployeeSessionProfile[key];
-            });
-
-           
-
-           
-                this.employeeParameterValueList = value[2];
-                this.currentEmployeeParameterValueList = [];
-                this.employeeParameterValueList.forEach(item=>{
-                    if (item.document_value){
-                        let document_name = item.document_value.split("/")
-                        document_name = document_name[document_name.length-1]
-                        item.document_name = document_name
-                    }
-                });
-
-                this.employeeParameterValueList.forEach(item => {                 
-                    let tempObject = {}
-                    Object.keys(item).forEach(key => {
-                        tempObject[key] = item[key];
-                    });
-                    this.currentEmployeeParameterValueList.push(tempObject)
-                });
-                this.isLoading = false;
-            
-        }, error => {
-            this.isLoading = false;
-        });
-
-    }
-
-
     checkFieldChanged(selectedValue, currentValue): boolean {
         if(selectedValue!==null && currentValue!==null ){
             if (selectedValue !== currentValue){
@@ -161,132 +102,7 @@ export class UpdateProfileComponent implements OnInit {
         return true;
     }
 
-    updateEmployeeProfile(): void {
-
-        if (this.currentEmployeeProfile.name === undefined || this.currentEmployeeProfile.name === '') {
-            alert('Name should be populated');
-            return;
-        }
-
-        if (this.currentEmployeeProfile.fatherName === undefined || this.currentEmployeeProfile.fatherName === '') {
-            alert('Father\'s Name should be populated');
-            return;
-        }
-
-        if (this.currentEmployeeProfile.dateOfBirth === undefined || this.currentEmployeeProfile.dateOfBirth === '') {
-            this.currentEmployeeProfile.dateOfBirth = null;
-        }
-
-        if (this.currentEmployeeProfile.dateOfJoining === undefined || this.currentEmployeeProfile.dateOfJoining === '') {
-            this.currentEmployeeProfile.dateOfJoining = null;
-        }
-
-        if (this.currentEmployeeProfile.dateOfLeaving === undefined || this.currentEmployeeProfile.dateOfLeaving === '') {
-            this.currentEmployeeProfile.dateOfLeaving = null;
-        }
-
-        if (this.currentEmployeeProfile.mobileNumber === undefined || this.currentEmployeeProfile.mobileNumber === '') {
-            this.currentEmployeeProfile.mobileNumber = null;
-            alert('Mobile number is required.');
-            return;
-        } else if (this.currentEmployeeProfile.mobileNumber.toString().length != 10) {
-            alert('Mobile number should be 10 digits');
-            return;
-        } else {
-            let selectedEmployee = null;
-            this.employeeList.forEach(employee => {
-                if (employee.mobileNumber === this.currentEmployeeProfile.mobileNumber
-                    && employee.id !== this.currentEmployeeProfile.id) {
-                    selectedEmployee = employee;
-                }
-            });
-            if (selectedEmployee) {
-                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
-                return;
-            }
-        }
-
-        if (this.currentEmployeeProfile.aadharNumber != null
-            && this.currentEmployeeProfile.aadharNumber.toString().length != 12) {
-            alert("Aadhar No. should be 12 digits");
-            return;
-        }
-
-        this.isLoading = true;
-        Promise.all([
-            this.employeeOldService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt),
-            (this.currentEmployeeSessionProfile.id==null?
-                this.employeeOldService.createEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
-                    :this.employeeOldService.updateEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
-            )
-        ]).then(value => {
-            this.isLoading = false;
-
-
-        let generateList = [];
-        let updateList = [];
-        let service_list = [];
-        this.currentEmployeeParameterValueList.forEach(x => {
-            x.parentEmployee = this.currentEmployeeProfile.id;
-        });
-        this.employeeParameterList.forEach(parameter => {
-            console.log('parameter')
-            console.dir(parameter)
-            if (this.checkCustomFieldChanged(parameter)) {
-                let temp_obj = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
-                if (temp_obj){
-                    const data = { ...temp_obj}
-                    const form_data = new FormData();
-                    Object.keys(data).forEach(key => {
-                        if (data[key]){
-                            if (key =="document_name"|| key=="document_size"){}
-                            else if (key=='document_value'){
-                                form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
-                                form_data.append('document_size',data['document_size'])
-                            }
-                            else {
-                                form_data.append(key,data[key])   
-                            }
-                        }
-                        else{
-                            form_data.append(key,"")
-                        } 
-                    })
-                    if (temp_obj.id) {
-                        updateList.push(form_data)
-                    } else if (!temp_obj.id) {
-                        generateList.push(form_data)
-                    }
-                }
-            }
-        });
-        
-        if (generateList.length) {
-            generateList.forEach(x => {
-                service_list.push(this.employeeService.createObject(this.employeeService.employee_parameter_value,x))
-            })
-        }
-
-        if (updateList.length) {
-            updateList.forEach(x => {
-                service_list.push(this.employeeService.updateObject(this.employeeService.employee_parameter_value,x))
-
-            })
-        }
-
-        if(this.deleteList.length){
-            this.deleteList.forEach(x =>{
-                service_list.push(this.employeeService.deleteObject(this.employeeService.employee_parameter_value,{'id':x.id}))
-            })
-        }
-            alert('Employee profile updated successfully');
-            this.selectedEmployeeProfile = this.currentEmployeeProfile;
-            this.selectedEmployeeSessionProfile = this.currentEmployeeSessionProfile;
-        }, error => {
-            this.isLoading = false;
-        });
-
-    }
+    
 
     dataURLtoFile(dataurl, filename) {
     	try {
@@ -364,20 +180,28 @@ export class UpdateProfileComponent implements OnInit {
             return;
         }
 
-        let data = {
-            id: this.selectedEmployeeProfile.id,
+        const reader = new FileReader();
+        reader.onload = e => {
+            this.selectedEmployeeProfile.profileImage = reader.result;
+            this.currentEmployeeProfile.profileImage = reader.result;
+            this.profileImage=reader.result;
         };
-        this.isLoading = true;
-        this.employeeOldService.uploadProfileImage(image, data, this.user.jwt).then( response => {
-            this.isLoading = false;
-            alert(response.message);
-            if (response.status === 'success') {
-                this.selectedEmployeeProfile.profileImage = response.url;
-                this.currentEmployeeProfile.profileImage = response.url;
-            }
-        }, error => {
-            this.isLoading = false;
-        });
+        reader.readAsDataURL(image);
+
+        // let data = {
+        //     id: this.selectedEmployeeProfile.id,
+        // };
+        // this.isLoading = true;
+        // this.employeeOldService.uploadProfileImage(image, data, this.user.jwt).then( response => {
+        //     this.isLoading = false;
+        //     alert(response.message);
+        //     if (response.status === 'success') {
+        //         this.selectedEmployeeProfile.profileImage = response.url;
+        //         this.currentEmployeeProfile.profileImage = response.url;
+        //     }
+        // }, error => {
+        //     this.isLoading = false;
+        // });
     }
 
     resizeImage(file:File):Promise<Blob> {

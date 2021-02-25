@@ -3,7 +3,7 @@
 
     <app-employee-filter [user]="user"
                          [showAllEmployees]="true"
-                         (employee)="getEmployeeProfile($event)"
+                         (employee)="serviceAdapter.getEmployeeProfile($event)"
                          (emitEmployeeList)="getEmployeeList($event)"></app-employee-filter>
 
 
@@ -390,7 +390,8 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="updateEmployeeProfile();">Update</button>
+        <button *ngIf="!isMobile()" type="submit" id="action-add-employee" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updateEmployeeProfile()">Update Profile</button>
+        <button [ngClass]="'sticky mobileButton-'+user.activeSchool.secondaryThemeColor" *ngIf="isMobile()" mat-fab color="primary" (click)="serviceAdapter.updateEmployeeProfile()"><mat-icon>check</mat-icon></button>
         <div class="clearfix"></div>
 
     </ng-container>
