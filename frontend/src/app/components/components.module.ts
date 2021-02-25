@@ -40,6 +40,7 @@ import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.compon
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
+import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         IndianCurrencyPipe,
 
         EmployeeFilterComponent,
+        ImagePdfPreviewDialogComponent,
 
     ],
     imports: [
@@ -101,6 +103,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
+        ImagePdfPreviewDialogComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,

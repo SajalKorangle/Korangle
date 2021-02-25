@@ -24,7 +24,6 @@ import {ImagePdfPreviewDialogComponent} from "../../components/image-pdf-preview
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintStudentProfileComponent,
-        ImagePdfPreviewDialogComponent,
     ],
 
     imports: [

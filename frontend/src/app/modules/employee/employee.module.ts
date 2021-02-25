@@ -19,6 +19,7 @@ import { PrintEmployeeExpCertiComponent } from './print/print-employee-exp-certi
 import { PrintEmployeeICardsComponent } from './print/print-employee-i-card/print-employee-i-cards.component';
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
 import {ExcelService} from "../../excel/excel-service";
+import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
 @NgModule({
     declarations: [
@@ -31,7 +32,7 @@ import {ExcelService} from "../../excel/excel-service";
         // ExperienceCertiComponent,
         PrintEmployeeExpCertiComponent,
         PrintEmployeeICardsComponent,
-        PrintEmployeeListComponent
+        PrintEmployeeListComponent,
     ],
 
     imports: [
@@ -41,6 +42,10 @@ import {ExcelService} from "../../excel/excel-service";
 
     ],
     exports: [
+        ImagePdfPreviewDialogComponent,
+    ],
+    entryComponents:[
+        ImagePdfPreviewDialogComponent,
     ],
     providers: [EmployeeOldService, ExcelService],
     bootstrap: [EmployeeComponent]
