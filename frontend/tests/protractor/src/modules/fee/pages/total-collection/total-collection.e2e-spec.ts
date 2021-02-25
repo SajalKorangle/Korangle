@@ -20,15 +20,25 @@ describe('Fees 3.0 -> Total Collection', () => {
         await page.waitForXPath('//mat-datepicker-toggle');
         const [datePicker] = await page.$x('//mat-datepicker-toggle');
         datePicker.click();
-        await page.waitForXPath('//tr[2]//following::td[2]');
         // clicking on the particular date
-        const [date] = await page.$x('//tr[2]//following::td[2]');
+        await page.waitForXPath('//mat-calendar-header//button');
+        const [range] = await page.$x('//mat-calendar-header//button');
+        range.click();
+        await page.waitForTimeout(2000);
+        const [year] = await page.$x('//tr[1]//following::td[1]');
+        year.click();
+        await page.waitForTimeout(2000);
+        const [month] = await page.$x('//tr[2]//following::td[1]');
+        month.click();
+        await page.waitForTimeout(2000);
+        const [date] = await page.$x('//tr[2]//following::td[1]');
         date.click();
-        // clicking on search button
+        const [today] = await page.$x('//tr[1]//following::td[2]');
+        today.click();
         await page.waitForSelector('button[type="button"]');
         const [search] = await page.$x('//button[@class=\'btn btn-warning\']');
         search.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(3000);
 
     });
 
@@ -45,7 +55,7 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(4);
         // Checking the number of cols to be equals to 7 -> Initially there are 7 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(7);
+        expect(nodes.length).toBe(8);
     });
 
     it('Total Collection: Fee receipt Type Toggle', async () => {
@@ -63,7 +73,7 @@ describe('Fees 3.0 -> Total Collection', () => {
 
         // Checking the number of cols to be equals to 8 -> cancelled remark and cancelled by gets added automatically then there are 8 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(9);
+        expect(nodes.length).toBe(10);
 
         nodes = await containsFirst('mat-select', 'Cancelled Receipts');
         await nodes.click();
@@ -76,7 +86,7 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(5);
         // Checking the number of cols to be equals to 7 -> Default 7 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(7);
+        expect(nodes.length).toBe(8);
 
         // again selecting only valid receipts
         [node] = await page.$x('//mat-select//following::mat-select[4]');
