@@ -1,7 +1,0 @@
-Start backend for mobile testing:
-backend/test_mobile_backend.sh
-
-Start frontend for mobile testing:
-frontend/test_mobile_frontend.sh
-
-Note: stay in the KORANGLE_VIRTUAL_ENVIRONMENT.
