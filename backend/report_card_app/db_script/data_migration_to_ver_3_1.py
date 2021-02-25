@@ -4,6 +4,7 @@ def dataMigration(apps, schema_editor):
 
     ReportCardLayoutNew = apps.get_model('report_card_app', 'ReportCardLayoutNew')
     TestSecond = apps.get_model('examination_app', 'TestSecond')
+    Examination = apps.get_model('examination_app', 'Examination')
     layouts = ReportCardLayoutNew.objects.all()
 
     for layout in layouts:
@@ -14,7 +15,8 @@ def dataMigration(apps, schema_editor):
                     layer['textAlign'] = 'left'
                     layer['textBaseline'] = 'top'
                     layer['maxWidth'] = 200
-                    layer['y'] -= layer['fontSize']*0.9
+                    layer['y'] -= layer['fontSize'] * 0.9
+                    
                     if (layer['LAYER_TYPE'] == 'MARKS'):
                         outOf = 100
                         if (layer['parentExamination'] and layer['parentSubject'] and layer['testType'] and layer['marksType']):
@@ -24,6 +26,12 @@ def dataMigration(apps, schema_editor):
                         outOf *= layer['factor']
                         layer['outOf'] = outOf
                         del layer['factor']
+
+                    if (layer['LAYER_TYPE'] in ['MARKS', 'GRADE', 'REMARK']):
+                        if (layer['parentExamination'] and layer['parentSubject']):
+                            exams = Examination.objects.filter(id=layer['parentExamination'])
+                            if (len(exams) > 0):
+                                layer['examinationName'] = exams.first().name                
 
                 elif (layer['LAYER_TYPE'] == 'TABLE'):
                     strokeStyle = layer['tableStyle']['strokeStyle']

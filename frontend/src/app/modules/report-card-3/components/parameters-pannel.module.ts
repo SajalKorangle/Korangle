@@ -25,6 +25,7 @@ import { LayerReplacementDialogComponent } from './dialogs/layer-replacement-dia
 import { SettingsParametersPannelComponent } from './right-pannel/settings-parameter-pannel/settings-parameters-pannel.component';
 import { SessionParameterPannelComponent } from './right-pannel/session-parameter-pannel/session-parameter-pannel.component';
 import { GroupParametersPannelComponent } from './right-pannel/group-parameters-pannel/group-parameters-pannel.component';
+import { ExamMappingDialogComponent } from './dialogs/exam-mapping-dialog/exam-mapping-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { GroupParametersPannelComponent } from './right-pannel/group-parameters-
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
     GroupParametersPannelComponent,
+    ExamMappingDialogComponent,
   ],
   imports: [
     ComponentsModule,
@@ -79,7 +81,8 @@ import { GroupParametersPannelComponent } from './right-pannel/group-parameters-
     LayerReplacementDialogComponent,
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
-    GroupParametersPannelComponent
+    GroupParametersPannelComponent,
+    ExamMappingDialogComponent
   ]
 })
 export class ParametersPannelModule { }

@@ -422,6 +422,21 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase{
         newLayer.y += 15;
         return this.newLayerInitilization(newLayer);
     }
+
+    mapExamination(examMap: { [key: number]: any }): void{
+        console.log('exam map form ca: ', examMap);
+        this.layers.forEach(layer => {
+            switch (layer.LAYER_TYPE) {
+                case 'MARKS':
+                case 'REMARK':
+                case 'GRADE':
+                    if(examMap[layer.examinationName] != undefined)
+                        layer.parentExamination = examMap[layer.examinationName];
+                    break;
+            }
+        });
+        this.fullCanavsRefresh();
+    }
 }
 
 

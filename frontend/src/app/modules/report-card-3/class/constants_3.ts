@@ -582,7 +582,8 @@ export interface Layer{
     decimalPlaces?: number;
     outOf?: number;
     marks?: number;
-    formula?:string;
+    formula?: string;
+    examinationName?: string;
 };
 
 export class BaseLayer {    // this layer is inherited by all canvas layers
@@ -1815,6 +1816,7 @@ export class GradeLayer extends CanvasText implements Layer{
         if (this.parentExamination && this.subGradeId) {
             this.text = this.source.getValueFunc(this.ca.DATA, this.parentExamination, this.subGradeId);
             this.error = false;
+            this.examinationName = this.source.getExaminationName(this.ca.DATA, this.parentExamination);
         } else {
             this.text = this.alternateText;
             this.error = true;
@@ -1857,6 +1859,7 @@ export class RemarkLayer extends CanvasText implements Layer{
         if (this.parentExamination) {
             this.text = this.source.getValueFunc(this.ca.DATA, this.parentExamination);
             this.error = false;
+            this.examinationName = this.source.getExaminationName(this.ca.DATA, this.parentExamination);
         } else {
             this.text = this.alternateText;
             this.error = true;
@@ -1992,11 +1995,12 @@ export class MarksLayer extends CanvasText implements Layer{
             }
             else {
                 if (this.inWords) {
-                    this.text = this.marks >= -1 ? getMarksInWords(Math.round(this.marks*Math.pow(10, this.decimalPlaces))/Math.pow(10, this.decimalPlaces), this.decimalPlaces) : this.alternateText;
+                    this.text = this.marks >= 0 ? getMarksInWords(Math.round(this.marks*Math.pow(10, this.decimalPlaces))/Math.pow(10, this.decimalPlaces), this.decimalPlaces) : this.alternateText;
                 } else {
                     this.text = this.marks >= 0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
             }
+            this.examinationName = this.source.getExaminationName(this.ca.DATA, this.parentExamination);
             this.error = false;
         } else {
             this.text = this.alternateText;

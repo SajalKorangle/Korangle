@@ -7,6 +7,7 @@ import { MarksDialogComponent } from '../../components/dialogs/marks-dialog/mark
 import {LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component'
 import { InventoryDialogComponent } from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
+import { ExamMappingDialogComponent} from './../../components/dialogs/exam-mapping-dialog/exam-mapping-dialog.component'
 
 export class DesignReportCardHtmlAdapter {
 
@@ -180,6 +181,19 @@ export class DesignReportCardHtmlAdapter {
         })
     }
 
+    openExamMappingDialog(): void{
+        this.openedDialog = this.vm.dialog.open(ExamMappingDialogComponent, {
+            data: {
+                ca:this.vm.canvasAdapter
+            }
+        })
+        this.openedDialog.afterClosed().subscribe((examMapping: {[key:string]:number}) => { 
+            if (examMapping) {
+                this.vm.canvasAdapter.mapExamination(examMapping);
+            }
+        })
+    }
+
     openInventory(): void{
         this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
             data: {
@@ -205,6 +219,7 @@ export class DesignReportCardHtmlAdapter {
                             content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.publicLayoutList[selection.index].content))
                         };
                         this.vm.populateCurrentLayoutWithGivenValue(newLayout1, true);
+                        this.openExamMappingDialog();
                         break;
                     case 'shared':
                         let newLayout2: any = {
@@ -214,6 +229,7 @@ export class DesignReportCardHtmlAdapter {
                             content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.sharedLayoutList[selection.index].content))
                         };
                         this.vm.populateCurrentLayoutWithGivenValue(newLayout2, true);
+                        this.openExamMappingDialog();
                         break;
                 }
             }
