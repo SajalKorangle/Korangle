@@ -146,7 +146,7 @@ export class ManageEventComponent implements OnInit {
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'eventImages': eventImages, 'index': index, 'editable': false, 'isMobile': this.isMobile()}
+            data: {'eventImages': eventImages, 'index': index, 'viewEventPage': false, 'isMobile': this.isMobile()}
         });
         dialogRef.afterClosed();
     }
@@ -185,12 +185,12 @@ export class ManageEventComponent implements OnInit {
         console.log($event);
     }
 
-    selectTag($event: any,eventTag:any) {
-      console.log($event);
-         if($event.target.innerHTML!='' && ($event.target.contentEditable=='false'||$event.target.contentEditable=='inherit') ) {
-                    eventTag.selected = !eventTag.selected;
-                    this.selectTaggedImages(eventTag);
-                }
+    selectTag($event: any, eventTag: any) {
+        console.log($event);
+        if ($event.target.innerHTML != '' && ($event.target.contentEditable == 'false' || $event.target.contentEditable == 'inherit')) {
+            eventTag.selected = !eventTag.selected;
+            this.selectTaggedImages(eventTag);
+        }
     }
 
     saveTag($event: any,eventTag:any) {

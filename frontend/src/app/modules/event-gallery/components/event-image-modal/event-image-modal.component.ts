@@ -28,7 +28,8 @@ const right = [
 export interface ImagePreviewDialogData {
     eventImages: any;
     index: any;
-    editable: any;
+    tagList:any;
+    viewEventPage: boolean;
     isMobile: any;
 }
 
@@ -71,6 +72,7 @@ export class EventImageModalComponent {
         'width': '95vw',
         'max-width': '100%',
     }
+    isImageDownloading:boolean;
 
     onNoClick(): void {
         this.dialogRef.close();
@@ -132,5 +134,12 @@ export class EventImageModalComponent {
     changeImageSize(event: any){
         this.imageStyle.width = event.value.toString() + '%';
     }
-    
+
+    getCorrespondingTags() {
+        return this.data.tagList.filter(tags => this.data.eventImages[this.counter].tagList.some(tag=> tag == tags.id));
+    }
+
+    downloadSelectedImages() {
+        
+    }
 }

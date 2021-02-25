@@ -4,7 +4,7 @@
 <div class="card-content table-responsive" *ngIf="!isLoading">
 
 
-    <div class="row" *ngIf="!selectedEvent">
+    <div class="row" *ngIf="!currentEvent">
         <div class="col-md-4">
             <mat-form-field style="width: 100%" [floatLabel]="'never'">
                 <input matInput
@@ -15,22 +15,13 @@
         </div>
     </div>
 
-    <div *ngIf="isEventListLoading">
-        <app-loading-spinner [user]="user"></app-loading-spinner>
-    </div>
+<!--    <div *ngIf="isEventListLoading">-->
+<!--        <app-loading-spinner [user]="user"></app-loading-spinner>-->
+<!--    </div>-->
 
-    <ng-container *ngIf="!isEventListLoading">
-
-        <ng-container *ngIf="selectedEvent">
-            <mat-icon
-                    style="float:left;cursor: pointer;margin-left:15px;"
-                    (click)="selectedEvent = null;">arrow_back
-            </mat-icon>
-            <span style="font-size:14px;float:left;margin-top:3px;margin-left: 5px;">Back</span>
-            <br>
-            <br>
-        </ng-container>
-        <ng-container *ngIf="!selectedEvent">
+<!--    <ng-container *ngIf="!isEventListLoading">-->
+    
+        <ng-container *ngIf="!currentEvent">
             <mat-card style="margin-top: 10px;" *ngFor="let event of htmlAdapter.getEventList()"
                       (click)="viewSelectedEvent(event)">
                 <div class="row">
@@ -64,19 +55,33 @@
             </mat-card>
         </ng-container>
 
-        <ng-container *ngIf="selectedEvent">
+        <ng-container *ngIf="currentEvent">
 
             <div class="row">
-                <div class="col-md-4" style="font-weight: 400;">
-                    <span style="font-size: 12px;">Title</span><br>
-                    <span style="font-size: 16px;display:block;margin-top:6px;">{{selectedEvent.title}}</span>
+                <div class="col-md-5" style="padding-left: 9px">
+                    <mat-icon
+                            style="float:left;cursor: pointer;"
+                            (click)="currentEvent = null;">arrow_back
+                    </mat-icon>
+                    <span style="font-size:14px;float:left;margin-top:3px;margin-left: 5px;">Back</span>
                 </div>
             </div>
 
-            <div class="row" style="margin-top: 20px;font-weight: 400;">
+            <div class="row">
+                <div class="col-md-4" style="margin-top: 15px;font-weight: 400;">
+                    <span style="font-size: 18px;display:block;margin-top:6px;">{{currentEvent.title}}</span>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4" style="margin-top: 15px;font-weight: 400;">
+                    <span style="font-size: 14px;display:block;margin-top:6px;">{{currentEvent.heldOn | date : 'dd MMM yyyy'}}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 15px;font-weight: 400;">
                 <div class="col-md-11">
-                    <span style="font-size: 12px;">Text</span><br>
-                    <span style="font-size: 16px;display:block;margin-top:6px;white-space: pre-line;line-height: 19px;word-wrap: break-word;">{{selectedEvent.description}}</span>
+                    <span style="font-size: 18px;display:block;margin-top:6px;white-space: pre-line;line-height: 19px;word-wrap: break-word;">{{currentEvent.description}}</span>
                 </div>
             </div>
 
@@ -89,8 +94,10 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-12">
-                            <span style="font-size: 14px;font-weight:400;">Search By Tags</span><br>
-                            <ng-container *ngFor="let eventTag of tagList">
+                            <span *ngIf="this.currentTagList.length>0" style="font-size: 14px;font-weight:400;">Search By Tags</span>
+                            <span *ngIf="this.currentTagList.length==0" style="font-size: 14px;font-weight:400;">No Tags have been uploaded yet</span>
+                            <br>
+                            <ng-container *ngFor="let eventTag of currentTagList">
                                 <div class="btn"
                                      style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"
                                      [ngClass]="{'selectedTag' : eventTag.selected}"
@@ -111,14 +118,14 @@
 
 
             <mat-card style="margin-top: 20px;">
-                <div class="row" *ngIf="imageList.length>0">
-                    <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12" *ngIf="this.currentEventImageList.length>0">
                         <mat-checkbox (change)="selectAllMedia($event)"
                                       [checked]="getSelectedImagesCount() == imageList.length"
                                       [disabled]="isImageDownloading"><span class="editTag" style="color: orange"> Select All Media </span>
                         </mat-checkbox>
-                        <span style="float: right"><a href="javascript:void(0);" (click)="downloadSelectedImages()"> <i
-                                class="material-icons">save_alt</i>Download </a></span>
+                        <span style="float: right;"><a href="javascript:void(0);" (click)="downloadSelectedImages()" style="color:#FC9700;"> <i
+                                class="material-icons" style="color:#FC9700;">save_alt</i>Download </a></span>
                         <ng-container *ngIf="isImageDownloading">
                             <div class="loader__dot"
                                  style="display: inline-block;color:#ff9800;text-decoration: underline">Deleting
@@ -126,10 +133,13 @@
                                         class="loader__dot">.</span></div>
                         </ng-container>
                     </div>
+                    <div class="col-md-5" *ngIf="this.currentEventImageList.length==0">
+                        <span style="font-weight: 400;font-size: 18px">No Media uploaded yet</span>
+                    </div>
                 </div>
                 <mat-card-content style="max-height: 400px;overflow: auto">
                     <div class="image-row">
-                        <ng-container *ngFor="let image of imageList; let i = index" style="display: inline-block">
+                        <ng-container *ngFor="let image of getFilteredImageList(); let i = index" style="display: inline-block">
                             <div class="image-column">
                                 <input type="checkbox" id="myCheckbox{{i}}" [disabled]="isImageDownloading"
                                        [checked]="image.selected" (change)="image.selected = !image.selected"/>
@@ -148,5 +158,5 @@
             </mat-card>
 
         </ng-container>
-    </ng-container>
+<!--    </ng-container>-->
 </div>

@@ -19,6 +19,8 @@ export class ViewEventServiceAdapter {
         this.vm.isLoading = true;
         this.vm.eventList = [];
         this.vm.imageList = [];
+        this.vm.imageTagList = [];
+        this.vm.tagList = [];
         this.vm.eventNotifyList = [];
         this.vm.loadMoreEvents = true;
         this.fetchLoadingCount();
@@ -66,8 +68,15 @@ export class ViewEventServiceAdapter {
                     this.vm.tagList.push(val);
                 });
 
-                value2[1].forEach(val => {
-                    this.vm.imageList.push(val);
+                value2[1].forEach(image => {
+                    image['selected'] = false;
+                    image['tagList'] = [];
+                    value2[2].forEach(imageEvent => {
+                        if (imageEvent.parentEventImage == image.id) {
+                            image['tagList'].push(imageEvent.parentEventTag);
+                        }
+                    });
+                    this.vm.imageList.push(image);
                 });
 
                 value2[2].forEach(val => {
