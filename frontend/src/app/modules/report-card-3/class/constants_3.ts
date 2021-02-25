@@ -1813,9 +1813,11 @@ export class GradeLayer extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         const DATA = this.ca.DATA;
-        if (this.parentExamination && this.subGradeId) {
-            this.text = this.source.getValueFunc(this.ca.DATA, this.parentExamination, this.subGradeId);
-            this.error = false;
+        if (this.parentExamination) {
+            if (this.subGradeId) {
+                this.text = this.source.getValueFunc(this.ca.DATA, this.parentExamination, this.subGradeId);
+                this.error = false;
+            }
             this.examinationName = this.source.getExaminationName(this.ca.DATA, this.parentExamination);
         } else {
             this.text = this.alternateText;
@@ -1971,6 +1973,9 @@ export class MarksLayer extends CanvasText implements Layer{
     }
 
     layerDataUpdate(): void {
+        if (this.parentExamination) {
+            this.examinationName = this.source.getExaminationName(this.ca.DATA, this.parentExamination);
+        }
         if (this.parentExamination && this.parentSubject) {
             let gradeValue:string = null;
             this.marks = this.source.getValueFunc(
@@ -2000,7 +2005,6 @@ export class MarksLayer extends CanvasText implements Layer{
                     this.text = this.marks >= 0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
                 }
             }
-            this.examinationName = this.source.getExaminationName(this.ca.DATA, this.parentExamination);
             this.error = false;
         } else {
             this.text = this.alternateText;

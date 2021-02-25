@@ -28,7 +28,7 @@ def dataMigration(apps, schema_editor):
                         del layer['factor']
 
                     if (layer['LAYER_TYPE'] in ['MARKS', 'GRADE', 'REMARK']):
-                        if (layer['parentExamination'] and layer['parentSubject']):
+                        if (layer['parentExamination']):
                             exams = Examination.objects.filter(id=layer['parentExamination'])
                             if (len(exams) > 0):
                                 layer['examinationName'] = exams.first().name                
