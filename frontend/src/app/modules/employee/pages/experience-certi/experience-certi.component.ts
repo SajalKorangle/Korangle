@@ -19,7 +19,7 @@ export class ExperienceCertiComponent {
     employeeFullProfile: any;
     selected = false;
 
-    certificateNumber: number;
+    certificateNumber: any;
     certificateIssueDate;
     remark = 'His general conduct was good during the work.';
     boardList;
@@ -84,7 +84,7 @@ export class ExperienceCertiComponent {
     }
 
     isValidCertificate(): boolean {
-        if (this.certificateNumber == null) {
+        if (this.certificateNumber == null || this.certificateNumber == '') {
             alert('Certificate Number field should be filled');
             return false;
         }
