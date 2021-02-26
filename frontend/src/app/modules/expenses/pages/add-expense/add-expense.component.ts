@@ -43,7 +43,7 @@ export class AddExpenseComponent implements OnInit {
     constructor(private expenseService: ExpenseOldService) { }
 
     submitExpense(): void {
-        if (this.newExpense.amount === undefined || this.newExpense.amount === 0) {
+        if (this.newExpense.amount === undefined || this.newExpense.amount === 0 || this.newExpense.amount === null) {
             alert('Amount should be populated');
             return;
         }
