@@ -150,14 +150,14 @@ class ProfileImageView(APIView):
 ########### Employee ############
 
 
-class EmployeeView(OldCommonView, APIView): # Switch to new common_views_3 after fixing frontend request data format
+class EmployeeView(CommonView, APIView): # Switch to new common_views_3 after fixing frontend request data format
     Model = Employee
-    # RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
 
-class EmployeeListView(OldCommonListView, APIView): # Switch to new common_views_3 after fixing frontend request data format
+class EmployeeListView(CommonListView, APIView): # Switch to new common_views_3 after fixing frontend request data format
     Model = Employee
-    # RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
 ########### EmployeePermission ############
 from .models import EmployeePermission

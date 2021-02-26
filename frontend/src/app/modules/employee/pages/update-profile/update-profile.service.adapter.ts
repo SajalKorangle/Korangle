@@ -69,12 +69,6 @@ export class UpdateProfileServiceAdapter {
             Object.keys(this.vm.selectedEmployeeSessionProfile).forEach(key => {
                 this.vm.currentEmployeeSessionProfile[key] = this.vm.selectedEmployeeSessionProfile[key];
             });
-            console.log('session rofle')
-            console.dir(this.vm.currentEmployeeSessionProfile)
-
-           
-
-           
                 this.vm.employeeParameterValueList = value[2];
                 this.vm.currentEmployeeParameterValueList = [];
                 this.vm.employeeParameterValueList.forEach(item=>{
@@ -150,34 +144,25 @@ export class UpdateProfileServiceAdapter {
             alert("Aadhar No. should be 12 digits");
             return;
         }
-        // const employee_form_data= new FormData()
-        // //const data = { ...this.vm.currentEmployeeProfile};
-       
-        // const data = { ...this.vm.currentEmployeeProfile,content: JSON.stringify(this.vm.currentEmployeeProfile.content) };
-        // console.log('data')
-        // console.log(data)
-        // Object.keys(data).forEach(key => {
-        //         if (key === 'profileImage' ) {
-        //             if(this.vm.selectedEmployeeProfile.profileImage){
-        //                 //employee_form_data.append(key, this.dataURLtoFile(this.vm.selectedEmployeeProfile.profileImage, 'profileImage.jpeg'));
-        //             }
-        //         } else {
-        //             if (data[key]==this.vm.NULL_CONSTANT){
-        //                 employee_form_data.append(key,"");
-        //             }
-        //             else{
-        //                 employee_form_data.append(key,data[key]);
-        //             }
-        //         }
-        //     }); 
-        console.log('event image')
-        console.log(this.dataURLtoFile(this.vm.selectedEmployeeProfile.profileImage, 'profileImage.jpeg') )
-        this.vm.currentEmployeeProfile.profileImage = this.dataURLtoFile(this.vm.selectedEmployeeProfile.profileImage, 'profileImage.jpeg') 
-        console.log('curernt employee')
-        console.log(this.vm.currentEmployeeProfile)   
+        const employee_form_data= new FormData()       
+        const data = { ...this.vm.currentEmployeeProfile,content: JSON.stringify(this.vm.currentEmployeeProfile.content) };
+        Object.keys(data).forEach(key => {
+                if (key === 'profileImage' ) {
+                    if(this.vm.currentEmployeeProfile.profileImage){
+                        employee_form_data.append(key, this.dataURLtoFile(this.vm.currentEmployeeProfile.profileImage, 'profileImage.jpeg'));
+                    }
+                } else {
+                    if (data[key]==this.vm.NULL_CONSTANT){
+                        employee_form_data.append(key,"");
+                    }
+                    else{
+                        employee_form_data.append(key,data[key]);
+                    }
+                }
+            });  
         this.vm.isLoading = true;
         Promise.all([
-            this.vm.employeeService.updateObject(this.vm.employeeService.employees,this.vm.currentEmployeeProfile),
+            this.vm.employeeService.updateObject(this.vm.employeeService.employees,employee_form_data),
             (this.vm.currentEmployeeSessionProfile.id==null?
                 this.vm.employeeService.createObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])
                     :this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])

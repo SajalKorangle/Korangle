@@ -12,7 +12,7 @@ export class ViewAllServiceAdapter {
 
     initializeData (): void {
         let data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
 
@@ -21,7 +21,7 @@ export class ViewAllServiceAdapter {
         };
 
         const employee_parameter_value_data = {
-            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
 
@@ -30,6 +30,7 @@ export class ViewAllServiceAdapter {
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, employee_parameter_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, employee_parameter_value_data),
         ]).then(value => {
+            console.dir(value[0])
             this.vm.employeeProfileList = value[0].filter(employee => {
                 return employee.dateOfLeaving === null;
             });

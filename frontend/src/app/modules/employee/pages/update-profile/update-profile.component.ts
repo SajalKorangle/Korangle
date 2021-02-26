@@ -188,20 +188,6 @@ export class UpdateProfileComponent implements OnInit {
         };
         reader.readAsDataURL(image);
 
-        // let data = {
-        //     id: this.selectedEmployeeProfile.id,
-        // };
-        // this.isLoading = true;
-        // this.employeeOldService.uploadProfileImage(image, data, this.user.jwt).then( response => {
-        //     this.isLoading = false;
-        //     alert(response.message);
-        //     if (response.status === 'success') {
-        //         this.selectedEmployeeProfile.profileImage = response.url;
-        //         this.currentEmployeeProfile.profileImage = response.url;
-        //     }
-        // }, error => {
-        //     this.isLoading = false;
-        // });
     }
 
     resizeImage(file:File):Promise<Blob> {
