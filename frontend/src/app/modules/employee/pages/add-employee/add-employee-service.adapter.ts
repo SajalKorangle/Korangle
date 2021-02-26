@@ -19,10 +19,9 @@ export class AddEmployeeServiceAdapter {
         this.vm.newEmployeeSessionDetail = {};
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            'fields__korangle': 'id,name,mobileNumber,employeeNumber,dataOfLeaving',
         };
-        this.vm.employeeOldService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(employeeList => {
-            this.vm.employeeList = employeeList;
-        });
+        
 
         let module_data = {
             'parentBoard__or': this.vm.user.activeSchool.parentBoard,
@@ -37,7 +36,7 @@ export class AddEmployeeServiceAdapter {
         };
 
         Promise.all([
-            this.vm.employeeOldService.getEmployeeMiniProfileList(data, this.vm.user.jwt),
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees,data),
             this.vm.teamService.getObjectList(this.vm.teamService.module, module_data),
             this.vm.teamService.getObjectList(this.vm.teamService.task, task_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, {parentSchool: this.vm.user.activeSchool.dbId}),

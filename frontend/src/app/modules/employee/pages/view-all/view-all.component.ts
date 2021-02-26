@@ -1,7 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
-
+import {Component, OnInit} from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_LIST } from '../../../../print/print-routes.constants';
 import {ExcelService} from "../../../../excel/excel-service";

@@ -1,6 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import {Component, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import {TeamService} from '../../../../services/modules/team/team.service';
 import {EmployeeService} from '../../../../services/modules/employee/employee.service';
@@ -15,7 +13,7 @@ declare const $: any;
   selector: 'add-employee',
   templateUrl: './add-employee.component.html',
   styleUrls: ['./add-employee.component.css'],
-  providers:[BankService,TeamService,EmployeeService,EmployeeOldService]
+  providers:[BankService,TeamService,EmployeeService]
 })
 
 export class AddEmployeeComponent implements OnInit {
@@ -36,8 +34,7 @@ export class AddEmployeeComponent implements OnInit {
 
     serviceAdapter: AddEmployeeServiceAdapter;
 
-    constructor (public employeeOldService: EmployeeOldService,
-                 public employeeService : EmployeeService,
+    constructor (public employeeService : EmployeeService,
                  public bankService: BankService,
                  public teamService:TeamService,
                  public dialog:MatDialog) { }

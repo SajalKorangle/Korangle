@@ -1,7 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
-
+import { Component, OnInit } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {DataStorage} from "../../../../classes/data-storage";
 import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
@@ -51,8 +48,7 @@ export class UpdateProfileComponent implements OnInit {
     serviceAdapter: UpdateProfileServiceAdapter
 
 
-    constructor (public employeeOldService: EmployeeOldService,
-                public employeeService: EmployeeService,
+    constructor (public employeeService: EmployeeService,
                 public dialog:MatDialog,) { }
 
     ngOnInit(): void {
