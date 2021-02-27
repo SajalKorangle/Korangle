@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -279,16 +280,19 @@ public class MainActivity extends AppCompatActivity {
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
         if (BuildConfig.DEBUG) {
+            String url = "http://";
             try {
                 JSONObject jsonObject = new JSONObject(resJSON2String("json/debug_ip.json"));
+
+                url += jsonObject.getString("IP");
             } catch (JSONException e) {
-                return;
+                Toast.makeText(getApplicationContext(),
+                        "JSON Deserialization ERROR",
+                        Toast.LENGTH_LONG).show();
             }
-            
-            webview.loadUrl("http://192.168.29.79:4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
-        } else {
-            volleyFace.checkingUpdates();
-        }
+
+            webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
+        } else { volleyFace.checkingUpdates(); }
     }
 
     private String resJSON2String(String filename_res){
@@ -303,7 +307,9 @@ public class MainActivity extends AppCompatActivity {
 
             resJSON_string = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            return null;
+            Toast.makeText(getApplicationContext(),
+                    "JSON2STRING ERROR",
+                    Toast.LENGTH_LONG).show();
         }
 
         return resJSON_string;
