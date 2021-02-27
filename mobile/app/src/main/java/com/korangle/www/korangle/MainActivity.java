@@ -51,9 +51,12 @@ import com.google.firebase.iid.InstanceIdResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -282,8 +285,7 @@ public class MainActivity extends AppCompatActivity {
         if (BuildConfig.DEBUG) {
             String url = "http://";
             try {
-                JSONObject jsonObject = new JSONObject(resJSON2String("json/debug_ip.json"));
-
+                JSONObject jsonObject = new JSONObject(resJSON2String("korangle/debug_ip.json"));
                 url += jsonObject.getString("IP");
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(),
@@ -298,12 +300,11 @@ public class MainActivity extends AppCompatActivity {
     private String resJSON2String(String filename_res){
         String resJSON_string = null;
         try {
-            InputStream stream = getResources().getClass()
-                    .getResourceAsStream(filename_res);
-            byte[] buffer = new byte[(stream.available())]; // alloc json
+            InputStream json_stream = getAssets().open(filename_res);
+            byte[] buffer = new byte[(json_stream.available())]; // alloc json
 
-            stream.read(buffer);
-            stream.close();
+            json_stream.read(buffer);
+            json_stream.close();
 
             resJSON_string = new String(buffer, "UTF-8");
         } catch (IOException e) {
