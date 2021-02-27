@@ -47,8 +47,12 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -275,10 +279,34 @@ public class MainActivity extends AppCompatActivity {
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
         if (BuildConfig.DEBUG) {
+            try {
+                JSONObject jsonObject = new JSONObject(resJSON2String("json/debug_ip.json"));
+            } catch (JSONException e) {
+                return;
+            }
+            
             webview.loadUrl("http://192.168.29.79:4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
         } else {
             volleyFace.checkingUpdates();
         }
+    }
+
+    private String resJSON2String(String filename_res){
+        String resJSON_string = null;
+        try {
+            InputStream stream = getResources().getClass()
+                    .getResourceAsStream(filename_res);
+            byte[] buffer = new byte[(stream.available())]; // alloc json
+
+            stream.read(buffer);
+            stream.close();
+
+            resJSON_string = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            return null;
+        }
+
+        return resJSON_string;
     }
 
     public void exitActivity(View view) {

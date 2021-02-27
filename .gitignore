@@ -62,6 +62,7 @@ mobile/captures
 mobile/.externalNativeBuild
 mobile/.idea/caches/build_file_checksums.ser
 mobile/.idea/misc.xml
+mobile/app/src/main/res/json/debug_ip.json
 
 #built application files
 mobile/*.apk
