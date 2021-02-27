@@ -108,6 +108,7 @@ class Student(models.Model):
 
     parentTransferCertificate = \
         models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate')
+    
 
     def __str__(self):
         """A string representation of the model."""
