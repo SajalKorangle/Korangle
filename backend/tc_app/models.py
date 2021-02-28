@@ -5,6 +5,8 @@ from student_app.models import Student
 from fees_third_app.models import FeeType
 from employee_app.models import Employee
 from django.utils.timezone import now
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 class TCLayout(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -36,13 +38,16 @@ class TCImageAssets(models.Model): # implement image data size
 
 
 class TransferCertificateSettings(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)  
+    parentSchool = models.OneToOneField(School, on_delete=models.CASCADE)  
     
     tcFee = models.IntegerField(default=0)  # For fee collection
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, null=True)
     
     lastCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
+@receiver(post_save, sender=School)
+def newTcSettngs(sender, newSchool, **kwargs):
+    TransferCertificateSettings.create(parentSchool=newSchool, parentFeeType=None)
 
 
 class TransferCertificateNew(models.Model):

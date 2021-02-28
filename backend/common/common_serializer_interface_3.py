@@ -5,7 +5,7 @@ from django.db.models import Q
 
 
 def get_object(data, query_set, ModelSerializer):
-    object = query_set.get(id=data['id'])
+    object = query_set.get(**data.dict())
     return ModelSerializer(object).data
 
 

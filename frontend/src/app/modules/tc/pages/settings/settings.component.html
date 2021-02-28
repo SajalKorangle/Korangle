@@ -1,1 +1,39 @@
-<p>settings works!</p>
+<div class="card-content" style="margin-top: 20px;" *ngIf="!isLoading">
+    <ng-container *ngIf="tcSettings">
+        <h4>Fee settings</h4>
+        <div class="row">   
+            <div class="col-md-12">
+                <div class="col-md-3">TC Fee</div>
+                <div class="col-md-3">
+                    <input type="number"
+                            [(ngModel)]="tcSettings.tcFee"/>
+                </div>
+            </div>    
+            <!-- Complete tc fee type -->
+            <!-- <div class="col-md-12">
+                <div class="col-md-3">TC Fee Type</div>
+                <div class="col-md-3">
+                    <input type="text"
+                            [ngModel]="tcFeeTypeName"
+                            (ngModelChange)="tcFeeTypeName=$event"/>
+                </div>
+            </div> -->
+        </div>
+        <h4>Certificate no. settings</h4>
+        <div class="row">            
+            <div class="col-md-3">Last certificate number</div>
+            <div class="col-md-3">
+                <input type="number"
+                        [(ngModel)]="tcSettings.lastCertificateNumber"/>
+            </div>         
+        </div>
+        <button type="button"
+                (click)="updateSettings();"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Update Settings</button>
+    </ng-container>
+    
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

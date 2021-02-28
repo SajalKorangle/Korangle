@@ -7,8 +7,8 @@ from tc_app import views
 
 urlpatterns += [
 
-    url(r'^report-card-layout-new/batch', views.TCLayoutListView.as_view()),
-    url(r'^report-card-layout-new', views.TCLayoutListView.as_view()),
+    url(r'^tc-layout/batch', views.TCLayoutListView.as_view()),
+    url(r'^tc-layout', views.TCLayoutListView.as_view()),
     url(r'^tc-layout-sharing/batch', views.TCLayoutSharingListView.as_view()),
     url(r'^tc-layout-sharing', views.TCLayoutSharingView.as_view()),
     url(r'^tc-image-assets/batch', views.TCImageAssetsListView.as_view()),
