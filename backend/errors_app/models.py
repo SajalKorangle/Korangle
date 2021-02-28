@@ -9,11 +9,15 @@ ERROR_SOURCES = (
 
 class Error(models.Model):
 
-    errorSource = models.CharField(max_length=50, choices=ERROR_SOURCES, null=False, blank=False)
-    url = models.CharField(max_length=200, null=False, blank=False)
+    errorSource = models.CharField(max_length=50, choices=ERROR_SOURCES, null=False, blank=False, verbose_name='Error Source')
+    url = models.CharField(max_length=500, null=False, blank=False)
     description = models.TextField()
-    prompt = models.CharField(max_length=200)
+    prompt = models.CharField(max_length=250)
     fatal = models.BooleanField(default=False);
+    dateTime = models.DateTimeField(verbose_name='Date Time', auto_now_add=True)
 
     class Meta:
         db_table = 'error'
+
+    def __str__(self):
+        return self.prompt

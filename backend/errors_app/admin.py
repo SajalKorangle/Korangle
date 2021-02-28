@@ -1,4 +1,7 @@
 from django.contrib import admin
 from .models import Error
 
-admin.site.register(Error)
+class ErrorAdmin(admin.ModelAdmin):
+    readonly_fields = ('dateTime',)
+
+admin.site.register(Error, ErrorAdmin)
