@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 ERROR_SOURCES = (
@@ -9,6 +9,7 @@ ERROR_SOURCES = (
 
 class Error(models.Model):
 
+    user = models.ForeignKey(User, null=True)
     errorSource = models.CharField(max_length=50, choices=ERROR_SOURCES, null=False, blank=False, verbose_name='Error Source')
     url = models.CharField(max_length=500, null=False, blank=False)
     description = models.TextField()

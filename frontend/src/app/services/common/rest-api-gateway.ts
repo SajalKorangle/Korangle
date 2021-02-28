@@ -40,11 +40,11 @@ export class RestApiGateway {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
-            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${response}`, prompt);
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt);
             alert(jsonResponse.message);
             throw new Error();
         } else {
-            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${response}`, prompt, true);
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true);
             alert('Unexpected response from server');
             return null;
         }
@@ -113,6 +113,7 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from getData');
             }, error => {
+                    console.log('get error: ', error);
                 this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;

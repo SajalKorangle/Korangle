@@ -55,7 +55,7 @@ def user_permission_new(function):
     return wrap
 
 
-def user_permission_3(function):
+def user_permission_3(function):    # do we need to check authentication
     def wrap(*args, **kwargs):
         request = args[1]
 
