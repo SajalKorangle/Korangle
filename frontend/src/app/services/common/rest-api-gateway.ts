@@ -113,7 +113,6 @@ export class RestApiGateway {
             .then(response => {
                 return this.returnResponse(response, url, 'from getData');
             }, error => {
-                    console.log('get error: ', error);
                 this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData')
                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                 return null;
