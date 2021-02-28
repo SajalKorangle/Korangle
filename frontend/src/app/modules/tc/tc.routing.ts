@@ -5,6 +5,41 @@ import { TCComponent } from './tc.component';
 
 const routes: Routes = [
     {
+        path: 'settings',
+        loadChildren: 'app/modules/tc/pages/settings/settings.module#SettingsModule',
+        data: {moduleName: 'tc'},
+    },
+    {
+        path: 'cancel_tc',
+        loadChildren: 'app/modules/tc/pages/cancel-tc/cancel-tc.module#CancelTCModule',
+        data: {moduleName: 'tc'},
+    },
+    {
+        path: 'design_tc',
+        loadChildren: 'app/modules/tc/pages/design-tc/design-tc.module#DesignTCModule',
+        data: {moduleName: 'tc'},
+    },
+    {
+        path: 'generate_tc',
+        loadChildren: 'app/modules/tc/pages/generate-tc/generate-tc.module#GenerateTCModule',
+        data: {moduleName: 'tc'},
+    },
+    {
+        path: 'issue_tc',
+        loadChildren: 'app/modules/tc/pages/issue-tc/issue-tc.module#IssueTCModule',
+        data: {moduleName: 'tc'},
+    },
+    {
+        path: 'regenerate_tc',
+        loadChildren: 'app/modules/tc/pages/regenerate-tc/regenerate-tc.module#RegenerateTCModule',
+        data: {moduleName: 'tc'},
+    },
+    {
+        path: 'tc_logbook',
+        loadChildren: 'app/modules/tc/pages/tc-logbook/tc-logbook.module#TCLogbookModule',
+        data: {moduleName: 'tc'},
+    },
+    {
         path: '',
         component: TCComponent,
     },
