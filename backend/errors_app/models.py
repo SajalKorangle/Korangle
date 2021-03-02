@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import timedelta
 # Create your models here.
 
 ERROR_SOURCES = (
@@ -21,4 +22,4 @@ class Error(models.Model):
         db_table = 'error'
 
     def __str__(self):
-        return self.prompt
+        return self.prompt + ' - ' + (self.dateTime.astimezone().strftime("%m/%d/%Y, %H:%M:%S"))
