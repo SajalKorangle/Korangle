@@ -96,8 +96,9 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             this.storeThumbnail()
         }
         this.currentLayout.content[this.activePageIndex] = this.getDataToSave();
+        let returnPromise = this.loadData(this.currentLayout.content[pageIndex]);
         this.activePageIndex = pageIndex;
-        return this.loadData(this.currentLayout.content[pageIndex]);
+        return returnPromise;
     }
 
     removeCurretPage(): Promise<any>{
