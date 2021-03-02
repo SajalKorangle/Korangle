@@ -17,7 +17,6 @@ import { DesignTCHtmlAdapter } from './design-tc.html.adapter';
 import { DesignTCCanvasAdapter } from './design-tc.canvas.adapter';
 
 import { Layer, DATA_SOUCE_TYPE } from './../../class/constants';
-import { TCService } from 'app/services/modules/tc/tc.service';
 
 @Component({
   selector: 'app-design-tc',
