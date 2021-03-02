@@ -9,7 +9,6 @@ frontend/test_mobile_frontend.sh    //start frontend for mobile testing
 export const environment = {
     production: false,
     versionCheckURL: 'www.korangle.com/version.json',
-    //DJANGO_SERVER: 'http://localhost:8000',                      // normal debugging only (localhost)
-    DJANGO_SERVER: 'http://' + window.location.hostname + ':8000', //for mobile + normal debugging (LAN) (Your local IP goes here: <http://IP:8000>)
+    DJANGO_SERVER: 'http://' + window.location.hostname + ':8000', //for mobile + normal debugging over LAN
     api_version: '/v2.0',
 };
