@@ -184,11 +184,12 @@ export class DesignTCComponent implements OnInit, OnDestroy {
 
   newLayout(): void { // populating current layout to empty vaues and current activeSchool ID
     this.currentLayout = {
-        parentSchool: this.user.activeSchool.dbId,
+      parentSchool: this.user.activeSchool.dbId,
       name: '',
-        thumbnail: null,
-        publiclyShared: false,
-        content: this.canvasAdapter.getEmptyLayout(),
+      thumbnail: null,
+      publiclyShared: false,
+      content: this.canvasAdapter.getEmptyLayout(),
+      parentStudentSection: null 
     };
   } 
 
@@ -236,9 +237,9 @@ export class DesignTCComponent implements OnInit, OnDestroy {
   }
 
   doesCurrentLayoutHasUniqueName(): boolean {
-    return this.currentLayout.name.trim() != '' && this.reportCardLayoutList.filter(reportCardLayout => {
-      return this.currentLayout.id !== reportCardLayout.id
-        && reportCardLayout.name === this.currentLayout.name;
+    return this.currentLayout.name.trim() != '' && this.tcLayoutList.filter(tcLayout => {
+      return this.currentLayout.id !== tcLayout.id
+        && tcLayout.name === this.currentLayout.name;
     }).length === 0;
   };
 
@@ -249,8 +250,8 @@ export class DesignTCComponent implements OnInit, OnDestroy {
     this.unuploadedFiles[local_file_uri] = uploadedImage.name;
   }
 
-  resetCurrentLayout(): void {
-    const layout = this.reportCardLayoutList.find(item => {
+  resetCurrentLayout(): void {   // chek here
+    const layout = this.tcLayoutList.find(item => {
       return item.id === this.currentLayout.id;
     });
     this.populateCurrentLayoutWithGivenValue(layout === undefined ? this.ADD_LAYOUT_STRING : layout);
@@ -264,7 +265,7 @@ export class DesignTCComponent implements OnInit, OnDestroy {
     if (!this.currentLayout.id)
       return false;
     this.currentLayout.content[this.canvasAdapter.activePageIndex] = this.canvasAdapter.getDataToSave();
-    let dbSavedLayout = this.reportCardLayoutList.find(layout => layout.id == this.currentLayout.id);
+    let dbSavedLayout = this.tcLayoutList.find(layout => layout.id == this.currentLayout.id);
     return JSON.stringify(this.currentLayout.content) == dbSavedLayout.content && this.currentLayout.name == dbSavedLayout.name;
   }
 
