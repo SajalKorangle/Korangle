@@ -26,7 +26,7 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
     
     constructor() {
         super();
-        // console.log('canvas Adapter: ', this);
+        console.log('canvas Adapter: ', this);
         Object.defineProperty(this, 'currentLayout', {
             get: function () {
                 return this.vm.currentLayout;   // // reference to vm.currentLayout and there is no setter function
@@ -87,11 +87,11 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         this.canvasSizing(fullHeight, fullWidth, true);
         setTimeout(() => {
             let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
-            let dataurl = this.canvas.toDataURL()
-            doc.addImage(dataurl, 'PNG', 0, 0, this.canvasWidth, this.canvasHeight);
+            let dataurl = this.canvas.toDataURL('image/jpeg', 1.0)
+            doc.addImage(dataurl, 'JPEG', 0, 0, this.canvasWidth, this.canvasHeight);
             doc.save(this.vm.currentLayout.name + '.pdf');
             this.metaDrawings = true;
-            this.canvasSizing(actualCanavsHeight, actualCanavsWidth);
+            this.canvasSizing(actualCanavsHeight, actualCanavsWidth, true);
             this.vm.htmlAdapter.isSaving = false;
         },1000);    // bad design of waiting for canvas loading
     }

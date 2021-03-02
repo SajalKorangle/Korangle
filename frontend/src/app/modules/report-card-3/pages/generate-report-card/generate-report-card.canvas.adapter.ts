@@ -36,8 +36,8 @@ export class GenerateReportCardCanvasAdapter extends CanvasAdapterBase implement
     async downloadPDF(doc:any) { 
         await this.scheduleCanvasReDraw(0); // ensuring that all the images are loaded
         doc.addPage([this.virtualCanvas.width, this.virtualCanvas.height]);
-        let dataurl = this.virtualCanvas.toDataURL()
-        doc.addImage(dataurl, 'PNG', 0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
+        let dataurl = this.virtualCanvas.toDataURL('image/jpeg', 1.0)
+        doc.addImage(dataurl, 'JPEG', 0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
         return;
     }
 }

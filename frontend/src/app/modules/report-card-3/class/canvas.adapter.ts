@@ -86,7 +86,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         canavs.width = this.actualresolution.getmmWidth();
         let ctx = canavs.getContext('2d');
         ctx.drawImage(this.virtualCanvas, 0, 0, canavs.width, canavs.height);
-        this.currentLayout.thumbnail = canavs.toDataURL();
+        this.currentLayout.thumbnail = canavs.toDataURL('image/jpeg', 1.0);
     }
 
     updatePage(pageIndex: number): Promise<any>{
@@ -96,8 +96,9 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             this.storeThumbnail()
         }
         this.currentLayout.content[this.activePageIndex] = this.getDataToSave();
+        let returnPromise = this.loadData(this.currentLayout.content[pageIndex]);
         this.activePageIndex = pageIndex;
-        return this.loadData(this.currentLayout.content[pageIndex]);
+        return returnPromise;
     }
 
     removeCurretPage(): Promise<any>{
