@@ -1,1 +1,378 @@
-<p>design-tc works!</p>
+<div class="card-content table-responsive" id="dtc-wrapper" style="height: 90vh;" *ngIf="!htmlAdapter.isLoading; else spinner">
+
+    <div>
+        <button class="btn" style="padding: 4px 8px; font-size: medium; background-color: blue;" (click)="htmlAdapter.openInventory()">Inventory <span class="material-icons">inventory_2</span></button>
+        
+        <button *ngIf="currentLayout.id"
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}} material-icons"
+                [disabled]="htmlAdapter.isSaving"
+                (click)="serviceAdapter.deleteCurrentLayout()"
+                matTooltip="Delete Layout"
+                style="padding: 8px 12px; margin-right: 12px; float: right;">delete</button>
+
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}} material-icons"
+                (click)="htmlAdapter.isSaving=true; saveLayout();" 
+                style="padding: 8px 12px; margin-right: 12px; float: right;" 
+                matTooltip="Save Layout"
+                [disabled]="htmlAdapter.isSaving">save</button>
+        
+
+    </div>
+    <parent-student-filter [user]="user"
+                               (onStudentListSelected)="handleStudentListSelection($event)"
+                               (onStudentListLoading)="isStudentListLoading=$event"
+                               [selectedFilterType]="'Student'"
+                               [studentTcGenerated]="true"
+                               [bothFilters]="false"
+                               [showFilter]="false"></parent-student-filter>
+
+    <div id="dtc-mainCard" style="margin:0; padding:0;" class="bg-white">
+    <ng-container>
+    <mat-card>
+        <div *ngIf="!htmlAdapter.isFullScreen">
+        <mat-form-field style="width: 100%; max-width: 250px;">
+            <mat-label>
+                Layout Name
+            </mat-label>
+            <input matInput [(ngModel)]="currentLayout.name">
+            <mat-icon matSuffix *ngIf="doesCurrentLayoutHasUniqueName()"><span class="matrial-icons">emoji_emotions</span></mat-icon>
+            <mat-hint style="color:red; display: block;" *ngIf="!doesCurrentLayoutHasUniqueName() && currentLayout.name!=''" class="small">
+                Layout name must be unique
+            </mat-hint>
+        </mat-form-field>
+
+        <button class="btn"
+                (click)="resetCurrentLayout()"
+                [disabled]="htmlAdapter.isSaving"
+                style="padding: 4px 7px; margin-right: 12px; float: right;">Reset All</button>
+
+        </div>
+
+        <!--backdrop filter durnig saving-->
+        <div *ngIf="htmlAdapter.isSaving" style="width: 100%; height: 100%; position: absolute; z-index: 1; backdrop-filter: blur(1px);"></div>
+        
+        <mat-card class="bg-grey" style="width: 100%; padding: 2px; padding-bottom: 0; margin-top: 6px; align-items: center; display: flex; flex-wrap: wrap;" [class.stickyTop]="htmlAdapter.isFullScreen">
+            <!-- Top Toolbar -->
+
+            <div class="tool" style="padding: 2px;"> <!--Background Color Picker-->   
+                    <label>Background Color: </label>
+                    <input matTooltip="Add Background Color" type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                matTooltip="Add New Page"
+                        (click)="canvasAdapter.addEmptyPage()">note_add</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons"
+                matTooltip="Delete This Page"
+                [disabled]="currentLayout.content.length<=1"
+                        (click)="canvasAdapter.removeCurretPage()">remove_circle</button>
+            </div>
+
+            <div class="tool">  <!--Add Image-->
+                <input type='file' (change)="imageUploadHandler($event)" multiple="false" style="display: none" accept="image/x-png,image/jpeg" #imageInput/>
+                <button class="btn material-icons" matTooltip="Add Image"
+                        (click)="imageInput.click()">add_photo_alternate</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Refresh"
+                        (click)="canvasAdapter.fullCanavsRefresh()" [disabled]="htmlAdapter.isSaving">refresh</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Toggle FullScreen"
+                        (click)="htmlAdapter.fullScreenToggle()">{{htmlAdapter.isFullScreen?'fullscreen_exit':'fullscreen'}}</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Zoom Level"
+                        [matMenuTriggerFor]="zoomMenu" >zoom_in</button>
+                <mat-menu #zoomMenu="matMenu">
+                        <mat-slider min="{{canvasAdapter.minimumCanvasSize()}}" max="{{canvasAdapter.maximumCanvasSize()}}" step="0.5" value="{{canvasAdapter.canvasHeight}}" (input)="canvasAdapter.zoomToHeight($event.value)" (click)="$event.stopPropagation()"></mat-slider>
+                </mat-menu>
+            </div>
+
+            <div class="tool"> 
+                <button class="btn material-icons" matTooltip="Copy Layer"
+                        (click)="canvasAdapter.duplicateLayer(canvasAdapter.activeLayer)">content_copy</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Download"
+                        (click)="canvasAdapter.downloadPDF()">save_alt</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Add Text"
+                        (click)="canvasAdapter.newTextLayer()">title</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Add Date"
+                        (click)="canvasAdapter.newDateLayer()">calendar_today</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Add Table"
+                        (click)="htmlAdapter.newTableColumnCount = 0; htmlAdapter.newTableRowCount = 0;"
+                        [matMenuTriggerFor]="tableMenu">backup_table</button>
+                <mat-menu #tableMenu="matMenu">
+                    
+                    
+                    <div style="display: flex; flex-direction: column; margin: 4px 12px;" (click)="canvasAdapter.newTableLayer({rowCount: htmlAdapter.newTableRowCount, columnCount: htmlAdapter.newTableColumnCount});">
+                        <span style="text-align: center;">{{htmlAdapter.newTableRowCount}}&nbsp;*&nbsp;{{htmlAdapter.newTableColumnCount}}</span>
+                        <div style="width: 100%; display: flex; flex-direction: row;justify-content: space-between;"
+                                *ngFor="let row of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceRowCount);">
+                            <ng-container *ngFor="let col of htmlAdapter.getArrayOfLength(htmlAdapter.tableToolbarAssistanceColumnCount);">
+                                <span style="height: 10px; width: 10px;; margin: 1px"
+                                    [style.backgroundColor]="row<=htmlAdapter.newTableRowCount&&col<=htmlAdapter.newTableColumnCount?'blue':'lightgrey'"
+                                    (mouseover)="htmlAdapter.newTableColumnCount = col; htmlAdapter.newTableRowCount=row;">
+                                </span>
+                            </ng-container>
+                        </div>
+                    </div>
+                </mat-menu>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Change Page Resolution"
+                        (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Share Layout"
+                        (click)="htmlAdapter.openLayoutSharingDialog()">share</button>
+            </div>
+
+            <div class="tool">
+                <button class="btn material-icons" matTooltip="Add Shape"
+                [matMenuTriggerFor]="shapesMenu">category</button>
+                <mat-menu #shapesMenu="matMenu">
+                    <div style="display: flex; flex-wrap: wrap; max-width: 128px; margin: 0 2px;">
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newLineLayer()">
+                            <div style="background-color: black; width: 22px; height: 2px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newRectangleLayer()">
+                            <div style="background-color: black; width: 22px; height: 12px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newSquareLayer()">
+                            <div style="background-color: black; width: 20px; height: 20px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newRoundedRectangleLayer()">
+                            <div style="background-color: black; width: 22px; height: 12px; border-radius: 3px; display: inline-block;"></div>
+                        </div>
+                        <div style="height: 28px; width: 28px; background-color: lightgray; display: flex; justify-content: space-around; align-items: center; margin: 2px; cursor: pointer;" (click)="canvasAdapter.newCircleLayer()">
+                            <div style="background-color: black; width: 20px; height: 20px; border-radius: 50%; display: inline-block;"></div>
+                        </div>
+                    </div>
+                </mat-menu>
+            </div>
+
+            <div class="tool" style="margin-left: auto;">
+                <mat-form-field style="width: 50px; height: 30px;">
+                <mat-select placeholder="DPI" [(ngModel)]="canvasAdapter.dpi">
+                    <mat-option *ngFor="let dpi of htmlAdapter.dpiList" [value]="dpi">{{dpi}}</mat-option>
+                </mat-select>
+                </mat-form-field>
+            </div>
+
+        </mat-card>
+
+
+        
+        <div class="flex-row" style="margin-top: 8px; width: 100%; height: calc(100vh - 90px); justify-content: space-between; position: relative;" id="canvasDesigningWrapper">
+
+            <!--Custom Context Menu-->
+            <ng-container *ngIf="htmlAdapter.customMenuDisplay">
+                <app-custom-menu [left]="htmlAdapter.customMenuLeft" style="position: absolute;"
+                        [top]="htmlAdapter.customMenuTop"
+                        [layer]="canvasAdapter.activeLayer" 
+                        [ca]="canvasAdapter" 
+                        [layerIndexes]="canvasAdapter.activeLayerIndexes"
+                        (closeMenu)="htmlAdapter.closeContextMenu()">
+                    </app-custom-menu>
+            </ng-container>
+
+            <!-- column1: Left Pannel -->
+            <mat-card class="inline-block" style="width: 240px; padding: 4px;" class="leftPannel bg-grey">
+                <mat-button-toggle-group style="width: 100%; margin-top: 2px;">
+                    <mat-button-toggle value="layers" [checked]="htmlAdapter.activeLeftColumn === 'layers'"  (click)="htmlAdapter.activeLeftColumn = 'layers'">Layers</mat-button-toggle>
+                    <mat-button-toggle value="parameters" (click)="htmlAdapter.activeLeftColumn = 'parameters'">Parameters</mat-button-toggle>
+                </mat-button-toggle-group>
+
+
+                <!-- Parameters -->
+                <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'parameters'">
+                <div style="padding: 4px; border-radius: 4px; text-align: center;" class="bg-white inner-content">
+                   
+                <ng-container *ngFor="let fieldKey of htmlAdapter.getFieldKeys(); let i = index;">
+                    <mat-form-field style="margin-bottom: 1vh;">
+                        <mat-label>
+                            {{htmlAdapter.fields[fieldKey].displayFieldName}}
+                        </mat-label>
+                        <mat-select [value]="null">
+                            <mat-option *ngFor="let parameter of htmlAdapter.getFilteredParameterList(htmlAdapter.fields[fieldKey])"
+                                    (click)="htmlAdapter.addNewLayerForAsset(parameter)">
+                                {{parameter.displayParameterNameFunc()}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </ng-container>
+                <mat-form-field>
+                    <mat-label>Result</mat-label>
+                    <mat-select [value]="null">
+                        <mat-option (click)="htmlAdapter.openResultDialog(canvasAdapter.newReultLayer())">Pass/Fail/Supplementary</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                    
+                </div>
+                <div style="padding: 4px; border-radius: 4px; text-align: center;" class="bg-white inner-content">
+
+                    <button mat-stroked-button class="btn" style="width: calc(100% - 8px);"
+                            (click)="htmlAdapter.openExamMappingDialog()">Exam Mapping</button>
+                </div>
+                </ng-container>
+
+                
+                <!-- Layers Column -->
+                <ng-container *ngIf="htmlAdapter.activeLeftColumn === 'layers'">
+                    <div class="flex-column inner-content" style="flex-direction: column-reverse; position: relative; overflow-y: auto; overflow-x: hidden;">
+                        <ng-container *ngFor="let layer of canvasAdapter.layers; index as i">
+                            <hr style="margin:0; background-color: rgb(80, 80, 80); height: 3px; display: none;" [id]="layer.id"/> <!-- Layer Reorder Drop Assistance -->
+                            <span *ngIf="layer" draggable="true" 
+                                    (dragover)="$event.preventDefault(); htmlAdapter.dropAssistanceDisplay(layer.id);"
+                                    (dragleave)="htmlAdapter.dropAssistanceHide(layer.id)"
+                                    (dragstart)="$event.target.style.opacity='0.5'; $event.dataTransfer.setData('layerId', layer.id);" 
+                                    (dragend)="$event.target.style.opacity='1'"
+                                    (drop)="$event.preventDefault(); canvasAdapter.layerMove(layer.id, $event.dataTransfer.getData('layerId')); htmlAdapter.dropAssistanceHide(layer.id);"
+                                    (mousedown)="canvasAdapter.updateActiveLayer(i, $event.shiftKey);"
+                                    (contextmenu)="$event.preventDefault(); htmlAdapter.openContextMenu($event);"
+                                    style="width: calc(100% - 8px); text-align: center; margin: 4px; padding: 4px; border-radius: 3px; cursor: pointer; white-space: nowrap;" 
+                                    [class]="canvasAdapter.activeLayerIndexes.includes(i)?'bg-active':'bg-white'"
+                                    [id]="'layer_#'+layer.id"> 
+                                <span *ngIf="layer.error" style="color: red; float: left; font-size: x-large;">•</span>
+                                <span *ngIf="layer.isLocked" class="material-icons" style="float: left; font-size: small; margin-top: 3px;">lock</span>
+                                <span style="display: inline-block;"> {{layer.displayName}} </span>   <!--this is layer name-->
+                                <span style="float: right; margin-right: 12px;">#{{layer.id}}</span>   <!-- i is id which is the array index no.of layers -->
+                            </span>
+                        </ng-container>
+                    </div>
+                </ng-container>
+
+            </mat-card>
+
+            
+            
+            <!-- column 2: Canvas -->
+            <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 510px); position: relative; text-align: center; overflow: hidden;" id="canvasWrapper" (click)="htmlAdapter.canvasWrapperClickHandler($event)">
+                <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute; z-index: 2;"></mat-progress-bar></ng-container>
+                <div style="position: absolute; right: 2px; top: 4px; display: flex; flex-direction: column;" *ngIf="currentLayout.content.length>1">
+                    <button *ngFor="let dummy of currentLayout.content; let ind = index;" 
+                            (click)="canvasAdapter.updatePage(ind)"
+                            [class]="'btn ' + (canvasAdapter.activePageIndex==ind?'bg-active':'bg-white')" 
+                            style="padding: 4px 8px; margin: 3px;">
+                        {{ind+1}}
+                    </button>
+                </div>
+                <div style="overflow: auto; max-height: 100%;">
+                    <canvas id="mainCanvas" [style.margin.px]="htmlAdapter.canvasMargin"></canvas>
+                </div>
+            </mat-card>
+
+
+           
+            <!-- column 3: Right Pannel -->
+            <mat-card class="inline-block flex-column" style="width: 240px; padding-top: 8px; align-items: center; overflow-y: auto; overflow-x: hidden;">
+                <span *ngIf="!canvasAdapter.activeLayer" style="margin-top: 25px;">No Layers Selected </span>
+                
+                <div *ngIf="canvasAdapter.activeLayer" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-position-parameter-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-position-parameter-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('text')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-text-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-text-parameters-pannel>
+                </div>
+                
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('image')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-image-parameters-pannel 
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-image-parameters-pannel>
+                </div>
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-shape-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('shape')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-shape-parameters-pannel>
+                </div>
+
+                
+                <div class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-date-parameters-pannel 
+                            *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('date')"
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-date-parameters-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('attendance')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-attendance-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-attendance-parameters-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('table')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-table-parameter-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-table-parameter-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('currentSession')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-session-parameter-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-session-parameter-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('group')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-group-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-group-parameters-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('settings')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-settings-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-settings-parameters-pannel>
+                </div>
+
+            </mat-card>
+
+        </div>
+    </mat-card>
+
+    </ng-container>
+    </div>
+
+
+</div>
+
+<ng-template #spinner>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>

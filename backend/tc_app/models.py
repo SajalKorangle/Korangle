@@ -8,10 +8,13 @@ from django.utils.timezone import now
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+def upload_thumbnail_to(instance, filename):
+    return '%s/tc_layouts/imageAssets/%s_%s' % (instance.parentSchool.id, now().timestamp(), filename)
+
 class TCLayout(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
-    thumbnail = models.ImageField(upload_to="report_cards/layout_thumbnails",null=True)
+    thumbnail = models.ImageField(upload_to=upload_thumbnail_to,null=True)
     publiclyShared = models.BooleanField(default=False)
     content = models.TextField()  # Contains the JSON content for the layout
     parentStudentSection = models.ForeignKey(Student, on_delete=models.SET_NULL,

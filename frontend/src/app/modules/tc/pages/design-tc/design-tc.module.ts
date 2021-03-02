@@ -2,6 +2,16 @@ import { NgModule } from '@angular/core';
 
 import { DesignTCRoutingModule } from './design-tc.routing';
 import { ComponentsModule } from "../../../../components/components.module";
+
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {MatIconModule} from '@angular/material/icon';
+import { ParametersPannelModule } from './../../components/parameters-pannel.module';
+import { MatDialogModule} from '@angular/material/dialog';
+import { PageResolutionDialogComponent } from '../../components/dialogs/page-resolution-dialog/page-resolution-dialog.component';
+import { LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component';
+import { InventoryDialogComponent} from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
+
 import { DesignTCComponent } from "./design-tc.component";
 
 
@@ -13,10 +23,17 @@ import { DesignTCComponent } from "./design-tc.component";
     imports: [
         DesignTCRoutingModule,
         ComponentsModule,
+        MatDialogModule,
+        MatButtonToggleModule,
+        MatIconModule,
+        ParametersPannelModule,
     ],
-    exports: [
+    entryComponents: [
+        PageResolutionDialogComponent,
+        LayoutSharingDialogComponent,
+        InventoryDialogComponent,
+        LayerReplacementDialogComponent,
     ],
-    providers: [],
     bootstrap: [DesignTCComponent]
 })
 export class DesignTCModule { }
