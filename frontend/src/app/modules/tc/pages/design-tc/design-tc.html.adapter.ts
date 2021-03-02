@@ -155,7 +155,7 @@ export class DesignTCHtmlAdapter {
                             this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING);
                         }
                         else {
-                            this.vm.populateCurrentLayoutWithGivenValue(this.vm.reportCardLayoutList[selection.index]);
+                            this.vm.populateCurrentLayoutWithGivenValue(this.vm.tcLayoutList[selection.index]);
                         }
                         break;
                     case 'public':

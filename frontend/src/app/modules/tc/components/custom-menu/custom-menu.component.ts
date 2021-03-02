@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Layer } from '../../class/constants';
-import { DesignReportCardCanvasAdapter } from './../../pages/design-report-card/design-report-card.canvas.adapter';
+import { DesignTCCanvasAdapter} from './../../pages/design-tc/design-tc.canvas.adapter';
 
 @Component({
   selector: 'app-custom-menu',
@@ -12,7 +12,7 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
   @Input() top;
   @Input() left;
 
-  @Input() ca: DesignReportCardCanvasAdapter;
+  @Input() ca: DesignTCCanvasAdapter;
   @Input() layer: Layer;
   @Input() layerIndexes;
   @Output() closeMenu = new EventEmitter<null>();

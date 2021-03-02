@@ -222,18 +222,6 @@
                         </mat-select>
                     </mat-form-field>
                 </ng-container>
-                <mat-form-field>
-                    <mat-label>Result</mat-label>
-                    <mat-select [value]="null">
-                        <mat-option (click)="htmlAdapter.openResultDialog(canvasAdapter.newReultLayer())">Pass/Fail/Supplementary</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                    
-                </div>
-                <div style="padding: 4px; border-radius: 4px; text-align: center;" class="bg-white inner-content">
-
-                    <button mat-stroked-button class="btn" style="width: calc(100% - 8px);"
-                            (click)="htmlAdapter.openExamMappingDialog()">Exam Mapping</button>
                 </div>
                 </ng-container>
 

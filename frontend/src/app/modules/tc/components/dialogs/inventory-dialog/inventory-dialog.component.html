@@ -11,7 +11,7 @@
                     <span>New Layout</span>
                 </div>
 
-                <ng-container *ngFor="let layout of vm.reportCardLayoutList, let i = index;">
+                <ng-container *ngFor="let layout of vm.tcLayoutList, let i = index;">
                 <div style="text-align: center; max-width: 105px; cursor: pointer; margin: 4px;" (click)="selectedLayout.type='myLayout'; selectedLayout.index=i;">
                     <div style="height:150px; width:102px; margin: 4px 12px; background-color: lightgrey; display: table-cell; vertical-align: middle; text-align: center; border: solid 3px; position: relative;" [style.borderColor]="selectedLayout.type=='myLayout'&&selectedLayout.index==i?'blue':'lightgrey'">
                         <img [src]="layout.thumbnail" style="display: block; max-height: 144px; width: 96px; position: relative; z-index: 2;" alt="preview unavailable">

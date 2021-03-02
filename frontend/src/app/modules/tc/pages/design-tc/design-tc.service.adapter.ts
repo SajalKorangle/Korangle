@@ -16,7 +16,7 @@ export class DesignTCServiceAdapter {
     // initialize data
     initializeData(): void {
         this.vm.DATA.currentSession = this.vm.user.activeSchool.currentSessionDbId;
-        const report_card_layouts_data = {
+        const tc_layouts_data = {
             parentSchool: this.vm.user.activeSchool.dbId
         };
         const request_student_section_data = {
@@ -26,20 +26,6 @@ export class DesignTCServiceAdapter {
         };
         const request_student_parameter_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
-        };
-        const request_examination_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId
-        };
-        const request_grade_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
-        const request_sub_grade_data = {
-            parentGrade__parentSchool: this.vm.user.activeSchool.dbId,
-        };
-        const request_test_data = {
-            parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
-            parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
         const public_layouts_data = {
             publiclyShared: 'True'
@@ -54,35 +40,27 @@ export class DesignTCServiceAdapter {
 
         this.vm.htmlAdapter.isLoading = true;
         Promise.all([
-            this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, report_card_layouts_data),
+            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, tc_layouts_data), // 0
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 2
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 3
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 4
-            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data), // 5
-            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data), // 6
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 7
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 8
-            this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data), // 9
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 10
-            this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, public_layouts_data), //11
-            this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
-            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //13
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 5
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
+            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, public_layouts_data), //11
+            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //8
+            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, shared_layout_list_data), //9
         ]).then(data => { 
             // console.log(data);
-            this.vm.reportCardLayoutList = data[0];
+            this.vm.tcLayoutList = data[0];
             this.vm.DATA.data.studentSectionList = data[1];
             this.vm.DATA.data.studentParameterList = data[2];
             this.vm.DATA.data.classList = data[3];
             this.vm.DATA.data.divisionList = data[4];
-            this.vm.DATA.data.examinationList = data[5];
-            this.vm.DATA.data.testList = data[6];
-            this.vm.DATA.data.subjectList = data[7];
-            this.vm.DATA.data.sessionList = data[8];
-            this.vm.DATA.data.gradeList = data[9];
-            this.vm.DATA.data.subGradeList = data[10];
-            this.vm.publicLayoutList = data[11];
-            this.vm.DATA.data.classSectionSignatureList = data[13];
+            this.vm.DATA.data.subjectList = data[5];
+            this.vm.DATA.data.sessionList = data[6];
+            this.vm.publicLayoutList = data[7];
+            this.vm.DATA.data.classSectionSignatureList = data[8];
             // console.log('DATA: ', this.vm.DATA);
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
@@ -90,30 +68,18 @@ export class DesignTCServiceAdapter {
             const request_student_parameter_value_data = {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
-            const request_student_test_data = {
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-                parentExamination__in: this.vm.DATA.data.examinationList.map(item => item.id).join(','),
-            };
             const request_attendance_data = {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
                 'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
                 'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
             };
-            const request_student_sub_grade_data = {
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-            };
-            const request_student_examination_remarks_data = {
-                parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
-                parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-            };
 
             const request_layout_sharing_data = {
-                parentLayout__in: this.vm.reportCardLayoutList.map(l => l.id).join(',')
+                parentLayout__in: this.vm.tcLayoutList.map(l => l.id).join(',')
             }
 
             const shared_layout_data = {
-                id__in: data[12].map(sharedLayoutRelation => sharedLayoutRelation.parentLayout).join(',')
+                id__in: data[9].map(sharedLayoutRelation => sharedLayoutRelation.parentLayout).join(',')
             };
 
             // console.log(shared_layout_data);
@@ -121,27 +87,21 @@ export class DesignTCServiceAdapter {
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
                 this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
-                this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
-                this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
-                this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
-                this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
-                this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, request_layout_sharing_data),//6
-                this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, shared_layout_data), //7
+                this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 2
+                this.vm.tcService.getObjectList(this.vm.tcService.tc_layout_sharing, request_layout_sharing_data),//3
+                this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, shared_layout_data), //4
             ]).then(value => {
                 // console.log(value);
                 this.vm.DATA.data.studentList = value[0];
                 this.vm.DATA.data.studentParameterValueList = value[1];
-                this.vm.DATA.data.studentTestList = value[2];
-                this.vm.DATA.data.attendanceList = value[3];
-                this.vm.DATA.data.studentSubGradeList = value[4];
-                this.vm.DATA.data.studentExaminationRemarksList = value[5];
-                this.vm.sharedLayoutList = value[7];
+                this.vm.DATA.data.attendanceList = value[2];
+                this.vm.sharedLayoutList = value[4];
 
                 if (this.vm.DATA.data.studentList.length > 0)
                     this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
                 else
                     alert('Student Data unavaiable');
-                this.populateLayoutSharingData(value[6]);
+                this.populateLayoutSharingData(value[3]);
                 this.vm.htmlAdapter.isLoading = false;
                 this.vm.htmlAdapter.openInventory();
             }, error => {
@@ -174,42 +134,24 @@ export class DesignTCServiceAdapter {
         const request_student_parameter_value_data = {
             parentStudent: this.vm.selectedStudent.id,
         };
-        const request_student_test_data = {
-            parentStudent: this.vm.selectedStudent.id,
-            parentExamination__in: this.vm.DATA.data.examinationList.map(item => item.id).join(','),
-        };
         const request_attendance_data = {
             parentStudent: this.vm.selectedStudent,
             'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
             'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
         };
-        const request_student_sub_grade_data = {
-            parentStudent: this.vm.selectedStudent,
-        };
-        const request_student_examination_remarks_data = {
-            parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
-            parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent: this.vm.selectedStudent,
-        };
 
         Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1
-            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
-            this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 0
+            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 1
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 2
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
-            this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
-            this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
             
-        ]).then (value =>{
+        ]).then (value =>{  // check here, getObjectList to getObject
             // console.log(value);
             this.vm.DATA.data.studentSectionList.push(value[0][0]);
             this.vm.DATA.data.studentList.push(value[1][0]);
-            this.vm.DATA.data.studentParameterValueList.push(value[2][0]);
-            this.vm.DATA.data.studentTestList.push(value[3][0]);
-            this.vm.DATA.data.attendanceList.push(value[4][0]);
-            this.vm.DATA.data.studentSubGradeList.push(value[5][0]);
-            this.vm.DATA.data.studentExaminationRemarksList.push(value[6][0]);
+            this.vm.DATA.data.studentParameterValueList.push(value[2][0]);  
+            this.vm.DATA.data.attendanceList.push(value[3][0]);
             this.populateParameterListWithStudentCustomField();
             if (this.vm.DATA.data.studentList.length > 0)
                 this.vm.DATA.studentId = this.vm.selectedStudent.id;
@@ -224,7 +166,7 @@ export class DesignTCServiceAdapter {
     }
 
     populateLayoutSharingData(layoutSharingDataList:Array<any>):void {
-        this.vm.reportCardLayoutList.forEach(layout => this.vm.layoutSharingData[layout.id] = []);
+        this.vm.tcLayoutList.forEach(layout => this.vm.layoutSharingData[layout.id] = []);
         layoutSharingDataList.forEach(layoutSharingData => {
             this.vm.layoutSharingData[layoutSharingData.parentLayout].push(layoutSharingData);
         });
@@ -237,7 +179,7 @@ export class DesignTCServiceAdapter {
         } else {
             delete layoutToUpload.thumbnail
         }
-
+        console.log('layout to uplaod: ', layoutToUpload);
         const form_data = new FormData();
         Object.entries(layoutToUpload).forEach(([key, value]) => {
             if (key === 'thumbnail' ) {
@@ -248,16 +190,16 @@ export class DesignTCServiceAdapter {
         });
 
         if (layoutToUpload.id) {    // if previously saved then update
-            return this.vm.reportCardService.partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, form_data).then(savedLayout => {
-                let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
-                this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = { ...this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList], ...savedLayout };
+            return this.vm.tcService.partiallyUpdateObject(this.vm.tcService.tc_layout, form_data).then(savedLayout => {
+                let indexOfSavedLayoutInReportCardLayoutList = this.vm.tcLayoutList.findIndex(layout => layout.id == savedLayout.id);
+                this.vm.tcLayoutList[indexOfSavedLayoutInReportCardLayoutList] = { ...this.vm.tcLayoutList[indexOfSavedLayoutInReportCardLayoutList], ...savedLayout };
             });
         }
         else {  // if previously not saved then create
-            return this.vm.reportCardService.createObject(this.vm.reportCardService.report_card_layout_new, form_data).then(savedLayout => {
+            return this.vm.tcService.createObject(this.vm.tcService.tc_layout, form_data).then(savedLayout => {
                 savedLayout.id = parseInt(savedLayout.id);
                 this.vm.currentLayout.id = savedLayout.id;
-                this.vm.reportCardLayoutList.push(savedLayout);
+                this.vm.tcLayoutList.push(savedLayout);
                 this.vm.layoutSharingData[savedLayout.id] = []
             })
         }
@@ -267,7 +209,7 @@ export class DesignTCServiceAdapter {
         let formdata = new FormData();
         formdata.append('parentLayout', this.vm.currentLayout.id);
         formdata.append('image', image, file_name);
-        return this.vm.reportCardService.createObject(this.vm.reportCardService.image_assets, formdata).then(response => response.image);
+        return this.vm.tcService.createObject(this.vm.tcService.tc_image_assets, formdata).then(response => response.image);
     }
 
     deleteCurrentLayout(): void{
@@ -280,9 +222,9 @@ export class DesignTCServiceAdapter {
                 id: current_layut_id
             };
             this.vm.htmlAdapter.isSaving = true;
-            this.vm.reportCardService.deleteObject(this.vm.reportCardService.report_card_layout_new, layout_delete_request).then(response => {
-                const currentLayoutIndex = this.vm.reportCardLayoutList.findIndex(layout => layout.id == current_layut_id);
-                this.vm.reportCardLayoutList.splice(currentLayoutIndex, 1);
+            this.vm.tcService.deleteObject(this.vm.tcService.tc_layout, layout_delete_request).then(response => {
+                const currentLayoutIndex = this.vm.tcLayoutList.findIndex(layout => layout.id == current_layut_id);
+                this.vm.tcLayoutList.splice(currentLayoutIndex, 1);
                 this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING, false, true);
                 this.vm.htmlAdapter.isSaving = false;
             })
@@ -293,21 +235,21 @@ export class DesignTCServiceAdapter {
         if (schoolKID != this.vm.user.activeSchool.dbId) {
             const layoutSharingData = { parentSchool: schoolKID, parentLayout: this.vm.currentLayout.id };
             // console.log(layoutSharingData);
-            return this.vm.reportCardService.createObject(this.vm.reportCardService.layout_sharing, layoutSharingData);
+            return this.vm.tcService.createObject(this.vm.tcService.tc_layout_sharing, layoutSharingData);
         }
     }
 
     currentLayoutPublicToggle() {
         const layoutToUpload = { id: this.vm.currentLayout.id, publiclyShared: !this.vm.currentLayout.publiclyShared };
-        return this.vm.reportCardService.partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, layoutToUpload).then(savedLayout => {
-            let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
-            this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared = savedLayout.publiclyShared;
+        return this.vm.tcService.partiallyUpdateObject(this.vm.tcService.tc_layout, layoutToUpload).then(savedLayout => {
+            let indexOfSavedLayoutInReportCardLayoutList = this.vm.tcLayoutList.findIndex(layout => layout.id == savedLayout.id);
+            this.vm.tcLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared = savedLayout.publiclyShared;
             if (this.vm.currentLayout.id == savedLayout.id) {
                 this.vm.currentLayout.publiclyShared = savedLayout.publiclyShared;
             }
             // adjusting public layout list accordingly
-            if (this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared) {
-                this.vm.publicLayoutList.push(this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList])
+            if (this.vm.tcLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared) {
+                this.vm.publicLayoutList.push(this.vm.tcLayoutList[indexOfSavedLayoutInReportCardLayoutList])
             }
             else {
                 let prevPublicIndex = this.vm.publicLayoutList.findIndex(l => l.id == savedLayout.id);
@@ -318,7 +260,7 @@ export class DesignTCServiceAdapter {
 
     deleteLayoutSharing(layoutSharingData: any) {
         const delete_request = { id: layoutSharingData.id };
-        return this.vm.reportCardService.deleteObject(this.vm.reportCardService.layout_sharing, delete_request);
+        return this.vm.tcService.deleteObject(this.vm.tcService.tc_layout_sharing, delete_request);
     }
 
     getSchoolList(data:any) {

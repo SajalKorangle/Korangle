@@ -189,7 +189,6 @@ export class DesignTCComponent implements OnInit, OnDestroy {
       thumbnail: null,
       publiclyShared: false,
       content: this.canvasAdapter.getEmptyLayout(),
-      parentStudentSection: null 
     };
   } 
 
@@ -260,7 +259,7 @@ export class DesignTCComponent implements OnInit, OnDestroy {
   isLayoutSaved(): boolean {
     if (!this.currentLayout)
       return true;
-    if (!this.currentLayout.name && this.canvasAdapter.layers.length == 0 && this.canvasAdapter.gradeRuleSetList.length == 0)
+    if (!this.currentLayout.name && this.canvasAdapter.layers.length == 0)
       return true;
     if (!this.currentLayout.id)
       return false;

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {DesignReportCardComponent } from '../../../pages/design-report-card/design-report-card.component'
+import {DesignTCComponent } from '../../../pages/design-tc/design-tc.component'
 
 @Component({
   selector: 'app-layout-sharing-dialog',
@@ -9,7 +9,7 @@ import {DesignReportCardComponent } from '../../../pages/design-report-card/desi
 })
 export class LayoutSharingDialogComponent implements OnInit {
 
-  vm: DesignReportCardComponent;
+  vm: DesignTCComponent;
   layoutSharingList: any[]=[];
 
   isSharing: boolean = false;

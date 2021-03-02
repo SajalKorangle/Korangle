@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DesignTCCanvasAdapter } from 'app/modules/tc/pages/design-tc/design-tc.canvas.adapter';
 import {Layer} from '../../../class/constants';
-import { DesignReportCardCanvasAdapter } from '../../../pages/design-report-card/design-report-card.canvas.adapter';
 
 @Component({
   selector: 'app-layer-replacement-dialog',
@@ -10,7 +10,7 @@ import { DesignReportCardCanvasAdapter } from '../../../pages/design-report-card
 })
 export class LayerReplacementDialogComponent implements OnInit {
 
-  ca: DesignReportCardCanvasAdapter;
+  ca: DesignTCCanvasAdapter;
   layer: Layer;
   parameterList: any[]
   selectedParameter: any;

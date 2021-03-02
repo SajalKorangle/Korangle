@@ -11,6 +11,7 @@ export class TCService extends ServiceObject {
     // objects urls
     public tc_layout = '/tc-layout';
     public tc_layout_sharing = '/tc-layout-sharing';
+    public tc_image_assets = 'tc-image-assets';
     public tc_settings = '/transfer-certificate-settings';
     public transfer_certificate = 'transfer-certificate-new';
 

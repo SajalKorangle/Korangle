@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DesignReportCardComponent } from '../../../pages/design-report-card/design-report-card.component';
+import { DesignTCComponent } from '../../../pages/design-tc/design-tc.component';
 
 
 @Component({
@@ -10,7 +10,7 @@ import { DesignReportCardComponent } from '../../../pages/design-report-card/des
 })
 export class InventoryDialogComponent implements OnInit {
 
-  vm: DesignReportCardComponent;
+  vm: DesignTCComponent;
 
   selectedLayout: { type: string, index: number } = { type: null, index: null };  // type = page
 
