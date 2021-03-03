@@ -18,6 +18,8 @@ import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/ima
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
 import { toInteger, filter } from 'lodash';
+import {CommonFunctions} from '@classes/common-functions';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -712,16 +714,30 @@ export class ViewAllComponent implements OnInit {
             if (extension == "pdf") {
                 type = "pdf"
             } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
-                type = "img"
+                type = "image"
             }
-            const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
-                width: '600px',
-                data: {'file': file, 'type': type}
+            let dummyImageList=[];
+            if(type=="image"){
+                let data={'imageUrl':file};
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                // width: '600px',
+                // data: {'file': file, 'type': type}
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: {'imageList':dummyImageList,'file':file,'index':0,'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
             });
             dialogRef.afterClosed().subscribe(result => {
                 console.log('The dialog was closed');
             });
         }
+    }
+    
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 
     getHeaderValues(): any {

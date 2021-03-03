@@ -7,7 +7,7 @@ import {FormControl} from '@angular/forms';
 import {EventGalleryService} from '@services/modules/event-gallery/event-gallery.service';
 import {map} from 'rxjs/operators';
 import {ManageEventServiceAdapter} from '@modules/event-gallery/pages/manage-event/manage-event.service.adapter';
-import {EventImageModalComponent} from '@modules/event-gallery/components/event-image-modal/event-image-modal.component';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 
 
@@ -98,7 +98,7 @@ export class ManageEventComponent implements OnInit {
 
     checkTagEditable():string {
         let selectedTagsLength = this.eventTagList.filter(tag=>tag.selected == true).length;
-        if(selectedTagsLength==1){
+        if(selectedTagsLength==1 && !this.isDeletingImages && !this.isAssigning){
             return 'active';
         }else{
              return 'inactive';
@@ -133,7 +133,7 @@ export class ManageEventComponent implements OnInit {
                         eventImage: reader.result,
                         imageSize:image.size,
                     }
-                    this.serviceAdapter.uploadImage(tempImageData);
+                    this.serviceAdapter.uploadImage(tempImageData,image.type.split('/')[1]);
                 };
                 reader.readAsDataURL(image);
             });
@@ -141,12 +141,15 @@ export class ManageEventComponent implements OnInit {
     }
     
     openImagePreviewDialog(eventImages: any, index: any, editable: any): void {
-        const dialogRef = this.dialog.open(EventImageModalComponent, {
+      eventImages.forEach(img=>{
+          img.imageUrl=img.eventImage;
+      });
+        const dialogRef = this.dialog.open(ViewImageModalComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'eventImages': eventImages, 'index': index, 'viewEventPage': false, 'isMobile': this.isMobile()}
+            data: {'imageList': eventImages, 'index': index, 'type': 1,'fileType':'image','isMobile': this.isMobile()}
         });
         dialogRef.afterClosed();
     }

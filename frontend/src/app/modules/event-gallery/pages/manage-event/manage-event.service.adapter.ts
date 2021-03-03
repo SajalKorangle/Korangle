@@ -125,13 +125,14 @@ export class ManageEventServiceAdapter {
         });
     }
 
-    uploadImage(tempImageData: any) {
+    uploadImage(tempImageData: any,type:any) {
+        console.log(type);
         this.vm.isImageUploading = true;
         let temp_form_data = new FormData();
         const layout_data = {...tempImageData,};
         Object.keys(layout_data).forEach(key => {
             if (key === 'eventImage') {
-                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'eventImage' + Date.now() + '.jpeg'));
+                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'eventImage' + Date.now() +'.'+type));
             } else {
                 temp_form_data.append(key, layout_data[key]);
             }

@@ -156,7 +156,19 @@ export class School {
                         icon: 'receipt',
                     },
                 ]
-            })
+            });
+             this.parentModuleList.push({
+                'name': 'Event Gallery',
+                'studentList': this.studentList,
+                'id': this.studentList[0].id,
+                'taskList': [
+                    {
+                        title: 'Events',
+                        path: 'view_event',
+                        icon: 'event',
+                    },
+                ]
+            });
         }
 
     }

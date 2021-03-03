@@ -68,7 +68,7 @@
             <ng-container *ngFor="let eventTag of eventTagList">
                 <div class="btn" style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"  [ngClass]="{'selectedTag' : eventTag.selected}" (click)="selectTag($event,eventTag)" (blur)="saveTag($event,eventTag)" (paste)="onPaste($event)" (keydown)="onKeyDown($event)" >{{eventTag.tagName}}</div>
             </ng-container>
-                    <button *ngIf="eventTagList.length>0" class="btn btn-{{checkTagEditable() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}" (click)="assignSelectedTags()" [disabled]="(checkTagEditable()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning" style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span *ngIf="!isAssigning">Assign Tag</span> <div *ngIf="isAssigning" class="loader-custom"></div></button>
+                    <button *ngIf="eventTagList.length>0" class="btn btn-{{checkTagEditable() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}" (click)="assignSelectedTags()" [disabled]="(checkTagEditable()=='inactive' || checkMediaSelected() == 'inactive')" style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span *ngIf="!isAssigning">Assign Tag</span> <div *ngIf="isAssigning" class="loader-custom"></div></button>
                 </div>
             </div>
 <!--            <button [ngClass]="'sticky'" *ngIf="eventTagList.length>0 && isMobile()"-->

@@ -6,19 +6,20 @@ import {ViewEventHtmlAdapter} from '@modules/event-gallery/pages/view-event/view
 import {EventGalleryService} from '@services/modules/event-gallery/event-gallery.service';
 import {saveAs} from 'file-saver';
 import * as JSZip from 'jszip';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpEventType, HttpHeaders, HttpRequest} from '@angular/common/http';
 import {toInteger} from 'lodash';
 import {forkJoin} from 'rxjs/internal/observable/forkJoin';
-import {EventImageModalComponent} from '@modules/event-gallery/components/event-image-modal/event-image-modal.component';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 import {MatDialog} from '@angular/material/dialog';
 import {CommonFunctions} from '@classes/common-functions';
+import {StudentService} from '@services/modules/student/student.service';
 
 
 @Component({
     selector: 'app-view-event',
     templateUrl: './view-event.component.html',
     styleUrls: ['./view-event.component.css'],
-    providers: [EventGalleryService]
+    providers: [EventGalleryService,StudentService]
 })
 export class ViewEventComponent implements OnInit {
 
@@ -32,6 +33,7 @@ export class ViewEventComponent implements OnInit {
     editing = false;
     editingEvent: any;
     newEvent: any;
+    studentsClass:any;
     currentEventImageList:any;
     isLoading = false;
     imageResponseData: any;
@@ -43,22 +45,24 @@ export class ViewEventComponent implements OnInit {
     editingNotificationList: any;
     eventList: any;
     eventNotifyList: any;
+    commonMediaChecked:any;
     eventCount = 0;
     loadingCount = 10;
     loadMoreEvents = false;
     isEventListLoading = false;
     isImageDownloading: boolean;
    
-    percent_download_completed=0;
+    percent_download_completed=80;
     totalDownloadSize=0;
     download:any;
     totalFiles=0;
     downloadedFiles=0;
-    totalFailed:any;
+    totalFailed=0;
     currentTagList: any;
 
 
     constructor(public eventGalleryService: EventGalleryService,
+                public studentService:StudentService,
                 private _http: HttpClient,
                 private dialog:MatDialog) {
     }
@@ -108,27 +112,44 @@ export class ViewEventComponent implements OnInit {
     }
 
     downloadSelectedImages() {
-        let selectedImageUrls = [];
-        this.imageResponseData=[];
+        // let selectedImageUrls = ['https://homepages.cae.wisc.edu/~ece533/images/airplane.png','https://homepages.cae.wisc.edu/~ece533/images/boat.png','https://homepages.cae.wisc.edu/~ece533/images/cat.png'];
+        // this.imageResponseData=[];
         let selectedImages = this.currentEventImageList.filter(image => image.selected == true);
-        // this.imageList.filter(image => image.parentEvent === this.currentEvent.id && image.selected == true).forEach(image => {
-        //   // FileSaver.saveAs(image.eventImage, "image.jpg");
-        //   selectedImageUrls.push(image.eventImage);
-        // });
-        // this.createGetRequests(selectedImageUrls);
+        // this.getDownloadSize(selectedImages);
+        // if (this.totalDownloadSize) {
+        //     alert('Your are about to download ' + (this.totalFiles) + ' files of size ' + (this.totalDownloadSize / 1000000) + ' MB');
+        //     // this.imageList.filter(image => image.parentEvent === this.currentEvent.id && image.selected == true).forEach(image => {
+        //     //     // FileSaver.saveAs(image.eventImage, "image.jpg");
+        //     //     selectedImageUrls.push(image.eventImage);
+        //     // });
+        //     this.createGetRequests(selectedImageUrls);
         //
-        // forkJoin(...this.imageResponseData)
-        //     .subscribe((res) => {
-        //       const zip = new JSZip();
+        //     forkJoin(...this.imageResponseData)
+        //         .subscribe((res) => {
+        //             if (res.type === HttpEventType.Response) {
+        //                 const responseData = res.body;
+        //                 console.dir(responseData); // do something with the response
+        //             }
+        //             if (res.type === HttpEventType.DownloadProgress) {
+        //                 console.log(res.loaded, res.total);
+        //                 // event.loaded = bytes transfered 
+        //                 // event.total = "Content-Length", set by the server
         //
-        //       res.forEach((f, i) => {
-        //         zip.file(`image${i}.png`, f);
-        //       });
+        //                 const percentage = 100 / res.total * res.loaded;
+        //                 console.log(percentage);
+        //             }
+        //             const zip = new JSZip();
+        //             const folder = zip.folder(this.currentEvent.title);
+        //             res.forEach((f, i) => {
+        //                 folder.file(`image${i}.jpeg`, f);
+        //             });
         //
-        //       zip
-        //           .generateAsync({type: 'blob'})
-        //           .then(blob => saveAs(blob, this.currentEvent.title+'.zip'));
-        //     });
+        //             zip
+        //                 .generateAsync({type: 'blob'})
+        //                 .then(blob => saveAs(blob, this.currentEvent.title + '.zip'));
+        //         });
+        //    
+        // }
         this.totalFailed = 0;
         this.download = 'START';
         this.getDownloadSize(selectedImages);
@@ -138,17 +159,18 @@ export class ViewEventComponent implements OnInit {
             let check1 = 0;
             this.downloadedFiles = 0;
             let flag = 1;
+            var Folder = zip.folder(this.currentEvent.title);
             selectedImages.forEach(image => {
-                var Folder = zip.folder(this.currentEvent.title);
                 let document_url = image.eventImage;
                 if (document_url) {
                     check1 = check1 + 1;
                     this.download_each_file(document_url).then(blob => {
+                        console.log(blob);
                         if (blob) {
                             let type = document_url.split('.');
                             type = type[type.length - 1];
                             let file = new Blob([blob], {type: type});
-                            Folder.file(this.currentEvent.title + '_' + check1 + '.' + type, file);
+                            Folder.file(this.currentEvent.title + '_' + this.downloadedFiles + '.' + type, file);
                             this.downloadedFiles = this.downloadedFiles + 1;
                             console.log(check1, this.downloadedFiles)
                         }
@@ -182,13 +204,17 @@ export class ViewEventComponent implements OnInit {
     }
 
 
-  //   private createGetRequests(data: string[]) {
-  //       const headers= new HttpHeaders()
-  // .set('content-type', 'application/json')
-  // .set('Access-Control-Allow-Origin', '*');
-  //       headers.append('Access-Control-Allow-Origin','*')
-  //       data.forEach(url => this.imageResponseData.push(this._http.get(url, {headers:headers,responseType: 'blob'})));
-  //   }
+    private createGetRequests(data: string[]) {
+                data.forEach(url=> {
+
+                    const req = new HttpRequest("GET", url, {
+                        reportProgress: true ,responseType:'blob' // this is important!
+                    });
+                    // data.forEach(url => this.imageResponseData.push(this._http.get(url, {responseType: 'blob'})));
+                     this.imageResponseData.push(this._http.request(req));
+                });
+
+    }
 
 
     getSelectedImagesCount(): any {
@@ -212,12 +238,19 @@ export class ViewEventComponent implements OnInit {
 
     getFilteredImageList() {
             let selectedTags = this.tagList.filter(tag => tag.parentEvent === this.currentEvent.id && tag.selected == true);
+           let bool=false;
             if (selectedTags.length > 0) {
-                return this.currentEventImageList.filter(image => {
-                    return image.selected = image.tagList.some(tag => {
-                        return selectedTags.find(selectedTag => selectedTag.id == tag) != undefined;
+                if(!this.commonMediaChecked){
+                    return this.currentEventImageList.filter(image => {
+                        return image.selected = selectedTags.map(tags=>tags.id).every(r => image.tagList.includes(r))
                     });
-                });
+                }else {
+                    return this.currentEventImageList.filter(image => {
+                        return image.selected = image.tagList.some(tag => {
+                            return selectedTags.find(selectedTag => selectedTag.id == tag) != undefined;
+                        });
+                    });
+                }
             } else {
                 return this.currentEventImageList;
             }
@@ -234,9 +267,7 @@ export class ViewEventComponent implements OnInit {
     }
 
    async download_each_file(document_url) {
-         // let headers = new Headers();
-         //   headers.append('Access-Control-Allow-Origin', '*');
-        const response = await fetch(document_url);
+        const response = await fetch(document_url+"?xxx=");
         if (response.status ==403){
             ++this.totalFailed;
         }
@@ -252,7 +283,7 @@ export class ViewEventComponent implements OnInit {
 		        }
 		        chunks.push(value);
 		        receivedLength += value.length;
-		        this.percent_download_completed+=(value.length)/(this.totalDownloadSize)*100;
+		        this.percent_download_completed+=(value.length*1.0)/(this.totalDownloadSize*1.0)*100;
 		        console.log(`Received ${receivedLength} of ${contentLength}`)
 		        console.log(`now total received is ${this.percent_download_completed} %`)
 		    }
@@ -261,17 +292,24 @@ export class ViewEventComponent implements OnInit {
     }
 
     private openImagePreviewDialog(eventImageList: any, i: number, b: boolean) {
-         const dialogRef = this.dialog.open(EventImageModalComponent, {
+        eventImageList.forEach(img=>{
+          img.imageUrl=img.eventImage;
+      });
+         const dialogRef = this.dialog.open(ViewImageModalComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'eventImages': eventImageList, 'index': i, 'tagList': this.tagList,'viewEventPage':true, 'isMobile': this.isMobile()}
+            data: {'imageList': eventImageList, 'index': i, 'extraList': this.tagList,'type':2,'fileType':'image','isMobile': this.isMobile()}
         });
         dialogRef.afterClosed();
     }
     
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
+    }
+
+    getSelectedTagList() {
+       return this.currentTagList.filter(tg=> tg.parentEvent== this.currentEvent.id && tg.selected==true)
     }
 }
