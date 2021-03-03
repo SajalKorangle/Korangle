@@ -1,5 +1,4 @@
 import {AddEventComponent} from '@modules/event-gallery/pages/add-event/add-event.component';
-import {not} from 'rxjs/internal-compatibility';
 import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
 
 export class AddEventServiceAdapter {
@@ -94,14 +93,10 @@ export class AddEventServiceAdapter {
         this.notifyPersonData = [];
         studentData.forEach(student => {
             student['student'] = true;
-            // if (!this.notifyPersonData.find(person => person.mobileNumber === student.mobileNumber)) {
             this.notifyPersonData.push(student);
-            // }
         });
         employeeData.forEach(employee => {
             employee['employee'] = true;
-            // if (!this.notifyPersonData.find(person => person.mobileNumber === employee.mobileNumber)) {
-            // }
             this.notifyPersonData.push(employee);
 
         });

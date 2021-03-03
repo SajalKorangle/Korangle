@@ -28,6 +28,7 @@
                 </mat-form-field>
             </div>
         </div>
+        
         <div class="row">
             <div class="col-md-1" style="width: 60px;margin-top: 20px">
                 <span style="font-size: 16px">Text</span>
@@ -43,19 +44,20 @@
                 </mat-form-field>
             </div>
         </div>
+        
         <div class="row">
             <div class="col-md-1" style="width:100px;margin-top: 20px">
                 <span style="font-size: 16px">Held On</span>
             </div>
             <div class="col-md-3">
                 <mat-form-field style="margin-top: 5px ; margin-right: 15px; margin-bottom: 5px; width: 150px">
-                    <!--style="width: 180px;margin-top: 15px;margin-bottom:15px;"-->
                     <input type="date" matInput name="eventDate" onkeydown="return false"
                            [ngModel]="editing?editingEvent.heldOn:newEvent.heldOn"
                            (ngModelChange)="editing?editingEvent.heldOn=$event:newEvent.heldOn=$event">
                 </mat-form-field>
             </div>
         </div>
+        
         <div class="row">
             <div class="col-md-1" style="width: 230px;margin-top: 20px">
                 <span style="font-size: 16px">Event Visible to </span>
@@ -154,8 +156,8 @@
                                 <span class="eventDate">{{event.heldOn | date: 'dd MMM yyyy'}}</span>
                             </mat-card-title>
                             <mat-card-content
-                                    style="font-weight:400;font-size: 16px; white-space: pre-line; margin-top: 5px;line-height: 19px;word-wrap: break-word;">
-                                {{event.description.length>300?event.description.substring(0,300)+"....":event.description}} </mat-card-content>
+                                    class="eventDescription">
+                                {{event.description.length > 300 ? event.description.substring(0, 300) + "...." : event.description}} </mat-card-content>
                         </div>
                         <div class="col-md-5">
                             <img [src]=htmlAdapter.getEventImageUrl(event,0)

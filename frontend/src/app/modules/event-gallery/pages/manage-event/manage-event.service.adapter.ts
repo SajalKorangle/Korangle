@@ -75,9 +75,6 @@ export class ManageEventServiceAdapter {
                 this.vm.eventTagList.push(evenTag);
             });
             this.vm.eventImageTagList = value[3];
-            console.log(this.vm.eventImageList);
-            console.log(this.vm.eventTagList);
-            
             this.vm.isEventLoading=false;
         });
     }
@@ -126,7 +123,6 @@ export class ManageEventServiceAdapter {
     }
 
     uploadImage(tempImageData: any,type:any) {
-        console.log(type);
         this.vm.isImageUploading = true;
         let temp_form_data = new FormData();
         const layout_data = {...tempImageData,};
@@ -140,7 +136,6 @@ export class ManageEventServiceAdapter {
         Promise.all([
             this.vm.eventGalleryService.createObject(this.vm.eventGalleryService.event_image, temp_form_data),//0
         ]).then(value => {
-            console.log(value);
             value[0]['selected'] = false;
             value[0]['tagList'] = [];
             this.vm.eventImageTagList.forEach(imageEvent => {
@@ -197,8 +192,6 @@ export class ManageEventServiceAdapter {
             this.vm.eventImageTagList.push(value[0]);
             this.vm.eventTagList.forEach(tag=> tag.selected=false);
             this.vm.eventImageList.forEach(tag=> tag.selected=false);
-            console.log(this.vm.eventImageList);
-            console.log( this.vm.eventTagList);
             this.vm.isAssigning=false;
         });
     }

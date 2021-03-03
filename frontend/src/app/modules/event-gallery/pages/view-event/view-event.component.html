@@ -15,15 +15,10 @@
         </div>
     </div>
 
-    <!--    <div *ngIf="isEventListLoading">-->
-    <!--        <app-loading-spinner [user]="user"></app-loading-spinner>-->
-    <!--    </div>-->
-
-    <!--    <ng-container *ngIf="!isEventListLoading">-->
 
     <ng-container *ngIf="!currentEvent">
         <mat-card style="margin-top: 10px;" *ngFor="let event of htmlAdapter.getEventList()"
-                  (click)="viewSelectedEvent(event)">
+                  (click)="htmlAdapter.viewSelectedEvent(event)">
             <div class="row">
                 <div class="col-md-5">
                     <mat-card-title>
@@ -101,63 +96,63 @@
                             <div class="btn"
                                  style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"
                                  [ngClass]="{'selectedTag' : eventTag.selected}"
-                                 (click)="selectTag($event,eventTag)">{{eventTag.tagName}}</div>
+                                 (click)="htmlAdapter.selectTag($event,eventTag)">{{eventTag.tagName}}</div>
                         </ng-container>
-                        <div class="col-md-5" style="float:right;" *ngIf="getSelectedTagList().length>1">
+                        <div class="col-md-5" style="float:right;" *ngIf="htmlAdapter.getSelectedTagList().length>1">
                             <label class="switch">
                                 <input type="checkbox" [(ngModel)]="commonMediaChecked">
                                 <span class="slider round"></span>
                             </label>
-                             <span style="margin-left: 10px;"> View Media common with all selected tags </span>
+                            <span style="margin-left: 10px;"> View Media common with all selected tags </span>
                         </div>
-                        <!--                    <button *ngIf="eventTagList.length>0" class="btn btn-{{checkTagEditable() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}" (click)="assignSelectedTags()" [disabled]="(checkTagEditable()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning" style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span *ngIf="!isAssigning">Assign Tag</span> <div *ngIf="isAssigning" class="loader-custom"></div></button>-->
                     </div>
-
                 </div>
-                <!--            <button [ngClass]="'sticky'" *ngIf="eventTagList.length>0 && isMobile()"-->
-                <!--                    class="btn btn-{{checkTagSelected() =='active' && checkMediaSelected() == 'active' && !isAssigning?checkMediaSelected():'inactive' }}"-->
-                <!--                    (click)="assignSelectedTags()"-->
-                <!--                    [disabled]="(checkTagSelected()=='inactive' || checkMediaSelected() == 'inactive') && !isAssigning">-->
-                <!--                Assign Tag-->
-                <!--            </button>-->
-                <!--            <div class="clearfix"></div>-->
             </div>
         </div>
 
 
         <mat-card style="margin-top: 20px;">
+
             <div class="row">
-                <div class="col-md-12" *ngIf="this.currentEventImageList.length>0 && getFilteredImageList().length >0">
-                    <mat-checkbox (change)="selectAllMedia($event)"
-                                  [checked]="getSelectedImagesCount() == imageList.length"
+
+                <div class="col-md-12"
+                     *ngIf="this.currentEventImageList.length>0 && htmlAdapter.getFilteredImageList().length >0">
+                    <mat-checkbox (change)="htmlAdapter.selectAllMedia($event)"
+                                  [checked]="htmlAdapter.getSelectedImagesCount() == imageList.length"
                                   [disabled]="isImageDownloading"><span class="editTag" style="color: orange"> Select All Media </span>
                     </mat-checkbox>
-                    <span style="float: right;"><a href="javascript:void(0);" (click)="downloadSelectedImages()"
+                    <span style="float: right;"><a href="javascript:void(0);"
+                                                   (click)="htmlAdapter.downloadSelectedImages()"
                                                    style="color:#FC9700;"> <i
                             class="material-icons" style="color:#FC9700;">save_alt</i>Download </a></span>
+
                     <ng-container *ngIf="isImageDownloading">
                         <div class="loader__dot"
                              style="display: inline-block;color:#ff9800;text-decoration: underline">Deleting
                             Media<span class="loader__dot">.</span><span class="loader__dot">.</span><span
                                     class="loader__dot">.</span></div>
                     </ng-container>
+
                 </div>
             </div>
-                <div class="row">
-                    <ng-container *ngIf="download=='START'">
+
+            <div class="row">
+
+                <ng-container *ngIf="download=='START'">
                     <div class="col-md-12">
-                    <div class="progress" style="height: 20px;float:left;width:100%;margin-top:20px;">
-                        <div class="progress-bar progress-bar-success"
-                             role="progressbar"
-                             [style.width.%]="percent_download_completed">{{percent_download_completed | number : '1.0-0'}}
-                            %
+                        <div class="progress" style="height: 20px;float:left;width:100%;margin-top:20px;">
+                            <div class="progress-bar progress-bar-success"
+                                 role="progressbar"
+                                 [style.width.%]="percent_download_completed">{{percent_download_completed | number : '1.0-0'}}
+                                %
+                            </div>
                         </div>
-                    </div>
                     </div>
                     <div class="text-center">
                         <h4><b>{{downloadedFiles}} out of {{totalFiles}} files downloaded</b></h4>
                     </div>
-                    </ng-container>
+                </ng-container>
+
                 <div *ngIf="download=='END'">
                     <h4 class="text-success text-center">
                         <div class="spinner-border text-success" role="status">
@@ -166,11 +161,13 @@
                         <b>Download Done now Unziping</b>
                     </h4>
                 </div>
+
                 <div *ngIf="download=='FAIL'">
                     <h4 class="text-danger text-center">
                         <b>Download failed restart again.</b>
                     </h4>
                 </div>
+
                 <div *ngIf="totalFailed!=0" class="text-center">
                     <h5><b><i style="color:red">Failed to download {{totalFailed}} files</i></b></h5>
                 </div>
@@ -179,31 +176,34 @@
                     <span style="font-weight: 400;font-size: 18px">No Media uploaded yet</span>
                 </div>
             </div>
+
             <mat-card-content style="max-height: 400px;overflow: auto">
                 <div class="image-row">
-                    <div class="col-md-5" *ngIf="getFilteredImageList().length == 0 && this.currentEventImageList.length!=0">
+
+                    <div class="col-md-5"
+                         *ngIf="htmlAdapter.getFilteredImageList().length == 0 && this.currentEventImageList.length!=0">
                         <span style="font-weight: 400;font-size: 18px">No Media is Assigned to this tag</span>
                     </div>
-                    <ng-container *ngFor="let image of getFilteredImageList(); let i = index"
+
+                    <ng-container *ngFor="let image of htmlAdapter.getFilteredImageList(); let i = index"
                                   style="display: inline-block">
-                        <div class="image-column" *ngIf="getFilteredImageList().length >0">
+
+                        <div class="image-column" *ngIf="htmlAdapter.getFilteredImageList().length >0">
                             <input type="checkbox" id="myCheckbox{{i}}" [disabled]="isImageDownloading"
                                    [checked]="image.selected" (change)="image.selected = !image.selected"/>
                             <label for="myCheckbox{{i}}">
                                 <img src="{{image.eventImage}}" title="Select" class="hover-shadow cursor">
                                 <div class="view-image-icon-container">
-                                    <mat-icon class="view-eye" (click)="showPreview($event,image,i)">
+                                    <mat-icon class="view-eye" (click)="htmlAdapter.showPreview($event,image,i)">
                                         remove_red_eye
                                     </mat-icon>
                                 </div>
                             </label>
                         </div>
-
                     </ng-container>
                 </div>
             </mat-card-content>
         </mat-card>
 
     </ng-container>
-    <!--    </ng-container>-->
 </div>

@@ -19,7 +19,7 @@ describe('Event Gallery -> Manage Event', () => {
         
         let node = await containsFirst('mat-card', ''); 
         await node.click();
-    });
+    });-
 
     it('View Event : Check All Data', async () => {
         let nodes, node;
@@ -32,7 +32,6 @@ describe('Event Gallery -> Manage Event', () => {
         
         nodes = await containsAll('span', 'It was a Great Day for us');  
         expect(nodes.length).toBe(1);
-        
         
         await page.waitForXPath('//div[contains(., "Mountain")]');
         nodes = await containsAll('div[contains(@class, \'btn\') and contains(@class, \'ng-star-inserted\')]', '');  

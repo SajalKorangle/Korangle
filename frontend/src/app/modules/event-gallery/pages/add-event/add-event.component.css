@@ -7,15 +7,6 @@
     margin: 10px 4px;
 }
 
-
-/*.cdk-overlay-container .cdk-overlay-pane .testClass{*/
-/*   background: #c4c4c4;*/
-/*  margin-top:45px;*/
-/*}*/
-
-/*::ng-deep .mat-option:first-child .mat-pseudo-checkbox{ display: none; }*/
-
-
 :host .notifyList::ng-deep .mat-select-placeholder {
     color: black;
 }
@@ -77,11 +68,15 @@
     margin-right: 10px;
 }
 
-/*  @media only screen and (min-width: 769px) {*/
-/*    .paymentInput::placeholder {*/
-/*        color: transparent;*/
-/*    }*/
-/*}*/
+.eventDescription {
+    font-weight: 400;
+    font-size: 16px;
+    white-space: pre-line;
+    margin-top: 5px;
+    line-height: 19px;
+    word-wrap: break-word;
+}
+
 @media only screen and (max-width: 992px) {
     .postSaveBtn {
         float: left;
@@ -108,7 +103,7 @@
     .eventImage {
         width: 45%;
         min-width: 130px;
-    height: 150px;
+        height: 150px;
     }
 
 }

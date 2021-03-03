@@ -269,8 +269,8 @@ img.hover-shadow {
         max-width: 110px;
         max-height: 82px;
     }
-    
-    .extraImageCount{
+
+    .extraImageCount {
         margin-left: 20px;
     }
 
@@ -291,6 +291,19 @@ img.hover-shadow {
 
     .view-eye {
         font-size: 17px;
+    }
+
+    .eventDate {
+        float: left;
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .eventImage {
+        width: 45%;
+        min-width: 130px;
+        height: 150px;
     }
 }
 
@@ -352,7 +365,6 @@ label img {
 
 :checked + label img {
     transform: scale(0.9);
-    /* box-shadow: 0 0 5px #333; */
     z-index: -1;
 }
 
@@ -368,21 +380,4 @@ label img {
     height: 150px;
     margin-top: 30px;
     margin-right: 10px;
-}
-
-@media only screen and (max-width: 992px) {
-
-    .eventDate {
-        float: left;
-        width: 100%;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    .eventImage {
-        width: 45%;
-        min-width: 130px;
-        height: 150px;
-    }
-
 }

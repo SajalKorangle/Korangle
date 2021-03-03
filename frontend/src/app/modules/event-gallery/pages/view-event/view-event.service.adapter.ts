@@ -1,5 +1,3 @@
-import {ManageEventComponent} from '@modules/event-gallery/pages/manage-event/manage-event.component';
-import {CommonFunctions} from '@classes/common-functions';
 import {ViewEventComponent} from '@modules/event-gallery/pages/view-event/view-event.component';
 
 export class ViewEventServiceAdapter {
@@ -15,7 +13,7 @@ export class ViewEventServiceAdapter {
     }
 
 
-     initializeData(): void {
+    initializeData(): void {
         this.vm.isLoading = true;
         this.vm.eventList = [];
         this.vm.imageList = [];
@@ -26,10 +24,10 @@ export class ViewEventServiceAdapter {
         this.getStudentsClassData();
         this.fetchLoadingCount();
     }
-    
+
     getStudentsClassData() {
-        this.vm.studentsClass=[];
-        
+        this.vm.studentsClass = [];
+
         if (this.vm.user.activeSchool.role === 'Parent') {
             let student_list = {
                 'parentStudent__in': this.vm.user.activeSchool.studentList.map(s => s.id).join(),
@@ -37,14 +35,14 @@ export class ViewEventServiceAdapter {
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_list),//0
             ]).then(value => {
-                value[0].forEach(classs=>{
+                value[0].forEach(classs => {
                     this.vm.studentsClass.push(classs);
                 })
 
             });
         }
     }
-    
+
     fetchLoadingCount() {
         this.vm.isEventListLoading = true;
 
@@ -53,7 +51,7 @@ export class ViewEventServiceAdapter {
             'korangle__order': '-heldOn',
             'korangle__count': this.vm.eventCount.toString() + ',' + (this.vm.eventCount + this.vm.loadingCount).toString()
         }
-        
+
         Promise.all([
             this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data),//0
         ]).then(value => {
@@ -67,19 +65,19 @@ export class ViewEventServiceAdapter {
 
             let image_data = {
                 'parentEvent__in': value[0].map(e => e.id).join(),
-                'korangle__order':'-id',
+                'korangle__order': '-id',
             }
             let tag_data = {
                 'parentEvent__in': value[0].map(e => e.id).join(),
             }
-            let image_tag_data={
-                 'parentEventImage__parentEvent__in': value[0].map(e => e.id).join(),
+            let image_tag_data = {
+                'parentEventImage__parentEvent__in': value[0].map(e => e.id).join(),
             }
-            
-            let notify_data={
+
+            let notify_data = {
                 'parentEvent__in': value[0].map(e => e.id).join(),
             }
-            
+
 
             Promise.all([
                 this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_tag, tag_data),//0
@@ -99,7 +97,7 @@ export class ViewEventServiceAdapter {
                     });
                     return hasEmployeeVisibility || hasParentVisibility;
                 });
-                
+
 
                 value2[0].forEach(val => {
                     this.vm.tagList.push(val);
@@ -119,7 +117,7 @@ export class ViewEventServiceAdapter {
                 value2[2].forEach(val => {
                     this.vm.imageTagList.push(val);
                 });
-                
+
                 this.vm.isEventListLoading = false;
                 this.vm.isLoading = false;
             });
