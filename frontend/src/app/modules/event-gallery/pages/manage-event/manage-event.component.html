@@ -63,13 +63,14 @@
                             </button>
                             <div class="btn" id="new-tag"
                                  style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none;display: none;"
-                                 (blur)="htmlAdapter.createTag($event)" (keydown)="htmlAdapter.onKeyDown($event)"
+                                 (blur)="htmlAdapter.createTag($event)"  (paste)="htmlAdapter.onPaste($event)" (keydown)="htmlAdapter.onKeyDown($event)"
                                  contenteditable></div>
                             <div *ngIf="isTagCreating" class="loader-custom"></div>
                             <ng-container *ngFor="let eventTag of eventTagList">
                                 <div class="btn"
                                      style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"
                                      [ngClass]="{'selectedTag' : eventTag.selected}"
+                                     (paste)="htmlAdapter.onPaste($event)"
                                      (click)="htmlAdapter.selectTag($event,eventTag)" (blur)="htmlAdapter.saveTag($event,eventTag)" 
                                      (keydown)="htmlAdapter.onKeyDown($event)">{{eventTag.tagName}}</div>
                             </ng-container>

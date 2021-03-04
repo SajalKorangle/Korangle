@@ -121,7 +121,7 @@ export class ViewEventComponent implements OnInit {
 		        }
 		        chunks.push(value);
 		        receivedLength += value.length;
-		        this.percent_download_completed+=(value.length*1.0)/(this.totalDownloadSize*1.0)*100;
+		        this.percent_download_completed+=(value.length)/(this.totalDownloadSize)*10;
 		    }
             return new Blob(chunks);
     	}

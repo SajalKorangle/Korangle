@@ -176,4 +176,10 @@ export class ManageEventHtmlAdapter {
             });
         });
     }
+
+    onPaste(e: any) {
+        e.preventDefault();
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        document.execCommand('insertHTML', false, text);
+    }
 }
