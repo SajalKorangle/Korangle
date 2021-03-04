@@ -714,16 +714,14 @@ export class ViewAllComponent implements OnInit {
             if (extension == "pdf") {
                 type = "pdf"
             } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
-                type = "image"
+                type = "img"
             }
             let dummyImageList=[];
-            if(type=="image"){
+            if(type=="img"){
                 let data={'imageUrl':file};
                 dummyImageList.push(data);
             }
             const dialogRef = this.dialog.open(ViewImageModalComponent, {
-                // width: '600px',
-                // data: {'file': file, 'type': type}
                 maxWidth: '100vw',
                 maxHeight: '100vh',
                 height: '100%',

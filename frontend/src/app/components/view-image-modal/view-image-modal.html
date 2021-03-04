@@ -3,7 +3,7 @@
 
         <div class="row" style="width: 100%; margin: 0px">
 
-            <ng-container *ngIf="data.fileType=='image'">
+            <ng-container *ngIf="data.fileType=='img'">
                 <div class="col-md-1" style="padding: 0px;">
                     <span style="font-size: 15px; float:left">Media Viewer</span>
                 </div>
@@ -29,7 +29,7 @@
 
     <mat-dialog-content class="row">
 
-        <div *ngIf="data.fileType=='image'"
+        <div *ngIf="data.fileType=='img'"
              class="imageCol"
              [@animImageSlider]="counter">
             <ng-container *ngFor="let img of data.imageList; let i=index">
@@ -46,7 +46,7 @@
     </mat-dialog-content>
 
 
-    <mat-dialog-actions *ngIf="data.fileType=='image'">
+    <mat-dialog-actions *ngIf="data.fileType=='img'">
 
         <div class="row" style="width: 100%; margin: 0px">
             <div class="col-md-1" style="padding: 0px;" *ngIf="data.imageList.length>1">
@@ -94,7 +94,7 @@
 
     <mat-dialog-content class="row">
 
-        <div *ngIf="data.fileType=='image'"
+        <div *ngIf="data.fileType=='img'"
              class="imageCol"
              [@animImageSlider]="counter">
             <ng-container *ngFor="let img of data.imageList; let i=index"
@@ -113,7 +113,7 @@
 
     </mat-dialog-content>
 
-    <mat-dialog-actions *ngIf="data.fileType=='image'">
+    <mat-dialog-actions *ngIf="data.fileType=='img'">
         <div class="row" style="width: 100%; margin: 0px; text-align: center">
             <strong>{{counter + 1 }}/{{data.imageList.length}}</strong>
             <span class="material-icons" style="float: right;" (click)="showImageInGallery(data.imageList[counter])">crop_free</span>
