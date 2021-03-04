@@ -18,12 +18,22 @@ import * as jsPDF from 'jspdf'
 
 export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements CanvasAdapterInterface {
 
-    vm: DesignTCComponent;    
+    vm: DesignTCComponent;  
+    
+    extraFields: {
+        isLeavingSchoolBecasue: string,
+        issueDate: string,
+        leavingDate: string,
+    } = {
+            isLeavingSchoolBecasue: 'N/A',
+            issueDate: null,
+            leavingDate: null,
+        };
     
     
     constructor() {
         super();
-        // console.log('canvas Adapter: ', this);
+        console.log('canvas Adapter: ', this);
         Object.defineProperty(this, 'currentLayout', {
             get: function () {
                 return this.vm.currentLayout;   // // reference to vm.currentLayout and there is no setter function
@@ -32,13 +42,24 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
 
         Object.defineProperty(this, 'DATA', {
             get: function () {
-                return this.vm.DATA;    // reference to vm.DATA and there is no setter function
+                return { ...this.vm.DATA, ...this.extraFields };    // reference to vm.DATA and there is no setter function
             }
         });
     }
 
     initilizeAdapter(vm: DesignTCComponent) {
         this.vm = vm;
+    }
+
+    getEmptyLayoutPage(): { [key: string]: any }{
+        return {
+            ...super.getEmptyLayoutPage(),
+            extraFields: {
+                isLeavingSchoolBecasue: 'N/A',
+                issueDate: null,
+                leavingDate: null,
+            }
+         }
     }
 
     maximumCanvasSize():any{

@@ -1821,6 +1821,7 @@ export const FIELDS = {
     STUDENT_CUSTOM: FieldStructure.getStructure('Student Custom', 'student_custom'),
     SCHOOL: FieldStructure.getStructure('School', 'school'),
     ATTENDANCE: FieldStructure.getStructure('Attendance', 'attendance'),
+    TC: FieldStructure.getStructure('TC', 'tc'),
 };
 
 
@@ -1970,6 +1971,24 @@ export class StudentCustomParameterStructure {
                     return 'N/A';
                 }
             });
+    }
+
+}
+
+
+export class TCParameters {
+
+    // Student Parameter Id is the parameter key
+
+    static getStructure(displayName: any, variableName: any, layerType:any = CanvasText): any {
+        return ParameterStructure.getStructure(
+            variableName,
+            FIELDS.TC,
+            layerType,
+            () => {
+                return displayName;
+            },
+            (dataObject) => dataObject[variableName]);
     }
 
 }
@@ -2125,5 +2144,9 @@ export const PARAMETER_LIST = [
     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[0]),
     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
+
+    TCParameters.getStructure('Is Leaving School Because', 'isLeavingSchoolBecasue'),
+    TCParameters.getStructure('Issue date', 'issueDate', CanvasDate),
+    TCParameters.getStructure('Leaving Date', 'leavingDate', CanvasDate),
 
 ]

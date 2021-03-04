@@ -18,6 +18,7 @@ import { LayerReplacementDialogComponent } from './dialogs/layer-replacement-dia
 import { SettingsParametersPannelComponent } from './right-pannel/settings-parameter-pannel/settings-parameters-pannel.component';
 import { SessionParameterPannelComponent } from './right-pannel/session-parameter-pannel/session-parameter-pannel.component';
 import { GroupParametersPannelComponent } from './right-pannel/group-parameters-pannel/group-parameters-pannel.component';
+import { TCDefaultParametersDialogComponent } from './dialogs/tc-default-parameters-dialog/tc-default-parameters-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { GroupParametersPannelComponent } from './right-pannel/group-parameters-
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
     GroupParametersPannelComponent,
+    TCDefaultParametersDialogComponent,
   ],
   imports: [
     ComponentsModule,
@@ -59,6 +61,7 @@ import { GroupParametersPannelComponent } from './right-pannel/group-parameters-
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
     GroupParametersPannelComponent,
+    TCDefaultParametersDialogComponent
   ]
 })
 export class ParametersPannelModule { }

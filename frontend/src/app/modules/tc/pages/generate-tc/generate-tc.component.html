@@ -51,12 +51,29 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="selectedLayout">
+            <mat-form-field>
                 <mat-select placeholder="DPI" [(ngModel)]="canvasAdapter.dpi">
                     <mat-option *ngFor="let dpi of dpiList" [value]="dpi">{{dpi}}</mat-option>
                 </mat-select>
             </mat-form-field>
             <br/>
+
+            <div style="display: flex; flex-wrap: wrap;" class="flex-row-wrapper">
+                <mat-form-field>
+                    <mat-label>Issue Date</mat-label>
+                    <input matInput type="date" [(ngModel)]="issueDate"/>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Leaving Date</mat-label>
+                    <input matInput type="date" [(ngModel)]="leavingDate"/>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Is Leaving School Because</mat-label>
+                    <textarea matInput cols="80" cdkTextareaAutosize [(ngModel)]="isLeavingSchoolBecause"></textarea>
+                </mat-form-field>
+            </div>
 
             <div>
 

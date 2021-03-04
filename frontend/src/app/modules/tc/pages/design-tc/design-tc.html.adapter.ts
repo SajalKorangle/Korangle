@@ -4,7 +4,7 @@ import { PageResolutionDialogComponent } from '../../components/dialogs/page-res
 import {LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component'
 import { InventoryDialogComponent } from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
-
+import {TCDefaultParametersDialogComponent } from './../../components//dialogs/tc-default-parameters-dialog/tc-default-parameters-dialog.component'
 
 export class DesignTCHtmlAdapter {
 
@@ -124,6 +124,18 @@ export class DesignTCHtmlAdapter {
             data: {
                 vm: this.vm
             }
+        });
+    }
+
+    openTCDeafultParametersDialog():void {
+        this.openedDialog = this.vm.dialog.open(TCDefaultParametersDialogComponent, {
+            data: {
+                ca: this.vm.canvasAdapter
+            }
+        });
+
+        this.openedDialog.afterClosed().subscribe(() => {
+            this.vm.canvasAdapter.fullCanavsRefresh();
         });
     }
 

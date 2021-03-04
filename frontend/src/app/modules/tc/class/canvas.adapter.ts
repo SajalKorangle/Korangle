@@ -17,6 +17,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
     currentLayout: { name: string, thumbnail?:any, publiclyShared:boolean, content: any };
 
     DATA: any;
+    extraFields: { [key: string]: any } = {};
 
     virtualCanvas: HTMLCanvasElement;
     virtualContext: CanvasRenderingContext2D;
@@ -215,6 +216,8 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             // apply resolution
             this.updateResolution(resolution);
 
+            this.extraFields = Data.extraFields;
+
             let mmToPixelScaleFactor = 1 / this.pixelTommFactor;
 
             this.backgroundColor = Data.backgroundColor;
@@ -249,6 +252,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 resolutionName: this.actualresolution.resolutionName,
                 orientation: this.actualresolution.orientation
             },
+            extraFields: this.extraFields,
             backgroundColor: this.backgroundColor,
             layers: this.layers.map(l=>l.getDataToSave())
         };
@@ -314,6 +318,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase{
                 resolutionName: PAGE_RESOLUTIONS[1].resolutionName, // a4 page
                 orientation: 'p',
             },
+            extraFiedls: {},
             backgroundColor: DEFAULT_BACKGROUND_COLOR,
             gradeRuleSetList:[],
             layers: []

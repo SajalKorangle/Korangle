@@ -11,6 +11,7 @@ import { PageResolutionDialogComponent } from '../../components/dialogs/page-res
 import { LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component';
 import { InventoryDialogComponent} from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
+import { TCDefaultParametersDialogComponent} from './../../components/dialogs/tc-default-parameters-dialog/tc-default-parameters-dialog.component'
 
 import { DesignTCComponent } from "./design-tc.component";
 
@@ -33,6 +34,7 @@ import { DesignTCComponent } from "./design-tc.component";
         LayoutSharingDialogComponent,
         InventoryDialogComponent,
         LayerReplacementDialogComponent,
+        TCDefaultParametersDialogComponent
     ],
     bootstrap: [DesignTCComponent]
 })

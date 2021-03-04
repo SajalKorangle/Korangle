@@ -65,11 +65,9 @@ export class GenerateTCServiceAdapter {
         return Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 0
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 1
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
         ]).then(async data => { 
             this.vm.DATA.data.studentParameterList = data[0];
             this.vm.DATA.data.subjectList = data[1];
-            this.vm.DATA.data.sessionList = data[2];
 
             const request_student_parameter_value_data = {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),

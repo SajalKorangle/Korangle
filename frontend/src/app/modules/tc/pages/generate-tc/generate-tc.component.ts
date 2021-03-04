@@ -49,6 +49,10 @@ export class GenerateTCComponent implements OnInit {
   classSectionList: any[] = [];
   filteredStudentSectionList: any[] = [];
 
+  issueDate: any;
+  leavingDate: any;
+  isLeavingSchoolBecause: string;
+
   DATA: {
     studentId: number,
     currentSession: number,

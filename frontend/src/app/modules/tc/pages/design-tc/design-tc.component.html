@@ -149,6 +149,11 @@
             </div>
 
             <div class="tool">
+                <button class="btn" style="padding: 8px;" matTooltip="TC Default Parameters"
+                        (click)="htmlAdapter.openTCDeafultParametersDialog()">TC PARAMS</button>
+            </div>
+
+            <div class="tool">
                 <button class="btn material-icons" matTooltip="Add Shape"
                 [matMenuTriggerFor]="shapesMenu">category</button>
                 <mat-menu #shapesMenu="matMenu">

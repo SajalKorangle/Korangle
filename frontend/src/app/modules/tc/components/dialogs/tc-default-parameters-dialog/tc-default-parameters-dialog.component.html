@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>TC Deafult Parameters</h2>
+<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
+    <div style="padding: 4px; border-radius: 4px; text-align: center;" class="bg-white inner-content">
+                    
+        <mat-form-field>
+            <mat-label>Is Leaving School Because</mat-label>
+            <textarea matInput cdkTextareaAutosize [(ngModel)]="ca.extraFields.isLeavingSchoolBecasue"></textarea>
+        </mat-form-field>
+        <br/>
+
+        <mat-form-field>
+            <mat-label>Leaving Date</mat-label>
+            <input matInput type="date" [(ngModel)]="ca.extraFields.leavingDate">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Issue Date</mat-label>
+            <input matInput type="date" [(ngModel)]="ca.extraFields.issueDate">
+        </mat-form-field>
+            
+    </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
+</div>
