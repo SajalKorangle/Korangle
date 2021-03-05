@@ -158,7 +158,7 @@ export class School {
                 ]
             });
              this.parentModuleList.push({
-                'name': 'Event Gallery',
+                'name': this.name,
                 'studentList': this.studentList,
                 'id': this.studentList[0].id,
                 'taskList': [

@@ -48,6 +48,7 @@ export class ViewEventServiceAdapter {
 
         let event_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
             'korangle__order': '-heldOn',
             'korangle__count': this.vm.eventCount.toString() + ',' + (this.vm.eventCount + this.vm.loadingCount).toString()
         }

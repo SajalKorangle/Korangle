@@ -46,8 +46,8 @@ export class AddEventComponent implements OnInit {
     loadMoreEvents = false;
     isEventListLoading = false;
 
-    eventPostedMessage = 'A New Event "<eventTitle>" has been posted by the school, view the event details in View-Event page ';
-    eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the school event list';
+    eventPostedMessage = 'A New Event "<eventTitle>" has been posted , view the event details in Events page ';
+    eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the event list';
 
 
     constructor(public classService: ClassService,

@@ -33,6 +33,7 @@ export class AddEventServiceAdapter {
 
         let event_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
             'korangle__order': '-heldOn',
             'korangle__count': this.vm.eventCount.toString() + ',' + (this.vm.eventCount + this.vm.loadingCount).toString()
         }
@@ -109,6 +110,7 @@ export class AddEventServiceAdapter {
         this.vm.notifyPersonData = [];
         let event_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
             'title': this.vm.newEvent.title,
             'description': this.vm.newEvent.description,
             'heldOn': this.vm.newEvent.heldOn,
@@ -160,6 +162,7 @@ export class AddEventServiceAdapter {
         let event_data = {
             'id': this.vm.editingEvent.id,
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
             'title': this.vm.editingEvent.title,
             'description': this.vm.editingEvent.description,
             'heldOn': this.vm.editingEvent.heldOn,

@@ -20,6 +20,7 @@ export class ManageEventServiceAdapter {
         this.vm.filteredEventList = [];
         let event_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
         };
 
         Promise.all([
