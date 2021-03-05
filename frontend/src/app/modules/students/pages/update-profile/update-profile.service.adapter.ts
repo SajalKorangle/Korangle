@@ -91,13 +91,10 @@ export class UpdateProfileServiceAdapter {
         
         const student_form_data= new FormData()
         const data = { ...this.vm.currentStudent,content: JSON.stringify(this.vm.currentStudent.content) };
-        console.log('data ')
-        console.dir(data)
+        console.log(data)
         Object.keys(data).forEach(key => {
                 if (key === 'profileImage') {
                     if(this.vm.profileImage!==null){
-                        console.log('dat url to file')
-                        console.log(this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'))
                     	student_form_data.append(key, this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'));
                     }
                 }
@@ -110,8 +107,6 @@ export class UpdateProfileServiceAdapter {
                     }
                 }
             });
-        console.log('student form data')
-        console.dir(student_form_data)
 
         service_list.push(this.vm.studentService.updateObject(this.vm.studentService.student,student_form_data));
 
@@ -242,8 +237,6 @@ export class UpdateProfileServiceAdapter {
 
             // Copying the student parameter values for reference
             this.vm.studentParameterValueList = value[1];
-            console.log('student parameter value list')
-            console.dir(this.vm.studentParameterValueList)
             this.vm.currentStudentParameterValueList = [];
             this.vm.studentParameterValueList.filter(x => x.parentStudent===studentId).forEach(item=>{
                 if (item.document_value){
@@ -253,12 +246,10 @@ export class UpdateProfileServiceAdapter {
                 }
             });
 
-            
+            console.log(this.vm.studentParameterValueList)
             this.vm.studentParameterValueList.filter(x => x.parentStudent===studentId).forEach(item => {
                 this.vm.currentStudentParameterValueList.push(this.vm.commonFunctions.copyObject(item))
             });
-            console.log('current filtered  parameter value list')
-            console.dir(this.vm.currentStudentParameterValueList)
             this.vm.isLoading = false;
         });
     }
