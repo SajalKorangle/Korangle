@@ -71,7 +71,8 @@ export class DesignTCComponent implements OnInit, OnDestroy {
       attendanceList: any[],
       sessionList: any[],
       classSectionSignatureList: any[],
-    }
+    },
+    certificateNumber: number,
   } = {
     studentId: null,
     currentSession: null,
@@ -87,7 +88,8 @@ export class DesignTCComponent implements OnInit, OnDestroy {
       attendanceList: [],
       sessionList: [],
       classSectionSignatureList: [],
-    }
+      },
+      certificateNumber: -1
     }
   
   selectedStudent: any;

@@ -11,6 +11,16 @@ export class GenerateTCCanvasAdapter extends CanvasAdapterBase implements Canvas
     vm: GenerateTCComponent;
 
     dpi: number = 150;
+
+    extraFields: {
+        isLeavingSchoolBecasue: string,
+        issueDate: string,
+        leavingDate: string,
+    } = {
+            isLeavingSchoolBecasue: 'N/A',
+            issueDate: null,
+            leavingDate: null,
+        };
  
 
     constructor() {
@@ -24,7 +34,7 @@ export class GenerateTCCanvasAdapter extends CanvasAdapterBase implements Canvas
 
         Object.defineProperty(this, 'DATA', {
             get: function () {
-                return this.vm.DATA;    // reference to vm.DATA and there is no setter function
+                return {...this.extraFields, ...this.vm.DATA };    // reference to vm.DATA and there is no setter function
             }
         });
     }

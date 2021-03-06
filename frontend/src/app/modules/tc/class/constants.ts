@@ -2145,7 +2145,8 @@ export const PARAMETER_LIST = [
     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[1]),
     AttendanceParameterStructure.getStructure(ATTENDANCE_TYPE_LIST[2]),
 
-    TCParameters.getStructure('Is Leaving School Because', 'isLeavingSchoolBecasue'),
+    TCParameters.getStructure('Certificate Number', 'certificateNumber'),
+    TCParameters.getStructure('Is Leaving School Because', 'isLeavingSchoolBecause'),
     TCParameters.getStructure('Issue date', 'issueDate', CanvasDate),
     TCParameters.getStructure('Leaving Date', 'leavingDate', CanvasDate),
 

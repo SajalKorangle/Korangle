@@ -21,11 +21,11 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
     vm: DesignTCComponent;  
     
     extraFields: {
-        isLeavingSchoolBecasue: string,
+        isLeavingSchoolBecause: string,
         issueDate: string,
         leavingDate: string,
     } = {
-            isLeavingSchoolBecasue: 'N/A',
+            isLeavingSchoolBecause: 'N/A',
             issueDate: null,
             leavingDate: null,
         };
@@ -55,7 +55,7 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         return {
             ...super.getEmptyLayoutPage(),
             extraFields: {
-                isLeavingSchoolBecasue: 'N/A',
+                isLeavingSchoolBecause: 'N/A',
                 issueDate: null,
                 leavingDate: null,
             }

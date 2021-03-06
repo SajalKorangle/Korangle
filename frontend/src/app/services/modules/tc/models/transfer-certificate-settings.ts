@@ -1,7 +1,7 @@
 export class TransferCertificateSettings {
     parentSchool: number;
-    tcFee: number;
-    parentFeeType: number;
+    tcFee: number = 0;
+    parentFeeType: number = null;
     
-    lastCertificateNumber: number;
+    lastCertificateNumber: number = 0;
 }

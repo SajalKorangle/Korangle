@@ -17,8 +17,12 @@ export class SettingsServiceAdapter {
         }
 
         this.vm.isLoading = true;
-        this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings).then(data => {
-            this.vm.tcSettings = data;
+        Promise.all([
+            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), //0
+            this.vm.feeServie.getObjectList(this.vm.feeServie.fee_type, {})
+        ]).then(data => {
+            this.vm.tcSettings = data[0];
+            this.vm.feeTypeList = data[1];
             this.vm.isLoading = false;
         });
     }

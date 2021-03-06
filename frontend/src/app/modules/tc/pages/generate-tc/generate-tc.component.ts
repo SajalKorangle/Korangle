@@ -48,10 +48,9 @@ export class GenerateTCComponent implements OnInit {
 
   classSectionList: any[] = [];
   filteredStudentSectionList: any[] = [];
-
-  issueDate: any;
-  leavingDate: any;
-  isLeavingSchoolBecause: string;
+  
+  tcSettings: any;
+  generatedTc: any[];
 
   DATA: {
     studentId: number,
@@ -68,7 +67,11 @@ export class GenerateTCComponent implements OnInit {
       attendanceList: any[],
       sessionList: any[],
       classSectionSignatureList: any[],
-    }
+    },
+    issueDate: string,
+    leavingDate: string,
+    isLeavingSchoolBecause: string,
+    certificateNumber: number,
   } = {
     studentId: null,
     currentSession: null,
@@ -84,13 +87,17 @@ export class GenerateTCComponent implements OnInit {
       attendanceList: [],
       sessionList: [],
       classSectionSignatureList: [],
-    }
+      },
+      certificateNumber: -1,
+      issueDate: null,
+      leavingDate: null,
+      isLeavingSchoolBecause: '',
     }
   
   canvasAdapter: GenerateTCCanvasAdapter;
   serviceAdapter: GenerateTCServiceAdapter;
 
-  generatedReportCards: number = 0;
+  generatedTcs: number = 0;
   estimatedTime: any = null;
 
 
@@ -116,6 +123,7 @@ export class GenerateTCComponent implements OnInit {
 
     this.canvasAdapter = new GenerateTCCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
+    console.log('comp: ', this);
   }
 
   populateClassSectionList(classList, divisionList):void {
@@ -134,6 +142,22 @@ export class GenerateTCComponent implements OnInit {
             }
         });
     });
+  }
+
+  populateExtraFieldsFromLayout(): void{
+    const parsedData = JSON.parse(this.selectedLayout.content);
+    this.DATA = { ...this.DATA, ...parsedData[0].extraFields };
+    console.log('parsed Data.extra fields : ', parsedData[0].extraFields);
+  }
+
+  disableStudentsWithTC(tcData): void{
+    this.studentSectionList.forEach(ss => {
+      if (tcData.find(tc => tc.parentStudent == ss.parentStudent)) {
+        ss.disabled = true;
+      } else {
+        ss.disabled = false;
+      }
+    })
   }
 
   selectAllClasses(): void{
@@ -157,11 +181,11 @@ export class GenerateTCComponent implements OnInit {
   }
 
   selectAllStudents(): void{
-    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = true);
+    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = studentSection.disabled && true);
   }
 
   clearAllStudents(): void{
-    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = false);
+    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = studentSection.disabled && false);
   }
 
   getSelectedStudentList(): any[]{
@@ -170,7 +194,13 @@ export class GenerateTCComponent implements OnInit {
 
   async generateTC() {
     this.isLoading = true;
-    this.generatedReportCards = 0;
+
+    const generated_tc_list = await this.serviceAdapter.generateTC();
+    if (generated_tc_list.length == 0) {
+      this.isLoading = false;
+      return;
+    }
+    this.generatedTcs = 0;
     this.estimatedTime = null;
     let selectedLayutContent = JSON.parse(this.selectedLayout.content);
     this.DATA.data.studentSectionList = this.getSelectedStudentList();
@@ -186,6 +216,7 @@ export class GenerateTCComponent implements OnInit {
     let si;
     for (si = 0; si < this.DATA.data.studentList.length; si++){
       this.DATA.studentId = this.DATA.data.studentList[si].id;
+      this.DATA.certificateNumber = generated_tc_list.find(tc => tc.parentStudent == this.DATA.studentId).certificateNumber;
       for (let i = 0; i < selectedLayutContent.length; i++){
 
         if (doc.output('blob').size > (300 * 1024*1024)) {
@@ -204,7 +235,7 @@ export class GenerateTCComponent implements OnInit {
         await this.canvasAdapter.loadData(layoutPage);
         await this.canvasAdapter.downloadPDF(doc);
       }
-      this.generatedReportCards++;
+      this.generatedTcs++;
       let currTime:any = new Date();
       let timeTakenPerStudent: any = ((currTime - stratTime)) / (1000*(si+1));  // converting to seconds
       let estimatedTime = timeTakenPerStudent * (this.DATA.data.studentList.length - si - 1); // in seconds

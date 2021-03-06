@@ -44,7 +44,7 @@
                 <mat-label>
                     Select Layout
                 </mat-label>
-                <mat-select [(ngModel)]="selectedLayout">
+                <mat-select [(ngModel)]="selectedLayout" (ngModelChange)="populateExtraFieldsFromLayout()">
                     <mat-option *ngFor="let layout of tcLayoutList" [value]="layout">
                         {{layout.name}}
                     </mat-option>
@@ -61,17 +61,17 @@
             <div style="display: flex; flex-wrap: wrap;" class="flex-row-wrapper">
                 <mat-form-field>
                     <mat-label>Issue Date</mat-label>
-                    <input matInput type="date" [(ngModel)]="issueDate"/>
+                    <input matInput type="date" [(ngModel)]="DATA.issueDate"/>
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Leaving Date</mat-label>
-                    <input matInput type="date" [(ngModel)]="leavingDate"/>
+                    <input matInput type="date" [(ngModel)]="DATA.leavingDate"/>
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Is Leaving School Because</mat-label>
-                    <textarea matInput cols="80" cdkTextareaAutosize [(ngModel)]="isLeavingSchoolBecause"></textarea>
+                    <textarea matInput cols="80" cdkTextareaAutosize [(ngModel)]="DATA.isLeavingSchoolBecause"></textarea>
                 </mat-form-field>
             </div>
 
@@ -108,7 +108,7 @@
                 <ng-container *ngFor="let studentSection of filteredStudentSectionList, let i = index;">
                     <tr>
                         <td>
-                            <mat-checkbox [(ngModel)]="studentSection.selected"></mat-checkbox>
+                            <mat-checkbox [(ngModel)]="studentSection.selected" [disabled]="studentSection.disabled"></mat-checkbox>
                         </td>
                         <td>{{i+1}}</td>
                         <td>{{getStudent(studentSection.parentStudent).name}}</td>
@@ -130,9 +130,9 @@
 
 <ng-template #spinner>
     <app-loading-spinner [user]="user"></app-loading-spinner>
-    <div style="text-align: center;" *ngIf="generatedReportCards!=0">
-        <mat-progress-bar mode="determinate" [value]="generatedReportCards*100/getSelectedStudentList().length"></mat-progress-bar>
-        {{generatedReportCards}}/{{getSelectedStudentList().length}}<br/>
+    <div style="text-align: center;" *ngIf="generatedTcs!=0">
+        <mat-progress-bar mode="determinate" [value]="generatedTcs*100/getSelectedStudentList().length"></mat-progress-bar>
+        {{generatedTcs}}/{{getSelectedStudentList().length}}<br/>
         <ng-container *ngIf="estimatedTime">Estimated Time: {{estimatedTime.minutes}} minutes {{estimatedTime.seconds}} seconds</ng-container>
         <ng-container *ngIf="!estimatedTime">Processing ...</ng-container>
     </div>

@@ -38,6 +38,10 @@ export class DesignTCServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         }
 
+        const request_tc_settings = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        }
+
         this.vm.htmlAdapter.isLoading = true;
         Promise.all([
             this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, tc_layouts_data), // 0
@@ -49,7 +53,8 @@ export class DesignTCServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
             this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, public_layouts_data), //11
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //8
-            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, shared_layout_list_data), //9
+            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout_sharing, shared_layout_list_data), //9
+            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 10
         ]).then(data => { 
             // console.log(data);
             this.vm.tcLayoutList = data[0];
@@ -61,6 +66,7 @@ export class DesignTCServiceAdapter {
             this.vm.DATA.data.sessionList = data[6];
             this.vm.publicLayoutList = data[7];
             this.vm.DATA.data.classSectionSignatureList = data[8];
+            this.vm.DATA.certificateNumber = data[10].lastCertificateNumber+1;
             // console.log('DATA: ', this.vm.DATA);
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
@@ -81,8 +87,6 @@ export class DesignTCServiceAdapter {
             const shared_layout_data = {
                 id__in: data[9].map(sharedLayoutRelation => sharedLayoutRelation.parentLayout).join(',')
             };
-
-            // console.log(shared_layout_data);
 
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0

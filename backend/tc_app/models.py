@@ -68,5 +68,5 @@ class TransferCertificateNew(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS, null=False, blank=True)
     generatedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='generated_tc_set')
-    issuedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='issued_tc_set')
-    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='cancelled_tc_set')
+    issuedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='issued_tc_set')
+    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='cancelled_tc_set')

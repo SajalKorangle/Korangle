@@ -1,6 +1,6 @@
 import { GenerateTCComponent} from './generate-tc.component';
 import { StudentCustomParameterStructure } from './../../class/constants';
-
+import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 export class GenerateTCServiceAdapter {
 
     vm: GenerateTCComponent
@@ -23,6 +23,11 @@ export class GenerateTCServiceAdapter {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        const request_tc_settings = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
         this.vm.isLoading = true;
         Promise.all([
             this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, tc_layouts_data),
@@ -30,6 +35,7 @@ export class GenerateTCServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
+            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 5
         ]).then(data => { 
             this.vm.tcLayoutList = data[0];
             this.vm.studentSectionList = data[1];
@@ -38,16 +44,24 @@ export class GenerateTCServiceAdapter {
             this.vm.DATA.data.classList = data[2];
             this.vm.DATA.data.divisionList = data[3];
             this.vm.DATA.data.sessionList = data[4];
+            this.vm.tcSettings = data[5];
+            this.vm.DATA.certificateNumber = this.vm.tcSettings.lastCertificateNumber + 1;
 
             const request_student_data = {
                 id__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
             };
 
+            const request_tc_data = {
+                id_in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
+            }
+
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
+                this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data), // 1
             ]).then(value => {
                 this.vm.studentList = value[0];
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
+                this.vm.disableStudentsWithTC(value[1]);
                 this.vm.isLoading = false;
             }, error => {
                 this.vm.isLoading = false;
@@ -97,6 +111,28 @@ export class GenerateTCServiceAdapter {
                 studentParameter.name, studentParameter.id
             ));
         });
+    }
+
+    generateTC() {
+        const tc_list = []
+        let certificateNumber = this.vm.tcSettings.lastCertificateNumber + 1;
+        this.vm.getSelectedStudentList().forEach(ss => {
+            const tc = new TransferCertificateNew();
+            tc.parentStudent = ss.parentStudent;
+            tc.certificateNumber = certificateNumber;
+            certificateNumber++;
+            tc.issueDate = this.vm.DATA.issueDate;
+            tc.leavingDate = this.vm.DATA.leavingDate;
+            tc.leavingReason = this.vm.DATA.isLeavingSchoolBecause;
+            tc.status = 'Generated';
+            tc.generatedBy = this.vm.user.activeSchool.employeeId
+            tc_list.push(tc);
+        });
+        if (tc_list.length > 0) {
+            return this.vm.tcService.createObjectList(this.vm.tcService.transfer_certificate, tc_list)
+        } else {
+            Promise.resolve([]);
+        }
     }
 
 }
