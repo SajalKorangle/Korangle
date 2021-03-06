@@ -421,7 +421,8 @@ export class UpdateMarksServiceAdapter {
                         item.newMarksObtained = null;
                     }
                     else {
-                        var mark = item.marksObtained
+                        item.marksObtained = Number(item.marksObtained.toString());
+                        let mark = item.marksObtained;
                         item['newMarksObtained'] = mark;
                     }
 
@@ -461,12 +462,13 @@ export class UpdateMarksServiceAdapter {
 
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
             item.testDetails.forEach(itemTwo => {
-                if (itemTwo.marksObtained == null) {
-                    itemTwo.marksObtained = 0.0;
-                } else {
-                    itemTwo.marksObtained = parseFloat(itemTwo.marksObtained.toString()).toFixed(1);
+                console.log(itemTwo.marksObtained);
+                console.log(itemTwo.newMarksObtained);
+                if (itemTwo.newMarksObtained == null) {
+                    itemTwo.newMarksObtained = 0.0;
                 }
-                if ((itemTwo.newMarksObtained != itemTwo.marksObtained) && (itemTwo.newMarksObtained!= null))
+                itemTwo.newMarksObtained = parseFloat(itemTwo.newMarksObtained.toString()).toFixed(3);
+                if (itemTwo.newMarksObtained != itemTwo.marksObtained)
                 data.push(itemTwo);
             });
         });
@@ -496,7 +498,7 @@ export class UpdateMarksServiceAdapter {
                                 studentTest.newMarksObtained = null;
                             }
                             else {
-                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(1);
+                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(3);
                             } 
                         }
                     });
@@ -514,7 +516,7 @@ export class UpdateMarksServiceAdapter {
                                 studentTest.newMarksObtained = null;
                             }
                             else {
-                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(1);
+                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(3);
                             } 
                         }
                     });
