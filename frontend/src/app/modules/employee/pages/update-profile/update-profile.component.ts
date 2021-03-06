@@ -129,7 +129,7 @@ export class UpdateProfileComponent implements OnInit {
             this.currentEmployeeProfile.dateOfLeaving = null;
         }
 
-        if (this.currentEmployeeProfile.mobileNumber === undefined || this.currentEmployeeProfile.mobileNumber === '') {
+        if (this.currentEmployeeProfile.mobileNumber === undefined || this.currentEmployeeProfile.mobileNumber === null) {
             this.currentEmployeeProfile.mobileNumber = null;
             alert('Mobile number is required.');
             return;
