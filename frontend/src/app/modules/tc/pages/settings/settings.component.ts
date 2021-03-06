@@ -30,8 +30,24 @@ export class SettingsComponent implements OnInit {
     this.settingsServiceAdapter.initializeData();
   }
 
+  sanityCheck(): [boolean, string]{
+    if (this.tcSettings.tcFee < 0)
+      return [false, 'TC Fee Cannot be Negative']
+    if (this.tcSettings.tcFee > 0) {
+      if (this.tcSettings.parentFeeType == null)
+        return [false, 'Fee Type is required'];
+    }
+    return [true, '']
+  }
+
   updateSettings(): void{
-    this.settingsServiceAdapter.updateTcSettings(this.tcSettings);
+    const [sanityCheck, errorMessage] = this.sanityCheck();
+    if (sanityCheck) {
+      this.settingsServiceAdapter.updateTcSettings(this.tcSettings);
+    }
+    else {
+      alert(errorMessage);
+    }
   }
 
 }
