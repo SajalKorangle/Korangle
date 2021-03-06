@@ -118,27 +118,38 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
             case 3:
                 result = 'Session 2019-20';
                 break;
+            case 4:
+                result = 'Session 2020-21';
+                break;
+            case 5:
+                result = 'Session 2021-22';
+                break;
         }
         return result;
     }
 
     getExaminationMarks(student: any, classSubject: any, examinationId: any, baseMarks: any): any {
-        let maximumMarks = this.testList.filter(test => {
-            // return test.parentExamination == examinationId && test.parentSubject == classSubject.parentSubject;
+        let testTypeList = [];
+        let filteredTestList = this.testList.filter(test => {
             return test.parentExamination == examinationId
                 && test.parentSubject == classSubject.parentSubject
                 && test.parentClass == classSubject.parentClass
                 && test.parentDivision == classSubject.parentDivision;
-        }).reduce((total, a) => {
-            return total+a.maximumMarks;
+        });
+        filteredTestList.forEach(test => {
+            testTypeList.push(test.testType);
+        });
+        let maximumMarks = filteredTestList.reduce((total, a) => {
+            return total+Number(a.maximumMarks);
         }, 0);
         if (maximumMarks == 0) {
-            console.log('Maxium Marks is coming to be zero');
+            console.log('Maximum Marks is coming to be zero');
             return 0;
         }
         let studentMarks = this.studentTestList.filter(studentTest => {
             return studentTest.parentExamination == examinationId
                 && studentTest.parentSubject == classSubject.parentSubject
+                && testTypeList.includes(studentTest.testType)
                 && studentTest.parentStudent == student.id;
         }).reduce((total, a) => {
             return total+parseFloat(a.marksObtained);
