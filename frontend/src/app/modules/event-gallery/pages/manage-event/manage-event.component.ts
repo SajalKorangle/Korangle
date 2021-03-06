@@ -82,7 +82,7 @@ export class ManageEventComponent implements OnInit {
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'imageList': eventImages, 'index': index, 'type': 1, 'fileType': 'image', 'isMobile': this.isMobile()}
+            data: {'imageList': eventImages, 'index': index, 'type': 1, 'fileType': 'img', 'isMobile': this.isMobile()}
         });
         dialogRef.afterClosed();
     }

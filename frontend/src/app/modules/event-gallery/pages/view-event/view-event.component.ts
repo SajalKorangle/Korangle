@@ -136,7 +136,7 @@ export class ViewEventComponent implements OnInit {
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'imageList': eventImageList, 'index': i, 'extraList': this.tagList,'type':2,'fileType':'image','isMobile': this.isMobile()}
+            data: {'imageList': eventImageList, 'index': i, 'extraList': this.tagList,'type':2,'fileType':'img','isMobile': this.isMobile()}
         });
         dialogRef.afterClosed();
     }

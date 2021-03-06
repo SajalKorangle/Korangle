@@ -75,7 +75,7 @@
                                      (keydown)="htmlAdapter.onKeyDown($event)">{{eventTag.tagName}}</div>
                             </ng-container>
                             <button *ngIf="eventTagList.length>0"
-                                    class="btn btn-{{htmlAdapter.checkTagEditable() =='active' && htmlAdapter.checkMediaSelected() == 'active' && !isAssigning?htmlAdapter.checkMediaSelected():'inactive' }}"
+                                    class="btn btn-{{htmlAdapter.checkTagEditable() =='active' && htmlAdapter.checkMediaSelected() == 'active' && !isAssigning?user.activeSchool.secondaryThemeColor:'inactive' }}"
                                     (click)="htmlAdapter.assignSelectedTags()"
                                     [disabled]="(htmlAdapter.checkTagEditable()=='inactive' || htmlAdapter.checkMediaSelected() == 'inactive')"
                                     style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span
