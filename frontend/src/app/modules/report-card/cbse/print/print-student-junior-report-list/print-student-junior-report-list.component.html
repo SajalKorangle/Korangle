@@ -114,17 +114,17 @@
                         <ng-container *ngFor="let classSubject of classSubjectList;">
                             <tr class="marksTableFontSize">
                                 <td class="leftBorder rightBorder" style="padding: 5px;">{{getSubjectName(classSubject.parentSubject)}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[0]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[0]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[0]) | numberAndString:'1.0-2'}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[1]) | number:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[1]) | number:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
+                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[1]) | numberAndString:'1.0-2'}}</td>
                                 <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[1])}}</td>
                             </tr>
                         </ng-container>
@@ -197,7 +197,7 @@
             <div class="row no-gutters" style="font-size: 12px !important;">
                 <div class="col-xs-3" align="left">
                     Class Teacher's Remarks:<br/>
-                    {{getNextStep(student)}}
+                    <ng-container *ngIf="showPromotionStatement">{{getNextStep()}}</ng-container>
                 </div>
                 <div class="col-xs-9" align="left">
                     <i>{{getStudentRemark(student)}}</i>
