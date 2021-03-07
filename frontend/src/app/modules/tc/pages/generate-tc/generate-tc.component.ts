@@ -130,8 +130,6 @@ export class GenerateTCComponent implements OnInit {
 
     this.canvasAdapter = new GenerateTCCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
-    console.log('comp: ', this);
-    console.log('jspdf: ', jsPDF);
   }
 
   populateClassSectionList(classList, divisionList):void {
@@ -263,7 +261,10 @@ export class GenerateTCComponent implements OnInit {
     } else {
       doc.save(this.selectedLayout.name + '.pdf');
     }
-    
+
+    this.tcSettings.lastCertificateNumber = this.DATA.certificateNumber-1;
+    serviceList.push(this.serviceAdapter.updateTcSettings());
+
     Promise.all(serviceList).then(tc_list => {
       this.disableStudentsWithTC(tc_list);
       this.isLoading = false;

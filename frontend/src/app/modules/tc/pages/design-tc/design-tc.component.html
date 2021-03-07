@@ -56,7 +56,7 @@
 
             <div class="tool" style="padding: 2px;"> <!--Background Color Picker-->   
                     <label>Background Color: </label>
-                    <input matTooltip="Add Background Color" type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.applyBackground($event.target.value)"/>
+                    <input matTooltip="Add Background Color" type="color" [value]="canvasAdapter.backgroundColor" (input)="canvasAdapter.backgroundColor = $event.target.value; canvasAdapter.scheduleCanvasReDraw(0)"/>
             </div>
 
             <div class="tool">

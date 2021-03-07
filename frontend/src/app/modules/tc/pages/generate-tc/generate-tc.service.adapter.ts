@@ -72,6 +72,10 @@ export class GenerateTCServiceAdapter {
                 this.vm.studentList = value[0];
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
                 this.vm.disableStudentsWithTC(value[1]);
+                if (this.vm.tcSettings.tcFee > 0 && !value[2]) {
+                    alert('Update Setings in Settings Page');
+                    return;
+                }
                 this.vm.tcSchoolFeeRule = value[2];
                 this.vm.isLoading = false;
             }, error => {
@@ -158,6 +162,12 @@ export class GenerateTCServiceAdapter {
 
         return Promise.all(serviceList).then(res=> res[0]);
            
+    }
+
+    updateTcSettings() {
+        return this.vm.tcService.updateObject(this.vm.tcService.tc_settings, this.vm.tcSettings).then(responseData => {
+            this.vm.tcSettings = responseData;
+        });    
     }
 
 }
