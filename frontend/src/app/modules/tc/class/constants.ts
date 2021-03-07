@@ -375,6 +375,8 @@ export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
     new PageResolution('A6', 148, 105),
 ];
 
+export const TC_SCHOOL_FEE_RULE_NAME = '$TC FEE';
+
 export const permissibleClickError = 4;    // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 2; // in pixels
 export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';

@@ -1,6 +1,8 @@
 import { GenerateTCComponent} from './generate-tc.component';
-import { StudentCustomParameterStructure } from './../../class/constants';
+import { StudentCustomParameterStructure, TC_SCHOOL_FEE_RULE_NAME } from './../../class/constants';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
+import { StudentRoutingModule } from 'app/modules/students/student.routing';
+
 export class GenerateTCServiceAdapter {
 
     vm: GenerateTCComponent
@@ -27,6 +29,7 @@ export class GenerateTCServiceAdapter {
         const request_tc_settings = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
+
 
         this.vm.isLoading = true;
         Promise.all([
@@ -55,13 +58,21 @@ export class GenerateTCServiceAdapter {
                 id_in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
             }
 
+            const request_tc_school_fee_rule = {
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                name: TC_SCHOOL_FEE_RULE_NAME,
+                parentFeeType: this.vm.tcSettings.parentFeeType
+            }
+
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
                 this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data), // 1
+                this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule),  //  2
             ]).then(value => {
                 this.vm.studentList = value[0];
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
                 this.vm.disableStudentsWithTC(value[1]);
+                this.vm.tcSchoolFeeRule = value[2];
                 this.vm.isLoading = false;
             }, error => {
                 this.vm.isLoading = false;
@@ -113,26 +124,40 @@ export class GenerateTCServiceAdapter {
         });
     }
 
-    generateTC() {
-        const tc_list = []
-        let certificateNumber = this.vm.tcSettings.lastCertificateNumber + 1;
-        this.vm.getSelectedStudentList().forEach(ss => {
-            const tc = new TransferCertificateNew();
-            tc.parentStudent = ss.parentStudent;
-            tc.certificateNumber = certificateNumber;
-            certificateNumber++;
-            tc.issueDate = this.vm.DATA.issueDate;
-            tc.leavingDate = this.vm.DATA.leavingDate;
-            tc.leavingReason = this.vm.DATA.isLeavingSchoolBecause;
-            tc.status = 'Generated';
-            tc.generatedBy = this.vm.user.activeSchool.employeeId
-            tc_list.push(tc);
-        });
-        if (tc_list.length > 0) {
-            return this.vm.tcService.createObjectList(this.vm.tcService.transfer_certificate, tc_list)
-        } else {
-            Promise.resolve([]);
+    generateTC(studentId: number, certificateNumber: number, certificateDocumet: Blob) {
+        const tc_object = new TransferCertificateNew();
+        tc_object.parentStudent = studentId;
+        tc_object.certificateNumber = certificateNumber;
+        tc_object.issueDate = this.vm.DATA.issueDate;
+        tc_object.leavingDate = this.vm.DATA.leavingDate;
+        tc_object.leavingReason = this.vm.DATA.isLeavingSchoolBecause;
+        tc_object.status = 'Generated';
+        tc_object.generatedBy = this.vm.user.activeSchool.employeeId
+
+        delete tc_object.certificateFile;
+        const tc_form = new FormData();
+        Object.entries(tc_object).forEach(([key, value]) => tc_form.append(key, value));
+        tc_form.append('certificateFile', certificateDocumet, certificateNumber.toString()+'.pdf');
+
+        const serviceList = [];
+        serviceList.push(this.vm.tcService.createObject(this.vm.tcService.transfer_certificate, tc_form));
+
+        if (this.vm.tcSettings.tcFee > 0) {
+
+            const student_tc_fee = {
+                parentStudent: studentId,
+                parentSchoolFeeRule: this.vm.tcSchoolFeeRule.id,
+                parentFeeType: this.vm.tcSettings.parentFeeType,
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                isAnnually: true,
+                aprilAmount: this.vm.tcSettings.tcFee
+            }
+            
+            serviceList.push(this.vm.feeService.createObject(this.vm.feeService.student_fees, student_tc_fee));
         }
+
+        return Promise.all(serviceList).then(res=> res[0]);
+           
     }
 
 }

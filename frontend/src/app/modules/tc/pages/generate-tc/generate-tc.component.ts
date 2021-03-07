@@ -8,12 +8,16 @@ import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import {SchoolService} from '@services/modules/school/school.service';
-import {AttendanceService} from '@services/modules/attendance/attendance.service';
+import { AttendanceService } from '@services/modules/attendance/attendance.service';
+import { FeeService } from './../../../../services/modules/fees/fee.service';
+import { TransferCertificateSettings } from './../../../../services/modules/tc/models/transfer-certificate-settings';
+import { SchoolFeeRule } from './../../../../services/modules/fees/models/school-fee-rule';
 
 import { PARAMETER_LIST, DPI_LIST } from './../../class/constants';
 import { GenerateTCCanvasAdapter } from './generate-tc.canvas.adapter';
 
 import * as jsPDF from 'jspdf';
+import { School } from 'app/classes/school';
 
 @Component({
   selector: 'app-generate-tc',
@@ -26,6 +30,7 @@ import * as jsPDF from 'jspdf';
     SubjectService,
     SchoolService,
     AttendanceService,
+    FeeService,
   ]
 })
 export class GenerateTCComponent implements OnInit {
@@ -49,7 +54,8 @@ export class GenerateTCComponent implements OnInit {
   classSectionList: any[] = [];
   filteredStudentSectionList: any[] = [];
   
-  tcSettings: any;
+  tcSettings: TransferCertificateSettings;
+  tcSchoolFeeRule: SchoolFeeRule;
   generatedTc: any[];
 
   DATA: {
@@ -111,6 +117,7 @@ export class GenerateTCComponent implements OnInit {
     public subjectService: SubjectService,
     public schoolService: SchoolService,
     public attendanceService: AttendanceService,
+    public feeService: FeeService,
   ) { }
 
   ngOnInit() {
@@ -124,6 +131,7 @@ export class GenerateTCComponent implements OnInit {
     this.canvasAdapter = new GenerateTCCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
     console.log('comp: ', this);
+    console.log('jspdf: ', jsPDF);
   }
 
   populateClassSectionList(classList, divisionList):void {
@@ -154,9 +162,8 @@ export class GenerateTCComponent implements OnInit {
     this.studentSectionList.forEach(ss => {
       if (tcData.find(tc => tc.parentStudent == ss.parentStudent)) {
         ss.disabled = true;
-      } else {
-        ss.disabled = false;
       }
+      // else undefined which => false
     })
   }
 
@@ -181,42 +188,43 @@ export class GenerateTCComponent implements OnInit {
   }
 
   selectAllStudents(): void{
-    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = studentSection.disabled && true);
+    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = !studentSection.disabled && true);
   }
 
   clearAllStudents(): void{
-    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = studentSection.disabled && false);
+    this.filteredStudentSectionList.forEach(studentSection => studentSection.selected = false);
   }
 
   getSelectedStudentList(): any[]{
-    return this.filteredStudentSectionList.filter(studentSection => studentSection.selected);
+    return this.filteredStudentSectionList.filter(studentSection => !studentSection.disabled && studentSection.selected);
   }
 
   async generateTC() {
     this.isLoading = true;
+    const serviceList = [];
 
-    const generated_tc_list = await this.serviceAdapter.generateTC();
-    if (generated_tc_list.length == 0) {
-      this.isLoading = false;
-      return;
-    }
     this.generatedTcs = 0;
     this.estimatedTime = null;
+
     let selectedLayutContent = JSON.parse(this.selectedLayout.content);
+
     this.DATA.data.studentSectionList = this.getSelectedStudentList();
     this.DATA.data.studentList = this.DATA.data.studentSectionList.map(ss => this.studentList.find(s => s.id == ss.parentStudent));
     await this.serviceAdapter.getDataForGeneratingTC();
     
     let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
     doc.deletePage(1);
+
     let stratTime: any = new Date();
     let startSerialNo
     if(this.DATA.data.studentSectionList.length>0)
       startSerialNo = this.filteredStudentSectionList.findIndex(ss=>ss.id == this.DATA.data.studentSectionList[0].id)+1;
+    
     let si;
     for (si = 0; si < this.DATA.data.studentList.length; si++){
       this.DATA.studentId = this.DATA.data.studentList[si].id;
-      this.DATA.certificateNumber = generated_tc_list.find(tc => tc.parentStudent == this.DATA.studentId).certificateNumber;
+      const pdfCertificteSingle = new jsPDF({ orientation: 'p', unit: 'pt' });
+      pdfCertificteSingle.deletePage(1);
       for (let i = 0; i < selectedLayutContent.length; i++){
 
         if (doc.output('blob').size > (300 * 1024*1024)) {
@@ -234,7 +242,12 @@ export class GenerateTCComponent implements OnInit {
         let layoutPage = selectedLayutContent[i];
         await this.canvasAdapter.loadData(layoutPage);
         await this.canvasAdapter.downloadPDF(doc);
+        await this.canvasAdapter.downloadPDF(pdfCertificteSingle);
       }
+
+      serviceList.push(this.serviceAdapter.generateTC(this.DATA.studentId, this.DATA.certificateNumber, pdfCertificteSingle.output('blob', this.DATA.certificateNumber.toString()+'.pdf')))
+      this.DATA.certificateNumber += 1;
+
       this.generatedTcs++;
       let currTime:any = new Date();
       let timeTakenPerStudent: any = ((currTime - stratTime)) / (1000*(si+1));  // converting to seconds
@@ -250,8 +263,11 @@ export class GenerateTCComponent implements OnInit {
     } else {
       doc.save(this.selectedLayout.name + '.pdf');
     }
-   
-    this.isLoading = false;
+    
+    Promise.all(serviceList).then(tc_list => {
+      this.disableStudentsWithTC(tc_list);
+      this.isLoading = false;
+    });
   }
 
 }

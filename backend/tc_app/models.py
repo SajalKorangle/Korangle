@@ -52,10 +52,13 @@ class TransferCertificateSettings(models.Model):
 def newTcSettngs(sender, newSchool, **kwargs):
     TransferCertificateSettings.create(parentSchool=newSchool, parentFeeType=None)
 
+def upload_certificate_to(instance, filename):
+    return 'tc_app/TransferCertificateNew/certificateFile/%s-%s' % (now().timestamp(), filename)
 
 class TransferCertificateNew(models.Model):
     parentStudent = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='transferCertificateNew')
     certificateNumber = models.IntegerField(null=True, blank=True)
+    certificateFile = models.FileField(upload_to=upload_certificate_to)
 
     issueDate = models.DateField(null=True, blank=True)
     leavingDate = models.DateField(null=True, blank=True)

@@ -14,9 +14,18 @@
                     </mat-form-field>
                 </div>
             </div> 
+
+            <div class="col-md-12" style="display: flex; flex-direction: row; align-items: center; margin-top: 12px;">
+                <span class="col-md-3">TC School Fee Rule</span>
+                <div class="col-md-6" style="display: flex; flex-direction: row; align-items: baseline;">
+                    <span>{{tcSchoolFeeRuleName}}</span>
+                    <mat-icon style="font-size: small; margin-left: 8px;" [style.color]="tcSchoolFeeRuleInitilized?'green':'red'">{{tcSchoolFeeRuleInitilized?'check_circle':'cancel'}}</mat-icon>
+                    <span style="font-size: small;" *ngIf="!tcSchoolFeeRuleInitilized">(Update To Initilize School Fee Rule)</span>
+                </div>
+            </div> 
              
             <!-- Complete tc fee -->
-            <div class="col-md-12" style="display: flex; flex-direction: row; align-items: center;">
+            <div class="col-md-12" style="display: flex; flex-direction: row; align-items: center; margin-top: 12px;">
                 <div class="col-md-3">TC Fee</div>
                 <div class="col-md-3">
                     <mat-form-field>

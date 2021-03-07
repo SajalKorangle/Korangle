@@ -4,6 +4,8 @@ import { SettingsServiceAdapter } from './settings.service.adapter';
 import { TCService } from './../../../../services/modules/tc/tc.service';
 import { TransferCertificateSettings } from './../../../../services/modules/tc/models/transfer-certificate-settings'
 import { FeeService } from './../../../../services/modules/fees/fee.service';
+import { SchoolFeeRule } from './../../../../services/modules/fees/models/school-fee-rule';
+import { TC_SCHOOL_FEE_RULE_NAME } from './../../class/constants';
 
 @Component({
   selector: 'app-settings',
@@ -16,7 +18,11 @@ export class SettingsComponent implements OnInit {
   user: any;
 
   tcSettings: TransferCertificateSettings;
-  feeTypeList: { id: number, [key:string]:any }[];
+  feeTypeList: { id: number, [key: string]: any }[];
+  
+  tcSchoolFeeRuleName: string = TC_SCHOOL_FEE_RULE_NAME;
+  tcSchoolFeeRuleInitilized: boolean = false;
+  tcSchoolFeeRule: any;
 
   settingsServiceAdapter: SettingsServiceAdapter;
   isLoading = false;
@@ -43,7 +49,17 @@ export class SettingsComponent implements OnInit {
   updateSettings(): void{
     const [sanityCheck, errorMessage] = this.sanityCheck();
     if (sanityCheck) {
-      this.settingsServiceAdapter.updateTcSettings(this.tcSettings);
+      if (this.tcSettings.parentFeeType) {
+        if (!this.tcSchoolFeeRuleInitilized) {
+          this.tcSchoolFeeRule = {
+            name: this.tcSchoolFeeRuleName,
+            parentSession: this.user.activeSchool.currentSessionDbId,
+            isAnnually: true,
+          }
+        }
+        this.tcSchoolFeeRule.parentFeeType = this.tcSettings.parentFeeType;
+      }
+      this.settingsServiceAdapter.updateTcSettings();
     }
     else {
       alert(errorMessage);
