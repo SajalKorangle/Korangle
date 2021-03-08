@@ -14,8 +14,7 @@ def add_tc_module_and_tasks(apps, schema_editor):
         ('generate_tc', 'Generate T.C.'),
         ('issue_tc', 'Issue T.C.'),
         ('cancel_tc', 'Cancel T.C.'),
-        ('regenerate_tc', 'Regenerate T.C.'),
-        ('tc_logbook', 'T.C. Logbook'),
+        ('tc_logbook', 'View Logbook'),
         ('settings', 'Settings'),
     ]
 

@@ -32,7 +32,7 @@ export class IssueTCServiceAdapter{
 
             const request_student_data = {
                 id__in: this.vm.tcList.map(tc => tc.parentStudent),
-                fields__korangle: 'id,name,fathersName,scholarNumber',
+                fields__korangle: 'id,name,fathersName,scholarNumber,dateOfAdmission',
             }
 
             const student_fee_request = {
