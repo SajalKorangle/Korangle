@@ -48,16 +48,13 @@ class TransferCertificateSettings(models.Model):
     
     nextCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
-@receiver(post_save, sender=School)
-def newTcSettngs(sender, newSchool, **kwargs):
-    TransferCertificateSettings.create(parentSchool=newSchool, parentFeeType=None)
 
 def upload_certificate_to(instance, filename):
     return 'tc_app/TransferCertificateNew/certificateFile/%s-%s' % (now().timestamp(), filename)
 
 class TransferCertificateNew(models.Model):
-    parentStudent = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='transferCertificateNew')
-    certificateNumber = models.IntegerField(null=True, blank=True)
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='transferCertificateNew')
+    certificateNumber = models.IntegerField()
     certificateFile = models.FileField(upload_to=upload_certificate_to)
 
     issueDate = models.DateField(null=True, blank=True)
@@ -69,7 +66,7 @@ class TransferCertificateNew(models.Model):
         ('Issued', 'Issued'),
         ('Cancelled', 'Cancelled'),
     )
-    status = models.CharField(max_length=20, choices=STATUS, null=False, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS,)
     generatedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='generated_tc_set')
     issuedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='issued_tc_set')
     cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='cancelled_tc_set')

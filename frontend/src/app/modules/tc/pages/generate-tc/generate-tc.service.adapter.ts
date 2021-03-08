@@ -1,7 +1,7 @@
 import { GenerateTCComponent} from './generate-tc.component';
-import { StudentCustomParameterStructure, TC_SCHOOL_FEE_RULE_NAME } from './../../class/constants';
+import { StudentCustomParameterStructure } from './../../class/constants';
+import { TC_SCHOOL_FEE_RULE_NAME } from './../../class/constants_tc';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
-import { StudentRoutingModule } from 'app/modules/students/student.routing';
 
 export class GenerateTCServiceAdapter {
 
