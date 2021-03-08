@@ -40,7 +40,7 @@ import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.compon
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
-
+import { LocalDatePipe } from './../pipes/local-date-format.pipe';
 
 @NgModule({
     declarations: [
@@ -55,6 +55,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
+        LocalDatePipe,
 
         EmployeeFilterComponent,
 
@@ -105,6 +106,7 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
+        LocalDatePipe,
 
         CommonModule,
         FormsModule,

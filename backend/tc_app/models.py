@@ -60,6 +60,7 @@ class TransferCertificateNew(models.Model):
     issueDate = models.DateField(null=True, blank=True)
     leavingDate = models.DateField(null=True, blank=True)
     leavingReason = models.TextField(null=True, blank=True)
+    lastClassPassed = models.CharField(null=True, blank=True, max_length=30)
 
     STATUS = (
         ('Generated', 'Generated'),

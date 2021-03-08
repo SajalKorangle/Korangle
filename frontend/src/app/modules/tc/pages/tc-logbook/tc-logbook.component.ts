@@ -49,6 +49,7 @@ export class TCLogbookComponent implements OnInit {
     'Name': true,
     'Scholar No.': false,
     'Class Section': true,
+    'Last Class Passed': false,
     'Father\'s Name': true,
     'Status': true,
     'Certificate': true,

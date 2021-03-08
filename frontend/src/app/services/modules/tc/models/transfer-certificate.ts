@@ -8,6 +8,7 @@ export class TransferCertificateNew{
     issueDate: string;
     leavingDate: string;
     leavingReason: string;
+    lastClassPassed: string;
 
     status: string;
     generatedBy: number;

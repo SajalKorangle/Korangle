@@ -2033,7 +2033,8 @@ export const PARAMETER_LIST = [
     StudentParameterStructure.getStructure(`Blood Group`, 'bloodGroup'),
     StudentParameterStructure.getStructure(`Father's Annual Income`, 'fatherAnnualIncome'),
     StudentParameterStructure.getStructure(`RTE`, 'rte'),
-    StudentParameterStructure.getStructure(`Date of Admission`, 'dateOfAdmission', CanvasDate), //uncomment after implementing Date layer
+    StudentParameterStructure.getStructure(`Date of Admission`, 'dateOfAdmission', CanvasDate),
+    StudentParameterStructure.getStructure(`Admission Class`, 'admissionClass'),
 
     /* Student Session Field */
     StudentSessionParameterStructure.getStructure(

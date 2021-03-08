@@ -183,6 +183,7 @@ export class GenerateTCServiceAdapter {
         else
             delete tc_object.leavingDate;
         tc_object.leavingReason = this.vm.DATA.isLeavingSchoolBecause;
+        tc_object.lastClassPassed = this.vm.DATA.lastClassPassed;
         tc_object.status = 'Generated';
         tc_object.generatedBy = this.vm.user.activeSchool.employeeId
 
