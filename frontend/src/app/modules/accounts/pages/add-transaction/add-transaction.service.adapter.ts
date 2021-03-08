@@ -114,6 +114,9 @@ export class AddTransactionServiceAdapter {
                 })
                 approvalImages.forEach(image =>{
                     if(image.parentApproval == approval.id){
+                        this.getBase64FromUrl(image.imageURL).then(data64URL =>{
+                            image.imageURL = data64URL; 
+                        })
                         if(image.imageType == 'BILL'){
                             tempData.billImages.push(image);
                         }
@@ -395,6 +398,17 @@ export class AddTransactionServiceAdapter {
         
     }
     
+    getBase64FromUrl = async (url) => {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(blob); 
+          reader.onloadend = function() {
+            const base64data = reader.result;   
+            resolve(base64data);
+          }
+        })
+    }
     
-
 }
