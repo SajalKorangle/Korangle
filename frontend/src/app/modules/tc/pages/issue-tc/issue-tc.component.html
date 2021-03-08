@@ -36,13 +36,13 @@
                     <td>{{ss.parentStudentInstance.scholarNumber}}</td>
                     <td>{{ss.parentStudentInstance.name}}</td>
                     <td>{{getClassSectionName(ss.parentClass, ss.parentDivision)}}</td>
-                    <td>{{ss.tc.issueDate}}</td>
-                    <td>{{ss.tc.leavingDate}}</td>
+                    <td>{{ss.tc.issueDate | localDate}}</td>
+                    <td>{{ss.tc.leavingDate | localDate}}</td>
                     <td>{{ss.tc.status}}</td>
                     <td><a [href]="ss.tc.certificateFile" target="_blank"><mat-icon>description</mat-icon></a></td>
                     <td style="display: flex; flex-direction: column; align-items: center;">
                         <button mat-button [disabled]="tcIssuedOnThisPageSession[ss.tc.id] || ss.dueAmount>0" (click)="issueTC(ss.tc)" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="padding: 6px; margin: 0;">Issue Certificate</button>
-                        <span style="color: red; font-size: 11px; margin-top: 1px;">Amount Due: {{ss.dueAmount}}</span>
+                        <span style="color: red; font-size: 11px; margin-top: 1px;" [style.cursor]="userHasFeePermission?'pointer':''" (click)="navigateToCollectFee()">Amount Due: {{ss.dueAmount}}</span>
                     </td>
                 </tr>
             </ng-container>

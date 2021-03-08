@@ -55,6 +55,10 @@ export class IssueTCComponent implements OnInit {
   subFeeReciptList: Array<SubFeeReceipt>;
   subDiscountList: Array<SubDiscount>;
 
+  userHasFeePermission: boolean = false;
+  feeModule: any;
+  collectFeeTask: any;
+
   serviceAdapter: IssueTCServiceAdapter;
   isLoading = false;
 
@@ -69,6 +73,18 @@ export class IssueTCComponent implements OnInit {
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new IssueTCServiceAdapter(this);
     this.serviceAdapter.initializeData();
+
+    this.feeModule = this.user.activeSchool.moduleList.find(m => m.path == 'fees');
+    if (this.feeModule) {
+      this.collectFeeTask = this.feeModule.taskList.find(t => t.path == 'collect_fee');
+    } 
+    this.userHasFeePermission = this.feeModule && this.collectFeeTask;
+  }
+
+  navigateToCollectFee(): void{
+    if (this.userHasFeePermission) {
+      this.user.populateSectionAndRoute(this.collectFeeTask, this.feeModule);
+    }
   }
 
   populateClassSectionList(classList, divisionList):void {
