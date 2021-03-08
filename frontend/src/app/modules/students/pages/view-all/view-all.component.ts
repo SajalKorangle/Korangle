@@ -93,6 +93,10 @@ export class ViewAllComponent implements OnInit {
     noRTE = true;
     noneRTE = true;
 
+    /* TC Options */
+    noTC = true;
+    yesTC = true;
+
     displayStudentNumber = 0;
 
     classSectionList = [];
@@ -239,9 +243,7 @@ export class ViewAllComponent implements OnInit {
     }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList.filter( student => {
-            return student.parentTransferCertificate == null;
-        });
+        this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
@@ -535,6 +537,12 @@ export class ViewAllComponent implements OnInit {
                 return;
             }
 
+            // Transfer Certiicate Check
+            if(!((this.noTC && !student.parentTransferCertificate) || (this.yesTC && student.parentTransferCertificate) )){
+                student.show = false;
+                return;
+            }
+
             // Custom filters check
             for (let x of this.getFilteredStudentParameterList()) {
                 let flag = x.showNone;
@@ -693,7 +701,7 @@ export class ViewAllComponent implements OnInit {
 
 		    ];
 		    this.studentFullProfileList.forEach(student => {
-		        if (student.selectProfile) {
+		        if (student.selectProfile && student.show) {
 		            template.push(this.getStudentDisplayInfo(student));
 		        }
 		    });

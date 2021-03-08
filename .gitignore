@@ -44,6 +44,7 @@ backend/stop_server.sh
 backend/helloworld_project/logs
 backend/helloworld_project/nginx.conf
 backend/helloworld_project/gunicorn.conf.py
+backend/helloworld_project/prod_conf.py
 backend/backup_database.sh
 
 *.DS_Store
