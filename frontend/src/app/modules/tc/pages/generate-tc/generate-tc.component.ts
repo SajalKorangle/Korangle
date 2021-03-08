@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 
 import { GenerateTCServiceAdapter } from './generate-tc.service.adapter';
+import { StudentFee } from './../../../../services/modules/fees/models/student-fee';
 
 import { TCService } from '@services/modules/tc/tc.service';
 import { StudentService } from '@services/modules/student/student.service';
@@ -17,7 +18,6 @@ import { PARAMETER_LIST, DPI_LIST } from './../../class/constants';
 import { GenerateTCCanvasAdapter } from './generate-tc.canvas.adapter';
 
 import * as jsPDF from 'jspdf';
-import { MatTreeFlatDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-generate-tc',
@@ -56,6 +56,7 @@ export class GenerateTCComponent implements OnInit {
   
   tcSettings: TransferCertificateSettings;
   tcSchoolFeeRule: SchoolFeeRule;
+  tcStudentFeeList: Array<StudentFee>;
   generatedTc: any[];
 
   DATA: {

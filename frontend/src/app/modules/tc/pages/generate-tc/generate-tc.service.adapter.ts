@@ -66,6 +66,11 @@ export class GenerateTCServiceAdapter {
                 id_in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
             }
 
+            const tc_student_fee_data = {
+                parentStudent__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
+                parentSchoolFeeRule__name: TC_SCHOOL_FEE_RULE_NAME
+            }
+
             const serviceList = [];
             if (data[6]) {
                 this.vm.tcSettings = data[6];
@@ -109,22 +114,18 @@ export class GenerateTCServiceAdapter {
 
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-                this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data), // 1
+                this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data),   // 1
+                this.vm.feeService.getObjectList(this.vm.feeService.student_fees, tc_student_fee_data), // 2
                 ...serviceList
             ]).then(value => {
                 this.vm.studentList = value[0];
+                this.vm.tcStudentFeeList = value[2];
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
                 this.vm.disableStudentsWithTC(value[1]);
                 this.vm.isLoading = false;
             }
-            //     , error => {
-            //     this.vm.isLoading = false;
-            // }
             );
         })
-        //     .catch(err => {
-        //     this.vm.isLoading = false;
-        // })
     }
 
     getDataForGeneratingTC() {
@@ -187,7 +188,7 @@ export class GenerateTCServiceAdapter {
         const serviceList = [];
         serviceList.push(this.vm.tcService.createObject(this.vm.tcService.transfer_certificate, tc_form));
 
-        if (this.vm.tcSettings.tcFee > 0) {
+        if (this.vm.tcSettings.tcFee > 0 && this.vm.tcStudentFeeList.find(fee=>fee.parentStudent == studentId)==undefined) {
 
             const student_tc_fee = {
                 parentStudent: studentId,
