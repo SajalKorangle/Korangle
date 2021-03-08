@@ -1,6 +1,6 @@
 import { GenerateTCComponent} from './generate-tc.component';
 import { StudentCustomParameterStructure } from './../../class/constants';
-import { TC_SCHOOL_FEE_RULE_NAME } from './../../class/constants_tc';
+import { TC_SCHOOL_FEE_RULE_NAME, DEFAULT_TC_SETTINGS } from './../../class/constants_tc';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 
 export class GenerateTCServiceAdapter {
@@ -57,8 +57,6 @@ export class GenerateTCServiceAdapter {
             this.vm.DATA.data.classList = data[3];
             this.vm.DATA.data.divisionList = data[4];
             this.vm.DATA.data.sessionList = data[5];
-            this.vm.tcSettings = data[6];
-            this.vm.DATA.certificateNumber = this.vm.tcSettings.nextCertificateNumber;
 
             const request_student_data = {
                 id__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
@@ -68,32 +66,65 @@ export class GenerateTCServiceAdapter {
                 id_in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
             }
 
-            const request_tc_school_fee_rule = {
-                parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                name: TC_SCHOOL_FEE_RULE_NAME,
-                parentFeeType: this.vm.tcSettings.parentFeeType
+            const serviceList = [];
+            if (data[6]) {
+                this.vm.tcSettings = data[6];
+            }
+            else {  // settings is not initilized
+                this.vm.tcSettings = new DEFAULT_TC_SETTINGS(this.vm.user.activeSchool.dbId);
+                const defaultTCSettings = new DEFAULT_TC_SETTINGS(this.vm.user.activeSchool.dbId);
+                const tcSettingsInitilization = this.vm.tcService.createObject(this.vm.tcService.tc_settings, defaultTCSettings).then(savedTcSettings => {
+                    this.vm.tcSettings = savedTcSettings;
+                });
+                serviceList.push(tcSettingsInitilization);
+            }
+
+            this.vm.DATA.certificateNumber = this.vm.tcSettings.nextCertificateNumber;
+
+            if (this.vm.tcSettings.tcFee > 0) {
+                const request_tc_school_fee_rule = {
+                    parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                    name: TC_SCHOOL_FEE_RULE_NAME,
+                    parentFeeType: this.vm.tcSettings.parentFeeType,
+                };
+                const tc_fee_rule_request = this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule).then(tcSchoolFeeRule => {
+                    if (!tcSchoolFeeRule) {    // is school Fee Rule is not present
+                        const newSchoolFeeRule = {
+                            name: TC_SCHOOL_FEE_RULE_NAME,
+                            parentFeeType: this.vm.tcSettings.parentFeeType,
+                            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                            isAnnually: true,
+                            aprilAmount: this.vm.tcSettings.tcFee
+                        }
+                        this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(savedSchoolFeeRule => {
+                            this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
+                        })
+                    }
+                    else {
+                        this.vm.tcSchoolFeeRule = tcSchoolFeeRule;
+                    }
+                });
+                serviceList.push(tc_fee_rule_request);
             }
 
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
                 this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data), // 1
-                this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule),  //  2
+                ...serviceList
             ]).then(value => {
                 this.vm.studentList = value[0];
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
                 this.vm.disableStudentsWithTC(value[1]);
-                if (this.vm.tcSettings.tcFee > 0 && !value[2]) {
-                    alert('Update Setings in Settings Page');
-                    return;
-                }
-                this.vm.tcSchoolFeeRule = value[2];
                 this.vm.isLoading = false;
-            }, error => {
-                this.vm.isLoading = false;
-            });
-        }).catch(err => {
-            this.vm.isLoading = false;
+            }
+            //     , error => {
+            //     this.vm.isLoading = false;
+            // }
+            );
         })
+        //     .catch(err => {
+        //     this.vm.isLoading = false;
+        // })
     }
 
     getDataForGeneratingTC() {

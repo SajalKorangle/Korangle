@@ -17,6 +17,7 @@ import { PARAMETER_LIST, DPI_LIST } from './../../class/constants';
 import { GenerateTCCanvasAdapter } from './generate-tc.canvas.adapter';
 
 import * as jsPDF from 'jspdf';
+import { MatTreeFlatDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-generate-tc',
@@ -278,12 +279,13 @@ export class GenerateTCComponent implements OnInit {
     }
 
     this.tcSettings.nextCertificateNumber = this.DATA.certificateNumber;
-    serviceList.push(this.serviceAdapter.updateTcSettings());
 
-    Promise.all(serviceList).then(tc_list => {
-      this.disableStudentsWithTC(tc_list);
-      this.isLoading = false;
-    });
+    Promise.all([
+      Promise.all(serviceList).then(tc_list => {
+        this.disableStudentsWithTC(tc_list);
+      }),
+      this.serviceAdapter.updateTcSettings()
+    ]).then(res => this.isLoading = false);
   }
 
 }
