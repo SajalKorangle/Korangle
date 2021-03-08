@@ -46,7 +46,7 @@ class TransferCertificateSettings(models.Model):
     tcFee = models.IntegerField(default=0)  # For fee collection
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, null=True)
     
-    lastCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
+    nextCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
 @receiver(post_save, sender=School)
 def newTcSettngs(sender, newSchool, **kwargs):

@@ -148,6 +148,22 @@ export class GenerateTCComponent implements OnInit {
             }
         });
     });
+
+    const divisionPerClassCount = {}; // count of divisions in each class
+    this.classSectionList.forEach(cs => {
+      if (divisionPerClassCount[cs.class.id])
+        divisionPerClassCount[cs.class.id] += 1;
+      else
+        divisionPerClassCount[cs.class.id] = 1;
+    });
+
+    this.classSectionList = this.classSectionList.map(cs => { // showDivision based of division count per class
+      if (divisionPerClassCount[cs.class.id] == 1) {
+        return { ...cs, showDivision: false };
+      } else {
+        return { ...cs, showDivision: true };
+      }
+    })
   }
 
   populateExtraFieldsFromLayout(): void{
@@ -262,7 +278,7 @@ export class GenerateTCComponent implements OnInit {
       doc.save(this.selectedLayout.name + '.pdf');
     }
 
-    this.tcSettings.lastCertificateNumber = this.DATA.certificateNumber-1;
+    this.tcSettings.nextCertificateNumber = this.DATA.certificateNumber;
     serviceList.push(this.serviceAdapter.updateTcSettings());
 
     Promise.all(serviceList).then(tc_list => {

@@ -3,5 +3,5 @@ export class TransferCertificateSettings {
     tcFee: number = 0;
     parentFeeType: number = null;
     
-    lastCertificateNumber: number = 0;
+    nextCertificateNumber: number = 0;
 }

@@ -1,14 +1,14 @@
-import { TCLogbookComponent } from './tc-logbook.component';
+import { IssueTCComponent } from './issue-tc.component'
 
-export class TCLogbookServiceAdapter {
+export class IssueTCServiceAdapter{
 
-    vm: TCLogbookComponent
-
-    constructor(vm: TCLogbookComponent) {
+    vm: IssueTCComponent;
+    
+    constructor(vm: IssueTCComponent){
         this.vm = vm;
     }
-    
-    initializeData() {
+
+    initilizeData() {
         this.vm.isLoading = true;
 
         const request_student_section_data = {
@@ -27,6 +27,7 @@ export class TCLogbookServiceAdapter {
 
             const request_tc_data = {
                 parentStudent__in: data[0].map(ss => ss.parentStudent).join(','),
+                status: 'Generated'
             }
 
             const request_student_data = {
@@ -37,13 +38,10 @@ export class TCLogbookServiceAdapter {
             Promise.all([
                 this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data),   // 0
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 1
-                this.vm.employeeService.getObjectList(this.vm.employeeService.employees, {}),   // 2
             ]).then(value => {
                 this.vm.tcList = value[0];
                 this.vm.studentList = value[1];
-                this.vm.employeesList = value[2];
                 this.vm.populateStudentSectionWithTC();
-                this.vm.selectAllClasses();
                 this.vm.isLoading = false;
             })
         });

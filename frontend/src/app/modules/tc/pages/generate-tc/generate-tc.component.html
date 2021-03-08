@@ -21,7 +21,7 @@
                             <mat-checkbox [ngModel]="classSection.selected"
                                             (ngModelChange)="unselectAllClasses(); classSection.selected=$event;  handleFilteredStudentSectionList()"
                                             (click)="$event.stopPropagation();">
-                                {{classSection.class.name}}, {{classSection.section.name}}
+                                {{classSection.class.name}}{{classSection.showDivision?', '+classSection.section.name:''}}
                             </mat-checkbox>
                         </mat-option>
                     </ng-container>

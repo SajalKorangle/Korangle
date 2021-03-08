@@ -22,9 +22,12 @@ export class GenerateTCServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId
         };
         const request_student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        const request_next_session_student_section_data = {
+            parentSession: this.vm.user.activeSchool.currentSessionDbId+1,
+        }
 
         const request_tc_settings = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -34,21 +37,28 @@ export class GenerateTCServiceAdapter {
         this.vm.isLoading = true;
         Promise.all([
             this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, tc_layouts_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1\
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
-            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 5
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_next_session_student_section_data), // 2
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 3
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 4
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 5
+            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 6
         ]).then(data => { 
             this.vm.tcLayoutList = data[0];
-            this.vm.studentSectionList = data[1];
-            this.vm.classList = data[2];
-            this.vm.divisionList = data[3];
-            this.vm.DATA.data.classList = data[2];
-            this.vm.DATA.data.divisionList = data[3];
-            this.vm.DATA.data.sessionList = data[4];
-            this.vm.tcSettings = data[5];
-            this.vm.DATA.certificateNumber = this.vm.tcSettings.lastCertificateNumber + 1;
+            this.vm.studentSectionList = data[1].filter(ss => { // students who has not been promoted to next session
+                const studentId = ss.parentStudent;
+                const nextSessionSS = data[2].find(ssNextSession => ssNextSession.parentStudent == studentId);
+                if (nextSessionSS)
+                    return false;
+                return true;
+            });
+            this.vm.classList = data[3];
+            this.vm.divisionList = data[4];
+            this.vm.DATA.data.classList = data[3];
+            this.vm.DATA.data.divisionList = data[4];
+            this.vm.DATA.data.sessionList = data[5];
+            this.vm.tcSettings = data[6];
+            this.vm.DATA.certificateNumber = this.vm.tcSettings.nextCertificateNumber;
 
             const request_student_data = {
                 id__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),

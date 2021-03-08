@@ -66,7 +66,7 @@ export class DesignTCServiceAdapter {
             this.vm.DATA.data.sessionList = data[6];
             this.vm.publicLayoutList = data[7];
             this.vm.DATA.data.classSectionSignatureList = data[8];
-            this.vm.DATA.certificateNumber = data[10].lastCertificateNumber+1;
+            this.vm.DATA.certificateNumber = data[10].nextCertificateNumber;
             // console.log('DATA: ', this.vm.DATA);
             const request_student_data = {
                 id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
