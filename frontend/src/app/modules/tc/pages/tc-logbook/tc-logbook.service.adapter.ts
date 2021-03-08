@@ -30,9 +30,9 @@ export class TCLogbookServiceAdapter {
             };
 
             const request_student_data = {
-                id__in: this.vm.tcList.map(tc=>tc.parentStudent).join(','),
-                fields__korangle: 'id,name,fathersName,scholarNumber',
-            }
+                id__in: this.vm.tcList.map(tc => tc.parentStudent).join(','),
+                fields__korangle: 'id,name,fathersName,scholarNumber,dateOfAdmission',
+            };
             const emp_ids = [];
             this.vm.tcList.forEach(tc => {
                 emp_ids.push(tc.generatedBy);
@@ -40,11 +40,11 @@ export class TCLogbookServiceAdapter {
                     emp_ids.push(tc.issuedBy);
                 if (tc.cancelledBy)
                     emp_ids.push(tc.cancelledBy);
-            })
+            });
             const employee_request = {
                 id__in: emp_ids.join(','),
                 fields__korangle: 'id,name',
-            }
+            };
 
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 0

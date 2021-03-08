@@ -24,10 +24,12 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         isLeavingSchoolBecause: string,
         issueDate: string,
         leavingDate: string,
+        lastClassPassed: string,
     } = {
             isLeavingSchoolBecause: 'N/A',
             issueDate: null,
             leavingDate: null,
+            lastClassPassed: 'N/A',
         };
     
     
@@ -58,6 +60,7 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
                 isLeavingSchoolBecause: 'N/A',
                 issueDate: null,
                 leavingDate: null,
+                lastClassPassed: 'N/A',
             }
          }
     }

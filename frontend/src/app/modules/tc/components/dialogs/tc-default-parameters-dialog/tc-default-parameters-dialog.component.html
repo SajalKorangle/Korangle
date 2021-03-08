@@ -6,7 +6,6 @@
             <mat-label>Is Leaving School Because</mat-label>
             <textarea matInput cdkTextareaAutosize [(ngModel)]="ca.extraFields.isLeavingSchoolBecause"></textarea>
         </mat-form-field>
-        <br/>
 
         <mat-form-field>
             <mat-label>Leaving Date</mat-label>
@@ -16,6 +15,11 @@
         <mat-form-field>
             <mat-label>Issue Date</mat-label>
             <input matInput type="date" [(ngModel)]="ca.extraFields.issueDate">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Last Class Passed</mat-label>
+            <input matInput type="text" [(ngModel)]="ca.extraFields.lastClassPassed">
         </mat-form-field>
             
     </div>

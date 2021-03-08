@@ -79,6 +79,7 @@ export class GenerateTCComponent implements OnInit {
     leavingDate: string,
     isLeavingSchoolBecause: string,
     certificateNumber: number,
+    lastClassPassed: string,
   } = {
     studentId: null,
     currentSession: null,
@@ -99,6 +100,7 @@ export class GenerateTCComponent implements OnInit {
       issueDate: null,
       leavingDate: null,
       isLeavingSchoolBecause: '',
+      lastClassPassed: '',
     }
   
   canvasAdapter: GenerateTCCanvasAdapter;
@@ -131,6 +133,7 @@ export class GenerateTCComponent implements OnInit {
 
     this.canvasAdapter = new GenerateTCCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
+    console.log('comp: ', this);
   }
 
   populateClassSectionList(classList, divisionList):void {

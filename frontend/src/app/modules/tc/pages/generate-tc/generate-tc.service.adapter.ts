@@ -174,8 +174,14 @@ export class GenerateTCServiceAdapter {
         const tc_object = new TransferCertificateNew();
         tc_object.parentStudent = studentId;
         tc_object.certificateNumber = certificateNumber;
-        tc_object.issueDate = this.vm.DATA.issueDate;
-        tc_object.leavingDate = this.vm.DATA.leavingDate;
+        if (this.vm.DATA.issueDate)
+            tc_object.issueDate = this.vm.DATA.issueDate;
+        else
+            delete tc_object.issueDate;
+        if (this.vm.DATA.leavingDate)
+            tc_object.leavingDate = this.vm.DATA.leavingDate;
+        else
+            delete tc_object.leavingDate;
         tc_object.leavingReason = this.vm.DATA.isLeavingSchoolBecause;
         tc_object.status = 'Generated';
         tc_object.generatedBy = this.vm.user.activeSchool.employeeId

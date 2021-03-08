@@ -2149,5 +2149,6 @@ export const PARAMETER_LIST = [
     TCParameters.getStructure('Is Leaving School Because', 'isLeavingSchoolBecause'),
     TCParameters.getStructure('Issue date', 'issueDate', CanvasDate),
     TCParameters.getStructure('Leaving Date', 'leavingDate', CanvasDate),
+    TCParameters.getStructure('Last Class Passed', 'lastClassPassed'),
 
 ]

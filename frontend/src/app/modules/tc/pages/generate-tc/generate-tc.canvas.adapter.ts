@@ -16,10 +16,12 @@ export class GenerateTCCanvasAdapter extends CanvasAdapterBase implements Canvas
         isLeavingSchoolBecasue: string,
         issueDate: string,
         leavingDate: string,
+        lastClassPassed:string,
     } = {
             isLeavingSchoolBecasue: 'N/A',
             issueDate: null,
             leavingDate: null,
+            lastClassPassed: 'N/A',
         };
  
 
