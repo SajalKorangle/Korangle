@@ -26,7 +26,6 @@ docutils==0.14
 entrypoints==0.2.3
 factory-boy==2.10.0
 Faker==0.8.12
-freeze==1.0.10
 gunicorn==19.9.0
 h2==2.6.2
 hpack==3.0.0

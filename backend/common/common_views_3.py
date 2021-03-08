@@ -5,8 +5,6 @@ from decorators import user_permission_3
 
 import json
 
-from django.db.models import OneToOneRel
-
 from rest_framework import serializers
 
 from common.common_serializer_interface_3 import get_object, get_list, create_object, create_list, \
@@ -38,7 +36,6 @@ def get_model_serializer(Model, fields__korangle, validator):
         class Meta:
             model = Model
             fields = '__all__'
-            # fields = list(map(lambda o: o.name, filter(lambda f : f.concrete or isinstance(f, OneToOneRel) , Model._meta.get_fields())))  # should not run on every instance, after every migration is enough
 
     return ModelSerializer
 
