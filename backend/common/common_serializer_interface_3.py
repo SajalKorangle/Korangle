@@ -31,7 +31,7 @@ def get_list(data, query_set, ModelSerializer):
                 count_var = ''
             elif attr[-4:] == '__in':
                 if data[attr] != '':
-                    filter_var = {attr: list(map(int, data[attr].split(',')))}
+                    filter_var = {attr: list(data[attr].split(','))}
                 else:
                     filter_var = {attr: []}
             elif attr[-4:] == '__or':

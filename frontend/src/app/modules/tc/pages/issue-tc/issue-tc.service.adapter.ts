@@ -9,7 +9,7 @@ export class IssueTCServiceAdapter{
         this.vm = vm;
     }
 
-    initilizeData() {
+    initializeData() {
         this.vm.isLoading = true;
 
         const request_tc_data = {

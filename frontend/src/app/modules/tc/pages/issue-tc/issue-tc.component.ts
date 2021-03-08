@@ -68,8 +68,7 @@ export class IssueTCComponent implements OnInit {
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new IssueTCServiceAdapter(this);
-    this.serviceAdapter.initilizeData();
-    console.log('comp: ', this)
+    this.serviceAdapter.initializeData();
   }
 
   populateClassSectionList(classList, divisionList):void {
