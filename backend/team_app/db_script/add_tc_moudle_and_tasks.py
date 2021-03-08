@@ -5,7 +5,7 @@ def add_tc_module_and_tasks(apps, schema_editor):
     
     tc_module = Module.objects.create(path='tc',
                                             title='T.C.',
-                                            icon='video_library',
+                                            icon='description',
                                             orderNumber=10,
                                             parentBoard=None)
 

@@ -30,11 +30,6 @@ const routes: Routes = [
         data: {moduleName: 'tc'},
     },
     {
-        path: 'regenerate_tc',
-        loadChildren: 'app/modules/tc/pages/regenerate-tc/regenerate-tc.module#RegenerateTCModule',
-        data: {moduleName: 'tc'},
-    },
-    {
         path: 'tc_logbook',
         loadChildren: 'app/modules/tc/pages/tc-logbook/tc-logbook.module#TCLogbookModule',
         data: {moduleName: 'tc'},
