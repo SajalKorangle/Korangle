@@ -1,5 +1,6 @@
 import { environment } from '../../../../environments/environment';
 import { Constants } from '../../../classes/constants';
+import { DataStorage } from './../../../classes/data-storage';
 
 const ERROR_REPORTING_URL = '/errors/report-error';
 
@@ -15,6 +16,7 @@ export function reportError(errorSource: string, url: string, description: strin
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization' : 'JWT ' + DataStorage.getInstance().getUser().jwt,
             },
             body: JSON.stringify(body)
         }).then(response => {

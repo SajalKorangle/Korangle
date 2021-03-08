@@ -41,6 +41,8 @@ import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 import { LocalDatePipe } from './../pipes/local-date-format.pipe';
+import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
+
 
 @NgModule({
     declarations: [
@@ -56,6 +58,7 @@ import { LocalDatePipe } from './../pipes/local-date-format.pipe';
         DateInWordsPipe,
         IndianCurrencyPipe,
         LocalDatePipe,
+        NumberAndStringPipe,
 
         EmployeeFilterComponent,
 
@@ -107,6 +110,7 @@ import { LocalDatePipe } from './../pipes/local-date-format.pipe';
         DateInWordsPipe,
         IndianCurrencyPipe,
         LocalDatePipe,
+        NumberAndStringPipe,
 
         CommonModule,
         FormsModule,
