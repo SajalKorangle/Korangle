@@ -1,6 +1,6 @@
 <div class="row col-md-12">
     <span>
-        Account - {{account.title}}
+        Account - {{account.title}}&nbsp;A/c
     </span>
     <span style="float: right;">
         Current Balance: {{account.balance}} 
@@ -28,7 +28,7 @@
             <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
             <td *ngIf="columnFilter.accounts.value" class="text-left" style="vertical-align: top;" >
                 <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
-                    <span>{{account.accountTitle}}</span><br>
+                    <span>{{account.accountTitle}}&nbsp;A/c</span><br>
                 </div>
             </td>
             <td *ngIf="columnFilter.debitAmount.value" class="text-left" style="vertical-align: top;" >

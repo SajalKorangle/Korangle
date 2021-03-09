@@ -17,10 +17,6 @@
             <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
             <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
             <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
-            <!-- <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
-            <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th>
-            <th *ngIf="columnFilter.update" class="text-center"><span>Update</span></th>
-            <th *ngIf="columnFilter.delete" class="text-center"><span>Delete</span></th> -->
         </tr>
     </thead>
     <tbody>
@@ -31,36 +27,19 @@
             <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top;" >
                 <div *ngFor="let account of transaction.debitAccounts;" style="margin-bottom: 10px;">
                     <span>{{account.account}}</span><br>
-                    <span style="color: rgba(76, 175, 80, 1);">{{account.amount}}</span>
+                    <span style="color: rgba(76, 175, 80, 1);">{{account.amount}}&nbsp;A/c</span>
                 </div>
             </td>
             <td *ngIf="columnFilter.creditAccount.value" class="text-left" style="vertical-align: top;">
                 <div *ngFor="let account of transaction.creditAccounts" style="margin-bottom: 10px;">
                     <span>{{account.account}}</span><br>
-                    <span style="color:rgba(86, 142, 174, 1)">{{account.amount}}</span>
+                    <span style="color:rgba(86, 142, 174, 1)">{{account.amount}}&nbsp;A/c</span>
                 </div>
             </td>
             <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
             <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
             <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
-            <!-- <td *ngIf="columnFilter.quotation.value" class="text-center">
-                <i *ngIf="transaction.quotationImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.quotationImages, 0, 0);">
-                    insert_photo
-                </i>
-                <i *ngIf="transaction.quotationImages.length == 0">
-                    No Image
-                </i>
-            </td>
-            <td *ngIf="columnFilter.bill.value" class="text-center">  
-                <i *ngIf="transaction.billImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.billImages, 0, 0)">
-                    insert_photo
-                </i>
-                <i *ngIf="transaction.billImages.length == 0">
-                    No Image
-                </i>
-            </td>
-            <td *ngIf="columnFilter.update" class="text-center">Update</td>
-            <td *ngIf="columnFilter.delete" class="text-center">Delete</td> -->
+            
         </tr>
         
     </tbody>
