@@ -43,7 +43,7 @@ class Accounts(models.Model):
         (ACCOUNT_TYPE, 'ACCOUNT'),
     )
     accountType = models.TextField(null=False, choices=CHOICES, default=ACCOUNT_TYPE)
-    title = models.TextField(null=True, verbose_name='title')
+    title = models.TextField(null=False, verbose_name='title')
     
 
     class Meta:

@@ -1,4 +1,7 @@
-<h2 mat-dialog-title>Use For Transaction</h2>
+<h2 mat-dialog-title>
+    Use For Transaction
+    <i class="material-icons" mat-dialog-close style="float: right;cursor:pointer">close</i>
+</h2>
 <mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw;">
     
     <div class="row col-md-12">
@@ -9,7 +12,7 @@
                 </div>
                 <div class="col-md-9">
                     <div *ngFor = "let account of data.approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                        <span style="font-size: 14px;">{{account.account}}</span><br>
+                        <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br>
                         <mat-form-field style="float: left;">
                             <input type="number" min="0.01" matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event;" placeholder="Amount">
                         </mat-form-field>
@@ -24,7 +27,7 @@
                 </div>
                 <div class="col-md-9">
                     <div *ngFor = "let account of data.approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                        <span style="font-size: 14px;">{{account.account}}</span><br>
+                        <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br>
                         <mat-form-field style="float: left;">
                             <input type="number" min="0.01" matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event;" placeholder="Amount">
                         </mat-form-field>
@@ -79,6 +82,5 @@
 
 </mat-dialog-content>
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close class="btn"  cdkFocusInitial>Close</button>
-    <button [disabled]="isAmountMoreThanApproved() || isAmountUnequal()" mat-button class="btn" (click)="addTransaction()">Add</button>
+    <button [disabled]="isAmountMoreThanApproved() || isAmountUnequal()" mat-button class="custom-button" (click)="addTransaction()">Add</button>
 </div>
