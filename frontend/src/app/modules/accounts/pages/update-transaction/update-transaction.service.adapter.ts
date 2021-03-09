@@ -28,10 +28,16 @@ export class UpdateTransactionServiceAdapter {
             parentEmployee: this.vm.user.activeSchool.employeeId,
         }
 
+        let request_account_title_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            accountType: 'ACCOUNT',
+        }
+
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
         ]).then(value =>{
             // console.log(value);
             if(value[2].length > 0){
@@ -41,11 +47,16 @@ export class UpdateTransactionServiceAdapter {
             this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             console.log(this.vm.minimumDate, this.vm.maximumDate);
             this.vm.accountsList = value[0];
+            this.populateAccountTitle(value[3]);
             this.vm.isLoading = false;
         });
-        
-    
+    }
 
+    populateAccountTitle(accountTitleList){
+        this.vm.accountsList.forEach(acc =>{
+            acc['title'] = accountTitleList.find(account => account.id == acc.parentAccount).title;
+        })
+        console.log(this.vm.accountsList);
     }
 
     findTransactionByVNumber(event: any){

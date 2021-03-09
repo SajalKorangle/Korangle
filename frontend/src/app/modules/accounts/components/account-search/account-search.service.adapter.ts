@@ -52,11 +52,11 @@ export class AccountSearchServiceAdapter {
     initialiseAccountList(accountList: any, accountSessionList: any){
         this.vm.accountsList = [];
         accountSessionList.forEach(account =>{
-            let type = accountList.find(accounts => accounts.id == account.parentAccount).accountType;
-            let tempData = JSON.parse(JSON.stringify(account));
-            tempData['type'] = type;
-            if(type == 'ACCOUNT' || (type == 'GROUP' && this.vm.includeGroup == true)){
-                this.vm.accountsList.push(tempData);  
+            let acc = accountList.find(accounts => accounts.id == account.parentAccount);
+            account['type'] = acc.accountType;
+            account['title'] = acc.title;
+            if(acc.accountType == 'ACCOUNT' || (acc.accountType == 'GROUP' && this.vm.includeGroup == true)){
+                this.vm.accountsList.push(account);  
             }
         })
         return ;

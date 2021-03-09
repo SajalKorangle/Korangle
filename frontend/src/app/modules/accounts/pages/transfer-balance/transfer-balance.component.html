@@ -29,7 +29,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionAccountsList['Expenses']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 10px 5px 24px;">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <mat-checkbox 
                                     [disabled]="isElementDisabled(element)"
                                     [checked]="isElementSelected(element)" 
@@ -56,7 +56,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionAccountsList['Income']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 10px 5px 24px;">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <mat-checkbox 
                                     [disabled]="isElementDisabled(element)" 
                                     [checked]="isElementSelected(element)" 
@@ -85,7 +85,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionAccountsList['Assets']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 10px 5px 24px;">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <mat-checkbox 
                                     [disabled]="isElementDisabled(element)" 
                                     [checked]="isElementSelected(element)" 
@@ -115,7 +115,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionAccountsList['Liabilities']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 10px 5px 24px;">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <mat-checkbox 
                                     [disabled]="isElementDisabled(element)" 
                                     [checked]="isElementSelected(element)" 
@@ -139,17 +139,15 @@
 
         <div class="row col-md-12" *ngIf="selectedSession == nextSession">
             <mat-card>
-                
                 <mat-expansion-panel class="mat-elevation-z0" >
                     <mat-expansion-panel-header>
                         <div style="width: 100%;">
                             <span>Expenses</span>
-                            
                         </div>
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of nextSessionAccountsList['Expenses']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 0px 5px 22px">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <span class="account-font" style="float: right; margin-right: 15px">Cr: {{element.balance}}</span>
                         </div>
                         <div *ngIf="element.type == 'GROUP' ">
@@ -170,7 +168,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of nextSessionAccountsList['Income']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 0px 5px 22px">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <span class="account-font" style="float: right; margin-right: 15px">Cr: {{element.balance}}</span>
                         </div>
                         <div *ngIf="element.type == 'GROUP' ">
@@ -193,7 +191,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of nextSessionAccountsList['Assets']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 0px 5px 22px">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <span class="account-font" style="float: right; margin-right: 15px">Cr: {{element.balance}}</span>
                         </div>
                         <div *ngIf="element.type == 'GROUP' ">
@@ -217,7 +215,7 @@
                     </mat-expansion-panel-header>
                     <div class="mat-expansion-panel-body" *ngFor="let element of nextSessionAccountsList['Liabilities']" >
                         <div *ngIf="element.type == 'ACCOUNT' " style="margin: 5px 0px 5px 22px">
-                            {{element.title}}
+                            {{element.title}}&nbsp;A/c
                             <span class="account-font" style="float: right; margin-right: 15px">Cr: {{element.balance}}</span>
                         </div>
                         <div *ngIf="element.type == 'GROUP' ">

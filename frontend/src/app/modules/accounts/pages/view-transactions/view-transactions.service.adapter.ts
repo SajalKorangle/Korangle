@@ -79,7 +79,7 @@ export class ViewTransactionsServiceAdapter {
             account['title'] = acc.title;
             if(account['type'] == 'ACCOUNT'){
                 this.vm.accountsList.push(account);
-            }
+            }   
             else{
                 this.vm.groupsList.push(account);
             }

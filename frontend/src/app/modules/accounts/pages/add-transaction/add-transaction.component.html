@@ -23,7 +23,7 @@
                                 (ngModelChange)="account.debitAccount = $event; account" [disabled]="transaction.approvalId != null">
                                 <mat-option *ngFor="let account of accountsList"
                                     [value]="account">
-                                    {{account.title}}
+                                    {{account.title}}&nbsp;A/c
                                 </mat-option>   
                             </mat-select>
                         </mat-form-field>
@@ -53,7 +53,7 @@
                                 (ngModelChange)="account.creditAccount = $event">
                                 <mat-option *ngFor="let account of accountsList"
                                     [value]="account">
-                                    {{account.title}}
+                                    {{account.title}}&nbsp;A/c
                                 </mat-option>   
                             </mat-select>
                         </mat-form-field>

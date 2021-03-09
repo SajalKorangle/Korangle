@@ -25,6 +25,7 @@
 
     <div class="row" *ngIf="!isLoading">
         
+        
         <div class="col-md-2">
             <mat-form-field >
                 <mat-select placeholder="Select Columns">
@@ -39,7 +40,7 @@
             <mat-form-field >
                 <mat-select placeholder="Filter By A/C">
                     <mat-option *ngFor="let account of filterAccountsList">
-                        <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}&nbsp;A/c</mat-checkbox>
                     </mat-option>   
                 </mat-select>
             </mat-form-field>
@@ -104,13 +105,13 @@
                 <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
                 <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top;" >
                     <div *ngFor="let account of transaction.debitAccounts;" style="margin-bottom: 10px;">
-                        <span>{{account.account}}</span><br>
+                        <span>{{account.account}}&nbsp;A/c</span><br>
                         <span style="color: rgba(76, 175, 80, 1);">{{account.amount}}</span>
                     </div>
                 </td>
                 <td *ngIf="columnFilter.creditAccount.value" class="text-left" style="vertical-align: top;">
                     <div *ngFor="let account of transaction.creditAccounts" style="margin-bottom: 10px;">
-                        <span>{{account.account}}</span><br>
+                        <span>{{account.account}}&nbsp;A/c</span><br>
                         <span style="color:rgba(86, 142, 174, 1)">{{account.amount}}</span>
                     </div>
                 </td>
