@@ -43,6 +43,8 @@ class Accounts(models.Model):
         (ACCOUNT_TYPE, 'ACCOUNT'),
     )
     accountType = models.TextField(null=False, choices=CHOICES, default=ACCOUNT_TYPE)
+    title = models.TextField(null=True, verbose_name='title')
+    
 
     class Meta:
         db_table = 'accounts'
@@ -51,7 +53,6 @@ class AccountSession(models.Model):
     
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE, null=False, verbose_name='parentAccount', related_name='parentAccount')
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE, null=False, verbose_name='parentSession')
-    title = models.TextField(null=False, verbose_name='title')
     balance = models.IntegerField(null=True, blank=True, verbose_name='balance')
     parentGroup = models.ForeignKey(Accounts, null=True, verbose_name='parentGroup', related_name='parentGroup')
     parentHead = models.ForeignKey(Heads, null=False, verbose_name='parentHead')
@@ -126,7 +127,7 @@ class ApprovalImages(models.Model):
     QUOTATION_TYPE = 'QUOTATION'
     DOCUMENT_TYPE = (
         (BILL_TYPE, 'BILL'),
-        (QUOTATION_TYPE, 'QUOTATION'),
+        (QUOTATION_TYPE, 'QUOTATION'),  
     )
 
     imageType = models.TextField(null=False, choices=DOCUMENT_TYPE)

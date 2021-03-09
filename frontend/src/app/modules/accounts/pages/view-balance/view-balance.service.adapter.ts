@@ -64,9 +64,10 @@ export class ViewBalanceServiceAdapter {
         this.vm.accountsList = [];
         this.vm.groupsList = [];
         this.accountsSessionList.forEach(account =>{
-            let type = this.accountsList.find(accounts => accounts.id == account.parentAccount).accountType;
-            account['type'] = type;
-            if(type == 'ACCOUNT'){
+            let acc = this.accountsList.find(accounts => accounts.id == account.parentAccount);
+            account['type'] = acc.accountType;
+            account['title'] = acc.title;
+            if(acc.accountType == 'ACCOUNT'){
                 this.vm.accountsList.push(account);
             }
             else{
@@ -83,46 +84,47 @@ export class ViewBalanceServiceAdapter {
         let accountsSessionList = JSON.parse(JSON.stringify(this.accountsSessionList));
         let parentGroupsList = [];
         let individualAccountList = [];
-        // while(accountsSessionList.length > 0){
-            for(let i=0;i<accountsSessionList.length; i++){
-                let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
-                accountsSessionList[i]['type'] = type;
-                if(type == 'ACCOUNT'){
-                    // console.log('account' , accountsSessionList[i].title);
-                    if(accountsSessionList[i].parentGroup == null){
-                        // console.log('individual' , accountsSessionList[i].title);
-                        individualAccountList.push(accountsSessionList[i]);
+        for(let i=0;i<accountsSessionList.length; i++){
+            // let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
+            // accountsSessionList[i]['type'] = type;
+            let acc = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount);
+            accountsSessionList[i]['type'] = acc.accountType;
+            accountsSessionList[i]['title'] = acc.title;
+            if(acc.accountType == 'ACCOUNT'){
+                // console.log('account' , accountsSessionList[i].title);
+                if(accountsSessionList[i].parentGroup == null){
+                    // console.log('individual' , accountsSessionList[i].title);
+                    individualAccountList.push(accountsSessionList[i]);
+                    accountsSessionList.splice(i,1);
+                    i--;
+                }
+                else{
+                    let tempGroup = parentGroupsList.find(group => group.parentAccount == accountsSessionList[i].parentGroup);
+                    if(tempGroup == undefined){
+                        // console.log('parent Group Not Found');
+                        let parentGroupIndex =  accountsSessionList.map(function(e) { return e.parentAccount; }).indexOf(accountsSessionList[i].parentGroup);
+                        let parentGroupData = JSON.parse(JSON.stringify(accountsSessionList[parentGroupIndex]));
+                        // console.log('parent Group in all list', parentGroupData.title);
+                        
+                        parentGroupData['childs'] = [];
+                        parentGroupData.childs.push(accountsSessionList[i]);
+                        parentGroupsList.push(parentGroupData);
+                        accountsSessionList.splice(parentGroupIndex, 1);
+                        if(parentGroupIndex <= i){
+                            i--;
+                        }
                         accountsSessionList.splice(i,1);
                         i--;
                     }
                     else{
-                        let tempGroup = parentGroupsList.find(group => group.parentAccount == accountsSessionList[i].parentGroup);
-                        if(tempGroup == undefined){
-                            // console.log('parent Group Not Found');
-                            let parentGroupIndex =  accountsSessionList.map(function(e) { return e.parentAccount; }).indexOf(accountsSessionList[i].parentGroup);
-                            let parentGroupData = JSON.parse(JSON.stringify(accountsSessionList[parentGroupIndex]));
-                            // console.log('parent Group in all list', parentGroupData.title);
-                            
-                            parentGroupData['childs'] = [];
-                            parentGroupData.childs.push(accountsSessionList[i]);
-                            parentGroupsList.push(parentGroupData);
-                            accountsSessionList.splice(parentGroupIndex, 1);
-                            if(parentGroupIndex <= i){
-                                i--;
-                            }
-                            accountsSessionList.splice(i,1);
-                            i--;
-                        }
-                        else{
-                            // console.log('parent Group Found', tempGroup.title);
-                            tempGroup.childs.push(accountsSessionList[i]);
-                            accountsSessionList.splice(i,1);
-                            i--;
-                        }
+                        // console.log('parent Group Found', tempGroup.title);
+                        tempGroup.childs.push(accountsSessionList[i]);
+                        accountsSessionList.splice(i,1);
+                        i--;
                     }
                 }
             }
-        // }
+        }
 
         for(let i=0;i<accountsSessionList.length; i++){
             accountsSessionList[i]['childs'] = [];

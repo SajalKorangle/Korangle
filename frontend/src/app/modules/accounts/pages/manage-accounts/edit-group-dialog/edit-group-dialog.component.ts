@@ -42,9 +42,15 @@ export class EditGroupDialogComponent implements OnInit {
 
 
   editGroup(){
+    
+    let group_session_update_data = {
+      id: this.group.parentAccount,
+      title: this.group.title,
+    }
     console.log(this.group);
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.group),
+      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, group_session_update_data),
     ]).then(val =>{
       for(let i=0;i<this.data.vm.groupsList.length ;i++){
         if(this.data.vm.groupsList[i].id == this.group.id){

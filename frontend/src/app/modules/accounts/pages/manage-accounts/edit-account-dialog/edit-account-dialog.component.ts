@@ -43,11 +43,16 @@ export class EditAccountDialogComponent implements OnInit {
 
 
   editAccount(){
+    let account_session_update_data = {
+      id: this.account.parentAccount,
+      title: this.account.title,
+    }
     console.log(this.account);
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.account),
+      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data),
     ]).then(val =>{
-      
+      console.log(val);
       for(let i=0;i<this.data.vm.accountsList.length ;i++){
         if(this.data.vm.accountsList[i].id == this.account.id){
           this.data.vm.accountsList[i].title = this.account.title;
@@ -100,6 +105,7 @@ export class EditAccountDialogComponent implements OnInit {
     if(!confirm('Are you sure you want to delete this account?')){
       return ;
     }
+    
     console.log(this.account);
     Promise.all([
       this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.account),

@@ -74,8 +74,10 @@ export class ViewTransactionsServiceAdapter {
         this.vm.accountsList = [];
         this.vm.groupsList = [];
         sessionList.forEach(account =>{
-            let type = typeList.find(accounts => accounts.id == account.parentAccount).accountType;
-            if(type == 'ACCOUNT'){
+            let acc = typeList.find(accounts => accounts.id == account.parentAccount);
+            account['type'] = acc.accountType;
+            account['title'] = acc.title;
+            if(account['type'] == 'ACCOUNT'){
                 this.vm.accountsList.push(account);
             }
             else{

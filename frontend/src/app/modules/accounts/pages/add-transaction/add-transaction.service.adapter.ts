@@ -14,6 +14,12 @@ export class AddTransactionServiceAdapter {
     //initialize data
     initializeData(): void {
         this.vm.approvalsList = [];
+
+        let request_account_title_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            accountType: 'ACCOUNT',
+        }
+
         let request_account_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
             parentAccount__accountType: 'ACCOUNT',
@@ -28,11 +34,13 @@ export class AddTransactionServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_data),
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
         ]).then(value =>{
             console.log(value);
             this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
             this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             this.vm.accountsList = value[0];
+            this.populateAccountTitle(value[3]);
             if(value[1].length > 0){
                 this.vm.maximumPermittedAmount = value[1][0].restrictedAmount;
             }
@@ -48,7 +56,6 @@ export class AddTransactionServiceAdapter {
             }
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
-
             ]).then(val =>{let approval_id = [];
                 val[0].forEach(approval =>{
                     if(approval.parentTransaction == null){
@@ -73,6 +80,13 @@ export class AddTransactionServiceAdapter {
         },error =>{
             this.vm.isLoading = false;
         })
+    }
+
+    populateAccountTitle(accountTitleList){
+        this.vm.accountsList.forEach(acc =>{
+            acc['title'] = accountTitleList.find(account => account.id == acc.parentAccount).title;
+        })
+        console.log(this.vm.accountsList);
     }
 
     initialiseApprovalData(approvalList, approvalAccounts, approvalImages){

@@ -15,7 +15,9 @@ export class GrantApprovalServiceAdapter {
         this.vm.loadMoreApprovals = true;
         this.vm.isLoadingApproval = true;
 
-        
+        let request_account_title_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        }
 
         let request_account_session_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
@@ -24,15 +26,18 @@ export class GrantApprovalServiceAdapter {
         }
         
         let employee_data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
+            accountType: 'ACCOUNT',
         };
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
         ]).then(value =>{
             this.vm.accountsList = value[0];
+            this.populateAccountTitle(value[3]);
             this.vm.employeeList = value[1];
             
             this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
@@ -72,6 +77,13 @@ export class GrantApprovalServiceAdapter {
             this.vm.isLoadingApproval = false;
         })
         
+    }
+
+    populateAccountTitle(accountTitleList){
+        this.vm.accountsList.forEach(acc =>{
+            acc['title'] = accountTitleList.find(account => account.id == acc.parentAccount).title;
+        })
+        console.log(this.vm.accountsList);
     }
 
     loadMoreApprovals(){
