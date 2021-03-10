@@ -39,6 +39,9 @@ export class UpdateTransactionComponent implements OnInit {
     searchType = this.searchTypeList[0];
     minimumDate: any;
     maximumDate: any;
+
+    lockAccounts: any;
+
     constructor( 
       public accountsService: AccountsService,
       public schoolService: SchoolService,

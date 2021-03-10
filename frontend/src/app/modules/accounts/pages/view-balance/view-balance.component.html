@@ -333,7 +333,7 @@
                             No Image
                         </i>
                     </td>
-                    <td *ngIf="canUserUpdate()"  class="text-center" >
+                    <td *ngIf="canUserUpdate() && !isAccountLocked()"  class="text-center" >
                         <span style="color: rgba(255, 152, 0, 1);cursor: pointer" *ngIf="transaction.approvalId == null" (click)="openUpdateTransactionDialog(transaction)">
                             <u>Update</u>
                         </span>

@@ -1,7 +1,12 @@
 
 
-<div class="card-content table-responsive" *ngIf="!isLoading">
-    
+<div class="card-content table-responsive" *ngIf="!isLoading">    
+    <div *ngIf="lockAccounts">
+        <span  style="color: red;">
+            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
+                All Accounts has been locked for this session . No further changes can be done in accounts in this session. </b></h4></span>
+    </div>
+    <div *ngIf="!lockAccounts">
     <div *ngIf="displayWholeList == true;">
         <div class="row">
             <div class="col-md-9">
@@ -264,7 +269,7 @@
                             ></group-hierarchy>
         </div>
     </div>
-
+    </div>
     
 </div>
 

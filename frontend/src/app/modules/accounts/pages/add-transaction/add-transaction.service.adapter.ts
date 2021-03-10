@@ -13,73 +13,93 @@ export class AddTransactionServiceAdapter {
 
     //initialize data
     initializeData(): void {
-        this.vm.approvalsList = [];
-
-        let request_account_title_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            accountType: 'ACCOUNT',
-        }
-
-        let request_account_data = {
-            parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
-            parentAccount__accountType: 'ACCOUNT',
-            parentSession: this.vm.user.activeSchool.currentSessionDbId, 
-        }
-        let employee_data = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
-        }
         this.vm.isLoading = true;
+        let lock_accounts_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+        this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data).then(value=>{
+            if (value.length == 1) {
+                this.vm.lockAccounts = value[0];
+                this.vm.isLoading = false;
+            } else if (value.length == 0) {
+                this.vm.lockAccounts = null;
+                this.vm.approvalsList = [];
 
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_data),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
-        ]).then(value =>{
-            console.log(value);
-            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            this.vm.accountsList = value[0];
-            this.populateAccountTitle(value[3]);
-            if(value[1].length > 0){
-                this.vm.maximumPermittedAmount = value[1][0].restrictedAmount;
-            }
-            else{
-                this.vm.maximumPermittedAmount = null;
-            }
-            let granted_approval_data = {
-                'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
-                'requestStatus': 'APPROVED',
-                'parentTransaction': 'null__korangle',
-                'requestedGenerationDateTime__gte': this.vm.minimumDate,
-                'requestedGenerationDateTime__lte': this.vm.maximumDate,
-            }
-            Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
-            ]).then(val =>{let approval_id = [];
-                val[0].forEach(approval =>{
-                    if(approval.parentTransaction == null){
-                        approval_id.push(approval.id);
-                    }
-                })
-                let approval_details_data = {
-                    'parentApproval__in': approval_id,
+                let request_account_title_data = {
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                    accountType: 'ACCOUNT',
                 }
+
+                let request_account_data = {
+                    parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
+                    parentAccount__accountType: 'ACCOUNT',
+                    parentSession: this.vm.user.activeSchool.currentSessionDbId, 
+                }
+
+                let employee_data = {
+                    parentEmployee: this.vm.user.activeSchool.employeeId,
+                }
+
                 Promise.all([
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
-                ]).then(data =>{
-                    console.log(data);
-                    this.initialiseApprovalData(val[0], data[0], data[1]);
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
+                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
+                ]).then(value =>{
+                    console.log(value);
+                    this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+                    this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
+                    this.vm.accountsList = value[0];
+                    this.populateAccountTitle(value[3]);
+                    if(value[1].length > 0){
+                        this.vm.maximumPermittedAmount = value[1][0].restrictedAmount;
+                    }
+                    else{
+                        this.vm.maximumPermittedAmount = null;
+                    }
+                    let granted_approval_data = {
+                        'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
+                        'requestStatus': 'APPROVED',
+                        'parentTransaction': 'null__korangle',
+                        'requestedGenerationDateTime__gte': this.vm.minimumDate,
+                        'requestedGenerationDateTime__lte': this.vm.maximumDate,
+                    }
+                    Promise.all([
+                        this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
+        
+                    ]).then(val =>{let approval_id = [];
+                        val[0].forEach(approval =>{
+                            if(approval.parentTransaction == null){
+                                approval_id.push(approval.id);
+                            }
+                        })
+                        let approval_details_data = {
+                            'parentApproval__in': approval_id,
+                        }
+                        Promise.all([
+                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
+                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                        ]).then(data =>{
+                            console.log(data);
+                            this.initialiseApprovalData(val[0], data[0], data[1]);
+                            this.vm.isLoading = false;
+                        })
+        
+                    })
+                    
+                    
+                },error =>{
                     this.vm.isLoading = false;
                 })
-
-            })
-            
-            
-        },error =>{
+            }
+            else{
+                this.vm.isLoading=false;
+                alert("Unexpected errors. Please contact admin");
+            }
+        },error=>{
             this.vm.isLoading = false;
-        })
+        });
     }
 
     populateAccountTitle(accountTitleList){

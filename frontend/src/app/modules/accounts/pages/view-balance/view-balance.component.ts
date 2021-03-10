@@ -143,6 +143,7 @@ export class ViewBalanceComponent implements OnInit {
     transactionsList: any;
     employeeList: any;
     
+    lockAccounts: any;
       
 
     // Server Handling - Initial
@@ -262,4 +263,13 @@ export class ViewBalanceComponent implements OnInit {
         this.printService.navigateToPrintRoute(PRINT_LEDGER, {user: this.user, value});
     }
 
+    isAccountLocked(){
+      console.log(this.lockAccounts)
+        if (this.lockAccounts){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

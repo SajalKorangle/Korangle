@@ -38,6 +38,7 @@ export class GrantApprovalComponent implements OnInit {
     minimumDate: any;
     maximumDate: any;
 
+    lockAccounts: any;
     
     constructor( 
         public accountsService: AccountsService,

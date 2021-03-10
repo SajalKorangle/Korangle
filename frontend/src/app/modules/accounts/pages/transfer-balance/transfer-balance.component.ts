@@ -44,6 +44,8 @@ export class TransferBalanceComponent{
     currentSessionSelectedAccountsList = [];         // this list is responsible for keeping track of selected and disabled accounts as well as groups
 
     selectedSession: any;
+
+    splitView:false;
         
     constructor( 
         public accountsService: AccountsService,
@@ -124,8 +126,45 @@ export class TransferBalanceComponent{
         })
     }
 
+    countSelectedGroups(){
+        let count = 0;
+        this.currentSessionSelectedAccountsList.forEach(account=>{
+            if (account.type=="GROUP" && account.selected ==true){
+                count=count+1
+            }
+        })
+        return count;
+    }
 
-    
+    countTotalGroups(){
+        let count = 0;
+        this.currentSessionSelectedAccountsList.forEach(account=>{
+            if (account.type=="GROUP"){
+                count=count+1
+            }
+        })
+        return count;
+    }
 
-    
+    countSelectedAccounts(){
+        let count = 0;
+        this.currentSessionSelectedAccountsList.forEach(account=>{
+            if (account.type=="ACCOUNT" && account.selected ==true){
+                count=count+1
+            }
+        })
+        return count;
+    }
+
+    countTotalAccounts(){
+        let count = 0;
+        this.currentSessionSelectedAccountsList.forEach(account=>{
+            if (account.type=="ACCOUNT"){
+                count=count+1
+            }
+        })
+        return count;
+    }
+
+
 } 

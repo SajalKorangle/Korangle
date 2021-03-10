@@ -1,6 +1,12 @@
 
 
 <div class="card-content table-responsive" *ngIf="!isLoading">
+    <div *ngIf="lockAccounts">
+        <span  style="color: red;">
+            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
+                All Accounts has been locked for this session . No further transctions can be updated. </b></h4></span>
+    </div>
+    <div *ngIf="!lockAccounts">
     <div class="row">
         <div class="col-md-9" *ngIf="searchType == searchTypeList[0];">
             <mat-form-field style="width: 50%;">
@@ -105,7 +111,7 @@
         </div><br>
         
     </div>
-        
+    </div>
 </div>
 
 <ng-container *ngIf="isLoading">

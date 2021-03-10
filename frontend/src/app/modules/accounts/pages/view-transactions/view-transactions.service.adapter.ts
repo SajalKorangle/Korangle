@@ -43,12 +43,18 @@ export class ViewTransactionsServiceAdapter {
             parentEmployee: this.vm.user.activeSchool.employeeId,
         }
 
+        let lock_accounts_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data), //0
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_all_data),  //1 
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),    //2
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),    //3
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),  //4
+            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data), //5
         ]).then(value =>{
             if(value[4].length > 0){
                 this.vm.maximumPermittedAmount = value[4][0].restrictedAmount;
@@ -64,10 +70,22 @@ export class ViewTransactionsServiceAdapter {
             this.popoulateEmployeeList();
             this.popoulateHeadList();
             this.popoulateGroupsList();
+            this.initialiseLockAccountData(value[5]);
         },error =>{
             this.vm.isInitialLoading = false;
         })
 
+    }
+
+    initialiseLockAccountData(value){
+        if (value.length == 0) {
+            this.vm.lockAccounts = null;
+        } else if (value.length == 1) {
+            this.vm.lockAccounts = value[0];
+        }
+        else{
+            alert("Unexpected errors. Please contact admin")
+        }
     }
     
     initialiseGroupsAndAccountList(sessionList, typeList): any{

@@ -47,6 +47,8 @@ export class ManageAccountsComponent{
     maximumDate: any;
     specificGroup: any;
 
+    lockAccounts: any;
+
     searchList = [];
     // Server Handling - Initial
     ngOnInit(): void {

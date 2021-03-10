@@ -44,6 +44,8 @@ export class AddTransactionComponent implements OnInit {
     minimumDate: any;
     maximumDate: any;
 
+    lockAccounts: any;
+    
     constructor( 
       public accountsService: AccountsService,
       public dialog: MatDialog,

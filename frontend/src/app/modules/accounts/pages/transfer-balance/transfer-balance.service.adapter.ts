@@ -231,7 +231,8 @@ export class TransferBalanceServiceAdapter{
             for(let i=0;i<val[1].length; i++){
                 this.nextAccountsSessionList.find(element => element.id == val[1][i].id ).balance = val[1][i].balance;
             }
-
+            this.populateAccountSessionList(this.currentAccountsSessionList,this.nextAccountsSessionList);
+            this.initialiseDisplayData(this.currentAccountsSessionList, this.vm.currentSessionAccountsList);
             this.initialiseDisplayData(this.nextAccountsSessionList, this.vm.nextSessionAccountsList);
             this.vm.deSelectAllAccounts();
             alert('Balance Transferred Successfully')

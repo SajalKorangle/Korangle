@@ -173,3 +173,11 @@ class TransactionImages(models.Model):
 
     class Meta:
         db_table = 'transaction_images'
+
+class LockAccounts(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
+
+    class Meta:
+        db_table = 'lock_accounts'

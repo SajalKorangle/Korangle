@@ -16,38 +16,56 @@ export class UpdateTransactionServiceAdapter {
     initializeData(): void {
         this.vm.isLoadingTransaction = false;
         this.vm.isLoading = true;
-        this.vm.transactionsList = [];
-        this.vm.maximumPermittedAmount = null;
-        let request_account_session_data = {
-            parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId, 
-            parentAccount__accountType: 'ACCOUNT',
-        }
-        
-        let employee_data = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
-        }
 
-        let request_account_title_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            accountType: 'ACCOUNT',
-        }
+        let lock_accounts_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+        this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data).then(value=>{
+            if (value.length == 1) {
+                this.vm.lockAccounts = value[0];
+                this.vm.isLoading = false;
+            } else if (value.length == 0) {
+                this.vm.transactionsList = [];
+                this.vm.maximumPermittedAmount = null;
+                let request_account_session_data = {
+                    parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
+                    parentSession: this.vm.user.activeSchool.currentSessionDbId, 
+                    parentAccount__accountType: 'ACCOUNT',
+                }
+                
+                let employee_data = {
+                    parentEmployee: this.vm.user.activeSchool.employeeId,
+                }
 
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
-        ]).then(value =>{
-            // console.log(value);
-            if(value[2].length > 0){
-                this.vm.maximumPermittedAmount = value[2][0].restrictedAmount;
+                let request_account_title_data = {
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                    accountType: 'ACCOUNT',
+                }
+                
+                Promise.all([
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
+                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
+                ]).then(value =>{
+                    // console.log(value);
+                    if(value[2].length > 0){
+                        this.vm.maximumPermittedAmount = value[2][0].restrictedAmount;
+                    }
+                    this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+                    this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
+                    console.log(this.vm.minimumDate, this.vm.maximumDate);
+                    this.vm.accountsList = value[0];
+                    this.populateAccountTitle(value[3]);
+                    this.vm.isLoading = false;
+                });
             }
-            this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-            this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            console.log(this.vm.minimumDate, this.vm.maximumDate);
-            this.vm.accountsList = value[0];
-            this.populateAccountTitle(value[3]);
+            else{
+                this.vm.isLoading=false;
+                alert("Unexpected errors. Please contact admin");
+            }
+        },error=>{
             this.vm.isLoading = false;
         });
     }

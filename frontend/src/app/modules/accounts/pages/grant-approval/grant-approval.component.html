@@ -1,5 +1,10 @@
 <div class="card-content table-responsive ">
-    
+    <div *ngIf="lockAccounts">
+        <span  style="color: red;">
+            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
+                All Accounts has been locked for this session . No further approvals can be given for this session. </b></h4></span>
+    </div>
+    <div *ngIf="!lockAccounts">
     <div *ngFor='let approval of approvalsList'>
         <div class="row">
             <div class="col-md-10">
@@ -104,6 +109,7 @@
                 <div class="loaderCustom"></div>
             </div><br>
         </div><span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
+    </div>
     </div>
     
 </div>

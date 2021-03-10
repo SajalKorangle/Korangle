@@ -23,18 +23,22 @@ export class ViewBalanceServiceAdapter {
         let employee_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
-
-
+        let lock_accounts_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+        
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
 
         ]).then(value =>{
             this.vm.employeeList = value[2];
             this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
             this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            console.log(value);
+            this.initialiseLockAccountData(value[3]);
             let account_id_list = [];
             value[0].forEach(account =>{
                 account_id_list.push(account.id);
@@ -58,6 +62,17 @@ export class ViewBalanceServiceAdapter {
             this.vm.isLoading = false;
         })
 
+    }
+
+    initialiseLockAccountData(value){
+        if (value.length == 0) {
+            this.vm.lockAccounts = null;
+        } else if (value.length == 1) {
+            this.vm.lockAccounts = value[0];
+        }
+        else{
+            alert("Unexpected errors. Please contact admin")
+        }
     }
 
     initialiseAccountGroupList(){

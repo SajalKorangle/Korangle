@@ -82,3 +82,12 @@ class ApprovalAccountDetailsView(CommonView, APIView):
 
 class ApprovalAccountDetailsListView(CommonListView, APIView):
     Model = ApprovalAccountDetails
+
+
+from .models import LockAccounts
+
+class LockAccountsView(CommonView, APIView):
+    Model = LockAccounts
+
+class LockAccountsListView(CommonListView,  APIView):
+    Model = LockAccounts

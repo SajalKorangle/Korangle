@@ -64,3 +64,12 @@ urlpatterns += [
     url(r'^employee-amount-permission/batch', EmployeeAmountPermissionListView.as_view()),
     url(r'^employee-amount-permission', EmployeeAmountPermissionView.as_view()),
 ]
+
+
+
+from .views import LockAccountsView, LockAccountsListView
+
+urlpatterns += [
+    url(r'^lock-accounts/batch', LockAccountsListView.as_view()),
+    url(r'^lock-accounts', LockAccountsView.as_view()),
+]

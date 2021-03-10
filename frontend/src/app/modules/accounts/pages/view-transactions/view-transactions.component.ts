@@ -145,6 +145,8 @@ export class ViewTransactionsComponent implements OnInit {
     showSelectedOnly: boolean;
     maximumPermittedAmount: any;
 
+    lockAccounts: any;
+
     // Server Handling - Initial
     ngOnInit(): void {
       this.user = DataStorage.getInstance().getUser();
@@ -338,6 +340,15 @@ export class ViewTransactionsComponent implements OnInit {
           data: {transaction: JSON.parse(JSON.stringify(transaction)), vm: this, originalTransaction: transaction}
       });
   
+    }
+
+    isAccountLocked(){
+        if (this.lockAccounts){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }
