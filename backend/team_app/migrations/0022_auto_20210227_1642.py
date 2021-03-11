@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from team_app.db_script.add_tc_moudle_and_tasks import add_tc_module_and_tasks
+from team_app.db_script.add_tc_module_and_tasks import add_tc_module_and_tasks
 
 class Migration(migrations.Migration):
 

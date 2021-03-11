@@ -1,7 +1,7 @@
 from django.db import models
 
 from school_app.model.models import School
-from student_app.models import Student
+from student_app.models import Student, StudentSection
 from fees_third_app.models import FeeType
 from employee_app.models import Employee
 from django.utils.timezone import now
@@ -41,7 +41,7 @@ class TCImageAssets(models.Model): # implement image data size
 
 
 class TransferCertificateSettings(models.Model):
-    parentSchool = models.OneToOneField(School, on_delete=models.CASCADE)  
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, unique=True)  
     
     tcFee = models.IntegerField(default=0)  # For fee collection
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, null=True)
@@ -49,11 +49,13 @@ class TransferCertificateSettings(models.Model):
     nextCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
 
+
 def upload_certificate_to(instance, filename):
     return 'tc_app/TransferCertificateNew/certificateFile/%s-%s' % (now().timestamp(), filename)
 
 class TransferCertificateNew(models.Model):
-    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='transferCertificateNew')
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
+    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.SET_NULL, null=True)
     certificateNumber = models.IntegerField()
     certificateFile = models.FileField(upload_to=upload_certificate_to)
 
