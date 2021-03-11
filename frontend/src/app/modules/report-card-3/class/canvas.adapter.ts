@@ -352,6 +352,19 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         this.layers.push(layer);
         return this.updateActiveLayer(this.layers.length - 1)
     }
+
+    deleteGradeRuleSet(index: number): Promise<any>{
+        const gradeRuleSet = this.gradeRuleSetList[index];
+        this.layers.forEach(l => {
+            if (l.LAYER_TYPE == 'MARKS' || l.LAYER_TYPE == 'FORMULA') {
+                if (l.gradeRuleSet == gradeRuleSet) {
+                    l.gradeRuleSet = undefined;
+                }
+            }
+        })
+        this.gradeRuleSetList.splice(index, 1);
+        return this.fullCanavsRefresh();
+    }
     
 }
 

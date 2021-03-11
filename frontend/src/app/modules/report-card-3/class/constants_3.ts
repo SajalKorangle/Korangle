@@ -512,6 +512,7 @@ export interface CanvasAdapterInterface{
     resetActiveLayer(): Promise<any>;
     updateActiveLayer(activeLayerIndex: number, shiftKey: boolean): Promise<any>;
     newLayerInitilization(layer: Layer): Promise<any>;
+    deleteGradeRuleSet(index: number): Promise<any>;
 }
 
 
@@ -584,6 +585,7 @@ export interface Layer{
     marks?: number;
     formula?: string;
     examinationName?: string;
+    gradeRuleSet?: GradeRuleSet;
 };
 
 export class BaseLayer {    // this layer is inherited by all canvas layers
