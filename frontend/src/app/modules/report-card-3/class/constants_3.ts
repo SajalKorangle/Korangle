@@ -1280,30 +1280,22 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     updateWidth(newWidth: any){
         this.width = newWidth;
     }
-
-    highlightLayer(ctx: CanvasRenderingContext2D): void{
-        if (this.height && this.width) {
-            ctx.strokeStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR
-            ctx.lineWidth = ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH;
-            ctx.strokeRect(this.x - permissibleClickError/4, this.y - permissibleClickError/4,
-                this.width + this.shapeStyle.lineWidth + permissibleClickError/2, this.height + this.shapeStyle.lineWidth + permissibleClickError/2);
-        }
-    }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
         const x = this.x + this.shapeStyle.lineWidth / 2;   // adjisted for line Width
         const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
+        const width = this.width - this.shapeStyle.lineWidth ;
+        const height = this.height - this.shapeStyle.lineWidth;
+        ctx.beginPath();
+        ctx.rect(x+this.shapeStyle.lineWidth/2, y+this.shapeStyle.lineWidth/2, width - this.shapeStyle.lineWidth, height - this.shapeStyle.lineWidth);
+        ctx.fill();
         if (this.shapeStyle.lineWidth > 0) {
-            console.log('drawing');
             ctx.beginPath();
-            ctx.rect(x, y, this.width, this.length);
+            ctx.rect(x, y, width, height);
             ctx.stroke();
         }
-        ctx.beginPath();
-        ctx.rect(x+this.shapeStyle.lineWidth/2, y+this.shapeStyle.lineWidth/2, this.width - this.shapeStyle.lineWidth, this.length - this.shapeStyle.lineWidth);
-        ctx.fill();
         ctx.restore();
         return true;    // Drawn successfully on canvas
     }
@@ -1371,20 +1363,19 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
-        ctx.beginPath()
+        if (this.shapeStyle.lineWidth > 0) {
+            ctx.beginPath()
+            ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+        ctx.beginPath();
         ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI);
-        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
-
-    // isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
-    //     // return true;
-    //     return (
-    //         Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
-    //         Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
-    //     )
-    // }
 
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
