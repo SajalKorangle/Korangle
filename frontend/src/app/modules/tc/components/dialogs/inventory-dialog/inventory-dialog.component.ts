@@ -16,9 +16,14 @@ export class InventoryDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<InventoryDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any }) {
     this.vm = data.vm;
+    this.selectedLayout = data.selectedLayout;
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
+  
+  resetSelection(): void{
+    this.selectedLayout = { type: null, index: null };
+  }
 
   apply():void {
     this.dialogRef.close({ ...this.selectedLayout });

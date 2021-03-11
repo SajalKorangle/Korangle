@@ -79,8 +79,8 @@ export class DesignTCHtmlAdapter {
             this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }, this.vm.canvasAdapter));   
     }
 
-    fullScreenToggle(): void{   // check after adding html
-        let element = document.getElementById('dtc-mainCard');
+    fullScreenExitHandler = ():void=> {
+        const element = document.getElementById('dtc-mainCard');
         if (this.isFullScreen) {
             element.classList.remove('fullScreen');
             document.getElementById('dtc-wrapper').appendChild(element);
@@ -91,7 +91,15 @@ export class DesignTCHtmlAdapter {
                     },500))
                     .catch(err=>console.log(err));
             }
+            document.removeEventListener('fullscreenchange', this.fullScreenExitHandler);
             this.isFullScreen = false;
+        }
+    }
+
+    fullScreenToggle(): void{   // check after adding html
+        let element = document.getElementById('dtc-mainCard');
+        if (this.isFullScreen) {
+            this.fullScreenExitHandler();
         } else{
             element.classList.add('fullScreen');
             document.body.appendChild(element);
@@ -99,6 +107,7 @@ export class DesignTCHtmlAdapter {
                 document.body.requestFullscreen()
                     .then(() => setTimeout(() => {
                         this.canvasSetUp(true);
+                        document.addEventListener('fullscreenchange', this.fullScreenExitHandler);
                     }, 500))    // bad design f we specify the time, is there is any way to wait until the css styles are loaded?
                 .catch(err=>console.log(err));
             this.isFullScreen = true;
@@ -154,10 +163,15 @@ export class DesignTCHtmlAdapter {
     }
 
     openInventory(): void{
+        const data = { vm: this.vm, selectedLayout: {} };
+        if (this.vm.currentLayout.id) {
+            data.selectedLayout = { type: 'myLayout', index: this.vm.tcLayoutList.findIndex(l=>l.id==this.vm.currentLayout.id) };
+        }
+        else {
+            data.selectedLayout = { type: 'myLayout', index: -1 };
+        }
         this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
-            data: {
-                vm: this.vm,
-            }
+            data
         });
         this.openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {
