@@ -2207,6 +2207,9 @@ export class Formula extends CanvasText implements Layer{
             inWords: this.inWords,
             decimalPlaces:this.decimalPlaces,
         }
+        if (this.gradeRuleSet) {
+            savingData.gradeRuleSet = this.gradeRuleSet.id;
+        }
         return savingData;
     }
 
