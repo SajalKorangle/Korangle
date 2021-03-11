@@ -1128,12 +1128,12 @@ class ShapeBaseLayer extends BaseLayer{
         lineWidth: number,
         strokeStyle: string,
         fillStyle: string,
-        globalAlpha: number,
+        // globalAlpha: number,
     } = {
             lineWidth: 2,
             strokeStyle: '#000000',
             fillStyle: 'transparent',
-            globalAlpha: 1,
+            // globalAlpha: 1,
     }
 
     constructor(ca: CanvasAdapterInterface) { 
