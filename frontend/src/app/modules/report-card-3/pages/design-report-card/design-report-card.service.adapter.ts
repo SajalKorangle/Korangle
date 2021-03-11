@@ -204,24 +204,20 @@ export class DesignReportCardServiceAdapter {
             
         ]).then (value =>{
             // console.log(value);
-            this.vm.DATA.data.studentSectionList.push(value[0][0]);
-            this.vm.DATA.data.studentList.push(value[1][0]);
-            this.vm.DATA.data.studentParameterValueList.push(value[2][0]);
-            this.vm.DATA.data.studentTestList.push(value[3][0]);
-            this.vm.DATA.data.attendanceList.push(value[4][0]);
-            this.vm.DATA.data.studentSubGradeList.push(value[5][0]);
-            this.vm.DATA.data.studentExaminationRemarksList.push(value[6][0]);
-            this.populateParameterListWithStudentCustomField();
-            if (this.vm.DATA.data.studentList.length > 0)
-                this.vm.DATA.studentId = this.vm.selectedStudent.id;
-            else
-                alert('Student Data unavaiable');
+            this.vm.DATA.data.studentSectionList.push(...value[0]);
+            this.vm.DATA.data.studentList.push(...value[1]);
+            this.vm.DATA.data.studentParameterValueList.push(...value[2]);
+            this.vm.DATA.data.studentTestList.push(...value[3]);
+            this.vm.DATA.data.attendanceList.push(...value[4]);
+            this.vm.DATA.data.studentSubGradeList.push(...value[5]);
+            this.vm.DATA.data.studentExaminationRemarksList.push(...value[6]);
+
+            this.vm.DATA.studentId = this.vm.selectedStudent.id;
+
             this.vm.canvasAdapter.fullCanavsRefresh();
             
             this.vm.htmlAdapter.isSaving = false;
-        }), error =>{
-            this.vm.htmlAdapter.isSaving = false;
-        };
+        })
     }
 
     populateLayoutSharingData(layoutSharingDataList:Array<any>):void {
