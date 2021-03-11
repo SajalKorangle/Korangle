@@ -12,7 +12,7 @@ export class TCLogbookServiceAdapter {
         this.vm.isLoading = true;
 
         const request_tc_data = {
-            parentStudent__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         }
 
         Promise.all([
@@ -26,7 +26,7 @@ export class TCLogbookServiceAdapter {
 
             const request_student_section_data = {
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                parentStudent__in: this.vm.tcList.map(tc=>tc.parentStudent).join(','),
+                id__in: this.vm.tcList.map(tc=>tc.parentStudentSection).join(','),
             };
 
             const request_student_data = {

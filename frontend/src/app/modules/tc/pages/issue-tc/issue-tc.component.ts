@@ -190,10 +190,10 @@ export class IssueTCComponent implements OnInit {
   populateStudentSectionWithTC(): void{
     this.studentSestionWithTC = this.tcList.map(tc => {
       const studentId = tc.parentStudent;
-      const ss = this.studentSectionList.find(ss => ss.parentStudent == studentId);
+      const ss = this.studentSectionList.find(ss => ss.id == tc.parentStudentSection);
       return {
         ...ss,
-        tc: this.tcList.find(tc => tc.parentStudent == ss.parentStudent),
+        tc: tc,
         parentStudentInstance: this.studentList.find(s => s.id == ss.parentStudent),
         dueAmount: this.getStudentFeeDue(studentId)
       };

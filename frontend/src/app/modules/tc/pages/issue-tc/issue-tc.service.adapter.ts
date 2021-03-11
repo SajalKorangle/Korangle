@@ -13,7 +13,7 @@ export class IssueTCServiceAdapter{
         this.vm.isLoading = true;
 
         const request_tc_data = {
-            parentStudent__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
             status: 'Generated'
         }
 
@@ -27,7 +27,7 @@ export class IssueTCServiceAdapter{
             this.vm.divisionList = data[2];
 
             const request_student_section_data = {
-                parentStudent__id__in: this.vm.tcList.map(tc => tc.parentStudent),
+                id__in: this.vm.tcList.map(tc => tc.parentStudentSection),
             };
 
             const request_student_data = {

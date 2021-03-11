@@ -1,6 +1,8 @@
 export class TransferCertificateNew{
     id: number;
     parentStudent: number;
+    parentStudentSection: number;
+    parentSession: number;
     certificateNumber: number;
 
     certificateFile: any;

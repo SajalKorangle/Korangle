@@ -173,6 +173,8 @@ export class GenerateTCServiceAdapter {
     generateTC(studentId: number, certificateNumber: number, certificateDocumet: Blob) {
         const tc_object = new TransferCertificateNew();
         tc_object.parentStudent = studentId;
+        tc_object.parentStudentSection = this.vm.DATA.data.studentSectionList.find(ss => ss.parentStudent == studentId).id;
+        tc_object.parentSession = this.vm.user.activeSchool.currentSessionDbId;
         tc_object.certificateNumber = certificateNumber;
         if (this.vm.DATA.issueDate)
             tc_object.issueDate = this.vm.DATA.issueDate;

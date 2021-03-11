@@ -15,7 +15,7 @@ export class CancelTCServiceAdapter {
         this.vm.isLoading = true;
 
         const request_tc_data = {
-            parentStudent__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
             status__in: ['Generated', 'Issued'].join(','),
         }
 

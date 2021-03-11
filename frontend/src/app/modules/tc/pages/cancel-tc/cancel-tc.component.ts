@@ -96,12 +96,12 @@ export class CancelTCComponent implements OnInit {
 
   populateStudentSectionWithTC(): void{
     this.studentSestionWithTC = this.tcList.map(tc => {
-      const studentId = tc.parentStudent;
-      const ss = this.studentSectionList.find(ss => ss.parentStudent == studentId);
+      const student = this.studentList.find(s => s.id == tc.parentStudent)
+      const ss = this.studentSectionList.find(ss => ss.id == tc.parentStudentSection);
       return {
         ...ss,
-        tc: this.tcList.find(tc => tc.parentStudent == ss.parentStudent),
-        parentStudentInstance: this.studentList.find(s => s.id == ss.parentStudent),
+        tc: tc,
+        parentStudentInstance: student,
       };
     });
   }
