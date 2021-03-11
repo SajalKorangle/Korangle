@@ -35,6 +35,26 @@
             <input type="color" matInput [value]="layer.shapeStyle.strokeStyle"
                 (input)="layer.shapeStyle.strokeStyle = $event.target.value; canvasRefresh(0);" placeholder="Stroke Color">
         </mat-form-field>
+
+        <div *ngIf="layer.LAYER_TYPE != 'LINE'">
+            <mat-form-field>
+                <mat-label>Fill Color</mat-label>
+                <div style="display: flex; flex-direction: row; align-items: center;">
+                    <input type="color" matInput [value]="layer.shapeStyle.fillStyle" 
+                        (input)="layer.shapeStyle.fillStyle=$event.target.value; canvasRefresh(0);"> 
+                    <button mat-stroked-button class="material-icons" 
+                            style="transform: scale(0.75);" 
+                            [style.color]="layer.shapeStyle.fillStyle=='transparent'?'white':''" 
+                            [style.backgroundColor]="layer.shapeStyle.fillStyle=='transparent'?'blue':''" 
+                            (click)="layer.shapeStyle.fillStyle='transparent'; canvasRefresh(0);">
+                            <mat-icon>format_color_reset</mat-icon></button>
+                </div>
+            </mat-form-field>
+
+            <span style="font-size: small;">Opacity</span>
+            <mat-slider thumbLabel [displayWith]="formalLabelForSlider" min="0" max="1" step="0.01" [value]="layer.shapeStyle.globalAlpha" (input)="layer.shapeStyle.globalAlpha=$event.value; canvasRefresh(0);"></mat-slider>
+
+        </div>
         
     </div>
 

@@ -1,5 +1,6 @@
 import { ATTENDANCE_STATUS_LIST } from '@modules/attendance/classes/constants';
 import canvasTxt from 'canvas-txt';
+import { globalAgent } from 'http';
 
 const FormulaParser = require('hot-formula-parser').Parser;
 
@@ -698,7 +699,14 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.error = false;
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
             const DATA = this.ca.DATA;
-            this.uri = this.source.getValueFunc(DATA)+'?javascript=';
+            const value = this.source.getValueFunc(DATA)
+            if (value) {
+                this.uri = value + '?javascript=';
+            }
+            else {
+                this.error = true;
+                return;
+            }
         }
        
         const canvasWidth = this.ca.canvasWidth, canvasHeight = this.ca.canvasHeight;
@@ -1119,9 +1127,13 @@ class ShapeBaseLayer extends BaseLayer{
     shapeStyle: {
         lineWidth: number,
         strokeStyle: string,
+        fillStyle: string,
+        globalAlpha: number,
     } = {
             lineWidth: 2,
             strokeStyle: '#000000',
+            fillStyle: 'transparent',
+            globalAlpha: 1,
     }
 
     constructor(ca: CanvasAdapterInterface) { 
@@ -1192,11 +1204,15 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        if (this.shapeStyle.lineWidth == 0)
+            return true;
+        ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath()
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
         ctx.stroke();
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
 
@@ -1264,12 +1280,31 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     updateWidth(newWidth: any){
         this.width = newWidth;
     }
+
+    highlightLayer(ctx: CanvasRenderingContext2D): void{
+        if (this.height && this.width) {
+            ctx.strokeStyle = ACTIVE_LAYER_HIGHLIGHTER_COLOR
+            ctx.lineWidth = ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH;
+            ctx.strokeRect(this.x - permissibleClickError/4, this.y - permissibleClickError/4,
+                this.width + this.shapeStyle.lineWidth + permissibleClickError/2, this.height + this.shapeStyle.lineWidth + permissibleClickError/2);
+        }
+    }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
+        const x = this.x + this.shapeStyle.lineWidth / 2;   // adjisted for line Width
+        const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
+        if (this.shapeStyle.lineWidth > 0) {
+            console.log('drawing');
+            ctx.beginPath();
+            ctx.rect(x, y, this.width, this.length);
+            ctx.stroke();
+        }
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.width, this.length);
-        ctx.stroke();
+        ctx.rect(x+this.shapeStyle.lineWidth/2, y+this.shapeStyle.lineWidth/2, this.width - this.shapeStyle.lineWidth, this.length - this.shapeStyle.lineWidth);
+        ctx.fill();
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
 
@@ -2633,9 +2668,13 @@ export const PARAMETER_LIST = [
         'Class Teacher Signature',
         'signatureImage',
         (dataObject) => {
-            return dataObject.data.classSectionSignatureList.find(classs => 
+            const classTeacherSignature = dataObject.data.classSectionSignatureList.find(classs =>
                 classs.parentClass == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentClass &&
-                classs.parentDivision == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentDivision).signatureImage
+                classs.parentDivision == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentDivision);
+            if (classTeacherSignature)
+                return classTeacherSignature.signatureImage
+            else
+                return null;
         },
         CanvasImage
     ),

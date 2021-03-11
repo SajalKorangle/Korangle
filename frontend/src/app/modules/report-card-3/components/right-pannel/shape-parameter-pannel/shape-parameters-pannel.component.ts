@@ -24,4 +24,8 @@ export class ShapeParametersPannelComponent implements OnInit {
     return this.layer.ca.pixelTommFactor;
   }
 
+  formalLabelForSlider(value: number):string {
+    return (value * 100) + '%';
+  }
+
 }
