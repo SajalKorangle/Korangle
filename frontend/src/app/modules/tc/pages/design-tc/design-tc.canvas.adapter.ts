@@ -27,15 +27,15 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         lastClassPassed: string,
     } = {
             isLeavingSchoolBecause: 'N/A',
-            issueDate: new Date().toLocaleDateString(),
-            leavingDate: new Date().toLocaleDateString(),
+            issueDate: null,
+            leavingDate: null,
             lastClassPassed: 'N/A',
         };
     
     
     constructor() {
         super();
-        console.log('canvas Adapter: ', this);
+        // console.log('canvas Adapter: ', this);
         Object.defineProperty(this, 'currentLayout', {
             get: function () {
                 return this.vm.currentLayout;   // // reference to vm.currentLayout and there is no setter function
@@ -58,8 +58,8 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
             ...super.getEmptyLayoutPage(),
             extraFields: {
                 isLeavingSchoolBecause: 'N/A',
-                issueDate: new Date().toLocaleDateString(),
-                leavingDate: new Date().toLocaleDateString(),
+                issueDate: null,
+                leavingDate: null,
                 lastClassPassed: 'N/A',
             }
          }

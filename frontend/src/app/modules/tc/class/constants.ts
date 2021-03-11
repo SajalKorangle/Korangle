@@ -1609,7 +1609,14 @@ export class CanvasDate extends CanvasText implements Layer{
     layerDataUpdate(): void {
         if (this.dataSourceType == 'DATA') {
             const DATA = this.ca.DATA;
-            this.date = new Date(this.source.getValueFunc(DATA));
+            const value = this.source.getValueFunc(DATA)
+            if (value) {
+                this.date = new Date(this.source.getValueFunc(DATA));
+            }
+            else {
+                this.text = this.alternateText;
+                return;
+            }
         }
 
         this.dateFormatting();

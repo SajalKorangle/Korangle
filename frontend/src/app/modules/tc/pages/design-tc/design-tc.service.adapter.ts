@@ -178,7 +178,7 @@ export class DesignTCServiceAdapter {
         } else {
             delete layoutToUpload.thumbnail
         }
-        console.log('layout to uplaod: ', layoutToUpload);
+        // console.log('layout to uplaod: ', layoutToUpload);
         const form_data = new FormData();
         Object.entries(layoutToUpload).forEach(([key, value]) => {
             if (key === 'thumbnail' ) {

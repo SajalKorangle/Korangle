@@ -149,9 +149,6 @@ export class IssueTCComponent implements OnInit {
         }
       })
     });
-    console.log('all onth fee: ', allMonthFee);
-    console.log('total Late Fee: ', totalLateFee);
-    console.log('totalFee: ', allMonthFee + totalLateFee);
     return allMonthFee + totalLateFee;
   }
 
@@ -162,7 +159,6 @@ export class IssueTCComponent implements OnInit {
         totalFeePaid += subFeeReceipt[installmentMonth+'Amount'] + subFeeReceipt[installmentMonth+'LateFee']
       })
     });
-    console.log('total Fee Paid: ', totalFeePaid);
     return totalFeePaid;
   }
 
@@ -173,7 +169,6 @@ export class IssueTCComponent implements OnInit {
         totalDiscount += subDiscount[installmentMonth+'Amount'] + subDiscount[installmentMonth+'LateFee']
       })
     })
-    console.log('total Discount: ', totalDiscount);
     return totalDiscount;
   }
 

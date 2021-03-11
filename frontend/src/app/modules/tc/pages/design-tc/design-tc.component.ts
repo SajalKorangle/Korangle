@@ -118,7 +118,7 @@ export class DesignTCComponent implements OnInit, OnDestroy {
     this.populateCurrentLayoutWithGivenValue(this.ADD_LAYOUT_STRING);
 
     this.downloadFont();
-    console.log('DATA: ', this.DATA);
+    // console.log('DATA: ', this.DATA);
   }
 
   ngOnDestroy() {

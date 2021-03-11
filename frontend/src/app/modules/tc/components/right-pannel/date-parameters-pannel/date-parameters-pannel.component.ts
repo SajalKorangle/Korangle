@@ -108,7 +108,6 @@ export class DateParametersPannelComponent implements OnInit {
       }
     }
     this.secondSeparator = temp;
-    // console.log(temp);
     return temp;
   }
 

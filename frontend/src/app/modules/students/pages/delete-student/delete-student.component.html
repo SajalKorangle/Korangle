@@ -138,7 +138,7 @@
 
             <span *ngIf="!selectedStudent.deleted
                         && selectedStudentFeeReceiptList.length == 0
-                        && selectedStudentDiscountList.length == 0; else noDeletion">
+                        && selectedStudentDiscountList.length == 0 && selectedStudentHasNoTc(); else noDeletion">
                 <button type="submit"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.deleteStudent();">
@@ -152,8 +152,8 @@
                 <ng-container *ngIf="selectedStudent.deleted">Student is already deleted<br/></ng-container>
                 <ng-container *ngIf="selectedStudentFeeReceiptList.length != 0">Fee Receipt/s have been issued for the student<br/></ng-container>
                 <ng-container *ngIf="selectedStudentDiscountList.length != 0">Discount/s have been issued for the student<br/></ng-container>
+                <ng-container *ngIf="!selectedStudentHasNoTc()">TC is already generated<br/></ng-container>
             </ng-template>
-            <ng-container *ngIf="!selectedStudentHasNoTc()">Cannot delete student from session because TC is already generated<br/></ng-container>
 
             <div class="clearfix"></div>
 

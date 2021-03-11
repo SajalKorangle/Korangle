@@ -133,7 +133,7 @@ export class GenerateTCComponent implements OnInit {
 
     this.canvasAdapter = new GenerateTCCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
-    console.log('comp: ', this);
+    // console.log('comp: ', this);
   }
 
   populateClassSectionList(classList, divisionList):void {
@@ -173,7 +173,7 @@ export class GenerateTCComponent implements OnInit {
   populateExtraFieldsFromLayout(): void{
     const parsedData = JSON.parse(this.selectedLayout.content);
     this.DATA = { ...this.DATA, ...parsedData[0].extraFields };
-    console.log('parsed Data.extra fields : ', parsedData[0].extraFields);
+    // console.log('parsed Data.extra fields : ', parsedData[0].extraFields);
   }
 
   disableStudentsWithTC(tcData): void{
@@ -217,7 +217,26 @@ export class GenerateTCComponent implements OnInit {
     return this.filteredStudentSectionList.filter(studentSection => !studentSection.disabled && studentSection.selected);
   }
 
+  sanityCheck(): boolean{
+    if (!this.DATA.issueDate) {
+      alert('Issue Date is a compulsary field');
+      return false;
+    }
+    else if (!this.DATA.leavingDate) {
+      alert('Leaving Date is a compulsary field');
+      return false;
+    }
+    else if (!this.DATA.isLeavingSchoolBecause || this.DATA.isLeavingSchoolBecause =='') {
+      alert('Is Leaving School Because is a compulsary field')
+      return false;
+    }
+    return true;
+  }
+
   async generateTC() {
+    if (!this.sanityCheck()) {
+      return;
+    }
     this.isLoading = true;
     const serviceList = [];
 
