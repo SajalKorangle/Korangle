@@ -425,6 +425,7 @@ export const DATA_SOUCE_TYPE = [    // used in all canvas layers
 export const DEFAULT_BACKGROUND_COLOR = '#ffffff'; // white
 export const DEFAULT_TEXT_COLOR = '#000000'; // black
 
+export const DEFAULT_IMAGE_URL = 'https://korangleplus.s3.amazonaws.com/assets/img/ef3f502028770e76bbeeeea68744c2c3.jpg';
 
 export const ATTENDANCE_TYPE_LIST = [
     'Present',
@@ -704,8 +705,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
                 this.uri = value + '?javascript=';
             }
             else {
-                this.error = true;
-                return;
+                this.uri = DEFAULT_IMAGE_URL + '?javascript=';
             }
         }
        
