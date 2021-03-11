@@ -26,7 +26,8 @@ export class DeleteStudentServiceAdapter {
         };
 
         let tc_data = {
-            parentSession: this.vm.user.activeSchool.currentSessionDbId
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status__in: ['Generated', 'Issued'].join(','),
         }
 
         let student_section_data = {

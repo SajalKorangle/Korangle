@@ -27,8 +27,8 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         lastClassPassed: string,
     } = {
             isLeavingSchoolBecause: 'N/A',
-            issueDate: null,
-            leavingDate: null,
+            issueDate: new Date().toLocaleDateString(),
+            leavingDate: new Date().toLocaleDateString(),
             lastClassPassed: 'N/A',
         };
     
@@ -58,8 +58,8 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
             ...super.getEmptyLayoutPage(),
             extraFields: {
                 isLeavingSchoolBecause: 'N/A',
-                issueDate: null,
-                leavingDate: null,
+                issueDate: new Date().toLocaleDateString(),
+                leavingDate: new Date().toLocaleDateString(),
                 lastClassPassed: 'N/A',
             }
          }
