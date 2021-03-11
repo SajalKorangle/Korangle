@@ -195,10 +195,16 @@ export class DesignReportCardHtmlAdapter {
     }
 
     openInventory(): void{
+        const data = { vm: this.vm, selectedLayout: {} };
+        if (this.vm.currentLayout.id) {
+            data.selectedLayout = { type: 'myLayout', index: this.vm.reportCardLayoutList.findIndex(l=>l.id==this.vm.currentLayout.id) };
+        }
+        else {
+            data.selectedLayout = { type: 'myLayout', index: -1 };
+        }
+        
         this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
-            data: {
-                vm: this.vm,
-            }
+            data
         });
         this.openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {
