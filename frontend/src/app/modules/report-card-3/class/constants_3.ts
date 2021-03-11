@@ -1,5 +1,6 @@
 import { ATTENDANCE_STATUS_LIST } from '@modules/attendance/classes/constants';
 import canvasTxt from 'canvas-txt';
+import { globalAgent } from 'http';
 
 const FormulaParser = require('hot-formula-parser').Parser;
 
@@ -698,7 +699,14 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.error = false;
         if (this.dataSourceType == DATA_SOUCE_TYPE[1]) {
             const DATA = this.ca.DATA;
-            this.uri = this.source.getValueFunc(DATA)+'?javascript=';
+            const value = this.source.getValueFunc(DATA)
+            if (value) {
+                this.uri = value + '?javascript=';
+            }
+            else {
+                this.error = true;
+                return;
+            }
         }
        
         const canvasWidth = this.ca.canvasWidth, canvasHeight = this.ca.canvasHeight;
@@ -1119,9 +1127,13 @@ class ShapeBaseLayer extends BaseLayer{
     shapeStyle: {
         lineWidth: number,
         strokeStyle: string,
+        fillStyle: string,
+        // globalAlpha: number,
     } = {
             lineWidth: 2,
             strokeStyle: '#000000',
+            fillStyle: 'transparent',
+            // globalAlpha: 1,
     }
 
     constructor(ca: CanvasAdapterInterface) { 
@@ -1192,11 +1204,15 @@ export class CanvasLine extends ShapeBaseLayer implements Layer{
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        if (this.shapeStyle.lineWidth == 0)
+            return true;
+        ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
         ctx.beginPath()
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + (this.length*Math.cos((this.orientation*Math.PI)/180)), this.y+ (this.length*Math.sin((this.orientation*Math.PI)/180)));
         ctx.stroke();
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
 
@@ -1266,10 +1282,21 @@ export class CanvasRectangle extends ShapeBaseLayer implements Layer{
     }
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
+        const x = this.x + this.shapeStyle.lineWidth / 2;   // adjisted for line Width
+        const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
+        const width = this.width - this.shapeStyle.lineWidth ;
+        const height = this.height - this.shapeStyle.lineWidth;
         ctx.beginPath();
-        ctx.rect(this.x, this.y, this.width, this.length);
-        ctx.stroke();
+        ctx.rect(x+this.shapeStyle.lineWidth/2, y+this.shapeStyle.lineWidth/2, width - this.shapeStyle.lineWidth, height - this.shapeStyle.lineWidth);
+        ctx.fill();
+        if (this.shapeStyle.lineWidth > 0) {
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.stroke();
+        }
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
 
@@ -1336,20 +1363,20 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
     }
 
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
+        ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
-        ctx.beginPath()
-        ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI);
-        ctx.stroke();
+        const radius = this.radius - this.shapeStyle.lineWidth/2;
+        ctx.beginPath();
+        ctx.arc(this.x + this.radius, this.y + this.radius, radius - this.shapeStyle.lineWidth/2, 0, 2 * Math.PI); 
+        ctx.fill();
+        if (this.shapeStyle.lineWidth > 0) {
+            ctx.beginPath()
+            ctx.arc(this.x + this.radius, this.y + this.radius, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
-
-    // isClicked(mouseX: number, mouseY: number): boolean {   // reiterate if click is not working
-    //     // return true;
-    //     return (
-    //         Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) <= (this.radius + permissibleClickError) &&
-    //         Math.sqrt(((mouseX - this.x)*(mouseX - this.x)) + ((mouseY - this.y)*(mouseY - this.y))) >= (this.radius - permissibleClickError)
-    //     )
-    // }
 
     scale(scaleFactor: number): void {
         this.x *= scaleFactor;
@@ -1418,17 +1445,39 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         super.drawOnCanvas(ctx, scheduleReDraw);
+        ctx.save();
+        const x = this.x + this.shapeStyle.lineWidth / 2;   // adjisted for line Width
+        const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
+        const width = this.width - this.shapeStyle.lineWidth ;
+        const height = this.height - this.shapeStyle.lineWidth;
+        const radius = this.radius - this.shapeStyle.lineWidth / 2;
+        const offSet = this.shapeStyle.lineWidth / 2
         ctx.beginPath();
-        ctx.moveTo(this.x + this.radius, this.y);
-        ctx.lineTo(this.x + this.width - this.radius, this.y);
-        ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width, this.y + this.radius);
-        ctx.lineTo(this.x + this.width, this.y + this.length - this.radius);
-        ctx.quadraticCurveTo(this.x + this.width, this.y + this.length, this.x + this.width - this.radius, this.y + this.length);
-        ctx.lineTo(this.x + this.radius, this.y + this.length);
-        ctx.quadraticCurveTo(this.x, this.y + this.length, this.x, this.y + this.length - this.radius);
-        ctx.lineTo(this.x, this.y + this.radius);
-        ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
-        ctx.stroke();
+        ctx.moveTo(x + radius, y+offSet);
+        ctx.lineTo(x + width - radius, y+offSet);
+        ctx.quadraticCurveTo(x + width - offSet, y+offSet, x + width-offSet, y + radius);
+        ctx.lineTo(x + width - offSet, y + height - radius);
+        ctx.quadraticCurveTo(x + width - offSet, y + height- offSet, x + width - radius, y + height - offSet);
+        ctx.lineTo(x + radius, y + height - offSet);
+        ctx.quadraticCurveTo(x+offSet, y + height-offSet, x+offSet, y + height - radius);
+        ctx.lineTo(x+offSet, y + radius);
+        ctx.quadraticCurveTo(x+offSet, y+offSet, x + radius, y+offSet);
+        ctx.fill();
+        
+        if (this.shapeStyle.lineWidth > 0) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.stroke();
+        }
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
 
@@ -2633,9 +2682,13 @@ export const PARAMETER_LIST = [
         'Class Teacher Signature',
         'signatureImage',
         (dataObject) => {
-            return dataObject.data.classSectionSignatureList.find(classs => 
+            const classTeacherSignature = dataObject.data.classSectionSignatureList.find(classs =>
                 classs.parentClass == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentClass &&
-                classs.parentDivision == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentDivision).signatureImage
+                classs.parentDivision == dataObject.data.studentSectionList.find(x => x.parentStudent === dataObject.studentId).parentDivision);
+            if (classTeacherSignature)
+                return classTeacherSignature.signatureImage
+            else
+                return null;
         },
         CanvasImage
     ),
