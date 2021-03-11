@@ -42,6 +42,7 @@ export class AddAccountDialogComponent implements OnInit {
     let account_data = {
       parentSchool: this.data.vm.user.activeSchool.dbId,
       accountType: 'ACCOUNT',
+      title: this.accountName,
     }
     console.log(account_data);
     Promise.all([
@@ -52,7 +53,6 @@ export class AddAccountDialogComponent implements OnInit {
       let account_session_data = {
         parentAccount: value[0].id,
         parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
-        title: this.accountName,
         balance: this.openingBalance,
         parentGroup: null,
         parentHead : this.parentHead.id,

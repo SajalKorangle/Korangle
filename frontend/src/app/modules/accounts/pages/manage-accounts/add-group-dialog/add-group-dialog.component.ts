@@ -38,6 +38,7 @@ export class AddGroupDialogComponent implements OnInit {
     let group_data = {
       parentSchool: this.data.vm.user.activeSchool.dbId,
       accountType: 'GROUP',
+      title: this.groupName,
     }
     console.log(group_data);
     Promise.all([
@@ -48,7 +49,6 @@ export class AddGroupDialogComponent implements OnInit {
       let group_session_data = {
         parentAccount: value[0].id,
         parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
-        title: this.groupName,
         balance: null,
         parentGroup: null,
         parentHead : this.parentHead.id,

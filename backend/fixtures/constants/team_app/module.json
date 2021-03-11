@@ -16,5 +16,6 @@
 	{ "model": "team_app.module", "pk": 18, "fields": { "path": "class", "title": "Class", "icon": "people", "orderNumber": 13, "parentBoard": null } },
 	{ "model": "team_app.module", "pk": 19, "fields": { "path": "id_card", "title": "ID Card", "icon": "portrait", "orderNumber": 9, "parentBoard": null } },
 	{ "model": "team_app.module", "pk": 20, "fields": { "path": "homework", "title": "Homework", "icon": "assignment", "orderNumber": 12, "parentBoard": null } },
-	{ "model": "team_app.module", "pk": 21, "fields": { "path": "tutorials", "title": "Tutorials", "icon": "video_library", "orderNumber": 8, "parentBoard": null } }
+	{ "model": "team_app.module", "pk": 21, "fields": { "path": "tutorials", "title": "Tutorials", "icon": "video_library", "orderNumber": 8, "parentBoard": null } },
+	{ "model": "team_app.module", "pk": 22, "fields": { "path": "accounts", "title": "Accounts", "icon": "account_balance", "orderNumber": 7, "parentBoard": null } }
 ]

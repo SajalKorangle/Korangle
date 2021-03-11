@@ -1,6 +1,12 @@
 
 
 <div class="card-content table-responsive" *ngIf="!isLoading">
+    <div *ngIf="lockAccounts">
+        <span  style="color: red;">
+            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
+                All Accounts has been locked for this session . No further transctions can be updated. </b></h4></span>
+    </div>
+    <div *ngIf="!lockAccounts">
     <div class="row">
         <div class="col-md-9" *ngIf="searchType == searchTypeList[0];">
             <mat-form-field style="width: 50%;">
@@ -41,7 +47,7 @@
                                 <span *ngIf="transaction.approvalId != null" style="font-size: 14px;">Approval ID: {{transaction.approvalId}} &nbsp;&nbsp;(This Transcation Can Not Be Updated)</span>
                             </div>
                             <div class="col-md-5">
-                                <span style="font-size: 14px;float:right;" >Date :{{getDisplayDateFormat(transaction.transactionDate)}}</span>
+                                <span style="font-size: 14px;float:right;" >Date: {{getDisplayDateFormat(transaction.transactionDate)}}</span>
                             </div>
                         </div>
                     </mat-card-title>
@@ -54,7 +60,7 @@
                                     </div>
                                     <div class="col-md-9" style="padding: 0px;">
                                         <div *ngFor = "let account of transaction.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
+                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +72,7 @@
                                     </div>
                                     <div class="col-md-9" style="padding: 0px;">
                                         <div *ngFor = "let account of transaction.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
+                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +111,7 @@
         </div><br>
         
     </div>
-        
+    </div>
 </div>
 
 <ng-container *ngIf="isLoading">

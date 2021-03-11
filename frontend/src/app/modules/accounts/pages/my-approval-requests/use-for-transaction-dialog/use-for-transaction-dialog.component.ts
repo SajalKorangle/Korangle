@@ -214,16 +214,36 @@ export class UseFortransactionDialogComponent implements OnInit {
             // });
             Promise.all(service).then(data =>{
                 console.log(data);
-                this.data.originalApproval = this.data.approval;
                 this.data.originalApproval.parentTransaction = value1[0].id;
+                this.populateOriginalApproval();
                 alert('Transaction Recorded Successfully');
                 this.dialogRef.close();
             })
 
         })
-
     })
+
   }
 
+  populateOriginalApproval(){
+    this.data.originalApproval.transactionDate = CommonFunctions.formatDate(new Date(), '');
+    this.data.originalApproval.remark = this.data.approval.remark;
+    this.data.originalApproval.billImages = [];
+    this.data.originalApproval.quotationImages = [];
+    this.data.originalApproval.debitAccounts = [];
+    this.data.originalApproval.creditAccounts = [];
+    this.data.approval.billImages.forEach(element =>{
+      this.data.originalApproval.billImages.push(element);
+    })
+    this.data.approval.quotationImages.forEach(element =>{
+      this.data.originalApproval.quotationImages.push(element);
+    })
+    this.data.approval.debitAccounts.forEach(element =>{
+      this.data.originalApproval.debitAccounts.push(element);
+    })
+    this.data.approval.creditAccounts.forEach(element =>{
+      this.data.originalApproval.creditAccounts.push(element);
+    })
+  }
   
 }

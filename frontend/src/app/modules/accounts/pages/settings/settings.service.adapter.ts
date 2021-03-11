@@ -13,10 +13,34 @@ export class SettingsServiceAdapter {
 
     //initialize data
     initializeData(): void {
-        this.vm.isInitialLoading = false;
-        this.vm.isLoading = false;
-        this.vm.isUpdating = false;
+        this.vm.isInitialLoading = true;
+        this.vm.isLoading = true;
+        this.vm.isUpdating = true;
 
+        let lock_accounts_data = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data).then(value => {
+
+            if (value.length == 0) {
+                this.vm.lockAccounts = null;
+            } else if (value.length == 1) {
+                this.vm.lockAccounts = value[0];
+            } else {
+                alert('Error: Report admin');
+            }
+
+            this.vm.isInitialLoading = false;
+            this.vm.isLoading = false;
+            this.vm.isUpdating = false;
+
+        }, error => {
+            this.vm.isInitialLoading = false;
+            this.vm.isLoading = false;
+            this.vm.isUpdating = false;
+        })
     }
     
     getEmployeeAmount(employee: any): void{
@@ -109,6 +133,47 @@ export class SettingsServiceAdapter {
                 alert('Voucher Number Regenerated Successfully');
             })
         })
+    }
+
+    lockAccounts(): void {
+
+        this.vm.isLoading = true;
+
+        let lock_accounts_object = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        this.vm.accountsService.createObject(this.vm.accountsService.lock_accounts, lock_accounts_object).then(value => {
+
+            alert('Accounts locked successfully');
+
+            this.vm.lockAccounts = value;
+
+            this.vm.isLoading = false;
+
+        }, error => {
+            this.vm.isLoading = false;
+        })
+
+    }
+
+    unlockAccounts(): void {
+
+        this.vm.isLoading = true;
+
+        this.vm.accountsService.deleteObject(this.vm.accountsService.lock_accounts, this.vm.lockAccounts).then(value => {
+
+            alert('Accounts unlocked successfully');
+
+            this.vm.lockAccounts = null;
+
+            this.vm.isLoading = false;
+
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
     }
     
     

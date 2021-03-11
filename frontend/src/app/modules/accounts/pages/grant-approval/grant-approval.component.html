@@ -1,5 +1,10 @@
 <div class="card-content table-responsive ">
-    
+    <div *ngIf="lockAccounts">
+        <span  style="color: red;">
+            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
+                All Accounts has been locked for this session . No further approvals can be given for this session. </b></h4></span>
+    </div>
+    <div *ngIf="!lockAccounts">
     <div *ngFor='let approval of approvalsList'>
         <div class="row">
             <div class="col-md-10">
@@ -43,7 +48,7 @@
                                     </div>
                                     <div class="col-md-9" style="padding: 0px;">
                                         <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
+                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -55,7 +60,7 @@
                                     </div>
                                     <div class="col-md-9" style="padding: 0px;">
                                         <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
+                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -104,6 +109,7 @@
                 <div class="loaderCustom"></div>
             </div><br>
         </div><span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
+    </div>
     </div>
     
 </div>

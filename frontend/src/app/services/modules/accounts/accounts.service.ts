@@ -20,5 +20,6 @@ export class AccountsService extends ServiceObject {
     public settings = '/settings';
     public approval_request_account_details = '/approval-account-details';
     public approval_request_images = '/approval-images';
+    public lock_accounts = '/lock-accounts';
 
 }

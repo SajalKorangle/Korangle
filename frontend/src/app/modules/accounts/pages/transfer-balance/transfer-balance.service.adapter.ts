@@ -56,12 +56,13 @@ export class TransferBalanceServiceAdapter{
     populateAccountSessionList(currentAccountsSessionList, nextAccountsSessionList){
         for(let i=0;i<currentAccountsSessionList.length ; i++){
             let account = currentAccountsSessionList[i];
-            let type = this.accountsList.find(accounts => accounts.id == account.parentAccount).accountType;
-            account['type'] = type;
+            let acc = this.accountsList.find(accounts => accounts.id == account.parentAccount);
+            account['type'] = acc.accountType;
+            account['title'] = acc.title;
             account['selected'] = false;
             account['disabled'] = false;
             let nextSessionAccount = nextAccountsSessionList.find(acc => acc.parentAccount == account.parentAccount);
-            if(nextSessionAccount != undefined && type == 'ACCOUNT'){
+            if(nextSessionAccount != undefined && acc.accountType == 'ACCOUNT'){
                 if(account.parentHead == 1 || account.parentHead == 2){
                     account['disabled'] = true;
                 }
@@ -69,7 +70,7 @@ export class TransferBalanceServiceAdapter{
                     account['disabled'] = true;
                 }
             }
-            else if(nextSessionAccount != undefined && type == 'GROUP'){
+            else if(nextSessionAccount != undefined && acc.accountType == 'GROUP'){
                 account['disabled'] = true;
             }
             this.vm.currentSessionSelectedAccountsList.push(account);
@@ -83,9 +84,12 @@ export class TransferBalanceServiceAdapter{
         let parentGroupsList = [];
         let individualAccountList = [];
         for(let i=0;i<accountsSessionList.length; i++){
-            let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
-            accountsSessionList[i]['type'] = type;
-            if(type == 'ACCOUNT'){
+            // let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
+            // accountsSessionList[i]['type'] = type;
+            let acc = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount);
+            accountsSessionList[i]['type'] = acc.accountType;
+            accountsSessionList[i]['title'] = acc.title;
+            if(acc.accountType == 'ACCOUNT'){
                 if(accountsSessionList[i].parentGroup == null){
                     individualAccountList.push(accountsSessionList[i]);
                     accountsSessionList.splice(i,1);
@@ -190,7 +194,6 @@ export class TransferBalanceServiceAdapter{
                         parentAccount: element.parentAccount,
                         parentGroup: element.parentGroup,
                         parentHead: element.parentHead,
-                        title: element.title,
                         parentSession: this.vm.user.activeSchool.currentSessionDbId+1,
                         balance: null,
                     }
@@ -228,7 +231,8 @@ export class TransferBalanceServiceAdapter{
             for(let i=0;i<val[1].length; i++){
                 this.nextAccountsSessionList.find(element => element.id == val[1][i].id ).balance = val[1][i].balance;
             }
-
+            this.populateAccountSessionList(this.currentAccountsSessionList,this.nextAccountsSessionList);
+            this.initialiseDisplayData(this.currentAccountsSessionList, this.vm.currentSessionAccountsList);
             this.initialiseDisplayData(this.nextAccountsSessionList, this.vm.nextSessionAccountsList);
             this.vm.deSelectAllAccounts();
             alert('Balance Transferred Successfully')

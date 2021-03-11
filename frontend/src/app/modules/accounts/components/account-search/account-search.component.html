@@ -13,7 +13,7 @@
                                   (optionSelected)="handleAccountSelection($event.option.value)"
                                   [displayWith]="displayAccountFunction">
                     <mat-option *ngFor="let account of filteredAccountList | async" [value]="account">
-                        {{account.title}}
+                        {{account.title}}&nbsp;A/c
                     </mat-option>
                     <!-- <mat-option *ngFor="let group of groupsList" [value]="group">
                         {{group.title}}

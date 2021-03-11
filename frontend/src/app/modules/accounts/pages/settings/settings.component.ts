@@ -28,6 +28,8 @@ export class SettingsComponent{
     isUpdating: any;
     minimumDate: any;
     maximumDate: any;
+
+    lockAccounts: any;
     
     constructor( 
         public accountsService: AccountsService,

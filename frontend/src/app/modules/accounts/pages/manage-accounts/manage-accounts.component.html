@@ -1,7 +1,12 @@
 
 
-<div class="card-content table-responsive" *ngIf="!isLoading">
-    
+<div class="card-content table-responsive" *ngIf="!isLoading">    
+    <div *ngIf="lockAccounts">
+        <span  style="color: red;">
+            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
+                All Accounts has been locked for this session . No further changes can be done in accounts in this session. </b></h4></span>
+    </div>
+    <div *ngIf="!lockAccounts">
     <div *ngIf="displayWholeList == true;">
         <div class="row">
             <div class="col-md-9">
@@ -21,7 +26,7 @@
                 <div *ngFor = "let account of searchList">
                     <div class="col-md-3">
                         <mat-card style="margin-bottom:10px;" *ngIf="account.type=='ACCOUNT'">
-                            <mat-card-title><span style="cursor: pointer;" (click)="openEditDialog(account)">{{account.title}}</span>
+                            <mat-card-title><span style="cursor: pointer;" (click)="openEditDialog(account)">{{account.title}}&nbsp;A/c</span>
                                 <span *ngIf="account.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
                                 <span *ngIf="account.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
                             </mat-card-title>
@@ -50,13 +55,14 @@
                         <mat-card style="margin-bottom: 10px;">
                             <mat-card-title style="width: 100%;">
                                 <span style="cursor: pointer;" (click)="openEditDialog(element)">{{element.title}}</span>
+                                <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                             </mat-card-title>
                             <mat-card-content *ngIf="element.type == 'GROUP'">
                                 <div *ngFor="let child of element.childs">
-                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}&nbsp;A/c</span>
                                     <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
                                     <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
                                     <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
@@ -67,7 +73,7 @@
                                         <mat-card-content>
                                             <div *ngFor="let grandchild of child.childs">
                                                 
-                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}&nbsp;A/c</span>
                                                 <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
                                                 <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
                                                 <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
@@ -102,15 +108,16 @@
                         <mat-card style="margin-bottom: 10px;">
                             <mat-card-title style="width: 100%;">
                                 <span style="cursor: pointer;" (click)="openEditDialog(element)">{{element.title}}</span>
+                                <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                             </mat-card-title>
                             <mat-card-content *ngIf="element.type == 'GROUP'">
                                 <div *ngFor="let child of element.childs">
-                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}&nbsp;A/c</span>
                                     <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                    <span *ngIf="child.type == 'ACCOUNT' && child.balance > 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
                                     <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                         <mat-card-title style="width: 100%;">
                                             <span style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
@@ -119,9 +126,9 @@
                                         <mat-card-content>
                                             <div *ngFor="let grandchild of child.childs">
                                                 
-                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}&nbsp;A/c</span>
                                                 <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance > 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
                                                 <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                     <mat-card-title>
                                                         <span style="cursor: pointer;" (click)="openEditDialog(grandchild); $event.stopPropagation()">{{grandchild.title}}</span>
@@ -141,6 +148,7 @@
             <div class="row col-md-12" >
                 <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
             </div>
+
         </div>
 
         <div class="row">
@@ -153,15 +161,16 @@
                         <mat-card style="margin-bottom: 10px;">
                             <mat-card-title style="width: 100%;">
                                 <span style="cursor: pointer;" (click)="openEditDialog(element)">{{element.title}}</span>
+                                <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                             </mat-card-title>
                             <mat-card-content *ngIf="element.type == 'GROUP'">
                                 <div *ngFor="let child of element.childs">
-                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}&nbsp;A/c</span>
                                     <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                    <span *ngIf="child.type == 'ACCOUNT' && child.balance > 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
                                     <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                         <mat-card-title style="width: 100%;">
                                             <span style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
@@ -170,9 +179,9 @@
                                         <mat-card-content>
                                             <div *ngFor="let grandchild of child.childs">
                                                 
-                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}&nbsp;A/c</span>
                                                 <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance > 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
                                                 <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                     <mat-card-title>
                                                         <span style="cursor: pointer;" (click)="openEditDialog(grandchild); $event.stopPropagation()">{{grandchild.title}}</span>
@@ -192,6 +201,7 @@
             <div class="row col-md-12" >
                 <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
             </div>
+
         </div>
 
         <div class="row">
@@ -204,15 +214,16 @@
                         <mat-card style="margin-bottom: 10px;">
                             <mat-card-title style="width: 100%;">
                                 <span style="cursor: pointer;" (click)="openEditDialog(element)">{{element.title}}</span>
+                                <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
                                 <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                             </mat-card-title>
                             <mat-card-content *ngIf="element.type == 'GROUP'">
                                 <div *ngFor="let child of element.childs">
-                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}&nbsp;A/c</span>
                                     <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                    <span *ngIf="child.type == 'ACCOUNT' && child.balance > 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                    <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
                                     <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                         <mat-card-title style="width: 100%;">
                                             <span style="cursor: pointer;" (click)="openEditDialog(child)">{{child.title}}</span>
@@ -221,9 +232,9 @@
                                         <mat-card-content>
                                             <div *ngFor="let grandchild of child.childs">
                                                 
-                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="openEditDialog(grandchild)" >{{grandchild.title}}&nbsp;A/c</span>
                                                 <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance > 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
                                                 <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                     <mat-card-title>
                                                         <span style="cursor: pointer;" (click)="openEditDialog(grandchild); $event.stopPropagation()">{{grandchild.title}}</span>
@@ -243,7 +254,9 @@
             <div class="row col-md-12" >
                 <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
             </div>
+
         </div>
+
     </div>
     <div *ngIf="!displayWholeList">
         <div class="row col-md-12">
@@ -256,7 +269,7 @@
                             ></group-hierarchy>
         </div>
     </div>
-
+    </div>
     
 </div>
 
