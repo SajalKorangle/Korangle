@@ -1365,14 +1365,15 @@ export class CanvasCircle extends ShapeBaseLayer implements Layer{
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         ctx.save();
         super.drawOnCanvas(ctx, scheduleReDraw);
+        const radius = this.radius - this.shapeStyle.lineWidth/2;
+        ctx.beginPath();
+        ctx.arc(this.x + this.radius, this.y + this.radius, radius - this.shapeStyle.lineWidth/2, 0, 2 * Math.PI); 
+        ctx.fill();
         if (this.shapeStyle.lineWidth > 0) {
             ctx.beginPath()
-            ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI);
+            ctx.arc(this.x + this.radius, this.y + this.radius, radius, 0, 2 * Math.PI);
             ctx.stroke();
         }
-        ctx.beginPath();
-        ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, 2 * Math.PI);
-        ctx.fill();
         ctx.restore();
         return true;    // Drawn successfully on canvas
     }
@@ -1444,17 +1445,39 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
     
     drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean {
         super.drawOnCanvas(ctx, scheduleReDraw);
+        ctx.save();
+        const x = this.x + this.shapeStyle.lineWidth / 2;   // adjisted for line Width
+        const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
+        const width = this.width - this.shapeStyle.lineWidth ;
+        const height = this.height - this.shapeStyle.lineWidth;
+        const radius = this.radius - this.shapeStyle.lineWidth / 2;
+        const offSet = this.shapeStyle.lineWidth / 2
         ctx.beginPath();
-        ctx.moveTo(this.x + this.radius, this.y);
-        ctx.lineTo(this.x + this.width - this.radius, this.y);
-        ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width, this.y + this.radius);
-        ctx.lineTo(this.x + this.width, this.y + this.length - this.radius);
-        ctx.quadraticCurveTo(this.x + this.width, this.y + this.length, this.x + this.width - this.radius, this.y + this.length);
-        ctx.lineTo(this.x + this.radius, this.y + this.length);
-        ctx.quadraticCurveTo(this.x, this.y + this.length, this.x, this.y + this.length - this.radius);
-        ctx.lineTo(this.x, this.y + this.radius);
-        ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
-        ctx.stroke();
+        ctx.moveTo(x + radius, y+offSet);
+        ctx.lineTo(x + width - radius, y+offSet);
+        ctx.quadraticCurveTo(x + width - offSet, y+offSet, x + width-offSet, y + radius);
+        ctx.lineTo(x + width - offSet, y + height - radius);
+        ctx.quadraticCurveTo(x + width - offSet, y + height- offSet, x + width - radius, y + height - offSet);
+        ctx.lineTo(x + radius, y + height - offSet);
+        ctx.quadraticCurveTo(x+offSet, y + height-offSet, x+offSet, y + height - radius);
+        ctx.lineTo(x+offSet, y + radius);
+        ctx.quadraticCurveTo(x+offSet, y+offSet, x + radius, y+offSet);
+        ctx.fill();
+        
+        if (this.shapeStyle.lineWidth > 0) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.stroke();
+        }
+        ctx.restore();
         return true;    // Drawn successfully on canvas
     }
 
