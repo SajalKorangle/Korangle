@@ -25,6 +25,10 @@ export class DeleteStudentServiceAdapter {
             'fields__korangle': 'motherName,rollNumber,scholarNumber,dateOfBirth,address,remark',
         };
 
+        let tc_data = {
+            parentSession: this.vm.user.activeSchool.currentSessionDbId
+        }
+
         let student_section_data = {
             'parentStudent': studentList[0].id,
         };
@@ -48,6 +52,7 @@ export class DeleteStudentServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section,student_section_data),
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts,fee_receipt_data),
             this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_data),
+            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 4
         ]).then(value => {
 
             console.log(value);
@@ -60,6 +65,7 @@ export class DeleteStudentServiceAdapter {
             this.vm.selectedStudentSectionList = value[1];
             this.vm.selectedStudentFeeReceiptList = value[2];
             this.vm.selectedStudentDiscountList = value[3];
+            this.vm.tcList = value[4];
 
             this.vm.isLoading = false;
 

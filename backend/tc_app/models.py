@@ -1,6 +1,6 @@
 from django.db import models
 
-from school_app.model.models import School, SchoolSession
+from school_app.model.models import School, Session
 from student_app.models import Student, StudentSection
 from fees_third_app.models import FeeType
 from employee_app.models import Employee
@@ -54,7 +54,7 @@ def upload_certificate_to(instance, filename):
 class TransferCertificateNew(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
     parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.SET_NULL, null=True)
-    parentSession = models.ForeignKey(SchoolSession, on_delete=models.PROTECT)
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     certificateNumber = models.IntegerField()
     certificateFile = models.FileField(upload_to=upload_certificate_to)
 

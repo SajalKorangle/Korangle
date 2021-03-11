@@ -153,6 +153,7 @@
                 <ng-container *ngIf="selectedStudentFeeReceiptList.length != 0">Fee Receipt/s have been issued for the student<br/></ng-container>
                 <ng-container *ngIf="selectedStudentDiscountList.length != 0">Discount/s have been issued for the student<br/></ng-container>
             </ng-template>
+            <ng-container *ngIf="!selectedStudentHasNoTc()">Cannot delete student from session because TC is already generated<br/></ng-container>
 
             <div class="clearfix"></div>
 
