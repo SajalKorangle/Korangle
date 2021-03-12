@@ -32,7 +32,9 @@ def dataMigration(apps, schema_editor):
                             exams = Examination.objects.filter(id=layer['parentExamination'])
                             if (len(exams) > 0):
                                 layer['examinationName'] = exams.first().name                
-
+                elif (layer['LAYER_TYPE'] in ['LINE', 'RECTANGLE', 'CIRCLE', 'ROUNDED-RECTANGLE', 'SQUARE']):
+                    layer['shapeStyle']['fillStyle'] = 'transparent'
+                    
                 elif (layer['LAYER_TYPE'] == 'TABLE'):
                     strokeStyle = layer['tableStyle']['strokeStyle']
                     lineWidth = layer['tableStyle']['lineWidth']
