@@ -3,9 +3,8 @@ import { SettingsComponent } from './settings.component'
 export class SettingsServiceAdapter {
 
     vm: SettingsComponent;
+
     constructor() {}
-    dbId: any;
-    // Data
 
     initializeAdapter(vm: SettingsComponent): void {
         this.vm = vm;
@@ -15,17 +14,19 @@ export class SettingsServiceAdapter {
     initializeData(): void {
         this.vm.isLoading = true;
 
-        let lock_accounts_data = {
+        const lock_accounts_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data).then(value => {
+        Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
+        ]).then(value => {
 
-            if (value.length == 0) {
+            if (value[0].length == 0) {
                 this.vm.lockAccounts = null;
-            } else if (value.length == 1) {
-                this.vm.lockAccounts = value[0];
+            } else if (value[0].length == 1) {
+                this.vm.lockAccounts = value[0][0];
             } else {
                 alert('Error: Report admin');
             }
@@ -44,18 +45,14 @@ export class SettingsServiceAdapter {
         }
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
         ]).then(value =>{
-            this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-            this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            console.log(value);
-            if(value[0].length > 0){
-                this.vm.selectedEmployeeAmount = value[0][0].restrictedAmount;
-                this.dbId = value[0][0].id;
+            if (value[0].length > 0) {
+                this.vm.selectedEmployeeAccountPermission = value[0][0]
+                this.vm.selectedEmployeeAmount = this.vm.selectedEmployeeAccountPermission.restrictedAmount;
             }
-            else{
+            else {
+                this.vm.selectedEmployeeAccountPermission = null
                 this.vm.selectedEmployeeAmount = null;
-                this.dbId = null;
             }
             this.vm.selectedEmployee = employee;
             this.vm.isLoading = false;
@@ -64,28 +61,27 @@ export class SettingsServiceAdapter {
 
     changeAmountRestriction(): any{
         this.vm.isLoading = true;
-        if(this.dbId == null){
+        if (this.vm.selectedEmployeeAccountPermission) {
+            let tempData = {
+                id: this.vm.selectedEmployeeAccountPermission.id,
+                restrictedAmount: this.vm.selectedEmployeeAmount,
+            }
+            Promise.all([
+                this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.employee_amount_permission, tempData),
+            ]).then(value => {
+                this.vm.selectedEmployeeAccountPermission.restrictedAmount = value[0].restrictedAmount;
+                this.vm.isLoading = false;
+            })
+        }
+        else {
             let tempData = {
                 parentEmployee: this.vm.selectedEmployee.id,
                 restrictedAmount: this.vm.selectedEmployeeAmount,
             }
-            console.log(tempData);
             Promise.all([
                 this.vm.accountsService.createObject(this.vm.accountsService.employee_amount_permission, tempData),
             ]).then(value =>{
-                this.dbId = value[0].id;
-                this.vm.isLoading = false;
-            })
-        }
-        else{
-            let tempData = {
-                id: this.dbId,
-                restrictedAmount: this.vm.selectedEmployeeAmount,
-            }
-            console.log(tempData);
-            Promise.all([
-                this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.employee_amount_permission, tempData),
-            ]).then(value =>{
+                this.vm.selectedEmployeeAccountPermission = value[0];
                 this.vm.isLoading = false;
             })
         }
@@ -97,8 +93,8 @@ export class SettingsServiceAdapter {
         let voucherNumber = 1;
         let transaction_data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
-            'transactionDate__gte': this.vm.minimumDate,
-            'transactionDate__lte': this.vm.maximumDate,
+            'transactionDate__gte': this.vm.currentSession.startDate,
+            'transactionDate__lte': this.vm.currentSession.endDate,
             'korangle__order': 'id',
             'fields__korangle': 'id,voucherNumber'
         }
@@ -112,7 +108,7 @@ export class SettingsServiceAdapter {
                     'voucherNumber': voucherNumber,
                 }
                 
-                if(element.voucherNumber != voucherNumber){
+                if(element.voucherNumber != voucherNumber){ // if voucherNumber is aleady same (edundent update handeled)
                     toUpdateList.push(tempData);
                 }
                 voucherNumber = voucherNumber + 1;
