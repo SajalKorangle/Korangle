@@ -40,7 +40,6 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
   canvas: any;
 
   currentLayout: { id?: any, parentSchool: string, name: string, thumbnail?:string, publiclyShared:boolean, content: any };
-  thumbnailUpdated = false;
 
   ADD_LAYOUT_STRING = '<Add New Layout>';
 
@@ -60,6 +59,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
 
   DATA: {
     studentId: number,
+    currentSession: number,
     data: {
       school: any,
       studentList: any[],
@@ -78,9 +78,11 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       subGradeList: any[],
       studentSubGradeList: any[],
       studentExaminationRemarksList: any[],
+      classSectionSignatureList: any[],
     }
   } = {
     studentId: null,
+    currentSession: null,
     data: {
       school: null,
       studentList: [],
@@ -99,8 +101,11 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       subGradeList: [],
       studentSubGradeList: [],
       studentExaminationRemarksList: [],
+      classSectionSignatureList: [],
     }
   }
+
+  selectedStudent: any;
 
   constructor(
     public reportCardService: ReportCardService,
@@ -129,12 +134,26 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
     this.populateCurrentLayoutWithGivenValue(this.ADD_LAYOUT_STRING);
 
     this.downloadFont();
+    // console.log('DATA: ', this.DATA);
   }
 
   ngOnDestroy() {
+    this.canvasAdapter.destructor();
     let canavsWrapper = document.getElementById('mainCanvas');
     if(canavsWrapper)
       canavsWrapper.parentNode.removeChild(canavsWrapper);
+  }
+
+  handleStudentListSelection(value): void{
+      this.selectedStudent = value[0][0];
+      let temp = this.DATA.data.studentList.find(student => student.id == this.selectedStudent.id);
+      if(temp == undefined){
+        this.serviceAdapter.loadSelectedStudent();
+      }
+      else{
+        this.DATA.studentId = this.selectedStudent.id;
+        this.canvasAdapter.fullCanavsRefresh();
+      }
   }
   
   getFontStyleList(fontFamilyDisplayName: any): any {
@@ -145,19 +164,35 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
 
   downloadFont(): void {
     this.fontFamilyList.forEach(fontFamily => {
-        const newStyle = document.createElement('style');
+      const newStyle = document.createElement('style');
+      fontFamily.styleList.forEach(style => {
+        let fontStyle = '', fontWeight = '';
+        switch (style) {
+          case 'Bold':
+            fontWeight = 'font-weight: bold;';
+            break;
+          case 'Italic':
+            fontStyle = 'font-style: italic;';
+            break;
+          case 'BoldItalic':
+            fontWeight = 'font-weight: bold;';
+            fontStyle = 'font-style: italic;';
+        }
         newStyle.appendChild(document.createTextNode(
-            '@font-face {' +
-            'font-family: ' + fontFamily.displayName + ';' +
-            'src: url("'
-                + 'https://korangleplus.s3.amazonaws.com/'
-                + this.encodeURIComponent('assets/fonts/' +
-                    fontFamily.displayName +
-                    '/' + fontFamily.displayName + '-' + this.getFontStyleList(fontFamily.displayName)[0] + '.ttf')
-            + '");' +
-            '}'
-        ));
-        document.head.appendChild(newStyle);
+          '@font-face {' +
+          'font-family: ' + fontFamily.displayName + ';' +
+          'src: url("'
+              + 'https://korangleplus.s3.amazonaws.com/'
+              + this.encodeURIComponent('assets/fonts/' +
+                  fontFamily.displayName +
+                  '/' + fontFamily.displayName + '-' + style + '.ttf')
+          + '");' +
+          fontStyle+fontWeight+
+          '}'
+      ));
+      document.head.appendChild(newStyle);
+      });
+      
     });
   }
 
@@ -183,8 +218,8 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
       let mainCanavs = document.getElementById('mainCanvas');
       if (mainCanavs) {
         this.canvas = mainCanavs;
-        this.htmlAdapter.canvasSetUp();
         this.canvasAdapter.initilizeCanvas(this.canvas);
+        this.htmlAdapter.canvasSetUp();
       }
       else {
         // if canvs is not already rendered subscribe to mutations while canvas is rendered
@@ -192,8 +227,8 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
           let canvas = document.getElementById('mainCanvas');
           if (canvas) {
             this.canvas = canvas;
-            this.htmlAdapter.canvasSetUp();
             this.canvasAdapter.initilizeCanvas(this.canvas);
+            this.htmlAdapter.canvasSetUp();
             this.canvasAdapter.loadData(this.currentLayout.content[0]);
             me.disconnect();
           }
