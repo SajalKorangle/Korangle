@@ -51,6 +51,8 @@ export class GenerateFinalReportComponent implements OnInit {
 
     showPrincipalSignature = true;
     showClassTeacherSignature = true;
+    showPromotionStatement = true;
+    showAbsentOnZero = false;
 
     serviceAdapter: GenerateFinalReportServiceAdapter;
 
@@ -100,6 +102,8 @@ export class GenerateFinalReportComponent implements OnInit {
             'classSubjectList': this.classSubjectList,
             'showPrincipalSignature': this.showPrincipalSignature,
             'classTeacherSignature': this.classTeacherSignature,
+            'showPromotionStatement': this.showPromotionStatement,
+            'showAbsentOnZero': this.showAbsentOnZero,
         };
         let printRoute : string;
 

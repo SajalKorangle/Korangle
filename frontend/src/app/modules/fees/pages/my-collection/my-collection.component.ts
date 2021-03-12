@@ -59,6 +59,7 @@ export class MyCollectionComponent implements OnInit {
         this.serviceAdapter.initializeData();
 
         delete this.receiptColumnFilter['printButton'];
+        delete this.receiptColumnFilter['session'];
 
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.employee = false;
