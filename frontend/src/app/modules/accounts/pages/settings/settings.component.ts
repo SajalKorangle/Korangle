@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { SettingsServiceAdapter } from './settings.service.adapter'
-import { SchoolService } from './../../../../services/modules/school/school.service'
- 
+import { SchoolService } from './../../../../services/modules/school/school.service';
+
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
@@ -20,12 +20,10 @@ export class SettingsComponent{
     user: any;
     serviceAdapter: SettingsServiceAdapter;
     isLoading: boolean;
-    isInitialLoading: boolean;
 
     selectedEmployeeAmount : any;
     selectedEmployee: any;
     
-    isUpdating: any;
     minimumDate: any;
     maximumDate: any;
 
