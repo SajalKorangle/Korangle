@@ -181,3 +181,4 @@ class LockAccounts(models.Model):
 
     class Meta:
         db_table = 'lock_accounts'
+        unique_together = ('parentSchool', 'paerntSession')
