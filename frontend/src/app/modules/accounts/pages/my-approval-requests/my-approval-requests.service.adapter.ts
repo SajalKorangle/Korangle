@@ -1,5 +1,5 @@
 import { MyApprovalRequestsComponent } from './my-approval-requests.component';
-
+import { CommonFunctions } from './../../../../classes/common-functions';
 export class MyApprovalRequestsServiceAdapter {
 
     vm : MyApprovalRequestsComponent;
@@ -12,27 +12,33 @@ export class MyApprovalRequestsServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let request_account_session_data = {
+        const request_account_session_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId, 
             parentAccount__accountType: 'ACCOUNT',
         }
         
-        let request_account_title_data = {
+        const request_account_title_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
             accountType: 'ACCOUNT',
         }
 
-        let employee_data = {
+        const employee_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             // resterict to required fields only
         };
+
+        const lock_account_request = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+        }
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),    // 1
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),    // 3
+            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_account_request), // 4
         ]).then(value =>{
             this.vm.accountsList = value[0];
             this.vm.employeeList = value[1];
@@ -42,6 +48,10 @@ export class MyApprovalRequestsServiceAdapter {
             this.vm.maximumDate = currentSession.endDate;
 
             this.populateAccountTitle(value[3]);
+
+            if (value[4].length > 0) {
+                this.vm.accountsLockedForSession = true;
+            }
             
             let approval_id = [];
             let approval_request_data = {
@@ -179,6 +189,123 @@ export class MyApprovalRequestsServiceAdapter {
         })
         this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
         console.log(this.vm.approvalsList);
+    }
+
+    requestApprovals(): any{
+        this.vm.isLoading  = true;
+        let data = {
+            'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
+            'requestedGenerationDateTime__gte': this.vm.minimumDate,
+            'requestedGenerationDateTime__lte': this.vm.maximumDate,
+            'korangle__order': '-approvalId',
+            'korangle__count': '0,1',
+        }
+        let nextApprovalID = 1;
+        Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.approval, data),
+        ]).then(val =>{
+            console.log(val);
+            if(val[0].length > 0){
+                nextApprovalID = val[0][0].approvalId + 1;
+            }
+            let toCreateList = [];
+            this.vm.newApprovalList.forEach(approval =>{
+                let tempData = {
+                    parentEmployeeRequestedBy: approval.parentEmployeeRequestedBy,
+                    remark: approval.remark,
+                    requestedGenerationDateTime: approval.requestedGenerationDateTime,
+                    autoAdd: approval.autoAdd,
+                    requestStatus: approval.requestStatus,
+                    approvalId: nextApprovalID,
+                    transactionDate: approval.transactionDate,
+                }
+                nextApprovalID = nextApprovalID + 1;
+                toCreateList.push(tempData);
+            })
+            Promise.all([
+                this.vm.accountsService.createObjectList(this.vm.accountsService.approval, toCreateList),
+            ]).then(value =>{
+                console.log(value);
+                let toCreateAccountList = [];
+
+                const services = [];
+                value[0].forEach((element,index) =>{
+                    this.vm.newApprovalList[index].payFrom.forEach(accountStructure =>{
+                        let tempData = {
+                            parentApproval: element.id,
+                            parentAccount: accountStructure.account,
+                            amount: accountStructure.amount,
+                            transactionType: 'DEBIT',
+                        }
+                        toCreateAccountList.push(tempData);
+                    });
+                    this.vm.newApprovalList[index].payTo.forEach(accountStructure =>{
+                        let tempData = {
+                            parentApproval: element.id,
+                            parentAccount: accountStructure.account,
+                            amount: accountStructure.amount,
+                            transactionType: 'CREDIT',
+                        }
+                        toCreateAccountList.push(tempData);
+                    });
+
+                    let i=1;
+                    this.vm.newApprovalList[index].billImages.forEach(image =>{
+                        let tempData = {
+                            parentApproval: element.id,
+                            imageURL: image.imageURL,
+                            orderNumber: i,
+                            imageType: 'BILL',
+                        }
+                        let temp_form_data = new FormData();
+                        const layout_data = { ...tempData,};
+                        Object.keys(layout_data).forEach(key => {
+                            if (key === 'imageURL' ) {
+                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                            } else {
+                                temp_form_data.append(key, layout_data[key]);
+                            }
+                        });
+                        i = i + 1;
+                        services.push(this.vm.accountsService.createObject(this.vm.accountsService.approval_images, temp_form_data))
+
+                    })
+                    
+                    i=1;
+                    this.vm.newApprovalList[index].quotationImages.forEach(image =>{
+                        let tempData = {
+                            parentApproval: element.id,
+                            imageURL: image.imageURL,
+                            orderNumber: i,
+                            imageType: 'QUOTATION',
+                        }
+                        let temp_form_data = new FormData();
+                        const layout_data = { ...tempData,};
+                        Object.keys(layout_data).forEach(key => {
+                            if (key === 'imageURL' ) {
+                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
+                            } else {
+                                temp_form_data.append(key, layout_data[key]);
+                            }
+                        });
+                        i = i + 1;
+                        services.push(this.vm.accountsService.createObject(this.vm.accountsService.approval_images, temp_form_data))
+                    })
+                });
+                services.push(this.vm.accountsService.createObjectList(this.vm.accountsService.approval_account_details, toCreateAccountList));
+                Promise.all(services).then(data =>{
+                    console.log(data);
+                    this.vm.newApprovalList = [];
+                    this.vm.moreApprovalsCount = 1;
+                    this.vm.addApprovals();
+                    alert('Approval Request Generated Successfully');
+                    this.initialiseApprovalData(value[0], data[data.length - 1], data.slice(0, -1));
+                    this.vm.isLoading  = false;
+                })
+
+            })
+        })
+        
     }
 
     getBase64FromUrl = async (url) => {

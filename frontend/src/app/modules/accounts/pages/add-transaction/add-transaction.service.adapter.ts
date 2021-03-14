@@ -89,16 +89,12 @@ export class AddTransactionServiceAdapter {
                     })
                     
                     
-                },error =>{
-                    this.vm.isLoading = false;
                 })
             }
             else{
                 this.vm.isLoading=false;
                 alert("Unexpected errors. Please contact admin");
             }
-        },error=>{
-            this.vm.isLoading = false;
         });
     }
 
