@@ -1,7 +1,7 @@
 <div [style.display]="isLoading?'none':''" class="card-content table-responsive" >
 
     <div>
-        <div class="row">
+        <div class="row" *ngIf ="!lockAccounts">
             <h4 style="margin-left: 15px;"><b>Employee Permissions</b></h4>
             <div class="col-md-6">
                 <app-employee-filter [user]="user"
