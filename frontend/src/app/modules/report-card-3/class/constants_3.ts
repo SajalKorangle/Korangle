@@ -2151,18 +2151,12 @@ export function getParser(layers: Layer[]) {
     // setCustomFunctionsInParser(PARSER);
     layers.forEach((layer: Layer) => {
         if (layer) {
-            // if ((layer.LAYER_TYPE == 'MARKS')) {
-            //     PARSER.setVariable(numberToVariable(layer.id), layer.marks>=0?layer.marks:0);
-            // }
-            // else
-                if (layer instanceof CanvasText) {
-                let parsedValue = parseFloat(layer.text);
-                if (!isNaN(parsedValue)) {
-                    PARSER.setVariable(numberToVariable(layer.id), parsedValue);
-                }
-                else {
-                    PARSER.setVariable(numberToVariable(layer.id), 0);
-                    }
+            if ((layer.LAYER_TYPE == 'MARKS' || layer.LAYER_TYPE == 'FORMULA')) {
+                PARSER.setVariable(numberToVariable(layer.id), layer.marks>=0?Math.round(layer.marks*Math.pow(10, layer.decimalPlaces))/Math.pow(10, layer.decimalPlaces):0);
+            }
+            else if (layer instanceof CanvasText) {
+                const parsedValue = parseFloat(layer.text);
+                PARSER.setVariable(numberToVariable(layer.id), parsedValue);
             }
         }
     });
