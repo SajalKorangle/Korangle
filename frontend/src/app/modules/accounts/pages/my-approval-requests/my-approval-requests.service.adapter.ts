@@ -59,7 +59,7 @@ export class MyApprovalRequestsServiceAdapter {
                 'requestedGenerationDateTime__gte': this.vm.minimumDate,
                 'requestedGenerationDateTime__lte': this.vm.maximumDate,
                 'korangle__order': '-id',
-                'korangle__count': this.vm.approvalsList.length.toString() + ',' + this.vm.loadingCount.toString(),
+                'korangle__count': '0,10'
             }
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
@@ -67,6 +67,9 @@ export class MyApprovalRequestsServiceAdapter {
                 val[0].forEach(approval =>{
                     approval_id.push(approval.id);
                 })
+                if (val[0].length < 10) {
+                    this.vm.moreAprovalsAvailable = false;
+                }
                 let approval_details_data = {
                     'parentApproval__in': approval_id,
                 }
@@ -107,7 +110,7 @@ export class MyApprovalRequestsServiceAdapter {
             console.log(value);
             let approval_id = [];
             if (value[0].length < this.vm.loadingCount) {
-                this.vm.loadMoreApprovals = false;
+                this.vm.moreAprovalsAvailable = false;
             }
             value[0].forEach(approval => {
                 approval_id.push(approval.id);
