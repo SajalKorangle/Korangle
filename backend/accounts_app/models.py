@@ -17,11 +17,13 @@ def upload_image_to_1(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
     return 'accounts/%s/approval_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
+
 class Heads(models.Model):
     title = models.TextField()
 
     class Meta:
         db_table = 'heads'
+
 
 class EmployeeAmountPermission(models.Model):
 
@@ -49,16 +51,27 @@ class Accounts(models.Model):
     class Meta:
         db_table = 'accounts'
 
+
 class AccountSession(models.Model):
     
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE, related_name='acccountSessions')
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE,)
-    balance = models.IntegerField(null=True, blank=True,)
+    balance = models.IntegerField(null=True, blank=True)
+    openingBalance = models.PositiveIntegerField(null=False, default=0)
+    currentBalance = models.IntegerField(null=False, default=0)
     parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions')    # on delete?
     parentHead = models.ForeignKey(Heads)
 
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            self.currentBalance = self.openingBalance
+        else:
+            self.currentBalance = self.openingBalance - AccountSession.objects.get(id=self.id)
+        super(AccountSession, self).save(*args, **kwargs)
+
     class Meta:
         db_table = 'account_session'
+
 
 class Transaction(models.Model):
     
@@ -70,6 +83,43 @@ class Transaction(models.Model):
     
     class Meta:
         db_table = 'transaction'
+
+
+class TransactionAccountDetails(models.Model):
+    parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    parentAccount = models.ForeignKey(Accounts, on_delete=models.PROTECT)
+    amount = models.IntegerField(null=True, blank=True)
+
+    CREDIT_TYPE = 'CREDIT'
+    DEBIT_TYPE = 'DEBIT'
+    ACCOUNT_TYPE = (
+        (CREDIT_TYPE, 'CREDIT'),
+        (DEBIT_TYPE, 'DEBIT'),
+    )
+
+    transactionType = models.TextField(choices=ACCOUNT_TYPE)
+
+    class Meta:
+        db_table = 'transaction_account_details'
+
+
+class TransactionImages(models.Model):
+    parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    imageURL = models.ImageField(upload_to=upload_image_to, blank=True, null=True)
+    orderNumber = models.IntegerField(default=0)
+
+    BILL_TYPE = 'BILL'
+    QUOTATION_TYPE = 'QUOTATION'
+    DOCUMENT_TYPE = (
+        (BILL_TYPE, 'BILL'),
+        (QUOTATION_TYPE, 'QUOTATION'),
+    )
+
+    imageType = models.TextField(choices=DOCUMENT_TYPE)
+
+    class Meta:
+        db_table = 'transaction_images'
+
 
 class Approval(models.Model):
     
@@ -138,42 +188,6 @@ class ApprovalImages(models.Model):
     class Meta:
         db_table = 'approval_images'
 
-
-class TransactionAccountDetails(models.Model):
-
-    parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE)
-    amount = models.IntegerField(null=True, blank=True)
-
-    CREDIT_TYPE = 'CREDIT'
-    DEBIT_TYPE = 'DEBIT'
-    ACCOUNT_TYPE = (
-        (CREDIT_TYPE, 'CREDIT'),
-        (DEBIT_TYPE, 'DEBIT'),
-    )
-
-    transactionType = models.TextField(choices=ACCOUNT_TYPE)
-
-    class Meta:
-        db_table = 'transaction_account_details'
-
-class TransactionImages(models.Model):
-    
-    parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    imageURL = models.ImageField(upload_to = upload_image_to, blank = True, null=True)
-    orderNumber = models.IntegerField(default=0)
-    
-    BILL_TYPE = 'BILL'
-    QUOTATION_TYPE = 'QUOTATION'
-    DOCUMENT_TYPE = (
-        (BILL_TYPE, 'BILL'),
-        (QUOTATION_TYPE, 'QUOTATION'),
-    )
-
-    imageType = models.TextField(choices=DOCUMENT_TYPE)
-
-    class Meta:
-        db_table = 'transaction_images'
 
 class LockAccounts(models.Model):
 

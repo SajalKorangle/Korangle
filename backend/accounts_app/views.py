@@ -1,14 +1,19 @@
 from common.common_views_file import CommonView, CommonListView
 from rest_framework.views import APIView
+from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models import Sum
+
 
 # Create your views here.
 from .models import Heads
+
 
 class HeadsView(CommonView ,APIView):
     Model = Heads
 
 class HeadsListView(CommonListView ,APIView):
     Model = Heads
+
 
 from .models import EmployeeAmountPermission
 
@@ -18,6 +23,7 @@ class EmployeeAmountPermissionView(CommonView ,APIView):
 class EmployeeAmountPermissionListView(CommonListView ,APIView):
     Model = EmployeeAmountPermission
 
+
 from .models import Accounts
 
 class AccountsView(CommonView, APIView):
@@ -25,6 +31,7 @@ class AccountsView(CommonView, APIView):
 
 class AccountsListView(CommonListView, APIView):
     Model = Accounts
+
 
 from .models import AccountSession
 
@@ -34,6 +41,7 @@ class AccountSessionView(CommonView, APIView):
 class AccountSessionListView(CommonListView, APIView):
     Model = AccountSession
 
+
 from .models import Transaction
 
 class TransactionView(CommonView, APIView):
@@ -41,6 +49,7 @@ class TransactionView(CommonView, APIView):
 
 class TransactionListView(CommonListView, APIView):
     Model = Transaction
+
 
 from .models import TransactionImages
 
@@ -50,6 +59,7 @@ class TransactionImagesView(CommonView, APIView):
 class TransactionImagesListView(CommonListView, APIView):
     Model = TransactionImages
 
+
 from .models import TransactionAccountDetails
 
 class TransactionAccountDetailsView(CommonView, APIView):
@@ -57,6 +67,24 @@ class TransactionAccountDetailsView(CommonView, APIView):
 
 class TransactionAccountDetailsListView(CommonListView, APIView):
     Model = TransactionAccountDetails
+
+from school_app.model.models import Session
+
+def updateCurrentBalanceFromTransactionAccountDetails(sender, instance, **kwargs):
+    session_object = \
+        Session.objects.get(startDate__lte=instance.parentTransaction.transactionDate,
+                            endDate__gte=instance.parentTransaction.transactionDate)
+    account_session_object = \
+        AccountSession.objects.get(parentAccount=instance.parentAccount, parentSession=session_object)
+    if instance.transactionType == 'CREDIT':
+        account_session_object.currentBalance = account_session_object.currentBalance + instance.amount
+    if instance.transactionType == 'DEBIT':
+        account_session_object.currentBalance = account_session_object.currentBalance - instance.amount
+    account_session_object.save(update_fields=['currentBalance'])
+
+post_save.connect(updateCurrentBalanceFromTransactionAccountDetails, sender=TransactionAccountDetails)
+pre_delete.connect(updateCurrentBalanceFromTransactionAccountDetails, sender=TransactionAccountDetails)
+
 
 from .models import Approval
 
@@ -74,6 +102,7 @@ class ApprovalImagesView(CommonView, APIView):
 
 class ApprovalImagesListView(CommonListView, APIView):
     Model = ApprovalImages
+
 
 from .models import ApprovalAccountDetails
 
