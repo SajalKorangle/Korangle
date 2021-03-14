@@ -157,6 +157,7 @@
         <hr  style="margin-top: 24px;"/>
         <h3 class="icon-text-wrapper"><mat-icon>history</mat-icon><span> History</span></h3>
     </div>
+    <p *ngIf="approvalsList.length==0">No Records Found</p>
     <div *ngFor='let approval of approvalsList'>
         <div class="row">
             <div class="col-md-10">
@@ -249,7 +250,8 @@
             <div style="width: 100%" align="center">
                 <div class="loaderCustom"></div>
             </div><br>
-        </div><span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
+        </div>
+        <span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
     </div>
 
 </ng-container>

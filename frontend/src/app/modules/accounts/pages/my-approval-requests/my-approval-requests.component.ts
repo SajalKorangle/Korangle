@@ -44,8 +44,8 @@ export class MyApprovalRequestsComponent implements OnInit {
 
     moreApprovalsCount: number = 1;
     
-    loadMoreApprovals: any;
-    isLoadingApproval: any;
+    loadMoreApprovals: boolean = false;
+    isLoadingApproval: boolean = false;
 
     isLoading: boolean = false;
 
@@ -126,13 +126,14 @@ export class MyApprovalRequestsComponent implements OnInit {
         });
     }
 
-    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) ){
-          
-          console.log('added', this.loadMoreApprovals, this.isLoadingApproval);
+    @HostListener('window:scroll', ['$event']) onScrollEvent(event) {
+        const mainPannel = document.getElementById('main-pannel');
+        if((mainPannel.clientHeight + mainPannel.scrollTop) > (0.8*mainPannel.scrollHeight) && !this.loadMoreApprovals && !this.isLoadingApproval){
+            this.loadMoreApprovals = true;
+            // this.serviceAdapter.loadMoreApprovals();
         }
-        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreApprovals == true && this.isLoadingApproval == false){
-            this.serviceAdapter.loadMoreApprovals();
+        else if ((mainPannel.clientHeight + mainPannel.scrollTop) < (0.8 * mainPannel.scrollHeight)) {
+            this.loadMoreApprovals = false;
         }
     } 
 
