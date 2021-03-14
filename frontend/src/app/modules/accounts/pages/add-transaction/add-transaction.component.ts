@@ -1,11 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { AddTransactionServiceAdapter } from './add-transaction.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { CommonFunctions } from './../../../../classes/common-functions'
 import {MatDialog} from '@angular/material';
-import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
-import { SchoolService } from './../../../../services/modules/school/school.service'
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
+import { SchoolService } from './../../../../services/modules/school/school.service';
+
+import { AddTransactionServiceAdapter } from './add-transaction.service.adapter'
+import { AddTransactionHtmlRenderer } from './add-transaction.html.renderer';
+import { AddTransactionBackendData } from './add-transaction.backend.data';
 
 @Component({
   selector: 'add-transaction',
@@ -20,129 +23,95 @@ import { SchoolService } from './../../../../services/modules/school/school.serv
 
 export class AddTransactionComponent implements OnInit {
 
-    // @Input() user;
     user: any;
     isLoading: any;
-    accountsList: any;
 
     selectedDate: any;
 
-    transactions: any[];
-
+    transactionList: any[];
 
     debitAccount: any;
     debitAmount: any;
     creditAccount: any;
     creditAmount: any;
-    serviceAdapter: any;
-    autoAdd: any;
 
     approvalsList: any;
-    moreTransaction: any;
     maximumPermittedAmount: any;
     
-    minimumDate: any;
-    maximumDate: any;
-
     lockAccounts: any;
+
+    serviceAdapter: any;
+    htmlRenderer: any;
+    backendData: any;
     
     constructor( 
       public accountsService: AccountsService,
       public dialog: MatDialog,
       public schoolService: SchoolService,
-    ){ }
+    ) { }
+
     // Server Handling - Initial
     ngOnInit(): void {
-      this.user = DataStorage.getInstance().getUser();
-      this.transactions = [];
-      this.selectedDate = CommonFunctions.formatDate(new Date(), '');
-      this.serviceAdapter = new AddTransactionServiceAdapter;
-      this.serviceAdapter.initializeAdapter(this);
-      this.serviceAdapter.initializeData();
-      this.moreTransaction = 1;
-      this.addNewTransaction();
-      this.autoAdd = false;
-    }
 
-    func(){
-      console.log(this.selectedDate);
-    }
-    
-    addNewTransaction(): void{
-      for(let i=0;i<this.moreTransaction; i++){
-        let transaction = {
-          debitAccounts: [],
-          creditAccounts: [],
-          remark: null,
-          billImages: [],
-          quotationImages: [],
-          approvalId: null,
-          approvalDbId: null,
-          
-        }
-        this.transactions.push(transaction);
-        this.addNewDebitAccount(this.transactions.length - 1);
-        this.addNewCreditAccount(this.transactions.length - 1);
-      }
-    }
+        this.user = DataStorage.getInstance().getUser();
+        this.transactionList = [];
+        this.selectedDate = CommonFunctions.formatDate(new Date(), '');
 
-    addNewDebitAccount(index: any): void{
-      this.transactions[index].debitAccounts.push({
-        debitAccount: null,
-        debitAmount: null,
-      })
-    }
+        this.htmlRenderer = new AddTransactionHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
-    addNewCreditAccount(index: any): void{
-      this.transactions[index].creditAccounts.push({
-        creditAccount: null,
-        creditAmount: null,
-      })
+        this.backendData = new AddTransactionBackendData();
+        this.backendData.initializeData(this);
+
+        this.serviceAdapter = new AddTransactionServiceAdapter;
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
     }
 
     removeTransaction(index: any){
-      this.transactions.splice(index, 1);
+      this.transactionList.splice(index, 1);
     }
 
     removeDebitAccount(tIndex: any, aIndex: any){
-      this.transactions[tIndex].debitAccounts.splice(aIndex, 1);
+      this.transactionList[tIndex].debitAccountList.splice(aIndex, 1);
     }
     
     removeCreditAccount(tIndex: any, aIndex: any){
-      this.transactions[tIndex].creditAccounts.splice(aIndex, 1);
+      this.transactionList[tIndex].creditAccountList.splice(aIndex, 1);
     }
 
     handleAmountChange(transaction: any){
       let totalCreditAmount = 0;
-      transaction.creditAccounts.forEach(account =>{
+      transaction.creditAccountList.forEach(account =>{
         totalCreditAmount += account.creditAmount;
       })
       let totalDebitAmount = 0;
-      transaction.debitAccounts.forEach(account =>{
+      transaction.debitAccountList.forEach(account =>{
         totalDebitAmount += account.debitAmount;
       })
-      if(transaction.debitAccounts.length>1 && transaction.creditAccounts.length>1){
+      if(transaction.debitAccountList.length>1 && transaction.creditAccountList.length>1){
         
       }
-      else if(transaction.creditAccounts.length == 1){                                                      
-        if(transaction.creditAccounts[0].creditAmount < totalDebitAmount){
-          transaction.creditAccounts[0].creditAmount = totalDebitAmount;
+      else if(transaction.creditAccountList.length == 1){                                                      
+        if(transaction.creditAccountList[0].creditAmount < totalDebitAmount){
+          transaction.creditAccountList[0].creditAmount = totalDebitAmount;
         }
       }
       else{
-        if(transaction.debitAccounts[0].debitAmount < totalCreditAmount){
-          transaction.debitAccounts[0].debitAmount = totalCreditAmount;
+        if(transaction.debitAccountList[0].debitAmount < totalCreditAmount){
+          transaction.debitAccountList[0].debitAmount = totalCreditAmount;
         }
       }
     }
 
     isAmountUnEqual(transaction):boolean{
       let totalCreditAmount = 0;
-      transaction.creditAccounts.forEach(account =>{
+      transaction.creditAccountList.forEach(account =>{
         totalCreditAmount += account.creditAmount;
       })
       let totalDebitAmount = 0;
-      transaction.debitAccounts.forEach(account =>{
+      transaction.debitAccountList.forEach(account =>{
         totalDebitAmount += account.debitAmount;
       })
       if(totalCreditAmount == totalDebitAmount){
@@ -158,11 +127,11 @@ export class AddTransactionComponent implements OnInit {
         return false;
       }
       let totalCreditAmount = 0;
-      transaction.creditAccounts.forEach(account =>{
+      transaction.creditAccountList.forEach(account =>{
         totalCreditAmount += account.creditAmount;
       })
       let totalDebitAmount = 0;
-      transaction.debitAccounts.forEach(account =>{
+      transaction.debitAccountList.forEach(account =>{
         totalDebitAmount += account.debitAmount;
       })
       
@@ -175,13 +144,13 @@ export class AddTransactionComponent implements OnInit {
     }
 
     isAmountLessThanMinimum(transaction): boolean{
-      for(let i=0;i<transaction.debitAccounts.length; i++){
-        if(transaction.debitAccounts[i].debitAmount < 0.01 && transaction.debitAccounts[i].debitAccount != null){
+      for(let i=0;i<transaction.debitAccountList.length; i++){
+        if(transaction.debitAccountList[i].debitAmount < 0.01 && transaction.debitAccountList[i].debitAccount != null){
           return true;
         }
       }
-      for(let i=0;i<transaction.creditAccounts.length; i++){
-        if(transaction.creditAccounts[i].creditAmount < 0.01 && transaction.creditAccounts[i].creditAccount != null){
+      for(let i=0;i<transaction.creditAccountList.length; i++){
+        if(transaction.creditAccountList[i].creditAmount < 0.01 && transaction.creditAccountList[i].creditAccount != null){
           return true;
         }
       }
@@ -194,11 +163,11 @@ export class AddTransactionComponent implements OnInit {
       }
       let maxAmount = this.approvalsList.find(approval => approval.dbId == transaction.approvalDbId).totalAmount;
       let totalCreditAmount = 0;
-      transaction.creditAccounts.forEach(account =>{
+      transaction.creditAccountList.forEach(account =>{
         totalCreditAmount += account.creditAmount;
       })
       let totalDebitAmount = 0;
-      transaction.debitAccounts.forEach(account =>{
+      transaction.debitAccountList.forEach(account =>{
         totalDebitAmount += account.debitAmount;
       })
       if(totalCreditAmount > maxAmount || totalDebitAmount > maxAmount){
@@ -208,39 +177,22 @@ export class AddTransactionComponent implements OnInit {
 
     }
 
-    // isReapprovalRequired(transaction): boolean{
-    //   if(transaction.approvalId == null){
-    //     return false;
-    //   }
-    //   let temp = false;
-    //   for(let i=0;i<this.transactions.length; i++){
-    //     if(this.isApprovalRequired(this.transactions[i]) == true){
-    //       temp = true;
-    //       return temp;
-    //     }
-    //   }
-    //   return temp;
-    // }
-
-    isApprovalAttached(transaction): boolean{
+    isApprovalAttached(transaction): boolean {
       if(transaction.approvalId != null){
         return true;
       }
       return false;
     }
 
-
-
-    isAccountNotMentioned(transaction): boolean{
-      // console.log(transaction);
+    isAccountNotMentioned(transaction): boolean {
       let temp = false;
-      transaction.debitAccounts.forEach(account =>{
+      transaction.debitAccountList.forEach(account =>{
         if(account.debitAccount == null){
           temp = true;
         }
       })
       
-      transaction.creditAccounts.forEach(account =>{
+      transaction.creditAccountList.forEach(account =>{
         if(account.creditAccount == null){
           temp = true;
         }
@@ -251,30 +203,30 @@ export class AddTransactionComponent implements OnInit {
     isAccountRepeated(transaction): boolean{
       let temp = false;
       
-      for(let i=0;i<transaction.debitAccounts.length ;i++){
-        if(transaction.debitAccounts[i].debitAccount != null){
-          for(let j=i+1;j<transaction.debitAccounts.length; j++){
-            if(transaction.debitAccounts[j].debitAccount == transaction.debitAccounts[i].debitAccount){
+      for(let i=0;i<transaction.debitAccountList.length ;i++){
+        if(transaction.debitAccountList[i].debitAccount != null){
+          for(let j=i+1;j<transaction.debitAccountList.length; j++){
+            if(transaction.debitAccountList[j].debitAccount == transaction.debitAccountList[i].debitAccount){
               temp = true;
             }
           }
-          for(let j=0;j<transaction.creditAccounts.length; j++){
-            if(transaction.creditAccounts[j].creditAccount == transaction.debitAccounts[i].debitAccount){
+          for(let j=0;j<transaction.creditAccountList.length; j++){
+            if(transaction.creditAccountList[j].creditAccount == transaction.debitAccountList[i].debitAccount){
               temp = true;
             }
           }
         }
       }
 
-      for(let i=0;i<transaction.creditAccounts.length ;i++){
-        if(transaction.creditAccounts[i].creditAccount != null){
-          for(let j=i+1;j<transaction.creditAccounts.length; j++){
-            if(transaction.creditAccounts[j].creditAccount == transaction.creditAccounts[i].creditAccount){
+      for(let i=0;i<transaction.creditAccountList.length ;i++){
+        if(transaction.creditAccountList[i].creditAccount != null){
+          for(let j=i+1;j<transaction.creditAccountList.length; j++){
+            if(transaction.creditAccountList[j].creditAccount == transaction.creditAccountList[i].creditAccount){
               temp = true;
             }
           }
-          for(let j=0;j<transaction.debitAccounts.length; j++){
-            if(transaction.debitAccounts[j].debitAccount == transaction.creditAccounts[i].creditAccount){
+          for(let j=0;j<transaction.debitAccountList.length; j++){
+            if(transaction.debitAccountList[j].debitAccount == transaction.creditAccountList[i].creditAccount){
               temp = true;
             }
           }
@@ -282,28 +234,6 @@ export class AddTransactionComponent implements OnInit {
       }
 
       return temp;
-    }
-
-    isAddButtonDisabled(): boolean{
-      for(let i=0;i<this.transactions.length; i++){
-        if(this.isApprovalRequired(this.transactions[i]) || this.isAmountUnEqual(this.transactions[i]) || 
-        this.isAccountNotMentioned(this.transactions[i]) || this.isAccountRepeated(this.transactions[i]) || 
-        this.isAmountMoreThanApproval(this.transactions[i]) || this.isAmountLessThanMinimum(this.transactions[i])){
-          return true;
-        }
-      }
-      return false;
-    }
-
-    isApprovalButtonDisabled(): boolean{
-      for(let i=0;i<this.transactions.length; i++){
-        if(this.isAmountUnEqual(this.transactions[i]) || this.isAccountNotMentioned(this.transactions[i]) || 
-        this.isAccountRepeated(this.transactions[i]) || this.isAmountMoreThanApproval(this.transactions[i]) ||
-        this.isApprovalAttached(this.transactions[i]) || this.isAmountLessThanMinimum(this.transactions[i])){
-          return true;
-        }
-      }
-      return false;
     }
 
     readURL(event, transaction, str): void {
@@ -333,35 +263,30 @@ export class AddTransactionComponent implements OnInit {
       }
       console.log(transaction.billImages);
       console.log(transaction.quotationImages);
-  }
+    }
 
-  assignApproval(approval, transaction){
-    transaction.approvalId = approval.approvalId;
-    transaction.remark = approval.remark;
-    transaction.debitAccounts = approval.debitAccounts;
-    transaction.creditAccounts = approval.creditAccounts;
-    transaction.billImages = approval.billImages;
-    transaction.quotationImages = approval.quotationImages;
-    transaction.approvalDbId = approval.dbId,
-    console.log(approval);
-    console.log(transaction);
+    assignApproval(approval, transaction){
+        transaction.approvalId = approval.approvalId;
+        transaction.remark = approval.remark;
+        transaction.debitAccountList = approval.debitAccountList;
+        transaction.creditAccountList = approval.creditAccountList;
+        transaction.billImages = approval.billImages;
+        transaction.quotationImages = approval.quotationImages;
+        transaction.approvalDbId = approval.dbId;
+    }
 
-  }
+    openImagePreviewDialog(images: any, index: any, editable): void {
+      console.log(images);
+      const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
+          maxWidth: '100vw',
+          maxHeight: '100vh',
+          height: '100%',
+          width: '100%',
+          data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
+      });
 
-  openImagePreviewDialog(images: any, index: any, editable): void {
-    console.log(images);
-    const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        height: '100%',
-        width: '100%',
-        data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
-  }
-
-  
+      dialogRef.afterClosed().subscribe(result => {
+      });
+    }
 
 }
