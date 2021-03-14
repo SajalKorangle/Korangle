@@ -1,35 +1,49 @@
-<div *ngIf="!isLoading"class="card-content table-responsive" >
+<div [style.display]="isLoading?'none':''" class="card-content table-responsive" >
 
-    <div *ngIf="!isInitialLoading">
-        <div class="row">
+    <div>
+        <div class="row" *ngIf ="!lockAccounts">
             <h4 style="margin-left: 15px;"><b>Employee Permissions</b></h4>
             <div class="col-md-6">
                 <app-employee-filter [user]="user"
                             [showAllEmployees]="true"
                             (employee)="serviceAdapter.getEmployeeAmount($event)"
                             ></app-employee-filter>
-                <div class="row col-md-12"  *ngIf="selectedEmployee != null">
-                    <span style="font-family: Roboto;font-style: normal;font-weight: normal;font-size: 15px;">Amount Restriction :  </span>
+                <mat-card  *ngIf="selectedEmployee">
+                    <!--Employee Information-->
+                    <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 8px;">
+                        <img *ngIf="selectedEmployee.profileImage"
+                                style="width: 50px"
+                                src="{{selectedEmployee.profileImage}}">
+                        <img *ngIf="!selectedEmployee.profileImage"
+                                style="width: 50px"
+                                src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
+                        <span style="margin-left: 20px;">{{selectedEmployee.name}}</span><br/>
+                    </div>
+
+                    <!--Employee Amount Limit-->
+                    <span style="font-family: Roboto;font-style: normal;font-weight: normal;font-size: 15px;">Amount Restriction: &nbsp;&nbsp; </span>
                     <mat-form-field> 
                     <input type="number" 
-                            (blur)="serviceAdapter.changeAmountRestriction()"
-                            matInput [ngModel]="selectedEmployeeAmount" 
-                            (ngModelChange)="selectedEmployeeAmount=$event;" 
+                            matInput [(ngModel)]="selectedEmployeeAmount" 
                             placeholder="Enter Amount">
                     </mat-form-field><br>
-                    <div *ngIf="isUpdating" class="loader-custom"></div>
-                    <span *ngIf="selectedEmployeeAmount == null"  
-                            style="color: rgb(221, 160, 27); margin-left: 10px">
-                    <i class="material-icons" style="vertical-align: -6px;">error_outline</i>
-                        No Restriction Given Yet</span>
-                </div>
+
+                    <div style="color: rgb(221, 160, 27); display: flex; flex-direction: row; align-items: center;">
+                        <mat-icon *ngIf="!selectedEmployeeAccountPermission">error_outline</mat-icon>
+                        <span *ngIf="!selectedEmployeeAccountPermission">&nbsp;No Permissions Given Yet</span>
+                        <button mat-button 
+                                (click)="serviceAdapter.changeAmountRestriction()"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}" 
+                                style="padding: 8px; margin-right: 10px; margin-left: auto;">Update</button>
+                    </div>
+                </mat-card>
             </div>
         
-            <div class="col-md-6">
-                <button class="custom-button" style="margin-top: 10px;background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.regenerateVoucherNumber(); ">Regenerate Voucher Number</button>
-                <div *ngIf="isUpdating" class="loader-custom"></div>
-            </div>
         </div>
+
+        <hr>
+        <h4><b>Voucher Number</b></h4>
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.regenerateVoucherNumber(); ">Regenerate Voucher Number</button>
 
         <hr>
         <h4><b>Lock Accounts</b></h4>

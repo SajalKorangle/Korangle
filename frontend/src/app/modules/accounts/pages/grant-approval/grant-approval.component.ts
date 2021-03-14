@@ -1,17 +1,19 @@
-import {Component, OnInit, Inject, HostListener} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { GrantApprovalServiceAdapter } from './grant-approval.service.adapter'
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { SchoolService } from './../../../../services/modules/school/school.service'
-import { EmployeeService } from './../../../../services/modules/employee/employee.service'
+import { GrantApprovalServiceAdapter } from './grant-approval.service.adapter';
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import {MatDialog} from '@angular/material';
-import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { SchoolService } from './../../../../services/modules/school/school.service';
+import { EmployeeService } from './../../../../services/modules/employee/employee.service';
 
 @Component({
     selector: 'grant-approval',
     templateUrl: './grant-approval.component.html',
     styleUrls: ['./grant-approval.component.css'],
     providers: [
+        MatDialog,
         AccountsService,
         EmployeeService,
         SchoolService,
@@ -20,8 +22,6 @@ import { ImagePreviewDialogComponent } from './../../components/image-preview-di
 
 export class GrantApprovalComponent implements OnInit {
 
-
-    // @Input() user;
     user: any;
     serviceAdapter: GrantApprovalServiceAdapter;
 
@@ -40,10 +40,10 @@ export class GrantApprovalComponent implements OnInit {
 
     lockAccounts: any;
     
-    constructor( 
+    constructor(
+        public dialog: MatDialog,
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
-        public dialog: MatDialog,
         public schoolService: SchoolService,
     ){ }
     // Server Handling - Initial

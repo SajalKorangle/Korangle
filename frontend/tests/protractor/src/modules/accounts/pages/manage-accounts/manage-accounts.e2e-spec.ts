@@ -3,7 +3,6 @@ import {startBackendServer} from '../../../../backend-server';
 import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage} from '../../../../open-page';
 import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
-import { async } from '@angular/core/testing';
 
 describe('Accounts -> Manage Accounts', () => {
     let confirmDeleteDialog = async dialog => {

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { SettingsServiceAdapter } from './settings.service.adapter'
-import { SchoolService } from './../../../../services/modules/school/school.service'
- 
+import { SettingsServiceAdapter } from './settings.service.adapter';
+import { SESSION_CONSTANT } from './../../../../services/modules/school/models/session';
+
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { SchoolService } from './../../../../services/modules/school/school.service';
+
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
@@ -16,20 +18,18 @@ import { SchoolService } from './../../../../services/modules/school/school.serv
 
 export class SettingsComponent{
 
-    // @Input() user;
     user: any;
-    serviceAdapter: SettingsServiceAdapter;
-    isLoading: boolean;
-    isInitialLoading: boolean;
 
     selectedEmployeeAmount : any;
     selectedEmployee: any;
+    selectedEmployeeAccountPermission: any;
     
-    isUpdating: any;
-    minimumDate: any;
-    maximumDate: any;
+    currentSession: any;
 
     lockAccounts: any;
+
+    serviceAdapter: SettingsServiceAdapter;
+    isLoading: boolean;
     
     constructor( 
         public accountsService: AccountsService,
@@ -42,6 +42,8 @@ export class SettingsComponent{
         this.serviceAdapter = new SettingsServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.currentSession = SESSION_CONSTANT.find(session => session.id == this.user.activeSchool.currentSessionDbId);
     }
 
 

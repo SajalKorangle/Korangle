@@ -1,0 +1,122 @@
+<h2 mat-dialog-title>Marks Configuration</h2>
+<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw; max-width: 62vw;">
+
+    <mat-tab-group mat-align-tabs="center" >
+        
+        <mat-tab label="Examination">
+        <div style="margin: 4px; padding: 4px; display: flex; flex-wrap: wrap;">
+
+            <mat-form-field>
+                <mat-select 
+                    placeholder="Examination"
+                    [(ngModel)]="layer.parentExamination"
+                    (ngModelChange)="layer.parentSubject=null; layer.testType=null;">
+                    <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Subject"
+                [(ngModel)]="layer.parentSubject" 
+                (ngModelChange)="layer.testType=null;">
+                    <mat-option *ngFor="let subject of layer.ca.vm.DATA.data.subjectList;" [value]="subject.id">
+                        {{subject.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field><br/>
+
+            <mat-form-field>
+                <mat-select placeholder="Test Type"
+                [(ngModel)]="layer.testType">
+                    <mat-option *ngFor="let testType of layer.ca.vm.htmlAdapter.testTypeList" [value]="testType">{{testType?testType:'NONE'}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="M.M. / M.O."
+                [(ngModel)]="layer.marksType">
+                    <mat-option *ngFor="let marksType of layer.ca.vm.htmlAdapter.marksTypeList" [value]="marksType">{{marksType}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    Decimal Places
+                </mat-label>
+                <input matInput type="number" min="0" max="10" [(ngModel)]="layer.decimalPlaces">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    Out of
+                </mat-label>
+                <input matInput type="number" min="0" [(ngModel)]="layer.outOf">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Marks In Words"
+                [(ngModel)]="layer.inWords">
+                    <mat-option [value]="true">True</mat-option>
+                    <mat-option [value]="false">False</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Grade Rule Set"
+                [(ngModel)]="layer.gradeRuleSet">
+                    <mat-option [value]="null">None</mat-option>
+                    <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{gradeRuleSet.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        </mat-tab>
+    
+        <mat-tab label="Grade Rules" *ngIf="layer.gradeRuleSet">
+            <div>
+                <table class="table table-hover" style="margin-top: 6px;">
+                    <thead>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Criretia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let gradeRule of layer.gradeRuleSet.gradeRules; let i = index" style="margin-top: 10px;">
+                        <tr>
+                            <td>{{gradeRule.gradeValue}}</td>
+                            <td>
+                                {{gradeRule.lowerMarks}}
+                                <span>
+                                    <ng-container *ngIf="gradeRule.lowerInclusion else greaterThanEquals2">&lt;=</ng-container>
+                                    <ng-template #greaterThanEquals2>&nbsp;&lt;</ng-template>
+                                </span>
+                                    Marks
+                                <span>
+                                    <ng-container *ngIf="gradeRule.upperInclusion; else greterThanEquals1">&lt;=</ng-container>
+                                    <ng-template #greterThanEquals1>&nbsp;&lt;</ng-template>
+                                </span>
+                                <span> {{gradeRule.upperMarks}}</span>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                </table>
+
+                <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: fit-content;margin-left: auto; align-items: center; margin-top: 16px; ">
+                    <mat-form-field>
+                        <mat-select placeholder="Grade Rule Set"
+                        [(ngModel)]="layer.gradeRuleSet">
+                            <mat-option [value]="null">None</mat-option>
+                            <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{gradeRuleSet.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+    
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close class="btn" style="background-color: blue; display: block; margin-left: auto;" cdkFocusInitial>Apply</button>
+</div>
