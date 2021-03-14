@@ -150,7 +150,7 @@ class Approval(models.Model):
         db_table = 'approval'
 
 
-class ApprovalAccountDetails(models.Model):
+class ApprovalAccountDetails(models.Model): # should be connected to AccountSession
     
     parentApproval = models.ForeignKey(Approval, on_delete=models.CASCADE)
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE)

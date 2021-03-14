@@ -5,3 +5,9 @@ export const HEADS_LIST = [
     {id: 3, title: 'Assets'},
     {id: 4, title: 'Liabilities'},
 ];
+
+export const APPROVAL_STATUS = {
+    'APPROVED': 'APPROVED',
+    'PENDING': 'PENDING',
+    'DECLINED': 'DECLINED',
+};

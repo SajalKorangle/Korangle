@@ -18,8 +18,8 @@ export class AccountsService extends ServiceObject {
     public transaction_account_details = '/transaction-account-details';
     public transaction_images = '/transaction-images';
     public settings = '/settings';
-    public approval_request_account_details = '/approval-account-details';
-    public approval_request_images = '/approval-images';
+    public approval_account_details = '/approval-account-details';
+    public approval_images = '/approval-images';
     public lock_accounts = '/lock-accounts';
 
 }

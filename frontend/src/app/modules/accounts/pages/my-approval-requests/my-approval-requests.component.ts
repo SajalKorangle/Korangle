@@ -1,12 +1,16 @@
-import {Component, OnInit, Inject, HostListener} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter'
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { EmployeeService } from './../../../../services/modules/employee/employee.service'
-import { SchoolService } from './../../../../services/modules/school/school.service'
-import {MatDialog} from '@angular/material';
+import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter';
+import { CommonFunctions } from './../../../../classes/common-functions';
+
+import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
-import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/use-for-transaction-dialog.component'
+import { UseFortransactionDialogComponent } from './components/use-for-transaction-dialog/use-for-transaction-dialog.component'
+import { Approval, APPROVAL_STATUS_CHOICES } from './../../../../services/modules/accounts/models/approval';
+
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { SchoolService } from './../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'my-approval-requests',
@@ -19,18 +23,16 @@ import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/u
     ]
     
 })
-
-
-
-
 export class MyApprovalRequestsComponent implements OnInit {
 
-
-    // @Input() user;
     user: any;
     serviceAdapter: MyApprovalRequestsServiceAdapter;
 
-    approvalsList: any;
+    accountsLockedForSession: boolean = false;
+
+    newApprovalList: Array<NewCustomApproval> = [];
+
+    approvalsList: any = [];
     loadingCount = 10;
 
     accountsList: any;
@@ -39,14 +41,18 @@ export class MyApprovalRequestsComponent implements OnInit {
     
     minimumDate: any;
     maximumDate: any;
+
+    moreApprovalsCount: number = 1;
     
     loadMoreApprovals: any;
     isLoadingApproval: any;
 
-    constructor( 
+    isLoading: boolean = false;
+
+    constructor(
+        public dialog: MatDialog,
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
-        public dialog: MatDialog,
         public schoolService: SchoolService,
     ){ }
     // Server Handling - Initial
@@ -55,6 +61,9 @@ export class MyApprovalRequestsComponent implements OnInit {
         this.serviceAdapter = new MyApprovalRequestsServiceAdapter;
         this.serviceAdapter.initialiseAdapter(this);
         this.serviceAdapter.initialiseData();
+        this.newApprovalList = [new NewCustomApproval(this, {autoAdd: false})];
+
+        console.log('this: ', this);
     }
 
     getButtonStyle(approval){
@@ -140,5 +149,147 @@ export class MyApprovalRequestsComponent implements OnInit {
         return [day, month, year].join('/');
     }
 
+    addNewAccount(accountList): void{
+        accountList.push({ account: null, amount: null });
+    }
+
+    addAprovalImage(event: any, imageType:string, newCustomApproval: NewCustomApproval): void{
+        if (event.target.files && event.target.files[0]) {
+            let image = event.target.files[0];
+            
+            const reader = new FileReader();
+            reader.onload = e => {
+                const approvalImageStructure = {
+                    orderNumber: null,
+                    imageURL: reader.result,
+                }
+                if(imageType == 'bill'){
+                    newCustomApproval.billImages.push(approvalImageStructure);
+                }
+                else{
+                    newCustomApproval.quotationImages.push(approvalImageStructure);
+                }
+            };
+            reader.readAsDataURL(image);
+        }
+    }
+
+    addApprovals(): void{
+        const attributes = {};
+        if (this.newApprovalList.length>0 && this.newApprovalList[this.newApprovalList.length - 1].autoAdd) {
+            attributes['autoAdd'] = true
+        }
+        for (let i = 0; i < this.moreApprovalsCount; i++) {
+            this.newApprovalList.push(new NewCustomApproval(this, attributes));
+        }
+    }
+
+    isAccountNotMentioned(approval: NewCustomApproval): boolean{
+        approval.payFrom.forEach(acc => {
+            if (acc.account == null) {
+                return true
+            }
+        });
+        
+        approval.payTo.forEach(acc => {
+            if (acc.account == null) {
+                return true;
+            }
+        });
+        return false;
+    }
+    
+    isAmountUnEqual(approval: NewCustomApproval):boolean{
+        let totalCreditAmount = 0;
+        approval.payTo.forEach(acc => {
+            totalCreditAmount += acc.amount;
+        });
+        let totalDebitAmount = 0;
+        approval.payFrom.forEach(acc => {
+            totalDebitAmount += acc.amount;
+        });
+        return !(totalCreditAmount == totalDebitAmount);
+    }
+
+    isAmountLessThanMinimum(approval: NewCustomApproval): boolean{
+        approval.payFrom.forEach(acc => {
+            if (acc.amount < 0.01 && acc.account != null) {
+                return true;
+            }
+        });
+        approval.payTo.forEach(acc => {
+            if (acc.amount < 0.01 && acc.account != null) {
+                return true;
+            }
+        });
+        return false;
+    }
+
+    isAccountRepeated(approval: NewCustomApproval): boolean{
+        for(let i=0; i<approval.payFrom.length; i++){
+          if(approval.payFrom[i].account != null){
+              for (let j = i + 1; j < approval.payFrom.length; j++){
+                if(approval.payFrom[j].account == approval.payFrom[i].account){
+                    return true;
+                }
+            }
+            for(let j=0;j<approval.payTo.length; j++){
+              if(approval.payTo[j].account == approval.payFrom[i].account){
+                  return true;
+              }
+            }
+          }
+        }
+  
+        for(let i=0;i<approval.payTo.length ;i++){
+          if(approval.payTo[i].account != null){
+            for(let j=i+1;j<approval.payTo.length; j++){
+              if(approval.payTo[j].account == approval.payTo[i].account){
+                  return true;
+              }
+            }
+          }
+        }
+  
+        return false;
+    }
+
+    checkDataValidity(): boolean{
+        this.newApprovalList.forEach(approval => {
+            if (this.isAccountRepeated(approval) ||
+                this.isAmountLessThanMinimum(approval) ||
+                this.isAmountUnEqual(approval) ||
+                this.isAccountNotMentioned(approval)) {
+                return false;   // data not valid
+                }
+        })
+        return true;    // validity check passed
+    }
+    
+    requestApproval(): void{
+        if (!this.checkDataValidity()) {
+            alert('Data not valid!');
+            return;
+        }
+        this.serviceAdapter.requestApprovals();
+    }
 
 }
+
+class NewCustomApproval extends Approval{
+    structure: 'simple' | 'advance' = 'simple';
+  
+    payTo: Array<{account: number, amount: number}> = [{account: null, amount: null}];
+    payFrom: Array<{ account: number, amount: number }> = [{ account: null, amount: null }];
+    
+    billImages: Array<{imageURL: any, orderNumber: number}> = [];
+    quotationImages: Array<{imageURL: any, orderNumber: number}> = [];
+
+    constructor(vm: MyApprovalRequestsComponent, attributes = {}) {
+        super();
+        Object.entries(attributes).forEach(([key, value]) => this[key] = value);
+        this.parentEmployeeRequestedBy = vm.user.activeSchool.employeeId;
+        this.requestedGenerationDateTime = CommonFunctions.formatDate(new Date().toDateString(), '');
+        this.requestStatus= 'PENDING';
+    }
+  };

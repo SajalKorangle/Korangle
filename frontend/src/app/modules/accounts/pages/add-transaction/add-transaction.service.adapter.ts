@@ -85,8 +85,8 @@ export class AddTransactionServiceAdapter {
 
                     Promise.all([
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval, granted_approval_data),
-                        this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_account_details),
-                        this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_images),
+                        this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_account_details),
+                        this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_images),
                     ]).then(val => {
                         
                         this.initialiseApprovalData(val[0], val[1], val[2]);
@@ -94,8 +94,6 @@ export class AddTransactionServiceAdapter {
         
                     });
                     
-                },error =>{
-                    this.vm.isLoading = false;
                 })
             } else {
                 this.vm.isLoading=false;
@@ -289,13 +287,13 @@ export class AddTransactionServiceAdapter {
         const data = await fetch(url);
         const blob = await data.blob();
         return await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(blob); 
-          reader.onloadend = function() {
-            const base64data = reader.result;   
-            resolve(base64data);
-          }
-        })
+            const reader = new FileReader();
+            reader.readAsDataURL(blob); 
+            reader.onloadend = function() {
+                const base64data = reader.result;   
+                resolve(base64data);
+            }
+        });
     }
     
 }

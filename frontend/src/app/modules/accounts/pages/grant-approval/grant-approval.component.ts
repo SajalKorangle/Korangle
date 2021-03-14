@@ -45,13 +45,14 @@ export class GrantApprovalComponent implements OnInit {
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
         public schoolService: SchoolService,
-    ){ }
-    // Server Handling - Initial
+    ) { }
+    
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.serviceAdapter = new GrantApprovalServiceAdapter;
+        this.serviceAdapter = new GrantApprovalServiceAdapter();
         this.serviceAdapter.initialiseAdapter(this);
         this.serviceAdapter.initialiseData();
+        console.log('component: ', this);
     }
 
     getGrantButtonStyle(approval){

@@ -42,17 +42,18 @@ export class GrantApprovalServiceAdapter {
                 this.vm.isLoadingApproval = true; // repeted
 
                 Promise.all([
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
-                    this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
-                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data)
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
+                    this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),    // 1
+                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),    // 3
 
                 ]).then(value => {
+                    console.log('value: ', value);
                     this.vm.accountsList = value[0];
                     this.populateAccountTitle(value[3]);
                     this.vm.employeeList = value[1];
                     
-                    this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
+                    this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;
                     this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
                     let approval_id = [];
                     let approval_request_data = {
@@ -65,6 +66,7 @@ export class GrantApprovalServiceAdapter {
                     Promise.all([
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
                     ]).then(val => {
+                        console.log('val: ', val);
                         val[0].forEach(approval => {
                             approval_id.push(approval.id);
                         })
@@ -72,21 +74,17 @@ export class GrantApprovalServiceAdapter {
                             'parentApproval__in': approval_id,
                         }
                         Promise.all([
-                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data), // 0
+                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),  // 1
                         ]).then(data => {
-                            this.initialiseApprovalData(val[0], data[0], data[1]);
+                            this.initialiseApprovalData(val[0], data[0], data[1]);  // val[0]: approval_list, data[0]: approval_account_details_list, data[1]: approval_images_list
                             this.vm.isLoadingApproval = false;
                             if (val[0].length < this.vm.loadingCount) {
                                 this.vm.loadMoreApprovals = false;
                             }
-                        }, error => {
-                            this.vm.isLoadingApproval = false;
                         })
                     })
                     
-                }, error => {
-                    this.vm.isLoadingApproval = false;
                 });
             }
             else {
@@ -126,8 +124,8 @@ export class GrantApprovalServiceAdapter {
                 'parentApproval__in': approval_id,
             }
             Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),
             ]).then(data =>{
                 this.initialiseApprovalData(value[0], data[0], data[1]);
                 this.vm.isLoadingApproval = false;
@@ -168,8 +166,8 @@ export class GrantApprovalServiceAdapter {
             if(tempData.approvedBy != null)
             tempData.approvedByName = this.vm.employeeList.find(employee => employee.id == tempData.approvedBy).name;
 
-            approvalAccounts.forEach(account =>{
-                if(account.parentApproval == approval.id){
+            approvalAccounts.forEach(account => {
+                if (account.parentApproval == approval.id) {
                     let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
                     let temp = {
                         dbId: tempAccount.id,
@@ -180,14 +178,15 @@ export class GrantApprovalServiceAdapter {
                         parentHead: tempAccount.parentHead,
                         parentGroup: tempAccount.parentGroup,
                     }
-                    if(account.transactionType == 'DEBIT'){
+                    if (account.transactionType == 'DEBIT') {
                         tempData.debitAccounts.push(temp);
                     }
-                    else{
+                    else {
                         tempData.creditAccounts.push(temp);
                     }
                 }
-            })
+            });
+
             approvalImages.forEach(image =>{
                 if(image.parentApproval == approval.id){
                     if(approval.parentTransaction == null && approval.autoAdd){                
