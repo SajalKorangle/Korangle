@@ -39,7 +39,7 @@
                                     (ngModelChange)="account.creditAccount = $event">
                                     <mat-option *ngFor="let accountSession of backendData.accountSessionList"
                                         [value]="accountSession">
-                                        {{getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
+                                        {{htmlRenderer.getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
                                     </mat-option>   
                                 </mat-select>
                             </mat-form-field>
@@ -70,7 +70,7 @@
                                     (ngModelChange)="account.debitAccount = $event; account" [disabled]="transaction.approvalId != null">
                                     <mat-option *ngFor="let accountSession of backendData.accountSessionList"
                                         [value]="accountSession">
-                                        {{getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
+                                        {{htmlRenderer.getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
                                     </mat-option>   
                                 </mat-select>
                             </mat-form-field>

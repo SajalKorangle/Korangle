@@ -89,6 +89,8 @@ export class AddTransactionServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_images),
                     ]).then(val => {
                         
+                        console.log(val);
+
                         this.initialiseApprovalData(val[0], val[1], val[2]);
                         this.vm.isLoading = false;
         
