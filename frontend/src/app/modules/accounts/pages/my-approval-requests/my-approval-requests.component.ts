@@ -1,4 +1,4 @@
-import {Component, OnInit, HostListener} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter';
 import { CommonFunctions } from './../../../../classes/common-functions';
@@ -44,7 +44,7 @@ export class MyApprovalRequestsComponent implements OnInit {
 
     moreApprovalsCount: number = 1;
     
-    loadMoreApprovals: boolean = false;
+    moreAprovalsAvailable: boolean = true;
     isLoadingApproval: boolean = false;
 
     isLoading: boolean = false;
@@ -125,17 +125,6 @@ export class MyApprovalRequestsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
         });
     }
-
-    @HostListener('window:scroll', ['$event']) onScrollEvent(event) {
-        const mainPannel = document.getElementById('main-pannel');
-        if((mainPannel.clientHeight + mainPannel.scrollTop) > (0.8*mainPannel.scrollHeight) && !this.loadMoreApprovals && !this.isLoadingApproval){
-            this.loadMoreApprovals = true;
-            // this.serviceAdapter.loadMoreApprovals();
-        }
-        else if ((mainPannel.clientHeight + mainPannel.scrollTop) < (0.8 * mainPannel.scrollHeight)) {
-            this.loadMoreApprovals = false;
-        }
-    } 
 
     getDisplayDateFormat(str :any){
         // return str;
