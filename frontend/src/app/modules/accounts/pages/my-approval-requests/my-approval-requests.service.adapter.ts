@@ -103,13 +103,13 @@ export class MyApprovalRequestsServiceAdapter {
         console.log(approval_request_data);
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
-        ]).then(value =>{
+        ]).then(value => {
             console.log(value);
             let approval_id = [];
-            if(value[0].length < this.vm.loadingCount){
+            if (value[0].length < this.vm.loadingCount) {
                 this.vm.loadMoreApprovals = false;
             }
-            value[0].forEach(approval =>{
+            value[0].forEach(approval => {
                 approval_id.push(approval.id);
             })
             let approval_details_data = {
@@ -118,13 +118,11 @@ export class MyApprovalRequestsServiceAdapter {
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),
-            ]).then(data =>{
+            ]).then(data => {
                 this.initialiseApprovalData(value[0], data[0], data[1]);
                 this.vm.isLoadingApproval = false;
             })
-        },error =>{
-            this.vm.isLoadingApproval = false;
-        })
+        });
 
     }
 
@@ -235,7 +233,7 @@ export class MyApprovalRequestsServiceAdapter {
                             parentApproval: element.id,
                             parentAccount: accountStructure.account,
                             amount: accountStructure.amount,
-                            transactionType: 'DEBIT',
+                            transactionType: 'CREDIT',
                         }
                         toCreateAccountList.push(tempData);
                     });
@@ -244,7 +242,7 @@ export class MyApprovalRequestsServiceAdapter {
                             parentApproval: element.id,
                             parentAccount: accountStructure.account,
                             amount: accountStructure.amount,
-                            transactionType: 'CREDIT',
+                            transactionType: 'DEBIT',
                         }
                         toCreateAccountList.push(tempData);
                     });
