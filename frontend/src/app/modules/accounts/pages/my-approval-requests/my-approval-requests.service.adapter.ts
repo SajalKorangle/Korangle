@@ -1,6 +1,4 @@
-import { MyApprovalRequestsComponent } from './my-approval-requests.component'
-import { CommonFunctions } from './../../../../classes/common-functions'
-import { ThrowStmt } from '@angular/compiler';
+import { MyApprovalRequestsComponent } from './my-approval-requests.component';
 
 export class MyApprovalRequestsServiceAdapter {
 
@@ -12,9 +10,7 @@ export class MyApprovalRequestsServiceAdapter {
 
     initialiseData(){
 
-        this.vm.approvalsList = [];
-        this.vm.loadMoreApprovals = true;
-        this.vm.isLoadingApproval = true;
+        this.vm.isLoading = true;
 
         let request_account_session_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
@@ -29,20 +25,24 @@ export class MyApprovalRequestsServiceAdapter {
 
         let employee_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
+            // resterict to required fields only
         };
 
         Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),    // 1
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),    // 3
         ]).then(value =>{
             this.vm.accountsList = value[0];
-            this.populateAccountTitle(value[3]);
             this.vm.employeeList = value[1];
+
+            const currentSession = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
+            this.vm.minimumDate = currentSession.startDate;  // change for current session
+            this.vm.maximumDate = currentSession.endDate;
+
+            this.populateAccountTitle(value[3]);
             
-            this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-            this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             let approval_id = [];
             let approval_request_data = {
                 'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
@@ -61,21 +61,14 @@ export class MyApprovalRequestsServiceAdapter {
                     'parentApproval__in': approval_id,
                 }
                 Promise.all([
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data),
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),
                 ]).then(data =>{
                     this.initialiseApprovalData(val[0], data[0], data[1]);
-                    this.vm.isLoadingApproval = false;
-                    if(val[0].length < this.vm.loadingCount){
-                        this.vm.loadMoreApprovals = false;
-                    }
-                },error =>{
-                    this.vm.isLoadingApproval = false;
+                    this.vm.isLoading = false
                 })
             })
             
-        }, error =>{
-            this.vm.isLoadingApproval = false;
         })
         
     }
@@ -84,7 +77,6 @@ export class MyApprovalRequestsServiceAdapter {
         this.vm.accountsList.forEach(acc =>{
             acc['title'] = accountTitleList.find(account => account.id == acc.parentAccount).title;
         })
-        console.log(this.vm.accountsList);
     }
 
 
@@ -114,8 +106,8 @@ export class MyApprovalRequestsServiceAdapter {
                 'parentApproval__in': approval_id,
             }
             Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data),
+                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),
             ]).then(data =>{
                 this.initialiseApprovalData(value[0], data[0], data[1]);
                 this.vm.isLoadingApproval = false;
@@ -129,32 +121,25 @@ export class MyApprovalRequestsServiceAdapter {
     initialiseApprovalData(approvalList, approvalAccounts, approvalImages){
         approvalList.forEach(approval =>{
             let tempData = {
+                ...approval,
                 dbId: approval.id,
                 debitAccounts: [],
                 creditAccounts: [],
-                remark: approval.remark,
                 billImages: [],
                 quotationImages: [],
-                approvalId: approval.approvalId,
-                requestedGenerationDateTime: approval.requestedGenerationDateTime,
-                approvedGenerationDateTime: approval.approvedGenerationDateTime,
                 requestedBy: approval.parentEmployeeRequestedBy,
                 approvedBy: approval.parentEmployeeApprovedBy,
                 requestedByName: null,
                 approvedByName: null,
-                requestStatus: approval.requestStatus,
-                parentTransaction: approval.parentTransaction,
-                transactionDate: approval.transactionDate,
-                autoAdd: approval.autoAdd,
             }
 
             tempData.requestedByName = this.vm.employeeList.find(employee => employee.id == tempData.requestedBy).name;
             if(tempData.approvedBy != null)
-            tempData.approvedByName = this.vm.employeeList.find(employee => employee.id == tempData.approvedBy).name;
+                tempData.approvedByName = this.vm.employeeList.find(employee => employee.id == tempData.approvedBy).name;
 
             approvalAccounts.forEach(account =>{
                 if(account.parentApproval == approval.id){
-                    let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
+                    let tempAccount = this.vm.accountsList.find(acc => acc.parentAccount == account.parentAccount);
                     let temp = {
                         dbId: tempAccount.id,
                         accountDbId: tempAccount.parentAccount,

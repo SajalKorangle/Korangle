@@ -78,8 +78,8 @@ export class AddTransactionServiceAdapter {
                             'parentApproval__in': approval_id,
                         }
                         Promise.all([
-                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_account_details, approval_details_data),
-                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_request_images, approval_details_data),
+                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data),
+                            this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),
                         ]).then(data =>{
                             console.log(data);
                             this.initialiseApprovalData(val[0], data[0], data[1]);
@@ -393,7 +393,7 @@ export class AddTransactionServiceAdapter {
                             }
                         });
                         i = i + 1;
-                        services.push(this.vm.accountsService.createObject(this.vm.accountsService.approval_request_images, temp_form_data))
+                        services.push(this.vm.accountsService.createObject(this.vm.accountsService.approval_images, temp_form_data))
 
                     })
                     
@@ -415,10 +415,10 @@ export class AddTransactionServiceAdapter {
                             }
                         });
                         i = i + 1;
-                        services.push(this.vm.accountsService.createObject(this.vm.accountsService.approval_request_images, temp_form_data))
+                        services.push(this.vm.accountsService.createObject(this.vm.accountsService.approval_images, temp_form_data))
                     })
                 });
-                services.push(this.vm.accountsService.createObjectList(this.vm.accountsService.approval_request_account_details, toCreateAccountList));
+                services.push(this.vm.accountsService.createObjectList(this.vm.accountsService.approval_account_details, toCreateAccountList));
                 Promise.all(services).then(data =>{
                     console.log(data);
                     this.vm.transactions = [];

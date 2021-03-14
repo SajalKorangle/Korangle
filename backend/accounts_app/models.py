@@ -71,6 +71,8 @@ class Transaction(models.Model):
     class Meta:
         db_table = 'transaction'
 
+# add signal to update current balence for Account Session
+
 class Approval(models.Model):
     
     parentEmployeeRequestedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovalList')

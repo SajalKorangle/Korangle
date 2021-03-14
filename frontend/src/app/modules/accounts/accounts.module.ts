@@ -5,12 +5,12 @@ import { ComponentsModule } from '../../components/components.module';
 import { AccountsComponent } from './accounts.component';
 
 import { AccountsRoutingModule } from './accounts.routing';
-import { AccountsComponentsModule } from './components/component.module'
-import { ImagePreviewDialogComponent } from './components/image-preview-dialog/image-preview-dialog.component'
-import { UpdateTransactionDialogComponent } from './components/update-transaction-dialog/update-transaction-dialog.component'
-import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component'
+import { AccountsComponentsModule } from './components/component.module';
+import { ImagePreviewDialogComponent } from './components/image-preview-dialog/image-preview-dialog.component';
+import { UpdateTransactionDialogComponent } from './components/update-transaction-dialog/update-transaction-dialog.component';
+import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component';
 import {ExcelService} from "../../excel/excel-service";
-import { PrintLedgerComponent } from './print/print-ledger/print-ledger.component'
+import { PrintLedgerComponent } from './print/print-ledger/print-ledger.component';
 
 
 @NgModule({

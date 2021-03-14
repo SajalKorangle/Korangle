@@ -1,5 +1,13 @@
 <div class="card-content table-responsive ">
-    
+<ng-container *ngIf="!isLoading else loadingSpinner">
+    <div>
+        <button mat-button class="btn" style="background-color: blue; color: white;" 
+            (click)="openNewAprovalDialog()">
+                New Approval Request
+        </button>
+    </div>
+
+    <hr  style="margin-top: 16px;"/>
     <div *ngFor='let approval of approvalsList'>
         <div class="row">
             <div class="col-md-10">
@@ -94,10 +102,12 @@
             </div><br>
         </div><span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
     </div>
-    
-    
+
+</ng-container>
+
+<ng-template #loadingSpinner>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
+
 </div>
 
-<!-- <ng-container *ngIf="isLoading || isInitialLoading">
-    <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container> -->

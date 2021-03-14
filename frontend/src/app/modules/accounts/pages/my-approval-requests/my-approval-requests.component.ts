@@ -1,12 +1,15 @@
-import {Component, OnInit, Inject, HostListener} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter'
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { EmployeeService } from './../../../../services/modules/employee/employee.service'
-import { SchoolService } from './../../../../services/modules/school/school.service'
-import {MatDialog} from '@angular/material';
+import { MyApprovalRequestsServiceAdapter } from './my-approval-requests.service.adapter';
+
+import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
-import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/use-for-transaction-dialog.component'
+import { UseFortransactionDialogComponent } from './components/use-for-transaction-dialog/use-for-transaction-dialog.component'
+import { NewApprovalDialogComponent } from './components/new-approval-dialog/new-approval-dialog.component';
+
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { SchoolService } from './../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'my-approval-requests',
@@ -19,18 +22,12 @@ import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/u
     ]
     
 })
-
-
-
-
 export class MyApprovalRequestsComponent implements OnInit {
 
-
-    // @Input() user;
     user: any;
     serviceAdapter: MyApprovalRequestsServiceAdapter;
 
-    approvalsList: any;
+    approvalsList: any = [];
     loadingCount = 10;
 
     accountsList: any;
@@ -43,10 +40,12 @@ export class MyApprovalRequestsComponent implements OnInit {
     loadMoreApprovals: any;
     isLoadingApproval: any;
 
-    constructor( 
+    isLoading: boolean = false;
+
+    constructor(
+        public dialog: MatDialog,
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
-        public dialog: MatDialog,
         public schoolService: SchoolService,
     ){ }
     // Server Handling - Initial
@@ -106,6 +105,10 @@ export class MyApprovalRequestsComponent implements OnInit {
     
         dialogRef.afterClosed().subscribe(result => {
         });
+    }
+
+    openNewAprovalDialog(): void{
+        this.dialog.open(NewApprovalDialogComponent);
     }
 
     openUseForPaymentDialog(approval: any): void {

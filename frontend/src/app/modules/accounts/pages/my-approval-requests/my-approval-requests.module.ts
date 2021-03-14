@@ -4,13 +4,15 @@ import { MyApprovalRequestsComponent } from "./my-approval-requests.component";
 
 import {MyApprovalRequestsRoutingModule } from './my-approval-requests.routing';
 import {ComponentsModule} from "../../../../components/components.module";
-import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/use-for-transaction-dialog.component'
+import { UseFortransactionDialogComponent } from './components/use-for-transaction-dialog/use-for-transaction-dialog.component';
+import { NewApprovalDialogComponent } from './components/new-approval-dialog/new-approval-dialog.component'
 
 
 @NgModule({
     declarations: [
         MyApprovalRequestsComponent,
         UseFortransactionDialogComponent,
+        NewApprovalDialogComponent,
     ],
 
     imports: [
@@ -22,7 +24,7 @@ import { UseFortransactionDialogComponent } from './use-for-transaction-dialog/u
     bootstrap: [MyApprovalRequestsComponent],
     entryComponents: [
         UseFortransactionDialogComponent,
-        
+        NewApprovalDialogComponent,
     ]
     
 })
