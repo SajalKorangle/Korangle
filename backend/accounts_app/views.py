@@ -76,11 +76,19 @@ def updateCurrentBalanceOnTransactionAccountDetailsSave(sender, instance, **kwar
                             endDate__gte=instance.parentTransaction.transactionDate)
     account_session_object = \
         AccountSession.objects.get(parentAccount=instance.parentAccount, parentSession=session_object)
-    if instance.transactionType == 'CREDIT':
-        account_session_object.currentBalance = account_session_object.currentBalance - instance.amount
-    if instance.transactionType == 'DEBIT':
-        account_session_object.currentBalance = account_session_object.currentBalance + instance.amount
-    account_session_object.save(update_fields=['currentBalance'])
+    if instance.id is None:
+        if instance.transactionType == 'CREDIT':
+            account_session_object.currentBalance -= instance.amount
+        if instance.transactionType == 'DEBIT':
+            account_session_object.currentBalance += instance.amount
+        account_session_object.save()
+    else:
+        if instance.transactionType == 'CREDIT':
+            account_session_object.currentBalance -= instance.amount - TransactionAccountDetails.objects.get(id=instance.id).amount
+        if instance.transactionType == 'DEBIT':
+            account_session_object.currentBalance += instance.amount - TransactionAccountDetails.objects.get(id=instance.id).amount
+        account_session_object.save()
+
 
 def updateCurrentBalanceOnTransactionAccountDetailsDelete(sender, instance, **kwargs):
     session_object = \
@@ -89,12 +97,12 @@ def updateCurrentBalanceOnTransactionAccountDetailsDelete(sender, instance, **kw
     account_session_object = \
         AccountSession.objects.get(parentAccount=instance.parentAccount, parentSession=session_object)
     if instance.transactionType == 'CREDIT':
-        account_session_object.currentBalance = account_session_object.currentBalance + instance.amount
+        account_session_object.currentBalance += instance.amount
     if instance.transactionType == 'DEBIT':
-        account_session_object.currentBalance = account_session_object.currentBalance - instance.amount
-    account_session_object.save(update_fields=['currentBalance'])
+        account_session_object.currentBalance -= instance.amount
+    account_session_object.save()
 
-post_save.connect(updateCurrentBalanceOnTransactionAccountDetailsSave, sender=TransactionAccountDetails)
+pre_save.connect(updateCurrentBalanceOnTransactionAccountDetailsSave, sender=TransactionAccountDetails)
 pre_delete.connect(updateCurrentBalanceOnTransactionAccountDetailsDelete, sender=TransactionAccountDetails)
 
 
