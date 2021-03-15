@@ -1,6 +1,7 @@
 import { ManageAccountsComponent } from './manage-accounts.component'
 import { Account } from './../../../../services/modules/accounts/models/account';
 import { AccountSession } from './../../../../services/modules/accounts/models/account-session';
+import { group } from '@angular/animations';
 
 export class ManageAccountsServiceAdapter {
 
@@ -76,117 +77,64 @@ export class ManageAccountsServiceAdapter {
 
 
     initialiseDisplayData(){
-        let accountsSessionList = JSON.parse(JSON.stringify(this.accountsSessionList));
-        let parentGroupsList = [];
-        let individualAccountList = [];
-        for(let i=0;i<accountsSessionList.length; i++){
-            // let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
-            // accountsSessionList[i]['type'] = type;
-            let acc = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount);
-            accountsSessionList[i]['type'] = acc.accountType;
-            accountsSessionList[i]['title'] = acc.title;
-            if(acc.accountType == 'ACCOUNT'){
-                // console.log('account' , accountsSessionList[i].title);
-                if(accountsSessionList[i].parentGroup == null){
-                    // console.log('individual' , accountsSessionList[i].title);
-                    individualAccountList.push(accountsSessionList[i]);
-                    accountsSessionList.splice(i,1);
-                    i--;
-                }
-                else{
-                    let tempGroup = parentGroupsList.find(group => group.parentAccount == accountsSessionList[i].parentGroup);
-                    if(tempGroup == undefined){
-                        // console.log('parent Group Not Found');
-                        let parentGroupIndex =  accountsSessionList.map(function(e) { return e.parentAccount; }).indexOf(accountsSessionList[i].parentGroup);
-                        let parentGroupData = JSON.parse(JSON.stringify(accountsSessionList[parentGroupIndex]));
-                        // console.log('parent Group in all list', parentGroupData.title);
-                        
-                        parentGroupData['childs'] = [];
-                        parentGroupData.childs.push(accountsSessionList[i]);
-                        parentGroupsList.push(parentGroupData);
-                        accountsSessionList.splice(parentGroupIndex, 1);
-                        if(parentGroupIndex <= i){
-                            i--;
-                        }
-                        accountsSessionList.splice(i,1);
-                        i--;
-                    }
-                    else{
-                        // console.log('parent Group Found', tempGroup.title);
-                        tempGroup.childs.push(accountsSessionList[i]);
-                        accountsSessionList.splice(i,1);
-                        i--;
-                    }
-                }
-            }
-        }
+        const nonIndividualAccount = JSON.parse(JSON.stringify(this.vm.accountsList.filter(accountSession=>accountSession.parentGroup)));
+        const individualAccountList = JSON.parse(JSON.stringify(this.vm.accountsList.filter(accountSession => !accountSession.parentGroup)));
+        const groupStructureList = JSON.parse(JSON.stringify(this.vm.groupsList)).map(group => {
+            return { ...group, childs: [] } // structure of group
+        });
 
-        for(let i=0;i<accountsSessionList.length; i++){
-            accountsSessionList[i]['childs'] = [];
-            parentGroupsList.push(accountsSessionList[i]);
-        }
-        
-        for(let i=0; i<parentGroupsList.length; i++){
-           
-            if(parentGroupsList[i].parentGroup != null){
-                parentGroupsList.find(gro => gro.parentAccount == parentGroupsList[i].parentGroup).childs.push(parentGroupsList[i]);
-            }
-            
-        }
+        nonIndividualAccount.forEach(accountSession => {    // pushing all accounts with parentGroup in child of its group
+            groupStructureList.find(id => accountSession.parentGroup).childs.push(accountSession);
+        });
 
-        for(let i=0; i<parentGroupsList.length; i++){
-            if(parentGroupsList[i].parentGroup != null){
-                parentGroupsList.splice(i, 1);
-                i--;
+        for(let i=0; i<groupStructureList.length; i++){
+            if(groupStructureList[i].parentGroup){
+                groupStructureList.find(group => group.id == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
+                delete groupStructureList[i];
             }
         }
-        this.populateHeadWiseDisplayList(parentGroupsList, individualAccountList);
+        const rootGroupStructureList = groupStructureList.filter(Boolean);
+        this.populateHeadWiseDisplayList(rootGroupStructureList, individualAccountList);
 
     }
 
     populateHeadWiseDisplayList(groupsList, individualAccountList){
-        console.log(individualAccountList);
         this.vm.expensesList = [];
         this.vm.incomeList = [];
         this.vm.assetsList = [];
         this.vm.liabilityList = [];
-        groupsList.forEach(group =>{
+        groupsList.forEach(group => {
             let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
-            if(head == 'Expenses'){
+            if (head == 'Expenses') {
                 this.vm.expensesList.push(group);
             }
-            else if(head == 'Income'){
+            else if (head == 'Income') {
                 this.vm.incomeList.push(group);
             }
-            else if(head == 'Assets'){
+            else if (head == 'Assets') {
                 this.vm.assetsList.push(group);
             }
-            else if(head == 'Liabilities'){
+            else if (head == 'Liabilities') {
                 this.vm.liabilityList.push(group);
             }
 
-        })
-        individualAccountList.forEach(account =>{
-            let head = this.vm.headsList.find(head => head.id == account.parentHead).title;
-            if(head == 'Expenses'){
-                this.vm.expensesList.push(account);
+        });
+        individualAccountList.forEach(accountSession => {
+            let head = this.vm.headsList.find(head => head.id == accountSession.parentHead).title;
+            if (head == 'Expenses') {
+                this.vm.expensesList.push(accountSession);
             }
-            else if(head == 'Income'){
-                this.vm.incomeList.push(account);
+            else if (head == 'Income') {
+                this.vm.incomeList.push(accountSession);
             }
-            else if(head == 'Assets'){
-                this.vm.assetsList.push(account);
+            else if (head == 'Assets') {
+                this.vm.assetsList.push(accountSession);
             }
-            else if(head == 'Liabilities'){
-                this.vm.liabilityList.push(account);
+            else if (head == 'Liabilities') {
+                this.vm.liabilityList.push(accountSession);
             }
 
-        })
-        console.log(this.vm.expensesList);
-        console.log(this.vm.incomeList);
-        console.log(this.vm.assetsList);
-        console.log(this.vm.liabilityList);
-
+        });
     }
     
     
