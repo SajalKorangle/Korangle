@@ -64,7 +64,7 @@ class AccountSession(models.Model):
     parentHead = models.ForeignKey(Heads)
 
     def save(self, *args, **kwargs):
-        if self.currentBalance is None:
+        if self.currentBalance is None: # why this was required
             self.currentBalance = 0
         if self.openingBalance is None:
             self.openingBalance = 0

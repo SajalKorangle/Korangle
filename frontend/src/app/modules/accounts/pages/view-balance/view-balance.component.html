@@ -19,8 +19,8 @@
                         <div class="col-md-3">
                             <mat-card style="margin-bottom:10px;" *ngIf="account.type=='ACCOUNT'">
                                 <mat-card-title><span style="cursor: pointer;" (click)="displayLedgerAccount(account)">{{account.title}}&nbsp;A/c</span>
-                                    <span *ngIf="account.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
-                                    <span *ngIf="account.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
+                                    <span *ngIf="account.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.currentBalance}}</span>
+                                    <span *ngIf="account.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.currentBalance}}</span>
                                 </mat-card-title>
                             </mat-card>
                         </div>
@@ -42,15 +42,15 @@
                                 <mat-card-title style="width: 100%;">
                                     <span style="cursor: pointer;" (click)="displayLedgerAccount(element)">{{element.title}}</span>
                                     <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
                                     <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                                 </mat-card-title>
                                 <mat-card-content *ngIf="element.type == 'GROUP'">
                                     <div *ngFor="let child of element.childs">
                                         <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}&nbsp;A/c</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
                                         <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                             <mat-card-title style="width: 100%;">
                                                 <span style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}</span>
@@ -60,8 +60,8 @@
                                                 <div *ngFor="let grandchild of child.childs">
                                                     
                                                     <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}&nbsp;A/c</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
                                                     <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                         <mat-card-title>
                                                             <span style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}</span>
@@ -94,15 +94,15 @@
                                 <mat-card-title style="width: 100%;">
                                     <span style="cursor: pointer;" (click)="displayLedgerAccount(element)">{{element.title}}</span>
                                     <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
                                     <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                                 </mat-card-title>
                                 <mat-card-content *ngIf="element.type == 'GROUP'">
                                     <div *ngFor="let child of element.childs">
                                         <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}&nbsp;A/c</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
                                         <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                             <mat-card-title style="width: 100%;">
                                                 <span style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}</span>
@@ -112,8 +112,8 @@
                                                 <div *ngFor="let grandchild of child.childs">
                                                     
                                                     <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}&nbsp;A/c</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
                                                     <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                         <mat-card-title>
                                                             <span style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}</span>
@@ -146,15 +146,15 @@
                                 <mat-card-title style="width: 100%;">
                                     <span style="cursor: pointer;" (click)="displayLedgerAccount(element)">{{element.title}}</span>
                                     <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
                                     <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                                 </mat-card-title>
                                 <mat-card-content *ngIf="element.type == 'GROUP'">
                                     <div *ngFor="let child of element.childs">
                                         <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}&nbsp;A/c</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
                                         <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                             <mat-card-title style="width: 100%;">
                                                 <span style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}</span>
@@ -164,8 +164,8 @@
                                                 <div *ngFor="let grandchild of child.childs">
                                                     
                                                     <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}&nbsp;A/c</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
                                                     <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                         <mat-card-title>
                                                             <span style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}</span>
@@ -198,15 +198,15 @@
                                 <mat-card-title style="width: 100%;">
                                     <span style="cursor: pointer;" (click)="displayLedgerAccount(element)">{{element.title}}</span>
                                     <span *ngIf="element.type == 'ACCOUNT'">&nbsp;A/c</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
-                                    <span *ngIf="element.type == 'ACCOUNT' && element.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.balance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
+                                    <span *ngIf="element.type == 'ACCOUNT' && element.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{element.currentBalance}}</span>
                                     <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
                                 </mat-card-title>
                                 <mat-card-content *ngIf="element.type == 'GROUP'">
                                     <div *ngFor="let child of element.childs">
                                         <span *ngIf="child.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}&nbsp;A/c</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
-                                        <span *ngIf="child.type == 'ACCOUNT' && child.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.balance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
+                                        <span *ngIf="child.type == 'ACCOUNT' && child.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
                                         <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
                                             <mat-card-title style="width: 100%;">
                                                 <span style="cursor: pointer;" (click)="displayLedgerAccount(child)">{{child.title}}</span>
@@ -216,8 +216,8 @@
                                                 <div *ngFor="let grandchild of child.childs">
                                                     
                                                     <span *ngIf="grandchild.type == 'ACCOUNT'" style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}&nbsp;A/c</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
-                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.balance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
+                                                    <span *ngIf="grandchild.type == 'ACCOUNT' && grandchild.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
                                                     <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
                                                         <mat-card-title>
                                                             <span style="cursor: pointer;" (click)="displayLedgerAccount(grandchild)">{{grandchild.title}}</span>
@@ -271,9 +271,9 @@
             </mat-form-field>
         </div>
         <div class="row col-md-12" *ngIf="!isLedgerLoading">
-            <span>Current Balance: </span>
-            <span *ngIf="ledgerAccount.balance < 0" style="color:rgba(76, 175, 80, 1);">&nbsp;{{ledgerAccount.balance}}</span>
-            <span *ngIf="ledgerAccount.balance >= 0" style="color:rgba(86, 142, 174, 1);">&nbsp;{{ledgerAccount.balance}}</span>
+            <span>Current currentBalance: </span>
+            <span *ngIf="ledgerAccount.currentBalance < 0" style="color:rgba(76, 175, 80, 1);">&nbsp;{{ledgerAccount.currentBalance}}</span>
+            <span *ngIf="ledgerAccount.currentBalance >= 0" style="color:rgba(86, 142, 174, 1);">&nbsp;{{ledgerAccount.currentBalance}}</span>
 
         </div>
         
