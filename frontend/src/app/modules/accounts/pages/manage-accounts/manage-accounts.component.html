@@ -23,15 +23,15 @@
         </div>
         <div *ngIf="searchList.length > 0">
             <div class="row col-md-12">
-                <div *ngFor = "let account of searchList">
+                <div *ngFor="let account of searchList">
                     <div class="col-md-3">
                         <mat-card style="margin-bottom:10px;" *ngIf="account.type=='ACCOUNT'">
                             <mat-card-title><span style="cursor: pointer;" (click)="openEditDialog(account)">{{account.title}}&nbsp;A/c</span>
-                                <span *ngIf="account.balance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
-                                <span *ngIf="account.balance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.balance}}</span>
+                                <span *ngIf="account.currentBalance < 0" style="color:rgba(76, 175, 80, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.currentBalance}}</span>
+                                <span *ngIf="account.currentBalance >= 0" style="color:rgba(86, 142, 174, 1); font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.currentBalance}}</span>
                             </mat-card-title>
                         </mat-card>
-                        <mat-card *ngIf="account.type == 'GROUP'" style="margin-bottom: 10px">
+                        <mat-card *ngIf="account.type == 'GROUP'" style="margin-bottom: 10px"> <!--Why group? check handleSearch-->
                             <mat-card-title>
                                 <span style="cursor: pointer;" (click)="openEditDialog(account); $event.stopPropagation()">{{account.title}}</span>
                                 <i class="material-icons" style="vertical-align: -7px;float:right;cursor: pointer;" (click)="displayWholeGroup(account)">keyboard_arrow_right</i>

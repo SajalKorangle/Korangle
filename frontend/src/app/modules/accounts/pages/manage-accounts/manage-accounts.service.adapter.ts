@@ -1,4 +1,6 @@
 import { ManageAccountsComponent } from './manage-accounts.component'
+import { Account } from './../../../../services/modules/accounts/models/account';
+import { AccountSession } from './../../../../services/modules/accounts/models/account-session';
 
 export class ManageAccountsServiceAdapter {
 
@@ -10,84 +12,66 @@ export class ManageAccountsServiceAdapter {
         this.vm = vm;
     }
 
-    accountsSessionList: any;
-    accountsList: any;
-
     //initialize data
     initializeData(): void {
-        let request_account_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        }
         this.vm.isLoading = true;
-        let lock_accounts_data = {
+
+        const lock_accounts_data = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
+
         this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data).then(value=>{
             if (value.length == 1) {
-                this.vm.lockAccounts = value[0];
+                this.vm.lockAccounts = true;
                 this.vm.isLoading = false;
             } else if (value.length == 0) {
-                this.vm.lockAccounts = null;
-                Promise.all([
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
-                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
 
-                ]).then(value =>{
+                const request_account_data = {
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                };
+
+                const request_account_session_data = {
+                    'parentAccount__parentSchool': this.vm.user.activeSchool.dbId,
+                    'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+                }
+
+                Promise.all([
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),  // 0
+                    this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 1
+                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
+                ]).then(value => {
                     
-                    this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-                    this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-                    
-                    let account_id_list = [];
-                    value[0].forEach(account =>{
-                        account_id_list.push(account.id);
-                    })
-                    let request_account_session_data = {
-                        'parentAccount__in': account_id_list,
-                        'parentSession': this.vm.user.activeSchool.currentSessionDbId, 
-                    }
-                    Promise.all([
-                        this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
-                    ]).then(data =>{
-                        console.log(data);
-                        this.accountsList = value[0];
-                        this.accountsSessionList = data[0];
-                        this.initialiseAccountGroupList();
-                        this.initialiseDisplayData();
-                        this.vm.isLoading = false;
-                    }, error =>{
-                        this.vm.isLoading = false;
-                    })
-                },error =>{
+                    const currentSession = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId)
+                    this.vm.minimumDate = currentSession.startDate;  // change for current session
+                    this.vm.maximumDate = currentSession.endDate;
+
+                    this.initialiseAccountGroupList(value[1], value[0]);
+                    this.initialiseDisplayData();
                     this.vm.isLoading = false;
-                })
+ 
+                });
             }
             else{
                 this.vm.isLoading=false;
                 alert("Unexpected errors. Please contact admin");
             }
-        },error=>{
-            this.vm.isLoading = false;
         });
     }
 
-    initialiseAccountGroupList(){
+    initialiseAccountGroupList(accountSessionList: Array<AccountSession>, accountList: Array<Account>): void {
         this.vm.accountsList = [];
         this.vm.groupsList = [];
-        this.accountsSessionList.forEach(account =>{
-            let acc = this.accountsList.find(accounts => accounts.id == account.parentAccount);
-            account['type'] = acc.accountType;
-            account['title'] = acc.title;
-            if(acc.accountType == 'ACCOUNT'){
-                this.vm.accountsList.push(account);
+        accountSessionList.forEach(accountSession => {
+            let acc = accountList.find(account => account.id == accountSession.parentAccount);
+            const customAccount = { ...accountSession, type: acc.accountType, title: acc.title };
+            if (acc.accountType == 'ACCOUNT') {
+                this.vm.accountsList.push(customAccount);
             }
-            else{
-                this.vm.groupsList.push(account);
+            else {
+                this.vm.groupsList.push(customAccount);
             }
-        })
-        // console.log(this.vm.accountsList);
-        console.log(this.vm.groupsList);
-        return ;
+        });
     }
 
 

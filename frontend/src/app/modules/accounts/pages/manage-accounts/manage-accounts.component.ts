@@ -10,6 +10,7 @@ import { AccountsService } from './../../../../services/modules/accounts/account
 import { SchoolService } from './../../../../services/modules/school/school.service'
 import { HEADS_LIST } from './../../classes/constants'
 
+import { AccountSession } from './../../../../services/modules/accounts/models/account-session';
  
 @Component({
     selector: 'manage-accounts',
@@ -26,15 +27,10 @@ export class ManageAccountsComponent{
     user: any;
     serviceAdapter: ManageAccountsServiceAdapter;
 
-    accountsList: any;
-    groupsList: any;
+    accountsList: Array<customAccount>;
+    groupsList: Array<customAccount>;
     headsList = HEADS_LIST;
     isLoading: any;
-    constructor( 
-        public dialog: MatDialog,
-        public accountsService: AccountsService,
-        public schoolService: SchoolService,
-    ){ }
 
 
     expensesList = [];
@@ -47,9 +43,15 @@ export class ManageAccountsComponent{
     maximumDate: any;
     specificGroup: any;
 
-    lockAccounts: any;
+    lockAccounts: boolean = false;
 
-    searchList = [];
+    searchList: Array<customAccount> = [];
+
+    constructor( 
+        public dialog: MatDialog,
+        public accountsService: AccountsService,
+        public schoolService: SchoolService,
+    ){ }
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -57,6 +59,8 @@ export class ManageAccountsComponent{
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         this.displayWholeList = true;
+
+        console.log('this: ', this);
     }
 
 
@@ -109,7 +113,6 @@ export class ManageAccountsComponent{
     }
 
     handleSearch(event: any){
-        console.log(event.target.value);
         let str = event.target.value.trim();
         if(str.length == 0){
             this.searchList = [];
@@ -117,7 +120,6 @@ export class ManageAccountsComponent{
         else{
             this.searchList = this.getAccountListFromString(str);
         }
-        console.log(this.searchList);
     }
 
     getAccountListFromString(str: any){
@@ -141,4 +143,9 @@ export class ManageAccountsComponent{
         this.specificGroup = group;
     }
     
-} 
+}
+
+interface customAccount extends AccountSession{
+    title: string;
+    type: string;
+}
