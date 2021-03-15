@@ -35,6 +35,8 @@ export class ManageEventComponent implements OnInit {
     selectedImagesCount = 0;
     eventFormControl = new FormControl();
     selectedEvent: any;
+    imageCount=0;
+    totalImagesUploaded=0;
   
     isLoading: boolean;
     isImageUploading = false;

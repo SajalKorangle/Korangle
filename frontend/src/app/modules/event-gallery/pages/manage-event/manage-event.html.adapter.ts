@@ -48,7 +48,7 @@ export class ManageEventHtmlAdapter {
     }
 
     selectTag($event: any, eventTag: any) {
-        if ($event.target.innerHTML != '' && ($event.target.contentEditable == 'false' || $event.target.contentEditable == 'inherit')) {
+        if ($event.target.innerHTML != '' && ($event.target.contentEditable == 'false' || $event.target.contentEditable == 'inherit') && !this.vm.isImageUploading && !this.vm.isDeletingImages) {
             eventTag.selected = !eventTag.selected;
             this.selectTaggedImages(eventTag);
         }
@@ -133,6 +133,7 @@ export class ManageEventHtmlAdapter {
                     files.push(event.target.files[i]);
                 }
             }
+            this.vm.totalImagesUploaded=files.length;
 
             files.forEach(image => {
                 const reader = new FileReader();
