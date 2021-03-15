@@ -1,12 +1,13 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer} from './../../class/constants_3';
-import { PageResolutionDialogComponent } from './../../components/page-resolution-dialog/page-resolution-dialog.component';
-import {ResultDialogComponent } from './../../components/result-dialog/result-dialog.component'
-import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
-import { MarksDialogComponent } from './../../components/marks-dialog/marks-dialog.component';
-import {LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component'
-import { InventoryDialogComponent } from './../../components/inventory-dialog/inventory-dialog.component';
-import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
+import { FIELDS, PARAMETER_LIST, ParameterAsset, TEST_TYPE_LIST, MARKS_TYPE_LIST, PageResolution, DPI_LIST, Formula, Result, MarksLayer, Layer, CanvasImage, sleep} from './../../class/constants_3';
+import { PageResolutionDialogComponent } from '../../components/dialogs/page-resolution-dialog/page-resolution-dialog.component';
+import {ResultDialogComponent } from '../../components/dialogs/result-dialog/result-dialog.component'
+import { GradeRulesDialogComponent } from '../../components/dialogs/grade-rules-dialog/grade-rules-dialog.component';
+import { MarksDialogComponent } from '../../components/dialogs/marks-dialog/marks-dialog.component';
+import {LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component'
+import { InventoryDialogComponent } from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
+import { ExamMappingDialogComponent} from './../../components/dialogs/exam-mapping-dialog/exam-mapping-dialog.component'
 
 export class DesignReportCardHtmlAdapter {
 
@@ -35,22 +36,35 @@ export class DesignReportCardHtmlAdapter {
 
     activeLeftColumn: string = 'layers';
 
-    constructor() {}
+    constructor() {
+    }
 
     // Data
 
     initializeAdapter(vm: DesignReportCardComponent): void {
         this.vm = vm;
+        this.vm.canvasAdapter.layerClickEvents.push(async (layer) => {
+            let el = document.getElementById('layer_#' + layer.id)
+            let count = 10;
+            while (!el && count--) {
+                await sleep(50);
+                el = document.getElementById('layer_#' + layer.id);
+            }
+            if(el)
+                el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            
+        })
     }
 
-    canvasSetUp():void {    // Setting canvas height and width to according to parent div
+    canvasSetUp(doScale:boolean=false):void {    // Setting canvas height and width to according to parent div
         let canvasWrapper = document.getElementById('canvasWrapper');
         let wrapperBoundingDimensions = canvasWrapper.getBoundingClientRect();
-        let computedCavasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
+        let computedCanvasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
         let computedCanvasHeight = wrapperBoundingDimensions.height - 2 * this.canvasMargin;
-        
-        this.vm.canvas.width = computedCavasWidth;
-        this.vm.canvas.height = computedCanvasHeight;
+
+        this.vm.canvasAdapter.maxVisibleHeight = computedCanvasHeight;
+        this.vm.canvasAdapter.maxVisibleWidth = computedCanvasWidth;
+        this.vm.canvasAdapter.canvasSizing(computedCanvasHeight, computedCanvasWidth, doScale);
     }
 
     getFieldKeys(): any{
@@ -64,33 +78,43 @@ export class DesignReportCardHtmlAdapter {
     }
 
     addNewLayerForAsset(asset: ParameterAsset): void {
-        this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }, this.vm.canvasAdapter));   
+        if (asset.layerType == CanvasImage)
+            this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset, width: 25 / this.vm.canvasAdapter.pixelTommFactor }, this.vm.canvasAdapter));
+        else
+            this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }, this.vm.canvasAdapter));   
     }
 
-    fullScreenToggle(): void{
-        let element = document.getElementById('drc-mainCard');
+    fullScreenExitHandler = ():void=> {
+        const element = document.getElementById('drc-mainCard');
         if (this.isFullScreen) {
             element.classList.remove('fullScreen');
             document.getElementById('drc-wrapper').appendChild(element);
             if (document.fullscreenElement && document.exitFullscreen) {
                 document.exitFullscreen()
                     .then(() => setTimeout(() => {
-                    this.canvasSetUp();
-                    this.vm.canvasAdapter.canvasSizing();
+                    this.canvasSetUp(true);
                     },500))
                     .catch(err=>console.log(err));
             }
+            document.removeEventListener('fullscreenchange', this.fullScreenExitHandler);
             this.isFullScreen = false;
+        }
+    }
+
+    fullScreenToggle(): void{
+        let element = document.getElementById('drc-mainCard');
+        if (this.isFullScreen) {
+            this.fullScreenExitHandler();
         } else{
             element.classList.add('fullScreen');
             document.body.appendChild(element);
             if (document.body.requestFullscreen)
                 document.body.requestFullscreen()
                     .then(() => setTimeout(() => {
-                        this.canvasSetUp();
-                        this.vm.canvasAdapter.canvasSizing();
+                        this.canvasSetUp(true);
+                        document.addEventListener('fullscreenchange', this.fullScreenExitHandler);
                     }, 500))    // bad design f we specify the time, is there is any way to wait until the css styles are loaded?
-                .catch(err=>console.log(err));
+                    .catch(err => console.log(err));
             this.isFullScreen = true;
         }  
     }
@@ -103,7 +127,7 @@ export class DesignReportCardHtmlAdapter {
         });
         this.openedDialog.afterClosed().subscribe((result: PageResolution) => {
             if (result) {
-                console.log('activePageResolution acalled, result = ', result);
+                // console.log('activePageResolution acalled, result = ', result);
                 this.canvasSetUp();
                 this.vm.canvasAdapter.updateResolution(result);
             }
@@ -166,11 +190,30 @@ export class DesignReportCardHtmlAdapter {
         })
     }
 
-    openInventory(): void{
-        this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
+    openExamMappingDialog(): void{
+        this.openedDialog = this.vm.dialog.open(ExamMappingDialogComponent, {
             data: {
-                vm: this.vm,
+                ca:this.vm.canvasAdapter
             }
+        })
+        this.openedDialog.afterClosed().subscribe((examMapping: {[key:string]:number}) => { 
+            if (examMapping) {
+                this.vm.canvasAdapter.mapExamination(examMapping);
+            }
+        })
+    }
+
+    openInventory(): void{
+        const data = { vm: this.vm, selectedLayout: {} };
+        if (this.vm.currentLayout.id) {
+            data.selectedLayout = { type: 'myLayout', index: this.vm.reportCardLayoutList.findIndex(l=>l.id==this.vm.currentLayout.id) };
+        }
+        else {
+            data.selectedLayout = { type: 'myLayout', index: -1 };
+        }
+        
+        this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
+            data
         });
         this.openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {
@@ -191,6 +234,7 @@ export class DesignReportCardHtmlAdapter {
                             content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.publicLayoutList[selection.index].content))
                         };
                         this.vm.populateCurrentLayoutWithGivenValue(newLayout1, true);
+                        this.openExamMappingDialog();
                         break;
                     case 'shared':
                         let newLayout2: any = {
@@ -200,6 +244,7 @@ export class DesignReportCardHtmlAdapter {
                             content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.sharedLayoutList[selection.index].content))
                         };
                         this.vm.populateCurrentLayoutWithGivenValue(newLayout2, true);
+                        this.openExamMappingDialog();
                         break;
                 }
             }
@@ -230,6 +275,13 @@ export class DesignReportCardHtmlAdapter {
         let resultArray = [...Array(length + 1).keys()];
         resultArray.splice(0, 1);
         return resultArray;
+    }
+
+    canvasWrapperClickHandler(event) {
+        if (event.target != this.vm.canvasAdapter.canvas) {
+            this.vm.canvasAdapter.resetActiveLayer();
+            this.vm.canvasAdapter.scheduleCanvasReDraw(0);
+        }
     }
 
 }

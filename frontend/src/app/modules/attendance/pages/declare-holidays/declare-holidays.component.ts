@@ -5,17 +5,19 @@ import {StudentOldService} from '../../../../services/modules/student/student-ol
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
 import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
 import {DataStorage} from "../../../../classes/data-storage";
+import { DeclareHolidaysServiceAdapter } from './declare-holidays.service.adapter';
+import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 
 @Component({
   selector: 'declare-holidays',
   templateUrl: './declare-holidays.component.html',
   styleUrls: ['./declare-holidays.component.css'],
-    providers: [ AttendanceOldService, StudentOldService, EmployeeOldService ],
+    providers: [ AttendanceOldService, StudentOldService, EmployeeOldService,AttendanceService ],
 })
 
 export class DeclareHolidaysComponent implements OnInit {
 
-     user;
+    user;
 
     classSectionStudentList = [];
     employeeList = [];
@@ -25,37 +27,20 @@ export class DeclareHolidaysComponent implements OnInit {
     startDate = null;
     endDate = null;
 
+    serviceAdapter: DeclareHolidaysServiceAdapter
+
     isLoading = false;
 
-    constructor (private attendanceService: AttendanceOldService,
-                 private studentService: StudentOldService,
-                 private employeeService: EmployeeOldService) { }
-
+    constructor (public attendanceService: AttendanceOldService,
+                 public attendanceService2: AttendanceService,
+                 public studentService: StudentOldService,
+                 public employeeService: EmployeeOldService) { }  
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
-        let request_student_data = {
-            schoolDbId: this.user.activeSchool.dbId,
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
-
-        const request_employee_data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
-
+        this.serviceAdapter = new DeclareHolidaysServiceAdapter();
         this.isLoading = true;
-
-        Promise.all([
-            this.studentService.getClassSectionStudentList(request_student_data, this.user.jwt),
-            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            this.initializeClassSectionStudentList(value[0]);
-            this.initializeEmployeeList(value[1]);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
     }
 
     initializeEmployeeList(employeeList: any): void {
@@ -140,29 +125,6 @@ export class DeclareHolidaysComponent implements OnInit {
         return studentAttendanceStatusListData;
     }
 
-    declareHoliday(): void {
-
-        let student_data = this.prepareStudentAttendanceStatusListData();
-        let employee_data = this.prepareEmployeeAttendanceStatusListData();
-
-        if (student_data.length === 0 && employee_data.length === 0) {
-            alert('Nothing to update');
-            return;
-        }
-
-        this.isLoading = true;
-        Promise.all([
-            this.attendanceService.recordStudentAttendance(student_data, this.user.jwt),
-            this.attendanceService.recordEmployeeAttendance(employee_data, this.user.jwt)
-        ]).then(response => {
-            this.isLoading = false;
-            alert('Holidays recorded successfully');
-        }, error => {
-            this.isLoading = false;
-        });
-
-    }
-
     // Server Handling - 2
     getStudentIdList(): any {
         let studentIdList = [];
@@ -188,43 +150,6 @@ export class DeclareHolidaysComponent implements OnInit {
         return employeeIdList;
     }
 
-    deleteAttendance(): void {
-
-        if (!confirm('Are you sure, you want to delete all the attendance records for selected persons and dates')) {
-            return;
-        }
-
-        let studentList = this.getStudentIdList();
-        let employeeList = this.getEmployeeIdList();
-
-        if (studentList.length === 0 && employeeList.length === 0) {
-            alert('Nothing to delete');
-            return;
-        }
-
-        let student_data = {
-            studentIdList: studentList,
-            startDate: this.startDate,
-            endDate: this.endDate,
-        };
-        let employee_data = {
-            employeeIdList: employeeList,
-            startDate: this.startDate,
-            endDate: this.endDate,
-        };
-
-        this.isLoading = true;
-        Promise.all([
-            this.attendanceService.deleteStudentAttendance(student_data, this.user.jwt),
-            this.attendanceService.deleteEmployeeAttendance(employee_data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            alert('All records for the selected dates are deleted');
-        }, error => {
-            this.isLoading = false;
-        });
-
-    }
 
     // Called from Html files
     unselectAllEmployees(): void {

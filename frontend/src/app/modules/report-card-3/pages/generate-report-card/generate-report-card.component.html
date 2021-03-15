@@ -18,8 +18,8 @@
 
                     <ng-container *ngFor="let classSection of classSectionList">
                         <mat-option style="width: 100%;">
-                            <mat-checkbox [(ngModel)]="classSection.selected"
-                                            (ngModelChange)="handleFilteredStudentSectionList()"
+                            <mat-checkbox [ngModel]="classSection.selected"
+                                            (ngModelChange)="unselectAllClasses(); classSection.selected=$event;  handleFilteredStudentSectionList()"
                                             (click)="$event.stopPropagation();">
                                 {{classSection.class.name}}, {{classSection.section.name}}
                             </mat-checkbox>
@@ -81,17 +81,19 @@
                 <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
                 <tr>
                     <th></th>
+                    <th>S. No.</th>
                     <th>Name</th>
                     <th>Class & Section</th>
                     <th>Father's Name</th>
                 </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let studentSection of filteredStudentSectionList">
+                <ng-container *ngFor="let studentSection of filteredStudentSectionList, let i = index;">
                     <tr>
                         <td>
                             <mat-checkbox [(ngModel)]="studentSection.selected"></mat-checkbox>
                         </td>
+                        <td>{{i+1}}</td>
                         <td>{{getStudent(studentSection.parentStudent).name}}</td>
                         <td>{{getClass(studentSection.parentClass).name}}, {{getDivision(studentSection.parentDivision).name}}</td>
                         <td>{{getStudent(studentSection.parentStudent).fathersName}}</td>
@@ -113,6 +115,8 @@
     <app-loading-spinner [user]="user"></app-loading-spinner>
     <div style="text-align: center;" *ngIf="generatedReportCards!=0">
         <mat-progress-bar mode="determinate" [value]="generatedReportCards*100/getSelectedStudentList().length"></mat-progress-bar>
-        {{generatedReportCards}}/{{getSelectedStudentList().length}}
+        {{generatedReportCards}}/{{getSelectedStudentList().length}}<br/>
+        <ng-container *ngIf="estimatedTime">Estimated Time: {{estimatedTime.minutes}} minutes {{estimatedTime.seconds}} seconds</ng-container>
+        <ng-container *ngIf="!estimatedTime">Processing ...</ng-container>
     </div>
 </ng-template>

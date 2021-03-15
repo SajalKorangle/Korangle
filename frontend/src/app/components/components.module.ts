@@ -41,6 +41,7 @@ import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
+import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import {ViewImageModalComponent} from '@components/view-image-modal/view-image-m
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
+        NumberAndStringPipe,
 
         EmployeeFilterComponent,
 
@@ -107,6 +109,7 @@ import {ViewImageModalComponent} from '@components/view-image-modal/view-image-m
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
+        NumberAndStringPipe,
 
         CommonModule,
         FormsModule,

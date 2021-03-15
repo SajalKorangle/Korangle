@@ -1,0 +1,105 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">text_format</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        <mat-form-field appearence="fill">
+            <mat-label>
+                Value
+            </mat-label>
+            <textarea matInput [disabled]="!(layer.dataSourceType=='N/A' && layer.LAYER_TYPE=='TEXT')" [(ngModel)]="layer.text" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
+        </mat-form-field>
+        
+        <ng-container *ngIf="layer.LAYER_TYPE != 'TEXT' || layer.dataSourceType=='DATA'">
+            <mat-form-field appearence="fill">
+                <mat-label>
+                    Prefix
+                </mat-label>
+                <textarea matInput [(ngModel)]="layer.prefix" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearence="fill">
+                <mat-label>
+                    Suffix
+                </mat-label>
+                <textarea matInput [(ngModel)]="layer.suffix" (ngModelChange)="canvasRefresh();" matTextareaAutosize="true"></textarea>
+            </mat-form-field>
+        </ng-container>
+
+        <div style="text-align: center;">
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [multiple]="true">
+            <mat-button-toggle [checked]="layer.fontWeight=='bold'" (change)="boldToggle(); canvasRefresh(0);"><span class="material-icons">format_bold</span></mat-button-toggle>
+            <mat-button-toggle [checked]="layer.italics=='italic'" (change)="italicToggle(); canvasRefresh(0);"><span class="material-icons">format_italic</span></mat-button-toggle>
+            <mat-button-toggle [checked]="layer.underline" (change)="underlineToggle(); canvasRefresh(0);"><span class="material-icons">format_underline</span></mat-button-toggle>
+        </mat-button-toggle-group>
+        </div>
+
+        <div style="text-align: center; margin-top: 10px;"> <!-- Text Alignments -->
+            <mat-button-toggle-group [value]="layer.textAlign" (change)="layer.textAlign=$event.value; canvasRefresh();">
+                <mat-button-toggle value="left">
+                <mat-icon>format_align_left</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="center">
+                <mat-icon>format_align_center</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle value="right">
+                <mat-icon>format_align_right</mat-icon>
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+        <mat-form-field style="margin-top: 10px;">
+            <mat-label>
+                Font Size(mm)
+            </mat-label>
+            <input matInput type="number" [ngModel]="getFontSize()" (ngModelChange)="updateFontSize($event); canvasRefresh(500);">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>
+                Color
+            </mat-label>
+            <input matInput type="color" [value]="layer.fillStyle" (input)="layer.fillStyle=$event.target.value; canvasRefresh(0);"/>
+        </mat-form-field>
+
+        
+        <mat-form-field>
+            <mat-label>Font Family</mat-label>
+            <mat-select placeholder="Select Font Family"
+                    [(ngModel)]="layer.font"
+                    (ngModelChange)="canvasRefresh();">
+                <mat-option *ngFor="let fontFamily of fontFamilyList" [value]="fontFamily.displayName">
+                    <span [ngStyle]="{'font-family': fontFamily.displayName }">{{fontFamily.displayName}}</span>                
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Vertical</mat-label>
+            <mat-select
+                    [(ngModel)]="layer.textBaseline"
+                    (ngModelChange)="canvasRefresh();">
+                <mat-option *ngFor="let align of getVerticalAlignmentKeys()" [value]="align">
+                    <span>{{verticalAlignmentKeyMapMap[align]}}</span>                
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div style="margin-top: 10px; display: flex; width: 170px; justify-content: space-between; align-items: center;">
+            <mat-form-field style="width: 80px">
+                <mat-label>
+                    Width(mm)
+                </mat-label>
+                <input matInput type="number" [ngModel]="getWidth()" (ngModelChange)="updateWidth($event); canvasRefresh();">
+            </mat-form-field>   
+            <mat-form-field style="width: 80px">
+                <mat-label>
+                    Height(mm)
+                </mat-label>
+                <input matInput type="number" [ngModel]="getHeight()" (ngModelChange)="updateHeight($event); canvasRefresh();">
+            </mat-form-field>    
+        </div>
+
+    </div>
+</mat-card>
