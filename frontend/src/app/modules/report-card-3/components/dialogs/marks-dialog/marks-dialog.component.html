@@ -9,16 +9,14 @@
             <mat-form-field>
                 <mat-select 
                     placeholder="Examination"
-                    [(ngModel)]="layer.parentExamination"
-                    (ngModelChange)="layer.parentSubject=null; layer.testType=null;">
+                    [(ngModel)]="layer.parentExamination">
                     <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-select placeholder="Subject"
-                [(ngModel)]="layer.parentSubject" 
-                (ngModelChange)="layer.testType=null;">
+                [(ngModel)]="layer.parentSubject">
                     <mat-option *ngFor="let subject of layer.ca.vm.DATA.data.subjectList;" [value]="subject.id">
                         {{subject.name}}
                     </mat-option>
