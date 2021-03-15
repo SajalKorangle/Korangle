@@ -49,33 +49,14 @@ export class EditAccountDialogComponent implements OnInit {
     }
     console.log(this.account);
     Promise.all([
-      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.account),
-      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data),
+      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.account), // 0
+      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data), // 1
     ]).then(val =>{
       console.log(val);
-      this.account = { ...this.account, ...val[0] };
-      for(let i=0;i<this.data.vm.accountsList.length ;i++){
-        if(this.data.vm.accountsList[i].id == this.account.id){
-          this.data.vm.accountsList[i].title = this.account.title;
-          this.data.vm.accountsList[i].parentHead = this.account.parentHead;
-          this.data.vm.accountsList[i].parentGroup = this.account.parentGroup;
-          this.data.vm.accountsList[i].openingBalance = this.account.openingBalance;
-          this.data.vm.accountsList[i].currentBalance = this.account.currentBalance;
-          break;
-        }
-      }
-      
-      for(let i=0;i<this.data.vm.serviceAdapter.accountsSessionList.length ;i++){
-        if(this.data.vm.serviceAdapter.accountsSessionList[i].id == this.account.id){
-          this.data.vm.serviceAdapter.accountsSessionList[i].title = this.account.title;
-          this.data.vm.serviceAdapter.accountsSessionList[i].parentHead = this.account.parentHead;
-          this.data.vm.serviceAdapter.accountsSessionList[i].parentGroup = this.account.parentGroup;
-          this.data.vm.serviceAdapter.accountsSessionList[i].balance = this.account.balance;
-          break;
-        }
-      }
+      const indexOfCustomAccountSession = this.data.vm.accountsList.findIndex(accountSession => accountSession.id == this.account.id);
+      this.data.vm.accountsList[indexOfCustomAccountSession] = { ...this.account, ...val[0], title: val[1].title };
+
       this.data.vm.serviceAdapter.initialiseDisplayData();
-      console.log(val);
       alert('Account Updated Successfully');
       this.dialogRef.close();
     })

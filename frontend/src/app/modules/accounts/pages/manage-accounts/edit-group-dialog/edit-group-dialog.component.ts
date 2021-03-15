@@ -51,24 +51,11 @@ export class EditGroupDialogComponent implements OnInit {
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.group),
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, group_session_update_data),
-    ]).then(val =>{
-      for(let i=0;i<this.data.vm.groupsList.length ;i++){
-        if(this.data.vm.groupsList[i].id == this.group.id){
-          this.data.vm.groupsList[i].title = this.group.title;
-          this.data.vm.groupsList[i].parentHead = this.group.parentHead;
-          this.data.vm.groupsList[i].parentGroup = this.group.parentGroup;
-          break;
-        }
-      }
+    ]).then(val => {
       
-      for(let i=0;i<this.data.vm.serviceAdapter.accountsSessionList.length ;i++){
-        if(this.data.vm.serviceAdapter.accountsSessionList[i].id == this.group.id){
-          this.data.vm.serviceAdapter.accountsSessionList[i].title = this.group.title;
-          this.data.vm.serviceAdapter.accountsSessionList[i].parentHead = this.group.parentHead;
-          this.data.vm.serviceAdapter.accountsSessionList[i].parentGroup = this.group.parentGroup;
-          break;
-        }
-      }
+      const indexOfCustomGroupSessin = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == this.group.id);
+      this.data.vm.groupssList[indexOfCustomGroupSessin] = { ...this.group, ...val[0],  title: val[1].title };
+
       this.data.vm.serviceAdapter.initialiseDisplayData();
       console.log(val);
       alert('Group Updated Successfully');

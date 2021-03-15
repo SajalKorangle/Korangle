@@ -11,3 +11,6 @@ export const APPROVAL_STATUS = {
     'PENDING': 'PENDING',
     'DECLINED': 'DECLINED',
 };
+
+export const NEGATIVE_BALANCE_COLOR = 'rgba(76, 175, 80, 1)';
+export const POSITIVE_BALANCE_COLOR = 'rgba(86, 142, 174, 1)';

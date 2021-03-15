@@ -5,7 +5,7 @@ import { AccountSearchComponent } from './account-search/account-search.componen
 import { UpdateTransactionDialogComponent } from './update-transaction-dialog/update-transaction-dialog.component'
 import { GroupHierarchyComponent } from './group-hierarchy/group-hierarchy.component'
 import { GroupHierarchyListComponent } from './group-hierarchy-list/group-hierarchy-list.component'
-
+import { ColoredBalancePipe } from './pipes/colored-balance.pipe';
 @NgModule({
   declarations: [
     ImagePreviewDialogComponent,
@@ -13,6 +13,9 @@ import { GroupHierarchyListComponent } from './group-hierarchy-list/group-hierar
     UpdateTransactionDialogComponent,
     GroupHierarchyComponent,
     GroupHierarchyListComponent,
+
+    //pipes
+    ColoredBalancePipe,
   ],
   imports: [
     ComponentsModule,
@@ -23,6 +26,9 @@ import { GroupHierarchyListComponent } from './group-hierarchy-list/group-hierar
     UpdateTransactionDialogComponent,
     GroupHierarchyComponent,
     GroupHierarchyListComponent,
+    
+    //pipes
+    ColoredBalancePipe,
   ]
 })
 export class AccountsComponentsModule { }

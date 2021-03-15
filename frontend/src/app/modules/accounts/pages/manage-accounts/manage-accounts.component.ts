@@ -33,10 +33,10 @@ export class ManageAccountsComponent{
     isLoading: any;
 
 
-    expensesList = [];
-    assetsList = [];
-    liabilityList = [];
-    incomeList = [];
+    expensesList: Array<customGroupStructure> = [];
+    assetsList: Array<customGroupStructure> = [];
+    liabilityList: Array<customGroupStructure> = [];
+    incomeList: Array<customGroupStructure> = [];
     displayWholeList: boolean;
 
     minimumDate: any;
@@ -148,4 +148,8 @@ export class ManageAccountsComponent{
 interface customAccount extends AccountSession{
     title: string;
     type: string;
+}
+
+interface customGroupStructure extends customAccount{
+    childs: Array<customGroupStructure | customAccount | any>;
 }

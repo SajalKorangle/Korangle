@@ -90,10 +90,9 @@ export class ManageAccountsServiceAdapter {
         for(let i=0; i<groupStructureList.length; i++){
             if(groupStructureList[i].parentGroup){
                 groupStructureList.find(group => group.id == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
-                delete groupStructureList[i];
             }
         }
-        const rootGroupStructureList = groupStructureList.filter(Boolean);
+        const rootGroupStructureList = groupStructureList.filter(group=> !group.parentGroup);
         this.populateHeadWiseDisplayList(rootGroupStructureList, individualAccountList);
 
     }
