@@ -66,7 +66,7 @@ class AccountSession(models.Model):
         if self.id is None:
             self.currentBalance = self.openingBalance
         else:
-            self.currentBalance = self.openingBalance - AccountSession.objects.get(id=self.id)
+            self.currentBalance += self.openingBalance - AccountSession.objects.get(id=self.id).openingBalance
         super(AccountSession, self).save(*args, **kwargs)
 
     class Meta:

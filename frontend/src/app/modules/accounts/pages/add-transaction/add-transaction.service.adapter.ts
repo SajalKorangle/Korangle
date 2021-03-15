@@ -59,6 +59,8 @@ export class AddTransactionServiceAdapter {
                         this.vm.maximumPermittedAmount = null;
                     }
 
+                    console.log(this.vm.user.activeSchool.employeeId);
+
                     let granted_approval_data = {
                         'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
                         'requestStatus': 'APPROVED',
@@ -66,6 +68,8 @@ export class AddTransactionServiceAdapter {
                         'requestedGenerationDateTime__gte': this.vm.htmlRenderer.minimumDate,
                         'requestedGenerationDateTime__lte': this.vm.htmlRenderer.maximumDate,
                     };
+
+                    console.log(granted_approval_data);
 
                     let approval_account_details = {
                         'parentApproval__parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
@@ -124,7 +128,7 @@ export class AddTransactionServiceAdapter {
 
             approvalAccountList.forEach(approvalAccount =>{
                 if(approvalAccount.parentApproval == approval.id){
-                    let tempAccount = this.vm.htmlRenderer.accountSessionList.find(acccount => acccount.parentAccount == approvalAccount.parentAccount);
+                    let tempAccount = this.vm.backendData.accountSessionList.find(acccount => acccount.parentAccount == approvalAccount.parentAccount);
                     if(approvalAccount.transactionType == 'DEBIT'){
                         let temp_data = {
                             'debitAccount': tempAccount,
