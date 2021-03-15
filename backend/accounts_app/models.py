@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from employee_app.models import Employee
 from school_app.model.models import School,Session
+from django.db.models import Max
 
 import os
 from django.utils.timezone import now
@@ -57,12 +58,16 @@ class AccountSession(models.Model):
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE, related_name='acccountSessions')
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE,)
     balance = models.IntegerField(null=True, blank=True)
-    openingBalance = models.PositiveIntegerField(null=False, default=0)
-    currentBalance = models.IntegerField(null=False, default=0)
+    openingBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
+    currentBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
     parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions')    # on delete?
     parentHead = models.ForeignKey(Heads)
 
     def save(self, *args, **kwargs):
+        if self.currentBalance is None:
+            self.currentBalance = 0
+        if self.openingBalance is None:
+            self.openingBalance = 0
         if self.id is None:
             self.currentBalance = self.openingBalance
         else:
@@ -76,11 +81,22 @@ class AccountSession(models.Model):
 class Transaction(models.Model):
     
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, null=False, default=0)
     voucherNumber = models.IntegerField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
     transactionDate = models.DateField(null=True)
     approvalId = models.IntegerField(null=True, blank=True)
     
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            self.voucherNumber = 1
+            last_voucher_number = \
+                Transaction.objects.filter(parentSchool=self.parentEmployee.parentSchool) \
+                    .aggregate(Max('voucherNumber'))['voucherNumber__max']
+            if last_voucher_number is not None:
+                self.voucherNumber = last_voucher_number + 1
+        super(Transaction, self).save(*args, **kwargs)
+
     class Meta:
         db_table = 'transaction'
 
@@ -88,7 +104,7 @@ class Transaction(models.Model):
 class TransactionAccountDetails(models.Model):
     parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     parentAccount = models.ForeignKey(Accounts, on_delete=models.PROTECT)
-    amount = models.IntegerField(null=True, blank=True)
+    amount = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
 
     CREDIT_TYPE = 'CREDIT'
     DEBIT_TYPE = 'DEBIT'
@@ -154,7 +170,7 @@ class ApprovalAccountDetails(models.Model): # should be connected to AccountSess
     
     parentApproval = models.ForeignKey(Approval, on_delete=models.CASCADE)
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE)
-    amount = models.IntegerField(null=True, blank=True)
+    amount = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
 
     CREDIT_TYPE = 'CREDIT'
     DEBIT_TYPE = 'DEBIT'

@@ -24,7 +24,7 @@ export class AddTransactionServiceAdapter {
                 this.vm.isLoading = false;
             } else if (value.length == 0) {
                 this.vm.lockAccounts = null;
-                this.vm.approvalsList = [];
+                this.vm.backendData.approvalList = [];
 
                 let request_account_title_data = {
                     parentSchool: this.vm.user.activeSchool.dbId,
@@ -95,7 +95,10 @@ export class AddTransactionServiceAdapter {
                         
                         console.log(val);
 
-                        this.initialiseApprovalData(val[0], val[1], val[2]);
+                        this.vm.backendData.approvalList = val[0];
+                        this.vm.backendData.approvalAccountDetailsList = val[1];
+                        this.vm.backendData.approvalImagesList = val[2];
+
                         this.vm.isLoading = false;
         
                     });
@@ -110,183 +113,118 @@ export class AddTransactionServiceAdapter {
         });
     }
 
-    initialiseApprovalData(approvalList, approvalAccountList, approvalImageList){
-        approvalList.forEach(approval => {
-
-            let tempData = {
-                dbId: approval.id,
-                debitAccountList: [],
-                creditAccountList: [],
-                remark: approval.remark,
-                billImages: [],
-                quotationImages: [],
-                approvalId: approval.approvalId,
-                parentTransaction: approval.parentTransaction,
-                transactionDate: approval.transactionDate,
-                totalAmount: 0,
-            };
-
-            approvalAccountList.forEach(approvalAccount =>{
-                if(approvalAccount.parentApproval == approval.id){
-                    let tempAccount = this.vm.backendData.accountSessionList.find(acccount => acccount.parentAccount == approvalAccount.parentAccount);
-                    if(approvalAccount.transactionType == 'DEBIT'){
-                        let temp_data = {
-                            'debitAccount': tempAccount,
-                            'debitAmount': approvalAccount.amount,
-                        }
-                        tempData.debitAccountList.push(temp_data);
-                    }
-                    else{
-                        let temp_data = {
-                            'creditAccount': tempAccount,
-                            'creditAmount': approvalAccount.amount,
-                        }
-                        tempData.creditAccountList.push(temp_data);
-                    }
-                }
-            });
-
-            approvalImageList.forEach(image =>{
-                if(image.parentApproval == approval.id){
-                    this.getBase64FromUrl(image.imageURL).then(data64URL =>{
-                        image.imageURL = data64URL; 
-                    })
-                    if(image.imageType == 'BILL'){
-                        tempData.billImages.push(image);
-                    }
-                    else{
-                        tempData.quotationImages.push(image);
-                    }
-                }
-            });
-
-            tempData.debitAccountList.forEach(account =>{
-                tempData.totalAmount += account.debitAmount;
-            });
-            
-            this.vm.approvalsList.push(tempData);
-        });
-        this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
-    }
-
     addTransactions():any {
+
         this.vm.isLoading = true;
-        let data = {
-            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
-            'transactionDate__gte': this.vm.htmlRenderer.minimumDate,
-            'transactionDate__lte': this.vm.htmlRenderer.maximumDate,
-            'korangle__order': '-voucherNumber',
-            'korangle__count': '0,1',
-        }
-        let lastVoucherNumber = 1;
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
-        ]).then(val =>{
-            if(val[0].length > 0){
-                lastVoucherNumber = val[0][0].voucherNumber + 1;
+
+        let toCreateTransactionList = [];
+        this.vm.transactionList.forEach(transaction => {
+            let tempData = {
+                parentEmployee: this.vm.user.activeSchool.employeeId,
+                parentSchool: this.vm.user.activeSchool.dbId,
+                remark: transaction.remark,
+                transactionDate: this.vm.selectedDate,
             }
-            let toCreateList = [];
-            this.vm.transactionList.forEach(transaction =>{
-                let tempData = {
-                    parentEmployee: this.vm.user.activeSchool.employeeId,
-                    voucherNumber: lastVoucherNumber,
-                    remark: transaction.remark,
-                    transactionDate: this.vm.selectedDate,
-                    approvalId: transaction.approvalId,
+            toCreateTransactionList.push(tempData);
+        });
+
+        Promise.all([
+            this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList),
+        ]).then(value => {
+
+            let toUpdateApprovalList = [];
+            let toCreateAccountList = [];
+            let toCreateTransactionImageList = [];
+            const serviceList = [];
+
+            value[0].forEach((element, index) => {
+                
+                let transaction = this.vm.transactionList[index];
+
+                // Approvals
+                if (this.vm.transactionList[index].approval) {
+                    let approval_data = {
+                        id: transaction.approval.id,
+                        parentTransaction: element.id
+                    };
+                    toUpdateApprovalList.push(approval_data);
                 }
-                lastVoucherNumber = lastVoucherNumber + 1; 
-                toCreateList.push(tempData);
-            })
-            Promise.all([
-                this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateList),
-            ]).then(value =>{
-                // console.log(value);
-                let toCreateAccountList = [];
-                const service = [];
-                value[0].forEach((element,index) =>{
-                    this.vm.transactionList[index].debitAccountList.forEach(account =>{
-                        let tempData = {
-                            parentTransaction: element.id,
-                            parentAccount: account.debitAccount.parentAccount,
-                            amount: account.debitAmount,
-                            transactionType: 'DEBIT',
-                        }
-                        toCreateAccountList.push(tempData);
-                    });
-                    this.vm.transactionList[index].creditAccountList.forEach(account =>{
-                        let tempData = {
-                            parentTransaction: element.id,
-                            parentAccount: account.creditAccount.parentAccount,
-                            amount: account.creditAmount,
-                            transactionType: 'CREDIT',
-                        }
-                        toCreateAccountList.push(tempData);
-                    });
-                    
-                    
-                    let i=1;
-                    this.vm.transactionList[index].billImages.forEach(image =>{
-                        let tempData = {
-                            parentTransaction: element.id,
-                            imageURL: image.imageURL,
-                            orderNumber: i,
-                            imageType: 'BILL',
-                        }
-                        console.log(tempData);
-                        let temp_form_data = new FormData();
-                        const layout_data = { ...tempData,};
-                        console.log(layout_data);
-                        Object.keys(layout_data).forEach(key => {
-                            if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                            } else {
-                                temp_form_data.append(key, layout_data[key]);
-                            }
-                        });
-                        console.log(temp_form_data);
-                        i = i + 1;
-                        service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
 
-                    })
-                    
-                    i=1;
-                    this.vm.transactionList[index].quotationImages.forEach(image =>{
-                        let tempData = {
-                            parentTransaction: element.id,
-                            imageURL: image.imageURL,
-                            orderNumber: i,
-                            imageType: 'QUOTATION',
-                        }
-                        let temp_form_data = new FormData();
-                        const layout_data = { ...tempData,};
-                        Object.keys(layout_data).forEach(key => {
-                            if (key === 'imageURL' ) {
-                                temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                            } else {
-                                temp_form_data.append(key, layout_data[key]);
-                            }
-                        });
-                        i = i + 1;
-                        service.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data))
-                    })
-
+                // Debit Accounts
+                transaction.debitAccountList.forEach(account =>{
+                    let tempData = {
+                        parentTransaction: element.id,
+                        parentAccount: account.debitAccount.parentAccount,
+                        amount: account.debitAmount,
+                        transactionType: 'DEBIT',
+                    }
+                    toCreateAccountList.push(tempData);
                 });
-                service.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
-                Promise.all(service).then(data => {
 
-                    this.vm.transactionList = [];
-                    this.vm.htmlRenderer.addNewTransaction();
+                // Credit Accounts
+                transaction.creditAccountList.forEach(account =>{
+                    let tempData = {
+                        parentTransaction: element.id,
+                        parentAccount: account.creditAccount.parentAccount,
+                        amount: account.creditAmount,
+                        transactionType: 'CREDIT',
+                    }
+                    toCreateAccountList.push(tempData);
+                });
+                
+                // Bill Images
+                let i=1;
+                this.vm.transactionList[index].billImages.forEach(image => {
+                    let temp_form_data = new FormData();
+                    temp_form_data.append('parentTransaction', element.id);
+                    temp_form_data.append('imageURL', CommonFunctions.dataURLtoFile(image.imageURL, 'imageURL' + i +'.jpeg'));
+                    temp_form_data.append('orderNumber', i.toString());
+                    temp_form_data.append('imageType', 'BILL');
+                    i = i + 1;
+                    // toCreateTransactionImageList.push(temp_form_data);
+                    serviceList.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data));
+                });
+                
+                // Quotation Images
+                i=1;
+                this.vm.transactionList[index].quotationImages.forEach(image => {
+                    let temp_form_data = new FormData();
+                    temp_form_data.append('parentTransaction', element.id);
+                    temp_form_data.append('imageURL', CommonFunctions.dataURLtoFile(image.imageURL, 'imageURL' + i +'.jpeg'));
+                    temp_form_data.append('orderNumber', i.toString());
+                    temp_form_data.append('imageType', 'QUOTATION');
+                    i = i + 1;
+                    // toCreateTransactionImageList.push(temp_form_data);
+                    serviceList.push(this.vm.accountsService.createObject(this.vm.accountsService.transaction_images, temp_form_data));
+                });
 
-                    // Write down the number of transactions that have been recorded in alert message.
-                    alert('Transaction Recorded Successfully');
+            });
 
-                    this.vm.isLoading = false;
-                })
+            if (toUpdateApprovalList.length > 0) {
+                serviceList.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.approval, toUpdateApprovalList));
+            }
+            serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
+            /*if (toCreateTransactionImageList.length > 0) {
+                serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_images, toCreateTransactionImageList));
+            }*/
 
+            Promise.all(serviceList).then(data => {
+
+                this.vm.transactionList = [];
+                this.vm.htmlRenderer.addNewTransaction();
+
+                this.vm.backendData.approvalList = this.vm.backendData.approvalList.filter(approval => {
+                    return toUpdateApprovalList.find(updatedApproval => updatedApproval.id == approval.id) == undefined;
+                });
+
+                // Write down the number of transactions that have been recorded in alert message.
+                alert(toCreateTransactionList.length + ' Transaction/s Recorded Successfully');
+
+                this.vm.isLoading = false;
             })
 
-        })
-        
+        });
+
     }
 
     getBase64FromUrl = async (url) => {
