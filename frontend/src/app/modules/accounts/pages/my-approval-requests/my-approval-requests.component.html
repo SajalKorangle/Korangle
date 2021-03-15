@@ -1,6 +1,6 @@
 <div class="card-content table-responsive ">
 <ng-container *ngIf="!isLoading else loadingSpinner">
-    <div *ngIf="!accountsLockedForSession">
+    <div *ngIf="!accountsLockedForSession && inActiveSession() else notAllowedDescription">
         <h4 style="color: blue;"><b>New Approval Request</b></h4>
         <ng-container *ngFor="let approval of newApprovalList, let i = index;">
             <mat-card>
@@ -152,6 +152,17 @@
             <button mat-button style="float: right;" (click)="requestApproval()" class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Request Approval</button>
         </div>
     </div>
+
+    <ng-template #notAllowedDescription>
+        <div *ngIf="!inActiveSession()">
+        <span style="color: red;">Not in Active Session</span><span> (Request can only be made in active Session)</span>
+        </div>
+        <div *ngIf="accountsLockedForSession">
+            <span  style="color: red;">
+                <h4><b><mat-icon style="vertical-align: -6px;">error_outline</mat-icon>
+                    All Accounts has been locked for this session. No further transctions can be added. </b></h4></span>
+        </div>
+    </ng-template>
 
     <div style="margin-top: 75px;">
         <hr  style="margin-top: 24px;"/>

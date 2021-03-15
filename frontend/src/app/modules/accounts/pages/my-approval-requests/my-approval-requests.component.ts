@@ -66,6 +66,13 @@ export class MyApprovalRequestsComponent implements OnInit {
         console.log('this: ', this);
     }
 
+    inActiveSession(): boolean{
+        const today = new Date();
+        const sessionStartDate = new Date(this.minimumDate);
+        const sessionEndDate = new Date(this.maximumDate);
+        return today >= sessionStartDate && today <= sessionEndDate;
+    }
+
     getButtonStyle(approval){
         let style = {
             'background': null,
