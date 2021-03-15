@@ -11,14 +11,13 @@ import { AddTransactionHtmlRenderer } from './add-transaction.html.renderer';
 import { AddTransactionBackendData } from './add-transaction.backend.data';
 
 @Component({
-  selector: 'add-transaction',
-  templateUrl: './add-transaction.component.html',
-  styleUrls: ['./add-transaction.component.css'],
-  providers: [
-    AccountsService,
-    SchoolService,
-  ]
-    
+    selector: 'add-transaction',
+    templateUrl: './add-transaction.component.html',
+    styleUrls: ['./add-transaction.component.css'],
+    providers: [
+        AccountsService,
+        SchoolService,
+    ]
 })
 
 export class AddTransactionComponent implements OnInit {
@@ -35,7 +34,6 @@ export class AddTransactionComponent implements OnInit {
     creditAccount: any;
     creditAmount: any;
 
-    approvalsList: any;
     maximumPermittedAmount: any;
     
     lockAccounts: any;
@@ -107,11 +105,11 @@ export class AddTransactionComponent implements OnInit {
 
     isAmountUnEqual(transaction):boolean{
       let totalCreditAmount = 0;
-      transaction.creditAccountList.forEach(account =>{
+      transaction.creditAccountList.forEach(account => {
         totalCreditAmount += account.creditAmount;
       })
       let totalDebitAmount = 0;
-      transaction.debitAccountList.forEach(account =>{
+      transaction.debitAccountList.forEach(account => {
         totalDebitAmount += account.debitAmount;
       })
       if(totalCreditAmount == totalDebitAmount){
@@ -122,23 +120,22 @@ export class AddTransactionComponent implements OnInit {
       }
     }
 
-    isApprovalRequired(transaction): boolean{
-      if(transaction.approvalId != null || this.maximumPermittedAmount == null){
+    isApprovalRequired(transaction): boolean {
+      if(transaction.approval != null || this.maximumPermittedAmount == null){
         return false;
       }
       let totalCreditAmount = 0;
       transaction.creditAccountList.forEach(account =>{
         totalCreditAmount += account.creditAmount;
-      })
+      });
       let totalDebitAmount = 0;
       transaction.debitAccountList.forEach(account =>{
         totalDebitAmount += account.debitAmount;
-      })
+      });
       
       if(totalCreditAmount > this.maximumPermittedAmount || totalDebitAmount > this.maximumPermittedAmount){
         return true;
-      }
-      else{
+      } else {
         return false;
       }
     }
@@ -161,7 +158,9 @@ export class AddTransactionComponent implements OnInit {
       if(transaction.approvalId == null){
         return false;
       }
-      let maxAmount = this.approvalsList.find(approval => approval.dbId == transaction.approvalDbId).totalAmount;
+
+      let maxAmount = this.backendData.approvalList.find(approval => transaction.approval && approval.id == transaction.approval.id).totalAmount;
+
       let totalCreditAmount = 0;
       transaction.creditAccountList.forEach(account =>{
         totalCreditAmount += account.creditAmount;
@@ -175,13 +174,6 @@ export class AddTransactionComponent implements OnInit {
       }
       return false;
 
-    }
-
-    isApprovalAttached(transaction): boolean {
-      if(transaction.approvalId != null){
-        return true;
-      }
-      return false;
     }
 
     isAccountNotMentioned(transaction): boolean {
@@ -263,16 +255,6 @@ export class AddTransactionComponent implements OnInit {
       }
       console.log(transaction.billImages);
       console.log(transaction.quotationImages);
-    }
-
-    assignApproval(approval, transaction){
-        transaction.approvalId = approval.approvalId;
-        transaction.remark = approval.remark;
-        transaction.debitAccountList = approval.debitAccountList;
-        transaction.creditAccountList = approval.creditAccountList;
-        transaction.billImages = approval.billImages;
-        transaction.quotationImages = approval.quotationImages;
-        transaction.approvalDbId = approval.dbId;
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {

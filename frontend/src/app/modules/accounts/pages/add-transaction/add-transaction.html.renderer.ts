@@ -2,6 +2,8 @@ import { AddTransactionComponent } from './add-transaction.component';
 
 export class AddTransactionHtmlRenderer {
 
+    NULL_VALUE = null;
+
     minimumDate: any;
     maximumDate: any;
 
@@ -21,17 +23,20 @@ export class AddTransactionHtmlRenderer {
         });
     }
 
+    getFreshTransactionObject(): any {
+        return {
+            debitAccountList: [],
+            creditAccountList: [],
+            remark: null,
+            billImages: [],
+            quotationImages: [],
+            approval: null,
+        }
+    }
+
     addNewTransaction(): void{
         for(let i=0;i<this.moreTransaction; i++){
-            let transaction = {
-                debitAccountList: [],
-                creditAccountList: [],
-                remark: null,
-                billImages: [],
-                quotationImages: [],
-                approvalId: null,
-                approvalDbId: null,    
-            };
+            let transaction = this.getFreshTransactionObject();
             this.vm.transactionList.push(transaction);
             this.addNewDebitAccount(this.vm.transactionList.length - 1);
             this.addNewCreditAccount(this.vm.transactionList.length - 1);
@@ -52,15 +57,77 @@ export class AddTransactionHtmlRenderer {
         })
     }
   
-      isAddButtonDisabled(): boolean{
+    assignApproval(approval, transaction){
+        if (approval == this.NULL_VALUE) {
+            console.log('Null value');
+            transaction = this.getFreshTransactionObject();
+        } else {
+            console.log('Real value');
+            // transaction.approvalId = approval.approvalId;
+            transaction.approval = approval;
+            transaction.remark = approval.remark;
+
+            // Debit Account
+            transaction.debitAccountList = this.vm.backendData.approvalAccountDetailsList.filter(approvalAccountDetails => {
+              return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'DEBIT';
+            }).map(approvalAccountDetails => {
+                return {
+                    'debitAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.id == approvalAccountDetails.parentAccount),
+                    'debitAmount': approvalAccountDetails.amount,
+                };
+            });
+
+            // Credit Account
+            transaction.creditAccountList = this.vm.backendData.approvalAccountDetailsList.filter(approvalAccountDetails => {
+              return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'CREDIT';
+            }).map(approvalAccountDetails => {
+                return {
+                    'creditAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.id == approvalAccountDetails.parentAccount),
+                    'creditAmount': approvalAccountDetails.amount,
+                };
+            });
+
+            // Bill Images
+            this.vm.backendData.approvalImagesList.filter(approvalImages => {
+              return approvalImages.parentApproval == approval.id && approvalImages.imageType == 'BILL';
+            }).forEach(approvalImages => {
+                this.vm.serviceAdapter.getBase64FromUrl(approvalImages.imageURL).then(data64URL => {
+                    transaction.billImages.push({
+                        'imageUrl': data64URL,
+                    });
+                });
+            });
+
+            // Quotation Images
+            this.vm.backendData.approvalImagesList.filter(approvalImages => {
+                return approvalImages.parentApproval == approval.id && approvalImages.imageType == 'QUOTATION';
+            }).forEach(approvalImages => {
+                this.vm.serviceAdapter.getBase64FromUrl(approvalImages.imageURL).then(data64URL => {
+                    transaction.quotationImages.push({
+                        'imageUrl': data64URL,
+                    });
+                });
+            });
+        }
+    }
+
+    isApprovalUsedTwice(transaction): any {
+        if (!transaction.approval) { return false; }
+        return this.vm.transactionList.filter(transactionTwo => {
+            return transactionTwo.approval && transactionTwo.approval.id == transaction.approval.id;
+        }).length > 1;
+    }
+
+    isAddButtonDisabled(): boolean{
         for(let i=0;i<this.vm.transactionList.length; i++){
             if(this.vm.isApprovalRequired(this.vm.transactionList[i]) || this.vm.isAmountUnEqual(this.vm.transactionList[i]) || 
                 this.vm.isAccountNotMentioned(this.vm.transactionList[i]) || this.vm.isAccountRepeated(this.vm.transactionList[i]) || 
-                this.vm.isAmountMoreThanApproval(this.vm.transactionList[i]) || this.vm.isAmountLessThanMinimum(this.vm.transactionList[i])) {
+                this.vm.isAmountMoreThanApproval(this.vm.transactionList[i]) || this.vm.isAmountLessThanMinimum(this.vm.transactionList[i]) || 
+                this.isApprovalUsedTwice(this.vm.transactionList[i])) {
                 return true;
             }
         }
         return false;
-      }
+    }
   
 }

@@ -2,8 +2,12 @@ import { AddTransactionComponent } from './add-transaction.component';
 
 export class AddTransactionBackendData {
 
-    accountSessionList: any;
-    accountList: any;
+    accountSessionList = [];
+    accountList = [];
+
+    approvalList = [];
+    approvalAccountDetailsList = [];
+    approvalImagesList = [];
 
     vm: AddTransactionComponent;
     constructor() {}
