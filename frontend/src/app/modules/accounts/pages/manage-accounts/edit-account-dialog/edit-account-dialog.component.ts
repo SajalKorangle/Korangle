@@ -53,12 +53,14 @@ export class EditAccountDialogComponent implements OnInit {
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data),
     ]).then(val =>{
       console.log(val);
+      this.account = { ...this.account, ...val[0] };
       for(let i=0;i<this.data.vm.accountsList.length ;i++){
         if(this.data.vm.accountsList[i].id == this.account.id){
           this.data.vm.accountsList[i].title = this.account.title;
           this.data.vm.accountsList[i].parentHead = this.account.parentHead;
           this.data.vm.accountsList[i].parentGroup = this.account.parentGroup;
-          this.data.vm.accountsList[i].balance = this.account.balance;
+          this.data.vm.accountsList[i].openingBalance = this.account.openingBalance;
+          this.data.vm.accountsList[i].currentBalance = this.account.currentBalance;
           break;
         }
       }
