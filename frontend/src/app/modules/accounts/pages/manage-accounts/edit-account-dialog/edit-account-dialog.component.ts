@@ -10,6 +10,8 @@ export class EditAccountDialogComponent implements OnInit {
 
   account: any;
   isDeletable: any;
+
+  isLoading: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<EditAccountDialogComponent>,
     @Inject(MAT_DIALOG_DATA) 
@@ -42,7 +44,8 @@ export class EditAccountDialogComponent implements OnInit {
   }
 
 
-  editAccount(){
+  editAccount() {
+    this.isLoading = true;
     let account_session_update_data = {
       id: this.account.parentAccount,
       title: this.account.title,
@@ -58,6 +61,7 @@ export class EditAccountDialogComponent implements OnInit {
 
       this.data.vm.serviceAdapter.initialiseDisplayData();
       alert('Account Updated Successfully');
+      this.isLoading = false;
       this.dialogRef.close();
     })
   }
@@ -88,6 +92,7 @@ export class EditAccountDialogComponent implements OnInit {
     if(!confirm('Are you sure you want to delete this account?')){
       return ;
     }
+    this.isLoading = true;
     
     console.log(this.account);
     Promise.all([
@@ -99,19 +104,14 @@ export class EditAccountDialogComponent implements OnInit {
           break;
         }
       }
-      for(let i=0;i<this.data.vm.serviceAdapter.accountsSessionList.length ;i++){
-        if(this.data.vm.serviceAdapter.accountsSessionList[i].id == this.account.id){
-          this.data.vm.serviceAdapter.accountsSessionList.splice(i, 1);
-          break;
-        }
-      }
+
       let account_session_data = {
         parentAccount: this.account.parentAccount,
       }
       Promise.all([
-        this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.account_session,account_session_data),
+        this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.account_session, account_session_data),
       ]).then(data =>{
-        if(data[0].length > 0){
+        if(data[0].length == 0){
           let account_data = {
             id: this.account.parentAccount,
           }

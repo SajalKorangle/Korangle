@@ -11,6 +11,8 @@ export class AddGroupDialogComponent implements OnInit {
   groupName: any;
   parentGroup: any;
   parentHead: any;
+
+  isLoading: boolean = false;
   constructor(@Inject(MAT_DIALOG_DATA) 
     public data: {
         [key: string]: any,
@@ -34,7 +36,8 @@ export class AddGroupDialogComponent implements OnInit {
     this.parentHead = this.data.vm.headsList.find(head => head.id == this.parentGroup.parentHead);
   }
 
-  addGroup():any{
+  addGroup(): any{
+    this.isLoading = true;
     let group_data = {
       parentSchool: this.data.vm.user.activeSchool.dbId,
       accountType: 'GROUP',
@@ -48,7 +51,7 @@ export class AddGroupDialogComponent implements OnInit {
       let group_session_data = {
         parentAccount: value[0].id,
         parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
-        openingBalance: null,
+        openingBalance: 0,
         parentGroup: null,
         parentHead : this.parentHead.id,
       }
@@ -59,7 +62,6 @@ export class AddGroupDialogComponent implements OnInit {
       Promise.all([
         this.data.vm.accountsService.createObject(this.data.vm.accountsService.account_session, group_session_data),
       ]).then(data =>{
-        this.data.vm.serviceAdapter.accountsSessionList.push(data[0]);
         data[0]['type'] = 'GROUP';
         const customAccount = { ...data[0], type: 'GROUP', title: value[0].title };
         this.data.vm.groupsList.push(customAccount);
@@ -68,6 +70,7 @@ export class AddGroupDialogComponent implements OnInit {
         this.groupName = '';
         this.parentGroup = null;
         this.parentHead = null;
+        this.isLoading = false;
         console.log(data);
       })
 

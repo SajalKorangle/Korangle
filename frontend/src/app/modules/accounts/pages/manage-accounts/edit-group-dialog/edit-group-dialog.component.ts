@@ -10,6 +10,7 @@ export class EditGroupDialogComponent implements OnInit {
 
 
   group: any;
+  isLoading: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<EditGroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) 
@@ -42,7 +43,7 @@ export class EditGroupDialogComponent implements OnInit {
 
 
   editGroup(){
-    
+    this.isLoading = true;
     let group_session_update_data = {
       id: this.group.parentAccount,
       title: this.group.title,
@@ -67,6 +68,7 @@ export class EditGroupDialogComponent implements OnInit {
     if(!confirm('Are you sure you want to delete this group')){
       return ;
     }
+    this.isLoading = true;
     console.log(this.group);
     Promise.all([
       this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.group),
@@ -79,12 +81,7 @@ export class EditGroupDialogComponent implements OnInit {
           break;
         }
       }
-      for(let i=0;i<this.data.vm.serviceAdapter.accountsSessionList.length ;i++){
-        if(this.data.vm.serviceAdapter.accountsSessionList[i].id == this.group.id){
-          this.data.vm.serviceAdapter.accountsSessionList.splice(i, 1);
-          break;
-        }
-      }
+
       this.data.vm.serviceAdapter.initialiseDisplayData();
       alert('Group Deleted Successfully');
       this.dialogRef.close();
@@ -92,12 +89,10 @@ export class EditGroupDialogComponent implements OnInit {
   }
 
   isGroupDeletable(): boolean{
-    if(this.group.childs == undefined || this.group.childs.length == 0){
+    if(this.group.childs.length == 0){
       return true;
     }
     return false;
   }
-
-  
 
 }

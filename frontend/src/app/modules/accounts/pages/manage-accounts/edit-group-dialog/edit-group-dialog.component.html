@@ -1,4 +1,5 @@
 <h2 mat-dialog-title>Edit Group</h2>
+<ng-container *ngIf="!isLoading">
 <mat-dialog-content style="overflow: hidden;">
 
     <div class="row col-md-12">
@@ -53,3 +54,9 @@
         <span *ngIf="group.title.trim().length > 0 && group.parentHead != null" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="editGroup()">Edit Group</span>
     </div>
 </div>
+</ng-container>
+<ng-container *ngIf="isLoading">
+    <mat-dialog-content style="overflow: hidden;">
+        <app-loading-spinner [user]="data.user"></app-loading-spinner>
+    </mat-dialog-content>
+</ng-container>

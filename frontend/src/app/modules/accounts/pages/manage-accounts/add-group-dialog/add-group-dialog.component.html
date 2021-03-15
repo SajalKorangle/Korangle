@@ -2,6 +2,7 @@
     Add Group
     <i class="material-icons" mat-dialog-close style="float: right;cursor:pointer">close</i>
 </h3>
+<ng-container *ngIf="!isLoading">
 <mat-dialog-content style="overflow: hidden;">
     
         <div class="row col-md-12">
@@ -52,3 +53,10 @@
         <span *ngIf="groupName.trim().length > 0 && parentHead != null" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addGroup()">Add Group</span>
     </div>
 </div>
+</ng-container>
+
+<ng-container *ngIf="isLoading">
+    <mat-dialog-content style="overflow: hidden;">
+        <app-loading-spinner [user]="data.user"></app-loading-spinner>
+    </mat-dialog-content>
+</ng-container>
