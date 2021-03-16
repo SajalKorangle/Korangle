@@ -10,7 +10,6 @@ class ErrorAdmin(admin.ModelAdmin):
     
     def user_link(self, obj):
         change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
-        print('<a href="%s">%s</a>' % (change_url, obj.user.username))
         return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
 
 admin.site.register(Error, ErrorAdmin)
