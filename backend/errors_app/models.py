@@ -12,7 +12,7 @@ class Error(models.Model):
 
     user = models.ForeignKey(User, null=True)
     errorSource = models.CharField(max_length=50, choices=ERROR_SOURCES, null=False, blank=False, verbose_name='Error Source')
-    url = models.CharField(max_length=500, null=False, blank=False)
+    url = models.TextField()
     description = models.TextField()
     prompt = models.CharField(max_length=250)
     fatal = models.BooleanField(default=False);
@@ -22,4 +22,4 @@ class Error(models.Model):
         db_table = 'error'
 
     def __str__(self):
-        return self.prompt + ' - ' + (self.dateTime.astimezone().strftime("%m/%d/%Y, %H:%M:%S"))
+        return self.prompt + ' - ' + (self.dateTime.astimezone().strftime("%d/%m/%Y, %H:%M:%S"))
