@@ -1,6 +1,8 @@
 import { GenerateReportCardComponent } from './generate-report-card.component';
 import { StudentCustomParameterStructure } from './../../class/constants_3';
 
+const MAX_LENGTH_OF_GET_REQUEST = 900;
+
 export class GenerateReportCardServiceAdapter {
 
     vm: GenerateReportCardComponent
@@ -39,14 +41,29 @@ export class GenerateReportCardServiceAdapter {
             this.vm.DATA.data.divisionList = data[3];
             this.vm.DATA.data.sessionList = data[4];
 
-            const request_student_data = {
-                id__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
-            };
+            const service_list = [];
 
-            Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-            ]).then(value => {
-                this.vm.studentList = value[0];
+            const studentIdList = this.vm.studentSectionList.map(item => item.parentStudent);
+            const studentIdChunkList = [];
+            for (let i = 0; i < studentIdList.length; ){    // dividing big id list to smaller chunks until request is satasfiable
+                const chunk = [];
+                while (chunk.join(',').length < MAX_LENGTH_OF_GET_REQUEST && i < studentIdList.length) {
+                    chunk.push(studentIdList[i]);
+                    i++;
+                }
+                studentIdChunkList.push(chunk);
+            }
+            studentIdChunkList.forEach(idChunk => { // requesting students for eahc chunk
+                const request_student_data = {
+                    id__in: idChunk.join(','),
+                };
+                service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data));
+            });
+            
+
+            Promise.all(service_list).then(value => {
+                this.vm.studentList = [];
+                value.forEach(studenkChunk => this.vm.studentList.push(...studenkChunk));
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
                 this.vm.isLoading = false;
             }, error => {

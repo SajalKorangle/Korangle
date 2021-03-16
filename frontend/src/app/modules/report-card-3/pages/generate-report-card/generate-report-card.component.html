@@ -5,17 +5,6 @@
             <mat-form-field style="margin-right: 15px;">
                 <mat-select placeholder="Select Class">
 
-                    <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Select All
-                        </button>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Clear All
-                        </button>
-                    </mat-option>
-
                     <ng-container *ngFor="let classSection of classSectionList">
                         <mat-option style="width: 100%;">
                             <mat-checkbox [ngModel]="classSection.selected"
@@ -25,17 +14,6 @@
                             </mat-checkbox>
                         </mat-option>
                     </ng-container>
-
-                    <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Select All
-                        </button>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Clear All
-                        </button>
-                    </mat-option>
 
                 </mat-select>
             </mat-form-field>
