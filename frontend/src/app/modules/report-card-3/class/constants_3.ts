@@ -726,7 +726,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
                     this.height = this.width / this.aspectRatio;    // maintaining aspect ratio
                 }
             }
-            else if (this.height || this.width) {
+            else if (!this.height || !this.width) {
                 this.aspectRatio = this.image.width / this.image.height;
                 if (this.height)
                     this.width = this.height * this.aspectRatio;
