@@ -5,6 +5,9 @@ from employee_app.models import Employee
 from school_app.model.models import School,Session
 from django.db.models import Max
 
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, post_save
+
 import os
 from django.utils.timezone import now
 from datetime import datetime, date
@@ -62,20 +65,17 @@ class AccountSession(models.Model):
     parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions')    # on delete?
     parentHead = models.ForeignKey(Heads)
 
-    def save(self, *args, **kwargs):
-        if self.currentBalance is None: # why this was required
-            self.currentBalance = 0
-        if self.openingBalance is None:
-            self.openingBalance = 0
-        if self.id is None:
-            self.currentBalance = self.openingBalance
-        else:
-            self.currentBalance += self.openingBalance - AccountSession.objects.get(id=self.id).openingBalance
-        super(AccountSession, self).save(*args, **kwargs)
-
     class Meta:
         db_table = 'account_session'
 
+@receiver(pre_save, sender=AccountSession)
+def accountSessionPreSave(sender, instance, **kwargs):
+    if instance.openingBalance is None:
+        instance.openingBalance = 0
+    if instance.id is None:
+        instance.currentBalance = instance.openingBalance
+    else:
+        instance.currentBalance += instance.openingBalance - AccountSession.objects.get(id=instance.id).openingBalance
 
 class Transaction(models.Model):
     
@@ -86,19 +86,18 @@ class Transaction(models.Model):
     transactionDate = models.DateField(null=True)
     approvalId = models.IntegerField(null=True, blank=True)
     
-    def save(self, *args, **kwargs):
-        if self.id is None:
-            self.voucherNumber = 1
-            last_voucher_number = \
-                Transaction.objects.filter(parentSchool=self.parentEmployee.parentSchool) \
-                    .aggregate(Max('voucherNumber'))['voucherNumber__max']
-            if last_voucher_number is not None:
-                self.voucherNumber = last_voucher_number + 1
-        super(Transaction, self).save(*args, **kwargs)
-
     class Meta:
         db_table = 'transaction'
 
+@receiver(pre_save, sender=Transaction)
+def transectionPreSave(sender, instance, **kwargs):
+    if instance.id is None:
+        instance.voucherNumber = 1
+    last_voucher_number = \
+                Transaction.objects.filter(parentSchool=instance.parentEmployee.parentSchool) \
+                    .aggregate(Max('voucherNumber'))['voucherNumber__max']
+    if last_voucher_number is not None:
+        instance.voucherNumber = last_voucher_number + 1
 
 class TransactionAccountDetails(models.Model):
     parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
@@ -140,7 +139,7 @@ class Approval(models.Model):
     
     parentEmployeeRequestedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovalList')
     parentEmployeeApprovedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovedList')
-    approvalId = models.IntegerField(null=True, blank=True) 
+    approvalId = models.IntegerField(null=True, blank=True) # approval id should also be generated at the backend
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.CASCADE)
     requestedGenerationDateTime = models.DateField(null=True) # should be auto add?
     approvedGenerationDateTime = models.DateField(null=True)
@@ -164,7 +163,14 @@ class Approval(models.Model):
     class Meta:
         db_table = 'approval'
 
-
+@receiver(post_save, sender=Transaction)
+def transectionPostSave(sender, instance, **kwargs):
+    if (kwargs['created'] and instance.approvalId):
+        approval = Approval.objects.get(approvalId=instance.approvalId, parentEmployeeRequestedBy__parentSchool=instance.parentSchool)
+        approval.parentTransaction = instance
+        approval.transactionDate = instance.transactionDate
+        approval.save()
+        
 class ApprovalAccountDetails(models.Model): # should be connected to AccountSession
     
     parentApproval = models.ForeignKey(Approval, on_delete=models.CASCADE)

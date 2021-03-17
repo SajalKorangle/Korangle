@@ -1,6 +1,6 @@
 from common.common_views_3 import CommonView, CommonListView
 from rest_framework.views import APIView
-from django.db.models.signals import pre_delete, pre_save
+from django.db.models.signals import pre_delete, pre_save, post_save, post_delete
 
 
 # Create your views here.
@@ -75,9 +75,8 @@ def updateCurrentBalanceOnTransactionAccountDetailsSave(sender, instance, **kwar
                             endDate__gte=instance.parentTransaction.transactionDate)
     account_session_object = \
         AccountSession.objects.get(parentAccount=instance.parentAccount, parentSession=session_object)
-    if account_session_object.currentBalance is None:
-        account_session_object.currentBalance = 0
-    if instance.id is None:
+
+    if kwargs['created']:
         if instance.transactionType == 'CREDIT':
             account_session_object.currentBalance -= instance.amount
         if instance.transactionType == 'DEBIT':
@@ -102,8 +101,8 @@ def updateCurrentBalanceOnTransactionAccountDetailsDelete(sender, instance, **kw
         account_session_object.currentBalance -= instance.amount
     account_session_object.save()
 
-pre_save.connect(updateCurrentBalanceOnTransactionAccountDetailsSave, sender=TransactionAccountDetails)
-pre_delete.connect(updateCurrentBalanceOnTransactionAccountDetailsDelete, sender=TransactionAccountDetails)
+post_save.connect(updateCurrentBalanceOnTransactionAccountDetailsSave, sender=TransactionAccountDetails)
+post_delete.connect(updateCurrentBalanceOnTransactionAccountDetailsDelete, sender=TransactionAccountDetails)
 
 
 from .models import Approval

@@ -94,12 +94,12 @@ export class UseFortransactionDialogComponent implements OnInit {
 
   addTransaction(): any{
     let transaction_data = {
-        parentEmployee: this.data.approval.requestedBy,
-        remark: this.data.approval.remark,
-        transactionDate: this.data.approval.transactionDate?this.data.approval.transactionDate:CommonFunctions.formatDate(new Date(), ''),
-        approvalId: this.data.approval.approvalId,
+      parentSchool: this.data.vm.user.activeSchool.dbId,
+      parentEmployee: this.data.approval.requestedBy,
+      remark: this.data.approval.remark,
+      transactionDate: this.data.approval.transactionDate?this.data.approval.transactionDate:CommonFunctions.formatDate(new Date(), ''),
+      approvalId: this.data.approval.approvalId,
     }
-    console.log('tranection data: ', transaction_data);
     Promise.all([
       this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction, transaction_data),
     ]).then(value1 => {
@@ -173,13 +173,13 @@ export class UseFortransactionDialogComponent implements OnInit {
           
       let approvalUpdateData: {[key: string]: any} = {
         id: this.data.approval.dbId,
-        parentTransaction: value1[0].id,
+        // parentTransaction: value1[0].id,
       };
-      if (!this.data.approval.transactionDate) {
-        approvalUpdateData.transactionDate = CommonFunctions.formatDate(new Date(), '');
-      }
-      console.log('approval update = ', approvalUpdateData);
-      service.push(this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.approval, approvalUpdateData).then(data => this.data.approval = { ...this.data.approval, ...data }));
+      // if (!this.data.approval.transactionDate) {
+      //   approvalUpdateData.transactionDate = CommonFunctions.formatDate(new Date(), '');
+      // }
+      // console.log('approval update = ', approvalUpdateData);
+      service.push(this.data.vm.accountsService.getObject(this.data.vm.accountsService.approval, approvalUpdateData).then(data => this.data.approval = { ...this.data.approval, ...data }));
 
 
       // });

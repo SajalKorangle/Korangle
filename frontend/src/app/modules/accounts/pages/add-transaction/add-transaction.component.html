@@ -59,7 +59,7 @@
                                                     [inputValue]="account.creditAmount"
                                                     (outputValue)="account.creditAmount=$event; handleAmountChange(transaction, $event)">
                             </customized-number-input>
-                            <span *ngIf="j == transaction.creditAccountList.length-1" style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewCreditAccount(i)">
+                            <span *ngIf="j == transaction.creditAccountList.length-1" style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="htmlRenderer.addNewCreditAccount(i)">
                                 <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
                             </span>
                         </div>
