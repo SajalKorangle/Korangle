@@ -79,27 +79,10 @@ export class AddTransactionComponent implements OnInit {
       this.transactionList[tIndex].creditAccountList.splice(aIndex, 1);
     }
 
-    handleAmountChange(transaction: any){
-      let totalCreditAmount = 0;
-      transaction.creditAccountList.forEach(account =>{
-        totalCreditAmount += account.creditAmount;
-      })
-      let totalDebitAmount = 0;
-      transaction.debitAccountList.forEach(account =>{
-        totalDebitAmount += account.debitAmount;
-      })
-      if(transaction.debitAccountList.length>1 && transaction.creditAccountList.length>1){
-        
-      }
-      else if(transaction.creditAccountList.length == 1){                                                      
-        if(transaction.creditAccountList[0].creditAmount < totalDebitAmount){
-          transaction.creditAccountList[0].creditAmount = totalDebitAmount;
-        }
-      }
-      else{
-        if(transaction.debitAccountList[0].debitAmount < totalCreditAmount){
-          transaction.debitAccountList[0].debitAmount = totalCreditAmount;
-        }
+    handleAmountChange(transaction: any, newAmount: number) {
+      if (transaction.creditAccountList.length == 1 && transaction.debitAccountList.length == 1) {
+        transaction.creditAccountList[0].creditAmount = newAmount;
+        transaction.debitAccountList[0].debitAmount = newAmount;
       }
     }
 

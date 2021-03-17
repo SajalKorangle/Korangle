@@ -48,7 +48,7 @@
                         </div>
                         <div class="row col-md-12" style="margin-top: -17px">
                             <span *ngIf="account.creditAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{account.creditAccount.currentBalance}}</span>
-                            <span *ngIf="transaction.creditAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(i, j); handleAmountChange(transaction)">
+                            <span *ngIf="transaction.creditAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(i, j);">
                                 <u>Remove</u>
                             </span>
                         </div>
@@ -57,15 +57,8 @@
                                                     [minimum]="0.01"
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.creditAmount"
-                                                    (outputValue)="account.creditAmount=$event; handleAmountChange(transaction)">
+                                                    (outputValue)="account.creditAmount=$event; handleAmountChange(transaction, $event)">
                             </customized-number-input>
-                            <!-- mat-form-field style="float: left;">
-                                <input type="number"
-                                        min=0.01 matInput 
-                                        [ngModel]="account.creditAmount" 
-                                        (ngModelChange)="account.creditAmount=$event; handleAmountChange(transaction)" 
-                                        placeholder="Amount">
-                            </mat-form-field -->
                             <span *ngIf="j == transaction.creditAccountList.length-1" style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewCreditAccount(i)">
                                 <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
                             </span>
@@ -89,7 +82,7 @@
                         </div>
                         <div class="row col-md-12" style="margin-top: -17px">
                             <span *ngIf="account.debitAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{account.debitAccount.currentBalance}} </span>
-                            <span *ngIf="transaction.debitAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(i, j); handleAmountChange(transaction)">
+                            <span *ngIf="transaction.debitAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(i, j);">
                                 <u>Remove</u>
                             </span>
                         </div>
@@ -98,15 +91,8 @@
                                                     [minimum]="0.01"
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.debitAmount"
-                                                    (outputValue)="account.debitAmount=$event; handleAmountChange(transaction)">
+                                                    (outputValue)="account.debitAmount=$event; handleAmountChange(transaction, $event)">
                             </customized-number-input>
-                            <!-- mat-form-field style="float: left;">
-                                <input type="number" 
-                                        min="0.01" matInput 
-                                        [ngModel]="account.debitAmount" 
-                                        (ngModelChange)="account.debitAmount=$event;handleAmountChange(transaction)" 
-                                        placeholder="Amount">
-                            </mat-form-field -->
                             <span *ngIf="j == transaction.debitAccountList.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="htmlRenderer.addNewDebitAccount(i)">
                                 <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
                             </span>
