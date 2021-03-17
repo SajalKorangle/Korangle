@@ -258,16 +258,34 @@ export class MyApprovalRequestsComponent implements OnInit {
         return false;
     }
 
+    isDataNotFilled(): boolean{
+        let result = false;
+        this.newApprovalList.forEach(approval => {
+            approval.payTo.forEach(acc => {
+                if (!acc.account || !acc.amount)
+                    result =  true;
+            });
+            approval.payFrom.forEach(acc => {
+                if (!acc.account || !acc.amount)
+                    result =  true;
+            });
+        })
+        return result;
+    }
+
     checkDataValidity(): boolean{
+        if (this.isDataNotFilled())
+            return false;
+        let result = true;
         this.newApprovalList.forEach(approval => {
             if (this.isAccountRepeated(approval) ||
                 this.isAmountLessThanMinimum(approval) ||
                 this.isAmountUnEqual(approval) ||
                 this.isAccountNotMentioned(approval)) {
-                return false;   // data not valid
+                result = false;
                 }
         })
-        return true;    // validity check passed
+        return result;
     }
     
     requestApproval(): void{

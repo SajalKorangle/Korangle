@@ -150,7 +150,10 @@
             <span class="icon-text-wrapper" style="margin-top:20px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addApprovals()">
                 <mat-icon style="font-size: 13px;">control_point</mat-icon><span style="font-size: 13px;"> &nbsp;Add</span>
             </span>
-            <button mat-button style="float: right;" (click)="requestApproval()" class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Request Approval</button>
+            <button mat-button style="float: right;"
+                [ngStyle]="checkDataValidity()?{}:{'background':'rgba(196, 196, 196, 1)', 'color': 'white'}"
+                [disabled]="!checkDataValidity()" (click)="requestApproval()" 
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Request Approval</button>
         </div>
     </div>
 
