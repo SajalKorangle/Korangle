@@ -93,135 +93,105 @@ export class UseFortransactionDialogComponent implements OnInit {
   }
 
   addTransaction(): any{
-    let data = {
-      'parentEmployee__parentSchool': this.data.vm.user.activeSchool.dbId,
-      'transactionDate__gte': this.data.vm.minimumDate,
-      'transactionDate__lte': this.data.vm.maximumDate,
-      'korangle__order': '-voucherNumber',
-      'korangle__count': '0,1',
+    let transaction_data = {
+        parentEmployee: this.data.approval.requestedBy,
+        remark: this.data.approval.remark,
+        transactionDate: this.data.approval.transactionDate?this.data.approval.transactionDate:CommonFunctions.formatDate(new Date(), ''),
+        approvalId: this.data.approval.approvalId,
     }
-    let lastVoucherNumber = 1;
+    console.log('tranection data: ', transaction_data);
     Promise.all([
-        this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.transaction, data),
-    ]).then(val =>{
-      console.log(val[0]);
-        if(val[0].length > 0){
-            lastVoucherNumber = val[0][0].voucherNumber + 1;
-        }
-        let transaction_data = {
-            parentEmployee: this.data.approval.requestedBy,
-            voucherNumber: lastVoucherNumber,
-            remark: this.data.approval.remark,
-            transactionDate: this.data.approval.transactionDate,
-            approvalId: this.data.approval.approvalId,
+      this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction, transaction_data),
+    ]).then(value1 => {
+      let toCreateAccountList = [];
+      const service = [];
 
-        }
-        console.log(transaction_data);
-        Promise.all([
-            this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction, transaction_data),
-        ]).then(value1 =>{
-            console.log(value1);
-            let toCreateAccountList = [];
-            let toUpdateAccountBalanceList = [];
-            const service = [];
+      // value[0].forEach((element,index) =>{
+      this.data.approval.debitAccounts.forEach(account => {
+        let tempData = {
+          parentTransaction: value1[0].id,
+          parentAccount: account.accountDbId,
+          amount: account.amount,
+          transactionType: 'DEBIT',
+        };
+        toCreateAccountList.push(tempData);
+      });
+      this.data.approval.creditAccounts.forEach(account => {
+        let tempData = {
+          parentTransaction: value1[0].id,
+          parentAccount: account.accountDbId,
+          amount: account.amount,
+          transactionType: 'CREDIT',
+        };
+        toCreateAccountList.push(tempData);
+      });
+              
+              
+      let i = 1;
+      this.data.approval.billImages.forEach(image => {
+        let tempData = {
+          parentTransaction: value1[0].id,
+          imageURL: image.imageURL,
+          orderNumber: i,
+          imageType: 'BILL',
+        };
+        let temp_form_data = new FormData();
+        const layout_data = { ...tempData, };
+        Object.keys(layout_data).forEach(key => {
+          if (key === 'imageURL') {
+            temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i + '.jpeg'));
+          } else {
+            temp_form_data.append(key, layout_data[key]);
+          }
+        });
+        i = i + 1;
+        service.push(this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction_images, temp_form_data));
 
-            // value[0].forEach((element,index) =>{
-            this.data.approval.debitAccounts.forEach(account =>{
-                let tempData = {
-                    parentTransaction: value1[0].id,
-                    parentAccount: account.accountDbId,
-                    amount: account.amount,
-                    transactionType: 'DEBIT',
-                }
-                toCreateAccountList.push(tempData);
-                let tempData1 = {
-                    id: account.dbId,
-                    balance: account.balance + account.amount,
-                }
-                toUpdateAccountBalanceList.push(tempData1);
-            });
-            this.data.approval.creditAccounts.forEach(account =>{
-                let tempData = {
-                    parentTransaction: value1[0].id,
-                    parentAccount: account.accountDbId,
-                    amount: account.amount,
-                    transactionType: 'CREDIT',
-                }
-                toCreateAccountList.push(tempData);
-                
-                let tempData1 = {
-                    id: account.dbId,
-                    balance: account.balance - account.amount,
-                }
-                toUpdateAccountBalanceList.push(tempData1);
-            });
-                
-                
-            let i=1;
-            this.data.approval.billImages.forEach(image =>{
-            let tempData = {
-                parentTransaction: value1[0].id,
-                imageURL: image.imageURL,
-                orderNumber: i,
-                imageType: 'BILL',
-            }
-            let temp_form_data = new FormData();
-            const layout_data = { ...tempData,};
-            Object.keys(layout_data).forEach(key => {
-                if (key === 'imageURL' ) {
-                    temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                } else {
-                    temp_form_data.append(key, layout_data[key]);
-                }
-            });
-            i = i + 1;
-            service.push(this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction_images, temp_form_data))
-
-            })
-                
-            i=1;
-            this.data.approval.quotationImages.forEach(image =>{
-                let tempData = {
-                    parentTransaction: value1[0].id,
-                    imageURL: image.imageURL,
-                    orderNumber: i,
-                    imageType: 'QUOTATION',
-                }
-                let temp_form_data = new FormData();
-                const layout_data = { ...tempData,};
-                Object.keys(layout_data).forEach(key => {
-                    if (key === 'imageURL' ) {
-                        temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i +'.jpeg'));
-                    } else {
-                        temp_form_data.append(key, layout_data[key]);
-                    }
-                });
-                i = i + 1;
-                service.push(this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction_images, temp_form_data))
-            })
-            service.push(this.data.vm.accountsService.createObjectList(this.data.vm.accountsService.transaction_account_details, toCreateAccountList));
-            service.push(this.data.vm.accountsService.partiallyUpdateObjectList(this.data.vm.accountsService.account_session, toUpdateAccountBalanceList));
-            
-            let tempData = {
-                id: this.data.approval.dbId,
-                parentTransaction: value1[0].id,
-            }
-            this.data.approval.parentTransaction = value1[0].id;
-            this.data.approval.approvedGenerationDateTime = CommonFunctions.formatDate(new Date(), ''),
-            service.push(this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.approval, tempData))
+      });
+              
+      i = 1;
+      this.data.approval.quotationImages.forEach(image => {
+        let tempData = {
+          parentTransaction: value1[0].id,
+          imageURL: image.imageURL,
+          orderNumber: i,
+          imageType: 'QUOTATION',
+        };
+        let temp_form_data = new FormData();
+        const layout_data = { ...tempData, };
+        Object.keys(layout_data).forEach(key => {
+          if (key === 'imageURL') {
+            temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i + '.jpeg'));
+          } else {
+            temp_form_data.append(key, layout_data[key]);
+          }
+        });
+        i = i + 1;
+        service.push(this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction_images, temp_form_data));
+      });
+      service.push(this.data.vm.accountsService.createObjectList(this.data.vm.accountsService.transaction_account_details, toCreateAccountList));
+          
+      let approvalUpdateData: {[key: string]: any} = {
+        id: this.data.approval.dbId,
+        parentTransaction: value1[0].id,
+      };
+      if (!this.data.approval.transactionDate) {
+        approvalUpdateData.transactionDate = CommonFunctions.formatDate(new Date(), '');
+      }
+      console.log('approval update = ', approvalUpdateData);
+      service.push(this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.approval, approvalUpdateData).then(data => this.data.approval = { ...this.data.approval, ...data }));
 
 
-            // });
-            Promise.all(service).then(data =>{
-                console.log(data);
-                this.data.originalApproval.parentTransaction = value1[0].id;
-                this.populateOriginalApproval();
-                alert('Transaction Recorded Successfully');
-                this.dialogRef.close();
-            })
+      // });
+      Promise.all(service).then(data => {
+        console.log(data);
+        this.data.originalApproval.parentTransaction = value1[0].id;
+        this.populateOriginalApproval();
+        alert('Transaction Recorded Successfully');
+        this.dialogRef.close();
+      });
 
-        })
-    })
+    });
 
   }
 
