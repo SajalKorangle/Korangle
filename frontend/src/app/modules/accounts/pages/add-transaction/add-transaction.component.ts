@@ -6,7 +6,7 @@ import {MatDialog} from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { SchoolService } from './../../../../services/modules/school/school.service';
 
-import { AddTransactionServiceAdapter } from './add-transaction.service.adapter'
+import { AddTransactionServiceAdapter } from './add-transaction.service.adapter';
 import { AddTransactionHtmlRenderer } from './add-transaction.html.renderer';
 import { AddTransactionBackendData } from './add-transaction.backend.data';
 
@@ -38,8 +38,8 @@ export class AddTransactionComponent implements OnInit {
     
     lockAccounts: any;
 
-    serviceAdapter: any;
-    htmlRenderer: any;
+    serviceAdapter: AddTransactionServiceAdapter;
+    htmlRenderer: AddTransactionHtmlRenderer;
     backendData: any;
     
     constructor( 

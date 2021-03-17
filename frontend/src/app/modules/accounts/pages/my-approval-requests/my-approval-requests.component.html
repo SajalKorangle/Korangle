@@ -2,6 +2,7 @@
 <ng-container *ngIf="!isLoading else loadingSpinner">
     <div *ngIf="!accountsLockedForSession && inActiveSession() else notAllowedDescription">
         <h4 style="color: blue;"><b>New Approval Request</b></h4>
+        
         <ng-container *ngFor="let approval of newApprovalList, let i = index;">
             <mat-card>
             <div class="row">
@@ -28,7 +29,7 @@
                         </div>
                         <div class="row col-md-12" style="width: auto;">
                             <mat-form-field style="float: left;">
-                                <input type="number" min="0.01" matInput [(ngModel)]="payFrom.amount" placeholder="Amount">
+                                <input type="number" min="0.01" matInput [(ngModel)]="payFrom.amount" (ngModelChange)="handleAmountChange(approval, $event)" placeholder="Amount">
                             </mat-form-field>
                         </div>
                     </div>
@@ -57,7 +58,7 @@
 
                         <div class="row col-md-12" style="width: auto;">
                             <mat-form-field style="float: left;">
-                                <input type="number" min=0.01 matInput [(ngModel)]="payTo.amount" placeholder="Amount">
+                                <input type="number" min=0.01 matInput [(ngModel)]="payTo.amount" (ngModelChange)="handleAmountChange(approval, $event)" placeholder="Amount">
                             </mat-form-field>
                         </div>
                     </div>

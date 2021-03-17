@@ -173,7 +173,6 @@ export class ViewTransactionsServiceAdapter {
         if(this.vm.transactionsList.length == 0){
             this.vm.isLoading = true;
         }
-        console.log('loading', this.vm.transactionsList.length);
         this.vm.isLoadingTransaction = true;
         let transaction_data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            

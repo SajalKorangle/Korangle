@@ -17,7 +17,7 @@
                 <mat-option (click)="assignGroup(null)">
                     None
                 </mat-option>
-                <mat-option *ngFor="let group of data.vm.groupsList"
+                <mat-option *ngFor="let group of getFilteredGroupList()"
                     (click)="assignGroup(group)"
                     [value]="group">
                     {{group.title}}

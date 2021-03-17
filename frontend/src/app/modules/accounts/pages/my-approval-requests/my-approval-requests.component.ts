@@ -181,6 +181,13 @@ export class MyApprovalRequestsComponent implements OnInit {
         }
     }
 
+    handleAmountChange(approval: NewCustomApproval, newAmount: number): void{
+        if (approval.payTo.length == 1 && approval.payFrom.length == 1) {
+            approval.payFrom[0].amount = newAmount;
+            approval.payTo[0].amount = newAmount;
+        }
+    }
+
     isAccountNotMentioned(approval: NewCustomApproval): boolean{
         approval.payFrom.forEach(acc => {
             if (acc.account == null) {

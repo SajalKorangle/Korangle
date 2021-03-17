@@ -57,7 +57,6 @@ class AccountSession(models.Model):
     
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE, related_name='acccountSessions')
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE,)
-    balance = models.IntegerField(null=True, blank=True)
     openingBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
     currentBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
     parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions')    # on delete?

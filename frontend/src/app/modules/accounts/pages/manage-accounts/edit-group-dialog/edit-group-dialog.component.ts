@@ -41,6 +41,10 @@ export class EditGroupDialogComponent implements OnInit {
     return this.data.vm.groupsList.find(group => group.parentAccount == this.group.parentGroup);
   }
 
+  getFilteredGroupList(): Array<any> {
+    return this.data.vm.groupsList.filter(group => group.id != this.group.id);
+  }
+
 
   editGroup(){
     this.isLoading = true;
