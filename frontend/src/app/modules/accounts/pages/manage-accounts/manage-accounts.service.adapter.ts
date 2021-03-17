@@ -89,7 +89,7 @@ export class ManageAccountsServiceAdapter {
 
         for(let i=0; i<groupStructureList.length; i++){
             if(groupStructureList[i].parentGroup){
-                groupStructureList.find(group => group.id == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
+                groupStructureList.find(group => group.parentAccount == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
             }
         }
         const rootGroupStructureList = groupStructureList.filter(group=> !group.parentGroup);
@@ -97,42 +97,16 @@ export class ManageAccountsServiceAdapter {
 
     }
 
-    populateHeadWiseDisplayList(groupsList, individualAccountList){
-        this.vm.expensesList = [];
-        this.vm.incomeList = [];
-        this.vm.assetsList = [];
-        this.vm.liabilityList = [];
+    populateHeadWiseDisplayList(groupsList, individualAccountList) {
+        Object.keys(this.vm.hierarchyStructure).forEach(key => this.vm.hierarchyStructure[key] = []);   // empty array for all heads
         groupsList.forEach(group => {
             let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
-            if (head == 'Expenses') {
-                this.vm.expensesList.push(group);
-            }
-            else if (head == 'Income') {
-                this.vm.incomeList.push(group);
-            }
-            else if (head == 'Assets') {
-                this.vm.assetsList.push(group);
-            }
-            else if (head == 'Liabilities') {
-                this.vm.liabilityList.push(group);
-            }
+            this.vm.hierarchyStructure[head].push(group);
 
         });
         individualAccountList.forEach(accountSession => {
             let head = this.vm.headsList.find(head => head.id == accountSession.parentHead).title;
-            if (head == 'Expenses') {
-                this.vm.expensesList.push(accountSession);
-            }
-            else if (head == 'Income') {
-                this.vm.incomeList.push(accountSession);
-            }
-            else if (head == 'Assets') {
-                this.vm.assetsList.push(accountSession);
-            }
-            else if (head == 'Liabilities') {
-                this.vm.liabilityList.push(accountSession);
-            }
-
+            this.vm.hierarchyStructure[head].push(accountSession);
         });
     }
     

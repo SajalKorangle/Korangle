@@ -8,7 +8,7 @@ import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.com
 import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { SchoolService } from './../../../../services/modules/school/school.service'
-import { HEADS_LIST } from './../../classes/constants'
+import { HEADS_LIST } from '@services/modules/accounts/models/head';
 
 import { AccountSession } from './../../../../services/modules/accounts/models/account-session';
  
@@ -33,10 +33,19 @@ export class ManageAccountsComponent{
     isLoading: any;
 
 
-    expensesList: Array<customGroupStructure> = [];
-    assetsList: Array<customGroupStructure> = [];
-    liabilityList: Array<customGroupStructure> = [];
-    incomeList: Array<customGroupStructure> = [];
+    hierarchyStructure: {
+        Expenses: Array<customGroupStructure>,
+        Income: Array<customGroupStructure>,
+        Assets: Array<customGroupStructure>,
+        Liabilities: Array<customGroupStructure>,
+
+    } = {
+            Expenses: [],
+            Income: [],
+            Assets: [],
+            Liabilities: [],
+        }
+
     displayWholeList: boolean;
 
     minimumDate: any;
@@ -63,7 +72,7 @@ export class ManageAccountsComponent{
         console.log('this: ', this);
     }
 
-
+    
 
     openAddAccountDialog(){
         const dialogRef = this.dialog.open(AddAccountDialogComponent, {
@@ -124,16 +133,11 @@ export class ManageAccountsComponent{
 
     getAccountListFromString(str: any){
         let temp = [];
-        this.accountsList.forEach(account =>{
-            if(account.title.includes(str)){
+        this.accountsList.forEach(account => {
+            if (account.title.includes(str)) {
                 temp.push(account);
             }
-        })
-        // this.groupsList.forEach(group =>{
-        //     if(group.title.includes(str)){
-        //         temp.push(group);
-        //     }
-        // })
+        });
         return temp;
     }
 
