@@ -43,6 +43,7 @@ export class AddTransactionHtmlRenderer {
         }
     }
 
+
     addNewDebitAccount(index: any): void{
         this.vm.transactionList[index].debitAccountList.push({
             debitAccount: null,
@@ -59,8 +60,10 @@ export class AddTransactionHtmlRenderer {
   
     assignApproval(approval, transaction){
         if (approval == this.NULL_VALUE) {
-            console.log('Null value');
-            transaction = this.getFreshTransactionObject();
+            const transactionIndex = this.vm.transactionList.findIndex(t => t == transaction);
+            this.vm.transactionList[transactionIndex] = this.getFreshTransactionObject();
+            this.addNewCreditAccount(transactionIndex);
+            this.addNewDebitAccount(transactionIndex);
         } else {
             console.log('Real value');
             // transaction.approvalId = approval.approvalId;
@@ -72,7 +75,7 @@ export class AddTransactionHtmlRenderer {
               return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'DEBIT';
             }).map(approvalAccountDetails => {
                 return {
-                    'debitAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.id == approvalAccountDetails.parentAccount),
+                    'debitAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.parentAccount == approvalAccountDetails.parentAccount),
                     'debitAmount': approvalAccountDetails.amount,
                 };
             });
@@ -82,7 +85,7 @@ export class AddTransactionHtmlRenderer {
               return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'CREDIT';
             }).map(approvalAccountDetails => {
                 return {
-                    'creditAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.id == approvalAccountDetails.parentAccount),
+                    'creditAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.parentAccount == approvalAccountDetails.parentAccount),
                     'creditAmount': approvalAccountDetails.amount,
                 };
             });
