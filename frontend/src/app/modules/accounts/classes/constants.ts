@@ -1,3 +1,4 @@
+import { AccountSession } from '@services/modules/accounts/models/account-session';
 
 export const HEADS_LIST = [
     {id: 1, title: 'Expenses'},
@@ -14,3 +15,12 @@ export const APPROVAL_STATUS = {
 
 export const NEGATIVE_BALANCE_COLOR = 'rgba(76, 175, 80, 1)';
 export const POSITIVE_BALANCE_COLOR = 'rgba(86, 142, 174, 1)';
+
+export interface customAccount extends AccountSession{
+    title: string;
+    type: string;
+}
+
+export interface customGroupStructure extends customAccount{
+    childs: Array<customGroupStructure | customAccount | any>;
+}

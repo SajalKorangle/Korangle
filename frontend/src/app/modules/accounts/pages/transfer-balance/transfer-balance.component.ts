@@ -7,6 +7,8 @@ import { TransferBalanceServiceAdapter } from './transfer-balance.service.adapte
 import { HEADS_LIST} from '@services/modules/accounts/models/head';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 import { Account } from '@services/modules/accounts/models/account';
+import { customAccount, customGroupStructure } from './../../classes/constants';
+
 @Component({
     selector: 'transfer-balance',
     templateUrl: './transfer-balance.component.html',
@@ -28,7 +30,7 @@ export class TransferBalanceComponent implements OnInit{
     isLoading: any;
 
     accountList: Array<Account>;
-    currentSessionAccountSessionList: Array<customAccount>;
+    currentSessionAccountSessionList: Array<customAccount2>;
     nextSessionAccountSessionList: Array<AccountSession>;
 
     currentSessionHierarchyStructure: {
@@ -183,13 +185,7 @@ export class TransferBalanceComponent implements OnInit{
 };
 
 
-interface customAccount extends AccountSession{
-    title: string;
-    type: string;
+interface customAccount2 extends customAccount{
     selected?: boolean,
     disabled?: boolean,
-};
-
-interface customGroupStructure extends customAccount{
-    childs: Array<customGroupStructure | customAccount | any>;
 };

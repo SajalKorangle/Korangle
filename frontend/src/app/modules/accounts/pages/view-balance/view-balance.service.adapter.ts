@@ -1,6 +1,6 @@
-import { profile } from 'console';
 import { ViewBalanceComponent } from './view-balance.component'
-
+import { Account } from '@services/modules/accounts/models/account';
+import { AccountSession } from '@services/modules/accounts/models/account-session';
 export class ViewBalanceServiceAdapter {
 
     vm: ViewBalanceComponent;
@@ -11,11 +11,11 @@ export class ViewBalanceServiceAdapter {
         this.vm = vm;
     }
 
-    accountsSessionList: any;
-    accountsList: any;
+    accountsSessionList: Array<AccountSession>;
+    accountsList: Array<Account>;
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
         let request_account_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         }
@@ -27,41 +27,31 @@ export class ViewBalanceServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        const request_account_session_data = {
+            'parentAccount__parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId, 
+        }
         
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
-            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
+        const value = await Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),  // 0
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 1
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data), // 2
+            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),   // 3
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data), // 4
+        ]);
+        this.initialiseLockAccountData(value[3]);
 
-        ]).then(value =>{
-            this.vm.employeeList = value[2];
-            this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
-            this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-            this.initialiseLockAccountData(value[3]);
-            let account_id_list = [];
-            value[0].forEach(account =>{
-                account_id_list.push(account.id);
-            })
-            let request_account_session_data = {
-                'parentAccount__in': account_id_list,
-                'parentSession': this.vm.user.activeSchool.currentSessionDbId, 
-            }
-            Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),
-            ]).then(data =>{
-                this.accountsList = value[0];
-                this.accountsSessionList = data[0];
-                this.initialiseAccountGroupList();
-                this.initialiseDisplayData();
-                this.vm.isLoading = false;
-            }, error =>{
-                this.vm.isLoading = false;
-            })
-        },error =>{
-            this.vm.isLoading = false;
-        })
-
+        this.vm.employeeList = value[2];
+        const currentSesion = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId)
+        this.vm.minimumDate = currentSesion.startDate;  // change for current session
+        this.vm.maximumDate = currentSesion.endDate;
+            
+        this.accountsList = value[0];
+        this.accountsSessionList = value[4];
+        this.initialiseAccountGroupList();
+        this.initialiseDisplayData();
+        this.vm.isLoading = false;
     }
 
     initialiseLockAccountData(value){
@@ -78,133 +68,51 @@ export class ViewBalanceServiceAdapter {
     initialiseAccountGroupList(){
         this.vm.accountsList = [];
         this.vm.groupsList = [];
-        this.accountsSessionList.forEach(account =>{
-            let acc = this.accountsList.find(accounts => accounts.id == account.parentAccount);
-            account['type'] = acc.accountType;
-            account['title'] = acc.title;
+        this.accountsSessionList.forEach(accountSession =>{
+            let acc = this.accountsList.find(accounts => accounts.id == accountSession.parentAccount);
+            const customAccount = { ...accountSession, type: acc.accountType, title: acc.title };
             if(acc.accountType == 'ACCOUNT'){
-                this.vm.accountsList.push(account);
+                this.vm.accountsList.push(customAccount);
             }
             else{
-                this.vm.groupsList.push(account);
+                this.vm.groupsList.push(customAccount);
             }
         })
-        // console.log(this.vm.accountsList);
-        console.log(this.vm.groupsList);
         return ;
     }
 
 
     initialiseDisplayData(){
-        let accountsSessionList = JSON.parse(JSON.stringify(this.accountsSessionList));
-        let parentGroupsList = [];
-        let individualAccountList = [];
-        for(let i=0;i<accountsSessionList.length; i++){
-            // let type = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount).accountType;
-            // accountsSessionList[i]['type'] = type;
-            let acc = this.accountsList.find(accounts => accounts.id == accountsSessionList[i].parentAccount);
-            accountsSessionList[i]['type'] = acc.accountType;
-            accountsSessionList[i]['title'] = acc.title;
-            if(acc.accountType == 'ACCOUNT'){
-                // console.log('account' , accountsSessionList[i].title);
-                if(accountsSessionList[i].parentGroup == null){
-                    // console.log('individual' , accountsSessionList[i].title);
-                    individualAccountList.push(accountsSessionList[i]);
-                    accountsSessionList.splice(i,1);
-                    i--;
-                }
-                else{
-                    let tempGroup = parentGroupsList.find(group => group.parentAccount == accountsSessionList[i].parentGroup);
-                    if(tempGroup == undefined){
-                        // console.log('parent Group Not Found');
-                        let parentGroupIndex =  accountsSessionList.map(function(e) { return e.parentAccount; }).indexOf(accountsSessionList[i].parentGroup);
-                        let parentGroupData = JSON.parse(JSON.stringify(accountsSessionList[parentGroupIndex]));
-                        // console.log('parent Group in all list', parentGroupData.title);
-                        
-                        parentGroupData['childs'] = [];
-                        parentGroupData.childs.push(accountsSessionList[i]);
-                        parentGroupsList.push(parentGroupData);
-                        accountsSessionList.splice(parentGroupIndex, 1);
-                        if(parentGroupIndex <= i){
-                            i--;
-                        }
-                        accountsSessionList.splice(i,1);
-                        i--;
-                    }
-                    else{
-                        // console.log('parent Group Found', tempGroup.title);
-                        tempGroup.childs.push(accountsSessionList[i]);
-                        accountsSessionList.splice(i,1);
-                        i--;
-                    }
-                }
+        const nonIndividualAccount = JSON.parse(JSON.stringify(this.vm.accountsList.filter(accountSession=>accountSession.parentGroup)));
+        const individualAccountList = JSON.parse(JSON.stringify(this.vm.accountsList.filter(accountSession => !accountSession.parentGroup)));
+        const groupStructureList = JSON.parse(JSON.stringify(this.vm.groupsList)).map(group => {
+            return { ...group, childs: [] } // structure of group
+        });
+
+        nonIndividualAccount.forEach(accountSession => {    // pushing all accounts with parentGroup in child of its group
+            groupStructureList.find(id => accountSession.parentGroup).childs.push(accountSession);
+        });
+
+        for(let i=0; i<groupStructureList.length; i++){
+            if(groupStructureList[i].parentGroup){
+                groupStructureList.find(group => group.parentAccount == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
             }
         }
-
-        for(let i=0;i<accountsSessionList.length; i++){
-            accountsSessionList[i]['childs'] = [];
-            parentGroupsList.push(accountsSessionList[i]);
-        }
-        
-        for(let i=0; i<parentGroupsList.length; i++){
-           
-            if(parentGroupsList[i].parentGroup != null){
-                parentGroupsList.find(gro => gro.parentAccount == parentGroupsList[i].parentGroup).childs.push(parentGroupsList[i]);
-            }
-            
-        }
-
-        for(let i=0; i<parentGroupsList.length; i++){
-            if(parentGroupsList[i].parentGroup != null){
-                parentGroupsList.splice(i, 1);
-                i--;
-            }
-        }
-        this.populateHeadWiseDisplayList(parentGroupsList, individualAccountList);
-
+        const rootGroupStructureList = groupStructureList.filter(group=> !group.parentGroup);
+        this.populateHeadWiseDisplayList(rootGroupStructureList, individualAccountList);
     }
 
     populateHeadWiseDisplayList(groupsList, individualAccountList){
-        this.vm.expensesList = [];
-        this.vm.incomeList = [];
-        this.vm.assetsList = [];
-        this.vm.liabilityList = [];
-        groupsList.forEach(group =>{
+        Object.keys(this.vm.hierarchyStructure).forEach(key => this.vm.hierarchyStructure[key] = []);   // empty array for all heads
+        groupsList.forEach(group => {
             let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
-            if(head == 'Expenses'){
-                this.vm.expensesList.push(group);
-            }
-            else if(head == 'Income'){
-                this.vm.incomeList.push(group);
-            }
-            else if(head == 'Assets'){
-                this.vm.assetsList.push(group);
-            }
-            else if(head == 'Liabilities'){
-                this.vm.liabilityList.push(group);
-            }
+            this.vm.hierarchyStructure[head].push(group);
 
-        })
-        individualAccountList.forEach(account =>{
-            let head = this.vm.headsList.find(head => head.id == account.parentHead).title;
-            if(head == 'Expenses'){
-                this.vm.expensesList.push(account);
-            }
-            else if(head == 'Income'){
-                this.vm.incomeList.push(account);
-            }
-            else if(head == 'Assets'){
-                this.vm.assetsList.push(account);
-            }
-            else if(head == 'Liabilities'){
-                this.vm.liabilityList.push(account);
-            }
-
-        })
-        console.log(this.vm.expensesList);
-        console.log(this.vm.incomeList);
-        console.log(this.vm.assetsList);
-        console.log(this.vm.liabilityList);
+        });
+        individualAccountList.forEach(accountSession => {
+            let head = this.vm.headsList.find(head => head.id == accountSession.parentHead).title;
+            this.vm.hierarchyStructure[head].push(accountSession);
+        });
 
     }
     

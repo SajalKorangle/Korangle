@@ -9,8 +9,7 @@ import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { SchoolService } from './../../../../services/modules/school/school.service'
 import { HEADS_LIST } from '@services/modules/accounts/models/head';
-
-import { AccountSession } from './../../../../services/modules/accounts/models/account-session';
+import { customAccount, customGroupStructure } from './../../classes/constants';
  
 @Component({
     selector: 'manage-accounts',
@@ -147,13 +146,4 @@ export class ManageAccountsComponent{
         this.specificGroup = group;
     }
     
-}
-
-interface customAccount extends AccountSession{
-    title: string;
-    type: string;
-}
-
-interface customGroupStructure extends customAccount{
-    childs: Array<customGroupStructure | customAccount | any>;
-}
+};

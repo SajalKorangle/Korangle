@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { SchoolService } from './../../../../services/modules/school/school.service'
 import { ViewBalanceServiceAdapter } from './view-balance.service.adapter'
@@ -8,8 +8,9 @@ import { EmployeeService } from './../../../../services/modules/employee/employe
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component'
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_LEDGER } from './../../../../print/print-routes.constants'
-import { HEADS_LIST } from './../../classes/constants'
+import { PRINT_LEDGER } from './../../../../print/print-routes.constants';
+import { HEADS_LIST } from '@services/modules/accounts/models/head';
+import { customAccount, customGroupStructure } from './../../classes/constants';
 
 @Component({
     selector: 'view-balance',
@@ -28,26 +29,27 @@ export class ViewBalanceComponent implements OnInit {
     user: any;
     serviceAdapter: ViewBalanceServiceAdapter;
 
-    accountsList: any;
-    groupsList: any;
+    accountsList: Array<customAccount>;
+    groupsList: Array<customAccount>;
     headsList = HEADS_LIST;
     isLoading: any;
-    constructor( 
-        public dialog: MatDialog,
-        public accountsService: AccountsService,
-        public schoolService: SchoolService,
-        public employeeService: EmployeeService,
-        public printService: PrintService,
-    ){ }
 
     displayLedger: any;
     ledgerAccount: any;
     isLedgerLoading: any;
 
-    expensesList = [];
-    assetsList = [];
-    liabilityList = [];
-    incomeList = [];
+  hierarchyStructure: {
+    Expenses: Array<customGroupStructure>,
+    Income: Array<customGroupStructure>,
+    Assets: Array<customGroupStructure>,
+    Liabilities: Array<customGroupStructure>,
+
+  } = {
+      Expenses: [],
+      Income: [],
+      Assets: [],
+      Liabilities: [],
+    };
     displayWholeList: boolean;
 
     minimumDate: any;
@@ -145,6 +147,13 @@ export class ViewBalanceComponent implements OnInit {
     
     lockAccounts: any;
       
+    constructor( 
+      public dialog: MatDialog,
+      public accountsService: AccountsService,
+      public schoolService: SchoolService,
+      public employeeService: EmployeeService,
+      public printService: PrintService,
+    ){ }
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -171,17 +180,12 @@ export class ViewBalanceComponent implements OnInit {
     }
 
     getAccountListFromString(str: any){
-        let temp = [];
-        this.accountsList.forEach(account =>{
-            if(account.title.includes(str)){
-                temp.push(account);
-            }
-        })
-        // this.groupsList.forEach(group =>{
-        //     if(group.title.includes(str)){
-        //         temp.push(group);
-        //     }
-        // })
+      let temp = [];
+      this.accountsList.forEach(account => {
+        if (account.title.includes(str)) {
+          temp.push(account);
+        }
+      });
         return temp;
     }
 
