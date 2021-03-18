@@ -1,4 +1,4 @@
-<div class="card-content table-responsive ">
+<div class="card-content table-responsive" *ngIf="!isLoading else loader">
     <div *ngIf="lockAccounts">
         <span  style="color: red;">
             <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
@@ -114,6 +114,6 @@
     
 </div>
 
-<!-- <ng-container *ngIf="isLoading || isInitialLoading">
+<ng-template #loader>
     <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container> -->
+</ng-template>

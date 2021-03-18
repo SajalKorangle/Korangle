@@ -39,6 +39,8 @@ export class GrantApprovalComponent implements OnInit {
     maximumDate: any;
 
     lockAccounts: any;
+
+    isLoading: boolean = false;
     
     constructor(
         public dialog: MatDialog,

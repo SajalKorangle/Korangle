@@ -119,11 +119,14 @@ export class AddTransactionServiceAdapter {
 
         let toCreateTransactionList = [];
         this.vm.transactionList.forEach(transaction => {
-            let tempData = {
+            let tempData: {[key:string]: any} = {
                 parentEmployee: this.vm.user.activeSchool.employeeId,
                 parentSchool: this.vm.user.activeSchool.dbId,
                 remark: transaction.remark,
                 transactionDate: this.vm.selectedDate,
+            }
+            if (transaction.approval) {
+                tempData.approvalId = transaction.approval.approvalId;
             }
             toCreateTransactionList.push(tempData);
         });
@@ -132,23 +135,13 @@ export class AddTransactionServiceAdapter {
             this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList),
         ]).then(value => {
 
-            let toUpdateApprovalList = [];
+            // let toUpdateApprovalList = [];
             let toCreateAccountList = [];
-            let toCreateTransactionImageList = [];
             const serviceList = [];
 
             value[0].forEach((element, index) => {
                 
                 let transaction = this.vm.transactionList[index];
-
-                // Approvals
-                if (this.vm.transactionList[index].approval) {
-                    let approval_data = {
-                        id: transaction.approval.id,
-                        parentTransaction: element.id
-                    };
-                    toUpdateApprovalList.push(approval_data);
-                }
 
                 // Debit Accounts
                 transaction.debitAccountList.forEach(account =>{
@@ -200,9 +193,7 @@ export class AddTransactionServiceAdapter {
 
             });
 
-            if (toUpdateApprovalList.length > 0) {
-                serviceList.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.approval, toUpdateApprovalList));
-            }
+
             serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
             /*if (toCreateTransactionImageList.length > 0) {
                 serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_images, toCreateTransactionImageList));
@@ -210,12 +201,12 @@ export class AddTransactionServiceAdapter {
 
             Promise.all(serviceList).then(data => {
 
+                this.vm.backendData.approvalList = this.vm.backendData.approvalList.filter(approval => {
+                    return this.vm.transactionList.find(transaction => transaction.approval && transaction.approval.id == approval.id) == undefined;
+                });
+
                 this.vm.transactionList = [];
                 this.vm.htmlRenderer.addNewTransaction();
-
-                this.vm.backendData.approvalList = this.vm.backendData.approvalList.filter(approval => {
-                    return toUpdateApprovalList.find(updatedApproval => updatedApproval.id == approval.id) == undefined;
-                });
 
                 // Write down the number of transactions that have been recorded in alert message.
                 alert(toCreateTransactionList.length + ' Transaction/s Recorded Successfully');
