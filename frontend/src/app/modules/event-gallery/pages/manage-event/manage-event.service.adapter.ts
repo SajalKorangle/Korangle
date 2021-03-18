@@ -166,7 +166,9 @@ export class ManageEventServiceAdapter {
             this.vm.eventGalleryService.deleteObject(this.vm.eventGalleryService.event_image, image_data),//0
         ]).then(value => {
             this.vm.eventImageList = this.vm.eventImageList.filter(img => img.id != image.id);
+            this.vm.imageCount--;
             if (this.vm.eventImageList.filter(image => image.selected == true).length == 0) {
+                console.log(this.vm.imageCount);
                 this.vm.isDeletingImages = false;
             }
         });
@@ -196,8 +198,39 @@ export class ManageEventServiceAdapter {
                 if (image && !image.tagList.find(tagId => tagId == imageTag.id)) {
                     image.tagList.push(imageTag.parentEventTag);
                 }
+                this.vm.eventImageTagList.push(imageTag);
             });
-            this.vm.eventImageTagList.push(value[0]);
+            this.vm.eventTagList.forEach(tag => tag.selected = false);
+            this.vm.eventImageList.forEach(tag => tag.selected = false);
+            this.vm.isAssigning = false;
+        });
+    }
+
+    unAssignImageTags() {
+        this.vm.isAssigning = true;
+        let event_image_tag_data = [];
+        let selectedTag = this.vm.eventTagList.find(tag => tag.selected == true);
+        let selectedImageList = this.vm.eventImageList.filter(image => image.selected == true);
+        selectedImageList.forEach(selectedImage=> {
+            if (selectedImage.tagList.find(tagId => tagId == selectedTag.id)) {
+                let delete_id = this.vm.eventImageTagList.find(imageTag => imageTag.parentEventTag == selectedTag.id && imageTag.parentEventImage == selectedImage.id).id;
+                event_image_tag_data.push({
+                    'id': delete_id
+                });
+            }
+        });
+        Promise.all([
+            this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_image_tag, event_image_tag_data),//0
+        ]).then(value => {
+            console.log(value);
+            event_image_tag_data.forEach(EventImgTag=>{
+                this.vm.eventImageTagList = this.vm.eventImageTagList.filter(it => it.id != EventImgTag.id);
+            });
+            
+            selectedImageList.forEach(selectedImage=>{
+                selectedImage.tagList = selectedImage.tagList.filter(tagId => tagId !== selectedTag.id);
+            })
+
             this.vm.eventTagList.forEach(tag => tag.selected = false);
             this.vm.eventImageList.forEach(tag => tag.selected = false);
             this.vm.isAssigning = false;

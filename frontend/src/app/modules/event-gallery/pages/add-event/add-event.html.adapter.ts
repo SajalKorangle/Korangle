@@ -101,4 +101,7 @@ export class AddEventHtmlAdapter {
         return this.vm.editing ? this.vm.editingNotificationList : this.vm.notifySelectionList;
     }
 
+    checkForChanges() {
+        return (JSON.stringify(this.vm.eventList.find(event => event.id == this.vm.editingEvent.id)) != JSON.stringify(this.vm.editingEvent)) || (JSON.stringify(this.vm.notifySelectionList) != JSON.stringify(this.vm.editingNotificationList));
+    }
 }

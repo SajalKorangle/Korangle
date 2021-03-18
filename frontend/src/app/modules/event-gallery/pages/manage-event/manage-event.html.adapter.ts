@@ -28,16 +28,20 @@ export class ManageEventHtmlAdapter {
     }
 
     generateNewTag(): void {
-        var newTag = document.getElementById('new-tag');
+        let newTag = document.getElementById('new-tag');
         newTag.style.display = 'inline-block';
         newTag.focus();
     }
 
     createTag($event: any) {
+          $event.target.innerHTML = $event.target.innerHTML.replaceAll('&nbsp;', " ");
         if ($event.target.innerHTML != '' && $event.target.innerHTML.trim() != '') {
             this.vm.serviceAdapter.createTag($event.target.innerHTML);
             $event.target.innerHTML = '';
             $event.target.style.display = 'none';
+        }else{
+             let newTag = document.getElementById('new-tag');
+             newTag.style.display='none';
         }
     }
 
@@ -55,13 +59,15 @@ export class ManageEventHtmlAdapter {
     }
 
     saveTag($event: any, eventTag: any) {
+        $event.target.innerHTML = $event.target.innerHTML.replaceAll('&nbsp;', ' ');
         if ($event.target.innerHTML != eventTag.tagName) {
-            this.vm.serviceAdapter.updateTag(eventTag, $event.target.innerHTML);
-            $event.target.contentEditable = 'false';
-        } else if ($event.target.innerHTML == '' || $event.target.innerHTML.trim() == '') {
-            $event.target.innerHTML = eventTag.tagName;
-            $event.target.contentEditable = 'false';
+            if ($event.target.innerHTML == '' || $event.target.innerHTML.trim() == '') {
+                $event.target.innerHTML = eventTag.tagName;
+            } else {
+                this.vm.serviceAdapter.updateTag(eventTag, $event.target.innerHTML);
+            }
         }
+        $event.target.contentEditable = 'false';
     }
 
 
@@ -92,7 +98,11 @@ export class ManageEventHtmlAdapter {
     }
 
     assignSelectedTags() {
-        this.vm.serviceAdapter.assignImageTags();
+        if(this.getAssignStatus()) {
+            this.vm.serviceAdapter.assignImageTags();
+        }else{
+            this.vm.serviceAdapter.unAssignImageTags();
+        }
     }
 
     editSelectedTag(): void {
@@ -107,7 +117,8 @@ export class ManageEventHtmlAdapter {
 
     checkTagEditable(): string {
         let selectedTagsLength = this.vm.eventTagList.filter(tag => tag.selected == true).length;
-        if (selectedTagsLength == 1 && !this.vm.isDeletingImages && !this.vm.isAssigning) {
+        let selectedTag=this.vm.eventTagList.find(tag => tag.selected == true);
+        if (selectedTag!=undefined && selectedTagsLength == 1 && !this.vm.isDeletingImages && !this.vm.isAssigning) {
             return 'active';
         } else {
             return 'inactive';
@@ -180,7 +191,23 @@ export class ManageEventHtmlAdapter {
 
     onPaste(e: any) {
         e.preventDefault();
-        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        let text = (e.originalEvent || e).clipboardData.getData('text/plain');
         document.execCommand('insertHTML', false, text);
+    }
+
+    getAssignStatus() {
+        let assign=false;
+        if(this.vm.eventImageList.filter(img => img.selected).length>=1){
+            let selectedImageList=this.vm.eventImageList.filter(img => img.selected);
+             let selectedTag=this.vm.eventTagList.find(tag => tag.selected);
+             selectedImageList.forEach(selectedImage=> {
+                 if (selectedTag && !selectedImage.tagList.find(t => t == selectedTag.id)) {
+                     assign = true;
+                 }
+             });
+        }else{
+            assign = true;
+        }
+        return assign;
     }
 }

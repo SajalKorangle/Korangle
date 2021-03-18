@@ -115,7 +115,7 @@
             </button>
             <button type="submit"
                     *ngIf="editing"
-                    [disabled]="!htmlAdapter.areInputsValid()"
+                    [disabled]="!htmlAdapter.areInputsValid() || !htmlAdapter.checkForChanges()"
                     (click)="serviceAdapter.saveChanges()"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}} postSaveBtn">Save Changes
             </button>

@@ -79,7 +79,7 @@
                                     (click)="htmlAdapter.assignSelectedTags()"
                                     [disabled]="(htmlAdapter.checkTagEditable()=='inactive' || htmlAdapter.checkMediaSelected() == 'inactive')"
                                     style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span
-                                    *ngIf="!isAssigning">Assign Tag</span>
+                                    *ngIf="!isAssigning">{{htmlAdapter.getAssignStatus()?'Assign Tag':'UnAssign Tag'}}</span>
                                 <div *ngIf="isAssigning" class="loader-custom"></div>
                             </button>
                         </div>

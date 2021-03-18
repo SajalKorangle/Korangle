@@ -121,7 +121,7 @@
                                   [checked]="htmlAdapter.getSelectedImagesCount() == imageList.length"
                                   [disabled]="isImageDownloading"><span class="editTag" style="color: orange"> Select All Media </span>
                     </mat-checkbox>
-                    <span style="float: right;"><a href="javascript:void(0);"
+                    <span style="float: right;" *ngIf="htmlAdapter.getSelectedImagesCount()>0"><a href="javascript:void(0);"
                                                    (click)="htmlAdapter.downloadSelectedImages()"
                                                    style="color:#FC9700;"> <i
                             class="material-icons" style="color:#FC9700;">save_alt</i>Download </a></span>
