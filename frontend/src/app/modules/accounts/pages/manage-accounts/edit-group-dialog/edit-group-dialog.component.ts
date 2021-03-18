@@ -41,8 +41,50 @@ export class EditGroupDialogComponent implements OnInit {
     return this.data.vm.groupsList.find(group => group.parentAccount == this.group.parentGroup);
   }
 
+  findGroupHierarchy(root) { // dfs on hierarchy structure
+    if (root.type == "ACCOUNT")
+      return null;
+    if (root.id == this.group.id)
+      return root;
+    let group = null;
+    root.childs.every(g => {
+      if (g.type = "GROUP") {
+        group = this.findGroupHierarchy(g);
+        if (group) {
+          return false;
+        }
+      }
+      return true;
+    });
+    return group;
+  }
+
+  enumAllChilds(group): Array<number> {
+    if (group.type == "ACCOUNT")
+      return [];
+    let allchildIds = [];
+    group.childs.forEach(g => {
+      if (g.type == "GROUP") {
+        allchildIds.push(g.id);
+        allchildIds.push(...this.enumAllChilds(g));
+      }
+    });
+    return allchildIds;
+  }
+
   getFilteredGroupList(): Array<any> {
-    return this.data.vm.groupsList.filter(group => group.id != this.group.id);
+    const headTitle = this.getHead().title;
+    let filteredGroup =  this.data.vm.groupsList.filter(group => group.id != this.group.id);
+    let groupStructure;
+    this.data.vm.hierarchyStructure[headTitle].every(g => {
+      groupStructure = this.findGroupHierarchy(g);
+      if (groupStructure) {
+        return false;
+      }
+      return true;
+    });
+    let allChildIds = this.enumAllChilds(groupStructure);
+    return filteredGroup.filter(g => allChildIds.find(c => c == g.id) == undefined);
   }
 
 

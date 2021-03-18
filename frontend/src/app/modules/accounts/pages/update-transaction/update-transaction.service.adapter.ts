@@ -82,7 +82,7 @@ export class UpdateTransactionServiceAdapter {
         this.vm.isLoadingTransaction = true;
         let data = {
             voucherNumber: event.target.value,
-            parentEmployee: this.vm.user.activeSchool.employeeId,
+            // parentEmployee: this.vm.user.activeSchool.employeeId,
             transactionDate__gte: this.vm.minimumDate,
             transactionDate__lte: this.vm.maximumDate, 
         }
@@ -117,7 +117,7 @@ export class UpdateTransactionServiceAdapter {
         this.transaction_id_list = [];
         // console.log(account);
         let data = {
-            parentTransaction__parentEmployee: this.vm.user.activeSchool.employeeId,
+            // parentTransaction__parentEmployee: this.vm.user.activeSchool.employeeId,
             parentAccount: account.parentAccount,
             parentTransaction__transactionDate__gte:  this.vm.minimumDate,
             parentTransaction__transactionDate__lte:  this.vm.maximumDate,
