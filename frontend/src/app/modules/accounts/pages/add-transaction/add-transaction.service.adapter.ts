@@ -47,7 +47,6 @@ export class AddTransactionServiceAdapter {
                     this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
                     this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
                 ]).then(value =>{
-                    console.log(value);
                     this.vm.htmlRenderer.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
                     this.vm.htmlRenderer.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
                     this.vm.backendData.accountSessionList = value[0];
@@ -59,8 +58,6 @@ export class AddTransactionServiceAdapter {
                         this.vm.maximumPermittedAmount = null;
                     }
 
-                    console.log(this.vm.user.activeSchool.employeeId);
-
                     let granted_approval_data = {
                         'parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
                         'requestStatus': 'APPROVED',
@@ -68,8 +65,6 @@ export class AddTransactionServiceAdapter {
                         'requestedGenerationDateTime__gte': this.vm.htmlRenderer.minimumDate,
                         'requestedGenerationDateTime__lte': this.vm.htmlRenderer.maximumDate,
                     };
-
-                    console.log(granted_approval_data);
 
                     let approval_account_details = {
                         'parentApproval__parentEmployeeRequestedBy': this.vm.user.activeSchool.employeeId,
@@ -92,8 +87,6 @@ export class AddTransactionServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_account_details),
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_images),
                     ]).then(val => {
-                        
-                        console.log(val);
 
                         this.vm.backendData.approvalList = val[0];
                         this.vm.backendData.approvalAccountDetailsList = val[1];

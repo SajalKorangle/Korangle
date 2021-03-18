@@ -17,8 +17,6 @@ export class GroupHierarchyComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        console.log(this.group);
-
     }
 
     handleClick(element){

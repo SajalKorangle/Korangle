@@ -65,7 +65,6 @@ export class AddTransactionHtmlRenderer {
             this.addNewCreditAccount(transactionIndex);
             this.addNewDebitAccount(transactionIndex);
         } else {
-            console.log('Real value');
             // transaction.approvalId = approval.approvalId;
             transaction.approval = approval;
             transaction.remark = approval.remark;

@@ -212,10 +212,8 @@ export class AddTransactionComponent implements OnInit {
     }
 
     readURL(event, transaction, str): void {
-      console.log(str);
       if (event.target.files && event.target.files[0]) {
           let image = event.target.files[0];
-          console.log(image);
           if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
               alert('File type should be either jpg, jpeg, or png');
               return;
@@ -236,12 +234,9 @@ export class AddTransactionComponent implements OnInit {
           };
           reader.readAsDataURL(image);
       }
-      console.log(transaction.billImages);
-      console.log(transaction.quotationImages);
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
-      console.log(images);
       const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
           maxWidth: '100vw',
           maxHeight: '100vh',
