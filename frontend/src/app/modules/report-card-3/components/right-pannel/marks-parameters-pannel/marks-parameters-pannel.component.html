@@ -8,7 +8,7 @@
             <mat-select 
                 placeholder="Examination"
                 [(ngModel)]="layer.parentExamination"
-                (ngModelChange)="layer.parentSubject=null; layer.testType=null; layer.layerDataUpdate(); canvasRefresh();">
+                (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
                 <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
             </mat-select>
         </mat-form-field>
@@ -16,7 +16,7 @@
         <mat-form-field appearence="fill">
             <mat-select placeholder="Subject"
             [(ngModel)]="layer.parentSubject" 
-            (ngModelChange)="layer.testType=null; layer.layerDataUpdate(); canvasRefresh(); ">
+            (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(); ">
                 <mat-option *ngFor="let subject of layer.ca.vm.DATA.data.subjectList;" [value]="subject.id">
                     {{subject.name}}
                 </mat-option>
