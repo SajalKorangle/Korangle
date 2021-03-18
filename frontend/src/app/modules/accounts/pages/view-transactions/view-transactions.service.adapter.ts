@@ -555,6 +555,6 @@ export class ViewTransactionsServiceAdapter {
           this.vm.transactionsList.splice(transactionIndex, 1);
           alert('Transaction Updated Successfully');
         });
-      }
+    }
 
 }

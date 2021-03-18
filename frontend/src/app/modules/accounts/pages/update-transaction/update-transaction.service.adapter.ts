@@ -269,8 +269,20 @@ export class UpdateTransactionServiceAdapter {
         // console.log(this.vm.transactionsList);
     }
 
-    
-    
-    
+    deleteTransaction(transaction){
+        if(!confirm('Are you sure you want to delete this transaction?')){
+          return ;
+        }
+        let transaction_data = {
+          id: transaction.dbId,
+        }
+        Promise.all([
+          this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
+        ]).then(val => {
+          const transactionIndex = this.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
+          this.vm.transactionsList.splice(transactionIndex, 1);
+          alert('Transaction Updated Successfully');
+        });
+    }
 
 }
