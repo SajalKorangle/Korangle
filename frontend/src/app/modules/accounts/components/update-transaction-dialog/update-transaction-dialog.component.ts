@@ -259,7 +259,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
         let toCreateAccountList = [];
         let toUpdateAccountList = [];
         let toDeleteAccountList = [];
-        let toUpdateAccountBalanceList = [];
         let toDeleteImageList = [];
         let toUpdateImageList = [];
         const service = [];
@@ -274,11 +273,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
               transactionType: 'DEBIT',
             }
             toCreateAccountList.push(tempData);
-            let tempdata = {
-              id: account.dbId,
-              balance: account.balance + account.amount,
-            }
-            toUpdateAccountBalanceList.push(tempdata);
           }
           else{
             let amountDiff = account.amount -  this.originalTransaction.debitAccounts[index].amount;
@@ -288,13 +282,8 @@ export class UpdateTransactionDialogComponent implements OnInit {
                 amount: account.amount,
               }
               toUpdateAccountList.push(tempData);
-              let tempdata = {
-                id: account.dbId,
-                balance: account.balance + amountDiff,
-              }
-              toUpdateAccountBalanceList.push(tempdata);
             }
-            this.originalTransaction.debitAccounts.splice(index, 1);
+            this.originalTransaction.debitAccounts.splice(index, 1);  // remoevd from original transaction
           }
         })
         this.transaction.creditAccounts.forEach(account =>{
@@ -307,11 +296,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
               transactionType: 'CREDIT',
             }
             toCreateAccountList.push(tempData);
-            let tempdata = {
-              id: account.dbId,
-              balance: account.balance - account.amount,
-            }
-            toUpdateAccountBalanceList.push(tempdata);
           }
           else{
             let amountDiff = account.amount -  this.originalTransaction.creditAccounts[index].amount;
@@ -321,43 +305,15 @@ export class UpdateTransactionDialogComponent implements OnInit {
                 amount: account.amount,
               }
               toUpdateAccountList.push(tempData);
-              let tempdata = {
-                id: account.dbId,
-                balance: account.balance - amountDiff,
-              }
-              toUpdateAccountBalanceList.push(tempdata);
-
             }
-            this.originalTransaction.creditAccounts.splice(index, 1);
+            this.originalTransaction.creditAccounts.splice(index, 1); // remoevd from original transaction
           }
         })
         this.originalTransaction.debitAccounts.forEach(account =>{
           toDeleteAccountList.push(account.transactionAccountDbId);
-          let tempAccount = toUpdateAccountBalanceList.find(acccount => acccount.id == account.dbId);
-          if(tempAccount == undefined){
-            let tempData1 = {
-              id: account.dbId,
-              balance: account.balance - account.amount,
-            }
-            toUpdateAccountBalanceList.push(tempData1);
-          }
-          else{
-            tempAccount.balance -= account.amount;
-          }
         })
         this.originalTransaction.creditAccounts.forEach(account =>{
           toDeleteAccountList.push(account.transactionAccountDbId);
-          let tempAccount = toUpdateAccountBalanceList.find(acccount => acccount.id == account.dbId);
-          if(tempAccount == undefined){
-            let tempData1 = {
-              id: account.dbId,
-              balance: account.balance + account.amount,
-            }
-            toUpdateAccountBalanceList.push(tempData1);
-          }
-          else{
-            tempAccount.balance += account.amount;
-          }
         })
         let delete_data = {
           'id__in': toDeleteAccountList,
@@ -444,7 +400,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
         if(toDeleteAccountList.length > 0){
           service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_account_details, delete_data));
         }
-        service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList));
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction_images, toUpdateImageList));
         let image_delete_data = {
           id__in: toDeleteImageList,
@@ -487,28 +442,14 @@ export class UpdateTransactionDialogComponent implements OnInit {
     let transaction_data = {
       id: this.transaction.dbId,
     }
-    let toUpdateAccountBalanceList = [];
-    this.originalTransaction.debitAccounts.forEach(account =>{
-      let tempData = {
-        id: account.dbId,
-        balance: account.balance - account.amount
-      }
-      toUpdateAccountBalanceList.push(tempData);
-    })
-    this.originalTransaction.creditAccounts.forEach(account =>{
-      let tempData = {
-        id: account.dbId,
-        balance: account.balance + account.amount
-      }
-      toUpdateAccountBalanceList.push(tempData);
-    })
     Promise.all([
       this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
-      this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.account_session, toUpdateAccountBalanceList),
-    ]).then(val =>{
+    ]).then(val => {
+      const transactionIndex = this.data.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
+      this.data.vm.transactionsList.splice(transactionIndex, 1);
       alert('Transaction Updated Successfully');
       this.dialogRef.close();
-    })
+    });
   }
 
   

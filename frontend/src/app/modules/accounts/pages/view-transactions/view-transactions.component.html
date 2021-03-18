@@ -94,8 +94,6 @@
                 <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
                 <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
                 <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th>
-                <!-- <th *ngIf="columnFilter.update" class="text-center"><span>Update</span></th>
-                <th *ngIf="columnFilter.delete" class="text-center"><span>Delete</span></th> -->
             </tr>
         </thead>
         <tbody>
@@ -135,7 +133,7 @@
                     </i>
                 </td>
                  <td *ngIf="canUserUpdate && transaction.approvalId == null && !isAccountLocked()" style="color: rgba(255, 152, 0, 1);cursor: pointer" class="text-center" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></td>
-                <!--<td *ngIf="columnFilter.delete" class="text-center">Delete</td> -->
+                <td *ngIf="canUserUpdate && transaction.approvalId != null && !isAccountLocked()" style="color: rgba(255, 152, 0, 1);cursor: pointer" class="text-center" (click)="serviceAdapter.deleteTransaction(transaction)"><u>Delete</u></td>
             </tr>
             
         </tbody>

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, HostListener} from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
@@ -32,15 +32,6 @@ export class ViewTransactionsComponent implements OnInit {
     serviceAdapter: ViewTransactionsServiceAdapter;
     minimumDate: any;
     maximumDate: any;
-
-    constructor( 
-      public accountsService: AccountsService,
-      public employeeService: EmployeeService,
-      public dialog: MatDialog,
-      public printService: PrintService,
-      public excelService: ExcelService,
-      public schoolService: SchoolService,
-    ){ }
 
     isLoading: any;
     isLoadingTransaction: any;
@@ -145,7 +136,16 @@ export class ViewTransactionsComponent implements OnInit {
     showSelectedOnly: boolean;
     maximumPermittedAmount: any;
 
-    lockAccounts: any;
+  lockAccounts: any;
+  
+  constructor( 
+    public accountsService: AccountsService,
+    public employeeService: EmployeeService,
+    public dialog: MatDialog,
+    public printService: PrintService,
+    public excelService: ExcelService,
+    public schoolService: SchoolService,
+  ){ }
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -155,7 +155,7 @@ export class ViewTransactionsComponent implements OnInit {
       this.serviceAdapter.initialiseData();
       this.popoulateColumnFilter();
       this.showSelectedOnly = false;
-      console.log(this.isLoadingTransaction);
+      console.log('this: ', this);
     }
 
 

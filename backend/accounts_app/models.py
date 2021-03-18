@@ -93,11 +93,11 @@ class Transaction(models.Model):
 def transectionPreSave(sender, instance, **kwargs):
     if instance.id is None:
         instance.voucherNumber = 1
-    last_voucher_number = \
-                Transaction.objects.filter(parentSchool=instance.parentEmployee.parentSchool) \
-                    .aggregate(Max('voucherNumber'))['voucherNumber__max']
-    if last_voucher_number is not None:
-        instance.voucherNumber = last_voucher_number + 1
+        last_voucher_number = \
+                    Transaction.objects.filter(parentSchool=instance.parentEmployee.parentSchool) \
+                        .aggregate(Max('voucherNumber'))['voucherNumber__max']
+        if last_voucher_number is not None:
+            instance.voucherNumber = last_voucher_number + 1
 
 class TransactionAccountDetails(models.Model):
     parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
