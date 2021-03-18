@@ -5,6 +5,7 @@
                 All Accounts has been locked for this session . No further approvals can be given for this session. </b></h4></span>
     </div>
     <div *ngIf="!lockAccounts">
+    <span *ngIf="approvalsList && approvalsList.length==0">No Approval Record</span>
     <div *ngFor='let approval of approvalsList'>
         <div class="row">
             <div class="col-md-10">

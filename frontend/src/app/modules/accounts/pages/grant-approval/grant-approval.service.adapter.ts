@@ -9,7 +9,7 @@ export class GrantApprovalServiceAdapter {
         this.vm = vm;
     }
 
-    initialiseData(){
+    async initialiseData(){
         this.vm.isLoadingApproval = true;
 
         let request_account_title_data = {
@@ -31,6 +31,11 @@ export class GrantApprovalServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         }
 
+        const currentSession =
+            (await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}))
+                .find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
+        this.vm.minimumDate = currentSession.startDate;
+        this.vm.maximumDate = currentSession.endDate;
         this.vm.approvalsList = [];
         const approval_request_data = {
             'parentEmployeeRequestedBy__parentSchool': this.vm.user.activeSchool.dbId,
@@ -51,19 +56,16 @@ export class GrantApprovalServiceAdapter {
                 Promise.all([
                     this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
                     this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),    // 1
-                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
                     this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),    // 3
                     this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data), //4
                 ]).then(value => {
                     this.vm.accountsList = value[0];
-                    this.populateAccountTitle(value[3]);
+                    this.populateAccountTitle(value[2]);
                     this.vm.employeeList = value[1];
-                    
-                    this.vm.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;
-                    this.vm.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
+                
                     const approval_id = [];
 
-                    value[4].forEach(approval => {
+                    value[3].forEach(approval => {
                         approval_id.push(approval.id);
                     })
                     let approval_details_data = {
@@ -73,8 +75,8 @@ export class GrantApprovalServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data), // 0
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data),  // 1
                     ]).then(data => {
-                        this.initialiseApprovalData(value[4], data[0], data[1]);  // val[0]: approval_list, data[0]: approval_account_details_list, data[1]: approval_images_list
-                        if (value[4].length < this.vm.loadingCount) {
+                        this.initialiseApprovalData(value[3], data[0], data[1]);  // val[0]: approval_list, data[0]: approval_account_details_list, data[1]: approval_images_list
+                        if (value[3].length < this.vm.loadingCount) {
                             this.vm.loadMoreApprovals = false;
                         }
                         this.vm.isLoading = false;

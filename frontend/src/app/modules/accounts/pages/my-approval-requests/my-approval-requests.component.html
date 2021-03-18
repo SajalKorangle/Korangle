@@ -28,14 +28,18 @@
                             </span>
                         </div>
                         <div class="row col-md-12" style="width: auto;">
-                            <mat-form-field style="float: left;">
-                                <input type="number" min="0.01" matInput [(ngModel)]="payFrom.amount" (ngModelChange)="handleAmountChange(approval, $event)" placeholder="Amount">
-                            </mat-form-field>
+                                <customized-number-input [placeHolder]="'Amount'"
+                                                    [minimum]="0.01"
+                                                    [maximumDecimal]="2"
+                                                    [inputValue]="payFrom.amount"
+                                                    (outputValue)="payFrom.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
                         </div>
                     </div>
-                    <span class="icon-text-wrapper" style="float: right; margin-top: 20px; color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payFrom)">
-                        <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
-                    </span>
+                    <div class="row col-md-12" style="text-align: right;">
+                        <span class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payFrom)">
+                            <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -57,18 +61,21 @@
                         </div>
 
                         <div class="row col-md-12" style="width: auto;">
-                            <mat-form-field style="float: left;">
-                                <input type="number" min=0.01 matInput [(ngModel)]="payTo.amount" (ngModelChange)="handleAmountChange(approval, $event)" placeholder="Amount">
-                            </mat-form-field>
+                            <customized-number-input [placeHolder]="'Amount'"
+                                                    [minimum]="0.01"
+                                                    [maximumDecimal]="2"
+                                                    [inputValue]="payTo.amount"
+                                                    (outputValue)="payTo.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
                         </div>
                     </div>
-                    <span class="icon-text-wrapper" style="float: right; margin-top: 20px; color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payTo)">
-                        <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
-                    </span>
-                    
+                    <div class="row col-md-12" style="text-align: right;">
+                        <span class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payTo)">
+                            <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
+                        </span>
+                    </div>
                 </div>
 
-                <div class="col-md-3" style="padding: 0px; margin-left: 12px;">
+                <div class="col-md-3" style="margin-left: 12px;">
                     <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
                         <span *ngIf="isAccountNotMentioned(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
                             <mat-icon style="font-size: 12px;">dangerous</mat-icon><span> &nbsp;Please Select An Account</span>
