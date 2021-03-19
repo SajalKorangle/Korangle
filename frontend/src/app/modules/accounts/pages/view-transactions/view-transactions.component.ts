@@ -38,8 +38,8 @@ export class ViewTransactionsComponent implements OnInit {
     loadMoreTransactions: any;
     loadingCount = 15;
 
-    startDate = CommonFunctions.formatDate(new Date(), '');
-    endDate = CommonFunctions.formatDate(new Date, '');
+    startDate;
+    endDate;
 
     columnFilter : {
       voucherNumber: {
@@ -158,6 +158,19 @@ export class ViewTransactionsComponent implements OnInit {
       console.log('this: ', this);
     }
 
+    initilizeDate(): void{
+      const today = new Date();
+      const sessionStartDate = new Date(this.minimumDate);
+      const sessionEndDate = new Date(this.maximumDate);
+      if (today >= sessionStartDate && today <= sessionEndDate) {
+        this.startDate = CommonFunctions.formatDate(new Date(), '');
+        this.endDate = CommonFunctions.formatDate(new Date(), '');
+      }
+      else {
+        this.startDate = CommonFunctions.formatDate(sessionStartDate, '');
+        this.endDate = CommonFunctions.formatDate(sessionEndDate, '');
+      }
+    }
 
     resetValues(){
       this.transactionsList = [];

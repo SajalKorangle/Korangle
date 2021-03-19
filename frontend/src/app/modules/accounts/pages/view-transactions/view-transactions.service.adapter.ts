@@ -55,13 +55,14 @@ export class ViewTransactionsServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),    //3
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),  //4
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data), //5
-        ]).then(value =>{
-            if(value[4].length > 0){
+        ]).then(value => {
+            if (value[4].length > 0) {
                 this.vm.maximumPermittedAmount = value[4][0].restrictedAmount;
             }
             // console.log(value);
             this.vm.minimumDate = value[3].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
             this.vm.maximumDate = value[3].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
+            this.vm.initilizeDate();
             console.log(this.vm.minimumDate, this.vm.maximumDate);
             this.initialiseGroupsAndAccountList(value[0], value[2]);
             this.vm.isInitialLoading = false;
@@ -71,9 +72,7 @@ export class ViewTransactionsServiceAdapter {
             this.popoulateHeadList();
             this.popoulateGroupsList();
             this.initialiseLockAccountData(value[5]);
-        },error =>{
-            this.vm.isInitialLoading = false;
-        })
+        });
 
     }
 
@@ -102,8 +101,6 @@ export class ViewTransactionsServiceAdapter {
                 this.vm.groupsList.push(account);
             }
         });
-        console.log(this.vm.accountsList);
-        console.log(this.vm.groupsList);
     }
 
     popoulateAccountsList(): any{
