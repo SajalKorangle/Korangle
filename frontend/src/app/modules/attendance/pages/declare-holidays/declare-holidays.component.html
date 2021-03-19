@@ -120,12 +120,12 @@
 
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="declareHoliday()">Declare</button>
+                (click)="serviceAdapter.declareHoliday()">Declare</button>
 
         <button type="submit"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                 style="margin-left: 30px;"
-                (click)="deleteAttendance()">Delete All Records</button>
+                (click)="serviceAdapter.deleteAttendance()">Delete All Records</button>
 
     </ng-container>
 
