@@ -430,8 +430,8 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase{
         let deepCopyLayerData = JSON.parse(JSON.stringify(layerData));
         delete deepCopyLayerData.id;
         let newLayer = this.getLayerFromLayerData(deepCopyLayerData, layer.constructor);
-        let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
-        newLayer.scale(mmToPixelScaleFactor);
+        // let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
+        newLayer.scale(1/this.pixelTommFactor);
         newLayer.x += 15;   // slightly shifting layer 
         newLayer.y += 15;
         return this.newLayerInitilization(newLayer);
