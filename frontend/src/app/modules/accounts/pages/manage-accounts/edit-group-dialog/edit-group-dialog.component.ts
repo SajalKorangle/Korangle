@@ -101,7 +101,7 @@ export class EditGroupDialogComponent implements OnInit {
     ]).then(val => {
       
       const indexOfCustomGroupSessin = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == this.group.id);
-      this.data.vm.groupssList[indexOfCustomGroupSessin] = { ...this.group, ...val[0],  title: val[1].title };
+      this.data.vm.groupsList[indexOfCustomGroupSessin] = { ...this.group, ...val[0],  title: val[1].title };
 
       this.data.vm.serviceAdapter.initialiseDisplayData();
       console.log(val);

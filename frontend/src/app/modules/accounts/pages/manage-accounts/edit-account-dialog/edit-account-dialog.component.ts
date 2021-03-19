@@ -61,7 +61,7 @@ export class EditAccountDialogComponent implements OnInit {
 
       this.data.vm.serviceAdapter.initialiseDisplayData();
       alert('Account Updated Successfully');
-      this.isLoading = false;
+      // this.isLoading = false;
       this.dialogRef.close();
     })
   }
