@@ -3,8 +3,8 @@
         <mat-form-field style="margin-right: 20px;">
             <input type="date" matInput
                 onkeydown="return false"
-                [min] ="minimumDate"
-                [max] = "maximumDate"
+                [min]="minimumDate"
+                [max]="maximumDate"
                 [ngModel]="startDate"
                 (ngModelChange)="startDate=$event;resetValues() " placeholder="Start Date ">
         </mat-form-field>
@@ -12,8 +12,8 @@
         <mat-form-field style="margin-right: 20px;">
             <input type="date" matInput
                 onkeydown="return false"
-                [min] ="startDate"
-                [max] = "maximumDate"
+                [min]="startDate"
+                [max]="maximumDate"
                 [ngModel]="endDate"
                 (ngModelChange)="endDate=$event; resetValues() " placeholder="End Date ">
         </mat-form-field>

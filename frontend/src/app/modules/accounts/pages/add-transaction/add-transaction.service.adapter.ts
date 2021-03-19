@@ -49,6 +49,8 @@ export class AddTransactionServiceAdapter {
                 ]).then(value =>{
                     this.vm.htmlRenderer.minimumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
                     this.vm.htmlRenderer.maximumDate = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
+                    this.vm.initilizeDate();
+
                     this.vm.backendData.accountSessionList = value[0];
                     this.vm.backendData.accountList = value[3];
                     if(value[1].length > 0){

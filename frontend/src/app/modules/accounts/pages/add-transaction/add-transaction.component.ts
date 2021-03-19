@@ -53,7 +53,6 @@ export class AddTransactionComponent implements OnInit {
 
         this.user = DataStorage.getInstance().getUser();
         this.transactionList = [];
-        this.selectedDate = CommonFunctions.formatDate(new Date(), '');
 
         this.htmlRenderer = new AddTransactionHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
@@ -67,6 +66,16 @@ export class AddTransactionComponent implements OnInit {
 
     }
 
+  initilizeDate(): void{
+    const today = new Date();
+    const sessionStartDate = new Date(this.htmlRenderer.minimumDate);
+    const sessionEndDate = new Date(this.htmlRenderer.maximumDate);
+    if(today >= sessionStartDate && today <= sessionEndDate)
+      this.selectedDate = CommonFunctions.formatDate(new Date(), '');
+    else
+      this.selectedDate = CommonFunctions.formatDate(sessionEndDate, '');
+  }
+  
     removeTransaction(index: any){
       this.transactionList.splice(index, 1);
     }
