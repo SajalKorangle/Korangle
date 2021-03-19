@@ -87,19 +87,19 @@
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of transaction.billImages; let i = index">
-                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(transaction.billImages, i, 0); $event.stopPropagation()">
+                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(transaction.billImages, i, 0); $event.stopPropagation();">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of transaction.quotationImages; let i = index">
-                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(transaction.quotationImages, i, 0)" >
+                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(transaction.quotationImages, i, 0); $event.stopPropagation()" >
                                 </div>
                             </div>
                         </div>
                        <div style="text-align: right;">
-                            <span style="color: rgba(255, 152, 0, 1);" (click)="serviceAdapter.deleteTransaction(transaction)"><u>delete</u></span>
+                            <span style="color: rgba(255, 152, 0, 1);" (click)="serviceAdapter.deleteTransaction(transaction); $event.stopPropagation();"><u>delete</u></span>
                         </div>
                     </mat-card-content>
                 </mat-card>

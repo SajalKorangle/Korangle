@@ -50,27 +50,11 @@ export class UpdateTransactionDialogComponent implements OnInit {
     this.transaction.creditAccounts.splice(aIndex, 1);
   }
 
-  handleAmountChange(){
-    let totalCreditAmount = 0;
-    this.transaction.creditAccounts.forEach(account =>{
-      totalCreditAmount += account.amount;
-    })
-    let totalDebitAmount = 0;
-    this.transaction.debitAccounts.forEach(account =>{
-      totalDebitAmount += account.amount;
-    })
-    if(this.transaction.debitAccounts.length>1 && this.transaction.creditAccounts.length>1){
-      
-    }
-    else if(this.transaction.creditAccounts.length == 1){                                                      
-      if(this.transaction.creditAccounts[0].amount < totalDebitAmount){
-        this.transaction.creditAccounts[0].amount = totalDebitAmount;
-      }
-    }
-    else{
-      if(this.transaction.debitAccounts[0].amount < totalCreditAmount){
-        this.transaction.debitAccounts[0].amount = totalCreditAmount;
-      }
+  handleAmountChange(newAmount) {
+    console.log('transaction: ', this.transaction);
+    if (this.transaction.creditAccounts.length == 1 && this.transaction.debitAccounts.length == 1) {
+      this.transaction.creditAccounts[0].amount = newAmount;
+      this.transaction.debitAccounts[0].amount = newAmount;
     }
   }
 
