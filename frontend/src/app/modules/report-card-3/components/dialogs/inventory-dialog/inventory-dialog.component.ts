@@ -22,7 +22,7 @@ export class InventoryDialogComponent implements OnInit {
   ngOnInit() {}
 
   resetSelection(): void{
-    this.selectedLayout = { type: null, index: null };
+    this.selectedLayout = null;
   }
 
   isMyLayout():boolean {
