@@ -1,0 +1,17 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">book</i>
+    </div>
+    <div style="margin: 4px; padding: 4px; text-align: center;">
+
+        <mat-form-field appearence="fill">
+            <mat-select required
+                placeholder="Examination"
+                [(ngModel)]="layer.parentExamination"
+                (ngModelChange)="layer.layerDataUpdate(); canvasRefresh();">
+                <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>     
+
+    </div>
+</mat-card>

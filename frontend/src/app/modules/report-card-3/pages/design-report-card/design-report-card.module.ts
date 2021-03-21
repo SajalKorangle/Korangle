@@ -6,13 +6,14 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import { ParametersPannelModule } from './../../components/parameters-pannel.module';
 import { MatDialogModule} from '@angular/material/dialog';
-import { PageResolutionDialogComponent } from './../../components/page-resolution-dialog/page-resolution-dialog.component';
-import { ResultDialogComponent } from './../../components/result-dialog/result-dialog.component';
-import { MarksDialogComponent } from './../../components/marks-dialog/marks-dialog.component';
-import { GradeRulesDialogComponent } from './../../components/grade-rules-dialog/grade-rules-dialog.component';
-import { LayoutSharingDialogComponent } from './../../components/layout-sharing-dialog/layout-sharing-dialog.component';
-import { InventoryDialogComponent} from './../../components/inventory-dialog/inventory-dialog.component';
-import { LayerReplacementDialogComponent } from './../../components/layer-replacement-dialog/layer-replacement-dialog.component';
+import { PageResolutionDialogComponent } from '../../components/dialogs/page-resolution-dialog/page-resolution-dialog.component';
+import { ResultDialogComponent } from '../../components/dialogs/result-dialog/result-dialog.component';
+import { MarksDialogComponent } from '../../components/dialogs/marks-dialog/marks-dialog.component';
+import { GradeRulesDialogComponent } from '../../components/dialogs/grade-rules-dialog/grade-rules-dialog.component';
+import { LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component';
+import { InventoryDialogComponent} from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
+import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
+import { ExamMappingDialogComponent } from './../../components/dialogs/exam-mapping-dialog/exam-mapping-dialog.component'
 
 @NgModule({
   declarations: [DesignReportCardComponent],
@@ -31,7 +32,8 @@ import { LayerReplacementDialogComponent } from './../../components/layer-replac
     GradeRulesDialogComponent,
     LayoutSharingDialogComponent,
     InventoryDialogComponent,
-    LayerReplacementDialogComponent
+    LayerReplacementDialogComponent,
+    ExamMappingDialogComponent
   ],
   bootstrap: [DesignReportCardComponent]
 })
