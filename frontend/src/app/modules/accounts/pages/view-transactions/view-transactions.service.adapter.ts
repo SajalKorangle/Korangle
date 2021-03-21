@@ -19,11 +19,7 @@ export class ViewTransactionsServiceAdapter {
 
 
     initialiseData(){
-        this.vm.transactionsList = [];
         this.vm.isInitialLoading = true;
-        this.vm.isLoading = true;
-        this.vm.isLoadingTransaction = true;
-        this.vm.loadMoreTransactions = true;
 
         let request_account_session_data = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
@@ -167,26 +163,18 @@ export class ViewTransactionsServiceAdapter {
 
 
     loadTransactions():any{
-        if(this.vm.transactionsList.length == 0){
-            this.vm.isLoading = true;
-        }
-        this.vm.isLoadingTransaction = true;
+        this.vm.isLoading = true;
         let transaction_data = {
             'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
             'transactionDate__gte': this.vm.startDate,
             'transactionDate__lte': this.vm.endDate,
             'korangle__order': '-id',
-            'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
         }
-        console.log(transaction_data);
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
         ]).then(value => {
-            // console.log(value);
-            if (value[0].length < this.vm.loadingCount) {
-                this.vm.loadMoreTransactions = false;
-            }
+
             let transaction_id_data = [];
             value[0].forEach(element => {
                 transaction_id_data.push(element.id);
@@ -200,10 +188,6 @@ export class ViewTransactionsServiceAdapter {
             ]).then(data => {
                 // console.log(data);
                 this.initialiseTransactionData(value[0], data[0], data[1]);
-                this.vm.isLoadingTransaction = false;
-                this.vm.isLoading = false;
-            }, error => {
-                this.vm.isLoadingTransaction = false;
                 this.vm.isLoading = false;
             });
             
@@ -212,65 +196,17 @@ export class ViewTransactionsServiceAdapter {
     }
 
     loadAllTransactions(str):any{
-
-        if(this.vm.loadMoreTransactions == false){
-            if(str == 'print'){
-                this.printTransactionsList();
-            }
-            else{
-                this.downloadList();
-            }
+        if(str == 'print'){
+            this.printTransactionsList();
         }
-        
         else{
-            this.vm.transactionsList = [];
-            let transaction_data = {
-                'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
-                'transactionDate__gte': this.vm.startDate,
-                'transactionDate__lte': this.vm.endDate,
-                'korangle__order': '-id',
-                // 'korangle__count': this.vm.transactionsList.length.toString() + ',' + (this.vm.transactionsList.length + this.vm.loadingCount).toString(),
-            }
-    
-            Promise.all([
-                this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
-            ]).then(value =>{
-                // console.log(value);
-                if(value[0].length < this.vm.loadingCount){
-                    this.vm.loadMoreTransactions = false;
-                }
-                let transaction_id_data = [];
-                value[0].forEach(element =>{
-                    transaction_id_data.push(element.id);
-                })
-                let transaction_details_data = {
-                    'parentTransaction__in': transaction_id_data
-                }
-                Promise.all([
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
-                ]).then(data =>{
-                    // console.log(data);
-                    this.initialiseTransactionData(value[0], data[0], data[1]);
-                    this.vm.loadMoreTransactions = false;
-                    if(str == 'print'){
-                        this.printTransactionsList();
-                    }
-                    else{
-                        this.downloadList();
-                    }
-                    
-                },error =>{
-                })
-            }, error =>{
-            })
-
+            this.downloadList();
         }
-        
     }
 
     initialiseTransactionData(transactionList, transactionAccounts, transactionImages){
-        transactionList.forEach(transaction =>{
+        this.vm.transactionsList = [];
+        transactionList.forEach(transaction => {
             let tempData = {
                 dbId: transaction.id,
                 debitAccounts: [],

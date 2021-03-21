@@ -1,12 +1,12 @@
-<div class="card-content table-responsive ">
-    <div class="row col-md-12" *ngIf="!isInitialLoading" >
+<div class="card-content table-responsive " *ngIf="!isInitialLoading">
+    <div class="row col-md-12" >
         <mat-form-field style="margin-right: 20px;">
             <input type="date" matInput
                 onkeydown="return false"
                 [min]="minimumDate"
                 [max]="maximumDate"
                 [ngModel]="startDate"
-                (ngModelChange)="startDate=$event;resetValues() " placeholder="Start Date ">
+                (ngModelChange)="startDate=$event;" placeholder="Start Date ">
         </mat-form-field>
         
         <mat-form-field style="margin-right: 20px;">
@@ -15,15 +15,17 @@
                 [min]="startDate"
                 [max]="maximumDate"
                 [ngModel]="endDate"
-                (ngModelChange)="endDate=$event; resetValues() " placeholder="End Date ">
+                (ngModelChange)="endDate=$event;" placeholder="End Date ">
         </mat-form-field>
 
-        <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="resetValues(); serviceAdapter.loadTransactions(); "><i class="material-icons">search</i></button>
-        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('print')"><i class="material-icons">print</i></button>
-        <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('download')"><i class="material-icons">download</i></button>
+        <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.loadTransactions(); "><i class="material-icons">search</i></button>
+        <ng-container *ngIf="!isLoading && transactionsList && transactionsList.length>0">
+            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('print')"><i class="material-icons">print</i></button>
+            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('download')"><i class="material-icons">download</i></button>
+        </ng-container>
     </div>
 
-    <div class="row" *ngIf="!isLoading">
+    <div class="row" *ngIf="transactionsList && !isLoading">
         
         
         <div class="col-md-2">
@@ -82,7 +84,7 @@
 
     </div>
 
-    <table class="table table-hover" *ngIf="!isLoading">
+    <table class="table table-hover" *ngIf="transactionsList && !isLoading">
         <thead style="color: rgba(255, 152, 0, 1);">
             <tr> 
                 <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
@@ -139,15 +141,8 @@
         </tbody>
 
     </table>
-    <div *ngIf="loadMoreTransactions && !isLoading">
-        <div *ngIf="isLoadingTransaction">
-            <div style="width: 100%" align="center">
-                <div class="loaderCustom"></div>
-            </div><br>
-        </div><span *ngIf="!isLoadingTransaction" style="color: #817ae9;" (click)="serviceAdapter.loadTransactions()"><u>Load More..</u></span>
-    </div>
 
-    <ng-container *ngIf="!isInitialLoading && isLoading && !isLoadingTransaction">
+    <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
     

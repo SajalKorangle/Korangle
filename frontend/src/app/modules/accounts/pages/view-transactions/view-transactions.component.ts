@@ -1,4 +1,4 @@
-import {Component, OnInit, HostListener} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { EmployeeService } from './../../../../services/modules/employee/employee.service'
@@ -33,10 +33,8 @@ export class ViewTransactionsComponent implements OnInit {
     minimumDate: any;
     maximumDate: any;
 
+    isInitialLoading: any = false;
     isLoading: boolean = false;
-    isLoadingTransaction: any;
-    loadMoreTransactions: any;
-    loadingCount = 15;
 
     startDate;
     endDate;
@@ -131,8 +129,6 @@ export class ViewTransactionsComponent implements OnInit {
     filterHeadsList: any;
     filterGroupsList: any;
 
-    isInitialLoading: any;
-
     showSelectedOnly: boolean;
     maximumPermittedAmount: any;
 
@@ -172,12 +168,6 @@ export class ViewTransactionsComponent implements OnInit {
       }
     }
 
-    resetValues(){
-      this.transactionsList = [];
-      this.isLoading = true;
-      this.isLoadingTransaction = true;
-      this.loadMoreTransactions = true;
-    }
   
     popoulateColumnFilter(): any{
       let columnFilter = [];
@@ -298,16 +288,6 @@ export class ViewTransactionsComponent implements OnInit {
       }
       return false;
     }
-
-    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-      if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) ){
-        
-        console.log('added', this.loadMoreTransactions, this.isLoadingTransaction);
-      }
-      if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreTransactions == true && this.isLoadingTransaction == false){
-          this.serviceAdapter.loadTransactions();
-      }
-    } 
 
     func(a){
       console.log(a);
