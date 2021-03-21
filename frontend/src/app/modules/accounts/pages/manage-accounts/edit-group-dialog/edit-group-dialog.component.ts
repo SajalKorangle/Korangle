@@ -51,12 +51,10 @@ export class EditGroupDialogComponent implements OnInit {
     if (root.id == this.group.id)
       return root;
     let group = null;
-    root.childs.every(g => {
-      if (g.type = "GROUP") {
-        group = this.findGroupHierarchy(g);
-        if (group) {
-          return false;
-        }
+    root.childs.every(g => { 
+      group = this.findGroupHierarchy(g);
+      if (group) {
+        return false;
       }
       return true;
     });
@@ -122,6 +120,9 @@ export class EditGroupDialogComponent implements OnInit {
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, group_update_data), // 1
       Promise.all(accuntServiceList), // 2
     ]).then(val => {
+      const backendAccountIndex = this.data.vm.backendData.accountsList.findIndex(acc => acc.id == val[1].id);
+      this.data.vm.backendData.accountsList[backendAccountIndex] = { ...this.data.vm.backendData.accountsList[backendAccountIndex], ...val[1] };
+      
       const indexOfCustomGroupSession = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == val[0].id);
       this.data.vm.groupsList[indexOfCustomGroupSession] = { ...this.data.vm.groupsList[indexOfCustomGroupSession], ...val[0], title: val[1].title };
       val[2].forEach(accountSession => {

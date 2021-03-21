@@ -7,7 +7,7 @@ export class AddGroupDialogHtmlRenderer {
 
     initialize(vm: AddGroupDialogComponent) { this.vm = vm; }
 
-    isAccountNameAlreadyExists(): boolean {
+    isNameAlreadyExists(): boolean {
         return this.vm.data.vm.backendData.accountsList.find(account => {
             return account.title.trim() == this.vm.groupName.trim();
         }) != undefined;
@@ -16,7 +16,7 @@ export class AddGroupDialogHtmlRenderer {
     isAddButtonDisplayed(): boolean {
         return this.vm.groupName.trim().length > 0
          && (this.vm.parentHead != null || this.vm.parentGroup != null)
-         && !this.isAccountNameAlreadyExists();
+         && !this.isNameAlreadyExists();
     }
 
 }

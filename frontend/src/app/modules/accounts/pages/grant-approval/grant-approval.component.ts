@@ -111,15 +111,12 @@ export class GrantApprovalComponent implements OnInit {
         });
     }
 
-    @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) ){
-          
-          console.log('added', this.loadMoreApprovals, this.isLoadingApproval);
-        }
-        if((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7*document.documentElement.scrollHeight) && this.loadMoreApprovals == true && this.isLoadingApproval == false){
-            this.serviceAdapter.loadMoreApprovals();
-        }
-    } 
+    // @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+    //     const mainPannel = document.getElementById('main-pannel');
+    //     if((mainPannel.clientHeight + mainPannel.scrollTop) > (0.7*mainPannel.scrollHeight) && this.loadMoreApprovals == true && this.isLoadingApproval == false){
+    //         this.serviceAdapter.loadMoreApprovals();
+    //     }
+    // } 
 
     getDisplayDateFormat(str :any){
         // return str;

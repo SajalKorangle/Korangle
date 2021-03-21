@@ -10,7 +10,7 @@ export class GrantApprovalServiceAdapter {
     }
 
     async initialiseData(){
-        this.vm.isLoadingApproval = true;
+        this.vm.isLoading = true;
 
         let request_account_title_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -48,10 +48,9 @@ export class GrantApprovalServiceAdapter {
         this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data).then(value => {
             if (value.length == 1) {
                 this.vm.lockAccounts = value[0];
-                this.vm.isLoadingApproval = false;
+                this.vm.isLoading = false;
             } else if (value.length == 0) {
                 this.vm.loadMoreApprovals = true;
-                this.vm.isLoadingApproval = true; // repeted
 
                 Promise.all([
                     this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
@@ -86,7 +85,7 @@ export class GrantApprovalServiceAdapter {
             }
             else {
                 this.vm.isLoadingApproval = false;
-                this.vm.isLoadingApproval = false;
+                this.vm.isLoading = false;
                 alert("Unexpected errors. Please contact admin");
             }
         });
@@ -313,7 +312,8 @@ export class GrantApprovalServiceAdapter {
                     })
                 })
             }
-            else{
+            else {
+                this.vm.isLoading = false;
                 alert('Request Status Changed Successfully');
             }
         })

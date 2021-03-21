@@ -135,7 +135,7 @@ export class ManageAccountsComponent{
     getAccountListFromString(str: any){
         let temp = [];
         this.accountsList.forEach(account => {
-            if (account.title.includes(str)) {
+            if (account.title.toLowerCase().includes(str.toLowerCase())) {
                 temp.push(account);
             }
         });

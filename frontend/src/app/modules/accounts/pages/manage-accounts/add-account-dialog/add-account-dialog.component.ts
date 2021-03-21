@@ -72,6 +72,7 @@ export class AddAccountDialogComponent implements OnInit {
       ]).then(data =>{
         const customAccountSession = {...data[0], type: 'ACCOUNT', title: value[0].title}
         this.data.vm.accountsList.push(customAccountSession);
+        this.data.vm.backendData.accountsList.push(value[0]);
         this.data.vm.serviceAdapter.initialiseDisplayData();
         alert('Account Created Successfully');
         this.initializeAccountVariables();

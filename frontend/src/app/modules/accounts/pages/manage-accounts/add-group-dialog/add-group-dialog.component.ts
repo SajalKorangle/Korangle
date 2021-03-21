@@ -48,7 +48,8 @@ export class AddGroupDialogComponent implements OnInit {
     console.log(group_data);
     Promise.all([
       this.data.vm.accountsService.createObject(this.data.vm.accountsService.accounts, group_data),
-    ]).then(value =>{
+    ]).then(value => {
+      this.data.vm.backendData.accountsList.push(value[0]);
       console.log(value);
       let group_session_data = {
         parentAccount: value[0].id,

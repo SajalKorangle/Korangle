@@ -25,22 +25,24 @@
                         </div>
                     </mat-card-title>
                     <mat-card-content>
-                        <div class="row col-md-12"  style="margin-bottom:15px;">
-                            <span style="color: rgba(255, 152, 0, 1);">Requested On - </span><span>{{getDisplayDateFormat(approval.requestedGenerationDateTime)}}</span>
-                            <span *ngIf="approval.approvedGenerationDateTime != null" style="float:right;">
-                                <span *ngIf="approval.requestStatus == 'APPROVED'" style="color: rgba(255, 152, 0, 1)"> Approved On - </span>
-                                <span *ngIf="approval.requestStatus == 'DECLINED'" style="color: rgba(255, 152, 0, 1)"> Declined On - </span>
-                                {{getDisplayDateFormat(approval.approvedGenerationDateTime)}}
-                            </span>
-                            
+                        <div class="row"  style="margin-bottom:15px;">
+                            <div class="col-md-6">
+                                <span class="responsive-font" style="color: rgba(255, 152, 0, 1);">Requested On - </span><span class="responsive-font">{{getDisplayDateFormat(approval.requestedGenerationDateTime)}}</span><br/>
+                                <span class="responsive-font" style="color: rgba(255, 152, 0, 1);">Requested By - </span><span class="responsive-font">{{approval.requestedByName}}</span> 
+                            </div>
+
+                            <div class="col-md-6">
+                                <span class="responsive-font" *ngIf="approval.approvedGenerationDateTime != null">
+                                    <span class="responsive-font" *ngIf="approval.requestStatus == 'APPROVED'" style="color: rgba(255, 152, 0, 1)"> Approved On - </span>
+                                    <span class="responsive-font" *ngIf="approval.requestStatus == 'DECLINED'" style="color: rgba(255, 152, 0, 1)"> Declined On - </span>
+                                    {{getDisplayDateFormat(approval.approvedGenerationDateTime)}}
+                                </span><br/>
+                                <span class="responsive-font" *ngIf="approval.approvedByName != null">
+                                    <span class="responsive-font" style="color: rgba(255, 152, 0, 1);">Approved By - </span><span class="responsive-font">{{approval.approvedByName}}</span>
+                                </span>
+                            </div>
                         </div>
-                        <div class="row col-md-12" style="margin-bottom:15px;">
-                            <span style="color: rgba(255, 152, 0, 1);">Requested By - </span><span>{{approval.requestedByName}}</span>
-                            <span *ngIf="approval.approvedByName != null" style="float: right;">
-                                <span style="color: rgba(255, 152, 0, 1);">Approved By - </span><span>{{approval.approvedByName}}</span>
-                            </span>
-                            
-                        </div>
+
                         <div class="row" style="margin-bottom: 15px;">
                             <div class="col-md-6">
                                 <div class="row">
@@ -109,7 +111,7 @@
             <div style="width: 100%" align="center">
                 <div class="loaderCustom"></div>
             </div><br>
-        </div><span *ngIf="!isLoadingApproval" style="color: #817ae9;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
+        </div><span *ngIf="!isLoadingApproval" style="color: #817ae9; cursor: pointer;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
     </div>
     </div>
     

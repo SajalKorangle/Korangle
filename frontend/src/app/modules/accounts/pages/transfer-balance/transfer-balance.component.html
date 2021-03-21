@@ -52,7 +52,7 @@
                                         [checked]="isElementSelected(element)" 
                                         (change)="changeElementStatus(element, $event.checked); selectParentGroups(element, $event.checked)" 
                                         style="float:right; margin-top:2px; margin-right: 10px"></mat-checkbox>
-                                <span class="account-font" style="float: right; margin-right: 15px">Cr: {{element.balance}}</span>
+                                <span class="account-font" style="float: right; margin-right: 15px">Cr: {{element.currentBalance}}</span>
                             </div>
                             <div *ngIf="element.type == 'GROUP' ">
                                 <group-hierarchy-list

@@ -59,8 +59,10 @@ export class EditAccountDialogComponent implements OnInit {
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.account), // 0
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data), // 1
-    ]).then(val =>{
-      console.log(val);
+    ]).then(val => {
+      const backendAccountIndex = this.data.vm.backendData.accountsList.findIndex(acc => acc.id == val[1].id);
+      this.data.vm.backendData.accountsList[backendAccountIndex] = { ...this.data.vm.backendData.accountsList[backendAccountIndex], ...val[1]};
+
       const indexOfCustomAccountSession = this.data.vm.accountsList.findIndex(accountSession => accountSession.id == this.account.id);
       this.data.vm.accountsList[indexOfCustomAccountSession] = { ...this.account, ...val[0], title: val[1].title };
 

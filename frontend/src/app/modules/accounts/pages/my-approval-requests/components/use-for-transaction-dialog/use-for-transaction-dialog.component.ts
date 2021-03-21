@@ -100,6 +100,8 @@ export class UseFortransactionDialogComponent implements OnInit {
       transactionDate: this.data.approval.transactionDate?this.data.approval.transactionDate:CommonFunctions.formatDate(new Date(), ''),
       approvalId: this.data.approval.approvalId,
     }
+    this.data.vm.isLoading = true;
+    this.dialogRef.close();
     Promise.all([
       this.data.vm.accountsService.createObject(this.data.vm.accountsService.transaction, transaction_data),
     ]).then(value1 => {
@@ -137,6 +139,7 @@ export class UseFortransactionDialogComponent implements OnInit {
         };
         let temp_form_data = new FormData();
         const layout_data = { ...tempData, };
+        console.log('layout data: ', layout_data);
         Object.keys(layout_data).forEach(key => {
           if (key === 'imageURL') {
             temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i + '.jpeg'));
@@ -188,7 +191,7 @@ export class UseFortransactionDialogComponent implements OnInit {
         this.data.originalApproval.parentTransaction = value1[0].id;
         this.populateOriginalApproval();
         alert('Transaction Recorded Successfully');
-        this.dialogRef.close();
+        this.data.vm.isLoading = false;
       });
 
     });
