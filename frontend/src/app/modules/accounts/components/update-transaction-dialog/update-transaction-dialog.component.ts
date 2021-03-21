@@ -16,6 +16,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
   vm: any;
   accountsList: any;
   maximumPermittedAmount: any;
+
   constructor(
     public dialogRef: MatDialogRef<UpdateTransactionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) 
@@ -232,11 +233,13 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
 
 
-  addTransaction(){
+  addTransaction() {
+    this.vm.isLoading = true;
     let transaction_data = {
         id: this.transaction.dbId,
         remark: this.transaction.remark,
     }
+    this.dialogRef.close();
     Promise.all([
         this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.transaction, transaction_data),
     ]).then(value1 =>{
@@ -392,8 +395,8 @@ export class UpdateTransactionDialogComponent implements OnInit {
         
         Promise.all(service).then(data =>{
             this.populateOriginalTransaction();
-            alert('Transaction Updated Successfully');
-            this.dialogRef.close();
+          alert('Transaction Updated Successfully');
+          this.vm.isLoading = false;
         })
     })
   }
@@ -419,20 +422,22 @@ export class UpdateTransactionDialogComponent implements OnInit {
     })
   }
 
-  deleteTransaction(){
+  deleteTransaction() {
     if(!confirm('Are you sure you want to delete this transaction?')){
       return ;
     }
+    this.vm.isLoading = true;
     let transaction_data = {
       id: this.transaction.dbId,
     }
+    this.dialogRef.close();
     Promise.all([
       this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
     ]).then(val => {
       const transactionIndex = this.data.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
       this.data.vm.transactionsList.splice(transactionIndex, 1);
-      alert('Transaction Updated Successfully');
-      this.dialogRef.close();
+      alert('Transaction Deleted Successfully');
+      this.vm.isLoading = false;
     });
   }
 

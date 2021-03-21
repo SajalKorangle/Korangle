@@ -57,7 +57,7 @@
                             </mat-card-title>
                             <mat-card-content *ngIf="element.type == 'GROUP'">
                                 <div *ngFor="let child of element.childs" style="cursor: pointer;" (click)="openEditDialog(child); $event.stopPropagation()">
-                                    <ng-container *ngIf="element.type == 'ACCOUNT'">
+                                    <ng-container *ngIf="child.type == 'ACCOUNT'">
                                         <span>{{child.title}}&nbsp;A/c</span>
                                         <span [style.color]="child.currentBalance | coloredBalance"  style="font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
                                     </ng-container>
@@ -68,7 +68,7 @@
                                         </mat-card-title>
                                         <mat-card-content>
                                             <div *ngFor="let grandchild of child.childs" style="cursor: pointer;" (click)="openEditDialog(grandchild); $event.stopPropagation()">
-                                                <ng-container *ngIf="element.type == 'ACCOUNT'">
+                                                <ng-container *ngIf="grandchild.type == 'ACCOUNT'">
                                                     <span>{{grandchild.title}}&nbsp;A/c</span>
                                                     <span [style.color]="grandchild.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
                                                 </ng-container>

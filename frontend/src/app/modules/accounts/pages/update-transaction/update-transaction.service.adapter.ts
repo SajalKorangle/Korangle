@@ -273,6 +273,7 @@ export class UpdateTransactionServiceAdapter {
         if(!confirm('Are you sure you want to delete this transaction?')){
           return ;
         }
+        this.vm.isLoading = true;
         let transaction_data = {
           id: transaction.dbId,
         }
@@ -281,7 +282,8 @@ export class UpdateTransactionServiceAdapter {
         ]).then(val => {
           const transactionIndex = this.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
           this.vm.transactionsList.splice(transactionIndex, 1);
-          alert('Transaction Updated Successfully');
+            alert('Transaction Deleted Successfully');
+            this.vm.isLoading = false;
         });
     }
 

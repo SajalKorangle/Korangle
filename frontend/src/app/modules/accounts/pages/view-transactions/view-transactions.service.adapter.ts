@@ -182,35 +182,32 @@ export class ViewTransactionsServiceAdapter {
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
-        ]).then(value =>{
+        ]).then(value => {
             // console.log(value);
-            if(value[0].length < this.vm.loadingCount){
+            if (value[0].length < this.vm.loadingCount) {
                 this.vm.loadMoreTransactions = false;
             }
             let transaction_id_data = [];
-            value[0].forEach(element =>{
+            value[0].forEach(element => {
                 transaction_id_data.push(element.id);
-            })
+            });
             let transaction_details_data = {
                 'parentTransaction__in': transaction_id_data
-            }
+            };
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
-            ]).then(data =>{
+            ]).then(data => {
                 // console.log(data);
                 this.initialiseTransactionData(value[0], data[0], data[1]);
                 this.vm.isLoadingTransaction = false;
                 this.vm.isLoading = false;
-            },error =>{
+            }, error => {
                 this.vm.isLoadingTransaction = false;
                 this.vm.isLoading = false;
-            })
+            });
             
-        }, error =>{
-            this.vm.isLoadingTransaction = false;
-            this.vm.isLoading = false;
-        })
+        });
 
     }
 
@@ -542,6 +539,7 @@ export class ViewTransactionsServiceAdapter {
         if(!confirm('Are you sure you want to delete this transaction?')){
           return ;
         }
+        this.vm.isLoading = true;
         let transaction_data = {
           id: transaction.dbId,
         }
@@ -550,7 +548,8 @@ export class ViewTransactionsServiceAdapter {
         ]).then(val => {
           const transactionIndex = this.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
           this.vm.transactionsList.splice(transactionIndex, 1);
-          alert('Transaction Updated Successfully');
+            alert('Transaction Deleted Successfully');
+            this.vm.isLoading = false;
         });
     }
 

@@ -146,6 +146,10 @@
             </div><br>
         </div><span *ngIf="!isLoadingTransaction" style="color: #817ae9;" (click)="serviceAdapter.loadTransactions()"><u>Load More..</u></span>
     </div>
+
+    <ng-container *ngIf="!isInitialLoading && isLoading && !isLoadingTransaction">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
     
 </div>
 

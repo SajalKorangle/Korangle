@@ -107,7 +107,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="row col-md-12 custom-font"><span>Add Bill :</span></div>
-            <input type='file' (click)="imageInput.value = null" (change)="readURL($event, 'bill');" multiple="false" style="display: none"
+            <input type='file' (change)="readURL($event, 'bill');" multiple="false" style="display: none"
                         accept="image/jpeg,image/png" #imageInput />
             <div style="display: inline-block;">
                 <button type="submit" class="image-column" (click)="imageInput.click()"
@@ -120,7 +120,7 @@
         </div>
         <div class="col-md-6">
             <div class="row col-md-12 custom-font"><span>Add Quotation :</span></div>
-            <input type='file' (click)="imageInput.value = null" (change)="readURL($event, 'quo');" multiple="false" style="display: none"
+            <input type='file' (change)="readURL($event, 'quo');" multiple="false" style="display: none"
                         accept="image/jpeg,image/png" #imageInput1 />
             <div style="display: inline-block;">
                 <button type="submit" class="image-column" (click)="imageInput1.click()"

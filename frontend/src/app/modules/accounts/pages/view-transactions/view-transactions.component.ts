@@ -33,7 +33,7 @@ export class ViewTransactionsComponent implements OnInit {
     minimumDate: any;
     maximumDate: any;
 
-    isLoading: any;
+    isLoading: boolean = false;
     isLoadingTransaction: any;
     loadMoreTransactions: any;
     loadingCount = 15;
