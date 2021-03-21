@@ -64,17 +64,17 @@ export class EditGroupDialogComponent implements OnInit {
       return [];
     let allchildIds = [];
     group.childs.forEach(g => {
+      allchildIds.push(g.id);
       if (g.type == "GROUP") {
-        allchildIds.push(g.id);
         allchildIds.push(...this.enumAllChilds(g));
       }
     });
     return allchildIds;
   }
 
-  getFilteredGroupList(): Array<any> {
-    const headTitle = this.getHead().title;
-    let filteredGroup =  this.data.vm.groupsList.filter(group => group.id != this.group.id);
+  getAllChildsIds(): Array<number>{
+    const originalGroup = this.data.vm.groupsList.find(g => g.id == this.group.id);
+    const headTitle = this.data.vm.headsList.find(head => head.id == originalGroup.parentHead).title;
     let groupStructure;
     this.data.vm.hierarchyStructure[headTitle].every(g => {
       groupStructure = this.findGroupHierarchy(g);
@@ -83,26 +83,53 @@ export class EditGroupDialogComponent implements OnInit {
       }
       return true;
     });
-    let allChildIds = this.enumAllChilds(groupStructure);
+    return this.enumAllChilds(groupStructure);
+  }
+
+  getFilteredGroupList(): Array<any> {
+    let filteredGroup =  this.data.vm.groupsList.filter(group => group.id != this.group.id);
+    let allChildIds = this.getAllChildsIds();
     return filteredGroup.filter(g => allChildIds.find(c => c == g.id) == undefined);
   }
 
 
   editGroup(){
     this.isLoading = true;
-    let group_session_update_data = {
+    let group_update_data = {
       id: this.group.parentAccount,
       title: this.group.title,
     }
-    console.log(this.group);
-    Promise.all([
-      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.group),
-      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, group_session_update_data),
-    ]).then(val => {
-      
-      const indexOfCustomGroupSessin = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == this.group.id);
-      this.data.vm.groupsList[indexOfCustomGroupSessin] = { ...this.group, ...val[0],  title: val[1].title };
+    const accuntServiceList = [];
 
+    const allChilds = this.getAllChildsIds();
+    allChilds.forEach(accountSessionId => {
+      let accountSesion = this.data.vm.groupsList.find(g => g.id == accountSessionId);
+      if (!accountSesion)
+        accountSesion = this.data.vm.accountsList.find(a => a.id == accountSessionId);
+      if (accountSesion.parentHead != this.group.parentHead) {
+        accuntServiceList.push(
+          this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, {id: accountSesion.id, parentHead: this.group.parentHead}),
+        )
+      }
+    })
+
+    Promise.all([
+      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.group), // 0
+      this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, group_update_data), // 1
+      Promise.all(accuntServiceList), // 2
+    ]).then(val => {
+      const indexOfCustomGroupSession = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == val[0].id);
+      this.data.vm.groupsList[indexOfCustomGroupSession] = { ...this.data.vm.groupsList[indexOfCustomGroupSession], ...val[0], title: val[1].title };
+      val[2].forEach(accountSession => {
+        let type = this.data.vm.groupsList.find(g => g.id == accountSession.id) ? 'GROUP' : 'ACCOUNT';
+        if (type == "GROUP") {
+          const indexOfGroup = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == accountSession.id);
+          this.data.vm.groupsList[indexOfGroup] = { ...this.data.vm.groupsList[indexOfGroup], ...accountSession };
+        } else {
+          const indexOfAccount = this.data.vm.accountsList.findIndex(acc => acc.id == accountSession.id);
+          this.data.vm.accountsList[indexOfAccount] = { ...this.data.vm.accountsList[indexOfAccount], ...accountSession };
+        }
+      });
       this.data.vm.serviceAdapter.initialiseDisplayData();
       console.log(val);
       alert('Group Updated Successfully');
