@@ -6,6 +6,7 @@ import {ComponentsModule} from "../../../../components/components.module";
 import {UpdateProfileComponent} from "./update-profile.component";
 
 import {MultipleFileDialogModule} from '../../multiple-file-dialog/multiple-file-dialog.module';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import {MultipleFileDialogModule} from '../../multiple-file-dialog/multiple-file
     exports: [
     ],
     providers: [],
-    bootstrap: [UpdateProfileComponent]
+    bootstrap: [UpdateProfileComponent],
+    entryComponents:[ViewImageModalComponent],
 })
 export class UpdateProfileModule { }

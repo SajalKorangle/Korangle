@@ -1,0 +1,278 @@
+.selectedTag {
+    background: #3BB847 !important;
+}
+
+.tag {
+    background-color: #ABABAB;
+    height: 28px;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+.view-image-icon-container {
+    position: absolute;
+    bottom: 5px;
+    right: 7px;
+    cursor: pointer;
+    display: block;
+    z-index: 10;
+    background: black;
+    height: 25px;
+    width: 30px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    border-radius: 5px;
+}
+
+.view-eye{
+    color:white;
+    font-size: 25px;
+}
+
+.btn-inactive {
+    background-color: #ABABAB;
+}
+
+.loader-custom {
+    margin-left: 5px;
+    display: inline-block;
+    border: 2px solid lightgrey;
+    border-radius: 50%;
+    border-top: 2px solid dimgrey;
+    width: 18px;
+    height: 18px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+.btn-active {
+    background-color: #ff9800;
+}
+
+.active {
+    color: #ff9800;
+    cursor: pointer;
+}
+
+.inactive {
+    color: #ABABAB;
+    cursor: default;
+}
+
+.editTag {
+    text-decoration: underline;
+}
+
+.image-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.image-row > .image-column {
+}
+
+.image-row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.image-column {
+    width: 40%;
+    max-width: 252px;
+    height: 170px;
+    margin: 10px;
+}
+
+.image-column-mobile {
+    max-width: 0.525in;
+    height: 0.525in;
+    margin-right: 5px;
+    margin-top: 5px
+}
+
+.sticky {
+    position: fixed;
+    z-index: 6;
+    right: 10px;
+}
+
+.container {
+    position: relative;
+}
+
+.container img {
+    display: block;
+}
+
+.container .mat-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+}
+
+:host ::ng-deep .mat-checkbox-frame {
+    border-color: #ff9800;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.cursor:hover {
+    background-color: #b9b7b7;
+}
+
+.images {
+    opacity: 0.7;
+}
+
+.active,
+.images:hover {
+    opacity: 1;
+}
+
+img.hover-shadow {
+    transition: 0.3s;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dropinput {
+    position: absolute;
+    left: 22px;
+    opacity: 0;
+    width: 40%;
+    max-width: 252px;
+    height: 170px;
+}
+
+
+.mat-card.scrollable-content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.mat-card.scrollable-content > .mat-card-title-group {
+    display: block;
+}
+
+.mat-card.scrollable-content > .mat-card-content {
+    overflow-y: auto;
+}
+
+.mat-card ::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+}
+
+
+@keyframes blink {
+    50% {
+        color: transparent
+    }
+}
+
+.loader__dot {
+    animation: 1s blink infinite
+}
+
+.loader__dot:nth-child(2) {
+    animation-delay: 250ms
+}
+
+.loader__dot:nth-child(3) {
+    animation-delay: 500ms
+}
+
+@media only screen and (max-width: 992px) {
+    .image-column {
+        max-width: 110px;
+        max-height: 82px;
+    }
+
+    .dropinput {
+        max-width: 110px;
+        max-height: 82px;
+    }
+
+    label img {
+        max-height: 82px;
+        width: 100%;
+    }
+    
+    .view-image-icon-container{
+        height: 17px;
+        width: 23px;
+    }
+    
+    .view-eye{
+        font-size: 17px;
+    }
+}
+
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    display: inline-block;
+}
+
+input[type="checkbox"][id^="myCheckbox"] {
+    display: none;
+}
+
+label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+}
+
+label:before {
+    background-color: white;
+    color: white;
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    border: 1px solid grey;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 28px;
+    transition-duration: 0.4s;
+    transform: scale(0);
+}
+
+label img {
+    height: 170px;
+    width: 100%;
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+}
+
+:checked + label {
+    border-color: #ddd;
+}
+
+:checked + label:before {
+    content: "✓";
+    font-size: 20px;
+    background-color: green;
+    transform: scale(1);
+    z-index: 2;
+}
+
+:checked + label img {
+    transform: scale(0.9);
+    z-index: -1;
+}

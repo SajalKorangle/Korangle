@@ -146,7 +146,6 @@ export class AddTutorialServiceAdapter {
         ]).then(value => {
             this.populateTutorialList(value[0]);
             this.vm.showTutorialDetails = true;
-            this.vm.isAddDisabled = true;
         }, error => {
         });
         this.vm.initializeNewTutorial();
@@ -195,8 +194,6 @@ export class AddTutorialServiceAdapter {
         }, error =>{
             this.vm.isLoading = false;
         })
-        this.vm.isAddDisabled = true;
-        this.vm.showPreview = false;
     }
 
     makeEditableOrSave(tutorial: any): void {
@@ -255,7 +252,7 @@ export class AddTutorialServiceAdapter {
             alert('Tutorial topic should not be empty');
             return false;
         }
-        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && !t.id === tutorial.id)) {
+        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && t.id != tutorial.id)) {
             alert('The Topic already exists');
             return false;
         }
@@ -266,6 +263,11 @@ export class AddTutorialServiceAdapter {
         if (!this.vm.decimalRegex.test(tutorial.orderNumber) || parseFloat(tutorial.orderNumber) <= 0) {
             alert('OrderNumber should be greater than 0 with 1 decimal place');
             return false;
+        }
+        if(tutorial.link.match(this.vm.youtubeIdMatcher) === null)
+        {
+            alert('Please enter a valid link');
+            return false; 
         }
         if (!this.vm.youtubeRegex.test(tutorial.link.trim())) {
             alert('Please enter a valid link');

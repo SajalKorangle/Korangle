@@ -1,0 +1,4 @@
+[
+    {"model": "event_gallery_app.eventtag", "pk": 1, "fields": {"parentEvent": 1, "tagName": "Mountain"}},
+    {"model": "event_gallery_app.eventtag", "pk": 2, "fields": {"parentEvent": 1, "tagName": "Tree"}}
+]

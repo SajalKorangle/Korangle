@@ -41,6 +41,7 @@ import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 import { LocalDatePipe } from './../pipes/local-date-format.pipe';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
 
 
@@ -53,6 +54,7 @@ import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
+        ViewImageModalComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -105,7 +107,7 @@ import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
-
+        ViewImageModalComponent,
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
