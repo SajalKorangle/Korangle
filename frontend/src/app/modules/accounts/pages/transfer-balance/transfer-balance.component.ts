@@ -76,9 +76,9 @@ export class TransferBalanceComponent implements OnInit{
         console.log('this: ', this);
     }
 
-    changeAllAccountsStatusFromHead(parentHead, value){
+    changeAllAccountsStatusFromHead(parentHeadId, value){
         for(let i=0;i<this.currentSessionAccountSessionList.length; i++){
-            if(this.currentSessionAccountSessionList[i].parentHead == parentHead.id){
+            if(this.currentSessionAccountSessionList[i].parentHead == parentHeadId){
                 this.currentSessionAccountSessionList[i].selected = value;
             }
         }

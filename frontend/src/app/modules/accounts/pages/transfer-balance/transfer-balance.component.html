@@ -41,7 +41,7 @@
                         <mat-expansion-panel-header style="padding-left:20px; padding-right: 2px">
                             <div style="width: 100%;">
                                 <span>{{head.title}}</span>
-                                <mat-checkbox style="float:right; margin-top:2px; margin-right: 10px" [checked]="isAnyOneAccountSelected(head)" (change)="changeAllAccountsStatusFromHead(head, $event.checked )" (click)="$event.stopPropagation()"></mat-checkbox>
+                                <mat-checkbox style="float:right; margin-top:2px; margin-right: 10px" [checked]="isAnyOneAccountSelected(head)" (change)="changeAllAccountsStatusFromHead(head.id, $event.checked )" (click)="$event.stopPropagation()"></mat-checkbox>
                             </div>
                         </mat-expansion-panel-header>
                         <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionHierarchyStructure[head.title]" >
