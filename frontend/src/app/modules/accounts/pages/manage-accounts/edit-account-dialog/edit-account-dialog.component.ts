@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { EditAccountDialogHtmlRenderer } from './edit-account-dialog.html.renderer';
 
 @Component({
   selector: 'app-edit-account-dialog',
@@ -11,6 +12,8 @@ export class EditAccountDialogComponent implements OnInit {
   account: any;
   isDeletable: any;
 
+  htmlRenderer: EditAccountDialogHtmlRenderer;
+
   isLoading: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<EditAccountDialogComponent>,
@@ -21,8 +24,10 @@ export class EditAccountDialogComponent implements OnInit {
   { }
 
   ngOnInit() {
-    this.account = this.data.account;
-    this.isAccountDeletable();
+      this.account = this.data.account;
+      this.htmlRenderer = new EditAccountDialogHtmlRenderer();
+      this.htmlRenderer.initialize(this);
+      this.isAccountDeletable();
   }
 
   getHead() {

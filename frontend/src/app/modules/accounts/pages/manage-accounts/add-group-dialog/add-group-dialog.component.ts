@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AddGroupDialogHtmlRenderer } from './add-group-dialog.html.renderer';
 
 @Component({
   selector: 'app-add-group-dialog',
@@ -12,6 +13,8 @@ export class AddGroupDialogComponent implements OnInit {
   parentGroup: any;
   parentHead: any;
 
+  htmlRenderer: AddGroupDialogHtmlRenderer;
+
   isLoading: boolean = false;
   constructor(@Inject(MAT_DIALOG_DATA) 
     public data: {
@@ -20,12 +23,11 @@ export class AddGroupDialogComponent implements OnInit {
   { }
 
   ngOnInit() {
+      this.htmlRenderer = new AddGroupDialogHtmlRenderer();
+      this.htmlRenderer.initialize(this);
     this.groupName = '';
     this.parentGroup = null;
     this.parentHead = null;
-    console.log(this.data.vm.headsList);
-    console.log(this.data.vm.accountsList);
-    console.log(this.data.vm.groupsList);
   }
 
 

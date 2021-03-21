@@ -61,6 +61,7 @@ export class ManageAccountsServiceAdapter {
     }
 
     initialiseAccountGroupList(accountSessionList: Array<AccountSession>, accountList: Array<Account>): void {
+        this.vm.backendData.accountsList = accountList;
         this.vm.accountsList = [];
         this.vm.groupsList = [];
         accountSessionList.forEach(accountSession => {
@@ -84,7 +85,7 @@ export class ManageAccountsServiceAdapter {
         });
 
         nonIndividualAccount.forEach(accountSession => {    // pushing all accounts with parentGroup in child of its group
-            groupStructureList.find(g => g.parentAccount==accountSession.parentGroup).childs.push(accountSession);
+            groupStructureList.find(id => accountSession.parentGroup).childs.push(accountSession);
         });
 
         for(let i=0; i<groupStructureList.length; i++){

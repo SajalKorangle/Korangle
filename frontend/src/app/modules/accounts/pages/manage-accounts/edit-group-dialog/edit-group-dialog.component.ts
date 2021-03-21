@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { EditGroupDialogHtmlRenderer } from './edit-group-dialog.html.renderer';
 
 @Component({
   selector: 'app-edit-group-dialog',
@@ -8,8 +9,9 @@ import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 })
 export class EditGroupDialogComponent implements OnInit {
 
-
   group: any;
+
+    htmlRenderer: EditGroupDialogHtmlRenderer;
   isLoading: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<EditGroupDialogComponent>,
@@ -21,6 +23,8 @@ export class EditGroupDialogComponent implements OnInit {
 
   ngOnInit() {
     this.group = this.data.group;
+    this.htmlRenderer = new EditGroupDialogHtmlRenderer();
+    this.htmlRenderer.initialize(this);
   }
 
   getHead() {

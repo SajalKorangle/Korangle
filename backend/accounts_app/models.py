@@ -14,12 +14,12 @@ from datetime import datetime, date
 
 def upload_image_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'accounts/%s/transaction_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
+    return 'accounts_app/TransactionImages/imageURL/%s%s' % (instance.id, filename_ext.lower())
 
 
 def upload_image_to_1(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'accounts/%s/approval_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
+    return 'accounts_app/ApprovalImages/imageURL/%s%s' % (instance.id, filename_ext.lower())
 
 
 class Heads(models.Model):
@@ -54,6 +54,7 @@ class Accounts(models.Model):
 
     class Meta:
         db_table = 'accounts'
+        unique_together = ('parentSchool', 'title')
 
 
 class AccountSession(models.Model):
@@ -90,7 +91,7 @@ class Transaction(models.Model):
         db_table = 'transaction'
 
 @receiver(pre_save, sender=Transaction)
-def transectionPreSave(sender, instance, **kwargs):
+def transactionPreSave(sender, instance, **kwargs):
     if instance.id is None:
         instance.voucherNumber = 1
         last_voucher_number = \
@@ -164,7 +165,7 @@ class Approval(models.Model):
         db_table = 'approval'
 
 @receiver(post_save, sender=Transaction)
-def transectionPostSave(sender, instance, **kwargs):
+def transactionPostSave(sender, instance, **kwargs):
     if (kwargs['created'] and instance.approvalId):
         approval = Approval.objects.get(approvalId=instance.approvalId, parentEmployeeRequestedBy__parentSchool=instance.parentSchool)
         approval.parentTransaction = instance

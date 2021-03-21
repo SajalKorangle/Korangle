@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { AddAccountDialogHtmlRenderer } from './add-account-dialog.html.renderer';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -13,6 +14,8 @@ export class AddAccountDialogComponent implements OnInit {
   parentHead: any;
   openingBalance: any;
 
+  htmlRenderer: AddAccountDialogHtmlRenderer;
+
   isLoading: boolean = false;
   constructor(@Inject(MAT_DIALOG_DATA) 
     public data: {
@@ -21,11 +24,16 @@ export class AddAccountDialogComponent implements OnInit {
   { }
 
   ngOnInit() {
+      this.htmlRenderer = new AddAccountDialogHtmlRenderer();
+      this.htmlRenderer.initialize(this);
+      this.initializeAccountVariables();
+  }
+
+  initializeAccountVariables(): void {
     this.openingBalance = 0;
     this.accountName = '';
     this.parentHead = null;
     this.parentGroup = null;
-    console.log(this.data.vm.headsList);
   }
 
   assignHeadFromGroup(){
@@ -66,12 +74,8 @@ export class AddAccountDialogComponent implements OnInit {
         this.data.vm.accountsList.push(customAccountSession);
         this.data.vm.serviceAdapter.initialiseDisplayData();
         alert('Account Created Successfully');
-        this.accountName = '';
-        this.parentGroup = null;
-        this.parentHead = null;
-        this.openingBalance = 0;
+        this.initializeAccountVariables();
         this.isLoading = false;
-        console.log(data);
       })
 
     })

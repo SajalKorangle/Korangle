@@ -5,7 +5,8 @@ import { AddAccountDialogComponent } from './add-account-dialog/add-account-dial
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component'   
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
 import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.component'
-import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter'
+import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter';
+import { ManageAccountsBackendData } from './manage-accounts.backend.data';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { SchoolService } from './../../../../services/modules/school/school.service'
 import { HEADS_LIST } from '@services/modules/accounts/models/head';
@@ -25,6 +26,7 @@ export class ManageAccountsComponent{
 
     user: any;
     serviceAdapter: ManageAccountsServiceAdapter;
+    backendData: ManageAccountsBackendData;
 
     accountsList: Array<customAccount>;
     groupsList: Array<customAccount>;
@@ -63,12 +65,12 @@ export class ManageAccountsComponent{
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.serviceAdapter = new ManageAccountsServiceAdapter;
+        this.backendData = new ManageAccountsBackendData();
+        this.backendData.initialize(this);
+        this.serviceAdapter = new ManageAccountsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         this.displayWholeList = true;
-
-        console.log('this: ', this);
     }
 
     
