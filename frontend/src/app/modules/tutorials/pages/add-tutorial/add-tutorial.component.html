@@ -22,7 +22,7 @@
                     <mat-select placeholder="Subject"
                                 [ngModel]="selectedSubject"
                                 [disabled]="isLoading"
-                                (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;topicAlreadyPresent=false;showPreview=false;">
+                                (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;">
                         <mat-option *ngFor='let subject of selectedSection.subjectList;'
                                     [value]="subject">
                             {{getSubjectName(subject)}}
@@ -48,17 +48,17 @@
                                    type="text"
                                    cdkTextareaAutosize
                                    [(ngModel)]="newTutorial.chapter"
-                                   (ngModelChange)="checkEnableAddButton()">
+                                   >
                         </mat-form-field>
                     </div>
 
                     <div class="row">
                         <mat-form-field style="width: 100%;">
-                            <mat-label>Topic*<span *ngIf="topicAlreadyPresent" style="color: red">(Topic Already Present in the List)</span> </mat-label>
+                            <mat-label>Topic*<span *ngIf="topicAlreadyPresent(newTutorial)" style="color: red">(Topic Already Present in the List)</span> </mat-label>
                             <input matInput
                                    type="text"
                                    [(ngModel)]="newTutorial.topic"
-                                   (ngModelChange)="checkEnableAddButton()">
+                                   >
                         </mat-form-field>
                     </div>
                     <div class="row">
@@ -70,19 +70,19 @@
                                    min="1"
                                    step=".1"
                                    [(ngModel)]="newTutorial.orderNumber"
-                                   (ngModelChange)="checkEnableAddButton()">
+                                   >
                         </mat-form-field>
                     </div>
 
 
                     <div class="row">
                         <mat-form-field style="width: 100%;">
-                            <mat-label>Youtube Link*</mat-label>
+                            <mat-label>Youtube Link*<span *ngIf="!youTubeLinkValid() && newTutorial.link != null" style="color: red">(Invalid Link)</span> </mat-label>
                             <textarea matInput
                                       type="text"
                                       cdkTextareaAutosize
                                       [(ngModel)]="newTutorial.link" style="overflow: hidden;min-height: 17px"
-                                      (ngModelChange)="checkEnableAddButton();">
+                                      (ngModelChange)="youTubeLinkValid()">
                     </textarea>
                         </mat-form-field>
 
@@ -93,14 +93,14 @@
                     <div class="row">
                         <button type="submit"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                [disabled]="isAddDisabled"
+                                [disabled]="!checkEnableAddButton()"
                                 (click)="serviceAdapter.addNewTutorial(); ">Add
                         </button>
                     </div>
                 </div>
 
 
-                <ng-container *ngIf="showPreview">
+                <ng-container *ngIf="youTubeLinkValid()">
                     <div class="col-md-6" style="margin-left: 20px">
                         <iframe height="250" width="100%"
                                 [src]="previewBeforeAddTutorialUrl | safe"
