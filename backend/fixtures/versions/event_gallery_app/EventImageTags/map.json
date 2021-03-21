@@ -1,0 +1,17 @@
+[
+  {
+    "file": "two_image_tags.json",
+    "file_object_list": [
+      {
+        "app": "event_gallery_app",
+        "model": "EventImage",
+        "file": "two_images.json"
+      },
+      {
+        "app": "event_gallery_app",
+        "model": "EventTag",
+        "file": "two_tags.json"
+      }
+    ]
+  }
+]

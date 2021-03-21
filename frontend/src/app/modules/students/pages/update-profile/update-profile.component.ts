@@ -13,6 +13,7 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 import {MatDialog} from '@angular/material';
 import {MultipleFileDialogComponent} from '../../multiple-file-dialog/multiple-file-dialog.component';
 import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 declare const $: any;
 
@@ -493,15 +494,23 @@ export class UpdateProfileComponent implements OnInit {
     }
     
     openFilePreviewDialog(parameter): void {
-        let type=this.getParameterDocumentType(parameter)
-        let file = this.getParameterDocumentValue(parameter)
-        const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
-            width: '600px',
-            data: {'file': file, 'type': type}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-        });
+        let type=this.getParameterDocumentType(parameter);
+        let file = this.getParameterDocumentValue(parameter);
+         let dummyImageList=[];
+            if(type=="img"){
+                let data={'imageUrl':file};
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: {'imageList':dummyImageList,'file':file,'index':0,'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('The dialog was closed');
+            });
     }
 
 }

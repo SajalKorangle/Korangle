@@ -168,17 +168,19 @@
                         </ng-container>
                     </ng-container>
 
-                    <!-- Parent Module (Fees) -->
-                    <li [class.active]="user.activeSchool.parentModuleList[0].name === user.section.title"
+                <!-- Parent Modules (Fees And Event Gallery) -->
+                <ng-container *ngFor="let module of user.activeSchool.parentModuleList">
+                <li [class.active]="module.name === user.section.title"
                         [attr.data-color]='user.activeSchool.primaryThemeColor'
                         style="border-bottom: 0.1px solid lightgrey;">
-                        <a (click)="changePage(user.activeSchool.parentModuleList[0].taskList[0], user.activeSchool.parentModuleList[0]);">
-                            <i class="material-icons">{{user.activeSchool.parentModuleList[0].taskList[0].icon}}</i>
+                    <a (click)="changePage(module.taskList[0], module);">
+                        <i class="material-icons">{{module.taskList[0].icon}}</i>
                             <p>
-                                {{user.activeSchool.parentModuleList[0].taskList[0].title | titlecase}}
+                            {{module.taskList[0].title | titlecase}}
                             </p>
                         </a>
                     </li>
+                </ng-container>
 
                 </ng-container>
 
