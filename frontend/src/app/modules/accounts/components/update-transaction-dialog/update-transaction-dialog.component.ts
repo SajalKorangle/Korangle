@@ -366,13 +366,13 @@ export class UpdateTransactionDialogComponent implements OnInit {
           else{
             if(this.originalTransaction.quotationImages[index].orderNumber != i){
               let tempData = {
-                id: this.originalTransaction.billquotationImagesImages[index].id,
+                id: this.originalTransaction.quotationImages[index].id,
                 orderNumber: i,
               }
               toUpdateImageList.push(tempData);
             }
             i = i+1;
-            this.originalTransaction.billImages.splice(index, 1);
+            this.originalTransaction.quotationImages.splice(index, 1);
           }
         })
         this.originalTransaction.billImages.forEach(image =>{
@@ -388,11 +388,13 @@ export class UpdateTransactionDialogComponent implements OnInit {
           service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_account_details, delete_data));
         }
         service.push(this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction_images, toUpdateImageList));
+      if (toDeleteImageList.length > 0) {
         let image_delete_data = {
           id__in: toDeleteImageList,
-        }
+        };
         service.push(this.vm.accountsService.deleteObjectList(this.vm.accountsService.transaction_images, image_delete_data));
-        
+      }
+
         Promise.all(service).then(data =>{
             this.populateOriginalTransaction();
           alert('Transaction Updated Successfully');
