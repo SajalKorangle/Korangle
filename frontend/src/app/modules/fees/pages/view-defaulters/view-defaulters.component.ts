@@ -617,6 +617,12 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
+    getFilteredStudentListTotalFeesDueTillMonth(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['feesDueTillMonth'];
+        }, 0);
+    }
+
     getFilteredStudentListTotalFeesDue(): any {
         return this.getFilteredStudentList().reduce((total, student) => {
             return total + student['feesDueOverall'];
