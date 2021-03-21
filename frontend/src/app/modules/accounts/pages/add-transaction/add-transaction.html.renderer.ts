@@ -1,4 +1,5 @@
 import { AddTransactionComponent } from './add-transaction.component';
+import {isMobile} from 'app/classes/common.js';
 
 export class AddTransactionHtmlRenderer {
 
@@ -24,46 +25,54 @@ export class AddTransactionHtmlRenderer {
     }
 
     getFreshTransactionObject(): any {
-        return {
+        let transaction = {
             debitAccountList: [],
             creditAccountList: [],
             remark: null,
             billImages: [],
             quotationImages: [],
             approval: null,
+            simple: true,
         }
+        this.addCreditAccount(transaction);
+        this.addDebitAccount(transaction);
+        return transaction;
+    }
+
+    addCreditAccount(transaction: any): void {
+        transaction.creditAccountList.push({
+            creditAccount: null,
+            creditAmount: null,
+        });
+    }
+
+    addDebitAccount(transaction: any): void {
+        transaction.debitAccountList.push({
+            debitAccount: null,
+            debitAmount: null,
+        });
     }
 
     addNewTransaction(): void{
         for(let i=0;i<this.moreTransaction; i++){
             let transaction = this.getFreshTransactionObject();
             this.vm.transactionList.push(transaction);
-            this.addNewDebitAccount(this.vm.transactionList.length - 1);
-            this.addNewCreditAccount(this.vm.transactionList.length - 1);
         }
     }
 
-
-    addNewDebitAccount(index: any): void{
-        this.vm.transactionList[index].debitAccountList.push({
-            debitAccount: null,
-            debitAmount: null,
-        });
+    isTransactionSimple(transaction): boolean {
+        if (transaction.simple
+            && transaction.creditAccountList.length == 1
+            && transaction.debitAccountList.length == 1) {
+            return true;
+        }
+        return false;
     }
 
-    addNewCreditAccount(index: any): void{
-        this.vm.transactionList[index].creditAccountList.push({
-            creditAccount: null,
-            creditAmount: null,
-        })
-    }
-  
     assignApproval(approval, transaction){
         if (approval == this.NULL_VALUE) {
             const transactionIndex = this.vm.transactionList.findIndex(t => t == transaction);
             this.vm.transactionList[transactionIndex] = this.getFreshTransactionObject();
-            this.addNewCreditAccount(transactionIndex);
-            this.addNewDebitAccount(transactionIndex);
         } else {
             // transaction.approvalId = approval.approvalId;
             transaction.approval = approval;
@@ -130,6 +139,10 @@ export class AddTransactionHtmlRenderer {
             }
         }
         return false;
+    }
+
+    isMobile(): boolean {
+        return isMobile();
     }
   
 }
