@@ -25,66 +25,53 @@
         </ng-container>
     </div>
 
-    <div class="row" *ngIf="transactionsList && !isLoading">
+    <div *ngIf="transactionsList && !isLoading" style="width: 100%; display: flex; flex-wrap: wrap;">
         
-        
-        <div class="col-md-2">
-            <mat-form-field >
-                <mat-select placeholder="Select Columns">
-                    <mat-option *ngFor="let filter of filterColumnsList">
-                        <mat-checkbox [(ngModel)]="filter.value" (click)="$event.stopPropagation()">{{filter.displayName}}</mat-checkbox>
-                    </mat-option>   
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <mat-form-field>
+            <mat-select placeholder="Select Columns">
+                <mat-option *ngFor="let filter of filterColumnsList">
+                    <mat-checkbox [(ngModel)]="filter.value" (click)="$event.stopPropagation()">{{filter.displayName}}</mat-checkbox>
+                </mat-option>   
+            </mat-select>
+        </mat-form-field>
 
-        <div class="col-md-2">
-            <mat-form-field >
-                <mat-select placeholder="Filter By A/C">
-                    <mat-option *ngFor="let account of filterAccountsList">
-                        <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}&nbsp;A/c</mat-checkbox>
-                    </mat-option>   
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <mat-form-field >
+            <mat-select placeholder="Filter By A/C">
+                <mat-option *ngFor="let account of filterAccountsList">
+                    <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}&nbsp;A/c</mat-checkbox>
+                </mat-option>   
+            </mat-select>
+        </mat-form-field>
 
-        <div class="col-md-2">
-            <mat-form-field>
-                <mat-select placeholder="Filter By Employee">
-                    <mat-option *ngFor="let employee of filterEmployeeList">
-                        <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
-                    </mat-option>   
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <mat-form-field>
+            <mat-select placeholder="Filter By Employee">
+                <mat-option *ngFor="let employee of filterEmployeeList">
+                    <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
+                </mat-option>   
+            </mat-select>
+        </mat-form-field>
 
-        <div class="col-md-2">
-            <mat-form-field >
-                <mat-select placeholder="Filter By Head">
-                    <mat-option *ngFor="let head of filterHeadsList">
-                        <mat-checkbox [(ngModel)]="head.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{head.title}}</mat-checkbox>
-                    </mat-option>   
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <mat-form-field >
+            <mat-select placeholder="Filter By Head">
+                <mat-option *ngFor="let head of filterHeadsList">
+                    <mat-checkbox [(ngModel)]="head.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{head.title}}</mat-checkbox>
+                </mat-option>   
+            </mat-select>
+        </mat-form-field>
 
-        <div class="col-md-2">
-            <mat-form-field>
-                <mat-select placeholder="Filter By Group">
-                    <mat-option *ngFor="let group of filterGroupsList">
-                        <mat-checkbox [(ngModel)]="group.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{group.title}}</mat-checkbox>
-                    </mat-option>   
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <mat-form-field>
+            <mat-select placeholder="Filter By Group">
+                <mat-option *ngFor="let group of filterGroupsList">
+                    <mat-checkbox [(ngModel)]="group.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{group.title}}</mat-checkbox>
+                </mat-option>   
+            </mat-select>
+        </mat-form-field>
 
-        <div class="col-md-2">
-            <mat-slide-toggle [(ngModel)]="showSelectedOnly" (click)="getFilteredTransactionList();" style="margin-top:20px" >View Selected Only</mat-slide-toggle>
-        </div>
+        <mat-slide-toggle [(ngModel)]="showSelectedOnly" (click)="getFilteredTransactionList();" style="margin-top:20px; margin-left: auto;" >View Selected Only</mat-slide-toggle>
 
     </div>
 
-    <table class="table table-hover" *ngIf="transactionsList && !isLoading">
+    <table class="table table-hover table-responsive" *ngIf="transactionsList && !isLoading">
         <thead style="color: rgba(255, 152, 0, 1);">
             <tr> 
                 <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
