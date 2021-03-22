@@ -1,0 +1,195 @@
+<div class="card-content table-responsive">
+    <div *ngIf="isLoading" class="loader-cont">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+    <ng-container *ngIf="!isLoading">
+        <div class="row">
+            <ng-container *ngIf="editing">
+                <mat-icon
+                        style="float:left;cursor: pointer;margin-left:15px;"
+                        (click)="editing = false;htmlAdapter.unSelectAll()">arrow_back
+                </mat-icon>
+                <span style="font-size:14px;float:left;margin-top:3px;margin-left: 5px;">Back</span>
+                <br>
+                <br>
+            </ng-container>
+
+            <div class="col-md-1" style="width: 60px;margin-top: 20px">
+                <span style="font-size: 16px">Title</span>
+            </div>
+            <div class="col-md-10">
+                <mat-form-field style="width: 75%;" appearance="none">
+                    <input matInput
+                           type="text"
+                           maxlength="50"
+                           [ngModel]="editing?editingEvent.title:newEvent.title"
+                           (ngModelChange)="editing?editingEvent.title=$event:newEvent.title=$event"
+                           style="overflow: hidden;height:35px;background-color: #C4C4C4;padding-left:12px;font-weight: bold">
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-1" style="width: 60px;margin-top: 20px">
+                <span style="font-size: 16px">Text</span>
+            </div>
+            <div class="col-md-11">
+                <mat-form-field style="width: 95%" appearance="none">
+                <textarea matInput
+                          type="text"
+                          [ngModel]="editing?editingEvent.description:newEvent.description"
+                          (ngModelChange)="editing?editingEvent.description=$event:newEvent.description=$event"
+                          cdkTextareaAutosize
+                          style="background-color: #C4C4C4;min-height: 100px;padding: 12px;"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-1" style="width:100px;margin-top: 20px">
+                <span style="font-size: 16px">Held On</span>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field style="margin-top: 5px ; margin-right: 15px; margin-bottom: 5px; width: 150px">
+                    <input type="date" matInput name="eventDate" onkeydown="return false"
+                           [ngModel]="editing?editingEvent.heldOn:newEvent.heldOn"
+                           (ngModelChange)="editing?editingEvent.heldOn=$event:newEvent.heldOn=$event">
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-1" style="width: 230px;margin-top: 20px">
+                <span style="font-size: 16px">Event Visible to </span>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field style="width: 100%;" appearance="none">
+                    <mat-select [placeholder]="htmlAdapter.getPlaceHolder()" class="notifyList"
+                                style="width: 100%;background-color: #c4c4c4;cursor:pointer">
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    id="select-all-classes"
+                                    (click)="htmlAdapter.selectAll(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="htmlAdapter.unSelectAll(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                        <ng-container *ngFor="let notifyTo of htmlAdapter.getNotificationList()">
+                            <mat-option style="width: 100%;">
+                                <mat-checkbox [(ngModel)]="notifyTo.selected"
+                                              (click)="$event.stopPropagation();">
+                                    {{notifyTo.name}}
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
+
+                        <mat-option>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="htmlAdapter.selectAll(); $event.stopPropagation();">Select All
+                            </button>
+                            <button class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="htmlAdapter.unSelectAll(); $event.stopPropagation();">Clear All
+                            </button>
+                        </mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <a href="javascript:void(0)" (click)="serviceAdapter.deleteEvent(editingEvent)" *ngIf="editing"
+               class="deleteEvent">Delete
+                Event</a>
+            <button type="submit"
+                    *ngIf="!editing"
+                    (click)="serviceAdapter.postEvent()"
+                    [disabled]="!htmlAdapter.areInputsValid()"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}} postSaveBtn">Post Event
+            </button>
+            <button type="submit"
+                    *ngIf="editing"
+                    [disabled]="!htmlAdapter.areInputsValid() || !htmlAdapter.checkForChanges()"
+                    (click)="serviceAdapter.saveChanges()"
+                    class="btn btn-{{user.activeSchool.secondaryThemeColor}} postSaveBtn">Save Changes
+            </button>
+        </div>
+
+        <div class="row" style="margin-bottom: 30px;margin-right:5px;margin-left: 5px;">
+            <div class="col-md-12"
+                 style="border-bottom: 1px solid lightgrey;"></div>
+        </div>
+
+        <div *ngIf="!editing">
+            <div class="row">
+                <div class="col-md-2">
+                    <strong>Edit Previous Events</strong>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field style="width: 100%" [floatLabel]="'never'">
+                        <input matInput
+                               [(ngModel)]="searchString"
+                               type="text"
+                               placeholder="search event title">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <ng-container *ngFor="let event of htmlAdapter.getEventList()">
+                <mat-card style="margin-top: 10px;" (click)="htmlAdapter.checkMobileAndEdit(event)">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <mat-card-title>
+                                <strong style="font-size: 16px;">
+                                    {{event.title}}
+                                </strong>
+                                <span class="eventDate">{{event.heldOn | date: 'dd MMM yyyy'}}</span>
+                            </mat-card-title>
+                            <mat-card-content
+                                    class="eventDescription">
+                                {{event.description.length > 300 ? event.description.substring(0, 300) + "...." : event.description}} </mat-card-content>
+                        </div>
+                        <div class="col-md-5">
+                            <img [src]=htmlAdapter.getEventImageUrl(event,0)
+                                 alt="Event Images"
+                                 class="eventImage">
+                            <img [src]=htmlAdapter.getEventImageUrl(event,1)
+                                 alt="Event Images"
+                                 class="eventImage">
+                        </div>
+                        <div class="col-md-2">
+                            <button *ngIf="!htmlAdapter.isMobile()" type="submit"
+                                    (click)="htmlAdapter.editEvent(event)"
+                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}} editBtn">Edit Event
+                            </button>
+                        </div>
+                    </div>
+                </mat-card>
+            </ng-container>
+
+            <div *ngIf="loadMoreEvents" style="margin-top: 15px;">
+                         <span *ngIf="htmlAdapter.isMobile()" style="color: #817ae9;"
+                               (click)="serviceAdapter.fetchLoadingCount()"><u>Load
+                    More..</u></span>
+                <br>
+                <div *ngIf="isEventListLoading" style="width: 100%" align="center">
+                    <div class="loaderCustom"></div>
+                </div>
+            </div>
+        </div>
+
+    </ng-container>
+
+</div>
+
+
