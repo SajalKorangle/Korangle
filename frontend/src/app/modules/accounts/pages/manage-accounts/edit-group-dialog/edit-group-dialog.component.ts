@@ -147,12 +147,11 @@ export class EditGroupDialogComponent implements OnInit {
       return ;
     }
     this.isLoading = true;
-    console.log(this.group);
     Promise.all([
       this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.group),
     ]).then(val =>{
-      console.log(val);
-      
+      // this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != val[0].id});
+
       for(let i=0;i<this.data.vm.groupsList.length ;i++){
         if(this.data.vm.groupsList[i].id == this.group.id){
           this.data.vm.groupsList.splice(i, 1);
@@ -160,9 +159,34 @@ export class EditGroupDialogComponent implements OnInit {
         }
       }
 
-      this.data.vm.serviceAdapter.initialiseDisplayData();
-      alert('Group Deleted Successfully');
-      this.dialogRef.close();
+      let account_session_data = {
+        parentAccount: this.group.parentAccount,
+      }
+      Promise.all([
+        this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.account_session, account_session_data),
+      ]).then(data =>{
+        if(data[0].length == 0){
+          let account_data = {
+            id: this.group.parentAccount,
+          }
+          Promise.all([
+            this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.accounts, account_data),
+          ]).then(value => {
+            this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != value[0]});
+
+            this.data.vm.serviceAdapter.initialiseDisplayData();
+            alert('Group Deleted Successfully');
+            this.dialogRef.close();
+
+          });
+        }
+        else{
+          this.data.vm.serviceAdapter.initialiseDisplayData();
+          alert('Group Deleted Successfully');
+          this.dialogRef.close();
+        }
+      })
+
     })
   }
 
