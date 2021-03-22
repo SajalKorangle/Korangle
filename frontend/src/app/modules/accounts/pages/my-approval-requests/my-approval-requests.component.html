@@ -76,6 +76,13 @@
                 </div>
 
                 <div class="col-md-3" style="margin-left: 12px;">
+                    <!-- div class="row" style="margin-top: 20px; padding: 0px">
+                        <mat-slide-toggle [ngModel]="htmlRenderer.isApprovalSimple(approval)"
+                                          (ngModelChange)="transaction=htmlRenderer.getFreshTransactionObject(); transaction.simple=$event"
+                                          [disabled]="transaction.creditAccountList.length > 1 || transaction.debitAccountList.length > 1">
+                            Simple
+                        </mat-slide-toggle>
+                    </div -->
                     <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
                         <span *ngIf="isAccountNotMentioned(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
                             <mat-icon style="font-size: 12px;">dangerous</mat-icon><span> &nbsp;Please Select An Account</span>

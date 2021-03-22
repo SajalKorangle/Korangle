@@ -11,6 +11,7 @@ import { Approval, APPROVAL_STATUS_CHOICES } from './../../../../services/module
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 import { EmployeeService } from './../../../../services/modules/employee/employee.service';
 import { SchoolService } from './../../../../services/modules/school/school.service';
+import {MyApprovalRequestsHtmlRenderer} from '@modules/accounts/pages/my-approval-requests/my-approval-requests.html.renderer';
 
 @Component({
     selector: 'my-approval-requests',
@@ -27,6 +28,7 @@ export class MyApprovalRequestsComponent implements OnInit {
 
     user: any;
     serviceAdapter: MyApprovalRequestsServiceAdapter;
+    htmlRenderer: MyApprovalRequestsHtmlRenderer;
 
     accountsLockedForSession: boolean = false;
 
@@ -58,6 +60,8 @@ export class MyApprovalRequestsComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.htmlRenderer = new MyApprovalRequestsHtmlRenderer();
+        this.htmlRenderer.initialise(this);
         this.serviceAdapter = new MyApprovalRequestsServiceAdapter;
         this.serviceAdapter.initialiseAdapter(this);
         this.serviceAdapter.initialiseData();
