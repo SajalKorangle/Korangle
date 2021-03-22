@@ -121,7 +121,7 @@
                 <div class="col-md-3">
                     <div class="row" style="margin-top: 20px; padding: 0px">
                         <mat-slide-toggle [ngModel]="htmlRenderer.isTransactionSimple(transaction)"
-                                        (ngModelChange)="transaction.simple=$event"
+                                        (ngModelChange)="transactionList[i]=htmlRenderer.getFreshTransactionObject(); transactionList[i].simple=$event"
                                         [disabled]="transaction.creditAccountList.length > 1 || transaction.debitAccountList.length > 1">
                             Simple
                         </mat-slide-toggle>
