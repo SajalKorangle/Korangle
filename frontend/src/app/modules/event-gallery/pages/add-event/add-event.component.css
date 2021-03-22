@@ -1,0 +1,109 @@
+.notifyList::ng-deep .mat-select-arrow {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid;
+    margin: 10px 4px;
+}
+
+:host .notifyList::ng-deep .mat-select-placeholder {
+    color: black;
+}
+
+.options::ng-deep .mat-checkbox-label {
+    color: black;
+}
+
+.options::ng-deep .mat-checkbox-frame {
+    background-color: #ffff !important;
+    border-color: black;
+}
+
+/deep/ .mat-option-pseudo-checkbox {
+    margin-right: 8px;
+    background-color: #ffff;
+}
+
+.options::ng-deep .mat-pseudo-checkbox {
+    color: black;
+}
+
+.options::ng-deep .mat-option-text {
+    color: black;
+}
+
+.notifyList::ng-deep .mat-select-value {
+    padding: 10px;
+}
+
+.postSaveBtn {
+    float: right;
+    margin: 13px;
+}
+
+.editBtn {
+    float: right;
+    margin: 45% 10px 10px;
+}
+
+.deleteEvent {
+    float: left;
+    margin-top: 20px;
+    margin-left: 15px;
+    text-decoration: underline;
+    color: orange;
+}
+
+.eventDate {
+    float: right;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.eventImage {
+    width: 45.5%;
+    height: 150px;
+    margin-top: 30px;
+    margin-right: 10px;
+}
+
+.eventDescription {
+    font-weight: 400;
+    font-size: 16px;
+    white-space: pre-line;
+    margin-top: 5px;
+    line-height: 19px;
+    word-wrap: break-word;
+}
+
+@media only screen and (max-width: 992px) {
+    .postSaveBtn {
+        float: left;
+        margin: 13px;
+    }
+
+    .editBtn {
+        margin: 10px 10px 10px;
+    }
+
+    .deleteEvent {
+        float: right;
+        margin-right: 15px;
+        display: block;
+    }
+
+    .eventDate {
+        float: left;
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .eventImage {
+        width: 45%;
+        min-width: 130px;
+        height: 150px;
+    }
+
+}

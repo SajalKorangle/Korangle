@@ -58,18 +58,15 @@ export class TotalCollectionServiceAdapter {
         let fee_receipt_list = {
             'generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
             'generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'cancelled': 'false__boolean',
+            'parentSchool': this.vm.user.activeSchool.dbId
         };
 
         let sub_fee_receipt_list = {
             'parentFeeReceipt__generationDateTime__gte': this.vm.startDate + ' 00:00:00%2B05:30',
             'parentFeeReceipt__generationDateTime__lte': this.vm.endDate + ' 23:59:59%2B05:30',
-            'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentFeeReceipt__cancelled': 'false__boolean',
+            'parentFeeReceipt__parentSchool': this.vm.user.activeSchool.dbId
         };
-
-        this.vm.initializeSelection();
+        
 
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
@@ -78,12 +75,13 @@ export class TotalCollectionServiceAdapter {
 
             this.vm.feeReceiptList = value[0].sort((a,b) => {return b.receiptNumber-a.receiptNumber});;
             this.vm.subFeeReceiptList = value[1];
-
+           
             let service_list = [];
 
             let student_list = {
                 'id__in': [...new Set(value[0].filter(item => {
-                    return !this.vm.studentList.find(student => {
+                    // checking item.parentStudent because cancelled receipt student could also be deleted.
+                    return item.parentStudent && !this.vm.studentList.find(student => {
                         return student.id == item.parentStudent;
                     });
                 }).map(item => item.parentStudent))],
@@ -101,7 +99,8 @@ export class TotalCollectionServiceAdapter {
                 let student_section_list = {
                     'parentSession': item,
                     'parentStudent__in': [...new Set(value[0].filter(item2 => {
-                        return item2.parentSession == item;
+                        // checking item2 because cancelled receipt student could also be deleted.
+                        return item2.parentStudent && item2.parentSession == item;
                     }).map(item2 => item2.parentStudent).filter(item2 => {
                         return !this.vm.studentSectionList.find(studentSection => {
                             return studentSection.parentSession == item && studentSection.parentStudent == item2;
@@ -139,6 +138,8 @@ export class TotalCollectionServiceAdapter {
                 this.initializeFilteredLists();
                 this.vm.isLoading = false;
             }
+            
+            this.vm.initializeSelection();
 
         }, error => {
             this.vm.isLoading = false;
@@ -152,7 +153,8 @@ export class TotalCollectionServiceAdapter {
         this.vm.filteredClassSectionList = this.vm.feeReceiptList.map(fee=>{
             return this.vm.getClassAndSection(fee.parentStudent,fee.parentSession);
         }).filter((item, index, final) => {
-            return final.findIndex(item2 => item2.classs.id == item.classs.id
+            // checking item && item2 because cancelled receipt student could also be deleted.
+            return final.findIndex(item2 => item2 && item && item2.classs.id == item.classs.id
                 && item2.section.id == item.section.id ) == index;
         }).sort((a,b) => {
             if (a.classs.orderNumber == b.classs.orderNumber) {
@@ -179,6 +181,12 @@ export class TotalCollectionServiceAdapter {
             }) != undefined;
         });
 
+        //Filtered Session List
+        this.vm.filteredSessionList = this.vm.sessionList.filter(session => {
+            return this.vm.feeReceiptList.map(a => a.parentSession).filter((item, index, final) => {
+                return final.indexOf(item) == index;
+            }).includes(session.id);
+        })
     }
 
 }

@@ -1,0 +1,74 @@
+<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">date_range</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+        <mat-form-field *ngIf="layer.LAYER_TYPE =='DATE'">
+            <mat-label>Choose Date</mat-label>
+            <input type="date" matInput [ngModel]="getCurrentDate()"
+                (ngModelChange)="onDateSelected($event); canvasRefresh();">
+        </mat-form-field>
+
+
+        <mat-form-field>
+            <mat-label>Date Format</mat-label>
+            <mat-select [ngModel]="getDateFormat()" (ngModelChange)="dateFormat = $event; changeDateFormat();canvasRefresh(0);">
+                <mat-option [value]="'dmy'">dd / mm / yyyy</mat-option>
+                <mat-option [value]="'mdy'">mm / dd / yyyy</mat-option>
+                <mat-option [value]="'ydm'">yyyy / dd / mm</mat-option>
+                <mat-option [value]="'ymd'">yyyy / mm / dd</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+            
+            <mat-form-field style="width: 40px;">
+                <mat-label>Day</mat-label>
+                <mat-select [ngModel]="getDayFormat()" (ngModelChange)="dayFormat = $event; changeDateFormat();canvasRefresh(0);">
+                    <mat-option [value]="'<d>'">1</mat-option>
+                    <mat-option [value]="'<dd>'">01</mat-option>
+                    <mat-option [value]="'<ddd>'">1st</mat-option>
+                    <mat-option [value]="'<dddd>'">First</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            
+
+            <mat-form-field style="width: 70px;">
+                <mat-label>Month</mat-label>
+                <mat-select [ngModel]="getMonthFormat()" (ngModelChange)="monthFormat = $event; changeDateFormat();canvasRefresh(0);">
+                    <mat-option [value]="'<m>'">1</mat-option>
+                    <mat-option [value]="'<mm>'">01</mat-option>
+                    <mat-option [value]="'<mmm>'">Jan</mat-option>
+                    <mat-option [value]="'<mmmm>'">January</mat-option>
+                </mat-select>
+            </mat-form-field>
+            
+            
+
+            <mat-form-field style="width: 70px;">
+                <mat-label>YEAR</mat-label>
+                <mat-select [ngModel]="getYearFormat()" (ngModelChange)="yearFormat = $event; changeDateFormat();canvasRefresh(0);">
+                    <mat-option [value]="'<yy>'">01</mat-option>
+                    <mat-option [value]="'<yyy>'">2001</mat-option>
+                    <mat-option [value]="'<yyyy>'">Two Thousand One</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            
+        </div>
+
+        <!-- First Separator -->
+        <mat-form-field style="padding: 0px; padding-right: 2px"> 
+            <input matInput [ngModel]="getFirstSeparator()"
+                (ngModelChange)="firstSeparator = $event; changeDateFormat(); canvasRefresh(0);" placeholder="Enter First Separator">
+        </mat-form-field><br>
+
+            <!-- Second Separator -->
+        <mat-form-field style="padding: 0px; padding-right: 2px"> 
+            <input matInput [ngModel]="getSecondSeparator()"
+                (ngModelChange)="secondSeparator = $event; changeDateFormat(); canvasRefresh(0);" placeholder="Enter Second Separator">
+        </mat-form-field>
+    </div>
+
+</mat-card>

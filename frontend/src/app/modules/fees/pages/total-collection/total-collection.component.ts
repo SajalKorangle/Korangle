@@ -49,6 +49,9 @@ export class TotalCollectionComponent implements OnInit {
     selectedEmployee = null;
     filteredEmployeeList = [];
 
+    selectedSession = null;
+    filteredSessionList = [];
+
     selectedModeOfPayment = null;
     filteredModeOfPaymentList = [];
 
@@ -56,6 +59,8 @@ export class TotalCollectionComponent implements OnInit {
     filteredClassSectionList = [];
 
     selectedFeeType=null;
+    selectedFeeReceiptType=null;
+    receiptTypeList=['Valid Receipts','Cancelled Receipts']
     filteredFeeTypeList=[];
 
     isInitialLoading = false;
@@ -76,14 +81,13 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.initializeSelection();
+        //this.initializeSelection();
         /*delete this.receiptColumnFilter['printButton'];
 
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;*/
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
         }
@@ -96,11 +100,14 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedClassSection = null;
         this.selectedModeOfPayment = null;
         this.selectedFeeType = null;
+        this.selectedFeeReceiptType=this.receiptTypeList[0];
+        this.selectedSession = null;
 
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;
+        this.receiptColumnFilter.session = true;
 
     }
 
@@ -119,7 +126,7 @@ export class TotalCollectionComponent implements OnInit {
             'selectedEmployee': this.selectedEmployee,
             'selectedModeOfPayment': this.selectedModeOfPayment,
             'selectedFeeType':this.selectedFeeType,
-            'sessionList':this.sessionList,
+            'sessionList':this.filteredSessionList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, {user: this.user, value: data});
@@ -127,22 +134,30 @@ export class TotalCollectionComponent implements OnInit {
 
     getClass(studentId: any, sessionId: any): any {
         return  this.classList.find(classs => {
-            return classs.id == this.studentSectionList.find(studentSection => {
+            let tempStudentSection = this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
-            }).parentClass;
+            });
+            // checking tempStudentSection because cancelled receipt student could also be deleted.
+            return tempStudentSection && classs.id == tempStudentSection.parentClass;
         });
     }
 
     getSection(studentId: any, sessionId: any): any {
         return this.sectionList.find(section => {
-            return section.id == this.studentSectionList.find(studentSection => {
+            let tempStudentSection = this.studentSectionList.find(studentSection => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
-            }).parentDivision;
+            });
+            // checking tempStudentSeciton because cancelled receipt student could also be deleted.
+            return tempStudentSection && section.id == tempStudentSection.parentDivision;
         });
     }
 
     getClassAndSection(studentId: any, sessionId: any): any {
         const classs=this.getClass(studentId,sessionId);
+        // because cancelled receipt student could also be deleted.
+        if (classs === undefined) {
+            return undefined;
+        }
         const section=this.getSection(studentId,sessionId);
         return {
             'classs': classs,
@@ -166,6 +181,11 @@ export class TotalCollectionComponent implements OnInit {
                 return feeReceipt.parentEmployee == this.selectedEmployee.id;
             });
         }
+        if (this.selectedFeeReceiptType) {
+            tempList = tempList.filter(feeReceipt => {
+                return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
+            });
+        }
         if (this.selectedModeOfPayment) {
             tempList = tempList.filter(feeReceipt => {
                 return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
@@ -173,8 +193,9 @@ export class TotalCollectionComponent implements OnInit {
         }
         if (this.selectedClassSection) {
             tempList = tempList.filter(feeReceipt => {
-                let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
-                return classSection.classs.id == this.selectedClassSection.classs.id
+            let classSection = this.getClassAndSection(feeReceipt.parentStudent,feeReceipt.parentSession);
+            // checking classSection because cancelled receipt student could also be deleted.
+            return classSection && classSection.classs.id == this.selectedClassSection.classs.id
                     && classSection.section.id == this.selectedClassSection.section.id;
             });
         }
@@ -187,6 +208,11 @@ export class TotalCollectionComponent implements OnInit {
                 return filteredSubFeeList.find(parentFeeId => {
                     return parentFeeId == feeReceipt.id;
                 }) != undefined;
+            });
+        }
+        if (this.selectedSession) {
+            tempList = tempList.filter(feeReceipt => {
+                return feeReceipt.parentSession == this.selectedSession.id;
             });
         }
 
@@ -217,4 +243,8 @@ export class TotalCollectionComponent implements OnInit {
         }, 0);
     }
 
+    checkCancelledRemark():void {
+       this.receiptColumnFilter.cancelledRemark=Boolean(this.selectedFeeReceiptType === 'Cancelled Receipts');
+       this.receiptColumnFilter.cancelledBy=Boolean(this.selectedFeeReceiptType === 'Cancelled Receipts');
+    }
 }

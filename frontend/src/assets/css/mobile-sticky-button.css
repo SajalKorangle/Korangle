@@ -1,0 +1,27 @@
+.mobileButton-primary {
+    background-color: #9c27b0 !important;
+}
+
+.mobileButton-info {
+    background-color: #00bcd4 !important;
+}
+
+.mobileButton-success {
+    background-color: #4caf50 !important;
+}
+
+.mobileButton-warning {
+    background-color: #ff9800 !important;
+}
+
+.mobileButton-danger {
+    background-color: #f44336 !important;
+}
+
+.mobileButton-indigo {
+    background-color: #3F51B5 !important;
+}
+
+.mobileButton-white {
+    background-color: #FFFFFF !important;
+}

@@ -1,0 +1,9 @@
+<mat-dialog-content style="max-height: 90vh;">
+    <button mat-icon-button (click)="onNoClick();" style="float:right;margin-bottom: 10px;"><mat-icon>clear</mat-icon></button>
+    <div class="viewbox" *ngIf="data.type=='img'" >
+        <img src="{{data.file}}" style="width:100%;">
+    </div>
+    <div class="viewbox" *ngIf="data.type=='pdf'">
+        <iframe style="width: 100%;height: 600px ;" [src]="data.file | safe" crossorigin="anonymous"></iframe>
+    </div>
+</mat-dialog-content>

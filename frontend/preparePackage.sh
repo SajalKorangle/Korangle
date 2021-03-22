@@ -1,5 +1,5 @@
 rm -rf korangle.zip korangle/
-ng build --prod --build-optimizer
+node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
 mv dist/ korangle
 npm run post-build $1
 cp version.json korangle/version.json

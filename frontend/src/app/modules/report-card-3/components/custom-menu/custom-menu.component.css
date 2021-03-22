@@ -1,0 +1,10 @@
+.menuButton {
+    display: block;
+    background-color: white;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.menuButton:hover {
+    background-color: lightgray;
+}

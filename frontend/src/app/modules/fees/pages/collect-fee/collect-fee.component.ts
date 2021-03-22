@@ -102,7 +102,6 @@ export class CollectFeeComponent implements OnInit {
 
         if(CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.receiptNumber = false;
-            this.receiptColumnFilter.class = false;
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
             this.receiptColumnFilter.printButton = false;
@@ -1208,4 +1207,15 @@ export class CollectFeeComponent implements OnInit {
         }, 0);
     }
 
+    isGenerateReceiptDisabled():boolean {
+           if (this.newFeeReceiptList.length>0) {
+               if (this.newModeOfPayment == this.modeOfPaymentList[1]) {
+                   return !this.newChequeNumber;
+               } else {
+                   return false;
+               }
+           }else{
+               return true;
+           }
+    }
 }

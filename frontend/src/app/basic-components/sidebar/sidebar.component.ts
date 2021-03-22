@@ -49,11 +49,12 @@ export class SidebarComponent implements OnInit {
                 private notificationService: NotificationService,
                 private schoolService : SchoolService) {
 
-        // Review: Ye code kisliye likha hai.
-        this.router.routeReuseStrategy.shouldReuseRoute = function() {
+        this.router.routeReuseStrategy.shouldReuseRoute = function(future: any, curr: any) {
+            if (curr._routerState.url.includes('print:print') || future._routerState.url.includes('print:print')) {
+                return curr.routeConfig === future.routeConfig;
+            }
             return false;
         };
-
     }
 
     @HostListener('window:popstate', ['$event'])

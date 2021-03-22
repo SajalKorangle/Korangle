@@ -139,8 +139,8 @@ class StudentTest(models.Model):
     parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
     parentSubject = models.ForeignKey(SubjectSecond, models.PROTECT, null=False, default=0, verbose_name='parentSubject')
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
-    testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
-    marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
+    testType = models.CharField(max_length=11, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=3,null=False, verbose_name='marksObtained', default=0)
 
     class Meta:
         db_table = 'student_test'
@@ -255,3 +255,12 @@ class CCEMarks(models.Model):
         unique_together = ('parentStudent', 'parentSession')
 
 
+class StudentExaminationRemarks(models.Model):
+
+    parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
+    parentExamination = models.ForeignKey(Examination, models.CASCADE, null=False, default=0, verbose_name='parentExamination')
+    remark = models.TextField(null=False, default='-', verbose_name='remark', blank=True)
+
+    class Meta:
+        db_table = 'remarks'
+        unique_together = ('parentStudent', 'parentExamination')

@@ -12,6 +12,15 @@ import { BusStopService} from '@services/modules/school/bus-stop.service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import {SchoolService} from '@services/modules/school/school.service';
 
+import {MatDialog} from '@angular/material';
+import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver';
+import { toInteger, filter } from 'lodash';
+import {CommonFunctions} from '@classes/common-functions';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
+
 class ColumnFilter {
     showSerialNumber = true;
     showProfileImage = false;
@@ -59,11 +68,12 @@ export class ViewAllComponent implements OnInit {
 
     NULL_CONSTANT = null;
 
-    showCustomFilters = false;
+    showFilters = false;
 
     session_list = [];
 
     columnFilter: ColumnFilter;
+    documentFilter: ColumnFilter; 
 
     /* Category Options */
     scSelected = false;
@@ -85,6 +95,10 @@ export class ViewAllComponent implements OnInit {
     noRTE = true;
     noneRTE = true;
 
+    /* TC Options */
+    noTC = true;
+    yesTC = true;
+
     displayStudentNumber = 0;
 
     classSectionList = [];
@@ -96,7 +110,30 @@ export class ViewAllComponent implements OnInit {
     busStopList = [];
 
     studentParameterList: any[] = [];
+    studentParameterOtherList : any[] =[];
+    studentParameterDocumentList : any[] =[];
+    
     studentParameterValueList: any[] = [];
+    
+    profileDocumentSelectList = [
+        'Profile',
+       'Documents',
+   ]
+    currentProfileDocumentFilter ;
+
+    percent_download_comlpleted ;
+    totalDownloadSize;
+    download;
+    totalFiles;
+    downloadedFiles;
+    totalFailed;
+    
+    profileColumns;
+    documentColumns;
+
+    noFileIcon ="/assets/img/nofile.png";
+    pdfIcon ="/assets/img/pdfIcon.png";
+    imageIcon ="/assets/img/imageIcon.png";
 
     isLoading = false;
 
@@ -108,14 +145,23 @@ export class ViewAllComponent implements OnInit {
                 public excelService: ExcelService,
                 public schoolService: SchoolService,
                 public printService: PrintService,
-                public busStopService: BusStopService) { }
+                public busStopService: BusStopService,
+                public dialog:MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.columnFilter = new ColumnFilter();
+        this.documentFilter = new ColumnFilter();
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
+        this.percent_download_comlpleted=0;
+        this.totalDownloadSize =0;
+        this.download='NOT';
+        this.downloadedFiles=0;
+        this.totalFiles=0;
+        this.totalFailed=0;
     }
 
     initializeClassSectionList(classSectionList: any): void {
@@ -130,11 +176,52 @@ export class ViewAllComponent implements OnInit {
 
     getParameterValue(student, parameter) {
         try {
-            return this.studentParameterValueList.find(x =>
-                x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
-            ).value;
-        } catch {
+            if (this.currentProfileDocumentFilter === 'Profile'){
+            	return this.studentParameterValueList.find(x =>
+                	x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).value;
+            }
+            else{
+                let value =  this.studentParameterValueList.find(x =>
+                    x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).document_value;
+                if (value){
+		            if (value ==="" || value===undefined){
+		            }
+		            else{
+		                return value;
+		            }
+            	}
+                else{
+                    return this.NULL_CONSTANT;
+            	}
+        	}
+        }catch {
             return this.NULL_CONSTANT;
+        }
+    }
+    
+    
+    getDocumentIcon(student,parameter){
+    	try {
+            let value =  this.studentParameterValueList.find(x =>x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id).document_value;
+            if (value){
+                if (value ==="" || value===undefined){
+                    return this.NULL_CONSTANT;
+                } else{
+                    let type = value.split(".")
+                    type = type[type.length-1]
+                    if (type=="pdf"){
+                        return this.pdfIcon;
+                    }
+                    else if (type=="jpg"|| type=="jpeg" || type=="png"){
+                        return this.imageIcon;
+                    }
+                }
+            } else{
+                return this.noFileIcon;
+            }
+        }
+        catch{
+            return this.noFileIcon;
         }
     }
 
@@ -158,12 +245,12 @@ export class ViewAllComponent implements OnInit {
     }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList.filter( student => {
-            return student.parentTransferCertificate == null;
-        });
+        this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
+            studentFullProfile['selectProfile']= false;
+            studentFullProfile['selectDocument']=false;
         });
         this.handleStudentDisplay();
     }
@@ -225,7 +312,7 @@ export class ViewAllComponent implements OnInit {
             columnFilter: this.columnFilter
         };
         this.printService.navigateToPrintRoute(PRINT_STUDENT_LIST, {user: this.user, value});
-    };
+	};
 
     unselectAllClasses(): void {
         this.classSectionList.forEach(
@@ -266,6 +353,79 @@ export class ViewAllComponent implements OnInit {
             item.show = false;
         })
     };
+    
+    selectAllDocuments():void{
+        Object.keys(this.documentFilter).forEach((key) => {
+            this.documentFilter[key] = true;
+        });
+        this.studentParameterDocumentList.forEach(item => {
+            item.show = true;
+        })
+    };
+    
+    unSelectAllDocuments(): void {
+        Object.keys(this.documentFilter).forEach((key) => {
+            this.documentFilter[key] = false;
+        });
+        this.studentParameterDocumentList.forEach(item => {
+            item.show = false;
+        })
+    };
+    
+    selectAllStudents(): void {
+        if (this.currentProfileDocumentFilter==='Profile'){
+            this.studentFullProfileList.forEach(student => {
+                if (student.show){
+                    student.selectProfile=true;
+                }
+            })
+        }
+        else{
+            this.studentFullProfileList.forEach(student => {
+                if (student.show){
+                    student.selectDocument=true;
+                }
+            })
+        }
+    }
+
+    unselectAllStudents(): void {
+        if (this.currentProfileDocumentFilter==='Profile'){
+            this.studentFullProfileList.forEach(student => {
+                if (student.show){
+                    student.selectProfile=false;
+                }
+            })
+        }
+        else{
+            this.studentFullProfileList.forEach(student => {
+                if (student.show){
+                    student.selectDocument=false;
+                }
+            })
+        }
+    }
+
+    getSelectedStudents(){
+        let count =0;
+        if(this.currentProfileDocumentFilter==='Profile'){
+            count=0;
+            this.studentFullProfileList.forEach(student=>{
+                if(student.show && student.selectProfile){
+                    ++count;
+                }
+            })
+        }
+        else if (this.currentProfileDocumentFilter==='Documents'){
+            count=0;
+            this.studentFullProfileList.forEach(student=>{
+                if(student.show && student.selectDocument){
+                    ++count;
+                }
+            })
+        }
+        return count;
+    }
 
     showSectionName(classs: any): boolean {
         let sectionLength = 0;
@@ -379,6 +539,12 @@ export class ViewAllComponent implements OnInit {
                 return;
             }
 
+            // Transfer Certiicate Check
+            if(!((this.noTC && !student.parentTransferCertificate) || (this.yesTC && student.parentTransferCertificate) )){
+                student.show = false;
+                return;
+            }
+
             // Custom filters check
             for (let x of this.getFilteredStudentParameterList()) {
                 let flag = x.showNone;
@@ -396,31 +562,188 @@ export class ViewAllComponent implements OnInit {
             }
             ++this.displayStudentNumber;
             student.show = true;
+            student.selectDocument= true;
+            student.selectProfile = true;
             student.serialNumber = ++serialNumber;
 
         });
 
     };
 
-    downloadList(): void {
-
-        let template: any;
-
-        template = [
-
-            this.getHeaderValues(),
-
-        ];
-
+    getDownloadSize(){
+        this.totalDownloadSize = 0
         this.studentFullProfileList.forEach(student => {
-            if (student.show) {
-                template.push(this.getStudentDisplayInfo(student));
+            if (student.selectDocument) {
+                this.studentParameterDocumentList.forEach(parameter=>{
+                    if (parameter.show){
+                        let item = this.studentParameterValueList.find(x =>
+                            (x.parentStudent === student.dbId) && (x.parentStudentParameter === parameter.id)
+                        )
+                        if (item){
+                            this.totalFiles+=1
+                            if(item.document_size){
+                                this.totalDownloadSize+=toInteger(item.document_size)
+                            }
+                        }
+                    }
+                })
             }
-        });
+        })
+    }
 
-        console.log(template);
+    dataURLtoFile(dataurl, filename) {
+        try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
 
-        this.excelService.downloadFile(template, 'korangle_students.csv');
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, {type: mime});
+        } catch (e) {
+            return null;
+        }
+    }
+
+
+    async download_each_file(document_url){
+        const response = await fetch(document_url)
+        if (response.status ==403){
+            ++this.totalFailed;
+        }
+        else{
+		    const reader = response.body.getReader();
+		    const contentLength = response.headers.get('Content-Length');
+		    let receivedLength = 0;
+		    let chunks = [];
+		    while(true) {
+		        const {done, value} = await reader.read();
+		         if (done) {
+		             break;
+		        }
+		        chunks.push(value);
+		        receivedLength += value.length;
+		        this.percent_download_comlpleted+=(value.length*1.0)/(this.totalDownloadSize*1.0)*100;
+		        console.log(`Received ${receivedLength} of ${contentLength}`)
+		        console.log(`now total received is ${this.percent_download_comlpleted} %`)
+		    }
+		    let blob = new Blob(chunks);
+		    return blob;
+    	}
+	}
+
+    downloadDocuments() {
+        this.totalFailed=0;
+        this.download="START";
+        this.getDownloadSize();
+        if (this.totalDownloadSize){
+		    alert("Your are about to download "+ (this.totalFiles) +" files of size "+(this.totalDownloadSize/1000000)+" MB");
+		    let zip = new JSZip();
+		    let check1 = 0;
+		    this.downloadedFiles = 0;
+		    let flag = 1;
+		    this.studentParameterDocumentList.forEach(parameter => {
+		        if (parameter.show){
+		            var Folder = zip.folder(parameter.name);
+		            this.studentFullProfileList.forEach(student => {
+		                if (student.selectDocument) {
+		                    let document_url = this.getParameterValue(student,parameter);
+		                    if (document_url){
+		                        check1=check1+1;
+		                        this.download_each_file(document_url).then(blob => {
+		                            if (blob){
+                                        let type = document_url.split(".");
+                                        type = type[type.length-1];
+				                        let file = new Blob([blob], { type: type});
+                                        Folder.file(student.name+"_"+student.dbId+"_"+parameter.name+"."+type,file);
+                                        this.downloadedFiles=this.downloadedFiles+1;
+                                        console.log(check1,this.downloadedFiles)
+                                    }
+                                    if (check1===this.downloadedFiles+this.totalFailed){
+                                        zip.generateAsync({ type: "blob"})
+                                        .then(content => {
+                                            FileSaver.saveAs(content, "Documents.zip");
+                                            this.download='NOT'
+                                        });
+                                        this.isLoading=false
+                                        this.download='END'
+                                        this.downloadedFiles=0
+                                        this.totalFiles=0
+                                        this.percent_download_comlpleted=0
+                                        this.totalDownloadSize =0
+                                    }
+		                        },error=>{
+		                            this.download="FAIL"
+		                            this.isLoading = false;
+		                            this.downloadedFiles=0
+		                            this.totalFiles=0
+		                            this.percent_download_comlpleted=0
+		                            this.totalDownloadSize =0
+		                        });
+		                    };
+		                };
+		            });
+		        };
+		    });
+	    } else{
+	    alert("No documents are available for download.");
+		this.download="NOT";
+		}
+	}
+	
+    downloadList(): void {
+        if (this.currentProfileDocumentFilter==='Profile'){
+		    let template: any;
+		    template = [
+		        this.getHeaderValues(),
+
+		    ];
+		    this.studentFullProfileList.forEach(student => {
+		        if (student.selectProfile && student.show) {
+		            template.push(this.getStudentDisplayInfo(student));
+		        }
+		    });
+		    this.excelService.downloadFile(template, 'korangle_students.csv');
+		} else if (this.currentProfileDocumentFilter==='Documents'){
+			this.downloadDocuments();
+    	}
+    }
+
+    openFilePreviewDialog(student,parameter): void {
+        let file =this.getParameterValue(student,parameter);
+        if(file) {
+            let urlList = file.split(".")
+            let extension = urlList[urlList.length - 1]
+            let type
+            if (extension == "pdf") {
+                type = "pdf"
+            } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
+                type = "img"
+            }
+            let dummyImageList=[];
+            if(type=="img"){
+                let data={'imageUrl':file};
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: {'imageList':dummyImageList,'file':file,'index':0,'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('The dialog was closed');
+            });
+        }
+    }
+    
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 
     getHeaderValues(): any {
@@ -454,7 +777,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showRTE?headerValues.push('RTE'):'';
         this.columnFilter.showRemark?headerValues.push('remark'):'';
         // Custom parameters
-        this.studentParameterList.forEach(item => item.show?headerValues.push(item.name):'')
+        this.studentParameterOtherList.forEach(item => item.show?headerValues.push(item.name):'')
         return headerValues;
     }
 
@@ -489,7 +812,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showRTE?studentDisplay.push(student.rte):'';
         this.columnFilter.showRemark?studentDisplay.push(student.remark):'';
         // Custom parameter values
-        this.studentParameterList.forEach(item => item.show?studentDisplay.push(this.getParameterValue(student, item)):'')
+        this.studentParameterOtherList.forEach(item => item.show?studentDisplay.push(this.getParameterValue(student, item)):'')
 
         return studentDisplay;
     }

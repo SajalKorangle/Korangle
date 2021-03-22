@@ -93,7 +93,25 @@ export class AddStudentServiceAdapter {
             this.vm.newStudent.bankName = value ;
         });
     }
+    
+    dataURLtoFile(dataurl, filename) {
+        try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
 
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, {type: mime});
+        } catch (e) {
+            return null;
+        }
+    }
+    
     createNewStudent(): void {
 
         if (this.vm.newStudent.name == null || this.vm.newStudent.name == '') {
@@ -146,10 +164,22 @@ export class AddStudentServiceAdapter {
             this.vm.newStudent.dateOfAdmission = null;
         }
 
-        this.vm.studentService.createObject(this.vm.studentService.student, this.vm.newStudent).then(value => {
-
+		const student_form_data= new FormData()
+        const data = { ...this.vm.newStudent};
+        Object.keys(data).forEach(key => {
+                if (key === 'profileImage' ) {
+                    if(this.vm.profileImage){
+                        student_form_data.append(key, this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'));
+                    }
+                } else {
+                    if (data[key]!==null){
+                        student_form_data.append(key,data[key]);
+                    }
+                }
+            });
+        this.vm.studentService.createObject(this.vm.studentService.student,student_form_data).then(value => {
             this.vm.newStudentSection.parentStudent = value.id;
-
+            this.vm.isLoading = true;
             let student_subject_list = [];
 
             this.vm.classSubjectList.filter(classSubject => {
@@ -235,13 +265,36 @@ export class AddStudentServiceAdapter {
             this.vm.currentStudentParameterValueList.forEach(x => {
                 x.parentStudent = value.id;
             });
-
+            
+            let form_data_list = [];
+            this.vm.studentParameterList.forEach(parameter => {
+                let temp_obj = this.vm.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+                if (temp_obj){
+                    const data = { ...temp_obj}
+                    const form_data = new FormData();
+                     Object.keys(data).forEach(key => {
+                         if (data[key]){
+                             if (key =="document_name"|| key=="document_size"){}
+                             else if (key=='document_value'){
+                                 form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
+                                 form_data.append('document_size',data['document_size'])
+                                }
+                            else {
+                                form_data.append(key,data[key])
+                            }
+                        }
+                    })
+                    form_data_list.push(form_data)
+                }
+            });
             Promise.all([
                 this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                 this.vm.subjectService.createObjectList(this.vm.subjectService.student_subject, student_subject_list),
                 this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, student_test_list),
                 this.vm.feeService.createObjectList(this.vm.feeService.student_fees, student_fee_list),
-                this.vm.studentService.createObjectList(this.vm.studentService.student_parameter_value, this.vm.currentStudentParameterValueList)
+                form_data_list.forEach(x => {
+                    this.vm.studentService.createObject(this.vm.studentService.student_parameter_value,x)
+                })
             ]).then( valueTwo => {
 
                 alert('Student admitted successfully');

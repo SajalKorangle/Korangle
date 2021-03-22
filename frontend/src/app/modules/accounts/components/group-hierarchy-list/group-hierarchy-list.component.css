@@ -1,0 +1,28 @@
+
+.group-font {
+    font-family: 'Roboto';
+    font-weight: 530;
+    font-size: 15px;
+}
+
+.account-font{
+    font-family: 'Roboto';
+    font-weight: 400;
+    font-size: 14px;
+}
+
+div.mat-expansion-panel-body {
+    padding: 0 0 0 25px;
+}
+ 
+.mat-expansion-panel-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 2px;
+    border-radius: inherit;
+}
+
+/* .mat-expansion-panel-body {
+    padding: 0 24px 16px;
+} */

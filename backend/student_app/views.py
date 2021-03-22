@@ -190,22 +190,15 @@ class TransferCertificateView(APIView):
 from .business.profile_image import partial_update_profile_image
 
 
-class StudentView(OldCommonView, APIView):
+class StudentView(CommonView, APIView):
     Model = Student
-    # RelationsToSchool = ['parentSchool__id']
-    # RelationsToStudent = ['id']
+    RelationsToSchool = ['parentSchool__id']
+    RelationsToStudent = ['id']
 
-    @user_permission_3
-    def patch(self,request, *args, **kwargs):
-        if 'profileImage' in request.FILES:
-            return partial_update_profile_image(request,self.Model,self.ModelSerializer)
-        else:
-            return super.patch(request)
-
-class StudentListView(OldCommonListView, APIView):
+class StudentListView(CommonListView, APIView):
     Model = Student
-    # RelationsToSchool = ['parentSchool__id']
-    # RelationsToStudent = ['id']
+    RelationsToSchool = ['parentSchool__id']
+    RelationsToStudent = ['id']
 
 
 ########### Student Section #############
@@ -238,7 +231,7 @@ class StudentParameterListView(CommonListView, APIView):
 
 ########### Student Parameter Value#############
 
-
+from common.common_views_file import CommonView, CommonListView  #for file handling
 class StudentParameterValueView(CommonView, APIView):
     Model = StudentParameterValue
     RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentParameter__parentSchool__id']

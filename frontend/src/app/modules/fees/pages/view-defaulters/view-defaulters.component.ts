@@ -13,6 +13,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_REPORT} from '../../print/print-routes.constants';
+import { isMobile } from '../../../../classes/common.js';
 
 @Component({
     selector: 'view-defaulters',
@@ -91,6 +92,8 @@ export class ViewDefaultersComponent implements OnInit {
     currentSession: any;
 
     isLoading = false;
+
+
 
     constructor(public schoolService: SchoolService,
                 public feeService: FeeService,
@@ -321,7 +324,7 @@ export class ViewDefaultersComponent implements OnInit {
                 };
                 this.parentList.push(newParentObject);
             }
-
+            
         });
 
         this.parentList = this.parentList.sort((a, b) => {
@@ -564,12 +567,27 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
+    getFilteredParentFeesDueOverall(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['feesDueOverall'];
+            }, 0);
+        }, 0);
+    }
 
     getParentFeesPaid(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['feesPaidThisSession'];
         }, 0);
     }
+    getFilteredParentTotalFeesPaid(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['feesPaidThisSession'];
+            }, 0);
+        }, 0);
+    }
+
 
     getParentDiscount(parent: any): any {
         return parent.studentList.reduce((total, student) => {
@@ -577,9 +595,54 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
+    getFilteredParentTotalDiscount(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['discountThisSession'];
+            }, 0);
+        }, 0);
+    }
+
     getParentTotalFees(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['totalFeesThisSession'];
+        }, 0);
+    }
+
+    getFilteredParentTotalFees(): any {
+        return this.getFilteredParentList().reduce((total, parent) => {
+            return total + parent.studentList.reduce((total, student) => {
+                return total + student['totalFeesThisSession'];
+            }, 0);
+        }, 0);
+    }
+
+    getFilteredStudentListTotalFeesDueTillMonth(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['feesDueTillMonth'];
+        }, 0);
+    }
+
+    getFilteredStudentListTotalFeesDue(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['feesDueOverall'];
+        }, 0);
+    }
+    getFilteredStudentListTotalFeesDemand(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['totalFeesThisSession'];
+        }, 0);
+    }
+
+    getFilteredStudentListTotalFeesPaid(): any {
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['feesPaidThisSession'];
+        }, 0);
+    }
+
+    getFilteredStudentListTotalDiscount(): any{
+        return this.getFilteredStudentList().reduce((total, student) => {
+            return total + student['discountThisSession'];
         }, 0);
     }
 
@@ -841,4 +904,17 @@ export class ViewDefaultersComponent implements OnInit {
         return "Rs. " + Number(data).toLocaleString('en-IN');
     }
 
+    isMobile(): boolean {
+        return isMobile();
+    }
+
+    hasPermission(): boolean {
+
+        let moduleIdx = this.user.activeSchool.moduleList.findIndex( module => module.path == 'fees');
+
+        if(this.user.activeSchool.moduleList[moduleIdx].taskList.findIndex( task => task.path == 'generate_fees_report') == -1)
+        return false;
+
+        return true;
+    }
 }

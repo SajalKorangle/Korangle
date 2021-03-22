@@ -40,3 +40,14 @@ export const PRINT_MARKSHEET_SECOND_FORMAT = 'print-marksheet-second-format';
 
 //enquiry
 export const PRINT_ENQUIRY_LIST='print-enquiry-list';
+
+// Custom Report Card
+export const PRINT_CUSTOM_REPORTCARD = 'print-custom-report-card';
+
+
+// Transactions
+export const PRINT_TRANSACTIONS = 'print-transactions';
+
+
+// Ledger
+export const PRINT_LEDGER = 'print-ledger';
