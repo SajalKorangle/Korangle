@@ -30,7 +30,7 @@ export class InventoryDialogComponent implements OnInit {
   }
 
   apply(): void {
-    if (this.isMyLayout()) {
+    if (this.isMyLayout() || this.selectedLayout == this.vm.ADD_LAYOUT_STRING) {
       this.dialogRef.close({ layout: this.selectedLayout, copy: false });
     }
     else {
