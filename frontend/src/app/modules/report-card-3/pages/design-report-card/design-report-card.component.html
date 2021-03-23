@@ -155,6 +155,11 @@
             </div>
 
             <div class="tool">
+                <button class="btn" style="padding: 8px;"
+                        (click)="canvasAdapter.newImportedLayer()">Import Layer</button>
+            </div>
+
+            <div class="tool">
                 <button class="btn material-icons" matTooltip="Change Page Resolution"
                         (click)="htmlAdapter.openPageResolutionDialog()">photo_size_select_large</button>
             </div>
@@ -401,6 +406,13 @@
                             [layer]="canvasAdapter.activeLayer"
                             [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
                             ></app-group-parameters-pannel>
+                </div>
+
+                <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('importedLayer')" class="parameters-tool" style="margin:0; width: 100%;">
+                    <app-import-layer-parameters-pannel
+                            [layer]="canvasAdapter.activeLayer"
+                            [canvasRefresh]="canvasAdapter.scheduleCanvasReDraw"
+                            ></app-import-layer-parameters-pannel>
                 </div>
 
                 <div *ngIf="canvasAdapter.activeLayer && canvasAdapter.activeLayer.parameterToolPannels.includes('settings')" class="parameters-tool" style="margin:0; width: 100%;">

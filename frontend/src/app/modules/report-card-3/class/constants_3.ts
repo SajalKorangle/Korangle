@@ -500,6 +500,8 @@ export interface CanvasAdapterInterface{
 
     metaDrawings: boolean;
 
+    pageSharedData: { [key: number]: { [key: number]: string; }; };
+
     clearCanvas(): void
     storeThumbnail(): void;
     updatePage(pageIndex: number): Promise<any>;
@@ -588,6 +590,9 @@ export interface Layer{
     formula?: string;
     examinationName?: string;
     gradeRuleSet?: GradeRuleSet;
+    export?: boolean;
+    pageIndex?: number;
+    layerId?: number;
 };
 
 export class BaseLayer {    // this layer is inherited by all canvas layers
@@ -2019,6 +2024,8 @@ export class MarksLayer extends CanvasText implements Layer{
     
     gradeRuleSet: GradeRuleSet;
 
+    export: boolean = false;
+
     constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('marks');
@@ -2083,6 +2090,7 @@ export class MarksLayer extends CanvasText implements Layer{
             marksType: this.marksType,
             inWords: this.inWords,
             examinationName: this.source.getExaminationName(this.ca.DATA, this.parentExamination),
+            export: this.export,
         }
         if (this.gradeRuleSet) {
             savingData.gradeRuleSet = this.gradeRuleSet.id;
@@ -2172,6 +2180,8 @@ export class Formula extends CanvasText implements Layer{
     inWords: boolean = false;
     gradeRuleSet: GradeRuleSet;
 
+    export: boolean = false;
+
     constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
         this.parameterToolPannels.push('formula');
@@ -2257,7 +2267,8 @@ export class Formula extends CanvasText implements Layer{
             ...savingData,
             formula: this.formula,
             inWords: this.inWords,
-            decimalPlaces:this.decimalPlaces,
+            decimalPlaces: this.decimalPlaces,
+            export: this.export,
         }
         if (this.gradeRuleSet) {
             savingData.gradeRuleSet = this.gradeRuleSet.id;
@@ -2265,6 +2276,41 @@ export class Formula extends CanvasText implements Layer{
         return savingData;
     }
 
+}
+
+export class Importedlayer extends CanvasText implements Layer{
+    pageIndex: number;
+    layerId: number;
+    text = '!FOUND';
+
+    constructor(attributes: object, ca: CanvasAdapterInterface) {
+        super(attributes, ca, false);
+        this.parameterToolPannels.push('importedLayer');
+
+        this.initilizeSelf(attributes);
+        this.LAYER_TYPE = 'IMPORTED_LAYER';
+        this.layerDataUpdate();          
+    }
+
+    layerDataUpdate(): void {
+        this.text = '!FOUND';
+        if (this.pageIndex != undefined && this.layerId != undefined) {
+            if (this.ca.pageSharedData[this.pageIndex] && this.ca.pageSharedData[this.pageIndex][this.layerId]) {
+                this.text = this.ca.pageSharedData[this.pageIndex][this.layerId];
+            }
+        }
+    }
+
+    getDataToSave(): { [object: string]: any } {
+        let savingData = super.getDataToSave();
+        delete savingData.text;
+        savingData = {
+            ...savingData,
+            pageIndex: this.pageIndex,
+            layerId: this.layerId,
+        }
+        return savingData;
+    }
 }
 
 export class Result extends CanvasText implements Layer{
@@ -2382,7 +2428,9 @@ export const LayersMappedByType: {[key:string]: any} = {
     'MARKS': MarksLayer,
     'CURRENT_SESSION': CurrentSession,
     'FORMULA': Formula,
-    'RESULT': Result
+    'RESULT': Result,
+    'IMPORTED_LAYER': Importedlayer,
+
 }
 
 

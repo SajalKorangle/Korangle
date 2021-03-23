@@ -26,7 +26,7 @@ import { SettingsParametersPannelComponent } from './right-pannel/settings-param
 import { SessionParameterPannelComponent } from './right-pannel/session-parameter-pannel/session-parameter-pannel.component';
 import { GroupParametersPannelComponent } from './right-pannel/group-parameters-pannel/group-parameters-pannel.component';
 import { ExamMappingDialogComponent } from './dialogs/exam-mapping-dialog/exam-mapping-dialog.component';
-
+import { ImportLayerParametersPannelComponent } from './right-pannel/import-layer-parameter-pannel/import-layer-parameters-pannel.component';
 @NgModule({
   declarations: [
     TextParametersPannelComponent,
@@ -52,6 +52,7 @@ import { ExamMappingDialogComponent } from './dialogs/exam-mapping-dialog/exam-m
     SessionParameterPannelComponent,
     GroupParametersPannelComponent,
     ExamMappingDialogComponent,
+    ImportLayerParametersPannelComponent
   ],
   imports: [
     ComponentsModule,
@@ -82,7 +83,8 @@ import { ExamMappingDialogComponent } from './dialogs/exam-mapping-dialog/exam-m
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
     GroupParametersPannelComponent,
-    ExamMappingDialogComponent
+    ExamMappingDialogComponent,
+    ImportLayerParametersPannelComponent,
   ]
 })
 export class ParametersPannelModule { }

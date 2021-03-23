@@ -3,7 +3,7 @@ import {CanvasAdapterHTMLMixin } from './../../class/canvas.adapter';
 
 import {
     CanvasAdapterInterface,
-    Layer, CanvasImage, CanvasText,
+    CanvasImage, CanvasText,
     CanvasDate,
     Formula,
     Result,
@@ -13,7 +13,7 @@ import {
     CanvasSquare,
     CanvasCircle,
     CanvasRoundedRectangle,
-    CanvasGroup,
+    Importedlayer,
 } from './../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
@@ -161,6 +161,12 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         let canavsTable = new CanvasTable(initialParameters, this);
         this.newLayerInitilization(canavsTable);
         return canavsTable;
+    }
+
+    newImportedLayer(initialParameters: object = {}): Importedlayer{
+        const importedLayer = new Importedlayer(initialParameters, this);
+        this.newLayerInitilization(importedLayer);
+        return importedLayer;
     }
 
 }

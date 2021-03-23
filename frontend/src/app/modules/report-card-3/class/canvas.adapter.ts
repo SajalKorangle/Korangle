@@ -50,6 +50,8 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
     metaDrawings: boolean = false;   // meta drawings includes things like hilighter, assistance etc.
 
+    pageSharedData: { [key: number]: { [key: number]: string; }; } = {};
+    
     constructor() {
         this.virtualCanvas = document.createElement('canvas');
         this.virtualContext = this.virtualCanvas.getContext('2d');
@@ -89,6 +91,24 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         this.currentLayout.thumbnail = canavs.toDataURL('image/jpeg', 1.0);
     }
 
+    manageSharedData(newPageIndex: number): void{
+        if (newPageIndex > this.activePageIndex) {
+            this.pageSharedData[this.activePageIndex] = {};
+            this.layers.forEach(l => {
+                if ((l.LAYER_TYPE == 'FORMULA' || l.LAYER_TYPE == 'MARKS') && l.export) {
+                    this.pageSharedData[this.activePageIndex][l.id] = l.text;
+                }
+            });
+        }
+        else {
+            Object.keys(this.pageSharedData).forEach((key) => {
+                if (parseInt(key) >= newPageIndex) {
+                    delete this.pageSharedData[key];
+                }
+            });
+        }
+    }
+
     updatePage(pageIndex: number): Promise<any>{
         if (this.activePageIndex == pageIndex)
             return;
@@ -96,6 +116,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             this.storeThumbnail()
         }
         this.currentLayout.content[this.activePageIndex] = this.getDataToSave();
+        this.manageSharedData(pageIndex);
         let returnPromise = this.loadData(this.currentLayout.content[pageIndex]);
         this.activePageIndex = pageIndex;
         return returnPromise;
