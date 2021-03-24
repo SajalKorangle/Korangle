@@ -3,7 +3,7 @@ import {CanvasAdapterHTMLMixin } from './../../class/canvas.adapter';
 
 import {
     CanvasAdapterInterface,
-    Layer, CanvasImage, CanvasText,
+    CanvasImage, CanvasText,
     CanvasDate,
     Formula,
     Result,
@@ -13,7 +13,6 @@ import {
     CanvasSquare,
     CanvasCircle,
     CanvasRoundedRectangle,
-    CanvasGroup,
 } from './../../class/constants_3';
 
 import * as jsPDF from 'jspdf'
