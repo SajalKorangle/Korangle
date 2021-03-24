@@ -8,7 +8,7 @@ import { Component, Input,OnInit, ViewEncapsulation } from '@angular/core';
 
 export class GroupHierarchyListComponent implements OnInit {
 
-    @Input() group;
+    @Input() element;
     @Input() vm;
     @Input() displayCheckBox;
 

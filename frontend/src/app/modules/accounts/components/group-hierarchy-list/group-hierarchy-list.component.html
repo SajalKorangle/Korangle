@@ -1,30 +1,32 @@
-<mat-expansion-panel class="mat-elevation-z0">
-    <mat-expansion-panel-header>
-        <div style="width: 100%;">
-            <span class="group-font">{{group.title}}</span>
-            <mat-checkbox  *ngIf="displayCheckBox"
-                    [checked]="vm.isElementSelected(group)" 
-                    (change)="vm.changeElementStatus(group, $event.checked); vm.selectParentGroups(group, $event.checked); vm.changeChildStatus(group, $event.checked)" 
-                    style="float:right; margin-top:2px;  margin-right: 10px" 
-                    (click)="$event.stopPropagation()"></mat-checkbox>
-        </div>
-    </mat-expansion-panel-header>
-    <div *ngFor="let child of group.childs" >
-        <div *ngIf="child.type == 'ACCOUNT'" style="margin: 5px 0px; padding-left: 24px">
-            <span class="account-font">{{child.title}}&nbsp;A/c</span>
-            <mat-checkbox   *ngIf="displayCheckBox"
-                            [checked]="vm.isElementSelected(child)" 
-                            [disabled]="vm.isElementDisabled(child)"
-                            (change)="vm.changeElementStatus(child, $event.checked); vm.selectParentGroups(child, $event.checked)" 
-                            style="float:right; margin-top:2px;  margin-right: 18px"></mat-checkbox>
-            <span class="account-font" style="float: right; margin-right: 15px">Cr: {{child.currentBalance}}</span>
-        </div>
-        <div *ngIf="child.type == 'GROUP' ">
-            <group-hierarchy-list
-                        [group]="child"
-                        [vm]="vm"
-                        [displayCheckBox]="displayCheckBox"
-                        ></group-hierarchy-list>
-        </div>
+<div *ngIf="element.type == 'ACCOUNT' else groupView" class="hoverable-div left-line" style="margin: 0; padding: 5px 0px; padding-left: 24px">
+    <span class="account-font">{{element.title}}&nbsp;A/c</span>
+    <mat-checkbox   *ngIf="displayCheckBox"
+                    [checked]="vm.isElementSelected(element)" 
+                    [disabled]="vm.isElementDisabled(element)"
+                    (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked)" 
+                    style="float:right; margin-top:2px;  margin-right: 18px"></mat-checkbox>
+    <span class="account-font" [style.color]="element.currentBalance | coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{element.currentBalance}}</span>
+</div>
+<ng-template #groupView>
+    <div class="left-line">
+        <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+            <mat-expansion-panel-header>
+                <div style="width: 100%;">
+                    <span class="group-font">{{element.title}}</span>
+                    <mat-checkbox  *ngIf="displayCheckBox"
+                            [checked]="vm.isElementSelected(element)" 
+                            (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked); vm.changeChildStatus(element, $event.checked)" 
+                            style="float:right; margin-top:2px;  margin-right: 10px" 
+                            (click)="$event.stopPropagation()"></mat-checkbox>
+                </div>
+            </mat-expansion-panel-header>
+            <div *ngFor="let child of element.childs" >
+                <group-hierarchy-list
+                            [element]="child"
+                            [vm]="vm"
+                            [displayCheckBox]="displayCheckBox"
+                            ></group-hierarchy-list>
+            </div>
+        </mat-expansion-panel>
     </div>
-</mat-expansion-panel>
+</ng-template>

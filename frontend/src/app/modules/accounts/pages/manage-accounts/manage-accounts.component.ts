@@ -57,6 +57,8 @@ export class ManageAccountsComponent{
 
     searchList: Array<customAccount> = [];
 
+    listView: boolean = true;
+
     constructor( 
         public dialog: MatDialog,
         public accountsService: AccountsService,

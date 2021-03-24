@@ -13,7 +13,7 @@ export const APPROVAL_STATUS = {
     'DECLINED': 'DECLINED',
 };
 
-export const NEGATIVE_BALANCE_COLOR = 'rgba(76, 175, 80, 1)';
+export const NEGATIVE_BALANCE_COLOR = 'red';
 export const POSITIVE_BALANCE_COLOR = 'rgba(86, 142, 174, 1)';
 
 export interface customAccount extends AccountSession{

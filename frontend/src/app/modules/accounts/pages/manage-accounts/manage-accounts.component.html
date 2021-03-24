@@ -15,10 +15,10 @@
                         placeholder="Search Account Name">
                 </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" style="text-align: right;">
                 <button (click)="openAddAccountDialog()" class="custom-button">Create Account</button>
-                <button (click)="openAddGroupDialog()" class="custom-button" style="margin-left: 10px;">Create Group</button>
-
+                <button (click)="openAddGroupDialog()" class="custom-button" style="margin-left: 10px;">Create Group</button><br/>
+                <mat-slide-toggle [(ngModel)]="listView" style="margin-top: 8px;">List View</mat-slide-toggle>
             </div>
         </div>
         <div *ngIf="searchList.length > 0">
@@ -38,61 +38,84 @@
             </div>
 
         </div>
-        <ng-container *ngFor="let head of headsList;">
-        <div class="row">
-            <div class="row col-md-12" style="margin-bottom: 10px;">
-                <div class="col-md-12"><span><strong>{{head.title}}</strong></span></div>
-            </div>
-            <div class="row col-md-12">
-                <div *ngFor="let element of hierarchyStructure[head.title]">
-                    <div class="col-md-3">
-                        <mat-card style="margin-bottom: 10px; cursor: pointer;" (click)="openEditDialog(element); $event.stopPropagation();">
-                            <mat-card-title style="width: 100%;">
-                                <span>{{element.title}}</span>
-                                <ng-container *ngIf="element.type == 'ACCOUNT'">
-                                    <span>&nbsp;A/c</span>
-                                    <span [style.color]="element.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px;">&nbsp;Bal {{element.currentBalance}}</span>
-                                </ng-container>
-                                <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
-                            </mat-card-title>
-                            <mat-card-content *ngIf="element.type == 'GROUP'">
-                                <div *ngFor="let child of element.childs" style="cursor: pointer;" (click)="openEditDialog(child); $event.stopPropagation()">
-                                    <ng-container *ngIf="child.type == 'ACCOUNT'">
-                                        <span>{{child.title}}&nbsp;A/c</span>
-                                        <span [style.color]="child.currentBalance | coloredBalance"  style="font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
+        <ng-container *ngIf="!listView">
+            <ng-container  *ngFor="let head of headsList;">
+            <div class="row">
+                <div class="row col-md-12" style="margin-bottom: 10px;">
+                    <div class="col-md-12"><span><strong>{{head.title}}</strong></span></div>
+                </div>
+                <div class="row col-md-12">
+                    <div *ngFor="let element of hierarchyStructure[head.title]">
+                        <div class="col-md-3">
+                            <mat-card style="margin-bottom: 10px; cursor: pointer;" (click)="openEditDialog(element); $event.stopPropagation();">
+                                <mat-card-title style="width: 100%;">
+                                    <span>{{element.title}}</span>
+                                    <ng-container *ngIf="element.type == 'ACCOUNT'">
+                                        <span>&nbsp;A/c</span>
+                                        <span [style.color]="element.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px;">&nbsp;Bal {{element.currentBalance}}</span>
                                     </ng-container>
-                                        <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
-                                        <mat-card-title style="width: 100%;">
-                                            <span>{{child.title}}</span>
-                                            <hr style="margin-top:4px;margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
-                                        </mat-card-title>
-                                        <mat-card-content>
-                                            <div *ngFor="let grandchild of child.childs" style="cursor: pointer;" (click)="openEditDialog(grandchild); $event.stopPropagation()">
-                                                <ng-container *ngIf="grandchild.type == 'ACCOUNT'">
-                                                    <span>{{grandchild.title}}&nbsp;A/c</span>
-                                                    <span [style.color]="grandchild.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
-                                                </ng-container>
-                                                <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
-                                                    <mat-card-title>
-                                                        <span>{{grandchild.title}}</span>
-                                                        <i class="material-icons" style="vertical-align: -7px;float:right;cursor: pointer;" (click)="displayWholeGroup(grandchild)">keyboard_arrow_right</i>
-                                                    </mat-card-title>
-                                                </mat-card>
-                                            </div>
-                                        </mat-card-content>
-                                    </mat-card>
-                                </div>
-                            </mat-card-content>
-                        </mat-card>
+                                    <hr *ngIf="element.type == 'GROUP'" style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
+                                </mat-card-title>
+                                <mat-card-content *ngIf="element.type == 'GROUP'">
+                                    <div *ngFor="let child of element.childs" style="cursor: pointer;" (click)="openEditDialog(child); $event.stopPropagation()">
+                                        <ng-container *ngIf="child.type == 'ACCOUNT'">
+                                            <span>{{child.title}}&nbsp;A/c</span>
+                                            <span [style.color]="child.currentBalance | coloredBalance"  style="font-size:13px; margin-bottom: 10px"><br>Bal {{child.currentBalance}}</span>
+                                        </ng-container>
+                                            <mat-card *ngIf="child.type == 'GROUP'" style="margin-bottom: 10px;">
+                                            <mat-card-title style="width: 100%;">
+                                                <span>{{child.title}}</span>
+                                                <hr style="margin-top:4px;margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
+                                            </mat-card-title>
+                                            <mat-card-content>
+                                                <div *ngFor="let grandchild of child.childs" style="cursor: pointer;" (click)="openEditDialog(grandchild); $event.stopPropagation()">
+                                                    <ng-container *ngIf="grandchild.type == 'ACCOUNT'">
+                                                        <span>{{grandchild.title}}&nbsp;A/c</span>
+                                                        <span [style.color]="grandchild.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px"><br>Bal {{grandchild.currentBalance}}</span>
+                                                    </ng-container>
+                                                    <mat-card *ngIf="grandchild.type == 'GROUP'" style="padding: 10px; margin-top: 5px">
+                                                        <mat-card-title>
+                                                            <span>{{grandchild.title}}</span>
+                                                            <i class="material-icons" style="vertical-align: -7px;float:right;cursor: pointer;" (click)="displayWholeGroup(grandchild)">keyboard_arrow_right</i>
+                                                        </mat-card-title>
+                                                    </mat-card>
+                                                </div>
+                                            </mat-card-content>
+                                        </mat-card>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
                     </div>
+
+                </div>
+                <div class="row col-md-12" >
+                    <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
                 </div>
 
             </div>
-            <div class="row col-md-12" >
-                <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
-            </div>
-
-        </div>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="listView">
+            <ng-container *ngFor="let head of headsList;">
+                <div class="col-md-12">
+                <mat-expansion-panel class="mat-elevation-z0" expanded="true">
+                    <mat-expansion-panel-header style="padding-left:20px; padding-right: 2px">
+                        <div style="width: 100%;">
+                            <span>{{head.title}}</span>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <div class="mat-expansion-panel-body" *ngFor="let element of hierarchyStructure[head.title]" >
+                        <group-hierarchy-list
+                                    [element]="element"
+                                    [vm]="this"
+                                    [displayCheckBox]="false"
+                                    ></group-hierarchy-list>
+                    </div>
+                </mat-expansion-panel>
+                <hr style="margin: 2px;"/>
+                </div>
+            </ng-container>
         </ng-container>
     </div>
     <div *ngIf="!displayWholeList">
