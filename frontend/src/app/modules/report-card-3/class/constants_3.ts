@@ -2331,6 +2331,7 @@ export class Result extends CanvasText implements Layer{
 
     layerDataUpdate(): void {
         let numberOfFailedSubjects = 0;
+        this.marksLayers = this.marksLayers.filter(m => m && this.ca.layers.find(l => l.id == m.id));
         this.marksLayers.forEach((layer: MarksLayer | Formula, index: number) => {
             if (!layer.marks || layer.marks < this.rules.passingMarks[index]) {
                 numberOfFailedSubjects++;

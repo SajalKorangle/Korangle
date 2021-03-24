@@ -37,8 +37,12 @@ export class ResultDialogComponent implements OnInit {
       });
       if (!alreadyPresent) {
         this.marksLayers.push(this.newMarksLayer);
-        this.rules.remarks[this.marksLayers.length] = '';
-        this.rules.colorRule[this.marksLayers.length] = '#000000';
+        if (!this.rules.remarks[this.marksLayers.length]) {
+          this.rules.remarks[this.marksLayers.length] = '';
+        }
+        if (!this.rules.colorRule[this.marksLayers.length]) {
+          this.rules.colorRule[this.marksLayers.length] = '#000000';
+        }
         this.rules.passingMarks[this.marksLayers.length-1] = DEFAULT_PASSING_MARKS;
       }
     }
@@ -46,8 +50,6 @@ export class ResultDialogComponent implements OnInit {
 
   removeMarksLayer(index: number): void{
     this.marksLayers.splice(index, 1);
-    this.rules.remarks.splice(index + 1, 1);
-    this.rules.colorRule.splice(index + 1, 1);
     this.rules.passingMarks.splice(index, 1);
   }
 
