@@ -482,7 +482,7 @@
         <!-- Custom Documents Parameter -->
         <div class="row">
             <div *ngFor="let parameter of studentParameterList">
-            	<div *ngIf="parameter.parameterType=='DOCUMENT'"  id="documentContainer" class="col-md-5" style="margin-top: 10px;margin-right:10px" [class.fieldChanged]="checkCustomFieldChanged(parameter)">
+            	<div *ngIf="parameter.parameterType=='DOCUMENT'" class="col-md-5" style="margin-top: 10px;margin-right:10px" [class.fieldChanged]="checkCustomFieldChanged(parameter)">
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
                     	<input id="{{parameter.id}}" class="dropinput"
                     		type="file"

@@ -529,9 +529,10 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     resizeContainer(element:any):void {
-        const docContainer=this.findAncestor(element,'col-md-5');
-        const docText=this.findAncestor(element,'documentText');
+        let docText=element.parentElement;
+        let docContainer=docText.parentElement.parentElement;
         if(docContainer && docText) {
+            console.log( docText.clientHeight )
             let textHeight = docText.clientHeight + 26;
             if (textHeight > 120) {
                 docContainer.style.height = textHeight + 'px';
@@ -540,10 +541,5 @@ export class UpdateProfileComponent implements OnInit {
             }
         }
     }
-
-    findAncestor(el, cls) {
-        while ((el = el.parentElement) && !el.classList.contains(cls))
-        return el;
-    }
-
+    
 }
