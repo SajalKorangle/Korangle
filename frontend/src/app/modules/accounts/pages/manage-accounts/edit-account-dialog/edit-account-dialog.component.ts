@@ -124,7 +124,9 @@ export class EditAccountDialogComponent implements OnInit {
           }
           Promise.all([
             this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.accounts, account_data),
-          ]).then(value =>{
+          ]).then(value => {
+            this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != value[0]});
+
             this.data.vm.serviceAdapter.initialiseDisplayData();
             alert('Account Deleted Successfully');
             this.dialogRef.close();
