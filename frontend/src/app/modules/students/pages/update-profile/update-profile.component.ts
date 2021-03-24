@@ -1,6 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 import {UpdateProfileServiceAdapter} from './update-profile.service.adapter'
+
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import {DataStorage} from "../../../../classes/data-storage";
@@ -9,9 +10,6 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 import {MatDialog} from '@angular/material';
 import {MultipleFileDialogComponent} from '../../multiple-file-dialog/multiple-file-dialog.component';
 import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
-
-
-
 
 declare const $: any;
 
@@ -23,6 +21,7 @@ declare const $: any;
 })
 
 export class UpdateProfileComponent implements OnInit {
+
     
     
     user;
@@ -58,7 +57,7 @@ export class UpdateProfileComponent implements OnInit {
     serviceAdapter: UpdateProfileServiceAdapter
 
     commonFunctions: CommonFunctions;
-
+    
 
     constructor (public studentService: StudentService,
         public schoolService: SchoolService,
@@ -75,7 +74,8 @@ export class UpdateProfileComponent implements OnInit {
         this.deleteList=[]
         this.profileImage=this.NULL_CONSTANT
     }
-    
+
+
     handleDetailsFromParentStudentFilter(value): void {
         this.classList = value['classList'];
         this.sectionList = value['sectionList'];
@@ -287,7 +287,7 @@ export class UpdateProfileComponent implements OnInit {
         	if (document_value){
         		let document_name = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id).document_name
         		let urlList=[]
-		        if (document_name){ 
+		        if (document_name){
 		            urlList = document_name.split(".")
 		        }
 		        else{
@@ -386,7 +386,7 @@ export class UpdateProfileComponent implements OnInit {
         }
     }
     
-    getDocumentName(parameter,element:any){
+    getDocumentName(parameter){
         let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id)
         if (item) {
             if (item.document_name){
@@ -394,13 +394,11 @@ export class UpdateProfileComponent implements OnInit {
             }
             else{
                 let document_name = item.document_value.split("/")
-                document_name = document_name[document_name.length-1];
+                document_name = document_name[document_name.length-1]
                 return document_name.substring(document_name.indexOf("_")+1,document_name.length);
             }
         }
-        
     }
-    
     
     updateDocuments = (parameter, value,element) => {
         const options = this.studentParameterList.filter(parameter=>(parameter.parameterType=="DOCUMENT"))
@@ -497,11 +495,11 @@ export class UpdateProfileComponent implements OnInit {
     
     openFilePreviewDialog(parameter): void {
         if(this.getParameterDocumentType(parameter)!='none') {
-            let type = this.getParameterDocumentType(parameter);
-            let file = this.getParameterDocumentValue(parameter);
-            let dummyImageList = [];
-            if (type == "img") {
-                let data = {'imageUrl': file};
+        let type=this.getParameterDocumentType(parameter);
+        let file = this.getParameterDocumentValue(parameter);
+         let dummyImageList=[];
+            if(type=="img"){
+                let data={'imageUrl':file};
                 dummyImageList.push(data);
             }
             const dialogRef = this.dialog.open(ViewImageModalComponent, {
@@ -509,7 +507,7 @@ export class UpdateProfileComponent implements OnInit {
                 maxHeight: '100vh',
                 height: '100%',
                 width: '100%',
-                data: {'imageList': dummyImageList, 'file': file, 'index': 0, 'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
+                data: {'imageList':dummyImageList,'file':file,'index':0,'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
             });
             dialogRef.afterClosed().subscribe(result => {
                 console.log('The dialog was closed');
