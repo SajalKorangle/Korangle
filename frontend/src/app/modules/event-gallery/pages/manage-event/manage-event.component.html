@@ -1,0 +1,174 @@
+<div class="card-content table-responsive">
+    <div *ngIf="isLoading" class="loader-cont">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+
+    <ng-container *ngIf="!isLoading">
+
+        <div class="row">
+            <div class="col-md-4">
+                <form class="example-form">
+                    <mat-form-field style="width: 100%" floatPlaceholder="never">
+                        <input type="text"
+                               placeholder="Search by event title"
+                               aria-label="Event"
+                               matInput
+                               [formControl]="eventFormControl"
+                               [matAutocomplete]="autoCompleteEvent">
+                        <mat-autocomplete #autoCompleteEvent="matAutocomplete"
+                                          (optionSelected)="htmlAdapter.handleEventSelection($event.option.value)"
+                                          [displayWith]="htmlAdapter.displayEventTitle">
+                            <mat-option *ngFor="let event of filteredEventList | async" [value]="event">
+                                {{event.title}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </form>
+            </div>
+        </div>
+
+        <div *ngIf="isEventLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </div>
+
+        <ng-container *ngIf="selectedEvent && !isEventLoading">
+
+            <div class="row">
+                <div class="col-md-4" style="font-weight: 400;">
+                    <span style="font-size: 12px;">Title</span><br>
+                    <span style="font-size: 16px;display:block;margin-top:6px;">{{selectedEvent.title}}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;font-weight: 400;">
+                <div class="col-md-11">
+                    <span style="font-size: 12px;">Text</span><br>
+                    <span style="font-size: 16px;display:block;margin-top:6px;white-space: pre-line;line-height: 19px;word-wrap: break-word;">{{selectedEvent.description}}</span>
+                </div>
+            </div>
+
+            <div class="row" style="margin:20px 5px 30px;">
+                <div class="col-md-12"
+                     style="border-bottom: 1px solid lightgrey;"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span style="font-size: 14px;font-weight:400;">Tags</span><br>
+                            <button class="btn" id="generate-tags-btn" (click)="htmlAdapter.generateNewTag()"
+                                    style="background-color:#ABABAB;width: 20px;height: 28px;padding:0;">+
+                            </button>
+                            <div class="btn" id="new-tag"
+                                 style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none;display: none;"
+                                 (blur)="htmlAdapter.createTag($event)"  (paste)="htmlAdapter.onPaste($event)" (keydown)="htmlAdapter.onKeyDown($event)"
+                                 contenteditable></div>
+                            <div *ngIf="isTagCreating" class="loader-custom"></div>
+                            <ng-container *ngFor="let eventTag of eventTagList">
+                                <div class="btn"
+                                     style="background:#ABABAB;height : 28px;padding:5px;margin-left:5px;text-transform:none"
+                                     [ngClass]="{'selectedTag' : eventTag.selected}"
+                                     (paste)="htmlAdapter.onPaste($event)"
+                                     (click)="htmlAdapter.selectTag($event,eventTag)" (blur)="htmlAdapter.saveTag($event,eventTag)" 
+                                     (keydown)="htmlAdapter.onKeyDown($event)">{{eventTag.tagName}}</div>
+                            </ng-container>
+                            <button *ngIf="eventTagList.length>0"
+                                    class="btn btn-{{htmlAdapter.checkTagEditable() =='active' && htmlAdapter.checkMediaSelected() == 'active' && !isAssigning?user.activeSchool.secondaryThemeColor:'inactive' }}"
+                                    (click)="htmlAdapter.assignSelectedTags()"
+                                    [disabled]="(htmlAdapter.checkTagEditable()=='inactive' || htmlAdapter.checkMediaSelected() == 'inactive')"
+                                    style="float: right;width: 94px;height: 41px;padding: 0;border-radius: 5px;"><span
+                                    *ngIf="!isAssigning">{{htmlAdapter.getAssignStatus()?'Assign Tag':'UnAssign Tag'}}</span>
+                                <div *ngIf="isAssigning" class="loader-custom"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="eventTagList.length>0">
+                        <div class="col-md-5">
+                            <mat-icon style="font-size:20px;position: relative;top: 4px;"
+                                      [ngStyle]="{'color':htmlAdapter.checkTagEditable()=='active'?'#ff9800':'#ABABAB'}">edit
+                            </mat-icon>
+                            <a href="javascript:void(0)" (click)="htmlAdapter.editSelectedTag()"
+                               class="editTag {{htmlAdapter.checkTagEditable()}}">Edit Tag</a>
+                            <mat-icon style="font-size:20px;margin-left:15px;position: relative;top: 4px;"
+                                      [ngStyle]="{'color':htmlAdapter.checkTagSelected()=='active'?'#ff9800':'#ABABAB'}">
+                                delete_outline
+                            </mat-icon>
+                            <a href="javascript:void(0)" (click)="htmlAdapter.deleteSelectedTag()"
+                               class="editTag {{htmlAdapter.checkTagSelected()}}">Delete Tag</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <mat-card style="margin-top: 20px;">
+
+                <div class="row" *ngIf="eventImageList.length>0">
+                    
+                    <div class="col-md-12">
+                        <mat-checkbox (change)="htmlAdapter.selectAllMedia($event)"
+                                      [checked]="htmlAdapter.getSelectedImagesCount() == eventImageList.length"
+                                      [disabled]="isDeletingImages || isImageUploading"><span class="editTag"
+                                                                                              style="color: orange"> Select All Media </span>
+                        </mat-checkbox>
+                        <mat-icon style="margin-left:20px;position: relative;top: 4px;"
+                                  [ngStyle]="{'color':htmlAdapter.checkMediaSelected()=='active'?'#ff9800':'#ABABAB'}">
+                            delete_outline
+                        </mat-icon>
+                        <a href="javascript:void(0)" (click)="htmlAdapter.deleteSelectedMedia()"
+                           class="editTag {{htmlAdapter.checkMediaSelected()}}"><span *ngIf="!isDeletingImages">Delete Media</span></a>
+                        <ng-container *ngIf="isDeletingImages">
+                            <div class="loader__dot" style="display: inline-block;color:#ff9800">Deleting Media<span
+                                    class="loader__dot">.</span><span class="loader__dot">.</span><span
+                                    class="loader__dot">.</span></div>
+                        </ng-container>
+                        <span style="float: right">{{htmlAdapter.getSelectedImagesCount()}} Selected</span>
+                    </div>
+                    
+                </div>
+
+                <mat-card-content style="max-height: 400px;overflow: auto">
+                    <div class="image-row">
+                       
+                        <button type="submit" class="image-column"
+                                style="cursor: pointer;margin-left:8px;">
+                            <input type='file' class="dropinput"
+                                   [style.top]="eventImageList.length > 0 ? '65px' : '22px'" title=""
+                                   (input)="htmlAdapter.readURL($event);imageInput.value = null" (click)="imageInput.value = null"
+                                   [disabled]="isImageUploading || isDeletingImages" multiple="multiple"
+                                   accept="image/jpeg,image/png" #imageInput/>
+                            <span style="font-size:35px;font-weight: 400;">+</span><br>
+                            <span style="font-weight: 400;" *ngIf="!isMobile() && !isImageUploading">Upload media or drop it here</span>
+                            <ng-container *ngIf="isImageUploading">
+                                <div class="loader__dot">Uploading<span class="loader__dot">.</span><span
+                                        class="loader__dot">.</span><span class="loader__dot">.</span></div>
+                            </ng-container>
+                        </button>
+                        
+                        <ng-container *ngFor="let image of eventImageList; let i = index" style="display: inline-block">
+                            <div class="image-column">
+                                <input type="checkbox" id="myCheckbox{{i}}"
+                                       [disabled]="isDeletingImages || isImageUploading" [checked]="image.selected"
+                                       (change)="image.selected = !image.selected"/>
+                                <label for="myCheckbox{{i}}">
+                                    <img src="{{image.eventImage}}" title="Select" class="hover-shadow cursor">
+                                    <div class="view-image-icon-container">
+                                        <mat-icon class="view-eye" (click)="htmlAdapter.showPreview($event,image,i)">
+                                            remove_red_eye
+                                        </mat-icon>
+                                    </div>
+                                </label>
+                            </div>
+                        </ng-container>
+                        
+                    </div>
+                </mat-card-content>
+                
+            </mat-card>
+        </ng-container>
+    </ng-container>
+</div>

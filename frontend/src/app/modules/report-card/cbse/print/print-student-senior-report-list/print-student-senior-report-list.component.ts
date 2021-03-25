@@ -30,7 +30,10 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     classSubjectList: any;
     showPrincipalSignature: any;
     classTeacherSignature: any;
+    showPromotionStatement: any;
+    showAbsentOnZero: any;
 
+    absentValue = 'Abs.';
     attendance_status_list = ATTENDANCE_STATUS_LIST;
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
@@ -57,6 +60,8 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
         this.classSubjectList = value['classSubjectList'];
         this.showPrincipalSignature = value['showPrincipalSignature'];
         this.classTeacherSignature = value['classTeacherSignature'];
+        this.showPromotionStatement = value['showPromotionStatement'];
+        this.showAbsentOnZero = value['showAbsentOnZero'];
         this.viewChecked = false;
     }
 
@@ -118,60 +123,75 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
             case 3:
                 result = 'Session 2019-20';
                 break;
+            case 4:
+                result = 'Session 2020-21';
+                break;
+            case 5:
+                result = 'Session 2021-22';
+                break;
         }
         return result;
     }
 
     getExaminationMarks(student: any, classSubject: any, examinationId: any, baseMarks: any): any {
-        let maximumMarks = this.testList.filter(test => {
-            // return test.parentExamination == examinationId && test.parentSubject == classSubject.parentSubject;
+        let testTypeList = [];
+        let filteredTestList = this.testList.filter(test => {
             return test.parentExamination == examinationId
                 && test.parentSubject == classSubject.parentSubject
                 && test.parentClass == classSubject.parentClass
                 && test.parentDivision == classSubject.parentDivision;
-        }).reduce((total, a) => {
-            return total+a.maximumMarks;
+        });
+        filteredTestList.forEach(test => {
+            testTypeList.push(test.testType);
+        });
+        let maximumMarks = filteredTestList.reduce((total, a) => {
+            return total+Number(a.maximumMarks);
         }, 0);
         if (maximumMarks == 0) {
-            console.log('Maxium Marks is coming to be zero');
+            console.log('Maximum Marks is coming to be zero');
             return 0;
         }
         let studentMarks = this.studentTestList.filter(studentTest => {
             return studentTest.parentExamination == examinationId
                 && studentTest.parentSubject == classSubject.parentSubject
+                && testTypeList.includes(studentTest.testType)
                 && studentTest.parentStudent == student.id;
         }).reduce((total, a) => {
-            return total+a.marksObtained;
+            return total+Number(a.marksObtained);
         }, 0);
         return (studentMarks*baseMarks/maximumMarks);
     }
 
-    getPeriodicTestMarks(student: any, classSubject: any, term: any): any {
+    getPeriodicTestMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationPeriodicTest;
-        return this.getExaminationMarks(student, classSubject, examinationId, 10);
+        let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 10);
+        return handleAbsent ? (examinationMarks == 0 ? this.absentValue : examinationMarks) : examinationMarks;
     }
 
-    getNoteBookMarks(student: any, classSubject: any, term: any): any {
+    getNoteBookMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationNoteBook;
-        return this.getExaminationMarks(student, classSubject, examinationId, 5);
+        let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 5);
+        return handleAbsent ? (examinationMarks == 0 ? this.absentValue : examinationMarks) : examinationMarks;
     }
 
-    getSubEnrichmentMarks(student: any, classSubject: any, term: any): any {
+    getSubEnrichmentMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationSubEnrichment;
-        return this.getExaminationMarks(student, classSubject, examinationId, 5);
+        let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 5);
+        return handleAbsent ? (examinationMarks == 0 ? this.absentValue : examinationMarks) : examinationMarks;
     }
 
-    getFinalTermMarks(student: any, classSubject: any, term: any): any {
+    getFinalTermMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
         let examinationId = this.reportCardMappingList.find(reportCardMapping => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationFinalTerm;
-        return this.getExaminationMarks(student, classSubject, examinationId, 80);
+        let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 80);
+        return handleAbsent ? (examinationMarks == 0 ? this.absentValue : examinationMarks) : examinationMarks;
     }
 
     getOverallMarks(student: any, classSubject: any, term: any): any {

@@ -19,6 +19,7 @@ import { ContactUsComponent } from './frontpage/contact-us/contact-us.component'
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
+import {DecimalPipe} from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -41,7 +42,7 @@ import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/wha
     ],
     exports: [
     ],
-  providers: [ { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService ],
+  providers: [ { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

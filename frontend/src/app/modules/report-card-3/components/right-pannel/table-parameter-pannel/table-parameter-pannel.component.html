@@ -1,0 +1,204 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">backup_table</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+        <div style="text-align: center;">
+            <span>(X, Y): ({{getCellX()}},{{getCellY()}})</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; margin: 6px; margin-bottom: 12px;">
+            <div style="width: 100%; display: flex; flex-direction: row;"
+                    *ngFor="let row of layer.rowsList; let i = index">
+                <ng-container *ngFor="let column of layer.columnsList; let j = index">
+                    <span style="height: 15px; width: 15px;; margin: 1px; cursor: pointer;"
+                         (click)="checkCell(i ,j)"
+                         [style.backgroundColor]="isCellSelected(i,j)==true?'blue':'lightgrey'">
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+
+        <button *ngIf="layer.selectedCells.length>0" (click)="layer.selectedCells=[]" mat-stroked-button style="width: calc(100% - 8px); margin: 4px;">Reset Selection</button>
+
+        <div class="row col-md-12" style="margin-top: 2px; margin-bottom: 2px; padding-right: 0px">
+            Row : 
+            <button class="btn btn-secondary material-icons"
+                matTooltip="Delete Selected Rows"
+                style="margin: 0px;padding:0px; margin-left: 15px; margin-right: 2px; float:right"
+                (click)="deleteSelectedRows();layer.updateTableMetrix(); canvasRefresh(0);">
+                delete</button>
+
+            <button class="btn btn-secondary material-icons"
+                matTooltip="Add Row After"       
+                style="margin: 0px;padding:0px; margin-left: 2px; margin-right: 2px; float:right"
+                (click)="addRowAfter();layer.updateTableMetrix(); canvasRefresh(0);">
+                expand_more</button>
+
+            <button class="btn btn-secondary material-icons"
+            matTooltip="Add Row Before"
+                style="margin: 0px;padding:0px; margin-left: 2px; margin-right: 2px; float:right"
+                (click)="shiftRowCorrdinates();addRowBefore();layer.updateTableMetrix(); canvasRefresh(0);">
+                expand_less</button>
+
+
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 5px;  margin-bottom: 5px; padding-right: 0px">
+            Column : 
+            
+            <button class="btn btn-secondary material-icons"
+            matTooltip="Delete Selected Columns"
+                style="margin: 0px;padding:0px; margin-left: 15px; margin-right: 2px; float:right"
+                (click)="deleteSelectedColumns();layer.updateTableMetrix(); canvasRefresh(0);">
+                delete</button>
+            
+                
+            <button class="btn btn-secondary material-icons"
+            matTooltip="Add Column After"
+                style="margin: 0px;padding:0px; margin-left: 2px; margin-right: 2px; float:right"
+                (click)="addColumnAfter();layer.updateTableMetrix(); canvasRefresh(0);">
+                chevron_right</button>
+
+            <button class="btn btn-secondary material-icons"
+            matTooltip="Add Column Before"
+                style="margin: 0px;padding:0px; margin-left: 2px; margin-right: 2px; float:right"
+                (click)="shiftColumnCorrdinates();addColumnBefore();layer.updateTableMetrix(); canvasRefresh(0);">
+                chevron_left</button>
+
+            
+        </div>
+
+        <!-- <div class="row col-md-12" style="margin-top: 2px;  margin-bottom: 2px;">
+            Delete Rows: 
+            <button class="btn btn-secondary material-icons"
+                style="margin: 0px;padding:0px; margin-left: 2px; margin-right: 2px;"
+                (click)="deleteSelectedRows();layer.updateTableMetrix(); canvasRefresh(0);">
+                delete</button>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 2px;  margin-bottom: 2px;">
+            Delete Columns: 
+            <button class="btn btn-secondary material-icons"
+                style="margin: 0px;padding:0px; margin-left: 2px; margin-right: 2px"
+                (click)="deleteSelectedColumns();layer.updateTableMetrix(); canvasRefresh(0);">
+                delete</button>
+        </div> -->
+
+        <div *ngIf="layer.selectedCells.length > 0">
+        
+            <mat-form-field>
+                <mat-label>
+                    Cell Background Color
+                </mat-label>
+                <input matInput type="color" [value]="getCellColor()" (input)="changeCellColor($event.target.value); canvasRefresh(0); "/>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    Selected Rows Height(mm)
+                </mat-label>
+                <input matInput type="number" [ngModel]="getRowHeight()" (ngModelChange)="changeRowHeight($event/getPixelTommFactor()) ;layer.updateTableMetrix(); canvasRefresh(); "/>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    Selected Columns Width(mm)
+                </mat-label>
+                <input matInput type="number" [ngModel]="getColumnWidth()" (ngModelChange)="changeColumnWidth($event/getPixelTommFactor()); layer.updateTableMetrix(); canvasRefresh()"/>
+            </mat-form-field>
+    
+            <span>Top Grid Line</span><br>
+            <div class="row" style="margin: 0px;">
+                <mat-checkbox class="col-md-5" style="margin-top: 10px ; padding: 0px" [ngModel]="getBorderValue('top')"
+                            (ngModelChange)="changeBorderValue('top', $event); layer.updateTableMetrix(); canvasRefresh()">Visible</mat-checkbox>          
+                <mat-form-field class="col-md-7">
+                    <mat-label>
+                        Width(mm)
+                    </mat-label>
+                    <input matInput type="number" [ngModel]="getBorderWidth('top')" (ngModelChange)="changeBorderWidth('top', $event/getPixelTommFactor()) ;layer.updateTableMetrix(); canvasRefresh(); "/>
+                </mat-form-field>
+
+                <mat-form-field class="col-md-12">
+                    <mat-label>
+                        Border Color
+                    </mat-label>
+                    <input matInput type="color" [value]="getBorderColor('top')" (input)="changeBorderColor('top',$event.target.value); canvasRefresh(0); "/>
+                </mat-form-field>
+                
+            </div>
+
+            <span>Bottom Grid Line</span><br>
+            <div class="row" style="margin: 0px;">
+                <mat-checkbox class="col-md-5" style="margin-top: 10px ; padding: 0px" [ngModel]="getBorderValue('bottom')"
+                            (ngModelChange)="changeBorderValue('bottom', $event); layer.updateTableMetrix(); canvasRefresh()">Visible</mat-checkbox>              
+                <mat-form-field class="col-md-7">
+                    <mat-label>
+                        Width(mm)
+                    </mat-label>
+                    <input matInput type="number" [ngModel]="getBorderWidth('bottom')" (ngModelChange)="changeBorderWidth('bottom', $event/getPixelTommFactor()) ;layer.updateTableMetrix(); canvasRefresh(); "/>
+                </mat-form-field>
+
+                <mat-form-field class="col-md-12">
+                    <mat-label>
+                        Border Color
+                    </mat-label>
+                    <input matInput type="color" [value]="getBorderColor('bottom')" (input)="changeBorderColor('bottom',$event.target.value); canvasRefresh(0); "/>
+                </mat-form-field>
+            </div>
+
+            <span>Left Grid Line</span><br>
+            <div class="row" style="margin: 0px;">
+                <mat-checkbox class="col-md-5" style="margin-top: 10px ; padding: 0px" [ngModel]="getBorderValue('left')"
+                            (ngModelChange)="changeBorderValue('left', $event); layer.updateTableMetrix(); canvasRefresh()">Visible</mat-checkbox>
+                <mat-form-field class="col-md-7">
+                    <mat-label>
+                        Width(mm)
+                    </mat-label>
+                    <input matInput type="number" [ngModel]="getBorderWidth('left')" (ngModelChange)="changeBorderWidth('left', $event/getPixelTommFactor()) ;layer.updateTableMetrix(); canvasRefresh(); "/>
+                </mat-form-field>
+                <mat-form-field class="col-md-12">
+                    <mat-label>
+                        Border Color
+                    </mat-label>
+                    <input matInput type="color" [value]="getBorderColor('left')" (input)="changeBorderColor('left',$event.target.value); canvasRefresh(0); "/>
+                </mat-form-field>
+            </div>
+
+            <span>Right Grid Line</span><br>
+            <div class="row" style="margin: 0px;">
+                <mat-checkbox class="col-md-5" style="margin-top: 10px ; padding: 0px" [ngModel]="getBorderValue('right')"
+                            (ngModelChange)="changeBorderValue('right', $event); layer.updateTableMetrix(); canvasRefresh()">Visible</mat-checkbox>        
+                <mat-form-field class="col-md-7">
+                    <mat-label>
+                        Width(mm)
+                    </mat-label>
+                    <input matInput type="number" [ngModel]="getBorderWidth('right')" (ngModelChange)="changeBorderWidth('right', $event/getPixelTommFactor()) ;layer.updateTableMetrix(); canvasRefresh(); "/>
+                </mat-form-field>
+                <mat-form-field class="col-md-12">
+                    <mat-label>
+                        Border Color
+                    </mat-label>
+                    <input matInput type="color" [value]="getBorderColor('right')" (input)="changeBorderColor('right',$event.target.value); canvasRefresh(0); "/>
+                </mat-form-field>
+            </div>
+
+           
+
+            <!-- <mat-form-field>
+                <mat-label>
+                    Stroke Weight(mm)
+                </mat-label>
+                <input matInput type="number" [ngModel]="(layer.tableStyle.lineWidth*getPixelTommFactor()).toFixed(2)" (ngModelChange)="layer.tableStyle.lineWidth = $event/getPixelTommFactor(); layer.updateTableMetrix(); canvasRefresh()"/>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>
+                    Stroke Color
+                </mat-label>
+                <input matInput type="color" [value]="layer.tableStyle.strokeStyle" (input)="layer.tableStyle.strokeStyle=$event.target.value; canvasRefresh(0);"/>
+            </mat-form-field> -->
+        </div>
+              
+    </div>
+</mat-card>

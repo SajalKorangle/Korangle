@@ -14,7 +14,7 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
 
   @Input() ca: DesignReportCardCanvasAdapter;
   @Input() layer: Layer;
-  @Input() layerIndex;
+  @Input() layerIndexes;
   @Output() closeMenu = new EventEmitter<null>();
 
   constructor() { }
@@ -36,13 +36,16 @@ export class CustomMenuComponent implements OnInit, OnDestroy {
   }
 
   deleteLayer(): void { // order of event propogation is : deleteLayer then menuClickhandler then documentClickhandler
-    this.ca.layers.splice(this.layerIndex, 1);
+    this.layerIndexes.forEach(i => {
+      delete this.ca.layers[i];
+    });
+    this.ca.layers = this.ca.layers.filter(Boolean);
     this.ca.activeLayer = null;
-    this.ca.activeLayerIndex = null;
+    this.ca.activeLayerIndexes = [];
   }
 
   duplicateLayer(): void{
-    this.ca.duplicateLayer(this.layer);
+    this.layerIndexes.forEach(i => this.ca.duplicateLayer(this.ca.layers[i]));
   }
 
   replaceLayer(): void{

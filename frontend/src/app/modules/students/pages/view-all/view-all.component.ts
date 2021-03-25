@@ -18,6 +18,8 @@ import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/ima
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
 import { toInteger, filter } from 'lodash';
+import {CommonFunctions} from '@classes/common-functions';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -92,6 +94,10 @@ export class ViewAllComponent implements OnInit {
     yesRTE = true;
     noRTE = true;
     noneRTE = true;
+
+    /* TC Options */
+    noTC = true;
+    yesTC = true;
 
     displayStudentNumber = 0;
 
@@ -239,9 +245,7 @@ export class ViewAllComponent implements OnInit {
     }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList.filter( student => {
-            return student.parentTransferCertificate == null;
-        });
+        this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
@@ -535,6 +539,12 @@ export class ViewAllComponent implements OnInit {
                 return;
             }
 
+            // Transfer Certiicate Check
+            if(!((this.noTC && !student.parentTransferCertificate) || (this.yesTC && student.parentTransferCertificate) )){
+                student.show = false;
+                return;
+            }
+
             // Custom filters check
             for (let x of this.getFilteredStudentParameterList()) {
                 let flag = x.showNone;
@@ -693,7 +703,7 @@ export class ViewAllComponent implements OnInit {
 
 		    ];
 		    this.studentFullProfileList.forEach(student => {
-		        if (student.selectProfile) {
+		        if (student.selectProfile && student.show) {
 		            template.push(this.getStudentDisplayInfo(student));
 		        }
 		    });
@@ -714,14 +724,26 @@ export class ViewAllComponent implements OnInit {
             } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
                 type = "img"
             }
-            const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
-                width: '600px',
-                data: {'file': file, 'type': type}
+            let dummyImageList=[];
+            if(type=="img"){
+                let data={'imageUrl':file};
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: {'imageList':dummyImageList,'file':file,'index':0,'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
             });
             dialogRef.afterClosed().subscribe(result => {
                 console.log('The dialog was closed');
             });
         }
+    }
+    
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 
     getHeaderValues(): any {

@@ -65,7 +65,7 @@ class ReportCardMappingView(CommonView, APIView):
         'parentExaminationPeriodicTest__parentSchool__id',
         'parentExaminationNoteBook__parentSchool__id',
         'parentExaminationSubEnrichment__parentSchool__id',
-        'parentExaminationFinalTerm____parentSchool__id'
+        'parentExaminationFinalTerm__parentSchool__id'
         ]
 
 
@@ -76,5 +76,5 @@ class ReportCardMappingListView(CommonListView, APIView):
         'parentExaminationPeriodicTest__parentSchool__id',
         'parentExaminationNoteBook__parentSchool__id',
         'parentExaminationSubEnrichment__parentSchool__id',
-        'parentExaminationFinalTerm____parentSchool__id'
+        'parentExaminationFinalTerm__parentSchool__id'
         ]
