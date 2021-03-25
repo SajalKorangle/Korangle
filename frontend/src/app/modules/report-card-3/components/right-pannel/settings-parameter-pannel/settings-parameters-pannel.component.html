@@ -7,6 +7,8 @@
             <input matInput [ngModel]="layer.alternateText"
                 (ngModelChange)="layer.alternateText = $event;layer.layerDataUpdate(); canvasRefresh();" placeholder="Enter Alternate Text ">
         </mat-form-field>
+
+        <mat-slide-toggle *ngIf="layer.LAYER_TYPE=='FORMULA' || layer.LAYER_TYPE=='MARKS'" [(ngModel)]="layer.export">Export</mat-slide-toggle>
     </div>
 
 </mat-card>
