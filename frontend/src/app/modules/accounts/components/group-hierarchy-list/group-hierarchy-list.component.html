@@ -1,18 +1,19 @@
-<div *ngIf="element.type == 'ACCOUNT' else groupView" class="hoverable-div left-line" style="margin: 0; padding: 5px 0px; padding-left: 24px">
+<div *ngIf="element.type == 'ACCOUNT' else groupView" class="hoverable-div left-line" style="margin: 0; padding: 5px 0px; padding-left: 24px; cursor: pointer;" (click)="customClick.emit(element); $event.stopPropagation()">
     <span class="account-font">{{element.title}}&nbsp;A/c</span>
     <mat-checkbox   *ngIf="displayCheckBox"
+                    (click)="$event.stopPropagation();"
                     [checked]="vm.isElementSelected(element)" 
                     [disabled]="vm.isElementDisabled(element)"
                     (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked)" 
                     style="float:right; margin-top:2px;  margin-right: 18px"></mat-checkbox>
-    <span class="account-font" [style.color]="element.currentBalance | coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{element.currentBalance}}</span>
+    <span class="account-font" [style.color]="element.currentBalance | coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{element[balanceName]}}</span>
 </div>
 <ng-template #groupView>
     <div class="left-line">
         <mat-expansion-panel class="mat-elevation-z0" expanded="true">
             <mat-expansion-panel-header>
                 <div style="width: 100%;">
-                    <span class="group-font">{{element.title}}</span>
+                    <span class="group-font" (click)="customClick.emit(element); $event.stopPropagation();" style="cursor: pointer;">{{element.title}}</span>
                     <mat-checkbox  *ngIf="displayCheckBox"
                             [checked]="vm.isElementSelected(element)" 
                             (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked); vm.changeChildStatus(element, $event.checked)" 
@@ -25,6 +26,8 @@
                             [element]="child"
                             [vm]="vm"
                             [displayCheckBox]="displayCheckBox"
+                            (customClick)="customClick.emit($event);"
+                            [balanceName]="'openingBalance'"
                             ></group-hierarchy-list>
             </div>
         </mat-expansion-panel>

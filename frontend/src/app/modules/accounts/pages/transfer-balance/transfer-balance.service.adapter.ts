@@ -94,7 +94,7 @@ export class TransferBalanceServiceAdapter{
 
         console.log('groupStructure: ', groupStructureList);
         nonIndividualAccount.forEach(accountSession => {    // pushing all accounts with parentGroup in child of its group
-            groupStructureList.find(id => accountSession.parentGroup).childs.push(accountSession);
+            groupStructureList.find(g => g.parentAccount==accountSession.parentGroup).childs.push(accountSession);
         });
 
         for(let i=0; i<groupStructureList.length; i++){

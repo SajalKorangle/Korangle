@@ -49,6 +49,8 @@
                                         [element]="element"
                                         [vm]="this"
                                         [displayCheckBox]="true"
+                                        [balanceName]="'currentBalance'"
+                                        (customClick)="toggleElementStatus($event)"
                                         ></group-hierarchy-list>
                         </div>
                     </mat-expansion-panel>
@@ -74,6 +76,7 @@
                                         [element]="element"
                                         [vm]="this"
                                         [displayCheckBox]="false"
+                                        [balanceName]="'currentBalance'"
                                         ></group-hierarchy-list>
                         </div>
                     </mat-expansion-panel>

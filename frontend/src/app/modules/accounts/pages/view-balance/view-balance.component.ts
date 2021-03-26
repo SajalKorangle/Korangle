@@ -145,7 +145,9 @@ export class ViewBalanceComponent implements OnInit {
     transactionsList: any;
     employeeList: any;
     
-    lockAccounts: any;
+  lockAccounts: any;
+  
+  listView: boolean = true;
       
     constructor( 
       public dialog: MatDialog,
@@ -165,7 +167,18 @@ export class ViewBalanceComponent implements OnInit {
         this.displayWholeList = true;
         this.displayLedger = false;
     }
+  
+    getHeadName(id: number) {
+      return this.headsList.find(h => h.id == id).title;
+  }
 
+    getGroupName(id: number) {
+        const group = this.groupsList.find(g => g.id == id);
+        if (group)
+            return group.title;
+        else
+            return null;
+    }
 
     handleSearch(event: any){
         console.log(event.target.value);

@@ -112,6 +112,15 @@ export class TransferBalanceComponent implements OnInit{
         account.selected = value;
     }
 
+    toggleElementStatus(element) {
+        const account = this.currentSessionAccountSessionList.find(account => account.parentAccount == element.parentAccount);
+        account.selected = !account.selected;
+        this.selectParentGroups(element, account.selected);
+        if (element.type == 'GROUP') {
+            this.changeChildStatus(element, account.selected);
+        }
+    }
+
     isElementSelected(element){
         return this.currentSessionAccountSessionList.find(account => account.parentAccount == element.parentAccount).selected;
     }

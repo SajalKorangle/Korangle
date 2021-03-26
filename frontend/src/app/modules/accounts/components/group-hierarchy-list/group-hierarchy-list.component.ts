@@ -1,4 +1,4 @@
-import { Component, Input,OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input,OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 @Component({
     selector: 'group-hierarchy-list',
     templateUrl: './group-hierarchy-list.component.html',
@@ -11,6 +11,8 @@ export class GroupHierarchyListComponent implements OnInit {
     @Input() element;
     @Input() vm;
     @Input() displayCheckBox;
+    @Input() balanceName;
+    @Output() customClick = new EventEmitter<any>();
 
     constructor (
         

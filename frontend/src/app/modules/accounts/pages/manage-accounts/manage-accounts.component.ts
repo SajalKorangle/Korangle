@@ -73,9 +73,20 @@ export class ManageAccountsComponent{
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         this.displayWholeList = true;
+        console.log('this: ', this);
     }
 
-    
+    getHeadName(id: number) {
+        return this.headsList.find(h => h.id == id).title;
+    }
+
+    getGroupName(id: number) {
+        const group = this.groupsList.find(g => g.id == id);
+        if (group)
+            return group.title;
+        else
+            return null;
+    }
 
     openAddAccountDialog(){
         const dialogRef = this.dialog.open(AddAccountDialogComponent, {

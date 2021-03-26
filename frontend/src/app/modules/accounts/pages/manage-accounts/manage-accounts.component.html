@@ -29,6 +29,10 @@
                             <mat-card-title><span style="cursor: pointer;">{{account.title}}&nbsp;A/c</span>
                                 <span [style.color]="account.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px">&nbsp;Bal {{account.currentBalance}}</span>
                             </mat-card-title>
+                            <mat-card-content>
+                                <span style="font-size: x-small;">Head: {{getHeadName(account.parentHead)}}</span>&nbsp;
+                                <span style="font-size: x-small;" *ngIf="account.parentGroup">Group: {{getGroupName(account.parentGroup)}}</span>
+                            </mat-card-content>
                         </mat-card>
                     </div>
                 </div>
@@ -110,6 +114,8 @@
                                     [element]="element"
                                     [vm]="this"
                                     [displayCheckBox]="false"
+                                    (customClick)="openEditDialog($event)"
+                                    [balanceName]="'openingBalance'"
                                     ></group-hierarchy-list>
                     </div>
                 </mat-expansion-panel>
