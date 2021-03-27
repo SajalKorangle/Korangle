@@ -32,11 +32,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterColumnsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterColumnsList,'value'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterColumnsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterColumnsList,'value'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
                 <mat-option *ngFor="let filter of filterColumnsList">
@@ -45,11 +45,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterColumnsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterColumnsList,'value'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterColumnsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterColumnsList,'value'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
             </mat-select>
@@ -60,11 +60,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterAccountsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterAccountsList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterAccountsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterAccountsList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
                 <mat-option *ngFor="let account of filterAccountsList">
@@ -73,11 +73,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterAccountsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterAccountsList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterAccountsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterAccountsList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
             </mat-select>
@@ -88,11 +88,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterEmployeeList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterEmployeeList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterEmployeeList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterEmployeeList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
                 <mat-option *ngFor="let employee of filterEmployeeList">
@@ -101,11 +101,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterEmployeeList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterEmployeeList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterEmployeeList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterEmployeeList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
             </mat-select>
@@ -116,11 +116,11 @@
                         <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterHeadsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterHeadsList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterHeadsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterHeadsList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                             </mat-option>
                 <mat-option *ngFor="let head of filterHeadsList">
@@ -129,11 +129,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterHeadsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterHeadsList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterHeadsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterHeadsList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
             </mat-select>
@@ -144,11 +144,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterGroupsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterGroupsList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterGroupsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterGroupsList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
                 <mat-option *ngFor="let group of filterGroupsList">
@@ -157,11 +157,11 @@
                     <mat-option>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="selectAll(filterGroupsList); $event.stopPropagation();">Select All
+                                (click)="selectAll(filterGroupsList,'selected'); $event.stopPropagation();">Select All
                         </button>
                         <button class="btn"
                                 style="padding: 4px 7px"
-                                (click)="deSelectAll(filterGroupsList); $event.stopPropagation();">Clear All
+                                (click)="deSelectAll(filterGroupsList,'selected'); $event.stopPropagation();">Clear All
                         </button>
                     </mat-option>
             </mat-select>

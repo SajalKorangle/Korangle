@@ -333,15 +333,15 @@ export class ViewTransactionsComponent implements OnInit {
   
     }
     
-    selectAll(list:any){
+    selectAll(list:any,value:any){
         list.forEach(item => {
-            item.selected = true;
+            item[value] = true;
         });
     }
     
-    deSelectAll(list:any){
+    deSelectAll(list:any,value:any){
         list.forEach(item => {
-            item.selected = false;
+            item[value] = false;
         });
     }
 
