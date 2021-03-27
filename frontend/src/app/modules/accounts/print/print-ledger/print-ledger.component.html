@@ -18,7 +18,7 @@
             <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
             <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
             <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
-            
+            <th>Balance</th>
         </tr>
     </thead>
     <tbody>
@@ -44,7 +44,7 @@
             <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
             <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
             <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
-            
+            <th>{{transaction.balance.toFixed(2)}}</th>
         </tr>
         
     </tbody>
