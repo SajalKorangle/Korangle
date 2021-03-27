@@ -54,7 +54,6 @@ export class GrantApprovalComponent implements OnInit {
         this.serviceAdapter = new GrantApprovalServiceAdapter();
         this.serviceAdapter.initialiseAdapter(this);
         this.serviceAdapter.initialiseData();
-        console.log('component: ', this);
     }
 
     getGrantButtonStyle(approval){
@@ -98,7 +97,6 @@ export class GrantApprovalComponent implements OnInit {
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
-        console.log(images);
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',

@@ -7,6 +7,19 @@
     cursor: pointer;
 }
 
+.error-icon{
+    font-size: 15px;
+    display: table-cell;
+    padding-right: 5px;
+    position: relative;
+    top: 3px;
+}
+
+.error-container{
+    color: rgb(243, 59, 59);
+    display: table;
+    font-weight: 550;
+}
 
 .custom-button {
     font-family: 'Roboto';
@@ -30,4 +43,14 @@
     background: #ff9800;
     color:white;
     box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}
+
+@media only screen and (max-width: 992px) {
+    .error-container{
+        margin-left: 15px;
+    }
+    
+    .toggleButton{
+        margin-left: 0;
+    }
 }

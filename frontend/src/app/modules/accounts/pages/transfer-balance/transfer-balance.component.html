@@ -4,7 +4,7 @@
     </div>
     <div *ngIf="nextSession != undefined">
         <mat-slide-toggle [(ngModel)]="splitView"  style="margin-top:20px;margin-bottom:30px;" ><b>Split View</b></mat-slide-toggle>
-        <button *ngIf="splitView" class="custom-button" style="margin-top: 20px;margin-right:22px;float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
+        <button *ngIf="splitView && !isMobile()" class="custom-button" style="margin-top: 20px;margin-right:22px;float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
         
         <div *ngIf="!splitView">
             <div class="row col-md-12">

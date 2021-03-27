@@ -21,5 +21,9 @@ export class GroupHierarchyListComponent implements OnInit {
     ngOnInit(): void {
 
     }
+    
+    getBalance(balance:any){
+return balance<0?balance.split('-')[1]+" (-ve)":balance;
+    }
 
 }

@@ -8,6 +8,7 @@ import { HEADS_LIST} from '@services/modules/accounts/models/head';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 import { Account } from '@services/modules/accounts/models/account';
 import { customAccount, customGroupStructure } from './../../classes/constants';
+import {CommonFunctions} from '@classes/common-functions';
 
 @Component({
     selector: 'transfer-balance',
@@ -73,7 +74,6 @@ export class TransferBalanceComponent implements OnInit{
         this.serviceAdapter = new TransferBalanceServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        console.log('this: ', this);
     }
 
     changeAllAccountsStatusFromHead(parentHeadId, value){
@@ -189,8 +189,14 @@ export class TransferBalanceComponent implements OnInit{
         })
         return count;
     }
+   
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
+    }
 
-
+    getCurrentBalance(balance:any) {
+        return balance<0?balance.split('-')[1]+" (-ve)":balance;
+    }
 };
 
 

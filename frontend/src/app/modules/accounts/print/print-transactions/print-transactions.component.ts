@@ -29,7 +29,6 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
         this.endDate = value['endDate'];
         this.columnFilter = value['columnFilter'];
         this.viewChecked = false;
-        console.log(this.transactionsList);
     }
 
     ngAfterViewChecked(): void {

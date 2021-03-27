@@ -124,11 +124,9 @@ export class ViewBalanceServiceAdapter {
             parentTransaction__transactionDate__gte: this.vm.minimumDate,
             fields__korangle: 'parentTransaction',
         }
-        console.log(data);
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, data),
         ]).then(val =>{
-            console.log(val);
             let transction_id_list = [];
             val[0].forEach(element =>{
                 transction_id_list.push(element.parentTransaction);
@@ -222,7 +220,6 @@ export class ViewBalanceServiceAdapter {
             for(let i=0;i<tempData.accounts.length; i++){
                 let account = tempData.accounts[i];
                 if(ledgerAccountType == account.type){
-                    // console.log(account.type);
                     tempData.accounts.splice(i, 1);
                     i--;
                 }
@@ -250,8 +247,6 @@ export class ViewBalanceServiceAdapter {
             
             this.vm.transactionsList.push(tempData);
         }
-
-        console.log(this.vm.transactionsList);
     }
 
 }

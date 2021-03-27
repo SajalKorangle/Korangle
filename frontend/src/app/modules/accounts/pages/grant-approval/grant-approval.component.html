@@ -69,19 +69,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row col-md-12" style="margin-bottom: 15px;">
+                        <div *ngIf="approval.remark && approval.remark!=''" class="row col-md-12" style="margin-bottom: 15px;">
                             <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
                             <span style="margin-left: 60px;">{{approval.remark}}</span>
                         </div>
                         <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-6">
+                            <div class="col-md-6" *ngIf="approval.billImages.length>0">
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" *ngIf="approval.quotationImages.length>0" >
                                 <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
@@ -96,10 +96,10 @@
 
             </div>
             <div class="col-md-2" style="align-items:center">
-                <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
+                <div class="row col-md-12 grantButton">
                     <button class="custom-button" style="width:90px;" [ngStyle]="getGrantButtonStyle(approval)" [disabled]="approval.requestStatus == 'APPROVED' || approval.parentTransaction != null" (click)="serviceAdapter.changeApprovalStatus(approval, 'APPROVED')">Grant</button>
                 </div>
-                <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
+                <div class="row col-md-12 grantButton">
                     <button class="custom-button" style="width:90px;" [ngStyle]="getDeclineButtonStyle(approval)" [disabled]="approval.requestStatus == 'DECLINED' || approval.parentTransaction != null" (click)="serviceAdapter.changeApprovalStatus(approval, 'DECLINED')">Decline</button>
                 </div>
             </div>

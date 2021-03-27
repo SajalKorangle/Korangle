@@ -29,41 +29,141 @@
         
         <mat-form-field>
             <mat-select placeholder="Select Columns">
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterColumnsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterColumnsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
                 <mat-option *ngFor="let filter of filterColumnsList">
                     <mat-checkbox [(ngModel)]="filter.value" (click)="$event.stopPropagation()">{{filter.displayName}}</mat-checkbox>
                 </mat-option>   
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterColumnsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterColumnsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field >
             <mat-select placeholder="Filter By A/C">
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterAccountsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterAccountsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
                 <mat-option *ngFor="let account of filterAccountsList">
                     <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}&nbsp;A/c</mat-checkbox>
                 </mat-option>   
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterAccountsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterAccountsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field>
             <mat-select placeholder="Filter By Employee">
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterEmployeeList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterEmployeeList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
                 <mat-option *ngFor="let employee of filterEmployeeList">
                     <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
                 </mat-option>   
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterEmployeeList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterEmployeeList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field >
             <mat-select placeholder="Filter By Head">
+                        <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterHeadsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterHeadsList); $event.stopPropagation();">Clear All
+                        </button>
+                            </mat-option>
                 <mat-option *ngFor="let head of filterHeadsList">
                     <mat-checkbox [(ngModel)]="head.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{head.title}}</mat-checkbox>
                 </mat-option>   
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterHeadsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterHeadsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field>
             <mat-select placeholder="Filter By Group">
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterGroupsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterGroupsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
                 <mat-option *ngFor="let group of filterGroupsList">
                     <mat-checkbox [(ngModel)]="group.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{group.title}}</mat-checkbox>
                 </mat-option>   
+                    <mat-option>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="selectAll(filterGroupsList); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn"
+                                style="padding: 4px 7px"
+                                (click)="deSelectAll(filterGroupsList); $event.stopPropagation();">Clear All
+                        </button>
+                    </mat-option>
             </mat-select>
         </mat-form-field>
 

@@ -23,7 +23,6 @@ export class UseFortransactionDialogComponent implements OnInit {
   }
 
   readURL(event, str): void {
-    console.log(str);
     if (event.target.files && event.target.files[0]) {
         let image = event.target.files[0];
         if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
@@ -46,8 +45,6 @@ export class UseFortransactionDialogComponent implements OnInit {
         };
         reader.readAsDataURL(image);
     }
-    console.log(this.data.approval.billImages);
-    console.log(this.data.approval.quotationImages);
   }
 
   isAmountMoreThanApproved(): boolean{
@@ -139,7 +136,6 @@ export class UseFortransactionDialogComponent implements OnInit {
         };
         let temp_form_data = new FormData();
         const layout_data = { ...tempData, };
-        console.log('layout data: ', layout_data);
         Object.keys(layout_data).forEach(key => {
           if (key === 'imageURL') {
             temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'imageURL' + i + '.jpeg'));
@@ -181,13 +177,11 @@ export class UseFortransactionDialogComponent implements OnInit {
       // if (!this.data.approval.transactionDate) {
       //   approvalUpdateData.transactionDate = CommonFunctions.formatDate(new Date(), '');
       // }
-      // console.log('approval update = ', approvalUpdateData);
       service.push(this.data.vm.accountsService.getObject(this.data.vm.accountsService.approval, approvalUpdateData).then(data => this.data.approval = { ...this.data.approval, ...data }));
 
 
       // });
       Promise.all(service).then(data => {
-        console.log(data);
         this.data.originalApproval.parentTransaction = value1[0].id;
         this.populateOriginalApproval();
         alert('Transaction Recorded Successfully');

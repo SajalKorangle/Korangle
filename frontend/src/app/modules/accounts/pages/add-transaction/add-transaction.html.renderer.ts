@@ -24,6 +24,10 @@ export class AddTransactionHtmlRenderer {
         });
     }
 
+    getCurrentBalance(balance: any) {
+        return balance < 0 ? balance.split('-')[1] + ' (-ve)' : balance;
+    }
+
     getFreshTransactionObject(): any {
         let transaction = {
             debitAccountList: [],

@@ -6,7 +6,7 @@
                     [disabled]="vm.isElementDisabled(element)"
                     (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked)" 
                     style="float:right; margin-top:2px;  margin-right: 18px"></mat-checkbox>
-    <span class="account-font" [style.color]="element.currentBalance | coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{element[balanceName]}}</span>
+    <span class="account-font" [style.color]="element.currentBalance | coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{getBalance(element[balanceName])}}</span>
 </div>
 <ng-template #groupView>
     <div class="left-line">

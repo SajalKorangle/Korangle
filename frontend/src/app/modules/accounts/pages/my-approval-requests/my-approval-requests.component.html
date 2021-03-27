@@ -157,7 +157,7 @@
             <hr>
         </ng-container>
 
-        <div style="margin-top: 16px;">
+        <div style="margin-top: 16px;position:relative">
             <mat-form-field>
                 <input type="number" matInput [(ngModel)]="moreApprovalsCount" placeholder="Add More Approvals">
             </mat-form-field>
@@ -168,8 +168,10 @@
                 [ngStyle]="checkDataValidity()?{}:{'background':'rgba(196, 196, 196, 1)', 'color': 'white'}"
                 [disabled]="!checkDataValidity()" (click)="requestApproval()" 
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Request Approval</button>
+            
         </div>
     </div>
+    
 
     <ng-template #notAllowedDescription>
         <div *ngIf="!inActiveSession()">
