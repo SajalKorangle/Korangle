@@ -11,6 +11,13 @@ span {
     cursor: pointer;
 }
 
+.sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    float: right;
+    bottom: 30px;
+}
+
 .custom-button {
     font-family: 'Roboto';
     font-weight: 500;

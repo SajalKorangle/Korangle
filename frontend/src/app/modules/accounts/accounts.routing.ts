@@ -30,7 +30,7 @@ const routes: Routes = [
         data: {moduleName: 'accounts'},
     },
     {
-        path: 'my_approval_requests',
+        path: 'request_approval',
         loadChildren: 'app/modules/accounts/pages/my-approval-requests/my-approval-requests.module#MyApprovalRequestsModule',
         data: {moduleName: 'accounts'},
     },

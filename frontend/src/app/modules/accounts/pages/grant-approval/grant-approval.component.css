@@ -11,6 +11,15 @@ span {
 	cursor: pointer;
 }
 
+.grantButton{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 40px
+}
+
+
+
 .custom-button {
 	font-family: 'Roboto';
 	font-weight: 500;
@@ -49,5 +58,10 @@ span {
 @media only screen and (max-width: 991px) {
 	.responsive-font {
 		/* font-size: 2.5vw; */
+	}
+	.grantButton{
+		display: block;
+		float:left;
+		margin-left:7%;
 	}
 }

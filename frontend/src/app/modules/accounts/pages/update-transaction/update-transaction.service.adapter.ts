@@ -49,13 +49,11 @@ export class UpdateTransactionServiceAdapter {
                     this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
                     this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),
                 ]).then(value =>{
-                    // console.log(value);
                     if(value[2].length > 0){
                         this.vm.maximumPermittedAmount = value[2][0].restrictedAmount;
                     }
                     this.vm.minimumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
                     this.vm.maximumDate = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
-                    console.log(this.vm.minimumDate, this.vm.maximumDate);
                     this.vm.accountsList = value[0];
                     this.populateAccountTitle(value[3]);
                     this.vm.isLoading = false;
@@ -74,7 +72,6 @@ export class UpdateTransactionServiceAdapter {
         this.vm.accountsList.forEach(acc =>{
             acc['title'] = accountTitleList.find(account => account.id == acc.parentAccount).title;
         })
-        console.log(this.vm.accountsList);
     }
 
     findTransactionByVNumber(event: any){
@@ -86,11 +83,9 @@ export class UpdateTransactionServiceAdapter {
             transactionDate__gte: this.vm.minimumDate,
             transactionDate__lte: this.vm.maximumDate, 
         }
-        // console.log(data);
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
         ]).then(val =>{
-            // console.log(val);
             if(val[0].length > 0){
                 let transaction_data = {
                     parentTransaction: val[0][0].id,
@@ -99,7 +94,6 @@ export class UpdateTransactionServiceAdapter {
                     this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_data),
                     this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
                 ]).then(data =>{
-                    console.log(data);
                     this.initialiseTransactionData(val[0], data[0], data[1]);
                     this.vm.isLoadingTransaction = false;
                 })
@@ -115,7 +109,6 @@ export class UpdateTransactionServiceAdapter {
         this.vm.loadMoreTransaction = true;
         this.vm.isLoadingTransaction = true;
         this.transaction_id_list = [];
-        // console.log(account);
         let data = {
             // parentTransaction__parentEmployee: this.vm.user.activeSchool.employeeId,
             parentAccount: account.parentAccount,
@@ -135,7 +128,6 @@ export class UpdateTransactionServiceAdapter {
             this.transaction_id_list = this.transaction_id_list.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })
-            // console.log(this.transaction_id_list);
             
             let min = Math.min(this.vm.loadingCount, this.transaction_id_list.length);
             if(min < this.vm.loadingCount){
@@ -150,11 +142,9 @@ export class UpdateTransactionServiceAdapter {
             let data = {
                 id__in: transaction_id_list,
             }
-            // console.log(this.transaction_id_list);
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
             ]).then(val =>{
-                // console.log(val);
                 if(val[0].length > 0){
                     
                     let transaction_data = {
@@ -164,7 +154,6 @@ export class UpdateTransactionServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_data),
                         this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
                     ]).then(data =>{
-                        console.log(data);
                         this.initialiseTransactionData(val[0], data[0], data[1]);
                         this.vm.isLoadingTransaction = false;
                     })
@@ -191,11 +180,9 @@ export class UpdateTransactionServiceAdapter {
         let data = {
             id__in: transaction_id_list,
         }
-        // console.log(this.transaction_id_list);
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
         ]).then(val =>{
-            console.log(val);
             if(val[0].length > 0){
                 
                 let transaction_data = {
@@ -205,7 +192,6 @@ export class UpdateTransactionServiceAdapter {
                     this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_data),
                     this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
                 ]).then(data =>{
-                    console.log(data);
                     this.initialiseTransactionData(val[0], data[0], data[1]);
                     this.vm.isLoadingTransaction = false;
                 })
@@ -266,7 +252,6 @@ export class UpdateTransactionServiceAdapter {
 
         })
         this.vm.transactionsList.sort((a,b) => { return (b.voucherNumber - a.voucherNumber)});
-        // console.log(this.vm.transactionsList);
     }
 
     deleteTransaction(transaction){

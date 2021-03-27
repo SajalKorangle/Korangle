@@ -95,7 +95,6 @@ export class GrantApprovalServiceAdapter {
         this.vm.accountsList.forEach(acc =>{
             acc['title'] = accountTitleList.find(account => account.id == acc.parentAccount).title;
         })
-        console.log(this.vm.accountsList);
     }
 
     loadMoreApprovals(){
@@ -108,7 +107,6 @@ export class GrantApprovalServiceAdapter {
             'korangle__order': '-id',
             'korangle__count': this.vm.approvalsList.length.toString() + ',' + (this.vm.approvalsList.length + this.vm.loadingCount).toString(),
         }
-        console.log(approval_request_data);
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
         ]).then(value => {
@@ -203,7 +201,6 @@ export class GrantApprovalServiceAdapter {
 
         })
         this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
-        console.log(this.vm.approvalsList);
     }
 
     async changeApprovalStatus(approval, status) {
@@ -232,7 +229,6 @@ export class GrantApprovalServiceAdapter {
                 Promise.all([
                     this.vm.accountsService.createObject(this.vm.accountsService.transaction, transaction_data),
                 ]).then(value1 =>{
-                    // console.log(value1);
                     let toCreateAccountList = [];
                     const service = [];
 

@@ -143,9 +143,11 @@ export class ManageAccountsComponent{
     }
 
     displayWholeGroup(group: any){
-        console.log(group);
         this.displayWholeList = false;
         this.specificGroup = group;
     }
-    
+
+    getCurrentBalance(balance:any) {
+        return balance<0?balance.split('-')[1]+" (-ve)":balance;
+    }
 };

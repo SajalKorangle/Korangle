@@ -165,10 +165,19 @@
                 <mat-icon style="font-size: 13px;">control_point</mat-icon><span style="font-size: 13px;"> &nbsp;Add</span>
             </span>
             <button mat-button style="float: right;"
+                    *ngIf="!isMobile()"
                 [ngStyle]="checkDataValidity()?{}:{'background':'rgba(196, 196, 196, 1)', 'color': 'white'}"
                 [disabled]="!checkDataValidity()" (click)="requestApproval()" 
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Request Approval</button>
         </div>
+        
+            <button [ngClass]="'sticky mobileButton-'+user.activeSchool.secondaryThemeColor"
+                    mat-fab *ngIf="isMobile()"
+                    (click)="requestApproval()">
+                Request Approval
+            </button>
+<!--        <button style="top: calc(100vh - 50px) !important; position: fixed !important" md-button (click)='requestApproval();'>button</button>-->
+
     </div>
 
     <ng-template #notAllowedDescription>
