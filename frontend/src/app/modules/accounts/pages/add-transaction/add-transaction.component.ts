@@ -94,6 +94,12 @@ export class AddTransactionComponent implements OnInit {
         transaction.creditAccountList[0].creditAmount = newAmount;
         transaction.debitAccountList[0].debitAmount = newAmount;
       }
+      else if (transaction.creditAccountList.length == 1) {
+        transaction.creditAccountList[0].creditAmount = transaction.debitAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.debitAmount, 0);
+      }
+      else if (transaction.debitAccountList.length == 1) {
+        transaction.debitAccountList[0].debitAmount = transaction.creditAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.creditAmount, 0);
+      }
     }
 
     isAmountUnEqual(transaction):boolean{

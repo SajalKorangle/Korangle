@@ -19,10 +19,15 @@ export class SettingsServiceAdapter {
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        const employee_amount_permission_request = {
+            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
+        }
+
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
+            this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_amount_permission_request),
         ]).then(value => {
-
+            this.vm.backendData.employeeAmountPermissionList = value[1];
             if (value[0].length == 0) {
                 this.vm.lockAccounts = null;
             } else if (value[0].length == 1) {
@@ -30,33 +35,8 @@ export class SettingsServiceAdapter {
             } else {
                 alert('Error: Report admin');
             }
-
             this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        })
-    }
-    
-    getEmployeeAmount(employee: any): void{
-        this.vm.isLoading = true;
-        let employee_data = {
-            parentEmployee: employee.id,
-        }
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-        ]).then(value =>{
-            if (value[0].length > 0) {
-                this.vm.selectedEmployeeAccountPermission = value[0][0]
-                this.vm.selectedEmployeeAmount = this.vm.selectedEmployeeAccountPermission.restrictedAmount;
-            }
-            else {
-                this.vm.selectedEmployeeAccountPermission = null
-                this.vm.selectedEmployeeAmount = null;
-            }
-            this.vm.selectedEmployee = employee;
-            this.vm.isLoading = false;
-        })
+        });
     }
 
     changeAmountRestriction(): any{
@@ -80,7 +60,8 @@ export class SettingsServiceAdapter {
             }
             Promise.all([
                 this.vm.accountsService.createObject(this.vm.accountsService.employee_amount_permission, tempData),
-            ]).then(value =>{
+            ]).then(value => {
+                this.vm.backendData.employeeAmountPermissionList.push(value[0]);
                 this.vm.selectedEmployeeAccountPermission = value[0];
                 this.vm.isLoading = false;
             })

@@ -6,7 +6,8 @@
             <div class="col-md-6">
                 <app-employee-filter [user]="user"
                             [showAllEmployees]="true"
-                            (employee)="serviceAdapter.getEmployeeAmount($event)"
+                            (employee)="handleEmployeeSelection($event)"
+                            (emitEmployeeList)="backendData.employeeList=$event"
                             ></app-employee-filter>
                 <mat-card  *ngIf="selectedEmployee">
                     <!--Employee Information-->
@@ -54,6 +55,26 @@
         <button *ngIf ="!lockAccounts" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.lockAccounts()">Lock Accounts<mat-icon>lock</mat-icon></button>
         <button *ngIf ="lockAccounts" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.unlockAccounts()">Unlock Accounts<mat-icon>lock_open</mat-icon></button>
 
+    </div>
+    <hr/>
+    <div *ngIf="backendData.employeeList.length>0">
+        <h4>Emploee Permissions</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Amount Restriction</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let permission of backendData.employeeAmountPermissionList;">
+                    <tr style="cursor: pointer;" (click)="handleEmployeeSelection(backendData.getEmployee(permission.parentEmployee)); scrollToTop();">
+                        <th>{{backendData.getEmployee(permission.parentEmployee).name}}</th>
+                        <th>{{permission.restrictedAmount}}</th>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
     </div>
 </div>
 

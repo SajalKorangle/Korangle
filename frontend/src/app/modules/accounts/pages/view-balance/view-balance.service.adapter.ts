@@ -150,7 +150,11 @@ export class ViewBalanceServiceAdapter {
         })
     }
 
-    initialiseTransactionData(transactionList, transactionAccounts, transactionImages){
+    initialiseTransactionData(transactionList, transactionAccounts, transactionImages) {
+        transactionList.sort((a, b) => {
+            return b.voucherNumber - a.voucherNumber;
+        });
+        let lastAccountBalance = this.vm.ledgerAccount.currentBalance;
         for(let j=0;j<transactionList.length ; j++){
             let transaction = transactionList[j];
             let totalAmount = 0;
@@ -170,6 +174,7 @@ export class ViewBalanceServiceAdapter {
                 transactionDate: transaction.transactionDate,
                 parentEmployeeName: null,
                 parentEmployee: transaction.parentEmployee,
+                balance: -1,
             }
 
             tempData.parentEmployeeName = this.vm.employeeList.find(employee => employee.id == transaction.parentEmployee).name;
@@ -177,7 +182,7 @@ export class ViewBalanceServiceAdapter {
             for(let i=0;i<transactionAccounts.length; i++){
                 let account = transactionAccounts[i];
                 if(account.parentTransaction == transaction.id){
-                    let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
+                    let tempAccount = this.vm.accountsList.find(acc=> acc.parentAccount == account.parentAccount);
                     if(tempAccount.parentAccount == this.vm.ledgerAccount.parentAccount){
                         ledgerAccountAmount = account.amount;
                         ledgerAccountType = account.transactionType;
@@ -206,11 +211,18 @@ export class ViewBalanceServiceAdapter {
                     tempData.accounts.push(temp_data);
                 }
             }
+            console.log("type: ", ledgerAccountType);
+            tempData.balance = lastAccountBalance;
+            if (ledgerAccountType == 'DEBIT') {
+                lastAccountBalance = parseFloat(lastAccountBalance) - parseFloat(ledgerAccountAmount);
+            } else {
+                lastAccountBalance = parseFloat(lastAccountBalance) + parseFloat(ledgerAccountAmount);
+            }
 
             for(let i=0;i<tempData.accounts.length; i++){
                 let account = tempData.accounts[i];
                 if(ledgerAccountType == account.type){
-                    console.log(account.type);
+                    // console.log(account.type);
                     tempData.accounts.splice(i, 1);
                     i--;
                 }
@@ -219,7 +231,7 @@ export class ViewBalanceServiceAdapter {
                 }
             }
 
-            for(let i=0;i<transactionImages.length ; i++){
+            for(let i=0; i<transactionImages.length; i++){
                 let image = transactionImages[i];
                 if(image.parentTransaction == transaction.id){
                     if(image.imageType == 'BILL'){
@@ -235,11 +247,9 @@ export class ViewBalanceServiceAdapter {
             }
             tempData.billImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
             tempData.quotationImages.sort((a,b) => { return (a.orderNumber - b.orderNumber)});
+            
             this.vm.transactionsList.push(tempData);
         }
-        this.vm.transactionsList.sort((a,b) => {
-            return Date.parse(a.transactionDate) - Date.parse(b.transactionDate);
-        })
 
         console.log(this.vm.transactionsList);
     }

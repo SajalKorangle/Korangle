@@ -168,8 +168,8 @@
                     <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
                     <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
                     <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th>
+                    <th>Balance</th>
                     <th *ngIf="canUserUpdate()" class="text-center"></th>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -211,6 +211,7 @@
                             No Image
                         </i>
                     </td>
+                    <td>{{transaction.balance}}</td>
                     <td *ngIf="canUserUpdate() && !isAccountLocked()"  class="text-center" >
                         <span style="color: rgba(255, 152, 0, 1);cursor: pointer" *ngIf="transaction.approvalId == null" (click)="openUpdateTransactionDialog(transaction)">
                             <u>Update</u>
