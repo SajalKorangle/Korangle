@@ -154,7 +154,7 @@ export class ViewBalanceServiceAdapter {
         transactionList.sort((a, b) => {
             return b.voucherNumber - a.voucherNumber;
         });
-        let lastAccountBalance = this.vm.ledgerAccount.currentBalance;
+        let lastAccountBalance = parseFloat(this.vm.ledgerAccount.currentBalance);
         for(let j=0;j<transactionList.length ; j++){
             let transaction = transactionList[j];
             let totalAmount = 0;
@@ -214,9 +214,9 @@ export class ViewBalanceServiceAdapter {
             console.log("type: ", ledgerAccountType);
             tempData.balance = lastAccountBalance;
             if (ledgerAccountType == 'DEBIT') {
-                lastAccountBalance = parseFloat(lastAccountBalance) - parseFloat(ledgerAccountAmount);
+                lastAccountBalance = lastAccountBalance - parseFloat(ledgerAccountAmount);
             } else {
-                lastAccountBalance = parseFloat(lastAccountBalance) + parseFloat(ledgerAccountAmount);
+                lastAccountBalance = lastAccountBalance + parseFloat(ledgerAccountAmount);
             }
 
             for(let i=0;i<tempData.accounts.length; i++){

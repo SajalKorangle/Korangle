@@ -11,7 +11,7 @@ import { Approval, APPROVAL_STATUS_CHOICES } from './../../../../services/module
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 import { EmployeeService } from './../../../../services/modules/employee/employee.service';
 import { SchoolService } from './../../../../services/modules/school/school.service';
-import {MyApprovalRequestsHtmlRenderer} from '@modules/accounts/pages/my-approval-requests/my-approval-requests.html.renderer';
+import {MyApprovalRequestsHtmlRenderer} from './my-approval-requests.html.renderer';
 
 @Component({
     selector: 'my-approval-requests',
@@ -302,14 +302,16 @@ export class MyApprovalRequestsComponent implements OnInit {
 
 }
 
-class NewCustomApproval extends Approval{
+export class NewCustomApproval extends Approval{
     structure: 'simple' | 'advance' = 'simple';
   
     payTo: Array<{account: number, amount: number}> = [{account: null, amount: null}];
     payFrom: Array<{ account: number, amount: number }> = [{ account: null, amount: null }];
     
     billImages: Array<{imageURL: any, orderNumber: number}> = [];
-    quotationImages: Array<{imageURL: any, orderNumber: number}> = [];
+    quotationImages: Array<{ imageURL: any, orderNumber: number; }> = [];
+    
+    simple: boolean = true;
 
     constructor(vm: MyApprovalRequestsComponent, attributes = {}) {
         super();

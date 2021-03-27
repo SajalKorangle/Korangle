@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="row col-md-12" style="text-align: right;">
-                        <span class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payFrom)">
+                        <span *ngIf="!htmlRenderer.isApprovalSimple(approval)" class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payFrom)">
                             <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
                         </span>
                     </div>
@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="row col-md-12" style="width: auto;">
-                            <customized-number-input [placeHolder]="'Amount'"
+                            <customized-number-input [placeHolder]="'Amount'" *ngIf="!htmlRenderer.isApprovalSimple(approval)"
                                                     [minimum]="0.01"
                                                     [maximumDecimal]="2"
                                                     [inputValue]="payTo.amount"
@@ -69,20 +69,20 @@
                         </div>
                     </div>
                     <div class="row col-md-12" style="text-align: right;">
-                        <span class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payTo)">
+                        <span *ngIf="!htmlRenderer.isApprovalSimple(approval)" class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payTo)">
                             <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
                         </span>
                     </div>
                 </div>
 
                 <div class="col-md-3" style="margin-left: 12px;">
-                    <!-- div class="row" style="margin-top: 20px; padding: 0px">
+                    <div class="row" style="margin-top: 20px; padding: 0px">
                         <mat-slide-toggle [ngModel]="htmlRenderer.isApprovalSimple(approval)"
-                                          (ngModelChange)="transaction=htmlRenderer.getFreshTransactionObject(); transaction.simple=$event"
-                                          [disabled]="transaction.creditAccountList.length > 1 || transaction.debitAccountList.length > 1">
+                                          (ngModelChange)="newApprovalList[i]=htmlRenderer.getFreshApprovalObject(approval); newApprovalList[i].simple=$event"
+                                          [disabled]="approval.payTo.length > 1 || approval.payFrom.length > 1">
                             Simple
                         </mat-slide-toggle>
-                    </div -->
+                    </div>
                     <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
                         <span *ngIf="isAccountNotMentioned(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
                             <mat-icon style="font-size: 12px;">dangerous</mat-icon><span> &nbsp;Please Select An Account</span>
