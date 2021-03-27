@@ -11,7 +11,7 @@ span {
 	cursor: pointer;
 }
 
-.grantButton{
+.grantDeclineButton{
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -59,7 +59,7 @@ span {
 	.responsive-font {
 		/* font-size: 2.5vw; */
 	}
-	.grantButton{
+	.grantDeclineButton{
 		display: block;
 		float:left;
 		margin-left:7%;

@@ -193,10 +193,6 @@ export class TransferBalanceComponent implements OnInit{
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
     }
-
-    getCurrentBalance(balance:any) {
-        return balance<0?balance.split('-')[1]+" (-ve)":balance;
-    }
 };
 
 
