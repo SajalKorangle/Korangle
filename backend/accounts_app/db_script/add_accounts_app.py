@@ -34,8 +34,8 @@ def add_accounts_app(apps, schema_editor):
             'orderNumber' : 4,
         },
         {
-            'path' : 'request_approval',
-            'title' : 'Request Approval',
+            'path' : 'my_approval_requests',
+            'title' : 'My Approval Requests',
             'orderNumber' : 5,
         },
         {
