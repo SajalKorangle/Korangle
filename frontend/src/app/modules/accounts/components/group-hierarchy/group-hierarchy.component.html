@@ -8,7 +8,7 @@
             <div *ngFor="let child of group.childs" style="display: inline-block; margin-right: 15px">
                 <div *ngIf="child.type == 'ACCOUNT'">
                     <span  style="cursor: pointer;" (click)="handleClick(child)">{{child.title}}&nbsp;A/c</span>
-                    <span [style.color]="child.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px"><br>Cr Bal {{child.currentBalance}}</span>
+                    <span [style.color]="child.currentBalance | coloredBalance" style="font-size:13px; margin-bottom: 10px"><br>Cr Bal {{child.currentBalance | DisplayBalance}}</span>
                 </div>
             </div>
             <div *ngFor="let child of group.childs">

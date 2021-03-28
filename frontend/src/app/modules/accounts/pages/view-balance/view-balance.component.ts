@@ -289,8 +289,5 @@ export class ViewBalanceComponent implements OnInit {
     const headChilds: Array<customGroupStructure> = Object.values(this.hierarchyStructure[headTitle]);
     return headChilds.reduce((accumulator: number, nextEntry: customGroupStructure):number => accumulator + nextEntry.currentBalance, 0);
   }
-        
-  getCurrentBalance(balance:any) {
-      return balance<0?balance.split('-')[1]+" (-ve)":balance;
-  }
+  
 }

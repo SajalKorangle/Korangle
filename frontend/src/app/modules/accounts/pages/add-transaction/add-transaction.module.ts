@@ -4,6 +4,7 @@ import { AddTransactionComponent } from "./add-transaction.component";
 
 import {AddTransactionRoutingModule } from './add-transaction.routing';
 import {ComponentsModule} from "../../../../components/components.module";
+import {AccountsComponentsModule} from '@modules/accounts/components/component.module';
 
 
 
@@ -13,8 +14,9 @@ import {ComponentsModule} from "../../../../components/components.module";
     ],
 
     imports: [
-        AddTransactionRoutingModule ,
+        AddTransactionRoutingModule,
         ComponentsModule,
+        AccountsComponentsModule,
 
     ],
     exports: [

@@ -160,7 +160,4 @@ export class ManageAccountsComponent{
         this.specificGroup = group;
     }
 
-    getCurrentBalance(balance:any) {
-        return balance<0?balance.split('-')[1]+" (-ve)":balance;
-    }
 };

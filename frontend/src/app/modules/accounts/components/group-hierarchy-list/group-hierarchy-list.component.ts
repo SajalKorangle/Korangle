@@ -21,10 +21,5 @@ export class GroupHierarchyListComponent implements OnInit {
     ngOnInit(): void {
 
     }
-    
-    getBalance(balance: any) {
-        balance = parseFloat(balance);
-        return balance<0?Math.abs(balance)+" (-ve)":balance;
-    }
 
 }

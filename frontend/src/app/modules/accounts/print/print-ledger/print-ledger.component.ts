@@ -49,8 +49,5 @@ export class PrintLedgerComponent implements OnInit, AfterViewChecked {
   
         return [day, month, year].join('/');
       }
-
-    getCurrentBalance(balance:any) {
-        return balance<0?balance.split('-')[1]+" (-ve)":balance;
-    }
+      
 }

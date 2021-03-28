@@ -57,7 +57,7 @@
                             </mat-form-field>
                         </div>
                         <div class="row col-md-12" style="margin-top: -17px">
-                            <span *ngIf="account.creditAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{htmlRenderer.getCurrentBalance(account.creditAccount.currentBalance)}}</span>
+                            <span *ngIf="account.creditAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{account.creditAccount.currentBalance | DisplayBalance}}</span>
                             <span *ngIf="transaction.creditAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(i, j);">
                                 <u>Remove</u>
                             </span>
@@ -108,7 +108,7 @@
                             </mat-form-field>
                         </div>
                         <div class="row col-md-12" style="margin-top: -17px">
-                            <span *ngIf="account.debitAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{htmlRenderer.getCurrentBalance(account.debitAccount.currentBalance)}} </span>
+                            <span *ngIf="account.debitAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{account.debitAccount.currentBalance | DisplayBalance}} </span>
                             <span *ngIf="transaction.debitAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(i, j);">
                                 <u>Remove</u>
                             </span>
