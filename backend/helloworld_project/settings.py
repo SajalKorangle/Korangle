@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'information_app',
     'grade_app',
     'id_card_app',
+    'authentication_app',
     'homework_app',
     'feature_app',
     'tutorial_app',
