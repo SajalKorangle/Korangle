@@ -1,0 +1,106 @@
+# Frontend
+.vscode/
+.idea/
+*.iml
+frontend/.idea/
+frontend/protractorFailuresReport/
+frontend/node_modules/
+frontend/school.iml
+frontend/preparePackage.sh
+frontend/tmp
+frontend/src/src.iml
+frontend/.DS_Store
+frontend/md-angular-v1.4.1.iml
+frontend/.vscode/
+frontend/build/post-build.js
+frontend/korangle/
+frontend/korangle.*
+frontend/version.json
+frontend/preparePackage.sh
+frontend/src/environments/environment.prod.ts
+frontend/dist/
+frontend/src/coverage-report/
+frontend/src/coverage/*.json
+frontend/copytoserver.sh
+frontend/tests/karma/dummy.spec.ts
+backend/*db.sqlite3*
+*.pyc
+*.swp
+
+# Backend
+backend/*DS_Store
+backend/*message_app
+backend/copydatabasefromserver.sh
+backend/test_database
+backend/helloworld_project/media
+backend/*.idea
+backend/staticpages/.*
+backend/sms_file
+backend/backupdb
+backend/copydatabase.sh
+backend/prev_db
+backend/start_server.sh
+backend/stop_server.sh
+backend/helloworld_project/logs
+backend/helloworld_project/nginx.conf
+backend/helloworld_project/gunicorn.conf.py
+backend/helloworld_project/prod_conf.py
+backend/backup_database.sh
+
+*.DS_Store
+
+# Webscrappers
+WebScrapers/JusDialWebScraper/*.csv
+
+# Mobile
+mobile/.idea/*
+mobile/*.iml
+mobile/.gradle/
+mobile/build/
+mobile/local.properties
+mobile/.DS_Store
+mobile/captures
+mobile/.externalNativeBuild
+mobile/.idea/caches/build_file_checksums.ser
+mobile/.idea/misc.xml
+
+#built application files
+mobile/*.apk
+mobile/*.aar
+mobile/*.ap_
+mobile/*.aab
+
+# Java class files
+mobile/*.class
+
+# files for the dex VM
+mobile/*.dex
+
+# generated files
+mobile/bin/
+mobile/gen/
+
+# Local configuration file (sdk path, etc)
+mobile/local.properties
+
+# Windows thumbnail db
+mobile/Thumbs.db
+
+# OSX files
+mobile/.DS_Store
+
+# Android Studio
+mobile/*.iml
+mobile/.idea
+
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+mobile/.gradle
+mobile/build/
+mobile/.navigation/
+mobile/captures/
+
+#NDK
+mobile/obj/
+mobile/.externalNativeBuild
+mobile/app/release/*
+
