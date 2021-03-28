@@ -181,7 +181,6 @@ export class ViewBalanceComponent implements OnInit {
     }
 
     handleSearch(event: any){
-        console.log(event.target.value);
         let str = event.target.value.trim();
         if(str.length == 0){
             this.searchList = [];
@@ -189,7 +188,6 @@ export class ViewBalanceComponent implements OnInit {
         else{
             this.searchList = this.getAccountListFromString(str);
         }
-        console.log(this.searchList);
     }
 
     getAccountListFromString(str: any){
@@ -203,7 +201,6 @@ export class ViewBalanceComponent implements OnInit {
     }
 
     displayWholeGroup(group: any){
-        console.log(group);
         this.displayWholeList = false;
         this.specificGroup = group;
     }
@@ -248,7 +245,6 @@ export class ViewBalanceComponent implements OnInit {
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
-        console.log(images);
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',
@@ -281,7 +277,6 @@ export class ViewBalanceComponent implements OnInit {
     }
 
     isAccountLocked(){
-      console.log(this.lockAccounts)
         if (this.lockAccounts){
             return true;
         }
@@ -293,5 +288,9 @@ export class ViewBalanceComponent implements OnInit {
   getHeadBalance(headTitle): number {
     const headChilds: Array<customGroupStructure> = Object.values(this.hierarchyStructure[headTitle]);
     return headChilds.reduce((accumulator: number, nextEntry: customGroupStructure):number => accumulator + nextEntry.currentBalance, 0);
+  }
+        
+  getCurrentBalance(balance:any) {
+      return balance<0?balance.split('-')[1]+" (-ve)":balance;
   }
 }

@@ -2,6 +2,7 @@ import { ViewTransactionsComponent } from './view-transactions.component'
 import { PRINT_TRANSACTIONS } from '../../../../print/print-routes.constants';
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
+import xlsx = require('xlsx');
 
 export class ViewTransactionsServiceAdapter { 
     
@@ -55,11 +56,9 @@ export class ViewTransactionsServiceAdapter {
             if (value[4].length > 0) {
                 this.vm.maximumPermittedAmount = value[4][0].restrictedAmount;
             }
-            // console.log(value);
             this.vm.minimumDate = value[3].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;  // change for current session
             this.vm.maximumDate = value[3].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             this.vm.initilizeDate();
-            console.log(this.vm.minimumDate, this.vm.maximumDate);
             this.initialiseGroupsAndAccountList(value[0], value[2]);
             this.vm.isInitialLoading = false;
             this.vm.employeeList = value[1];
@@ -186,7 +185,6 @@ export class ViewTransactionsServiceAdapter {
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
             ]).then(data => {
-                // console.log(data);
                 this.initialiseTransactionData(value[0], data[0], data[1]);
                 this.vm.isLoading = false;
             });
@@ -259,7 +257,6 @@ export class ViewTransactionsServiceAdapter {
 
         })
         this.vm.transactionsList.sort((a,b) => { return (b.voucherNumber - a.voucherNumber)});
-        console.log(this.vm.transactionsList);
     }
 
     getHeaderValue():any{
@@ -309,14 +306,15 @@ export class ViewTransactionsServiceAdapter {
     }
 
     downloadList(): any{
-        console.log(this.getHeaderValue());
         let excelData = [];
         excelData.push(this.getHeaderValue());
         this.vm.getFilteredTransactionList().forEach(transaction =>{
             excelData.push(this.getTransactionsData(transaction));
         })
-        console.log(excelData);
-        this.vm.excelService.downloadFile(excelData, 'korangle_transactions.csv');
+        let ws = xlsx.utils.aoa_to_sheet(excelData);
+        let wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+        xlsx.writeFile(wb, 'Transactions.xlsx');
         if(this.vm.columnFilter.bill.value || this.vm.columnFilter.quotation.value){
             this.downloadDocuments();
         }
@@ -389,10 +387,8 @@ export class ViewTransactionsServiceAdapter {
                                         let type = document_url.split(".");
                                         type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-                                        console.log(file, 'bill');
                                         Folder.file('transaction_'+transaction.voucherNumber+"_bill_" + image.orderNumber+'.'+type, file);
                                         this.downloadedFiles=this.downloadedFiles+1;
-                                        console.log(check1,this.downloadedFiles)
                                     }
                                     if (check1===this.downloadedFiles+this.totalFailed){
                                         zip.generateAsync({ type: "blob"})
@@ -427,10 +423,8 @@ export class ViewTransactionsServiceAdapter {
                                         let type = document_url.split(".");
                                         type = type[type.length-1];
 				                        let file = new Blob([blob], { type: type});
-                                        console.log(file, 'quo');
                                         Folder.file('transaction_'+transaction.voucherNumber+'_quotation_' + image.orderNumber+'.'+type, file);
                                         this.downloadedFiles=this.downloadedFiles+1;
-                                        console.log(check1,this.downloadedFiles)
                                     }
                                     if (check1===this.downloadedFiles+this.totalFailed){
                                         zip.generateAsync({ type: "blob"})

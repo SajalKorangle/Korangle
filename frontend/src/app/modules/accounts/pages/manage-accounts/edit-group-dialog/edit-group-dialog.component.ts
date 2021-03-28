@@ -136,7 +136,6 @@ export class EditGroupDialogComponent implements OnInit {
         }
       });
       this.data.vm.serviceAdapter.initialiseDisplayData();
-      console.log(val);
       alert('Group Updated Successfully');
       this.dialogRef.close();
     })

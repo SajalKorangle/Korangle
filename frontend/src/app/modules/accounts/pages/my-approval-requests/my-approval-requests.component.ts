@@ -67,7 +67,6 @@ export class MyApprovalRequestsComponent implements OnInit {
         this.serviceAdapter.initialiseData();
         this.newApprovalList = [new NewCustomApproval(this, {autoAdd: false})];
 
-        console.log('this: ', this);
     }
 
     inActiveSession(): boolean{
@@ -115,7 +114,6 @@ export class MyApprovalRequestsComponent implements OnInit {
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
-        console.log(images);
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',
@@ -299,6 +297,13 @@ export class MyApprovalRequestsComponent implements OnInit {
         }
         this.serviceAdapter.requestApprovals();
     }
+    
+    isMobile():boolean{
+        if (window.innerWidth > 991) {
+            return false
+        }
+        return true
+    };
 
 }
 

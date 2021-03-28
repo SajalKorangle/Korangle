@@ -151,7 +151,6 @@ export class ViewTransactionsComponent implements OnInit {
       this.serviceAdapter.initialiseData();
       this.popoulateColumnFilter();
       this.showSelectedOnly = false;
-      console.log('this: ', this);
     }
 
     initilizeDate(): void{
@@ -294,7 +293,6 @@ export class ViewTransactionsComponent implements OnInit {
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
-      console.log(images);
       const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
           maxWidth: '100vw',
           maxHeight: '100vh',
@@ -333,6 +331,18 @@ export class ViewTransactionsComponent implements OnInit {
           data: {transaction: JSON.parse(JSON.stringify(transaction)), vm: this, originalTransaction: transaction}
       });
   
+    }
+    
+    selectAll(list:any,value:any){
+        list.forEach(item => {
+            item[value] = true;
+        });
+    }
+    
+    deSelectAll(list:any,value:any){
+        list.forEach(item => {
+            item[value] = false;
+        });
     }
 
     isAccountLocked(){

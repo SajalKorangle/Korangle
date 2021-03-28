@@ -45,12 +45,10 @@ export class AddGroupDialogComponent implements OnInit {
       accountType: 'GROUP',
       title: this.groupName,
     }
-    console.log(group_data);
     Promise.all([
       this.data.vm.accountsService.createObject(this.data.vm.accountsService.accounts, group_data),
     ]).then(value => {
       this.data.vm.backendData.accountsList.push(value[0]);
-      console.log(value);
       let group_session_data = {
         parentAccount: value[0].id,
         parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
@@ -61,7 +59,6 @@ export class AddGroupDialogComponent implements OnInit {
       if(this.parentGroup != null){
         group_session_data.parentGroup = this.parentGroup.parentAccount;
       }
-      console.log(group_session_data);
       Promise.all([
         this.data.vm.accountsService.createObject(this.data.vm.accountsService.account_session, group_session_data),
       ]).then(data =>{
@@ -74,7 +71,6 @@ export class AddGroupDialogComponent implements OnInit {
         this.parentGroup = null;
         this.parentHead = null;
         this.isLoading = false;
-        console.log(data);
       })
 
     })

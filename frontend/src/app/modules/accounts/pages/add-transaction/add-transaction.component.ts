@@ -63,7 +63,6 @@ export class AddTransactionComponent implements OnInit {
         this.serviceAdapter = new AddTransactionServiceAdapter;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-      console.log('this: ', this);
     }
 
   initilizeDate(): void{
@@ -85,7 +84,6 @@ export class AddTransactionComponent implements OnInit {
     }
     
   removeCreditAccount(tIndex: any, aIndex: any) {
-    console.log('tIndex: ', tIndex, 'aIndex: ', aIndex);
       this.transactionList[tIndex].creditAccountList.splice(aIndex, 1);
     }
 

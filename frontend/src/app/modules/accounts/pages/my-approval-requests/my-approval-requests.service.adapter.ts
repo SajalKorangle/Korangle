@@ -103,11 +103,9 @@ export class MyApprovalRequestsServiceAdapter {
             'korangle__order': '-id',
             'korangle__count': this.vm.approvalsList.length.toString() + ',' + (this.vm.approvalsList.length + this.vm.loadingCount).toString(),
         }
-        console.log(approval_request_data);
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data),
         ]).then(value => {
-            console.log(value);
             let approval_id = [];
             if (value[0].length < this.vm.loadingCount) {
                 this.vm.moreAprovalsAvailable = false;
@@ -189,7 +187,6 @@ export class MyApprovalRequestsServiceAdapter {
 
         })
         this.vm.approvalsList.sort((a,b) => { return (b.approvalId - a.approvalId)});
-        console.log(this.vm.approvalsList);
     }
 
     requestApprovals(): any{
@@ -205,7 +202,6 @@ export class MyApprovalRequestsServiceAdapter {
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.approval, data),
         ]).then(val =>{
-            console.log(val);
             if(val[0].length > 0){
                 nextApprovalID = val[0][0].approvalId + 1;
             }
@@ -226,7 +222,6 @@ export class MyApprovalRequestsServiceAdapter {
             Promise.all([
                 this.vm.accountsService.createObjectList(this.vm.accountsService.approval, toCreateList),
             ]).then(value =>{
-                console.log(value);
                 let toCreateAccountList = [];
 
                 const services = [];
@@ -295,7 +290,6 @@ export class MyApprovalRequestsServiceAdapter {
                 });
                 services.push(this.vm.accountsService.createObjectList(this.vm.accountsService.approval_account_details, toCreateAccountList));
                 Promise.all(services).then(data =>{
-                    console.log(data);
                     this.vm.newApprovalList = [];
                     this.vm.moreApprovalsCount = 1;
                     this.vm.addApprovals();

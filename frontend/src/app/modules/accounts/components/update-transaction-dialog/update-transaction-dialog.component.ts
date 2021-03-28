@@ -52,7 +52,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
   }
 
   handleAmountChange(newAmount) {
-    console.log('transaction: ', this.transaction);
     if (this.transaction.creditAccounts.length == 1 && this.transaction.debitAccounts.length == 1) {
       this.transaction.creditAccounts[0].amount = newAmount;
       this.transaction.debitAccounts[0].amount = newAmount;

@@ -55,7 +55,6 @@ export class EditAccountDialogComponent implements OnInit {
       id: this.account.parentAccount,
       title: this.account.title,
     }
-    console.log(this.account);
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.account), // 0
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data), // 1
@@ -84,7 +83,6 @@ export class EditAccountDialogComponent implements OnInit {
     Promise.all([
       this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.transaction_account_details, data),
     ]).then(val =>{
-      console.log(val);
       if(val[0].length  == 0){
         this.isDeletable = true;
       }
@@ -101,7 +99,6 @@ export class EditAccountDialogComponent implements OnInit {
     }
     this.isLoading = true;
     
-    console.log(this.account);
     Promise.all([
       this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.account),
     ]).then(val =>{

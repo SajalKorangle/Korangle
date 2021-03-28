@@ -24,9 +24,9 @@
 
         <!-- Transaction List -->
         <div *ngFor="let transaction of transactionList; let i = index;">
-
+        <mat-card style="display: grid;margin-top: 15px;margin-bottom: 15px">
             <div class="row">
-                <div class="col-md-1" style="width: 4%; margin-top: 15px">
+                <div class="col-md-1" style="width: 4%;margin-top: 15px;">
                     <strong>{{i+1}}.</strong>
                 </div>
 
@@ -57,7 +57,7 @@
                             </mat-form-field>
                         </div>
                         <div class="row col-md-12" style="margin-top: -17px">
-                            <span *ngIf="account.creditAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{account.creditAccount.currentBalance}}</span>
+                            <span *ngIf="account.creditAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{htmlRenderer.getCurrentBalance(account.creditAccount.currentBalance)}}</span>
                             <span *ngIf="transaction.creditAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(i, j);">
                                 <u>Remove</u>
                             </span>
@@ -108,7 +108,7 @@
                             </mat-form-field>
                         </div>
                         <div class="row col-md-12" style="margin-top: -17px">
-                            <span *ngIf="account.debitAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{account.debitAccount.currentBalance}} </span>
+                            <span *ngIf="account.debitAccount != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance: {{htmlRenderer.getCurrentBalance(account.debitAccount.currentBalance)}} </span>
                             <span *ngIf="transaction.debitAccountList.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(i, j);">
                                 <u>Remove</u>
                             </span>
@@ -138,7 +138,7 @@
 
                 <!-- Warning & Error Statements -->
                 <div class="col-md-3">
-                    <div class="row" style="margin-top: 20px; padding: 0px">
+                    <div class="row toggleButton" style="margin-top: 20px;padding:0">
                         <mat-slide-toggle [ngModel]="htmlRenderer.isTransactionSimple(transaction)"
                                         (ngModelChange)="transactionList[i]=htmlRenderer.getFreshTransactionObject(); transactionList[i].simple=$event"
                                         [disabled]="transaction.creditAccountList.length > 1 || transaction.debitAccountList.length > 1">
@@ -146,38 +146,38 @@
                         </mat-slide-toggle>
                     </div>
                     <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
-                        <span *ngIf="isAccountNotMentioned(transaction) == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px;    vertical-align: -3px;">dangerous</span><span> &nbsp;Please Select An Account</span>
+                        <span *ngIf="isAccountNotMentioned(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon">dangerous</span><span>Please Select An Account</span>
                         </span>
                     </div>
                     <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAmountUnEqual(transaction) == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px; vertical-align: -3px;">dangerous</span><span> &nbsp;Total Credit And Debit Amount Should Be Equal</span>
+                        <span *ngIf="isAmountUnEqual(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon">dangerous</span><span>Total Credit And Debit Amount Should Be Equal</span>
                         </span>
                     </div>
                     <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAmountLessThanMinimum(transaction) == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px; vertical-align: -3px;">dangerous</span><span> &nbsp;Minimum Amount should be 0.01</span>
+                        <span *ngIf="isAmountLessThanMinimum(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon" >dangerous</span><span>Minimum Amount should be 0.01</span>
                         </span>
                     </div>
                     <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAccountRepeated(transaction) == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px; vertical-align: -3px;">dangerous</span><span> &nbsp;Same Account Can Not Be Used In The Same Transaction</span>
+                        <div *ngIf="isAccountRepeated(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon">dangerous</span><span>Same Account Can Not Be Used In The Same Transaction</span>
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                        <span *ngIf="isAmountMoreThanApproval(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon">dangerous</span><span>Total Amount Can Not Be More Than Approved Amount</span>
                         </span>
                     </div>
                     <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAmountMoreThanApproval(transaction) == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px; vertical-align: -3px;">dangerous</span><span> &nbsp;Total Amount Can Not Be More Than Approved Amount</span>
-                        </span>
-                    </div>
-                    <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isApprovalRequired(transaction) == true" style="color: rgb(243 170 3); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px; vertical-align: -3px;">error_outline</span><span> &nbsp;Approval Is Required For This Transaction</span>
+                        <span *ngIf="isApprovalRequired(transaction) == true" style="color: rgb(243 170 3);display: table;font-weight: 550">
+                            <span class="material-icons error-icon">error_outline</span><span>Approval Is Required For This Transaction</span>
                         </span>
                     </div>
                     <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
-                        <span *ngIf="htmlRenderer.isApprovalUsedTwice(transaction) == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                            <span class="material-icons" style="font-size: 15px;    vertical-align: -3px;">dangerous</span><span> &nbsp;Same approval used twice</span>
+                        <span *ngIf="htmlRenderer.isApprovalUsedTwice(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon">dangerous</span><span>Same approval used twice</span>
                         </span>
                     </div>
                 </div>
@@ -250,7 +250,7 @@
                 <div class="col-md-10" style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 15px;"></div>
                 <div class="col-md-1" style="width: 4%;"></div>
             </div>
-
+        </mat-card>
         </div>
         <div class="row col-md-12" style="margin-top: 10px">
             <mat-form-field>
