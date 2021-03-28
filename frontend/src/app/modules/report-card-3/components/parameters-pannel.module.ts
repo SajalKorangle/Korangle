@@ -82,7 +82,7 @@ import { ExamMappingDialogComponent } from './dialogs/exam-mapping-dialog/exam-m
     SettingsParametersPannelComponent,
     SessionParameterPannelComponent,
     GroupParametersPannelComponent,
-    ExamMappingDialogComponent
+    ExamMappingDialogComponent,
   ]
 })
 export class ParametersPannelModule { }
