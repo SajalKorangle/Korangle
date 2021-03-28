@@ -48,7 +48,9 @@ export class ViewBalanceServiceAdapter {
         this.vm.maximumDate = currentSesion.endDate;
             
         this.accountsList = value[0];
-        this.accountsSessionList = value[4];
+        this.accountsSessionList = value[4].map(acc => {
+            return { ...acc, currentBalance: parseFloat(acc.currentBalance) };
+        });
         this.initialiseAccountGroupList();
         this.initialiseDisplayData();
         this.vm.isLoading = false;
@@ -98,8 +100,23 @@ export class ViewBalanceServiceAdapter {
                 groupStructureList.find(group => group.parentAccount == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
             }
         }
-        const rootGroupStructureList = groupStructureList.filter(group=> !group.parentGroup);
+        const rootGroupStructureList = groupStructureList.filter(group => !group.parentGroup);
+        rootGroupStructureList.forEach(g => {
+            this.populateGroupBalance(g);
+        });
         this.populateHeadWiseDisplayList(rootGroupStructureList, individualAccountList);
+    }
+
+    populateGroupBalance(customGroup): number {
+        if (customGroup.type=='ACCOUNT') {
+            return parseFloat(customGroup.currentBalance);
+        }
+        if (customGroup.type == 'GROUP' && customGroup.childs.length == 0) {
+            customGroup.currentBalance = 0;
+            return 0;
+        }
+        customGroup.currentBalance = customGroup.childs.reduce((acc, nextEl) => acc + this.populateGroupBalance(nextEl), 0);
+        return customGroup.currentBalance;
     }
 
     populateHeadWiseDisplayList(groupsList, individualAccountList){

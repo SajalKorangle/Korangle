@@ -101,6 +101,7 @@
                         <mat-expansion-panel-header style="padding-left:20px; padding-right: 2px">
                             <div style="width: 100%;">
                                 <span>{{head.title}}</span>
+                                <span class="account-font" [style.color]="getHeadBalance(head.title) | coloredBalance" style="margin-left: 15px;">Cr: {{getHeadBalance(head.title)}}</span>
                             </div>
                         </mat-expansion-panel-header>
                         <div class="mat-expansion-panel-body" *ngFor="let element of hierarchyStructure[head.title]" >

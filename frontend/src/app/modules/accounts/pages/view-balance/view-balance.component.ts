@@ -289,4 +289,8 @@ export class ViewBalanceComponent implements OnInit {
             return false;
         }
     }
+  
+  getHeadBalance(headTitle) {
+    return Object.values(this.hierarchyStructure[headTitle]).reduce((accumulator, nextEntry: customGroupStructure) => accumulator + nextEntry.currentBalance, 0);
+  }
 }
