@@ -109,7 +109,7 @@ export class ViewBalanceServiceAdapter {
 
     populateGroupBalance(customGroup): number {
         if (customGroup.type=='ACCOUNT') {
-            return parseFloat(customGroup.currentBalance);
+            return customGroup.currentBalance;
         }
         if (customGroup.type == 'GROUP' && customGroup.childs.length == 0) {
             customGroup.currentBalance = 0;
@@ -161,7 +161,9 @@ export class ViewBalanceServiceAdapter {
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
             ]).then(data =>{
-                this.initialiseTransactionData(data[0], data[1], data[2]);
+                this.initialiseTransactionData(data[0], data[1].map(el => {
+                    return { ...el, amount: parseFloat(el.amount) };
+                }), data[2]);
                 this.vm.isLedgerLoading = false;
             })
         })
@@ -171,7 +173,7 @@ export class ViewBalanceServiceAdapter {
         transactionList.sort((a, b) => {
             return b.voucherNumber - a.voucherNumber;
         });
-        let lastAccountBalance = parseFloat(this.vm.ledgerAccount.currentBalance);
+        let lastAccountBalance = this.vm.ledgerAccount.currentBalance;
         for(let j=0;j<transactionList.length ; j++){
             let transaction = transactionList[j];
             let totalAmount = 0;
@@ -231,9 +233,9 @@ export class ViewBalanceServiceAdapter {
             console.log("type: ", ledgerAccountType);
             tempData.balance = lastAccountBalance;
             if (ledgerAccountType == 'DEBIT') {
-                lastAccountBalance = lastAccountBalance - parseFloat(ledgerAccountAmount);
+                lastAccountBalance = lastAccountBalance - ledgerAccountAmount;
             } else {
-                lastAccountBalance = lastAccountBalance + parseFloat(ledgerAccountAmount);
+                lastAccountBalance = lastAccountBalance + ledgerAccountAmount;
             }
 
             for(let i=0;i<tempData.accounts.length; i++){

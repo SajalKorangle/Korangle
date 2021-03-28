@@ -290,7 +290,8 @@ export class ViewBalanceComponent implements OnInit {
         }
     }
   
-  getHeadBalance(headTitle) {
-    return Object.values(this.hierarchyStructure[headTitle]).reduce((accumulator, nextEntry: customGroupStructure) => accumulator + nextEntry.currentBalance, 0);
+  getHeadBalance(headTitle): number {
+    const headChilds: Array<customGroupStructure> = Object.values(this.hierarchyStructure[headTitle]);
+    return headChilds.reduce((accumulator: number, nextEntry: customGroupStructure):number => accumulator + nextEntry.currentBalance, 0);
   }
 }

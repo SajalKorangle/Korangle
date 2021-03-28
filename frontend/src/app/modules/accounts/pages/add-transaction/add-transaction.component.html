@@ -45,13 +45,14 @@
                                             <input style="pointer-events: auto;" #searchInput1 (click)="$event.stopPropagation();" matInput>
                                         </mat-form-field>
                                     </mat-option>
-                                    
+
                                     <ng-container *ngFor="let accountSession of backendData.accountSessionList">
                                         <mat-option *ngIf="htmlRenderer.getAccountFromAccountSession(accountSession).title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
                                             [value]="accountSession">
                                             {{htmlRenderer.getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
                                         </mat-option> 
-                                    </ng-container>  
+                                    </ng-container>
+
                                 </mat-select>
                             </mat-form-field>
                         </div>

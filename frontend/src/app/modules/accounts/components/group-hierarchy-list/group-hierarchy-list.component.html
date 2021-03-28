@@ -6,7 +6,7 @@
                     [disabled]="vm.isElementDisabled(element)"
                     (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked)" 
                     style="float:right; margin-top:2px;  margin-right: 18px"></mat-checkbox>
-    <span class="account-font" [style.color]="element[balanceName]| coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{element[balanceName]}}</span>
+    <span [style.color]="element[balanceName]| coloredBalance" style="margin-left: 25px;">Cr: {{element[balanceName]}}</span>
 </div>
 <ng-template #groupView>
     <div class="left-line">
@@ -14,7 +14,7 @@
             <mat-expansion-panel-header>
                 <div style="width: 100%;">
                     <span class="group-font" (click)="customClick.emit(element); $event.stopPropagation();" style="cursor: pointer;">{{element.title}}</span>
-                    <span *ngIf="element[balanceName]" class="account-font" [style.color]="element[balanceName] | coloredBalance" style="margin-left: 15px; margin-right: 15px">Cr: {{element[balanceName]}}</span>
+                    <span *ngIf="element[balanceName]" [style.color]="element[balanceName] | coloredBalance" style="margin-left: 25px;">Cr: {{element[balanceName]}}</span>
                     <mat-checkbox  *ngIf="displayCheckBox"
                             [checked]="vm.isElementSelected(element)" 
                             (change)="vm.changeElementStatus(element, $event.checked); vm.selectParentGroups(element, $event.checked); vm.changeChildStatus(element, $event.checked)" 
