@@ -17,7 +17,11 @@
       "es2016",
       "dom"
     ],
+<<<<<<< HEAD
     "paths": {  // dummy paths, original in frontend/src/tsconfig.app.json
+=======
+    "paths": {
+>>>>>>> d838092c4df8b6ec4c94bb050c020f7994364734
       "@modules/*": ["app/modules/*"],
       "@basic-components/*": ["app/basic-components/*"],
       "@classes/*": ["app/classes/*"],
