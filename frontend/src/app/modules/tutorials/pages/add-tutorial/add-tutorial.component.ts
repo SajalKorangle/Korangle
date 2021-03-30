@@ -39,12 +39,15 @@ export class AddTutorialComponent implements OnInit {
     classSectionSubjectList: any;
     selectedSection: any;
     tutorialUpdating = false;
+    isTutorialDetailsLoading=false;
     editedTutorial: any;
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher=/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-
+    isIFrameLoading=true;
+    loadCount=0;
+    limit=2;
 
     createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
     deleteMessage = 'The following tutorial has been deleted -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
@@ -168,4 +171,31 @@ export class AddTutorialComponent implements OnInit {
         return true;
     }
 
+    listenEvent(event: any) {
+        this.loadCount++;
+        console.log('i am here')
+        console.log(this.loadCount);
+        console.log(this.limit);
+        if (this.loadCount == this.limit) {
+            console.log('i am in')
+            this.isIFrameLoading = false;
+            this.loadCount = 0;
+        }
+    }
+
+    handleLinkChange() {
+            let videoId = this.newTutorial.link.match(this.youtubeIdMatcher);
+            if (videoId && this.previewBeforeAddTutorialUrl && videoId.includes(this.previewBeforeAddTutorialUrl.split('/')[4])) {
+                this.isIFrameLoading = false;
+                this.loadCount=0;
+            } else {
+                this.isIFrameLoading = true;
+                let iframe = document.getElementById('player');
+                if (iframe) {
+                    this.limit = 1;
+                } else {
+                    this.limit = 2;
+                }
+            }
+    }
 }

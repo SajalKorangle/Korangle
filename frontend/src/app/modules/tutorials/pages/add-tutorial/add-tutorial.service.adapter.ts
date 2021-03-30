@@ -137,7 +137,8 @@ export class AddTutorialServiceAdapter {
 
 
     getTutorialList(): void {
-        this.vm.showTutorialDetails = false;
+        this.vm.showTutorialDetails = true;
+        this.vm.isTutorialDetailsLoading=true;
         let request_class_subject_tutorial_data = {
             'parentClassSubject': this.vm.getParentClassSubject()
         };
@@ -145,7 +146,7 @@ export class AddTutorialServiceAdapter {
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_class_subject_tutorial_data),
         ]).then(value => {
             this.populateTutorialList(value[0]);
-            this.vm.showTutorialDetails = true;
+            this.prepareStudentList();
         }, error => {
         });
         this.vm.initializeNewTutorial();
@@ -328,6 +329,7 @@ export class AddTutorialServiceAdapter {
         ]).then(value =>{
             this.vm.currentClassStudentList = value[0];
             this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
+            this.vm.isTutorialDetailsLoading=false;
         })
     }
 

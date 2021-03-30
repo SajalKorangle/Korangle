@@ -4,7 +4,7 @@
             <mat-form-field  *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Subject"
                             [ngModel]="selectedSubject"
-                            (ngModelChange)="selectedSubject=$event;showTutorialVideo=false;selectedChapter={};">
+                            (ngModelChange)="handleSubjectSelection($event)">
                     <mat-option *ngFor='let subject of filteredStudentSubject;' [value]="subject">
                         {{getSubjectName(subject)}}
                     </mat-option>
@@ -14,7 +14,7 @@
             <mat-form-field *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Chapter"
                             [ngModel]="selectedChapter"
-                            (ngModelChange)="selectedChapter=$event;showTutorialVideo=false;selectedTopic={};">
+                            (ngModelChange)="handleChapterSelection($event)">
                     <mat-option *ngFor='let chapter of selectedSubject.chapterList;' [value]="chapter">
                         {{chapter.name}}
                     </mat-option>
@@ -25,7 +25,7 @@
             <mat-form-field  *ngIf="!noTutorials" style="margin: 20px;">
                 <mat-select placeholder="Select Topic"
                             [ngModel]="selectedTopic"
-                            (ngModelChange)="selectedTopic=$event;setTutorialVideo()">
+                            (ngModelChange)="handleTopicSelection($event)">
                     <mat-option *ngFor='let topic of selectedChapter.topicList;' [value]="topic">
                         {{topic.topic}}
                     </mat-option>
@@ -35,10 +35,17 @@
             <span *ngIf="noTutorials" style="margin-left:20px">[ No Tutorial Videos Present ]</span>
 
         </div>
+       
+        <ng-container *ngIf="isIFrameLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </ng-container>
+       
         <ng-container *ngIf="showTutorialVideo">
-            <div style="height:70%;width: 70%;margin-left:10%;margin-bottom: 5%">
-                <div class="embed-responsive embed-responsive-16by9">
+            <div [class.d-none]="isIFrameLoading" style="height:70%;width: 70%;margin-left:10%;margin-bottom: 5%">
+                <div  class="embed-responsive embed-responsive-16by9">
                     <iframe class="embed-responsive-item"
+                            id="player"
+                            (load)="listenEvent($event)"
                             [src]="videoUrl | safe"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

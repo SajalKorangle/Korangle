@@ -56,7 +56,6 @@ export class ViewTutorialsServiceAdapter {
             this.vm.studentSubjectList = value[2];
             this.studentProfile = value[3][0];
             this.populateTutorialList();
-            this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
@@ -87,6 +86,7 @@ export class ViewTutorialsServiceAdapter {
         ]).then(value => {
             this.tutorialList = value[0];
             this.populateFilteredSubjectTutorialList();
+            this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
         });
