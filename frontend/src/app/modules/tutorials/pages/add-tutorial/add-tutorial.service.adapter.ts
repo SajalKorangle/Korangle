@@ -136,21 +136,20 @@ export class AddTutorialServiceAdapter {
     }
 
 
-    getTutorialList(): void {
+    async getTutorialList(){
         this.vm.showTutorialDetails = true;
         this.vm.isTutorialDetailsLoading=true;
         let request_class_subject_tutorial_data = {
             'parentClassSubject': this.vm.getParentClassSubject()
         };
-        Promise.all([
+       const value= await Promise.all([
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_class_subject_tutorial_data),
-        ]).then(value => {
-            this.populateTutorialList(value[0]);
-            this.prepareStudentList();
-        }, error => {
-        });
+        ]);
+
+        this.populateTutorialList(value[0]);
+        await this.prepareStudentList();
         this.vm.initializeNewTutorial();
-         // Add button is disabled
+        this.vm.isTutorialDetailsLoading=false;
     }
 
     populateTutorialList(tutorialList) {
@@ -310,7 +309,7 @@ export class AddTutorialServiceAdapter {
     }
 
 
-    prepareStudentList(): any{
+    async prepareStudentList(){
         this.vm.currentClassStudentList = [];
         let student_list = this.fullStudentList.filter(student =>{
             if(student.parentClass == this.vm.selectedClass.id && student.parentDivision == this.vm.selectedSection.id) return true;
@@ -324,13 +323,9 @@ export class AddTutorialServiceAdapter {
             'id__in': studentIdList,
             'fields__korangle': 'id,name,mobileNumber',
         }
-        Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-        ]).then(value =>{
-            this.vm.currentClassStudentList = value[0];
-            this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
-            this.vm.isTutorialDetailsLoading=false;
-        })
+        const value = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)
+        this.vm.currentClassStudentList = value;
+        this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
     }
 
     populateStudentList(tutorial): any{
