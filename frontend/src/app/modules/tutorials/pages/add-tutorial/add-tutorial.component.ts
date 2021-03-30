@@ -173,11 +173,7 @@ export class AddTutorialComponent implements OnInit {
 
     listenEvent(event: any) {
         this.loadCount++;
-        console.log('i am here')
-        console.log(this.loadCount);
-        console.log(this.limit);
         if (this.loadCount == this.limit) {
-            console.log('i am in')
             this.isIFrameLoading = false;
             this.loadCount = 0;
         }
