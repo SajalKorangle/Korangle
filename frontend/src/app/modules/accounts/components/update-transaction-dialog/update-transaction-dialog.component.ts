@@ -41,8 +41,6 @@ export class UpdateTransactionDialogComponent implements OnInit {
     this.transaction.creditAccounts.push({});
   }
 
-  
-
   removeDebitAccount(aIndex: any){
     this.transaction.debitAccounts.splice(aIndex, 1);
   }
@@ -55,6 +53,12 @@ export class UpdateTransactionDialogComponent implements OnInit {
     if (this.transaction.creditAccounts.length == 1 && this.transaction.debitAccounts.length == 1) {
       this.transaction.creditAccounts[0].amount = newAmount;
       this.transaction.debitAccounts[0].amount = newAmount;
+    }
+    else if (this.transaction.creditAccountList.length == 1) {
+      this.transaction.creditAccountList[0].amount = this.transaction.debitAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+    }
+    else if (this.transaction.debitAccountList.length == 1) {
+      this.transaction.debitAccountList[0].amount = this.transaction.creditAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
     }
   }
 
@@ -100,6 +104,44 @@ export class UpdateTransactionDialogComponent implements OnInit {
     }
   }
 
+  isAmountMoreThanApproval(): boolean{
+    if(this.transaction.approvalId == null){
+      return false;
+    }
+
+    const parentApproval = this.data.approval;
+    let flag = false;
+    this.transaction.creditAccounts.forEach(account => {
+      if (!account.accountDbId) {
+        return; // return of this callback function not isAmpuntMoreThanApproval function
+      }
+      const approvalAccountDeatils = this.data.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount==account.accountDbId && el.transactionType == 'CREDIT');
+      if (approvalAccountDeatils) {
+        if (account.amount > approvalAccountDeatils.amount) {
+          flag = true;
+        }
+      }
+      else {
+        flag = true;
+      }
+    });
+
+    this.transaction.debitAccounts.forEach(account => {
+      if (!account.accountDbId) {
+        return; // return of this callback function not isAmpuntMoreThanApproval function
+      }
+      const approvalAccountDeatils = this.data.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount == account.accountDbId && el.transactionType == 'DEBIT');
+      if (approvalAccountDeatils) {
+        if (account.amount > approvalAccountDeatils.amount) {
+          flag = true;
+        }
+      }
+      else {
+        flag = true;
+      }
+    });
+    return flag;
+  }
 
   isAccountNotMentioned(): boolean{
     let temp = false;
@@ -170,7 +212,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
   isAddButtonDisabled(): boolean{
     
     if(this.isApprovalRequired() || this.isAmountUnEqual() || 
-    this.isAccountNotMentioned() || this.isAccountRepeated() || this.isAmountLessThanMinimum()){
+    this.isAccountNotMentioned() || this.isAccountRepeated() || this.isAmountLessThanMinimum() || this.isAmountMoreThanApproval()){
       return true;
     }
     return false;

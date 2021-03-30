@@ -44,7 +44,7 @@
                                 <span style="font-size: 14px;">Voucher Number: {{transaction.voucherNumber}}</span>
                             </div>
                             <div class="col-md-5">
-                                <span *ngIf="transaction.approvalId != null" style="font-size: 14px;">Approval ID: {{transaction.approvalId}} &nbsp;&nbsp;(This Transcation Can Not Be Updated)</span>
+                                <span *ngIf="transaction.approvalId != null" style="font-size: 14px;">Approval ID: {{transaction.approvalId}}</span>
                             </div>
                             <div class="col-md-5">
                                 <span style="font-size: 14px;float:right;" >Date: {{getDisplayDateFormat(transaction.transactionDate)}}</span>

@@ -94,6 +94,11 @@
                     <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Maximum Permitted Amount is {{maximumPermittedAmount}}</span>
                 </span>
             </div>
+            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                <span *ngIf="isAmountMoreThanApproval()" style="color: rgb(243, 59, 59); font-weight: 550">
+                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span>Total Amount Can Not Be More Than Approved Amount</span>
+                </span>
+            </div>
         </div>
     </div>
     <div class="row col-md-12">

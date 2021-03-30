@@ -9,7 +9,7 @@ export class EditGroupDialogHtmlRenderer {
 
     isAccountNameAlreadyExists(): boolean {
         return this.vm.data.vm.backendData.accountsList.find(account => {
-            return account.title.trim() == this.vm.group.title.trim() && account.id != this.vm.group.id;
+            return account.title.trim() == this.vm.group.title.trim() && account.id != this.vm.group.parentAccount;
         }) != undefined;
     }
 

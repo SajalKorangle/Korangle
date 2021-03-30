@@ -37,7 +37,7 @@
                             <mat-form-field style="width: 100%;" (click)="searchInput1.focus()">
                                 <mat-select placeholder="Pay From" 
                                             [ngModel]="account.creditAccount"
-                                            [disabled]="transaction.approvalId != null"
+                                            [disabled]="transaction.approval != null"
                                             (ngModelChange)="account.creditAccount = $event">
                                     <mat-option style="pointer-events: none;">  <!--Search bar-->
                                         <mat-form-field style="width: 100%;">
@@ -77,7 +77,7 @@
                                                     [inputValue]="account.creditAmount"
                                                     (outputValue)="account.creditAmount=$event; handleAmountChange(transaction, $event)">
                             </customized-number-input>
-                            <span *ngIf="j == transaction.creditAccountList.length-1" style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="htmlRenderer.addCreditAccount(transaction)">
+                            <span *ngIf="j == transaction.creditAccountList.length-1 && transaction.approval==null" style="float: right; margin-top:20px;font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="htmlRenderer.addCreditAccount(transaction)">
                                 <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
                             </span>
                         </div>
@@ -90,7 +90,7 @@
                         <div class="row col-md-12">
                             <mat-form-field style="width: 100%;" (click)="searchInput2.focus()">
                                 <mat-select placeholder="Pay To" [ngModel]="account.debitAccount"
-                                    (ngModelChange)="account.debitAccount=$event;" [disabled]="transaction.approvalId != null">
+                                    (ngModelChange)="account.debitAccount=$event;" [disabled]="transaction.approval != null">
                                     <mat-option style="pointer-events: none;">  <!--Search bar-->
                                         <mat-form-field style="width: 100%;">
                                             <mat-icon matPrefix>search</mat-icon>
@@ -128,7 +128,7 @@
                                                     [inputValue]="account.debitAmount"
                                                     (outputValue)="account.debitAmount=$event; handleAmountChange(transaction, $event)">
                             </customized-number-input>
-                            <span *ngIf="j == transaction.debitAccountList.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="htmlRenderer.addDebitAccount(transaction)">
+                            <span *ngIf="j == transaction.debitAccountList.length-1 && transaction.approval == null" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="htmlRenderer.addDebitAccount(transaction)">
                                 <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add Account</span>
                             </span>
                         </div>
@@ -260,7 +260,7 @@
                 <span class="material-icons" style="font-size: 13px;">control_point</span><span> &nbsp;Add</span>
             </span>
         </div>
-        <div class="row col-md-12" style="margin-top: 0px">
+        <div class="row col-md-12" style="margin-top: 0px;">
             <button type="submit" style="float: right;background:rgba(255, 152, 0, 1); color: white" class="custom-button" (click)="serviceAdapter.addTransactions()"  *ngIf="!htmlRenderer.isAddButtonDisabled()" >Add Transactions</button>
             <button type="submit" style="float: right;background:rgba(196, 196, 196, 1); color: white; cursor: not-allowed; border:2px solid rgba(196, 196, 196, 1);" class="custom-button" *ngIf="htmlRenderer.isAddButtonDisabled()" >Add Transactions</button>
         </div>

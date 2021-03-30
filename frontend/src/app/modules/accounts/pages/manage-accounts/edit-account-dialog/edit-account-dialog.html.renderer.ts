@@ -9,7 +9,7 @@ export class EditAccountDialogHtmlRenderer {
 
     isAccountNameAlreadyExists(): boolean {
         return this.vm.data.vm.backendData.accountsList.find(account => {
-            return account.title.trim() == this.vm.account.title.trim() && account.id != this.vm.account.id;
+            return account.title.trim() == this.vm.account.title.trim() && account.id != this.vm.account.parentAccount;
         }) != undefined;
     }
 
