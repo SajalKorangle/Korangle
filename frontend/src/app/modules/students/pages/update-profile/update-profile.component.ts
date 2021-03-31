@@ -1,8 +1,5 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
-import { Student } from '../../../../classes/student';
-import { Classs } from '../../../../classes/classs';
-import { Section } from '../../../../classes/section';
 import {UpdateProfileServiceAdapter} from './update-profile.service.adapter'
 
 import { StudentService } from '../../../../services/modules/student/student.service';
@@ -12,7 +9,6 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 
 import {MatDialog} from '@angular/material';
 import {MultipleFileDialogComponent} from '../../multiple-file-dialog/multiple-file-dialog.component';
-import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 declare const $: any;
@@ -380,6 +376,10 @@ export class UpdateProfileComponent implements OnInit {
                 alert ("File size should not exceed 5MB")
                 return false
             }
+            else if(value.name.length>100){
+                alert ("File name should not exceed 100 characters")
+                return false
+            }
             else{
             	return true
             }
@@ -494,6 +494,7 @@ export class UpdateProfileComponent implements OnInit {
     }
     
     openFilePreviewDialog(parameter): void {
+        if(this.getParameterDocumentType(parameter)!='none') {
         let type=this.getParameterDocumentType(parameter);
         let file = this.getParameterDocumentValue(parameter);
          let dummyImageList=[];
@@ -511,6 +512,34 @@ export class UpdateProfileComponent implements OnInit {
             dialogRef.afterClosed().subscribe(result => {
                 console.log('The dialog was closed');
             });
+        }
     }
 
+    getIcon(parameter: any) {
+        let src="/assets/img/";
+        switch(this.getParameterDocumentType(parameter)) {
+            case 'none':
+                return src+'nofile.png';
+            case 'img':
+                return src+'img.png';
+            case 'pdf':
+                return src+'pdf.png';
+        }
+                
+    }
+
+    resizeContainer(element:any):void {
+        let docText=element.parentElement;
+        let docContainer=docText.parentElement.parentElement;
+        if(docContainer && docText) {
+            console.log( docText.clientHeight )
+            let textHeight = docText.clientHeight + 26;
+            if (textHeight > 120) {
+                docContainer.style.height = textHeight + 'px';
+            } else {
+                docContainer.style.height = '120px';
+            }
+        }
+    }
+    
 }

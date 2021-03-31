@@ -7,10 +7,11 @@ import { environment } from '../../environments/environment';
 
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationOldService {
 
     private getUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/get-user-details/';
     private loginUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/login-user-details/';
+
 
     private headers = new HttpHeaders({'Content-Type': 'application/json' });
 

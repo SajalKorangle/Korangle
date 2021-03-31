@@ -85,6 +85,20 @@
 
                 <div class="clearfix"></div>
 
+                <div class="row">
+                    <div class="col-md-12"
+                         align="center">
+                        <a style="cursor: pointer" (click)="changePage.emit('signup')">Sign Up</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12"
+                         align="center">
+                        <a style="cursor: pointer" (click)="changePage.emit('forgot-password')">Forgot Password</a>
+                    </div>
+                </div>
+
             </div>
 
             <ng-container *ngIf="isLoading">

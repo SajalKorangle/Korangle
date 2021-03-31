@@ -9,7 +9,9 @@ import { BasicComponentsModule } from "./basic-components/basic-components.modul
 
 import { AppComponent } from './app.component';
 
-import { LoginComponent } from './authentication/login.component';
+import { LoginComponent } from './authentication/login/login.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
 
 import { PrintService } from './print/print-service';
 import { FrontpageComponent } from './frontpage/frontpage.component';
@@ -19,12 +21,17 @@ import { ContactUsComponent } from './frontpage/contact-us/contact-us.component'
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {SignupComponent} from './authentication/signup/signup.component';
 import {DecimalPipe} from '@angular/common';
 
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
+        ForgotPasswordComponent,
+        SignupComponent,
+        AuthenticationComponent,
         FrontpageComponent,
         AboutUsComponent,
         WhyKorangleComponent,
@@ -39,6 +46,8 @@ import {DecimalPipe} from '@angular/common';
         HttpClientModule,
         BrowserModule,
         BrowserAnimationsModule,
+        ReactiveFormsModule,
+        // RecaptchaModule,  // this is the recaptcha main module
     ],
     exports: [
     ],
