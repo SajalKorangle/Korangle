@@ -52,7 +52,7 @@ export class AddTransactionServiceAdapter {
                     this.vm.initilizeDate();
 
                     this.vm.backendData.accountSessionList = value[0];
-                    this.vm.backendData.accountList = value[3];
+                    this.vm.backendData.accountList = value[3].filter(account=> this.vm.backendData.accountSessionList.find(accountSession=> accountSession.parentAccount==account.id)!=undefined); // only accounts of currentSession
                     if(value[1].length > 0){
                         this.vm.maximumPermittedAmount = value[1][0].restrictedAmount;
                     }
@@ -103,8 +103,6 @@ export class AddTransactionServiceAdapter {
                 this.vm.isLoading=false;
                 alert("Unexpected errors. Please contact admin");
             }
-        }, error => {
-            this.vm.isLoading = false;
         });
     }
 

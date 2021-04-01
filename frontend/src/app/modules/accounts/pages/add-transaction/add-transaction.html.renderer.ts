@@ -56,7 +56,7 @@ export class AddTransactionHtmlRenderer {
 
     addNewTransaction(): void{
         for(let i=0;i<this.moreTransaction; i++){
-            let transaction = this.getFreshTransactionObject();
+            const transaction = this.getFreshTransactionObject();
             this.vm.transactionList.push(transaction);
         }
     }

@@ -10,6 +10,8 @@ from employee_app.models import Employee
 
 from django.contrib.auth.models import User
 
+from accounts_app.models import Transaction, Accounts
+
 # Create your models here.
 
 
@@ -261,6 +263,7 @@ class FeeReceipt(models.Model):
         ( 'Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
 
     class Meta:
         db_table = 'fee_receipt_new'
@@ -415,3 +418,17 @@ class LockFee(models.Model):
     class Meta:
         db_table = 'lock_fee'
 
+class FeeSettings(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    fromAccount = models.ForeignKey(Accounts, on_delete=models.SET_NULL, null=True)
+
+class FeePaymentAccounts(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE)
+    
+    MODE_OF_PAYMENT = (
+        ( 'Cash', 'Cash' ),
+        ( 'Cheque', 'Cheque' ),
+        ( 'Online', 'Online'),
+    )
+    modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT)

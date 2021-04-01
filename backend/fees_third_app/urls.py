@@ -83,3 +83,17 @@ urlpatterns += [
 ]
 
 
+from .views import FeeSettingsView, FeeSettingsListView
+
+urlpatterns += [
+    url(r'^fee-settings/batch', FeeSettingsListView.as_view()),
+    url(r'^fee-settings', FeeSettingsView.as_view()),
+]
+
+
+from .views import FeePaymentAccountsView, FeePaymentAccountsListView
+
+urlpatterns += [
+    url(r'^fee-payment-accounts/batch', FeePaymentAccountsListView.as_view()),
+    url(r'^fee-payment-accounts', FeePaymentAccountsView.as_view()),
+]

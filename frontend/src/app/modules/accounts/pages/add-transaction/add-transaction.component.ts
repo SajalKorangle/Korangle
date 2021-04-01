@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
 import { CommonFunctions } from './../../../../classes/common-functions'
@@ -23,16 +23,10 @@ import { AddTransactionBackendData } from './add-transaction.backend.data';
 export class AddTransactionComponent implements OnInit {
 
   user: any;
-  isLoading: any;
 
   selectedDate: any;
 
   transactionList: any[];
-
-  debitAccount: any;
-  debitAmount: any;
-  creditAccount: any;
-  creditAmount: any;
 
   maximumPermittedAmount: any;
   
@@ -41,6 +35,8 @@ export class AddTransactionComponent implements OnInit {
   serviceAdapter: AddTransactionServiceAdapter;
   htmlRenderer: AddTransactionHtmlRenderer;
   backendData: AddTransactionBackendData;
+
+  isLoading: any;
   
   constructor( 
     public accountsService: AccountsService,
@@ -50,18 +46,18 @@ export class AddTransactionComponent implements OnInit {
 
   // Server Handling - Initial
   ngOnInit(): void {
+    this.user = DataStorage.getInstance().getUser();
+    this.transactionList = [];
 
-      this.user = DataStorage.getInstance().getUser();
-      this.transactionList = [];
+    this.htmlRenderer = new AddTransactionHtmlRenderer();
+    this.htmlRenderer.initializeRenderer(this);
 
-      this.htmlRenderer = new AddTransactionHtmlRenderer();
-      this.htmlRenderer.initializeRenderer(this);
+    this.backendData = new AddTransactionBackendData();
+    this.backendData.initializeData(this);
 
-      this.backendData = new AddTransactionBackendData();
-      this.backendData.initializeData(this);
-
-      this.serviceAdapter = new AddTransactionServiceAdapter;
-      this.serviceAdapter.initializeAdapter(this);
+    this.serviceAdapter = new AddTransactionServiceAdapter;
+    this.serviceAdapter.initializeAdapter(this);
+    
     this.serviceAdapter.initializeData();
     console.log("this", this);
   }

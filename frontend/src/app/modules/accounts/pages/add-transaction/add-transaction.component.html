@@ -46,10 +46,10 @@
                                         </mat-form-field>
                                     </mat-option>
 
-                                    <ng-container *ngFor="let accountSession of backendData.accountSessionList">
-                                        <mat-option *ngIf="htmlRenderer.getAccountFromAccountSession(accountSession).title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
-                                            [value]="accountSession">
-                                            {{htmlRenderer.getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
+                                    <ng-container *ngFor="let account of backendData.accountList">
+                                        <mat-option *ngIf="account.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                                            [value]="account.id">
+                                            {{account.title}}&nbsp;A/c
                                         </mat-option> 
                                     </ng-container>
 
@@ -98,10 +98,10 @@
                                         </mat-form-field>
                                     </mat-option>
                                       
-                                    <ng-container *ngFor="let accountSession of backendData.accountSessionList">
-                                        <mat-option *ngIf="htmlRenderer.getAccountFromAccountSession(accountSession).title.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
-                                            [value]="accountSession">
-                                            {{htmlRenderer.getAccountFromAccountSession(accountSession).title}}&nbsp;A/c
+                                    <ng-container *ngFor="let account of backendData.accountList">
+                                        <mat-option *ngIf="account.title.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
+                                            [value]="account.id">
+                                            {{account.title}}&nbsp;A/c
                                         </mat-option>   
                                     </ng-container>
                                 </mat-select>

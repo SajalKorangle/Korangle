@@ -173,3 +173,21 @@ class LockFeeListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id']
 
 
+from .models import FeeSettings, FeePaymentAccounts
+
+class FeeSettingsView(CommonView, APIView):
+    Model = FeeSettings
+    RelationsToSchool = ['parentSchool']
+
+class FeeSettingsListView(CommonListView, APIView):
+    Model = FeeSettings
+    RelationsToSchool = ['parentSchool']
+
+
+class FeePaymentAccountsView(CommonView, APIView):
+    Model = FeePaymentAccounts
+    RelationsToSchool = ['parentSchool', 'parentAccount__parentSchool']
+
+class FeePaymentAccountsListView(CommonListView, APIView):
+    Model = FeePaymentAccounts
+    RelationsToSchool = ['parentSchool', 'parentAccount__parentSchool']
