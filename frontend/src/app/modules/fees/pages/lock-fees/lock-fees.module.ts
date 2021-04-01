@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import { MatChipsModule } from '@angular/material/chips'
 
 import {LockFeesRoutingModule,} from './lock-fees.routing';
 import {ComponentsModule} from "../../../../components/components.module";
@@ -14,6 +14,7 @@ import {LockFeesComponent} from "./lock-fees.component";
     imports: [
         LockFeesRoutingModule ,
         ComponentsModule,
+        MatChipsModule
     ],
     exports: [
     ],

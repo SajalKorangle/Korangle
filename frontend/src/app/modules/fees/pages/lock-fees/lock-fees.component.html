@@ -2,10 +2,71 @@
 
     <ng-container *ngIf="!isLoading">
 
+        <ng-container *ngIf="feeSettings else enableAccounting">
+
+            <mat-form-field>
+                <mat-label>Student Fee Debit Account</mat-label>
+                <mat-select [ngModel]="feeSettings.fromAccount">
+                    <mat-option style="pointer-events: none;">  <!--Search bar-->
+                        <mat-form-field style="width: 100%;">
+                            <mat-icon matPrefix>search</mat-icon>
+                            <input style="pointer-events: auto;" #searchInput1 (click)="$event.stopPropagation();" matInput>
+                        </mat-form-field>
+                    </mat-option>
+                        
+                    <ng-container *ngFor="let account of accountsList">
+                        <mat-option *ngIf="account.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                            [value]="account.id">
+                            {{account.title}}&nbsp;A/c
+                        </mat-option>   
+                    </ng-container>
+                </mat-select>
+            </mat-form-field><br/>
+
+            <ng-container *ngFor="let paymentMode of getPaymentModeList(); let i=index;">
+                <div style="display: flex; flex-direction: row; width: 100%;">
+                <mat-form-field style="flex-grow: 2;">
+                    <mat-label>Mode: {{paymentMode}}</mat-label>
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let feePaymentAccount of getPaymentModeFilteredFeeAccountsList(paymentMode)"
+                                 [removable]="true" (removed)="removeFeePaymentAccount(feePaymentAccount)">
+                          {{getAccountName(feePaymentAccount.parentAccount)}}
+                          <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                      </mat-chip-list>
+                      <input style="pointer-events: none; opacity: 0;">
+                </mat-form-field>
+
+                <mat-form-field style="margin: 8px;">
+                    <mat-label>Add Account</mat-label>
+                    <mat-select placeholder="Add Account">
+                        <ng-container *ngFor="let account of accountsList">
+                            <mat-option (click)="addNewAccountInFeePaymentAccountList(account, paymentMode); $event.stopPropagation();">
+                                {{account.title}}&nbsp;A/c
+                            </mat-option>   
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+                </div>
+            </ng-container>
+
+            <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="float: right;">Disable Accounting</button>
+            <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="float: right;">Update</button><br/>
+            <div class="clearfix"></div>
+        </ng-container>
+        
+        <ng-template #enableAccounting>
+            <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" 
+                    (click)="enbaleAccountingHandler()"
+                    style="background-color: blue;">
+                    Enable Accounting</button>
+        </ng-template>
+
+        <mat-divider style="margin: 12px 0px;"></mat-divider>
         <ng-container *ngIf="lockFees; else feesUnlocked;">
             <span style="font-size: 16px;">
                 Unlock fees structure for session {{getSession(this.user.activeSchool.currentSessionDbId).name}}
-            </span><br/><br/>
+            </span><br/>
             <button type="submit"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.unlockFees()">
@@ -16,7 +77,7 @@
         <ng-template #feesUnlocked>
             <span style="font-size: 16px;">
                 Lock fees structure for session {{getSession(this.user.activeSchool.currentSessionDbId).name}}
-            </span><br/><br/>
+            </span><br/>
             <button type="submit"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="serviceAdapter.lockFees()">

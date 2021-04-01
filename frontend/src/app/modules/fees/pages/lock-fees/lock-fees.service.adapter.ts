@@ -14,35 +14,40 @@ export class LockFeesServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
 
         this.vm.isLoading = true;
 
-        this.vm.schoolService.getObjectList(this.vm.schoolService.session,{}).then(session=>{
-            this.vm.sessionList = session;
-        })
+        this.vm.sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
 
-        let lock_fee_list = {
+        const lock_fee_list = {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fee_list).then(value => {
+        const accounts_request = {
+            accountType: 'ACCOUNT',
+        }
 
-            if (value.length == 0) {
-                this.vm.lockFees = null;
-            } else if (value.length == 1) {
-                this.vm.lockFees = value[0];
-            } else {
-                alert('Error: Report admin');
-            }
+        const [lockFeesList, feePaymentAccountsList, feeSettingsList, accountsList ] = await Promise.all([
+            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fee_list),  // 0
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 1
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}), //3
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 4
+        ]);
 
-            this.vm.isLoading = false;
+        if (lockFeesList.length == 0) {
+            this.vm.lockFees = null;
+        } else if (lockFeesList.length == 1) {
+            this.vm.lockFees = lockFeesList[0];
+        } else {
+            alert('Error: Report admin');
+        }
+        this.vm.feePaymentAccountsList = feePaymentAccountsList;
+        this.vm.feeSettings = feeSettingsList[0];
+        this.vm.accountsList = accountsList;
 
-        }, error => {
-            this.vm.isLoading = false;
-        })
-
+        this.vm.isLoading = false;
     }
 
     lockFees(): void {
