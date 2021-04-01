@@ -670,7 +670,8 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
 export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image Layer
     displayName: string = 'Image'; 
 
-    image: HTMLImageElement = null;  
+    image: HTMLImageElement = null;
+    radius:number=0;
 
     // uses height and width of the base layer for image height and width
 
@@ -764,7 +765,16 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             return true;
 
         if (this.image.complete && this.image.naturalHeight != 0) {
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+          ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+
+        // create clipping region which will display portion of image
+        // The image will only be visible inside the circular clipping path
+        // ctx.beginPath();
+        // ctx.arc(this.x, this.y,this.radius, 0, Math.PI * 2, false);
+        // ctx.closePath();
+        // ctx.save();
+        // ctx.clip();
+        // ctx.drawImage(this.image, (this.x-(this.radius*2)/2) , (this.y-(this.radius*2)/2), this.radius*2, this.radius*2);
             return true;    // Drawn successfully on canvas
         }
         scheduleReDraw();   // draw again after some time
@@ -785,6 +795,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             height: this.height * this.ca.pixelTommFactor,
             width: this.width * this.ca.pixelTommFactor,
             maintainAspectRatio: this.maintainAspectRatio,
+            radius:this.radius,
         };
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.uri = this.uri;
