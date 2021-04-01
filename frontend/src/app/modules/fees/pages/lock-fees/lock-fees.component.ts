@@ -29,6 +29,8 @@ export class LockFeesComponent implements OnInit {
     feePaymentAccountsList: Array<FeePaymentAccounts>;
 
     accountsList: Array<Account>;
+
+    searchInput: string = '';
     
     isLoading = false;
 
@@ -80,11 +82,41 @@ export class LockFeesComponent implements OnInit {
         return this.accountsList.find(account => account.id == id).title;
     }
 
-    addNewAccountInFeePaymentAccountList(account, paymentMode):void {
+    addNewAccountInFeePaymentAccountList(account, paymentMode): void {
+        const alreadyExists = this.feePaymentAccountsList.find(fpa => fpa.parentAccount == account.id && fpa.modeOfPayment == paymentMode)!=undefined;
+        if (alreadyExists)
+            return;
         const newPaymentAccount = new FeePaymentAccounts();
         newPaymentAccount.parentSchool = this.user.activeSchool.dbId;
         newPaymentAccount.modeOfPayment = paymentMode;
         newPaymentAccount.parentAccount = account.id;
         this.feePaymentAccountsList.push(newPaymentAccount);
+    }
+
+    settingsValidityCheck(): boolean{
+        let errormsg = ''
+        let dataValid = true;
+        Object.values(MODE_OF_PAYMENT).forEach(paymentMode => {
+            if (this.getPaymentModeFilteredFeeAccountsList(paymentMode).length == 0) {
+                dataValid = false;
+            }
+        });
+        if (!dataValid) {
+            errormsg += '• Atleast one account is required in each payment mode';
+        }
+        if (!this.feeSettings.fromAccount) {
+            dataValid = false;
+            errormsg += '\n• Student fee debit account cannot be empty';
+        }
+        else {
+            if (this.feePaymentAccountsList.find(fpa => fpa.parentAccount == this.feeSettings.fromAccount) != undefined) {
+                dataValid = false;
+                errormsg += '\n• Student fee debit account cannot be included in any accounts under payment mode';
+            }
+        }
+        if (!dataValid) {
+            alert(errormsg.trim());
+        }
+        return dataValid;
     }
 }

@@ -177,17 +177,17 @@ from .models import FeeSettings, FeePaymentAccounts
 
 class FeeSettingsView(CommonView, APIView):
     Model = FeeSettings
-    RelationsToSchool = ['parentSchool']
+    RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
 
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
-    RelationsToSchool = ['parentSchool']
+    RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
 
 
 class FeePaymentAccountsView(CommonView, APIView):
     Model = FeePaymentAccounts
-    RelationsToSchool = ['parentSchool', 'parentAccount__parentSchool']
+    RelationsToSchool = ['parentSchool__id', 'parentAccount__parentSchool__id']
 
 class FeePaymentAccountsListView(CommonListView, APIView):
     Model = FeePaymentAccounts
-    RelationsToSchool = ['parentSchool', 'parentAccount__parentSchool']
+    RelationsToSchool = ['parentSchool__id', 'parentAccount__parentSchool__id']

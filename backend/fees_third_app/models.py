@@ -419,7 +419,7 @@ class LockFee(models.Model):
         db_table = 'lock_fee'
 
 class FeeSettings(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
     fromAccount = models.ForeignKey(Accounts, on_delete=models.SET_NULL, null=True)
 
 class FeePaymentAccounts(models.Model):

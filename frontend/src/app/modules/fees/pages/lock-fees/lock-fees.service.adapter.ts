@@ -67,9 +67,7 @@ export class LockFeesServiceAdapter {
 
             this.vm.isLoading = false;
 
-        }, error => {
-            this.vm.isLoading = false;
-        })
+        });
 
     }
 
@@ -85,10 +83,74 @@ export class LockFeesServiceAdapter {
 
             this.vm.isLoading = false;
 
-        }, error => {
-            this.vm.isLoading = false;
         });
 
+    }
+
+    async updatePaymentSettings() {
+        if (!this.vm.settingsValidityCheck())
+            return;
+        this.vm.isLoading = true;
+        const fields_request = {
+            fields_korangle: 'id',
+        }
+        const [feePaymentAccountsList, feeSettingsList] = await Promise.all([
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, fields_request),  // 1
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fields_request), //3
+        ]);
+
+        const serviceList = [];
+
+        const newFeeSettings = { ...this.vm.feeSettings };
+        if (feeSettingsList.length > 0) {   // i already exists
+            newFeeSettings.id = feeSettingsList[0].id;
+            serviceList.push(
+                this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings).then(res => this.vm.feeSettings = res)
+            );
+        } else {
+            serviceList.push(   // 
+                this.vm.feeService.createObject(this.vm.feeService.fee_settings, newFeeSettings).then(res => this.vm.feeSettings = res)
+            );
+        }
+
+        const unchangeFeePaymentAccountList = this.vm.feePaymentAccountsList.filter(fpa=> feeSettingsList.find(f=> f.id==fpa.id)!=undefined);
+        const toDeleteFeePaymentAccountList = feeSettingsList.filter(fpa=> this.vm.feePaymentAccountsList.find(f=> f.id==fpa.id)==undefined);
+        const toCreateFeePaymentAccountList = this.vm.feePaymentAccountsList.filter(fpa=> feeSettingsList.find(f=> f.id==fpa.id)==undefined);
+        if (toDeleteFeePaymentAccountList.length > 0) {
+            serviceList.push(
+                this.vm.feeService.deleteList(this.vm.feeService.fee_payment_accounts, toDeleteFeePaymentAccountList)
+            );
+        }
+
+        serviceList.push(
+            this.vm.feeService.createList(this.vm.feeService.fee_payment_accounts, toCreateFeePaymentAccountList).then(res => {
+                this.vm.feePaymentAccountsList = [...unchangeFeePaymentAccountList, ...res];
+            })
+        )
+
+        await Promise.all(serviceList);
+        alert('fees accounting settings updated')
+        this.vm.isLoading = false;
+    }
+
+    async deleteAccounting() {
+        this.vm.isLoading = true;
+        const fields_request = {
+            fields_korangle: 'id',
+        }
+        const [feePaymentAccountsList, feeSettingsList] = await Promise.all([
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, fields_request),  // 1
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fields_request), //3
+        ]);
+
+        await Promise.all([
+            this.vm.feeService.deleteList(this.vm.feeService.fee_payment_accounts, feePaymentAccountsList),
+            this.vm.feeService.deleteList(this.vm.feeService.fee_settings, feeSettingsList),
+        ]);
+        this.vm.feeSettings = undefined;
+        this.vm.feePaymentAccountsList = [];
+        alert('fees accounting disabled successfully');
+        this.vm.isLoading = false;
     }
 
 }
