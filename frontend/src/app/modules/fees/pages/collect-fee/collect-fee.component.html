@@ -373,9 +373,19 @@
                             <mat-select placeholder="Select Payment Mode"
                                         [ngModel]="newModeOfPayment"
                                         [disabled]="!newFeeReceiptList.length>0"
-                                        (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode()">
+                                        (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode(); handlePaymentAccountOnPaymentModeChange();">
                                 <mat-option *ngFor='let paymentMode of modeOfPaymentList;' [value]="paymentMode">
                                     {{paymentMode}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field style="margin-top: 22px;">
+                            <mat-select placeholder="Select Payment Account"
+                                        [(ngModel)]="studentFeePaymentAccount">
+                                <mat-option *ngFor='let paymentAccount of htmlRenderer.getFilteredPaymentAccounts();' [value]="paymentAccount.id">
+                                    {{paymentAccount.title}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

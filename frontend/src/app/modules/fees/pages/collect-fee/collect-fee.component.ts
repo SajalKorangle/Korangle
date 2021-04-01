@@ -24,13 +24,19 @@ import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants'
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "../../../../services/modules/school/school.service";
 
+import { AccountsService } from '@services/modules/accounts/accounts.service';
+import { Account } from '@services/modules/accounts/models/account';
+import { FeeSettings } from '@services/modules/fees/models/fee-settings';
+import { FeePaymentAccounts } from '@services/modules/fees/models/fee-payment-accounts';
+import { CollectFeeHTMLRenderer } from './collect-fee.html.renderer';
+
 declare const $: any;
 
 @Component({
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [ FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService ],
+    providers: [ FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService ],
 })
 
 export class CollectFeeComponent implements OnInit {
@@ -56,6 +62,12 @@ export class CollectFeeComponent implements OnInit {
     employeeList = [];
     boardList = [];
 
+    //accounting
+    feeSettings: FeeSettings;
+    feePaymentAccountsList: Array<FeePaymentAccounts>;
+    accountsList: Array<Account>;
+    studentFeePaymentAccount: number;
+
     // Data from Parent Student Filter
     classList = [];
     sectionList = [];
@@ -76,19 +88,23 @@ export class CollectFeeComponent implements OnInit {
     lateFeeVisible = true;
 
     serviceAdapter: CollectFeeServiceAdapter;
+    htmlRenderer: CollectFeeHTMLRenderer;
 
     isLoading = false;
 
     isStudentListLoading = false;
 
-    constructor(public feeService: FeeService,
-                public studentService: StudentService,
-                public vehicleService: VehicleOldService,
-                public classService: ClassService,
-                public employeeService: EmployeeService,
-                public schoolService: SchoolService,
-                private cdRef: ChangeDetectorRef,
-                private printService: PrintService) {}
+    constructor(
+        public feeService: FeeService,
+        public studentService: StudentService,
+        public vehicleService: VehicleOldService,
+        public classService: ClassService,
+        public employeeService: EmployeeService,
+        public schoolService: SchoolService,
+        public accountsService: AccountsService,
+        private cdRef: ChangeDetectorRef,
+        private printService: PrintService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -96,6 +112,8 @@ export class CollectFeeComponent implements OnInit {
         this.serviceAdapter = new CollectFeeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new CollectFeeHTMLRenderer(this);
 
         this.receiptColumnFilter.receiptNumber = true;
         this.receiptColumnFilter.scholarNumber = false;
@@ -163,6 +181,7 @@ export class CollectFeeComponent implements OnInit {
         this.studentFeeDetailsVisibleList = [];
         this.newRemark = null;
         this.newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
+        this.handlePaymentAccountOnPaymentModeChange();
         this.newChequeNumber = null;
     
     
@@ -1217,5 +1236,15 @@ export class CollectFeeComponent implements OnInit {
            }else{
                return true;
            }
+    }
+
+    handlePaymentAccountOnPaymentModeChange(): void{
+        if (this.feeSettings) {
+            this.studentFeePaymentAccount = null;
+            const filteredAccounts = this.htmlRenderer.getFilteredPaymentAccounts();
+            if (filteredAccounts.length == 1) {
+                this.studentFeePaymentAccount = filteredAccounts[0].id;
+            }
+        }
     }
 }

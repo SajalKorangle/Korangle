@@ -37,11 +37,14 @@ export class CollectFeeServiceAdapter {
 
         Promise.all([
 
-            this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session,{})
+            this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),    // 3
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}),  // 5
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 6
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, {}), //7
         ]).then( value => {
 
             this.vm.feeTypeList = value[0];
@@ -49,10 +52,12 @@ export class CollectFeeServiceAdapter {
             this.vm.employeeList = value[2];
             this.vm.boardList = value[3];
             this.vm.sessionList = value[4]
+            this.vm.feeSettings = value[5][0];
+            this.vm.feePaymentAccountsList = value[6];
+            this.vm.accountsList = value[7];
+            this.vm.handlePaymentAccountOnPaymentModeChange();
             this.vm.isLoading = false;
 
-        }, error => {
-            this.vm.isLoading = false;
         });
 
     }
@@ -160,7 +165,8 @@ export class CollectFeeServiceAdapter {
         let sub_fee_receipt_list = this.vm.newSubFeeReceiptList.map(subFeeReceipt => {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
-
+        console.log('fee_receipt_list: ', fee_receipt_list);
+        console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
 
         let student_fee_list = this.vm.studentFeeList.filter(studentFee => {
