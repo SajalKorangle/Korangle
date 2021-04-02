@@ -1,6 +1,6 @@
 
 import { CollectFeeComponent } from './collect-fee.component';
-import {CommonFunctions} from "../../../../classes/common-functions";
+import { CommonFunctions } from "../../../../classes/common-functions";
 
 export class CollectFeeServiceAdapter {
 
@@ -16,7 +16,7 @@ export class CollectFeeServiceAdapter {
 
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
 
         this.vm.isLoading = true;
 
@@ -35,31 +35,46 @@ export class CollectFeeServiceAdapter {
             parentSchool: schoolId,
         };
 
-        Promise.all([
+        const value = await Promise.all([
+                this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
+                this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
+                this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
+                this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
+                this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
+                this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}),  // 5
+                this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 6
+                this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, {}), //7
+            ]);
+        this.vm.feeTypeList = value[0];
+        this.vm.busStopList = value[1];
+        this.vm.employeeList = value[2];
+        this.vm.boardList = value[3];
+        this.vm.sessionList = value[4]
+        this.vm.feeSettings = value[5][0];
+        this.vm.feePaymentAccountsList = value[6];
+        this.vm.accountsList = value[7];
+        this.vm.handlePaymentAccountOnPaymentModeChange();
 
-            this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
-            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
-            this.vm.schoolService.getObjectList(this.vm.schoolService.board,{}),    // 3
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}),  // 5
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 6
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, {}), //7
-        ]).then( value => {
+        if (value[5].length > 0) {
+            const accountSet = new Set();
+            this.vm.feePaymentAccountsList.forEach(fpa => accountSet.add(fpa.parentAccount));
+            accountSet.add(this.vm.feeSettings.fromAccount);
+            let accounts_list = Array.from(accountSet);
+            const account_session_request = {
+                parentAccount__in: accounts_list,
+                parentSession: sessionId
+            }
 
-            this.vm.feeTypeList = value[0];
-            this.vm.busStopList = value[1];
-            this.vm.employeeList = value[2];
-            this.vm.boardList = value[3];
-            this.vm.sessionList = value[4]
-            this.vm.feeSettings = value[5][0];
-            this.vm.feePaymentAccountsList = value[6];
-            this.vm.accountsList = value[7];
-            this.vm.handlePaymentAccountOnPaymentModeChange();
+            const account_session_list = await this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request);
+            if(account_session_list.length != accounts_list.length){
+                alert('• Accounting is enabled but required accounts are not present in ths session\n• Consider updating settings or transfering balance from previous session');
+            } else {
+                    this.vm.isLoading = false;
+            }
+        } else {
             this.vm.isLoading = false;
-
-        });
-
+        }
+            
     }
 
 
@@ -149,7 +164,7 @@ export class CollectFeeServiceAdapter {
 
 
     // Generate Fee Receipt/s
-    generateFeeReceipts(): void {
+    async generateFeeReceipts() {
 
         this.vm.isLoading = true;
 
@@ -165,6 +180,7 @@ export class CollectFeeServiceAdapter {
         let sub_fee_receipt_list = this.vm.newSubFeeReceiptList.map(subFeeReceipt => {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
+
         console.log('fee_receipt_list: ', fee_receipt_list);
         console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
@@ -180,40 +196,97 @@ export class CollectFeeServiceAdapter {
 
         this.vm.isLoading = true;
 
-        Promise.all([
+        const value = await Promise.all([
             this.vm.feeService.createList(this.vm.feeService.fee_receipts, fee_receipt_list),
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
-        ]).then(value => {
+        ]);
+
+        let transactionFromAccountId;
+        let transactionToAccountId;
+        const toCreateTransactionList = [];
+        const toCreateTransactionAccountDetails = [];
+        const toUpdateFeeReceipts = [];
+        let createdTransactionList;
+
+        const serviceList = [];
+
+        if (this.vm.feeSettings) {
+            transactionFromAccountId = this.vm.feeSettings.fromAccount;
+            transactionToAccountId = this.vm.studentFeePaymentAccount;
+            value[0].forEach(fee_receipt => {
+                if (this.vm.feeSettings) {
+                    const newTransaction = {
+                        parentEmployee: this.vm.user.activeSchool.employeeId,
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                        remark: `Student Fee, receipt no.: ${fee_receipt.receiptNumber}`,
+                        transactionDate: CommonFunctions.formatDate(new Date().toDateString(), ''),
+                    };
+                    toCreateTransactionList.push(newTransaction);
+                }
+            });
+            createdTransactionList = await this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList);
+            
+            createdTransactionList.forEach((transaction, index) => {
+                toUpdateFeeReceipts.push({ id: value[0][index], parentTransaction: transaction.id });
+                value[0][index].parentTransaction = transaction.id;
+            });
+            serviceList.push(
+                this.vm.feeService.partiallyUpdateList(this.vm.feeService.fee_receipts, toUpdateFeeReceipts)
+            );
 
             value[0].forEach(fee_receipt => {
+                let totalAmount = 0;
                 sub_fee_receipt_list.forEach(subFeeReceipt => {
-                    if(subFeeReceipt.parentSession == fee_receipt.parentSession
+                    if (subFeeReceipt.parentSession == fee_receipt.parentSession
                         && this.vm.studentFeeList.find(item => {
                             return item.id == subFeeReceipt.parentStudentFee;
                         }).parentStudent == fee_receipt.parentStudent) {
                         subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
+                        totalAmount += this.vm.installmentList.reduce((totalInstallment, installment) => {
+                            return totalInstallment
+                                + (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0)
+                                + (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0);
+                        }, 0);
+                    }
+                });
+                // create transactio  account details here
+            });
+            
+        }
+        else {
+            value[0].forEach(fee_receipt => {
+                let totalAmount = 0;
+                sub_fee_receipt_list.forEach(subFeeReceipt => {
+                    if (subFeeReceipt.parentSession == fee_receipt.parentSession
+                        && this.vm.studentFeeList.find(item => {
+                            return item.id == subFeeReceipt.parentStudentFee;
+                        }).parentStudent == fee_receipt.parentStudent) {
+                        subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
+
+                        totalAmount += this.vm.installmentList.reduce((totalInstallment, installment) => {
+                            return totalInstallment
+                                + (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0)
+                                + (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0);
+                        }, 0);
                     }
                 });
             });
+        }
 
-            this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then( value2 => {
+        this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
 
-                this.addToFeeReceiptList(value[0]);
-                this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);
+            this.addToFeeReceiptList(value[0]);
+            this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);
 
-                alert('Fees submitted successfully');
+            alert('Fees submitted successfully');
 
-                this.vm.printFullFeeReceiptList(value[0], value2);
+            this.vm.printFullFeeReceiptList(value[0], value2);
 
-                this.vm.handleStudentFeeProfile();
+            this.vm.handleStudentFeeProfile();
 
-                this.vm.isLoading = false;
-
-            })
-
-        }, error => {
             this.vm.isLoading = false;
-        })
+
+        });
 
     }
 
