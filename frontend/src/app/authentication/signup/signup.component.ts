@@ -7,7 +7,7 @@ import {SignupServiceAdapter} from './signup.service.adapter';
 import {AuthenticationService} from '@services/modules/authentication/authentication.service';
 import {AuthenticationOldService} from '@services/authentication-old.service';
 import {UserService} from '@services/modules/user/user.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
     selector: 'app-signup',
@@ -39,6 +39,8 @@ export class SignupComponent implements OnInit {
 
     isLoading = false;
 
+    validators = VALIDATORS_REGX;
+
     serviceAdapter: SignupServiceAdapter;
 
     constructor(public authenticationService: AuthenticationService,
@@ -69,14 +71,15 @@ export class SignupComponent implements OnInit {
     }
 
     isFormValid(): boolean {
-        if (isNaN(Number(this.mobileNumber)) ||
-            this.mobileNumber.toString().length !== 10 ||
-            Number(this.mobileNumber) < 0 ||
-            this.mobileNumber.toString().indexOf('.') !== -1) {
-            // alert('Invalid Mobile Number');
+        if (!this.validators.phoneNumber.test(this.mobileNumber)) {
             return false;
-        } else if (!this.firstName ||
-            this.firstName.toString().length < 2) {
+        } else if (!this.firstName || !this.validators.name.test(this.firstName)) {
+            return false;
+        }
+        else if (this.lastName && !this.validators.name.test(this.lastName)) {
+            return false;
+        }
+        else if (this.emailAddress && !this.validators.email.test(this.emailAddress)) {
             return false;
         }
         return true;

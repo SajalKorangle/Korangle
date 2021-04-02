@@ -6,7 +6,7 @@ import {DataStorage} from '@classes/data-storage';
 import {ForgotPasswordServiceAdapter} from './forgot-password.service.adapter';
 import {AuthenticationService} from '@services/modules/authentication/authentication.service';
 import {UserService} from '@services/modules/user/user.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
     selector: 'app-forgot-password',
@@ -24,7 +24,7 @@ export class ForgotPasswordComponent implements OnInit {
     @Output() showFrontPageProgressBar = new EventEmitter();
     @Output() changePage = new EventEmitter();
 
-    mobileNumber: any;
+    mobileNumber: string = '';
     otp = '';
     password = '';
     confirmPassword = '';
@@ -32,6 +32,8 @@ export class ForgotPasswordComponent implements OnInit {
     section = 'mobileNumber';
 
     visibilityMode = false;
+
+    validators = VALIDATORS_REGX;
 
     isLoading = false;
 
@@ -64,14 +66,7 @@ export class ForgotPasswordComponent implements OnInit {
     }
 
     isMobileNumberValid(): boolean {
-        if (isNaN(this.mobileNumber) ||
-            this.mobileNumber.toString().length !== 10 ||
-            this.mobileNumber < 0 ||
-            this.mobileNumber.toString().indexOf('.') !== -1) {
-            // alert('Invalid Mobile Number');
-            return false;
-        }
-        return true;
+        return this.validators.phoneNumber.test(this.mobileNumber);
     }
 
 }
