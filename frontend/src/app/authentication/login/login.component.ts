@@ -7,6 +7,7 @@ import {Constants} from '@classes/constants';
 import {environment} from '../../../environments/environment';
 import {CommonFunctions} from '@classes/common-functions';
 import {DataStorage} from '@classes/data-storage';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
     selector: 'app-login',
@@ -25,6 +26,9 @@ export class LoginComponent implements OnInit {
     username = '';
     password = '';
     visibilityMode = false;
+
+    validators = VALIDATORS_REGX;
+
     isLoading = false;
 
     constructor(private authenticationService: AuthenticationOldService,
@@ -89,6 +93,10 @@ export class LoginComponent implements OnInit {
 
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
+    }
+
+    isFormValid(): boolean{
+        return this.validators.phoneNumber.test(this.username);
     }
 
 }
