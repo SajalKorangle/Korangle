@@ -16,6 +16,11 @@ const routes: Routes = [
         data: {moduleName: 'parent'},
     },
     {
+        path: 'view_event',
+        loadChildren: 'app/modules/event-gallery/pages/view-event/view-event.module#ViewEventModule',
+        data: {moduleName: 'parent'},
+    },
+    {
         path: 'view_marks',
         loadChildren: 'app/modules/parent/pages/view-marks/view-marks.module#ViewMarksModule',
         data: {moduleName: 'parent'},

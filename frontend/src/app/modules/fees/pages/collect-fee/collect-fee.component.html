@@ -95,9 +95,17 @@
                                         <div class="col-md-2">
                                             Address
                                         </div>
-                                        <div class="col-md-10">
+                                        <div class="col-md-5">
                                             : <span style="font-weight: 600; margin-left: 5px;">{{student.address}}</span>
                                         </div>
+                                        <ng-container *ngIf="student.mobileNumber">
+                                            <div class="col-md-2">
+                                                Mobile No.
+                                            </div>
+                                            <div class="col-md-3">
+                                                : <span style="font-weight: 600; margin-left: 5px;">{{student.mobileNumber}}</span>
+                                            </div>
+                                        </ng-container>
                                     </div>
 
                                 </div>

@@ -488,39 +488,16 @@
                     		type="file"
                     		multiple="true"
                     		(input)="updateDocuments(parameter,$event,imageInput)" #imageInput>
-                        <label class="documentLabel">{{parameter.name}}</label>
-                        <div *ngIf="getParameterDocumentType(parameter)=='none'">
                             <div class="documentIcon">
-                                <img src="/assets/img/nofile.png">
+                                <img [src]=getIcon(parameter) (click)="openFilePreviewDialog(parameter)" alt="icon">
                             </div>
                             <div class="documentText">
-                                <p class="documentName">Select a file or Drag it here</p>
-                                <button (click)="imageInput.click()" class="documentButton">Upload</button>
+                                <label class="documentLabel" #docLabel>{{parameter.name}}{{resizeContainer(docLabel)}}</label>
+                                <button *ngIf="getParameterDocumentType(parameter)=='none'" (click)="imageInput.click()" class="documentButton">Upload</button>
+                                <button *ngIf="getParameterDocumentType(parameter)!='none'" (click)="imageInput.click()" class="documentButton">Replace</button>
+                                <button *ngIf="getParameterDocumentType(parameter)!='none'" (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
                                 <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
                             </div>
-                        </div>
-                        <div *ngIf="getParameterDocumentType(parameter)=='img'">
-                            <div class="documentIcon">
-                                <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
-                            </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
-                            </div>
-                        </div>
-                        <div *ngIf="getParameterDocumentType(parameter)=='pdf'">
-                            <div class="documentIcon">
-                                <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
-                            </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

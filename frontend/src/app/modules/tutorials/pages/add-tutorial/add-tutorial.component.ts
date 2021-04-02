@@ -38,11 +38,8 @@ export class AddTutorialComponent implements OnInit {
     previewBeforeAddTutorialUrl: string;
     classSectionSubjectList: any;
     selectedSection: any;
-    isAddDisabled = true;
     tutorialUpdating = false;
     editedTutorial: any;
-    showPreview = false;
-    topicAlreadyPresent = false;
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher=/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -124,37 +121,51 @@ export class AddTutorialComponent implements OnInit {
         });
     }
 
+    topicAlreadyPresent(tutorial) : boolean {
+        let ownIdx = -1;
+        if(tutorial != undefined && tutorial.chapter!=null && tutorial.topic!=null)
+        {
+            ownIdx=  this.tutorialList.findIndex(tempTutorial => tutorial.id ===  tempTutorial.id)
+            for(let i=0;i<this.tutorialList.length;i++)
+            {
+                let temp = this.tutorialList[i];
+                if(temp.chapter === tutorial.chapter && temp.topic === tutorial.topic.trim() && i != ownIdx)
+                return true;
+            }
+        }
+        
+        return false;
 
-     checkEnableAddButton() {
+    }
+
+    youTubeLinkValid() : boolean {
         const tutorial = this.newTutorial;
-        this.topicAlreadyPresent = tutorial.topic && this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim());
 
         if (!tutorial.link || tutorial.link.trim() == '') {
-            this.isAddDisabled = true;
-            this.showPreview = false;
-            return;
+            return false;
         }
 
         if (this.youtubeRegex.test(tutorial.link.trim())) {
             if (tutorial.link.startsWith('www.')) {
                 tutorial.link = 'https://' + tutorial.link;
             }
-            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
-            this.showPreview = true;
-            if (!tutorial.chapter || tutorial.chapter.trim() == '') {
-                this.isAddDisabled = true;
-                return;
-            } else if (!tutorial.topic || tutorial.topic.trim() == '' || this.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim())) {
-                this.isAddDisabled = true;
-                return;
-            } else {
-                this.topicAlreadyPresent = false;
-                this.isAddDisabled = false;
-                this.topicAlreadyPresent = false;
+            if(tutorial.link.match(this.youtubeIdMatcher) === null)
+            {
+                return false;
             }
-        } else {
-            this.showPreview = false;
-            this.isAddDisabled = true;
+            this.previewBeforeAddTutorialUrl = "https://youtube.com/embed/"+tutorial.link.match(this.youtubeIdMatcher)[1];
+            return true;
         }
+        else
+        return false;
     }
+    checkEnableAddButton(): boolean {
+        const tutorial = this.newTutorial;
+
+        if (!tutorial.chapter || tutorial.chapter.trim() == '' ||  !tutorial.topic || tutorial.topic.trim() == '' || this.topicAlreadyPresent(tutorial) || !this.youTubeLinkValid())
+            return false;
+
+        return true;
+    }
+
 }
