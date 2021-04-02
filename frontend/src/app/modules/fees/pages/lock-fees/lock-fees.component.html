@@ -1,7 +1,7 @@
 <div class="card-content">
 
     <ng-container *ngIf="!isLoading">
-        <div  [style.opacity]="isActiveSession?'1':'0.3'">
+        <div [style.pointerEvents]="isActiveSession?'auto':'none'" [style.opacity]="isActiveSession?'1':'0.3'">
             <ng-container *ngIf="feeSettings else enableAccounting">
 
                 <mat-form-field style="width: 200px;" (click)="searchInput1.focus();">

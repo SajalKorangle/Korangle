@@ -35,6 +35,7 @@ export class LockFeesServiceAdapter {
         const account_session_request = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: activeSession.id,
+            parentAccount__accountType: 'ACCOUNT',
         }
 
         const fee_payment_accounts_request = {
@@ -79,7 +80,7 @@ export class LockFeesServiceAdapter {
     populateCustomAccountSession(accountsList, accountSessionList): void{
         this.vm.customAccountSessionList = accountSessionList.map(accountSession => {
             return {
-                ...accountSessionList,
+                ...accountSession,
                 type: 'ACCOUNT',
                 title: accountsList.find(account=> account.id==accountSession.parentAccount).title,
             }
