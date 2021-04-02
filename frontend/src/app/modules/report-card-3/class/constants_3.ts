@@ -765,20 +765,33 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             return true;
 
         if (this.image.complete && this.image.naturalHeight != 0) {
-          ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-
-        // create clipping region which will display portion of image
-        // The image will only be visible inside the circular clipping path
-        // ctx.beginPath();
-        // ctx.arc(this.x, this.y,this.radius, 0, Math.PI * 2, false);
-        // ctx.closePath();
-        // ctx.save();
-        // ctx.clip();
-        // ctx.drawImage(this.image, (this.x-(this.radius*2)/2) , (this.y-(this.radius*2)/2), this.radius*2, this.radius*2);
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(this.x + this.radius, this.y);
+            ctx.lineTo(this.x + this.width - this.radius, this.y);
+            ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width, this.y + this.radius);
+            ctx.lineTo(this.x + this.width, this.y + this.height - this.radius);
+            ctx.quadraticCurveTo(this.x + this.width, this.y + this.height, this.x + this.width - this.radius, this.y + this.height);
+            ctx.lineTo(this.x + this.radius, this.y + this.height);
+            ctx.quadraticCurveTo(this.x, this.y + this.height, this.x, this.y + this.height - this.radius);
+            ctx.lineTo(this.x, this.y + this.radius);
+            ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            ctx.restore();
             return true;    // Drawn successfully on canvas
         }
         scheduleReDraw();   // draw again after some time
         return false;   // Canvas Drawing failed, scheduled redraw for later
+    }
+
+    getMaxRadiusValue() {
+        return Math.round(this.width > this.height ? this.height / 2 : this.width / 2);
+    }
+
+    updateRadius(newRadius: any) {
+        this.radius = newRadius > this.getMaxRadiusValue() ? this.getMaxRadiusValue() : newRadius;
     }
 
     scale(scaleFactor: number): void{
@@ -786,6 +799,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.y *= scaleFactor;
         this.height *= scaleFactor;
         this.width *= scaleFactor;
+        this.radius *= scaleFactor;
     }
 
     getDataToSave(): {[object:string]:any} {
@@ -795,7 +809,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             height: this.height * this.ca.pixelTommFactor,
             width: this.width * this.ca.pixelTommFactor,
             maintainAspectRatio: this.maintainAspectRatio,
-            radius:this.radius,
+            radius:this.radius * this.ca.pixelTommFactor,
         };
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.uri = this.uri;

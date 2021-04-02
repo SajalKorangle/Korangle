@@ -13,10 +13,12 @@
             <input type="number" matInput [ngModel]="getImageWidth()"
                 (ngModelChange)="layer.updateWidth($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Width(mm)">
         </mat-form-field>
-        
-        <label [for]="ranger" >Radius {{this.layer.radius}}%</label>
-            <input type="range" min="0" max="100" #ranger [value]="this.layer.radius" (input)="updateRadius(ranger.value)" placeholder="Choose Radius(%)">
-        
+      
+       <mat-form-field style="margin-top: 16px;">
+            <input type="number" matInput [max]="layer.getMaxRadiusValue()" [ngModel]="getImageRadius()" 
+                   (ngModelChange)="layer.updateRadius($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Radius(mm)">
+        </mat-form-field>
+            
     </div>
 
 </mat-card>

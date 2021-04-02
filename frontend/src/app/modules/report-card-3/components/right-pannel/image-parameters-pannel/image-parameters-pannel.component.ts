@@ -28,7 +28,11 @@ export class ImageParametersPannelComponent implements OnInit {
     return this.layer.ca.pixelTommFactor;
   }
 
-  updateRadius(value:any) {
-     this.layer.radius=Number(value);
+  getImageRadius() {
+    if(this.layer.radius > this.layer.getMaxRadiusValue()){
+      this.layer.radius = this.layer.getMaxRadiusValue()
+    }
+    return Math.round(this.layer.radius*this.getPixelTommFactor() * 100) / 100;
   }
+  
 }
