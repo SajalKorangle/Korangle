@@ -1,5 +1,6 @@
 export class FeeSettings{
     id: number;
+    parentSession: number;
     parentSchool: number;
-    fromAccount: number;
+    fromAccountSession: number;
 }

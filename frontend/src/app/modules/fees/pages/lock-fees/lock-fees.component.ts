@@ -8,6 +8,8 @@ import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { FeeSettings } from '@services/modules/fees/models/fee-settings';
 import { FeePaymentAccounts, MODE_OF_PAYMENT } from '@services/modules/fees/models/fee-payment-accounts';
 import { Account } from '@services/modules/accounts/models/account';
+import { AccountSession } from '@services/modules/accounts/models/account-session';
+
 @Component({
     selector: 'lock-fees',
     templateUrl: './lock-fees.component.html',
@@ -29,9 +31,14 @@ export class LockFeesComponent implements OnInit {
     feePaymentAccountsList: Array<FeePaymentAccounts>;
 
     accountsList: Array<Account>;
+    accountSessionList: Array<AccountSession>;
+
+    customAccountSessionList: Array<CustomAccountSession>;
 
     searchInput: string = '';
     
+    isActiveSession: boolean;
+
     isLoading = false;
 
     constructor(
@@ -63,6 +70,7 @@ export class LockFeesComponent implements OnInit {
     enbaleAccountingHandler(): void{
         this.feeSettings = new FeeSettings();
         this.feeSettings.parentSchool = this.user.activeSchool.dbId;
+        this.feeSettings.parentSession = this.user.activeSchool.currentSessionDbId;
     }
 
     getPaymentModeList(): Array<string>{
@@ -79,37 +87,30 @@ export class LockFeesComponent implements OnInit {
     }
 
     getAccountName(id: number): string {
-        return this.accountsList.find(account => account.id == id).title;
+        return this.customAccountSessionList.find(accountSession => accountSession.id == id).title;
     }
 
-    addNewAccountInFeePaymentAccountList(account, paymentMode): void {
-        const alreadyExists = this.feePaymentAccountsList.find(fpa => fpa.parentAccount == account.id && fpa.modeOfPayment == paymentMode)!=undefined;
+    addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode): void {
+        const alreadyExists = this.feePaymentAccountsList.find(fpa => fpa.parentAccountSession == customAccountSession.id && fpa.modeOfPayment == paymentMode)!=undefined;
         if (alreadyExists)
             return;
         const newPaymentAccount = new FeePaymentAccounts();
         newPaymentAccount.parentSchool = this.user.activeSchool.dbId;
+        newPaymentAccount.parentSession = this.user.activeSchool.currentSessionDbId;
         newPaymentAccount.modeOfPayment = paymentMode;
-        newPaymentAccount.parentAccount = account.id;
+        newPaymentAccount.parentAccountSession = customAccountSession.id;
         this.feePaymentAccountsList.push(newPaymentAccount);
     }
 
     settingsValidityCheck(): boolean{
         let errormsg = ''
         let dataValid = true;
-        Object.values(MODE_OF_PAYMENT).forEach(paymentMode => {
-            if (this.getPaymentModeFilteredFeeAccountsList(paymentMode).length == 0) {
-                dataValid = false;
-            }
-        });
-        if (!dataValid) {
-            errormsg += '• Atleast one account is required in each payment mode';
-        }
-        if (!this.feeSettings.fromAccount) {
+        if (!this.feeSettings.fromAccountSession) {
             dataValid = false;
             errormsg += '\n• Student fee debit account cannot be empty';
         }
         else {
-            if (this.feePaymentAccountsList.find(fpa => fpa.parentAccount == this.feeSettings.fromAccount) != undefined) {
+            if (this.feePaymentAccountsList.find(fpa => fpa.parentAccountSession == this.feeSettings.fromAccountSession) != undefined) {
                 dataValid = false;
                 errormsg += '\n• Student fee debit account cannot be included in any accounts under payment mode';
             }
@@ -119,4 +120,9 @@ export class LockFeesComponent implements OnInit {
         }
         return dataValid;
     }
+}
+
+interface CustomAccountSession extends AccountSession{
+    type: 'ACCOUNT';
+    title: string;
 }

@@ -10,7 +10,7 @@ from employee_app.models import Employee
 
 from django.contrib.auth.models import User
 
-from accounts_app.models import Transaction, Accounts
+from accounts_app.models import Transaction, AccountSession
 
 # Create your models here.
 
@@ -419,12 +419,17 @@ class LockFee(models.Model):
         db_table = 'lock_fee'
 
 class FeeSettings(models.Model):
-    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
-    fromAccount = models.ForeignKey(Accounts, on_delete=models.SET_NULL, null=True)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
+    fromAccountSession = models.ForeignKey(AccountSession, on_delete=models.CASCADE, null=True)
 
+    class Meta:
+        unique_together = ('parentSchool', 'parentSession')
+        
 class FeePaymentAccounts(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
-    parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE)
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
+    parentAccountSession = models.ForeignKey(AccountSession, on_delete=models.CASCADE)
     
     MODE_OF_PAYMENT = (
         ( 'Cash', 'Cash' ),

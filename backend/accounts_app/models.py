@@ -68,6 +68,7 @@ class AccountSession(models.Model):
 
     class Meta:
         db_table = 'account_session'
+        unique_together = ('parentAccount', 'parentSession')
 
 @receiver(pre_save, sender=AccountSession)
 def accountSessionPreSave(sender, instance, **kwargs):

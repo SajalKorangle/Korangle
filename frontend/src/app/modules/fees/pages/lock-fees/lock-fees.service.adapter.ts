@@ -1,5 +1,6 @@
 
 import { LockFeesComponent } from './lock-fees.component';
+import { Session } from '@services/modules/school/models/session';
 
 export class LockFeesServiceAdapter {
 
@@ -19,20 +20,36 @@ export class LockFeesServiceAdapter {
         this.vm.isLoading = true;
 
         this.vm.sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        const activeSession: Session = this.vm.sessionList.find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
+        this.populateActiveSession(activeSession);
 
         const lock_fee_list = {
             'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentSession': activeSession.id,
         };
 
         const accounts_request = {
             accountType: 'ACCOUNT',
         }
 
-        const [lockFeesList, feePaymentAccountsList, feeSettingsList, accountsList ] = await Promise.all([
+        const account_session_request = {
+            parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: activeSession.id,
+        }
+
+        const fee_payment_accounts_request = {
+            'parentSession': activeSession.id,
+        };
+
+        const fee_settings_request = {
+            'parentSession': activeSession.id,
+        }
+
+        const [lockFeesList, feePaymentAccountsList, accountSessionList, feeSettingsList, accountsList ] = await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fee_list),  // 0
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 1
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}), //3
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, fee_payment_accounts_request),  // 1
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 2
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request), //3
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 4
         ]);
 
@@ -45,9 +62,28 @@ export class LockFeesServiceAdapter {
         }
         this.vm.feePaymentAccountsList = feePaymentAccountsList;
         this.vm.feeSettings = feeSettingsList[0];
+        this.vm.accountSessionList = accountSessionList;
         this.vm.accountsList = accountsList;
+        this.populateCustomAccountSession(this.vm.accountsList, this.vm.accountSessionList);
 
         this.vm.isLoading = false;
+    }
+
+    populateActiveSession(activeSession: Session):void {
+        const today = new Date();
+        const endDate = new Date(activeSession.endDate);
+        const startDate = new Date(activeSession.startDate);
+        this.vm.isActiveSession = today >= startDate && today <= endDate;
+    }
+
+    populateCustomAccountSession(accountsList, accountSessionList): void{
+        this.vm.customAccountSessionList = accountSessionList.map(accountSession => {
+            return {
+                ...accountSessionList,
+                type: 'ACCOUNT',
+                title: accountsList.find(account=> account.id==accountSession.parentAccount).title,
+            }
+        })
     }
 
     lockFees(): void {
