@@ -50,7 +50,7 @@ def generate_otp_for_signup(data):
         "smsContent": str(number) + ' is the OTP requested by you to sign up for korangle.com',
         "routeId": "1",
         "mobileNumbers": data['mobileNumber'],
-        "senderId": 'TBTSIG',
+        "senderId": 'KORNGL',
         "smsContentType": 'english',
     }
 
