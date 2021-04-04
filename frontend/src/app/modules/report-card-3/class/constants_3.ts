@@ -674,7 +674,10 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     radius:number=0;
 
     // uses height and width of the base layer for image height and width
-
+    lineWidth:number=0;
+    strokeStyle:string='#000000';
+    fillStyle:string='transparent';
+    
     uri: string;
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
@@ -765,33 +768,54 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             return true;
 
         if (this.image.complete && this.image.naturalHeight != 0) {
+            
+
+            const x = this.x + this.lineWidth/2;   // adjisted for line Width
+            const y = this.y + this.lineWidth/2;   // adjusted for line Width
+            const width = this.width - this.lineWidth;
+            const height = this.height - this.lineWidth;
+            const offSet = 2;
+            const maxRadius = Math.round(Math.max(this.width,this.height) / 2);
+            const computedRadius= Math.min(this.radius,maxRadius);
+           
             ctx.save();
+            ctx['lineWidth']=this.lineWidth;
+            ctx['strokeStyle']=this.strokeStyle;
             ctx.beginPath();
-            ctx.moveTo(this.x + this.radius, this.y);
-            ctx.lineTo(this.x + this.width - this.radius, this.y);
-            ctx.quadraticCurveTo(this.x + this.width, this.y, this.x + this.width, this.y + this.radius);
-            ctx.lineTo(this.x + this.width, this.y + this.height - this.radius);
-            ctx.quadraticCurveTo(this.x + this.width, this.y + this.height, this.x + this.width - this.radius, this.y + this.height);
-            ctx.lineTo(this.x + this.radius, this.y + this.height);
-            ctx.quadraticCurveTo(this.x, this.y + this.height, this.x, this.y + this.height - this.radius);
-            ctx.lineTo(this.x, this.y + this.radius);
-            ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
+            ctx.moveTo(this.x + computedRadius, this.y);
+            ctx.lineTo(this.x + this.width - computedRadius, this.y);
+            ctx.arcTo(this.x + this.width, this.y, this.x + this.width, this.y + computedRadius, computedRadius);
+            ctx.lineTo(this.x + this.width, this.y + this.height - computedRadius);
+            ctx.arcTo(this.x + this.width, this.y + this.height, this.x + this.width - computedRadius, this.y + this.height, computedRadius);
+            ctx.lineTo(this.x + computedRadius, this.y + this.height);
+            ctx.arcTo(this.x, this.y + this.height, this.x, this.y + this.height - computedRadius, computedRadius);
+            ctx.lineTo(this.x, this.y + computedRadius);
+            ctx.arcTo(this.x, this.y, this.x + computedRadius, this.y, computedRadius);
             ctx.closePath();
             ctx.clip();
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            ctx.drawImage(this.image, x-offSet,y-offSet,width+(2*offSet),height+(2*offSet));
+
+            if (this.lineWidth > 0) {
+                ctx.beginPath();
+                ctx.moveTo(this.x + computedRadius, this.y);
+                ctx.lineTo(this.x + this.width - computedRadius, this.y);
+                ctx.arcTo(this.x + this.width, this.y, this.x + this.width, this.y + computedRadius, computedRadius);
+                ctx.lineTo(this.x + this.width, this.y + this.height - computedRadius);
+                ctx.arcTo(this.x + this.width, this.y + this.height, this.x + this.width - computedRadius, this.y + this.height, computedRadius);
+                ctx.lineTo(this.x + computedRadius, this.y + this.height);
+                ctx.arcTo(this.x, this.y + this.height, this.x, this.y + this.height - computedRadius, computedRadius);
+                ctx.lineTo(this.x, this.y + computedRadius);
+                ctx.arcTo(this.x, this.y, this.x + computedRadius, this.y, computedRadius);
+                ctx.stroke();
+                ctx.closePath();
+
+            }
+            
             ctx.restore();
             return true;    // Drawn successfully on canvas
         }
         scheduleReDraw();   // draw again after some time
         return false;   // Canvas Drawing failed, scheduled redraw for later
-    }
-
-    getMaxRadiusValue() {
-        return Math.round(this.width > this.height ? this.height / 2 : this.width / 2);
-    }
-
-    updateRadius(newRadius: any) {
-        this.radius = newRadius > this.getMaxRadiusValue() ? this.getMaxRadiusValue() : newRadius;
     }
 
     scale(scaleFactor: number): void{
@@ -800,6 +824,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.height *= scaleFactor;
         this.width *= scaleFactor;
         this.radius *= scaleFactor;
+        this.lineWidth *= scaleFactor;
     }
 
     getDataToSave(): {[object:string]:any} {
@@ -810,6 +835,8 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             width: this.width * this.ca.pixelTommFactor,
             maintainAspectRatio: this.maintainAspectRatio,
             radius:this.radius * this.ca.pixelTommFactor,
+            lineWidth:this.lineWidth * this.ca.pixelTommFactor,
+            strokeStyle:this.strokeStyle,
         };
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.uri = this.uri;
@@ -1475,8 +1502,9 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
         const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
         const width = this.width - this.shapeStyle.lineWidth ;
         const height = this.height - this.shapeStyle.lineWidth;
-        const radius = this.radius - this.shapeStyle.lineWidth / 2;
-        const offSet = this.shapeStyle.lineWidth / 2
+        const offSet = this.shapeStyle.lineWidth / 2;
+        const maxRadius = Math.round(Math.max(this.width,this.height)/ 2);
+        const radius = Math.min(this.radius,maxRadius) - this.shapeStyle.lineWidth/2
         ctx.beginPath();
         ctx.moveTo(x + radius, y+offSet);
         ctx.lineTo(x + width - radius, y+offSet);

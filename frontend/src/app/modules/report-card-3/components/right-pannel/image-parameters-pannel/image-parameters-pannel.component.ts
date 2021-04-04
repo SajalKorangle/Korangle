@@ -15,24 +15,13 @@ export class ImageParametersPannelComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  getImageHeight(): any{
-    return Math.round(this.layer.height*this.getPixelTommFactor() * 100) / 100;
-  }
-
-  getImageWidth(): any{
-    return Math.round(this.layer.width*this.getPixelTommFactor() * 100) / 100;
-  }
   
   getPixelTommFactor(): number{
     return this.layer.ca.pixelTommFactor;
   }
 
-  getImageRadius() {
-    if(this.layer.radius > this.layer.getMaxRadiusValue()){
-      this.layer.radius = this.layer.getMaxRadiusValue()
-    }
-    return Math.round(this.layer.radius*this.getPixelTommFactor() * 100) / 100;
+  getMeasurementInMM(measurement: any){
+    return Math.round(measurement*this.getPixelTommFactor() * 100) / 100;
   }
   
 }
