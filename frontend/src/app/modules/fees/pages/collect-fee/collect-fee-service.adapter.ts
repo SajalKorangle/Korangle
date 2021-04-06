@@ -21,7 +21,6 @@ export class CollectFeeServiceAdapter {
         this.vm.isLoading = true;
 
         let schoolId = this.vm.user.activeSchool.dbId;
-        let sessionId = this.vm.user.activeSchool.currentSessionDbId;
         const today = new Date();
         const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
         const activeSession = sessionList.find(session => { // active session according to date
@@ -52,26 +51,28 @@ export class CollectFeeServiceAdapter {
             parentAccount__accountType: 'ACCOUNT',
         }
 
+        const fee_settings_request = {
+            parentSession: activeSession.id, 
+        }
+
         const value = await Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}),  // 5
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 6
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), //7
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), //8
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),  // 5
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), //6
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), //7
             ]);
         this.vm.feeTypeList = value[0];
         this.vm.busStopList = value[1];
         this.vm.employeeList = value[2];
         this.vm.boardList = value[3];
         this.vm.sessionList = value[4]
-        this.vm.feeSettings = value[5][0];
-        this.vm.feePaymentAccountsList = value[6];
-        this.vm.accountsList = value[7];
-        this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[8]);
+        this.vm.feeSettings = { ...value[5][0], accountingSettings: JSON.parse(value[5][0].accountingSettings) };
+        this.vm.accountsList = value[6];
+        this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
         this.vm.handlePaymentAccountOnPaymentModeChange();
 
         this.vm.isLoading = false;
@@ -210,9 +211,12 @@ export class CollectFeeServiceAdapter {
         let createdTransactionList;
 
         const serviceList = [];
-        const transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList.find(customAccountSession => customAccountSession.id == this.vm.feeSettings.fromAccountSession);
+        let transactionFromAccountSession;
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings) {
+            transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList.find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettings.parentAccountFrom);
+        }
 
-        if (this.vm.feeSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
             transactionFromAccountId = transactionFromAccountSession.parentAccount;
             transactionToAccountId = this.vm.studentFeePaymentAccount;
             value[0].forEach(fee_receipt => {
@@ -229,7 +233,7 @@ export class CollectFeeServiceAdapter {
             createdTransactionList = await this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList);
             
             createdTransactionList.forEach((transaction, index) => {
-                toUpdateFeeReceipts.push({ id: value[0][index], parentTransaction: transaction.id });
+                toUpdateFeeReceipts.push({ id: value[0][index].id, parentTransaction: transaction.id });
                 value[0][index].parentTransaction = transaction.id;
             });
             serviceList.push(
@@ -257,35 +261,28 @@ export class CollectFeeServiceAdapter {
                     amount: totalAmount,
                     transactionType: 'CREDIT',
                 };
-                toCreateTransactionList.push(newCreditTransactionAccountDetails);
+                toCreateTransactionAccountDetails.push(newCreditTransactionAccountDetails);
                 const newDebitTransactionAccountDetails = {
                     parentTransaction: fee_receipt.parentTransaction,
                     parentAccount: transactionFromAccountId,
                     amount: totalAmount,
                     transactionType: 'DEBIT',
                 };
-                toCreateTransactionList.push(newDebitTransactionAccountDetails);
-                serviceList.push(
-                    this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateTransactionAccountDetails)
-                );
+                toCreateTransactionAccountDetails.push(newDebitTransactionAccountDetails);
             });
+            serviceList.push(
+                this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateTransactionAccountDetails)
+            );
             
         }
         else {
             value[0].forEach(fee_receipt => {
-                let totalAmount = 0;
                 sub_fee_receipt_list.forEach(subFeeReceipt => {
                     if (subFeeReceipt.parentSession == fee_receipt.parentSession
                         && this.vm.studentFeeList.find(item => {
                             return item.id == subFeeReceipt.parentStudentFee;
                         }).parentStudent == fee_receipt.parentStudent) {
                         subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
-
-                        totalAmount += this.vm.installmentList.reduce((totalInstallment, installment) => {
-                            return totalInstallment
-                                + (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0)
-                                + (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0);
-                        }, 0);
                     }
                 });
             });
@@ -293,7 +290,7 @@ export class CollectFeeServiceAdapter {
 
         await Promise.all(serviceList);
 
-        this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
+        await this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
 
             this.addToFeeReceiptList(value[0]);
             this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);

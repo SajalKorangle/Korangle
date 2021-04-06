@@ -1,12 +1,11 @@
 <div class="card-content">
 
     <ng-container *ngIf="!isLoading">
-        <div [style.pointerEvents]="isActiveSession?'auto':'none'" [style.opacity]="isActiveSession?'1':'0.3'">
-
-            <mat-slide-toggle [ngModel]="backendData.feeSettings.accountingSettings" (click)="toggleAccounting()"></mat-slide-toggle>
+        <div [style.pointerEvents]="isActiveSession?'auto':'none'" [style.opacity]="isActiveSession?'1':'0.35'">
+            <mat-card style="margin-top: 12px;">
+            <mat-slide-toggle style="margin-right: 20px;" [checked]="backendData.feeSettings.accountingSettings!=null" (change)="toggleAccounting($event.checked)">Accounting</mat-slide-toggle>
 
             <ng-container *ngIf="backendData.feeSettings.accountingSettings">
-
                 <mat-form-field style="width: 200px;" (click)="searchInput1.focus();">
                     <mat-label>Student Fee Debit Account</mat-label>
                     <mat-select [(ngModel)]="backendData.feeSettings.accountingSettings.parentAccountFrom" required>
@@ -17,7 +16,7 @@
                             </mat-form-field>
                         </mat-option>
                             
-                        <ng-container *ngFor="let customAccountSession of backendData.getCustomAccountList()">
+                        <ng-container *ngFor="let customAccountSession of customAccountSessionList">
                             <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
                                 [value]="customAccountSession.id">
                                 {{customAccountSession.title}}&nbsp;A/c
@@ -50,7 +49,7 @@
                                 </mat-form-field>
                             </mat-option>
 
-                            <ng-container *ngFor="let customAccountSession of backendData.getCustomAccountList();">
+                            <ng-container *ngFor="let customAccountSession of customAccountSessionList;">
                                 <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput.toLowerCase())"
                                         (click)="addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode); $event.stopPropagation();">
                                     {{customAccountSession.title}}&nbsp;A/c
@@ -61,10 +60,11 @@
                     </div>
                 </ng-container>
             </ng-container>
-
+        </mat-card>
         </div>
 
-        <mat-divider style="margin: 12px 0px;"></mat-divider>
+        <mat-divider style="margin: 20px 0px;"></mat-divider>
+
         <ng-container *ngIf="backendData.feeSettings.sessionLocked; else feesUnlocked;">
             <span style="font-size: 16px;">
                 Unlock fees structure for session {{activeSession.name}}
@@ -76,10 +76,11 @@
                 Lock fees structure for session {{activeSession.name}}
             </span>
         </ng-template>
-
+        <br/>
         <mat-slide-toggle [(ngModel)]="backendData.feeSettings.sessionLocked">Lock Fee</mat-slide-toggle>
+        <br/>
 
-        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updatePaymentSettings()">Update</button>
+        <button style="margin: 20px 0;" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updatePaymentSettings()">Update</button>
     </ng-container>
 
     <ng-container *ngIf="isLoading">

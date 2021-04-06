@@ -69,7 +69,7 @@ export class SetSchoolFeesServiceAdapter {
             'fields__korangle': 'id,parentStudentFee',
         };
 
-        let lock_fees_list = {
+        const fee_settings_request = {
             'parentSchool': schoolId,
             'parentSession': sessionId,
         };
@@ -88,7 +88,7 @@ export class SetSchoolFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.student_fees, request_student_fee_data),
             this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),
             this.vm.feeService.getList(this.vm.feeService.sub_discounts, request_sub_discount_data),
-            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),
         ]).then(value => {
 
             this.populateFeeTypeList(value[0]);
@@ -108,7 +108,7 @@ export class SetSchoolFeesServiceAdapter {
             this.vm.studentFeeList = value[8];
             this.vm.subFeeReceiptList = value[9];
             this.vm.subDiscountList = value[10];
-            if (value[11].length == 1) { this.vm.lockFees = value[11]; }
+            if (value[11].length == 1) { this.vm.lockFees = value[11].sessionLocked; }
 
             this.vm.isLoading = false;
 

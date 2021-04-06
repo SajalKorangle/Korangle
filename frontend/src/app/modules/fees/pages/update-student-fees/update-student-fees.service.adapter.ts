@@ -46,7 +46,7 @@ export class UpdateStudentFeesServiceAdapter {
             parentSchool: schoolId,
         };
 
-        let lock_fees_list = {
+        let fee_settings_request = {
             'parentSchool': schoolId,
             'parentSession': sessionId,
         };
@@ -58,7 +58,7 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
-            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),
             this.vm.classService.getObjectList(this.vm.classService.classs,{}),
             this.vm.classService.getObjectList(this.vm.classService.division,{}),
         ]).then(value => {
@@ -68,7 +68,7 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.classFilterFeeList = value[2];
             this.vm.busStopFilterFeeList = value[3];
             this.vm.busStopList = value[4];
-            if (value[5].length == 1) { this.vm.lockFees = value[5]; }
+            if (value[5].length == 1) { this.vm.lockFees = value[5].sessionLocked; }
             this.vm.classList = value[6];
             this.vm.sectionList = value[7];
 

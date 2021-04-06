@@ -4,6 +4,7 @@ import {DataStorage} from "../../../../classes/data-storage";
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { MODE_OF_PAYMENT_LIST } from './../../classes/constants';
+import { AccountSession } from '@services/modules/accounts/models/account-session';
 
 import { SettingsServiceAdapter } from "./settings.service.adapter";
 import { SettingsBackendData } from './settings.backend.data';
@@ -21,6 +22,8 @@ export class SettingsComponent implements OnInit {
 
     sessionList = [];   // why this is needed
     activeSession: any;
+
+    customAccountSessionList: Array<CustomAccountSession>;
 
     searchInput: string = '';
     
@@ -52,11 +55,11 @@ export class SettingsComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
-    toggleAccounting(): void{
-        if (this.backendData.feeSettings.accountingSettings) {
-            this.backendData.feeSettings.accountingSettings = null;
-        } else {
+    toggleAccounting(checked: boolean): void{
+        if (checked) {
             this.backendData.initilizeAccouting();
+        } else {
+            this.backendData.feeSettings.accountingSettings = null;
         }
     }
 
@@ -65,36 +68,43 @@ export class SettingsComponent implements OnInit {
     }
 
     getAccountName(id: number): string {
-        return this.backendData.getCustomAccountList().find(accountSession => accountSession.id == id).title;
+        return this.customAccountSessionList.find(accountSession => accountSession.id == id).title;
     }
 
     addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode): void {
-        const alreadyExists = this.backendData.feeSettings.accountingSettings[paymentMode].find(accountSessionId => accountSessionId == customAccountSession.id)!=undefined;
+        const alreadyExists = this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].find(accountSessionId => accountSessionId == customAccountSession.id)!=undefined;
         if (alreadyExists)
             return;
-        this.backendData.feeSettings.accountingSettings[paymentMode].push(customAccountSession.id);
+        this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].push(customAccountSession.id);
     }
 
     settingsValidityCheck(): boolean{
         let errormsg = ''
         let dataValid = true;
-        if (!this.backendData.feeSettings.accountingSettings.parentAccountFrom) {
-            dataValid = false;
-            errormsg += '\n• Student fee debit account cannot be empty';
-        }
-        else {
-            this.getPaymentModeList().every(paymentMode => {
-                if (this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].find(accountSessionId => accountSessionId == this.backendData.feeSettings.accountingSettings.parentAccountFrom) != undefined) {
-                    dataValid = false;
-                    errormsg += '\n• Student fee debit account cannot be included in any accounts under payment mode';
-                    return false;   // return of every
-                }
-                return true;    // return of every
-            })
-        }
-        if (!dataValid) {
-            alert(errormsg.trim());
+        if (this.backendData.feeSettings.accountingSettings) {
+            if (!this.backendData.feeSettings.accountingSettings.parentAccountFrom) {
+                dataValid = false;
+                errormsg += '\n• Student fee debit account cannot be empty';
+            }
+            else {
+                this.getPaymentModeList().every(paymentMode => {
+                    if (this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].find(accountSessionId => accountSessionId == this.backendData.feeSettings.accountingSettings.parentAccountFrom) != undefined) {
+                        dataValid = false;
+                        errormsg += '\n• Student fee debit account cannot be included in any accounts under payment mode';
+                        return false;   // return of every
+                    }
+                    return true;    // return of every
+                });
+            }
+            if (!dataValid) {
+                alert(errormsg.trim());
+            }
         }
         return dataValid;
     }
+}
+
+interface CustomAccountSession extends AccountSession{
+    type: 'ACCOUNT';
+    title: string;
 }

@@ -12,8 +12,7 @@ export class CollectFeeHTMLRenderer{
     }
 
     getFilteredPaymentAccounts(): Array<CustomAccountSession>{
-        const filteredPaymentAccontsList = this.vm.feePaymentAccountsList.filter(fpa => fpa.modeOfPayment == this.vm.newModeOfPayment);
-        const filteredAccountsIdList: Array<number> = filteredPaymentAccontsList.map(fpa => fpa.parentAccountSession);
+        const filteredAccountsIdList: Array<number> = this.vm.feeSettings.accountingSettings.toAccountsStructure[this.vm.newModeOfPayment];
         return this.customAccountSessionList.filter(customAccountSession => filteredAccountsIdList.find(id=> id==customAccountSession .id));
     }
 

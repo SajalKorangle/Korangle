@@ -372,7 +372,7 @@
                         <mat-form-field style="margin-top: 22px;">
                             <mat-select placeholder="Select Payment Mode"
                                         [ngModel]="newModeOfPayment"
-                                        [disabled]="!newFeeReceiptList.length>0"
+                                        [disabled]="!(newFeeReceiptList.length>0)"
                                         (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode(); handlePaymentAccountOnPaymentModeChange();">
                                 <mat-option *ngFor='let paymentMode of modeOfPaymentList;' [value]="paymentMode">
                                     {{paymentMode}}
@@ -380,7 +380,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3" *ngIf="feeSettings && feeSettings.accountingSettings">
                         <mat-form-field style="margin-top: 22px;">
                             <mat-select placeholder="Select Payment Account"
                                         [(ngModel)]="studentFeePaymentAccount">

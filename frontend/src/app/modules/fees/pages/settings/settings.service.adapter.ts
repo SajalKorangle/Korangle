@@ -43,18 +43,20 @@ export class SettingsServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 4
         ]);
 
+        this.vm.backendData.accountSessionList = accountSessionList;
+        this.vm.backendData.accountsList = accountsList;
+
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
         } else if (feeSettingsList.length == 1) {
             this.vm.backendData.feeSettings = { ...feeSettingsList[0], accountingSettings: JSON.parse(feeSettingsList[0].accountingSettings)};
+            this.vm.backendData.filterInvalidAccounts();
         } else {
             alert('Error: Report admin');
             return;
         }
 
-        this.vm.backendData.accountSessionList = accountSessionList;
-        this.vm.backendData.accountsList = accountsList;
-        // this.populateCustomAccountSession(this.vm.accountsList, this.vm.accountSessionList);
+        this.populateCustomAccountSession(this.vm.backendData.accountsList, this.vm.backendData.accountSessionList);
 
         this.vm.isLoading = false;
     }
@@ -67,15 +69,15 @@ export class SettingsServiceAdapter {
         this.vm.isActiveSession = today >= startDate && today <= endDate;
     }
 
-    // populateCustomAccountSession(accountsList, accountSessionList): void{
-    //     this.vm.customAccountSessionList = accountSessionList.map(accountSession => {
-    //         return {
-    //             ...accountSession,
-    //             type: 'ACCOUNT',
-    //             title: accountsList.find(account=> account.id==accountSession.parentAccount).title,
-    //         }
-    //     })
-    // }
+    populateCustomAccountSession(accountsList, accountSessionList): void{
+        this.vm.customAccountSessionList = accountSessionList.map(accountSession => {
+            return {
+                ...accountSession,
+                type: 'ACCOUNT',
+                title: accountsList.find(account=> account.id==accountSession.parentAccount).title,
+            }
+        })
+    }
 
     async updatePaymentSettings() {
         if (!this.vm.settingsValidityCheck())
@@ -93,8 +95,6 @@ export class SettingsServiceAdapter {
         const newFeeSettings:any = { ...this.vm.backendData.feeSettings };
         if (newFeeSettings.accountingSettings) {
             newFeeSettings.accountingSettings = JSON.stringify(newFeeSettings.accountingSettings);
-        } else {
-            delete newFeeSettings.accountingSettings;
         }
         if (feeSettingsList.length > 0) {   // i already exists
             newFeeSettings.id = feeSettingsList[0].id;
@@ -107,7 +107,7 @@ export class SettingsServiceAdapter {
             );
         }
         await Promise.all(serviceList);
-        
+
         alert('fees accounting settings updated')
         this.vm.isLoading = false;
     }

@@ -27,7 +27,6 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
 import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { Account } from '@services/modules/accounts/models/account';
 import { FeeSettings } from '@services/modules/fees/models/fee-settings';
-import { FeePaymentAccounts } from '@services/modules/fees/models/fee-payment-accounts';
 import { CollectFeeHTMLRenderer } from './collect-fee.html.renderer';
 
 declare const $: any;
@@ -64,7 +63,6 @@ export class CollectFeeComponent implements OnInit {
 
     //accounting
     feeSettings: FeeSettings;
-    feePaymentAccountsList: Array<FeePaymentAccounts>;
     accountsList: Array<Account>;
     studentFeePaymentAccount: number;
 
@@ -1239,7 +1237,7 @@ export class CollectFeeComponent implements OnInit {
     }
 
     handlePaymentAccountOnPaymentModeChange(): void{
-        if (this.feeSettings) {
+        if (this.feeSettings && this.feeSettings.accountingSettings) {
             this.studentFeePaymentAccount = null;
             const filteredAccounts = this.htmlRenderer.getFilteredPaymentAccounts();
             if (filteredAccounts.length > 0) {

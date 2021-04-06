@@ -9,21 +9,9 @@ export class SettingsBackendData {
     feeSettings: FeeSettings;
     accountsList: Array<Account>;
     accountSessionList: Array<AccountSession>;
-    count=0
 
     constructor(vm: SettingsComponent) {
         this.vm = vm;
-    }
-
-    getCustomAccountList(): Array<CustomAccountSession>{
-        console.log("getCustomAccountList calling Count = ", ++count);
-        return this.accountSessionList.map(accountSession => {
-            return {
-                ...accountSession,
-                type: 'ACCOUNT',
-                title: this.accountsList.find(account=> account.id==accountSession.parentAccount).title,
-            }
-        })
     }
 
     applyDefaultSettings(): void{
@@ -38,9 +26,12 @@ export class SettingsBackendData {
         this.feeSettings.accountingSettings = new AccountingSettings();
     }
 
-}
+    filterInvalidAccounts(): void{
+        if (this.feeSettings.accountingSettings) {
+            this.vm.getPaymentModeList().forEach(paymentMode => {
+                this.feeSettings.accountingSettings.toAccountsStructure[paymentMode] = this.feeSettings.accountingSettings.toAccountsStructure[paymentMode].filter(accountSessionId => this.accountSessionList.find(accountSession => accountSession.id == accountSessionId));
+            });
+        }
+    }
 
-interface CustomAccountSession extends AccountSession{
-    type: 'ACCOUNT';
-    title: string;
 }
