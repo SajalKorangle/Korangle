@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -47,8 +48,15 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -275,10 +283,37 @@ public class MainActivity extends AppCompatActivity {
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
         if (BuildConfig.DEBUG) {
-            webview.loadUrl("http://10.0.2.2:4200");
-        } else {
-            volleyFace.checkingUpdates();
+            String url = "http://";
+            try {
+                JSONObject jsonObject = new JSONObject(resJSON2String("korangle/debug_ip.json"));
+                url += jsonObject.getString("IP");
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(),
+                        "JSON Deserialization ERROR",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
+        } else { volleyFace.checkingUpdates(); }
+    }
+
+    private String resJSON2String(String filename_res){
+        String resJSON_string = null;
+        try {
+            InputStream json_stream = getAssets().open(filename_res);
+            byte[] buffer = new byte[(json_stream.available())]; // alloc json
+
+            json_stream.read(buffer);
+            json_stream.close();
+
+            resJSON_string = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(),
+                    "JSON2STRING ERROR",
+                    Toast.LENGTH_LONG).show();
         }
+
+        return resJSON_string;
     }
 
     public void exitActivity(View view) {

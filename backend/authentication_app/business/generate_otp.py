@@ -44,7 +44,7 @@ def generate_otp(data):
         "smsContent": str(number) + ' is the OTP requested by you to reset your password for korangle.com',
         "routeId": "1",
         "mobileNumbers": data['mobileNumber'],
-        "senderId": 'TBTSIG',
+        "senderId": 'KORNGL',
         "smsContentType": 'english',
     }
 
