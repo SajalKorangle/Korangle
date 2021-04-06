@@ -384,7 +384,7 @@
                         <mat-form-field style="margin-top: 22px;">
                             <mat-select placeholder="Select Payment Account"
                                         [(ngModel)]="studentFeePaymentAccount">
-                                <mat-option *ngFor='let paymentAccount of htmlRenderer.getFilteredPaymentAccounts();' [value]="paymentAccount.id">
+                                <mat-option *ngFor='let paymentAccount of htmlRenderer.getFilteredPaymentAccounts();' [value]="paymentAccount.parentAccount">
                                     {{paymentAccount.title}}
                                 </mat-option>
                             </mat-select>

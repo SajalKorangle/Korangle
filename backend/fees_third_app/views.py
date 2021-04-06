@@ -6,7 +6,7 @@ from decorators import user_permission_new, user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount, LockFee
+    SubFeeReceipt, Discount, SubDiscount
 
 
 # Create your views here.
@@ -160,20 +160,9 @@ class SubDiscountListView(CommonListView, APIView):
     RelationsToStudent = ['parentDiscount__parentStudent__id', 'parentStudentFee__parentStudent__id']
 
 
-########### Lock Fee #############
+########### Fee Settings #############
 
-
-class LockFeeView(CommonView, APIView):
-    Model = LockFee
-    RelationsToSchool = ['parentSchool__id']
-
-
-class LockFeeListView(CommonListView, APIView):
-    Model = LockFee
-    RelationsToSchool = ['parentSchool__id']
-
-
-from .models import FeeSettings, FeePaymentAccounts
+from .models import FeeSettings
 
 class FeeSettingsView(CommonView, APIView):
     Model = FeeSettings
@@ -182,12 +171,3 @@ class FeeSettingsView(CommonView, APIView):
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
     RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
-
-
-class FeePaymentAccountsView(CommonView, APIView):
-    Model = FeePaymentAccounts
-    RelationsToSchool = ['parentSchool__id', 'parentAccount__parentSchool__id']
-
-class FeePaymentAccountsListView(CommonListView, APIView):
-    Model = FeePaymentAccounts
-    RelationsToSchool = ['parentSchool__id', 'parentAccount__parentSchool__id']

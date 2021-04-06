@@ -2,11 +2,14 @@
 
     <ng-container *ngIf="!isLoading">
         <div [style.pointerEvents]="isActiveSession?'auto':'none'" [style.opacity]="isActiveSession?'1':'0.3'">
-            <ng-container *ngIf="feeSettings else enableAccounting">
+
+            <mat-slide-toggle [ngModel]="backendData.feeSettings.accountingSettings" (click)="toggleAccounting()"></mat-slide-toggle>
+
+            <ng-container *ngIf="backendData.feeSettings.accountingSettings">
 
                 <mat-form-field style="width: 200px;" (click)="searchInput1.focus();">
                     <mat-label>Student Fee Debit Account</mat-label>
-                    <mat-select [(ngModel)]="feeSettings.fromAccountSession" required>
+                    <mat-select [(ngModel)]="backendData.feeSettings.accountingSettings.parentAccountFrom" required>
                         <mat-option style="pointer-events: none; height: auto;">  <!--Search bar-->
                             <mat-form-field style="width: 100%;">
                                 <mat-icon matPrefix (click)="searchInput1.focus();">search</mat-icon>
@@ -14,7 +17,7 @@
                             </mat-form-field>
                         </mat-option>
                             
-                        <ng-container *ngFor="let customAccountSession of customAccountSessionList">
+                        <ng-container *ngFor="let customAccountSession of backendData.getCustomAccountList()">
                             <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
                                 [value]="customAccountSession.id">
                                 {{customAccountSession.title}}&nbsp;A/c
@@ -28,9 +31,9 @@
                     <mat-form-field style="flex-grow: 2;">
                         <mat-label>Mode: {{paymentMode}}</mat-label>
                         <mat-chip-list required>
-                            <mat-chip *ngFor="let feePaymentAccount of getPaymentModeFilteredFeeAccountsList(paymentMode)"
-                                    [removable]="true" (removed)="removeFeePaymentAccount(feePaymentAccount)">
-                            {{getAccountName(feePaymentAccount.parentAccountSession)}}
+                            <mat-chip *ngFor="let feePaymentAccountSession of backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode], let fi=index;"
+                                    [removable]="true" (removed)="backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].splice(fi,1)">
+                            {{getAccountName(feePaymentAccountSession)}}
                             <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
                         </mat-chip-list>
@@ -47,7 +50,7 @@
                                 </mat-form-field>
                             </mat-option>
 
-                            <ng-container *ngFor="let customAccountSession of customAccountSessionList">
+                            <ng-container *ngFor="let customAccountSession of backendData.getCustomAccountList();">
                                 <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput.toLowerCase())"
                                         (click)="addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode); $event.stopPropagation();">
                                     {{customAccountSession.title}}&nbsp;A/c
@@ -57,45 +60,26 @@
                     </mat-form-field>
                     </div>
                 </ng-container>
-
-                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="float: right;" (click)="serviceAdapter.deleteAccounting()">Disable Accounting</button>
-                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="float: right;"
-                        (click)="serviceAdapter.updatePaymentSettings()">
-                        Update</button><br/>
-                <div class="clearfix"></div>
             </ng-container>
-            
-            <ng-template #enableAccounting>
-                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" 
-                        (click)="enbaleAccountingHandler()"
-                        style="background-color: blue;">
-                        Enable Accounting</button>
-            </ng-template>
+
         </div>
 
         <mat-divider style="margin: 12px 0px;"></mat-divider>
-        <ng-container *ngIf="lockFees; else feesUnlocked;">
+        <ng-container *ngIf="backendData.feeSettings.sessionLocked; else feesUnlocked;">
             <span style="font-size: 16px;">
-                Unlock fees structure for session {{getSession(this.user.activeSchool.currentSessionDbId).name}}
-            </span><br/>
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.unlockFees()">
-                Unlock
-            </button>
+                Unlock fees structure for session {{activeSession.name}}
+            </span>
         </ng-container>
 
         <ng-template #feesUnlocked>
             <span style="font-size: 16px;">
-                Lock fees structure for session {{getSession(this.user.activeSchool.currentSessionDbId).name}}
-            </span><br/>
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.lockFees()">
-                Lock
-            </button>
+                Lock fees structure for session {{activeSession.name}}
+            </span>
         </ng-template>
 
+        <mat-slide-toggle [(ngModel)]="backendData.feeSettings.sessionLocked">Lock Fee</mat-slide-toggle>
+
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updatePaymentSettings()">Update</button>
     </ng-container>
 
     <ng-container *ngIf="isLoading">

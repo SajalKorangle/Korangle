@@ -410,30 +410,12 @@ class SubDiscount(models.Model):
         db_table = 'sub_discount_new'
 
 
-class LockFee(models.Model):
-
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
-
-    class Meta:
-        db_table = 'lock_fee'
-
 class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
-    fromAccountSession = models.ForeignKey(AccountSession, on_delete=models.CASCADE, null=True)
+    sessionLocked = models.BooleanField(default=False)
+    accountingSettings = models.TextField(null=True) # json data
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
         
-class FeePaymentAccounts(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
-    parentAccountSession = models.ForeignKey(AccountSession, on_delete=models.CASCADE)
-    
-    MODE_OF_PAYMENT = (
-        ( 'Cash', 'Cash' ),
-        ( 'Cheque', 'Cheque' ),
-        ( 'Online', 'Online'),
-    )
-    modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT)

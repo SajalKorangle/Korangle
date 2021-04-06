@@ -87,7 +87,7 @@ const routes: Routes = [
 
     {
         path: 'lock_fees',
-        loadChildren: 'app/modules/fees/pages/lock-fees/lock-fees.module#LockFeesModule',
+        loadChildren: 'app/modules/fees/pages/settings/settings.module#SettingsModule',
         data: {moduleName: 'fees'},
     },
 

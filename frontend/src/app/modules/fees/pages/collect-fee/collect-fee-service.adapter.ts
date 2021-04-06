@@ -22,7 +22,14 @@ export class CollectFeeServiceAdapter {
 
         let schoolId = this.vm.user.activeSchool.dbId;
         let sessionId = this.vm.user.activeSchool.currentSessionDbId;
-
+        const today = new Date();
+        const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        const activeSession = sessionList.find(session => { // active session according to date
+            const endDate = new Date(session.endDate);
+            const startDate = new Date(session.startDate);
+            return today >= startDate && today <= endDate;
+        });
+            
         let fee_type_list = {
             'parentSchool': schoolId,
         };
@@ -35,15 +42,26 @@ export class CollectFeeServiceAdapter {
             parentSchool: schoolId,
         };
 
+        const accounts_request = {
+            accountType: 'ACCOUNT',
+        }
+
+        const account_session_request = {
+            parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: activeSession.id,
+            parentAccount__accountType: 'ACCOUNT',
+        }
+
         const value = await Promise.all([
-                this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
-                this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
-                this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
-                this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
-                this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
-                this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}),  // 5
-                this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 6
-                this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, {}), //7
+            this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, {}),  // 5
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_payment_accounts, {}),  // 6
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), //7
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), //8
             ]);
         this.vm.feeTypeList = value[0];
         this.vm.busStopList = value[1];
@@ -53,27 +71,10 @@ export class CollectFeeServiceAdapter {
         this.vm.feeSettings = value[5][0];
         this.vm.feePaymentAccountsList = value[6];
         this.vm.accountsList = value[7];
+        this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[8]);
         this.vm.handlePaymentAccountOnPaymentModeChange();
 
-        if (value[5].length > 0) {
-            const accountSet = new Set();
-            this.vm.feePaymentAccountsList.forEach(fpa => accountSet.add(fpa.parentAccount));
-            accountSet.add(this.vm.feeSettings.fromAccount);
-            let accounts_list = Array.from(accountSet);
-            const account_session_request = {
-                parentAccount__in: accounts_list,
-                parentSession: sessionId
-            }
-
-            const account_session_list = await this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request);
-            if(account_session_list.length != accounts_list.length){
-                alert('• Accounting is enabled but required accounts are not present in ths session\n• Consider updating settings or transfering balance from previous session');
-            } else {
-                    this.vm.isLoading = false;
-            }
-        } else {
-            this.vm.isLoading = false;
-        }
+        this.vm.isLoading = false;
             
     }
 
@@ -209,9 +210,10 @@ export class CollectFeeServiceAdapter {
         let createdTransactionList;
 
         const serviceList = [];
+        const transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList.find(customAccountSession => customAccountSession.id == this.vm.feeSettings.fromAccountSession);
 
-        if (this.vm.feeSettings) {
-            transactionFromAccountId = this.vm.feeSettings.fromAccount;
+        if (this.vm.feeSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
+            transactionFromAccountId = transactionFromAccountSession.parentAccount;
             transactionToAccountId = this.vm.studentFeePaymentAccount;
             value[0].forEach(fee_receipt => {
                 if (this.vm.feeSettings) {
@@ -249,7 +251,23 @@ export class CollectFeeServiceAdapter {
                         }, 0);
                     }
                 });
-                // create transactio  account details here
+                const newCreditTransactionAccountDetails = {
+                    parentTransaction: fee_receipt.parentTransaction,
+                    parentAccount: transactionToAccountId,
+                    amount: totalAmount,
+                    transactionType: 'CREDIT',
+                };
+                toCreateTransactionList.push(newCreditTransactionAccountDetails);
+                const newDebitTransactionAccountDetails = {
+                    parentTransaction: fee_receipt.parentTransaction,
+                    parentAccount: transactionFromAccountId,
+                    amount: totalAmount,
+                    transactionType: 'DEBIT',
+                };
+                toCreateTransactionList.push(newDebitTransactionAccountDetails);
+                serviceList.push(
+                    this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateTransactionAccountDetails)
+                );
             });
             
         }
@@ -272,6 +290,8 @@ export class CollectFeeServiceAdapter {
                 });
             });
         }
+
+        await Promise.all(serviceList);
 
         this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
 

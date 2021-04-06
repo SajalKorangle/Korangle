@@ -1242,7 +1242,9 @@ export class CollectFeeComponent implements OnInit {
         if (this.feeSettings) {
             this.studentFeePaymentAccount = null;
             const filteredAccounts = this.htmlRenderer.getFilteredPaymentAccounts();
-            this.studentFeePaymentAccount = filteredAccounts[0].id;
+            if (filteredAccounts.length > 0) {
+                this.studentFeePaymentAccount = filteredAccounts[0].parentAccount;
+            }
         }
     }
 }
