@@ -18,6 +18,10 @@ export class AddTransactionHtmlRenderer {
         this.addNewTransaction();
     }
 
+    getAccountSession(id: number) {
+        return this.vm.backendData.accountSessionList.find(accountSession => accountSession.parentAccount == id);
+    }
+
     getAccountFromAccountSession(accountSession: any): any {
         return this.vm.backendData.accountList.find(account => {
             return account.id === accountSession.parentAccount;
@@ -42,15 +46,15 @@ export class AddTransactionHtmlRenderer {
 
     addCreditAccount(transaction: any): void {
         transaction.creditAccountList.push({
-            creditAccount: null,
-            creditAmount: null,
+            parentAccount: null,
+            parentAmount: null,
         });
     }
 
     addDebitAccount(transaction: any): void {
         transaction.debitAccountList.push({
-            debitAccount: null,
-            debitAmount: null,
+            parentAccount: null,
+            parentAmount: null,
         });
     }
 
@@ -84,8 +88,8 @@ export class AddTransactionHtmlRenderer {
               return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'DEBIT';
             }).map(approvalAccountDetails => {
                 return {
-                    'debitAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.parentAccount == approvalAccountDetails.parentAccount),
-                    'debitAmount': approvalAccountDetails.amount,
+                    parentAccount: approvalAccountDetails.parentAccount,
+                    parentAmount: approvalAccountDetails.amount,
                 };
             });
 
@@ -94,8 +98,8 @@ export class AddTransactionHtmlRenderer {
               return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'CREDIT';
             }).map(approvalAccountDetails => {
                 return {
-                    'creditAccount': this.vm.backendData.accountSessionList.find(accountSession => accountSession.parentAccount == approvalAccountDetails.parentAccount),
-                    'creditAmount': approvalAccountDetails.amount,
+                    parentAccount: approvalAccountDetails.parentAccount,
+                    amount: approvalAccountDetails.amount,
                 };
             });
 

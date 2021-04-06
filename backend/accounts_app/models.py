@@ -83,7 +83,7 @@ class Transaction(models.Model):
     
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, null=False, default=0)
-    voucherNumber = models.IntegerField()
+    voucherNumber = models.IntegerField(blank=True)
     remark = models.TextField(null=True, blank=True)
     transactionDate = models.DateField()
     approvalId = models.IntegerField(null=True, blank=True)

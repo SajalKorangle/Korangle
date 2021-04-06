@@ -128,8 +128,7 @@ export class AddTransactionServiceAdapter {
             this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList),
         ]).then(value => {
 
-            // let toUpdateApprovalList = [];
-            let toCreateAccountList = [];
+            let toCreateTransactionAccountDetailsList = [];
             const serviceList = [];
 
             value[0].forEach((element, index) => {
@@ -140,22 +139,20 @@ export class AddTransactionServiceAdapter {
                 transaction.debitAccountList.forEach(account =>{
                     let tempData = {
                         parentTransaction: element.id,
-                        parentAccount: account.debitAccount.parentAccount,
-                        amount: account.debitAmount,
+                        ...account,
                         transactionType: 'DEBIT',
                     }
-                    toCreateAccountList.push(tempData);
+                    toCreateTransactionAccountDetailsList.push(tempData);
                 });
 
                 // Credit Accounts
                 transaction.creditAccountList.forEach(account =>{
                     let tempData = {
                         parentTransaction: element.id,
-                        parentAccount: account.creditAccount.parentAccount,
-                        amount: account.creditAmount,
+                        ...account,
                         transactionType: 'CREDIT',
                     }
-                    toCreateAccountList.push(tempData);
+                    toCreateTransactionAccountDetailsList.push(tempData);
                 });
                 
                 // Bill Images
@@ -187,7 +184,7 @@ export class AddTransactionServiceAdapter {
             });
 
 
-            serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateAccountList));
+            serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateTransactionAccountDetailsList));
             /*if (toCreateTransactionImageList.length > 0) {
                 serviceList.push(this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_images, toCreateTransactionImageList));
             }*/

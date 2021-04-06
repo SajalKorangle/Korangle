@@ -19,8 +19,8 @@ export class SettingsServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
-        const activeSession: Session = this.vm.sessionList.find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
+        const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        const activeSession: Session = sessionList.find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
         this.populateActiveSession(activeSession);
 
         const fee_settings_request = {

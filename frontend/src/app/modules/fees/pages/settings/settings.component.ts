@@ -20,7 +20,6 @@ export class SettingsComponent implements OnInit {
 
     user;
 
-    sessionList = [];   // why this is needed
     activeSession: any;
 
     customAccountSessionList: Array<CustomAccountSession>;

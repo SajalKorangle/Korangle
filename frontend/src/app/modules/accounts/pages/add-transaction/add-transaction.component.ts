@@ -86,25 +86,25 @@ export class AddTransactionComponent implements OnInit {
 
   handleAmountChange(transaction: any, newAmount: number) {
     if (transaction.creditAccountList.length == 1 && transaction.debitAccountList.length == 1) {
-      transaction.creditAccountList[0].creditAmount = newAmount;
-      transaction.debitAccountList[0].debitAmount = newAmount;
+      transaction.creditAccountList[0].amount = newAmount;
+      transaction.debitAccountList[0].amount = newAmount;
     }
     else if (transaction.creditAccountList.length == 1) {
-      transaction.creditAccountList[0].creditAmount = transaction.debitAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.debitAmount, 0);
+      transaction.creditAccountList[0].amount = transaction.debitAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
     }
     else if (transaction.debitAccountList.length == 1) {
-      transaction.debitAccountList[0].debitAmount = transaction.creditAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.creditAmount, 0);
+      transaction.debitAccountList[0].amount = transaction.creditAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
     }
   }
 
   isAmountUnEqual(transaction): boolean{
     let totalCreditAmount = 0;
     transaction.creditAccountList.forEach(account => {
-      totalCreditAmount += account.creditAmount;
+      totalCreditAmount += account.amount;
     })
     let totalDebitAmount = 0;
     transaction.debitAccountList.forEach(account => {
-      totalDebitAmount += account.debitAmount;
+      totalDebitAmount += account.amount;
     })
     if(totalCreditAmount == totalDebitAmount){
       return false;
@@ -120,11 +120,11 @@ export class AddTransactionComponent implements OnInit {
     }
     let totalCreditAmount = 0;
     transaction.creditAccountList.forEach(account =>{
-      totalCreditAmount += account.creditAmount;
+      totalCreditAmount += account.amount;
     });
     let totalDebitAmount = 0;
     transaction.debitAccountList.forEach(account =>{
-      totalDebitAmount += account.debitAmount;
+      totalDebitAmount += account.amount;
     });
     
     if(totalCreditAmount > this.maximumPermittedAmount || totalDebitAmount > this.maximumPermittedAmount){
@@ -136,12 +136,12 @@ export class AddTransactionComponent implements OnInit {
 
   isAmountLessThanMinimum(transaction): boolean{
     for(let i=0;i<transaction.debitAccountList.length; i++){
-      if(transaction.debitAccountList[i].debitAmount < 0.01 && transaction.debitAccountList[i].debitAccount != null){
+      if(transaction.debitAccountList[i].amount < 0.01 && transaction.debitAccountList[i].parentAccount != null){
         return true;
       }
     }
     for(let i=0;i<transaction.creditAccountList.length; i++){
-      if(transaction.creditAccountList[i].creditAmount < 0.01 && transaction.creditAccountList[i].creditAccount != null){
+      if(transaction.creditAccountList[i].amount < 0.01 && transaction.creditAccountList[i].parentAccount != null){
         return true;
       }
     }
@@ -156,12 +156,12 @@ export class AddTransactionComponent implements OnInit {
     const parentApproval = this.backendData.approvalList.find(approval => approval.id == transaction.approval.id);
     let flag = false;
     transaction.creditAccountList.forEach(account => {
-      if (!account.creditAccount) {
+      if (!account.parentAccount) {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
-      const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount==account.creditAccount.id && el.transactionType == 'CREDIT');
+      const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount==account.parentAccount.id && el.transactionType == 'CREDIT');
       if (approvalAccountDeatils) {
-        if (account.creditAmount > approvalAccountDeatils.amount) {
+        if (account.amount > approvalAccountDeatils.amount) {
           flag = true;
         }
       }
@@ -171,12 +171,12 @@ export class AddTransactionComponent implements OnInit {
     });
 
     transaction.debitAccountList.forEach(account => {
-      if (!account.debitAccount) {
+      if (!account.parentAccount) {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
-      const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount == account.debitAccount.id && el.transactionType == 'DEBIT');
+      const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount == account.parentAccount.id && el.transactionType == 'DEBIT');
       if (approvalAccountDeatils) {
-        if (account.debitAmount > approvalAccountDeatils.amount) {
+        if (account.amount > approvalAccountDeatils.amount) {
           flag = true;
         }
       }
@@ -190,13 +190,13 @@ export class AddTransactionComponent implements OnInit {
   isAccountNotMentioned(transaction): boolean {
     let temp = false;
     transaction.debitAccountList.forEach(account =>{
-      if(account.debitAccount == null){
+      if(account.parentAccount == null){
         temp = true;
       }
     })
     
     transaction.creditAccountList.forEach(account =>{
-      if(account.creditAccount == null){
+      if(account.parentAccount == null){
         temp = true;
       }
     })
@@ -207,14 +207,14 @@ export class AddTransactionComponent implements OnInit {
     let temp = false;
     
     for(let i=0;i<transaction.debitAccountList.length ;i++){
-      if(transaction.debitAccountList[i].debitAccount != null){
+      if(transaction.debitAccountList[i].parentAccount != null){
         for(let j=i+1;j<transaction.debitAccountList.length; j++){
-          if(transaction.debitAccountList[j].debitAccount == transaction.debitAccountList[i].debitAccount){
+          if(transaction.debitAccountList[j].parentAccount == transaction.debitAccountList[i].parentAccount){
             temp = true;
           }
         }
         for(let j=0;j<transaction.creditAccountList.length; j++){
-          if(transaction.creditAccountList[j].creditAccount == transaction.debitAccountList[i].debitAccount){
+          if(transaction.creditAccountList[j].parentAccount == transaction.debitAccountList[i].parentAccount){
             temp = true;
           }
         }
@@ -222,14 +222,14 @@ export class AddTransactionComponent implements OnInit {
     }
 
     for(let i=0;i<transaction.creditAccountList.length ;i++){
-      if(transaction.creditAccountList[i].creditAccount != null){
+      if(transaction.creditAccountList[i].parentAccount != null){
         for(let j=i+1;j<transaction.creditAccountList.length; j++){
-          if(transaction.creditAccountList[j].creditAccount == transaction.creditAccountList[i].creditAccount){
+          if(transaction.creditAccountList[j].parentAccount == transaction.creditAccountList[i].parentAccount){
             temp = true;
           }
         }
         for(let j=0;j<transaction.debitAccountList.length; j++){
-          if(transaction.debitAccountList[j].debitAccount == transaction.creditAccountList[i].creditAccount){
+          if(transaction.debitAccountList[j].parentAccount == transaction.creditAccountList[i].parentAccount){
             temp = true;
           }
         }
