@@ -84,7 +84,7 @@ class Transaction(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, null=False, default=0)
     voucherNumber = models.IntegerField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
-    transactionDate = models.DateField(null=True)
+    transactionDate = models.DateField(null=True)   # why is transaction date null, should be autoAdd
     approvalId = models.IntegerField(null=True, blank=True)
     
     class Meta:
@@ -142,7 +142,7 @@ class Approval(models.Model):
     parentEmployeeApprovedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovedList')
     approvalId = models.IntegerField(null=True, blank=True) # approval id should also be generated at the backend
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.CASCADE)
-    requestedGenerationDateTime = models.DateField(null=True) # should be auto add?
+    requestedGenerationDateTime = models.DateField(null=True) # should be auto add? and not null
     approvedGenerationDateTime = models.DateField(null=True)
     remark = models.TextField(null=True, blank=True)
     autoAdd = models.BooleanField(default=False)
@@ -167,7 +167,11 @@ class Approval(models.Model):
 @receiver(post_save, sender=Transaction)
 def transactionPostSave(sender, instance, **kwargs):
     if (kwargs['created'] and instance.approvalId):
-        approval = Approval.objects.get(approvalId=instance.approvalId, parentEmployeeRequestedBy__parentSchool=instance.parentSchool)
+        transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
+        approval = Approval.objects.get(approvalId=instance.approvalId,
+                parentEmployeeRequestedBy__parentSchool=instance.parentSchool,
+                requestedGenerationDateTime__gte=transactionSession.startDate,
+                requestedGenerationDateTime__lte=transactionSession.endDate)
         approval.parentTransaction = instance
         approval.transactionDate = instance.transactionDate
         approval.save()
