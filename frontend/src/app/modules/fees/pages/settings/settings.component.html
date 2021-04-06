@@ -29,20 +29,8 @@
                 </mat-form-field><br/>
 
                 <ng-container *ngFor="let paymentMode of getPaymentModeList(); let i=index;">
-                    <div style="display: flex; flex-direction: row; width: 100%;">
-                    <mat-form-field style="flex-grow: 2;">
-                        <mat-label>Mode: {{paymentMode}}</mat-label>
-                        <mat-chip-list required>
-                            <mat-chip *ngFor="let feePaymentAccountSession of backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode], let fi=index;"
-                                    [removable]="true" (removed)="backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].splice(fi,1)">
-                            {{getAccountName(feePaymentAccountSession)}}
-                            <mat-icon matChipRemove>cancel</mat-icon>
-                            </mat-chip>
-                        </mat-chip-list>
-                        <input style="pointer-events: none; opacity: 0;"> <!--Hack for propor placeholder display-->
-                    </mat-form-field>
-
-                    <mat-form-field style="margin-left: 16px;" (click)="searchInput=''">
+                    <div style="display: flex; flex-direction: row; align-items: center; width: 100%; margin-top: 24px;">
+                    <mat-form-field style="margin-left: 16px; margin-right: 20px;" (click)="searchInput=''">
                         <mat-label>Add Account</mat-label>
                         <mat-select placeholder="Add Account">
                             <mat-option style="pointer-events: none;">  <!--Search bar-->
@@ -60,6 +48,19 @@
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
+
+                    <mat-form-field style="flex-grow: 2;">
+                        <mat-label>Mode: {{paymentMode}}</mat-label>
+                        <mat-chip-list required>
+                            <mat-chip *ngFor="let feePaymentAccountSession of backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode], let fi=index;"
+                                    [removable]="true" (removed)="backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].splice(fi,1)">
+                            {{getAccountName(feePaymentAccountSession)}}
+                            <mat-icon class="pre-border" matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                        </mat-chip-list>
+                        <input style="pointer-events: none; opacity: 0;"> <!--Hack for propor placeholder display-->
+                    </mat-form-field>
+
                     </div>
                 </ng-container>
             </ng-container>
@@ -72,21 +73,21 @@
             <mat-icon style="font-size: 30px">lock</mat-icon><h3>&nbsp;&nbsp;Lock Fee</h3>
         </div>
 
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <span style="font-size: large;">Lock Fee &nbsp;</span>
+            <mat-slide-toggle [(ngModel)]="backendData.feeSettings.sessionLocked"></mat-slide-toggle>
+        </div>
         <ng-container *ngIf="backendData.feeSettings.sessionLocked; else feesUnlocked;">
             <span style="font-size: 16px;">
-                Unlock fees structure for session {{activeSession.name}}
+                (Unlock fees structure for session {{activeSession.name}})
             </span>
         </ng-container>
 
         <ng-template #feesUnlocked>
             <span style="font-size: 16px;">
-                Lock fees structure for session {{activeSession.name}}
+                (Lock fees structure for session {{activeSession.name}})
             </span>
-        </ng-template>
-        
-        <br/>
-        <mat-slide-toggle [(ngModel)]="backendData.feeSettings.sessionLocked">Lock Fee</mat-slide-toggle>
-        <br/>
+        </ng-template><br/>
 
         <button style="margin: 40px 0;" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updatePaymentSettings()">Update</button>
     </ng-container>
