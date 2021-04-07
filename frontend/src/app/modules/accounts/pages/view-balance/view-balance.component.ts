@@ -258,13 +258,9 @@ export class ViewBalanceComponent implements OnInit {
     }
 
     openUpdateTransactionDialog(transaction): void {
-        if(transaction.approvalId != null){
-          return ;
-        }
-        const dialogRef = this.dialog.open(UpdateTransactionDialogComponent, {
+        this.dialog.open(UpdateTransactionDialogComponent, {
             data: {transaction: JSON.parse(JSON.stringify(transaction)), vm: this, originalTransaction: transaction}
         });
-    
     }
 
     printTransactionsList(){
