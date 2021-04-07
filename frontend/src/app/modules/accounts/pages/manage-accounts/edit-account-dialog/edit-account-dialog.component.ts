@@ -79,11 +79,18 @@ export class EditAccountDialogComponent implements OnInit {
       parentTransaction__transactionDate__gte: this.data.vm.minimumDate,
       korangle__count: '0,1',
     }
+
+    const approval_account_details_request = {
+      parentAccount: this.account.parentAccount,
+      parentApproval__parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
+      korangle__count: '0,1',
+    }
     
     Promise.all([
       this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.transaction_account_details, data),
-    ]).then(val =>{
-      if(val[0].length  == 0){
+      this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.approval_account_details, approval_account_details_request),
+    ]).then(val => {
+      if(val[0].length  == 0 && val[1].length == 0){
         this.isDeletable = true;
       }
       else{

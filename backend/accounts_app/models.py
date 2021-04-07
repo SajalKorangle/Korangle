@@ -82,7 +82,7 @@ def accountSessionPreSave(sender, instance, **kwargs):
 class Transaction(models.Model):
     
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, null=False, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     voucherNumber = models.IntegerField(blank=True)
     remark = models.TextField(null=True, blank=True)
     transactionDate = models.DateField()
@@ -100,6 +100,18 @@ def transactionPreSave(sender, instance, **kwargs):
                         .aggregate(Max('voucherNumber'))['voucherNumber__max']
         if last_voucher_number is not None:
             instance.voucherNumber = last_voucher_number + 1
+        
+@receiver(post_save, sender=Transaction)
+def transactionPostSave(sender, instance, **kwargs):
+    if (kwargs['created'] and instance.approvalId):
+        transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
+        approval = Approval.objects.get(approvalId=instance.approvalId,
+                parentEmployeeRequestedBy__parentSchool=instance.parentSchool,
+                requestedGenerationDateTime__gte=transactionSession.startDate,
+                requestedGenerationDateTime__lte=transactionSession.endDate)
+        approval.parentTransaction = instance
+        approval.transactionDate = instance.transactionDate
+        approval.save()
 
 class TransactionAccountDetails(models.Model):
     parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
@@ -138,10 +150,11 @@ class TransactionImages(models.Model):
 
 
 class Approval(models.Model):   # what if both the employee are deleted, parentSchool should be there, or deleting should be handled
-    
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     parentEmployeeRequestedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovalList')
     parentEmployeeApprovedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovedList')
-    approvalId = models.IntegerField()
+    approvalId = models.IntegerField(blank=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.CASCADE)
     requestedGenerationDateTime = models.DateField() 
     approvedGenerationDateTime = models.DateField(null=True)
@@ -164,28 +177,18 @@ class Approval(models.Model):   # what if both the employee are deleted, parentS
 
     class Meta:
         db_table = 'approval'
+        unique_together = ('parentSession', 'approvalId')
 
-# @receiver(pre_save, sender=Approval)
-# def approvalPreSave(sender, instance, **kwargs):
-#     if instance.id is None:
-#         instance.approvalId = 1
-#         last_approval_id = \
-#                     Approval.objects.filter(parentSchool=instance.parentEmployeeRequestedBy.parentSchool) \
-#                         .aggregate(Max('approvalId'))['approvalId__max']
-#         if last_approval_id is not None:
-#             instance.approvalId = last_approval_id + 1
+@receiver(pre_save, sender=Approval)
+def approvalPreSave(sender, instance, **kwargs):
+    if instance.id is None:
+        instance.approvalId = 1
+        last_approval_id = \
+                    Approval.objects.filter(parentSchool=instance.parentSchool, parentSession=instance.parentSession) \
+                        .aggregate(Max('approvalId'))['approvalId__max']
+        if last_approval_id is not None:
+            instance.approvalId = last_approval_id + 1
 
-@receiver(post_save, sender=Transaction)
-def transactionPostSave(sender, instance, **kwargs):
-    if (kwargs['created'] and instance.approvalId):
-        transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
-        approval = Approval.objects.get(approvalId=instance.approvalId,
-                parentEmployeeRequestedBy__parentSchool=instance.parentSchool,
-                requestedGenerationDateTime__gte=transactionSession.startDate,
-                requestedGenerationDateTime__lte=transactionSession.endDate)
-        approval.parentTransaction = instance
-        approval.transactionDate = instance.transactionDate
-        approval.save()
         
 class ApprovalAccountDetails(models.Model): # should be connected to AccountSession
     
