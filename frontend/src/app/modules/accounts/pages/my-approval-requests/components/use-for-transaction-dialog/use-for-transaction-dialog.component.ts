@@ -48,22 +48,23 @@ export class UseFortransactionDialogComponent implements OnInit {
   }
 
   isAmountMoreThanApproved(): boolean{
-    let maxAmount = 0;
-    this.data.originalApproval.creditAccounts.forEach(account =>{
-      maxAmount += account.amount;
+    let flag = false;
+
+    this.data.approval.creditAccounts.forEach(account => {
+      const approvalAccountDeatils = this.data.originalApproval.creditAccounts.find(el => el.parentAccount == account.parentAccount);
+      if (account.amount > approvalAccountDeatils.amount) {
+        flag = true;
+      }
+    });
+
+    this.data.approval.debitAccounts.forEach(account => {
+      const approvalAccountDeatils = this.data.originalApproval.debitAccounts.find(el => el.parentAccount == account.parentAccount);
+      if (account.amount > approvalAccountDeatils.amount) {
+        flag = true;
+      }
     })
-    let totalCreditAmount = 0;
-    this.data.approval.creditAccounts.forEach(account =>{
-      totalCreditAmount += account.amount;
-    })
-    let totalDebitAmount = 0;
-    this.data.approval.debitAccounts.forEach(account =>{
-      totalDebitAmount += account.amount;
-    })
-    if(totalCreditAmount > maxAmount || totalDebitAmount > maxAmount){
-      return true;
-    }
-    return false;
+    
+    return flag;
   }
 
   isAmountUnequal(): boolean{
@@ -79,6 +80,20 @@ export class UseFortransactionDialogComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  handleAmountChange(newAmount: number) {
+    const transaction = this.data.approval;
+    if (transaction.creditAccounts.length == 1 && transaction.debitAccounts.length == 1) {
+      transaction.creditAccounts[0].amount = newAmount;
+      transaction.debitAccounts[0].amount = newAmount;
+    }
+    else if (transaction.creditAccounts.length == 1) {
+      transaction.creditAccounts[0].amount = transaction.debitAccounts.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+    }
+    else if (transaction.debitAccounts.length == 1) {
+      transaction.debitAccounts[0].amount = transaction.creditAccounts.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+    }
   }
 
   getMaximumApprovedAmount(){

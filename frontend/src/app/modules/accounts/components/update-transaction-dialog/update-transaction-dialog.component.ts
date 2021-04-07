@@ -16,6 +16,10 @@ export class UpdateTransactionDialogComponent implements OnInit {
   vm: any;
   accountsList: any;
   maximumPermittedAmount: any;
+  approval: any;
+  approvalAccountDetailList: Array<any>;
+
+  isLoading: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<UpdateTransactionDialogComponent>,
@@ -31,6 +35,24 @@ export class UpdateTransactionDialogComponent implements OnInit {
     this.accountsList = this.data.vm.accountsList;
     this.maximumPermittedAmount = this.data.vm.maximumPermittedAmount;
     this.originalTransaction = this.data.originalTransaction;
+    this.loadApproval();
+    console.log('this: ', this);
+  }
+
+  async loadApproval() {
+    this.isLoading = true;
+    const approval_request = {
+      parentTransaction: this.originalTransaction.dbId,
+    }
+    const approvalList = await this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request);
+    if (approvalList.length == 1) {
+      this.approval = approvalList[0];
+      const approval_account_details_request = {
+        parentApproval: this.approval.id,
+      }
+      this.approvalAccountDetailList = await this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_account_details_request);
+    }
+    this.isLoading = false;
   }
 
   addNewDebitAccount(): void{
@@ -54,11 +76,11 @@ export class UpdateTransactionDialogComponent implements OnInit {
       this.transaction.creditAccounts[0].amount = newAmount;
       this.transaction.debitAccounts[0].amount = newAmount;
     }
-    else if (this.transaction.creditAccountList.length == 1) {
-      this.transaction.creditAccountList[0].amount = this.transaction.debitAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+    else if (this.transaction.creditAccounts.length == 1) {
+      this.transaction.creditAccounts[0].amount = this.transaction.debitAccounts.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
     }
-    else if (this.transaction.debitAccountList.length == 1) {
-      this.transaction.debitAccountList[0].amount = this.transaction.creditAccountList.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+    else if (this.transaction.debitAccounts.length == 1) {
+      this.transaction.debitAccounts[0].amount = this.transaction.creditAccounts.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
     }
   }
 
@@ -105,17 +127,16 @@ export class UpdateTransactionDialogComponent implements OnInit {
   }
 
   isAmountMoreThanApproval(): boolean{
-    if(this.transaction.approvalId == null){
+    if(!this.approval){
       return false;
     }
 
-    const parentApproval = this.data.approval;
     let flag = false;
     this.transaction.creditAccounts.forEach(account => {
       if (!account.accountDbId) {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
-      const approvalAccountDeatils = this.data.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount==account.accountDbId && el.transactionType == 'CREDIT');
+      const approvalAccountDeatils = this.approvalAccountDetailList.find(el => el.parentAccount==account.accountDbId && el.transactionType == 'CREDIT');
       if (approvalAccountDeatils) {
         if (account.amount > approvalAccountDeatils.amount) {
           flag = true;
@@ -130,7 +151,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
       if (!account.accountDbId) {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
-      const approvalAccountDeatils = this.data.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount == account.accountDbId && el.transactionType == 'DEBIT');
+      const approvalAccountDeatils = this.approvalAccountDetailList.find(el => el.parentAccount == account.accountDbId && el.transactionType == 'DEBIT');
       if (approvalAccountDeatils) {
         if (account.amount > approvalAccountDeatils.amount) {
           flag = true;

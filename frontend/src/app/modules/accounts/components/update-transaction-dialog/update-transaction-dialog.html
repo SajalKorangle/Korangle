@@ -2,149 +2,174 @@
     Update Transaction
     <i class="material-icons" mat-dialog-close style="float: right;cursor:pointer">close</i>
 </h2>
-<mat-dialog-content>
-    
-    <div class="row col-md-12">
-        <div class="col-md-4">
-            <div class="row">
-                <div *ngFor="let account of transaction.debitAccounts; let j = index">
-                    <div class="row col-md-12">
-                        <mat-form-field style="width: 100%;">
-                            <mat-select placeholder="Pay To" [ngModel]="getAccount(account)">
-                                <mat-option *ngFor="let acccount of accountsList"
-                                    [value]="acccount" (click)="assignAccount(acccount, j, 'debit')">
-                                    {{acccount.title}}&nbsp;A/c
-                                </mat-option>   
-                            </mat-select>
-                        </mat-form-field>
+<ng-container *ngIf="!isLoading">
+    <mat-dialog-content>
+        
+        <div class="row col-md-12">
+            <div class="col-md-4">
+                <div class="row">
+                    <div *ngFor="let account of transaction.debitAccounts; let j = index">
+                        <div class="row col-md-12">
+                            <mat-form-field style="width: 100%;" (click)="searchInput1.focus()">
+                                <mat-select placeholder="Pay To" [ngModel]="getAccount(account)">
+                                    <mat-option style="pointer-events: none;">  <!--Search bar-->
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-icon matPrefix>search</mat-icon>
+                                            <input style="pointer-events: auto;" #searchInput1 (click)="$event.stopPropagation();" matInput>
+                                        </mat-form-field>
+                                    </mat-option>
+
+                                    <ng-container *ngFor="let acccount of accountsList">
+                                    <mat-option *ngIf="acccount.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                                        [value]="acccount" (click)="assignAccount(acccount, j, 'debit')">
+                                        {{acccount.title}}&nbsp;A/c
+                                    </mat-option>   
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row col-md-12" style="margin-top: -17px">
+                            <span *ngIf="account.balance != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance - {{account.balance}} </span>
+                            <span *ngIf="transaction.debitAccounts.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(j);">
+                                <u>Remove</u>
+                            </span>
+                        </div>
+                        <div class="row col-md-12">
+                            <mat-form-field style="float: left;">
+                                <input type="number" min=0.01 matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event; handleAmountChange($event)" placeholder="Amount">
+                            </mat-form-field>
+                            <span *ngIf="j == transaction.debitAccounts.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewDebitAccount()">
+                                <i class="material-icons" style="font-size: 13px;">control_point</i><span> &nbsp;Add Account</span>
+                            </span>
+                        </div>
                     </div>
-                    <div class="row col-md-12" style="margin-top: -17px">
-                        <span *ngIf="account.balance != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance - {{account.balance}} </span>
-                        <span *ngIf="transaction.debitAccounts.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeDebitAccount(j);">
-                            <u>Remove</u>
-                        </span>
-                    </div>
-                    <div class="row col-md-12">
-                        <mat-form-field style="float: left;">
-                            <input type="number" min=0.01 matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event; handleAmountChange($event)" placeholder="Amount">
-                        </mat-form-field>
-                        <span *ngIf="j == transaction.debitAccounts.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewDebitAccount()">
-                            <i class="material-icons" style="font-size: 13px;">control_point</i><span> &nbsp;Add Account</span>
-                        </span>
-                    </div>
+
                 </div>
-
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="row">
-                <div *ngFor="let account of transaction.creditAccounts; let j = index">
-                    <div class="row col-md-12">
-                        <mat-form-field style="width: 100%;">
-                            <mat-select placeholder="Pay From" [ngModel]="getAccount(account)"
-                            >
-                                <mat-option *ngFor="let acccount of accountsList"
-                                    [value]="acccount" (click) = "assignAccount(acccount, j, 'credit')">
-                                    {{acccount.title}}&nbsp;A/c
-                                </mat-option>   
-                            </mat-select>
-                        </mat-form-field>
+            <div class="col-md-4">
+                <div class="row">
+                    <div *ngFor="let account of transaction.creditAccounts; let j = index">
+                        <div class="row col-md-12">
+                            <mat-form-field style="width: 100%;" (click)="searchInput2.focus()">
+                                <mat-select placeholder="Pay From" [ngModel]="getAccount(account)">
+                                    <mat-option style="pointer-events: none;">  <!--Search bar-->
+                                        <mat-form-field style="width: 100%;">
+                                            <mat-icon matPrefix>search</mat-icon>
+                                            <input style="pointer-events: auto;" #searchInput2 (click)="$event.stopPropagation();" matInput>
+                                        </mat-form-field>
+                                    </mat-option>
+                                    <ng-container *ngFor="let acccount of accountsList" >
+                                        <mat-option *ngIf="acccount.title.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
+                                            [value]="acccount" (click) = "assignAccount(acccount, j, 'credit')">
+                                            {{acccount.title}}&nbsp;A/c
+                                        </mat-option>   
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row col-md-12" style="margin-top: -17px">
+                            <span *ngIf="account.balance != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance - {{account.balance}} </span>
+                            <span *ngIf="transaction.creditAccounts.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(j);">
+                                <u>Remove</u>
+                            </span>
+                        </div>
+                        <div class="row col-md-12">
+                            <mat-form-field style="float: left;">
+                                <input type="number" min=0.01 matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event; handleAmountChange($event)" placeholder="Amount">
+                            </mat-form-field>
+                            <span *ngIf="j == transaction.creditAccounts.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewCreditAccount()">
+                                <i class="material-icons" style="font-size: 13px;">control_point</i><span> &nbsp;Add Account</span>
+                            </span>
+                        </div>
                     </div>
-                    <div class="row col-md-12" style="margin-top: -17px">
-                        <span *ngIf="account.balance != null" style="float: left; font-size: 11px; color:rgba(133, 133, 133, 1)">Current Balance - {{account.balance}} </span>
-                        <span *ngIf="transaction.creditAccounts.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="removeCreditAccount(j);">
-                            <u>Remove</u>
-                        </span>
-                    </div>
-                    <div class="row col-md-12">
-                        <mat-form-field style="float: left;">
-                            <input type="number" min=0.01 matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event; handleAmountChange($event)" placeholder="Amount">
-                        </mat-form-field>
-                        <span *ngIf="j == transaction.creditAccounts.length-1" style="float: right;margin-top:20px; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addNewCreditAccount()">
-                            <i class="material-icons" style="font-size: 13px;">control_point</i><span> &nbsp;Add Account</span>
-                        </span>
-                    </div>
+
                 </div>
-
+            </div>
+            <div class="col-md-4">
+                <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
+                    <span *ngIf="isAccountNotMentioned() == true" style="color: rgb(243, 59, 59); font-weight: 550">
+                        <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Please Select An Account</span>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isAmountUnEqual() == true" style="color: rgb(243, 59, 59); font-weight: 550">
+                        <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Total Credit And Debit Amount Should Be Equal</span>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isAmountLessThanMinimum() == true" style="color: rgb(243, 59, 59); font-weight: 550">
+                        <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Minimum Amount should be 0.01</span>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isAccountRepeated() == true" style="color: rgb(243, 59, 59); font-weight: 550">
+                        <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Same Account Can Not Be Used In The Same Transaction</span>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isApprovalRequired() == true" style="color: rgb(243, 59, 59); font-weight: 550">
+                        <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Maximum Permitted Amount is {{maximumPermittedAmount}}</span>
+                    </span>
+                </div>
+                <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                    <span *ngIf="isAmountMoreThanApproval()" style="color: rgb(243, 59, 59); font-weight: 550">
+                        <i class="material-icons" style="font-size: 15px;">dangerous</i><span>Total Amount Can Not Be More Than Approved Amount</span>
+                    </span>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
-                <span *ngIf="isAccountNotMentioned() == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Please Select An Account</span>
-                </span>
+        <div class="row col-md-12">
+        
+            <mat-form-field style="width: 100%; display:inline-block">
+                <input type="text" matInput [ngModel]="transaction.remark"
+                    (ngModelChange)="transaction.remark=$event;" placeholder="Enter Remark"><br>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row col-md-12 custom-font"><span>Add Bill :</span></div>
+                <input type='file' (change)="readURL($event, 'bill');" multiple="false" style="display: none"
+                            accept="image/jpeg,image/png" #imageInput />
+                <div style="display: inline-block;">
+                    <button type="submit" class="image-column" (click)="imageInput.click()"
+                    style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228);"
+                    >+</button>
+                </div>
+                <div style="display: inline-block;" *ngFor="let image of transaction.billImages; let i = index">
+                    <img src="{{image.imageURL}}" style="margin-top: -15px;" class="image-column" (click)="data.vm.openImagePreviewDialog(transaction.billImages, i, 1)">
+                </div>
             </div>
-            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                <span *ngIf="isAmountUnEqual() == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Total Credit And Debit Amount Should Be Equal</span>
-                </span>
-            </div>
-            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                <span *ngIf="isAmountLessThanMinimum() == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Minimum Amount should be 0.01</span>
-                </span>
-            </div>
-            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                <span *ngIf="isAccountRepeated() == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Same Account Can Not Be Used In The Same Transaction</span>
-                </span>
-            </div>
-            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                <span *ngIf="isApprovalRequired() == true" style="color: rgb(243, 59, 59); font-weight: 550">
-                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span> &nbsp;Maximum Permitted Amount is {{maximumPermittedAmount}}</span>
-                </span>
-            </div>
-            <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                <span *ngIf="isAmountMoreThanApproval()" style="color: rgb(243, 59, 59); font-weight: 550">
-                    <i class="material-icons" style="font-size: 15px;">dangerous</i><span>Total Amount Can Not Be More Than Approved Amount</span>
-                </span>
+            <div class="col-md-6">
+                <div class="row col-md-12 custom-font"><span>Add Quotation :</span></div>
+                <input type='file' (change)="readURL($event, 'quo');" multiple="false" style="display: none"
+                            accept="image/jpeg,image/png" #imageInput1 />
+                <div style="display: inline-block;">
+                    <button type="submit" class="image-column" (click)="imageInput1.click()"
+                    style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228)"
+                    >+</button>
+                </div>
+                <div style="display: inline-block;" *ngFor="let image of transaction.quotationImages; let i = index">
+                    <img src="{{image.imageURL}}" style="margin-top: -15px;" class="image-column" (click)="data.vm.openImagePreviewDialog(transaction.quotationImages, i, 1)" >
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row col-md-12">
-    
-        <mat-form-field style="width: 100%; display:inline-block">
-            <input type="text" matInput [ngModel]="transaction.remark"
-                (ngModelChange)="transaction.remark=$event;" placeholder="Enter Remark"><br>
-        </mat-form-field>
-    </div>
+        
+        
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row col-md-12 custom-font"><span>Add Bill :</span></div>
-            <input type='file' (change)="readURL($event, 'bill');" multiple="false" style="display: none"
-                        accept="image/jpeg,image/png" #imageInput />
-            <div style="display: inline-block;">
-                <button type="submit" class="image-column" (click)="imageInput.click()"
-                style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228);"
-                >+</button>
-            </div>
-            <div style="display: inline-block;" *ngFor="let image of transaction.billImages; let i = index">
-                <img src="{{image.imageURL}}" style="margin-top: -15px;" class="image-column" (click)="data.vm.openImagePreviewDialog(transaction.billImages, i, 1)">
-            </div>
+    </mat-dialog-content>
+    <div mat-dialog-actions>
+        <div class="row col-md-12">
+            <button mat-button *ngIf="!isAddButtonDisabled()" class="custom-button" (click)="addTransaction()">Update</button>
+            <span style="font-size:14px;color: rgba(255, 152, 0, 1); cursor: pointer; float: right" (click)="deleteTransaction()"><u>Delete</u></span>
         </div>
-        <div class="col-md-6">
-            <div class="row col-md-12 custom-font"><span>Add Quotation :</span></div>
-            <input type='file' (change)="readURL($event, 'quo');" multiple="false" style="display: none"
-                        accept="image/jpeg,image/png" #imageInput1 />
-            <div style="display: inline-block;">
-                <button type="submit" class="image-column" (click)="imageInput1.click()"
-                style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228)"
-                >+</button>
-            </div>
-            <div style="display: inline-block;" *ngFor="let image of transaction.quotationImages; let i = index">
-                <img src="{{image.imageURL}}" style="margin-top: -15px;" class="image-column" (click)="data.vm.openImagePreviewDialog(transaction.quotationImages, i, 1)" >
-            </div>
-        </div>
-    </div>
-    
-    
 
-</mat-dialog-content>
-<div mat-dialog-actions>
-    <div class="row col-md-12">
-        <button mat-button *ngIf="!isAddButtonDisabled()" class="custom-button" (click)="addTransaction()">Update</button>
-        <span style="font-size:14px;color: rgba(255, 152, 0, 1); cursor: pointer; float: right" (click)="deleteTransaction()"><u>Delete</u></span>
     </div>
+</ng-container>
 
-</div>
+
+<ng-container *ngIf="isLoading">
+    <mat-dialog-content>
+        <app-loading-spinner [user]="vm.user"></app-loading-spinner>
+    </mat-dialog-content>
+</ng-container>

@@ -12,10 +12,10 @@
                 <mat-form-field style="width: 200px;" (click)="searchInput1.focus();">
                     <mat-label>Student Fee Debit Account</mat-label>
                     <mat-select [(ngModel)]="backendData.feeSettings.accountingSettings.parentAccountFrom" required>
-                        <mat-option style="pointer-events: none; height: auto;">  <!--Search bar-->
+                        <mat-option style="pointer-events: none;">  <!--Search bar-->
                             <mat-form-field style="width: 100%;">
                                 <mat-icon matPrefix (click)="searchInput1.focus();">search</mat-icon>
-                                <input style="pointer-events: auto;" #searchInput1 placeholder="Search..." (click)="$event.stopPropagation();" matInput>
+                                <input style="pointer-events: auto;" #searchInput1 (click)="$event.stopPropagation();" matInput>
                             </mat-form-field>
                         </mat-option>
                             
@@ -30,18 +30,18 @@
 
                 <ng-container *ngFor="let paymentMode of getPaymentModeList(); let i=index;">
                     <div style="display: flex; flex-direction: row; align-items: center; width: 100%; margin-top: 24px;">
-                    <mat-form-field style="margin-left: 16px; margin-right: 20px;" (click)="searchInput=''">
+                    <mat-form-field style="margin-left: 16px; margin-right: 20px;" (click)="searchInput2.focus()">
                         <mat-label>Add Account</mat-label>
                         <mat-select placeholder="Add Account">
                             <mat-option style="pointer-events: none;">  <!--Search bar-->
                                 <mat-form-field style="width: 100%;">
                                     <mat-icon matPrefix>search</mat-icon>
-                                    <input style="pointer-events: auto;" [(ngModel)]="searchInput" placeholder="Search..." (click)="$event.stopPropagation();" matInput>
+                                    <input style="pointer-events: auto;" #searchInput2 (click)="$event.stopPropagation();" matInput>
                                 </mat-form-field>
                             </mat-option>
 
                             <ng-container *ngFor="let customAccountSession of customAccountSessionList;">
-                                <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput.toLowerCase())"
+                                <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
                                         (click)="addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode); $event.stopPropagation();">
                                     {{customAccountSession.title}}&nbsp;A/c
                                 </mat-option>   

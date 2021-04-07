@@ -38,11 +38,8 @@ export class UpdateTransactionComponent implements OnInit {
     accountsList: any;
     searchType = this.searchTypeList[0];
     minimumDate: any;
-  maximumDate: any;
+    maximumDate: any;
   
-  approvalList: Array<any>;
-  approvalAcountDetailsList: Array<any>;
-
     lockAccounts: any;
 
     constructor( 
@@ -98,18 +95,10 @@ export class UpdateTransactionComponent implements OnInit {
   }
 
   openUpdateTransactionDialog(transaction): void {
-    let approval;
-    let approvalAccountDetailsList;
-    if(transaction.approvalId != null){
-      approval = this.approvalList.find(a => a.id == transaction.approvalId);
-      approvalAccountDetailsList = this.approvalAcountDetailsList.filter(a => a.parentApproval == approval.id);
-    }
     const dialogRef = this.dialog.open(UpdateTransactionDialogComponent, {
         
       data: {
         transaction: JSON.parse(JSON.stringify(transaction)),
-        approval,
-        approvalAccountDetailsList,
         vm: this,
         originalTransaction: transaction
       }

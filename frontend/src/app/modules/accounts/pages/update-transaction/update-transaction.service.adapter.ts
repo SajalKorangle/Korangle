@@ -93,16 +93,6 @@ export class UpdateTransactionServiceAdapter {
                     this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_data),
                     this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
                 ]
-                if (val[0][0].approvalId) {
-                    const approval_request = {
-                        id__in: [val[0][0].approvalId]
-                    };
-                    const approval_account_details_request = {
-                        parentApproval: val[0][0].approvalId,
-                    }
-                    serviceList.push(this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request).then(res => this.vm.approvalList = res));
-                    serviceList.push(this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_account_details_request).then(res=>this.vm.approvalAcountDetailsList=res));
-                }
                 Promise.all(serviceList).then(data =>{
                     this.initialiseTransactionData(val[0], data[0], data[1]);
                     this.vm.isLoadingTransaction = false;
@@ -120,7 +110,6 @@ export class UpdateTransactionServiceAdapter {
         this.vm.isLoadingTransaction = true;
         this.transaction_id_list = [];
         let data = {
-            // parentTransaction__parentEmployee: this.vm.user.activeSchool.employeeId,
             parentAccount: account.parentAccount,
             parentTransaction__transactionDate__gte:  this.vm.minimumDate,
             parentTransaction__transactionDate__lte:  this.vm.maximumDate,
@@ -151,21 +140,11 @@ export class UpdateTransactionServiceAdapter {
             let data = {
                 id__in: transaction_id_list,
             }
-            const approval_request = {
-                parentTransaction__in: transaction_id_list,
-            }
-            const approval_accounts_details_request = {
-                parentApproval__parentTransaction__in: transaction_id_list,
-            }
+            
             Promise.all([
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request),
-                this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_accounts_details_request),
             ]).then(val => {
                 if(val[0].length > 0){
-                    
-                    this.vm.approvalList = val[1];
-                    this.vm.approvalAcountDetailsList = val[2];
 
                     let transaction_data = {
                         parentTransaction__in: transaction_id_list,

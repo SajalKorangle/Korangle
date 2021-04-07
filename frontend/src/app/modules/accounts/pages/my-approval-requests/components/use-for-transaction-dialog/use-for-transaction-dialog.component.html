@@ -11,10 +11,14 @@
                     <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
                 </div>
                 <div class="col-md-9">
-                    <div *ngFor = "let account of data.approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                    <div *ngFor="let account of data.approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
                         <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br>
                         <mat-form-field style="float: left;">
-                            <input type="number" min="0.01" matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event;" placeholder="Amount">
+                            <input type="number" min="0.01" 
+                                    [disabled]="data.approval.creditAccounts.length==1 && data.approval.debitAccounts.length>1"
+                                    matInput [(ngModel)]="account.amount" 
+                                    (ngModelChange)="handleAmountChange($event);" 
+                                    placeholder="Amount">
                         </mat-form-field>
                     </div>
                 </div>
@@ -26,17 +30,21 @@
                     <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
                 </div>
                 <div class="col-md-9">
-                    <div *ngFor = "let account of data.approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                    <div *ngFor="let account of data.approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
                         <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br>
                         <mat-form-field style="float: left;">
-                            <input type="number" min="0.01" matInput [ngModel]="account.amount" (ngModelChange)="account.amount=$event;" placeholder="Amount">
+                            <input type="number" min="0.01" 
+                                    [disabled]="data.approval.debitAccounts.length==1 && data.approval.creditAccounts.length>1"
+                                    matInput [(ngModel)]="account.amount" 
+                                    (ngModelChange)="handleAmountChange($event);" 
+                                    placeholder="Amount">
                         </mat-form-field>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <span *ngIf="isAmountMoreThanApproved()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Maximum Approved Amount Is {{getMaximumApprovedAmount()}}</span><br>
+            <span *ngIf="isAmountMoreThanApproved()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Ammount Exceeds Maximum Approval Ammount</span><br>
             <span *ngIf="isAmountUnequal()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Debit And Credit Amount Should Be Equal</span>
         </div>
     </div>

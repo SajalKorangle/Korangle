@@ -188,6 +188,12 @@ export class MyApprovalRequestsComponent implements OnInit {
             approval.payFrom[0].amount = newAmount;
             approval.payTo[0].amount = newAmount;
         }
+        else if (approval.payTo.length == 1) {
+            approval.payTo[0].amount = approval.payFrom.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+        }
+        else if (approval.payFrom.length == 1) {
+            approval.payFrom[0].amount = approval.payTo.reduce((accumulator, nextAccount) => accumulator + nextAccount.amount, 0);
+        }
     }
 
     isAccountNotMentioned(approval: NewCustomApproval): boolean{
