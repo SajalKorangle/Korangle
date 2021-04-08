@@ -214,6 +214,12 @@ if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] 
     except ImportError:
         print("ERROR!\nProduction Configuration File Not Found: korangle/backend/helloworld_project/prod_conf.py")
         exit()
+elif ('KORANGLE_STAGING' in os.environ) and (os.environ['KORANGLE_STAGING'] == 'TRUE'):
+    try:
+        from helloworld_project.stag_conf import *
+    except ImportError:
+        print("ERROR!\nStaging Configuration File Not Found: korangle/backend/helloworld_project/stag_conf.py")
+        exit()
 else:
     print("KORANGLE DEVELOPMENT/TESTING")
 
