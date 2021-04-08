@@ -671,12 +671,13 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
     displayName: string = 'Image'; 
 
     image: HTMLImageElement = null;
-    radius:number=0;
+    radius:number = 0;
 
     // uses height and width of the base layer for image height and width
-    lineWidth:number=0;
-    strokeStyle:string='#000000';
-    fillStyle:string='transparent';
+    borderStyle = {
+        lineWidth:  0,
+        strokeStyle: '#000000',
+    }
     
     uri: string;
     aspectRatio: any = null;    
@@ -769,18 +770,17 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
 
         if (this.image.complete && this.image.naturalHeight != 0) {
             
-
-            const x = this.x + this.lineWidth/2;   // adjisted for line Width
-            const y = this.y + this.lineWidth/2;   // adjusted for line Width
-            const width = this.width - this.lineWidth;
-            const height = this.height - this.lineWidth;
-            const offSet = 2;
-            const maxRadius = Math.round(Math.max(this.width,this.height) / 2);
-            const computedRadius= Math.min(this.radius,maxRadius);
+            const lineWidth = 2 * this.borderStyle.lineWidth;   // correcting for clipping
+            const x = this.x + this.borderStyle.lineWidth;   // adjisted for line Width
+            const y = this.y + this.borderStyle.lineWidth;   // adjusted for line Width
+            const width = this.width - lineWidth;
+            const height = this.height - lineWidth;
+            let maxRadius = Math.min(this.width, this.height) / 2;
+            let computedRadius= Math.ceil(Math.min(this.radius, maxRadius));
            
             ctx.save();
-            ctx['lineWidth']=this.lineWidth;
-            ctx['strokeStyle']=this.strokeStyle;
+
+            // Cliping path
             ctx.beginPath();
             ctx.moveTo(this.x + computedRadius, this.y);
             ctx.lineTo(this.x + this.width - computedRadius, this.y);
@@ -793,22 +793,16 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             ctx.arcTo(this.x, this.y, this.x + computedRadius, this.y, computedRadius);
             ctx.closePath();
             ctx.clip();
-            ctx.drawImage(this.image, x-offSet,y-offSet,width+(2*offSet),height+(2*offSet));
 
-            if (this.lineWidth > 0) {
-                ctx.beginPath();
-                ctx.moveTo(this.x + computedRadius, this.y);
-                ctx.lineTo(this.x + this.width - computedRadius, this.y);
-                ctx.arcTo(this.x + this.width, this.y, this.x + this.width, this.y + computedRadius, computedRadius);
-                ctx.lineTo(this.x + this.width, this.y + this.height - computedRadius);
-                ctx.arcTo(this.x + this.width, this.y + this.height, this.x + this.width - computedRadius, this.y + this.height, computedRadius);
-                ctx.lineTo(this.x + computedRadius, this.y + this.height);
-                ctx.arcTo(this.x, this.y + this.height, this.x, this.y + this.height - computedRadius, computedRadius);
-                ctx.lineTo(this.x, this.y + computedRadius);
-                ctx.arcTo(this.x, this.y, this.x + computedRadius, this.y, computedRadius);
+            if (lineWidth > 0) {
+                Object.entries(this.borderStyle).forEach(([key, value]) => ctx[key] = value);
+                ctx.lineWidth = lineWidth;
+                const correction = 1;
+                ctx.drawImage(this.image, x-correction, y-correction, width+(2*correction), height+(2*correction));    // with correction
                 ctx.stroke();
-                ctx.closePath();
-
+            }
+            else {
+                ctx.drawImage(this.image, x, y, width, height);
             }
             
             ctx.restore();
@@ -824,7 +818,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.height *= scaleFactor;
         this.width *= scaleFactor;
         this.radius *= scaleFactor;
-        this.lineWidth *= scaleFactor;
+        this.borderStyle.lineWidth *= scaleFactor;
     }
 
     getDataToSave(): {[object:string]:any} {
@@ -834,9 +828,8 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             height: this.height * this.ca.pixelTommFactor,
             width: this.width * this.ca.pixelTommFactor,
             maintainAspectRatio: this.maintainAspectRatio,
-            radius:this.radius * this.ca.pixelTommFactor,
-            lineWidth:this.lineWidth * this.ca.pixelTommFactor,
-            strokeStyle:this.strokeStyle,
+            radius: this.radius * this.ca.pixelTommFactor,
+            borderStyle: {...this.borderStyle, lineWidth: this.borderStyle.lineWidth * this.ca.pixelTommFactor,}
         };
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.uri = this.uri;
@@ -1503,8 +1496,8 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
         const width = this.width - this.shapeStyle.lineWidth ;
         const height = this.height - this.shapeStyle.lineWidth;
         const offSet = this.shapeStyle.lineWidth / 2;
-        const maxRadius = Math.round(Math.max(this.width,this.height)/ 2);
-        const radius = Math.min(this.radius,maxRadius) - this.shapeStyle.lineWidth/2
+        const maxRadius = Math.round(Math.min(this.width,this.height)/ 2);
+        const radius = Math.max(Math.min(this.radius, maxRadius) - this.shapeStyle.lineWidth / 2, 0);
         ctx.beginPath();
         ctx.moveTo(x + radius, y+offSet);
         ctx.lineTo(x + width - radius, y+offSet);

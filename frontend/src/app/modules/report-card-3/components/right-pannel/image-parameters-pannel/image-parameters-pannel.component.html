@@ -20,13 +20,13 @@
         </mat-form-field>
         
         <mat-form-field>
-            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.lineWidth)"
-                (ngModelChange)="layer.lineWidth = $event/getPixelTommFactor(); canvasRefresh();" placeholder="Line Width(mm)">
+            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.borderStyle.lineWidth)"
+                (ngModelChange)="layer.borderStyle.lineWidth = $event/getPixelTommFactor(); canvasRefresh();" placeholder="Line Width(mm)">
         </mat-form-field>
 
         <mat-form-field>
-            <input type="color" matInput [value]="layer.strokeStyle"
-                (input)="layer.strokeStyle = $event.target.value; canvasRefresh(0);" placeholder="Stroke Color">
+            <input type="color" matInput [value]="layer.borderStyle.strokeStyle"
+                (input)="layer.borderStyle.strokeStyle = $event.target.value; canvasRefresh(0);" placeholder="Stroke Color">
         </mat-form-field>
             
     </div>
