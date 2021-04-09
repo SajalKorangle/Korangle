@@ -54,8 +54,6 @@ jobs:
     
     - name: Deploy to Ec2
       uses: appleboy/ssh-action@master
-      env: 
-        STAGING_BRANCH: ${{ env.GITHUB_REF }}
       with:
         host: stag.korangle.com
         username: ubuntu
