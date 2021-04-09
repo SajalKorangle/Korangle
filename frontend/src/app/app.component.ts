@@ -6,7 +6,7 @@ import { DataStorage } from './classes/data-storage';
 import {AuthenticationService} from '@services/modules/authentication/authentication.service';
 import {AuthenticationOldService} from '@services/authentication-old.service';
 import {VersionCheckService} from './services/version-check.service';
-import {environment} from '../environments/environment.prod';
+import {environment} from '../environments/environment';
 import {NotificationService} from "./services/modules/notification/notification.service";
 import {Constants} from "./classes/constants";
 import {registerForNotification} from "./classes/common";
