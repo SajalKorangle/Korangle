@@ -41,20 +41,30 @@ jobs:
     - name: Prepare Package Staging
       run: |
         cd frontend
+        echo $KEY
         sh ./stagingPreparePackage.sh
-        
+      env: 
+        KEY: ${{secrets.STAGING_PRIVATE_KEY}}
+          
+    - name: Send frontend build to ec2
+      uses: appleboy/scp-action@master
+      with:
+        host: stag.korangle.com
+        username: ubuntu
+        key: ${{ secrets.STAGING_PRIVATE_KEY }}
+        port: 22
+        source: "frontend/korangle.zip"
+        target: "/home/ubuntu"
+#       run:  |
+#         echo "sending frontend.zip to aws"
+#         cd frontend
+#         sudo scp -o 'StrictHostKeyChecking no' ./korangle.zip ubuntu@stag.korangle.com:/home/ubuntu
+
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
       with:
           key: ${{ secrets.STAGING_PRIVATE_KEY }}
-          name: id_rsa
           known_hosts: unnecessary
-          
-    - name: Send frontend build to ec2
-      run:  |
-        echo "sending frontend.zip to aws"
-        cd frontend
-        sudo scp -o 'StrictHostKeyChecking no' ./korangle.zip ubuntu@stag.korangle.com:/home/ubuntu
     
     - name: Deploy to Ec2
       run:  |
