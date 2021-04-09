@@ -15,7 +15,7 @@ frontend/.vscode/
 frontend/build/post-build.js
 frontend/korangle/
 frontend/korangle.*
-frontend/version.json
+# frontend/version.json
 frontend/preparePackage.sh
 frontend/src/environments/environment.prod.ts
 frontend/dist/
