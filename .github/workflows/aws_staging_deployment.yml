@@ -67,7 +67,6 @@ jobs:
         envs: STAGING_BRANCH
         script: |
           source virtual_environment/bin/activate
-          export STAGING_BRANCH
           sh /home/ubuntu/code/korangle/backend/stop_server.sh
           sh ./setupkorangle.sh
           sh ./setupBackend.sh
