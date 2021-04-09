@@ -84,5 +84,6 @@ jobs:
           sh /home/ubuntu/code/korangle/backend/stop_server.sh
           sh ./setupkorangle.sh
           sh ./setupBackend.sh
-          sh /home/ubuntu/code/korangle/backend/start_server.sh
+          cd /home/ubuntu/code/korangle/backend
+          sh ./start_server.sh
           
