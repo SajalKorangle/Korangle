@@ -77,16 +77,19 @@ jobs:
         STAGING_BRANCH: ${{ env.GITHUB_REF }}
       run: |
         echo "branch name: " $STAGING_BRANCH
+        echo "branch name gtihub ref: " $GITHUB_REF
             
     - name: test env
       uses: appleboy/ssh-action@master
-      env: 
-        STAGING_BRANCH: ${{ env.GITHUB_REF }}
+      # env: 
+      #   STAGING_BRANCH: ${{ env.GITHUB_REF }}
       with:
         host: stag.korangle.com
         username: ubuntu
         key: ${{ secrets.STAGING_PRIVATE_KEY }}
         port: 22
-        # envs: STAGING_BRANCH
+        envs: GITHUB_REF
         script: |
-          echo "my branch name: " $STAGING_BRANCH
+          echo "my branch name: " $GITHUB_REF
+          STAGING_BRANCH=$GITHUB_REF
+          echo "my staging branch name: " $STAGING_BRANCH
