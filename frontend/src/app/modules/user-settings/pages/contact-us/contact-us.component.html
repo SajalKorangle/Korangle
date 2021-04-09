@@ -30,15 +30,30 @@
 
     </mat-card>
 
+    <mat-card style="margin-bottom: 15px;">
+
+        <mat-card-title> Designer Support </mat-card-title>
+
+        <div *ngIf="!isMobile()" style="margin-left: 10px;">
+            7007426363<br/>
+        </div>
+
+        <div *ngIf="isMobile()" style="margin-left: 10px;">
+            <a href="tel:7007426363">7007426363</a><br/>
+        </div>
+
+    </mat-card>
+
     <mat-card>
 
         <mat-card-title> Bank Account Details </mat-card-title>
 
         <div style="margin-left: 10px;">
-            Beneficiary Name: Harshal Agrawal<br/>
+            Account Name: Korangle Softwares<br/>
             Bank Name: Central Bank Of India<br/>
             Branch Name: Shujalpur Mandi<br/>
-            Account No. : 3433090796<br/>
+            Account Type: Current<br/>
+            Account No. : 3899954010<br/>
             Micr Code: 465016051<br/>
             IFSC Code: CBIN0283366
         </div>
