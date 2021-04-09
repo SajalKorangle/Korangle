@@ -16,7 +16,7 @@ frontend/.vscode/
 frontend/build/post-build.js
 frontend/korangle/
 frontend/korangle.*
-#frontend/version.json
+frontend/version.json
 frontend/src/environments/environment.prod.ts
 frontend/dist/
 frontend/src/coverage-report/
@@ -47,6 +47,7 @@ backend/helloworld_project/logs
 backend/helloworld_project/nginx.conf
 backend/helloworld_project/gunicorn.conf.py
 backend/helloworld_project/prod_conf.py
+backend/helloworld_project/stag_conf.py
 backend/backup_database.sh
 
 *.DS_Store
