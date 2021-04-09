@@ -7,7 +7,7 @@ def approval_model_fix(apps, schema_editor):
             approalInstance.parentSchool = approalInstance.parentEmployeeRequestedBy.parentSchool
             approalInstance.save()
         elif (approalInstance.parentEmployeeApprovedBy):
-            approvalInstance.parentSchool = approalInstance.parentEmployeeApprovedBy.parentSchool
+            approalInstance.parentSchool = approalInstance.parentEmployeeApprovedBy.parentSchool
             approalInstance.save()
         else:
             approalInstance.delete()
