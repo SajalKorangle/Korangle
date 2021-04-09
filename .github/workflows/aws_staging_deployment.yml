@@ -25,10 +25,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: test branch name
-      run: |
-        echo "GITHUB REF= " $GITHUB_REF
-
     # Installing Dependencies
     - name: Install dependencies
       run: |
