@@ -70,7 +70,7 @@ jobs:
       run:  |
         echo "deploying to aws..."
         echo "head ref: " $GITHUB_HEAD_REF 
-        suod ssh -o 'StrictHostKeyChecking no' ubuntu@stag.korangle.com env STAGING_BRANCH=$GITHUB_HEAD_REF 
+        sudo ssh -o 'StrictHostKeyChecking no' ubuntu@stag.korangle.com env STAGING_BRANCH=$GITHUB_HEAD_REF 
             "sh /home/ubuntu/code/korangle/backend/stop_server.sh
             sh ./setupkorangle.sh
             sh ./setupBackend.sh
