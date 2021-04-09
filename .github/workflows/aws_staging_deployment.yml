@@ -71,6 +71,12 @@ jobs:
     #       sh ./setupkorangle.sh
     #       sh ./setupBackend.sh
     #       sh /home/ubuntu/code/korangle/backend/start_server.sh
+
+    - name: branch name check
+      env:
+        STAGING_BRANCH: ${{ env.GITHUB_REF }}
+      run: |
+        echo "branch name: " $STAGING_BRANCH
             
     - name: test env
       uses: appleboy/ssh-action@master
