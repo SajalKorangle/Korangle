@@ -78,7 +78,9 @@ jobs:
         port: 22
         envs: GITHUB_REF
         script: |
+          echo "before env STAGING_STAGING: " $KORANGLE_STAGING
           source virtual_environment/bin/activate
+          echo "after env STAGING__STAGING: " $KORANGLE_STAGING
           STAGING_BRANCH=$GITHUB_REF
           export STAGING_BRANCH
           sh /home/ubuntu/code/korangle/backend/stop_server.sh
