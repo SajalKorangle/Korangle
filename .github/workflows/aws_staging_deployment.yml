@@ -24,8 +24,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-#    - uses: chrislennon/action-aws-cli@v1.1
-#    - name: Setup Aws cli 
+
+    - name: test branch name
+      run: |
+        echo "GITHUB REF= " $GITHUB_REF
 
     # Installing Dependencies
     - name: Install dependencies
@@ -55,25 +57,22 @@ jobs:
         port: 22
         source: "frontend/korangle.zip"
         target: "/home/ubuntu"
-#       run:  |
-#         echo "sending frontend.zip to aws"
-#         cd frontend
-#         sudo scp -o 'StrictHostKeyChecking no' ./korangle.zip ubuntu@stag.korangle.com:/home/ubuntu
 
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
-      with:
-          key: ${{ secrets.STAGING_PRIVATE_KEY }}
-          known_hosts: unnecessary
     
     - name: Deploy to Ec2
-      run:  |
-        echo "deploying to aws..."
-        echo "head ref: " $GITHUB_HEAD_REF 
-        sudo ssh -o 'StrictHostKeyChecking no' ubuntu@stag.korangle.com env STAGING_BRANCH=$GITHUB_HEAD_REF 
-            "sh /home/ubuntu/code/korangle/backend/stop_server.sh
-            sh ./setupkorangle.sh
-            sh ./setupBackend.sh
-            sh /home/ubuntu/code/korangle/backend/start_server.sh
-            "
+      uses: appleboy/ssh-action@master
+      with:
+        host: stag.korangle.com
+        username: ubuntu
+        key: ${{ secrets.STAGING_PRIVATE_KEY }}
+        port: 22
+        env:
+          STAGING_BRANCH: ${{ env.GITHUB_REF }}
+        envs: STAGING_BRANCH
+        script: |
+          sh /home/ubuntu/code/korangle/backend/stop_server.sh
+          sh ./setupkorangle.sh
+          sh ./setupBackend.sh
+          sh /home/ubuntu/code/korangle/backend/start_server.sh
+            
     
