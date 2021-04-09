@@ -81,6 +81,6 @@ jobs:
         username: ubuntu
         key: ${{ secrets.STAGING_PRIVATE_KEY }}
         port: 22
-        envs: STAGING_BRANCH
+        # envs: STAGING_BRANCH
         script: |
           echo "my branch name: " $STAGING_BRANCH
