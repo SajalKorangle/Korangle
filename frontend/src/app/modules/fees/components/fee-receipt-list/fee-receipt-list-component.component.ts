@@ -7,12 +7,13 @@ import {MatDialog} from '@angular/material/dialog';
 import {CancelFeeReceiptModalComponent} from '@modules/fees/components/cancel-fee-receipt-modal/cancel-fee-receipt-modal.component';
 import {FeeReceiptListComponentServiceAdapter} from '@modules/fees/components/fee-receipt-list/fee-receipt-list.component.service.adapter';
 import {FeeService} from '@services/modules/fees/fee.service';
+import { AccountsService } from '@services/modules/accounts/accounts.service';
 
 @Component({
     selector: 'app-fee-receipt-list',
     templateUrl: './fee-receipt-list-component.component.html',
     styleUrls: ['./fee-receipt-list-component.component.css'],
-    providers: [SchoolService,FeeService]
+    providers: [SchoolService, FeeService, AccountsService]
 })
 export class FeeReceiptListComponent implements OnInit {
 
@@ -41,7 +42,8 @@ export class FeeReceiptListComponent implements OnInit {
     constructor(private schoolService: SchoolService,
         private dialog: MatDialog,
         public printService: PrintService,
-        public feeService:FeeService) {
+        public feeService: FeeService,
+        public accountsService: AccountsService) {
     }
 
     ngOnInit() {

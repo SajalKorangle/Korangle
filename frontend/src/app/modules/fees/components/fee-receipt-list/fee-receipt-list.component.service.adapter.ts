@@ -39,10 +39,21 @@ export class FeeReceiptListComponentServiceAdapter {
             return tempObject;
         });
 
-        Promise.all([
+        const serviceList = [
             this.vm.feeService.partiallyUpdateObject(this.vm.feeService.fee_receipts, fee_receipt_object),
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
-        ]).then(value => {
+        ]
+
+        if (feeReceipt.parentTransaction) {
+            const transaction_delete_request = {
+                id: feeReceipt.parentTransaction,
+            }
+            serviceList.push(
+                this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_delete_request)
+            );
+        }
+
+        Promise.all(serviceList).then(value => {
 
             alert('Fee Receipt is cancelled');
             
