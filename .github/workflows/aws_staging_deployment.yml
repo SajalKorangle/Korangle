@@ -47,7 +47,7 @@ jobs:
     - name: Send frontend build to ec2
       uses: appleboy/scp-action@master
       with:
-        host: stag.korangle.com
+        host: test.korangle.com
         username: ubuntu
         key: ${{ secrets.STAGING_PRIVATE_KEY }}
         port: 22
@@ -58,7 +58,7 @@ jobs:
     - name: Deploy to Ec2
       uses: appleboy/ssh-action@master
       with:
-        host: stag.korangle.com
+        host: test.korangle.com
         username: ubuntu
         key: ${{ secrets.STAGING_PRIVATE_KEY }}
         port: 22
