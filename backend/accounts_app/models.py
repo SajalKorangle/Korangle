@@ -177,7 +177,7 @@ class Approval(models.Model):   # what if both the employee are deleted, parentS
 
     class Meta:
         db_table = 'approval'
-        # unique_together = ('parentSession', 'approvalId')
+        unique_together = ('parentSchool', 'parentSession', 'approvalId')
 
 @receiver(pre_save, sender=Approval)
 def approvalPreSave(sender, instance, **kwargs):
