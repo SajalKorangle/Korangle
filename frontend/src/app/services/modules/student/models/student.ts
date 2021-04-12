@@ -39,7 +39,7 @@ export class Student {
     rte: string = null;
 
     admissionSession: number = null;
-    admissionClass: string = null;
+    parentAdmissionClass: string = null;
     dateOfAdmission: any = null;
 
     parentTransferCertificate: number = null;

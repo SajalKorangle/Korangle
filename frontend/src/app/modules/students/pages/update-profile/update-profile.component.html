@@ -430,9 +430,9 @@
             <div class="col-md-3">
                 <mat-form-field  style="width: 100%;">
                     <mat-label>Admission Class</mat-label>
-                    <input matInput
-                           type="text"
-                           [(ngModel)]="currentStudent.admissionClass">
+                    <mat-select [(ngModel)]="currentStudent.parentAdmissionClass">
+                        <mat-option *ngFor="let class of classList" [value]="class.id">{{class.name}}</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
         </div>

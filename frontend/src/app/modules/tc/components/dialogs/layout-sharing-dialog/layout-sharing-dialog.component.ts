@@ -61,7 +61,7 @@ export class LayoutSharingDialogComponent implements OnInit {
       korangle__count: '0,9',
     }
     this.vm.serviceAdapter.getSchoolList(requestData).then(response => {
-      this.schoolList = response.filter(school=>school.id!=this.vm.user.activeSchool.dbId);
+      this.schoolList = response.filter(school=>school.id!=this.vm.user.activeSchool.dbId && this.layoutSharingList.every(ls=>ls.parentSchool!=school.id));
       this.fetchingSchoolList = false;
     });
   }

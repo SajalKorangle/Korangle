@@ -104,7 +104,7 @@ class Student(models.Model):
     rte = models.CharField(max_length=10, choices=RTE, null=True)
 
     admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
-    admissionClass = models.CharField(max_length=30, null=True, blank=True)
+    parentAdmissionClass = models.ForeignKey(Class, blank=True, null=True, on_delete=models.SET_NULL)
     dateOfAdmission = models.DateField(null=True, verbose_name='dateOfAdmission')
 
     parentTransferCertificate = \

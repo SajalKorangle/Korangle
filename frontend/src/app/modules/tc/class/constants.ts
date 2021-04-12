@@ -2089,7 +2089,27 @@ export const PARAMETER_LIST = [
     StudentParameterStructure.getStructure(`Father's Annual Income`, 'fatherAnnualIncome'),
     StudentParameterStructure.getStructure(`RTE`, 'rte'),
     StudentParameterStructure.getStructure(`Date of Admission`, 'dateOfAdmission', CanvasDate),
-    StudentParameterStructure.getStructure(`Admission Class`, 'admissionClass'),
+    ParameterStructure.getStructure(    // parent Admission Class
+        'parentAdmissionClass',
+        FIELDS.STUDENT,
+        CanvasText,
+        () => {
+            return `Admission Class`;
+        },
+        (dataObject) => {
+            const classInstance = dataObject.data.classList.find(
+                classs => {
+                    return classs.id === dataObject.data.studentList.find(
+                        s => s.id === dataObject.studentId
+                    ).parentAdmissionClass;
+                }
+            );
+            if (classInstance) {
+                return classInstance.name;
+            }
+            return null;
+        }
+    ),
 
     /* Student Session Field */
     StudentSessionParameterStructure.getStructure(

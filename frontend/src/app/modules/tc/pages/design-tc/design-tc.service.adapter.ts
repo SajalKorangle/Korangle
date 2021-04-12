@@ -178,9 +178,11 @@ export class DesignTCServiceAdapter {
         } else {
             delete layoutToUpload.thumbnail
         }
-        // console.log('layout to uplaod: ', layoutToUpload);
+        console.log('layout to uplaod: ', layoutToUpload);
         const form_data = new FormData();
         Object.entries(layoutToUpload).forEach(([key, value]) => {
+            if (!value)
+                return;
             if (key === 'thumbnail' ) {
                 form_data.append(key, value, `${this.vm.currentLayout.parentSchool}-${this.vm.currentLayout.name}.png`);
             } else {
