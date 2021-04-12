@@ -167,6 +167,17 @@
                                        (blur)="serviceAdapter.updateStudentField(column.key,student, $event.target.value, column.inputType)"
                                        [ngModel]="student[column.key]"/>
                             </ng-container>
+                            <ng-container *ngIf="column.inputType==='classList'">
+                                <mat-form-field>
+                                    <mat-select [ngModel]="student[column.key]"
+                                                [attr.id]="student.dbId+column.key"
+                                                (ngModelChange)="serviceAdapter.updateStudentField(column.key, student, $event, 'classList')">
+                                        <mat-option *ngFor='let classInstance of classList;' [value]="classInstance.id">
+                                            {{classInstance.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
                         </td>
                         <ng-container *ngFor="let parameter of studentParameterList" >
                         <td *ngIf="parameter.show"
