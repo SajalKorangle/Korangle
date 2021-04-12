@@ -500,6 +500,8 @@ export interface CanvasAdapterInterface{
 
     metaDrawings: boolean;
 
+    isLoading: boolean;
+
     clearCanvas(): void
     storeThumbnail(): void;
     updatePage(pageIndex: number): Promise<any>;

@@ -285,7 +285,7 @@
             
             <!-- column 2: Canvas -->
             <mat-card class="bg-grey inline-block" style="padding:0; width: calc(100% - 510px); position: relative; text-align: center; overflow: hidden;" id="canvasWrapper" (click)="htmlAdapter.canvasWrapperClickHandler($event)">
-                <ng-container *ngIf="htmlAdapter.isSaving"><mat-progress-bar mode="indeterminate" style="position: absolute; z-index: 2;"></mat-progress-bar></ng-container>
+                <ng-container *ngIf="htmlAdapter.isSaving || canvasAdapter.isLoading"><mat-progress-bar mode="indeterminate" style="position: absolute; z-index: 2;"></mat-progress-bar></ng-container>
                 <div style="position: absolute; right: 2px; top: 4px; display: flex; flex-direction: column;" *ngIf="currentLayout.content.length>1">
                     <button *ngFor="let dummy of currentLayout.content; let ind = index;" 
                             (click)="canvasAdapter.updatePage(ind)"

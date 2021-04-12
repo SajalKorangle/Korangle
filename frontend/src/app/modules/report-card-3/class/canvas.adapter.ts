@@ -50,6 +50,8 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
     metaDrawings: boolean = false;   // meta drawings includes things like hilighter, assistance etc.
 
+    isLoading: boolean = false;
+
     constructor() {
         this.virtualCanvas = document.createElement('canvas');
         this.virtualContext = this.virtualCanvas.getContext('2d');
@@ -145,13 +147,14 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         this.virtualContext.fillStyle = this.backgroundColor;
         this.virtualContext.fillRect(0, 0, this.canvasWidth, this.canvasHeight);   // Applying background color
 
+        let status = true;
         for (let i = 0; i < this.layers.length; i++){
             if (!this.layers[i])
                 continue;
-            let status = this.layers[i].drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw);    // check for redundant iterations
-            if (!status)
-                return false;
+            status = this.layers[i].drawOnCanvas(this.virtualContext, this.scheduleCanvasReDraw) && status;    // check for redundant iterations
         }
+        if (!status)
+            return false;
         if (this.activeLayer && this.metaDrawings) {
             this.activeLayer.highlightLayer(this.virtualContext);
         }
@@ -669,10 +672,9 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
     }
 
     protected drawAllLayers(): boolean{
-        if (super.drawAllLayers()) {
-            clearTimeout(this.pendingReDrawId);
-            this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
-        }
+        this.isLoading = !super.drawAllLayers();
+        clearTimeout(this.pendingReDrawId);
+        this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
         return true;
     }
 
