@@ -769,7 +769,7 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             return true;    // Drawn successfully on canvas
         }
-        scheduleReDraw();   // draw again after some time
+        scheduleReDraw(1000);   // draw again after some time
         return false;   // Canvas Drawing failed, scheduled redraw for later
     }
 
