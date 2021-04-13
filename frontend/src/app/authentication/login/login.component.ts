@@ -1,16 +1,17 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import { AuthenticationService } from '../services/authentication.service';
-import { User } from '../classes/user';
-import {registerForNotification} from "../classes/common.js";
-import {NotificationService} from "../services/modules/notification/notification.service";
-import {Constants} from "../classes/constants";
-import {environment} from "../../environments/environment";
-import {CommonFunctions} from "../classes/common-functions";
+import { AuthenticationOldService } from '@services/authentication-old.service';
+import { User } from '@classes/user';
+import {registerForNotification} from '@classes/common.js';
+import {NotificationService} from '@services/modules/notification/notification.service';
+import {Constants} from '@classes/constants';
+import {environment} from '../../../environments/environment';
+import {CommonFunctions} from '@classes/common-functions';
 import {DataStorage} from '@classes/data-storage';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
-    selector: 'app-login-form',
-    providers: [AuthenticationService, NotificationService],
+    selector: 'app-login',
+    providers: [AuthenticationOldService, NotificationService],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
 })
@@ -20,13 +21,17 @@ export class LoginComponent implements OnInit {
     user: User;
 
     @Output() showFrontPageProgressBar = new EventEmitter();
+    @Output() changePage = new EventEmitter();
 
     username = '';
     password = '';
     visibilityMode = false;
+
+    validators = VALIDATORS_REGX;
+
     isLoading = false;
 
-    constructor(private authenticationService: AuthenticationService,
+    constructor(private authenticationService: AuthenticationOldService,
                 private notificationService: NotificationService) {}
 
     ngOnInit(): void {
@@ -53,7 +58,8 @@ export class LoginComponent implements OnInit {
                 registerForNotification({
                     'user': this.user.id,
                     'jwt': this.user.jwt,
-                    'url': environment.DJANGO_SERVER + Constants.api_version + this.notificationService.module_url + this.notificationService.gcm_device,
+                    'url': environment.DJANGO_SERVER + Constants.api_version
+                        + this.notificationService.module_url + this.notificationService.gcm_device,
                 });
             }
         }, error => {
@@ -79,14 +85,18 @@ export class LoginComponent implements OnInit {
 
     getVisibilityMode(): string {
         if (this.visibilityMode) {
-            return "visibility_off";
+            return 'visibility_off';
         } else {
-            return "visibility";
+            return 'visibility';
         }
     }
 
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
+    }
+
+    isFormValid(): boolean{
+        return this.validators.phoneNumber.test(this.username);
     }
 
 }

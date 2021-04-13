@@ -134,12 +134,6 @@ def delete_object(data, query_set):
     return data['id']
 
 
-'''def delete_list(data, Model, ModelSerializer):
-    if data['id'] is not None and data['id'] != '':
-        Model.objects.filter(id__in=data['id'].split(',')).delete()
-    return data['id']'''
-
-
 def delete_list(data, query_set ):
 
     filter_var_list = []

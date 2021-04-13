@@ -286,7 +286,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         } catch (err) {
             console.error(err);
             reportError(ERROR_SOURCES[1], location.pathname + location.search, err.toString(), 'error in loading saved layout page; data croupted');
-            alert('data corupted');
+            alert('data corrupted');
             this.clearCanvas();
         }
         return Promise.reject();

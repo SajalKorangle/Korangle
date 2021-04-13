@@ -35,7 +35,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '59g0wy_6v_=f7l8getixb1b87!ee_^#lajh^zli2b+9zkvm0jw'
 
-ALLOWED_HOSTS = ['localhost', '10.0.2.2']
+ALLOWED_HOSTS = ['localhost']
 
 TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
@@ -72,9 +72,12 @@ INSTALLED_APPS = [
     'information_app',
     'grade_app',
     'id_card_app',
+    'authentication_app',
     'homework_app',
     'feature_app',
     'tutorial_app',
+    'event_gallery_app',
+    'accounts_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',
@@ -211,6 +214,12 @@ if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] 
         from helloworld_project.prod_conf import *
     except ImportError:
         print("ERROR!\nProduction Configuration File Not Found: korangle/backend/helloworld_project/prod_conf.py")
+        exit()
+elif ('KORANGLE_STAGING' in os.environ) and (os.environ['KORANGLE_STAGING'] == 'TRUE'):
+    try:
+        from helloworld_project.stag_conf import *
+    except ImportError:
+        print("ERROR!\nStaging Configuration File Not Found: korangle/backend/helloworld_project/stag_conf.py")
         exit()
 else:
     print("KORANGLE DEVELOPMENT/TESTING")

@@ -34,6 +34,7 @@ import { EmployeeFilterComponent } from './employee-filter/employee-filter.compo
 import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
 import { CustomizedNumberInputComponent } from './customized-number-input/customized-number-input.component';
 import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component'
+import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
 
 // Pipes
 
@@ -53,6 +54,7 @@ import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
+        ViewImageModalComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
@@ -105,7 +107,7 @@ import {NumberAndStringPipe} from '../pipes/number-and-string.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
-
+        ViewImageModalComponent,
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,

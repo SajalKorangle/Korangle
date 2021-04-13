@@ -287,8 +287,8 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
   }
 
   async saveLayout() {
-    if (this.currentLayout.name.trim() == '') {
-      await window.alert("Layout Name Cannot Be Empty!");
+    if (!this.doesCurrentLayoutHasUniqueName()) {
+      await window.alert("Layout Name Cannot Be Empty or repeated!");
       this.htmlAdapter.isSaving = false;
       return;
     }

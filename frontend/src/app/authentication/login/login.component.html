@@ -16,7 +16,10 @@
                                     <input matInput id="username" type="text"
                                            [(ngModel)]="username"
                                            placeholder="Mobile No."
-                                           name="username">
+                                           name="username"
+                                           [pattern]="validators.phoneNumber"
+                                           maxlength="10">
+                                    <mat-error>Please provide correct 10 digits mobile number</mat-error>
                                 </mat-form-field>
                             </div>
                         </ng-container>
@@ -30,7 +33,10 @@
                                     <input matInput id="username" type="text"
                                            [(ngModel)]="username"
                                            placeholder="Mobile No."
-                                           name="username">
+                                           name="username"
+                                           [pattern]="validators.phoneNumber"
+                                           maxlength="10">
+                                    <mat-error>Please provide correct 10 digits mobile number</mat-error>
                                 </mat-form-field>
                             </div>
                         </ng-container>
@@ -62,7 +68,7 @@
                                            placeholder="Password"
                                            [(ngModel)]="password"
                                            name="password">
-                                    <i matSuffix
+                                    <i matSuffix style="cursor: pointer;"
                                        class="material-icons"
                                        (click)="toggleVisibilityMode()"
                                     >{{getVisibilityMode()}}</i>
@@ -77,13 +83,27 @@
                     <div class="row">
                         <div class="col-md-12"
                              align="center">
-                            <button type="submit" class="btn btn-danger">Login</button>
+                            <button type="submit" [disabled]="!isFormValid()" class="btn btn-danger">Login</button>
                         </div>
                     </div>
 
                 </form>
 
                 <div class="clearfix"></div>
+
+                <div class="row">
+                    <div class="col-md-12"
+                         align="center">
+                        <a style="cursor: pointer" (click)="changePage.emit('signup')">Sign Up</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12"
+                         align="center">
+                        <a style="cursor: pointer" (click)="changePage.emit('forgot-password')">Forgot Password</a>
+                    </div>
+                </div>
 
             </div>
 

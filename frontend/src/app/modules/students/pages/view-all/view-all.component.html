@@ -324,7 +324,12 @@
             <ng-container *ngIf="showFilters">Hide Filters</ng-container>
         </button>
         <ng-container *ngIf="showFilters">
-            <br>Category<br>
+            <br><b>Age</b><br>
+            <input type="number" style="width: 60px; margin-right: 5px;" [(ngModel)]="minAge" (ngModelChange)="handleStudentDisplay()"/>
+            <span style="margin-right: 5px;">&lt;= Age &lt;=</span>
+            <input type="number" style="width: 60px;" [(ngModel)]="maxAge" (ngModelChange)="handleStudentDisplay()"/>
+
+            <br><br><b>Category</b><br>
             <mat-checkbox [(ngModel)]="scSelected"
                           style="margin-right: 5px;"
                           (ngModelChange)="handleStudentDisplay()"
@@ -346,7 +351,7 @@
                           (click)="$event.stopPropagation();">Gen.
             </mat-checkbox>
             
-            <br><br>Gender<br>
+            <br><br><b>Gender</b><br>
             <mat-checkbox [(ngModel)]="maleSelected"
                           style="margin-right: 5px;"
                           (ngModelChange)="handleStudentDisplay()"
