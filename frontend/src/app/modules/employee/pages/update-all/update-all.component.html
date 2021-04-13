@@ -103,6 +103,7 @@
                                 <ng-container *ngIf="parameter.parameterType===parameter_type_list[2]">
                                     <div class="text-center">
                                         <input class="dropinput" type="file"
+                                        style="cursor: pointer;"
                                                [attr.id]="employee.id+'-'+parameter.id"
                                                title="{{getDocumentName(employee, parameter)}}"
                                                (input)="serviceAdapter.updateParameterDocumentValue(employee,parameter,$event)">
