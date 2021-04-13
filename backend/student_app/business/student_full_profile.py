@@ -120,6 +120,8 @@ def get_student_full_profile(student_section_object):
         student_data['admissionSessionDbId'] = None
 
     student_data['dateOfAdmission'] = student_object.dateOfAdmission
+    if student_object.parentAdmissionClass is not None:
+        student_data['parentAdmissionClass'] = student_object.parentAdmissionClass.id
 
     student_data['sectionDbId'] = student_section_object.parentDivision.id
     student_data['sectionName'] = student_section_object.parentDivision.name

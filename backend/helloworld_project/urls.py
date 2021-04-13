@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^'+api_version+'homework/', include('homework_app.urls')),
     url(r'^'+api_version+'feature/', include('feature_app.urls')),
     url(r'^' + api_version + 'tutorial/', include('tutorial_app.urls')),
+    url(r'^' + api_version + 'tc/', include('tc_app.urls')),
     url(r'^'+api_version+'errors/', include('errors_app.urls')),
     url(r'^'+api_version+'accounts/', include('accounts_app.urls')),
     url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),

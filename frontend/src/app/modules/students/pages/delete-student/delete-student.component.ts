@@ -5,13 +5,14 @@ import { StudentService } from '../../../../services/modules/student/student.ser
 import {DeleteStudentServiceAdapter} from "./delete-student.service.adapter";
 import {SubjectService} from "../../../../services/modules/subject/subject.service";
 import {ExaminationService} from "../../../../services/modules/examination/examination.service";
-
+import { TCService } from './../../../../services/modules/tc/tc.service';
+import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 
 @Component({
   selector: 'app-delete-student',
   templateUrl: './delete-student.component.html',
   styleUrls: ['./delete-student.component.css'],
-  providers: [FeeService, StudentService, SubjectService, ExaminationService ],
+  providers: [FeeService, StudentService, SubjectService, ExaminationService, TCService ],
 })
 
 export class DeleteStudentComponent implements OnInit {
@@ -24,6 +25,7 @@ export class DeleteStudentComponent implements OnInit {
     selectedStudentSectionList = [];
     selectedStudentFeeReceiptList = [];
     selectedStudentDiscountList = [];
+    tcList: Array<TransferCertificateNew> = []
 
     // Data from Parent Student Filter
     classList = [];
@@ -35,10 +37,13 @@ export class DeleteStudentComponent implements OnInit {
 
     serviceAdapter: DeleteStudentServiceAdapter;
 
-    constructor(public studentService: StudentService,
-                public subjectService: SubjectService,
-                public examinationOldService: ExaminationService,
-                public feeService: FeeService) { }
+    constructor(
+        public studentService: StudentService,
+        public subjectService: SubjectService,
+        public examinationOldService: ExaminationService,
+        public feeService: FeeService,
+        public tcService: TCService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -65,7 +70,12 @@ export class DeleteStudentComponent implements OnInit {
             && this.selectedStudentDiscountList.find(discount => {
                 return discount.parentStudent == this.selectedStudent.id
                     && discount.parentSession == this.user.activeSchool.currentSessionDbId;
-            }) == undefined;
+            }) == undefined
+            && this.selectedStudentHasNoTc();
+    }
+
+    selectedStudentHasNoTc(): boolean{
+        return this.tcList.every(tc => tc.parentStudent != this.selectedStudent.id);
     }
 
 }

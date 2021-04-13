@@ -30,6 +30,7 @@ export class UpdateAllServiceAdapter {
                 {parentStudent__parentSchool: this.vm.user.activeSchool.dbId})
         ]).then(value => {
             this.vm.isLoading = false;
+            this.vm.classList = value[0];
             value[0].forEach(classs => {
                 classs.sectionList = [];
                 value[1].forEach(section => {
@@ -40,6 +41,7 @@ export class UpdateAllServiceAdapter {
             this.vm.initializeStudentFullProfileList(value[2]);
             this.vm.studentParameterList = value[3].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
             this.vm.studentParameterValueList = value[4];
+            console.log("student list: ", value[2]);
         }, error => {
             this.vm.isLoading = false;
         });

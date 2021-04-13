@@ -12,12 +12,12 @@ import {FeeService} from "../../../../services/modules/fees/fee.service";
 import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
 import {DataStorage} from "../../../../classes/data-storage";
 import {SchoolService} from "./../../../../services/modules/school/school.service"
-
+import { TCService } from "./../../../../services/modules/tc/tc.service";
 @Component({
   selector: 'promote-student',
   templateUrl: './promote-student.component.html',
   styleUrls: ['./promote-student.component.css'],
-    providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
+    providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, TCService ],
 })
 
 export class PromoteStudentComponent implements OnInit {
@@ -56,12 +56,14 @@ export class PromoteStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public schoolService : SchoolService,
-                 public studentService: StudentService,
-                 public classService: ClassService,
-                 public subjectService: SubjectService,
-                 public feeService: FeeService,
-                 public examinationService: ExaminationService) { }
+    constructor(
+        public schoolService: SchoolService,
+        public studentService: StudentService,
+        public classService: ClassService,
+        public subjectService: SubjectService,
+        public feeService: FeeService,
+        public examinationService: ExaminationService,
+        public tcService: TCService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
