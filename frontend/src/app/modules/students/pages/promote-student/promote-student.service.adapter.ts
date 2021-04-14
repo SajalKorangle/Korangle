@@ -60,19 +60,26 @@ export class PromoteStudentServiceAdapter {
             'parentSchoolFeeRule__parentSession': nextSessionId,
         };
 
+        const tc_data = {
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            'parentStudentSection__parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
+            'status__in': ['Generated', 'Issued']
+        };
+
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_one),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two),
-            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
-            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {})
+            this.vm.classService.getObjectList(this.vm.classService.classs,{}), // 0
+            this.vm.classService.getObjectList(this.vm.classService.division,{}),   // 1
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_one), // 2
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two), // 3
+            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list), // 4
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), // 5
+            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),  // 6
+            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),    // 7
+            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),  // 8
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 9
+            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 10
         ]).then(value => {
 
             // console.log(value);
@@ -80,7 +87,7 @@ export class PromoteStudentServiceAdapter {
             this.vm.classList = value[0];
             this.vm.sectionList = value[1];
 
-            this.vm.studentSectionListOne = value[2];
+            this.vm.studentSectionListOne = value[2].filter(ss=> value[10].find(tc=>tc.parentStudentSection==ss.id)==undefined);
             this.vm.studentSectionListTwo = value[3];
 
             this.vm.testSecondList = value[4];

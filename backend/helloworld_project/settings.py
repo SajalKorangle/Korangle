@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'report_card_app.report_card_cbse_app',
     'report_card_app.report_card_mp_board_app',
     'errors_app',
+    'tc_app',
 
     'corsheaders',
 
@@ -213,6 +214,12 @@ if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] 
         from helloworld_project.prod_conf import *
     except ImportError:
         print("ERROR!\nProduction Configuration File Not Found: korangle/backend/helloworld_project/prod_conf.py")
+        exit()
+elif ('KORANGLE_STAGING' in os.environ) and (os.environ['KORANGLE_STAGING'] == 'TRUE'):
+    try:
+        from helloworld_project.stag_conf import *
+    except ImportError:
+        print("ERROR!\nStaging Configuration File Not Found: korangle/backend/helloworld_project/stag_conf.py")
         exit()
 else:
     print("KORANGLE DEVELOPMENT/TESTING")
