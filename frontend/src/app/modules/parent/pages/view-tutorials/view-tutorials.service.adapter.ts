@@ -25,7 +25,7 @@ export class ViewTutorialsServiceAdapter {
 
 
     //initialize data
-    initializeData(): void {
+   async initializeData(){
         this.vm.isLoading = true;
 
         const request_student_subject_data = {
@@ -44,22 +44,19 @@ export class ViewTutorialsServiceAdapter {
         };
 
 
-        Promise.all([
+      const value=await  Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),//0
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),//1
             this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject, request_student_subject_data),//2
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),//3
-
-        ]).then(value => {
-            this.vm.classSubjectList = value[0];
-            this.vm.subjectList = value[1];
-            this.vm.studentSubjectList = value[2];
-            this.studentProfile = value[3][0];
-            this.populateTutorialList();
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+          ]);
+      
+       this.vm.classSubjectList = value[0];
+       this.vm.subjectList = value[1];
+       this.vm.studentSubjectList = value[2];
+       this.studentProfile = value[3][0];
+       await this.populateTutorialList();
+       this.vm.isLoading = false;
 
     }
 
@@ -72,7 +69,7 @@ export class ViewTutorialsServiceAdapter {
         return classSub.length > 0 ? classSub[0].id : null;
     }
 
-    populateTutorialList() {
+   async populateTutorialList() {
         this.filteredStudentSubject = [];
         this.vm.selectedSubject = {};
         this.vm.selectedChapter = {};
@@ -82,15 +79,11 @@ export class ViewTutorialsServiceAdapter {
         let request_tutorials_data = {
             'parentClassSubject__in': (this.vm.studentSubjectList.map(a => this.getParentClassSubjectFor(a))).filter(a => a!=null).join(),
         };
-        Promise.all([
+        const value = await  Promise.all([
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data),
-        ]).then(value => {
-            this.tutorialList = value[0];
-            this.populateFilteredSubjectTutorialList();
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        ]);
+       this.tutorialList = value[0];
+       this.populateFilteredSubjectTutorialList();
     }
 
 
