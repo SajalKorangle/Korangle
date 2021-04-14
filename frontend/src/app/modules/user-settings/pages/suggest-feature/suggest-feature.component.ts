@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {SuggestFeatureServiceAdapter} from './suggest-feature.service.adapter';
 import {DataStorage} from '../../../../classes/data-storage';
 import {FeatureService} from '../../../../services/modules/feature/feature.service';
+import {SuggestFeatureHtmlRenderer} from '@modules/user-settings/pages/suggest-feature/suggest-feature.html.renderer';
 
 @Component({
     selector: 'suggest-feature',
@@ -16,6 +17,12 @@ export class SuggestFeatureComponent implements OnInit {
 
     currentFeature: any;
 
+    featureStatusList = {
+        Pending: 'Pending',
+        Rejected: 'Rejected',
+        Resolved: 'Resolved',
+    };
+
     featureList = [];
 
     advantageQues = 'What is the advantage of this feature?';
@@ -24,6 +31,7 @@ export class SuggestFeatureComponent implements OnInit {
 
 
     serviceAdapter: SuggestFeatureServiceAdapter;
+    htmlRenderer: SuggestFeatureHtmlRenderer;
 
     isLoading = false;
 
@@ -32,6 +40,9 @@ export class SuggestFeatureComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+
+        this.htmlRenderer = new SuggestFeatureHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
         this.serviceAdapter = new SuggestFeatureServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -48,7 +59,9 @@ export class SuggestFeatureComponent implements OnInit {
             'description': null,
             'advantage': null,
             'frequency': null,
-            'managedBy': null
+            'managedBy': null,
+            'status': this.featureStatusList.Pending,
+            'productManagerRemark': null,
         };
     }
 

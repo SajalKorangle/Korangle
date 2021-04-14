@@ -19,6 +19,18 @@ class Feature(models.Model):
     frequency = models.TextField(null=True)
     managedBy = models.TextField(null=True)
 
+    Resolved = 'Resolved'
+    Rejected = 'Rejected'
+    Pending = 'Pending'
+    STATUS = (
+        (Resolved, 'Resolved'),
+        (Rejected, 'Rejected'),
+        (Pending, 'Pending')
+    )
+    status = models.CharField(max_length=15, choices=STATUS, null=False, default=Pending)
+
+    productManagerRemark = models.TextField(null=True, blank=True)
+
     class Meta:
         db_table = 'feature'
 
