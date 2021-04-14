@@ -15,9 +15,9 @@ class Feature(models.Model):
 
     title = models.TextField(null=False)
     description = models.TextField(null=False)
-    advantage = models.TextField(null=True)
-    frequency = models.TextField(null=True)
-    managedBy = models.TextField(null=True)
+    advantage = models.TextField(null=True, blank=True)
+    frequency = models.TextField(null=True, blank=True)
+    managedBy = models.TextField(null=True, blank=True)
 
     Resolved = 'Resolved'
     Rejected = 'Rejected'
