@@ -56,7 +56,7 @@ export class UpdateProfileComponent implements OnInit {
         this.serviceAdapter = new UpdateProfileServiceAdapter()
         this.serviceAdapter.initializeAdapter(this)
         this.serviceAdapter.initializeData()
-
+        this.commonFunctions = CommonFunctions.getInstance();
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};
     }

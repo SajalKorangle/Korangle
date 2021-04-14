@@ -66,9 +66,12 @@ export class UpdateProfileServiceAdapter {
 
             });
             this.vm.selectedEmployeeSessionProfile = value[1];
+            console.log('selected employee session profile', this.vm.selectedEmployeeSessionProfile)
             Object.keys(this.vm.selectedEmployeeSessionProfile).forEach(key => {
                 this.vm.currentEmployeeSessionProfile[key] = this.vm.selectedEmployeeSessionProfile[key];
             });
+            console.log('current employee session profile', this.vm.currentEmployeeSessionProfile)
+
                 this.vm.employeeParameterValueList = value[2];
                 this.vm.currentEmployeeParameterValueList = [];
                 this.vm.employeeParameterValueList.forEach(item=>{
@@ -92,6 +95,14 @@ export class UpdateProfileServiceAdapter {
             this.vm.isLoading = false;
         });
 
+    }
+
+    isDataURL(profileImage) : boolean
+    {   
+        let s = profileImage.toString()
+        console.log('substring is ', s.substr(0,3))
+        if(s.substr(0,3)==='dat')return false;
+        return true;
     }
 
     updateEmployeeProfile(): void {
@@ -144,14 +155,135 @@ export class UpdateProfileServiceAdapter {
             alert("Aadhar No. should be 12 digits");
             return;
         }
-        const employee_form_data= new FormData()       
-        const data = { ...this.vm.currentEmployeeProfile,content: JSON.stringify(this.vm.currentEmployeeProfile.content) };
+        console.log('curent employee profile', this.vm.currentEmployeeProfile)
+        // const employee_form_data= new FormData()       
+        // const data = { ...this.vm.currentEmployeeProfile,content: JSON.stringify(this.vm.currentEmployeeProfile) };
+        // Object.keys(data).forEach(key => {
+        //         if (key === 'profileImage' ) {
+        //             if(this.vm.profileImage!=null){
+        //                 employee_form_data.append(key, this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'));
+        //             }
+        //         } else {
+        //             if (data[key]==this.vm.NULL_CONSTANT){
+        //                 employee_form_data.append(key,"");
+        //             }
+        //             else{
+        //                 employee_form_data.append(key,data[key]);
+        //             }
+        //         }
+        //     });  
+        // this.vm.isLoading = true;
+        // Promise.all([
+        //     this.vm.employeeService.partiallyUpdateObject(this.vm.employeeService.employees,employee_form_data),
+        //     //this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])
+            
+        // ]).then(value => {
+        //     this.vm.isLoading = false;
+        //     console.log('e')
+        //     console.log(value[0])
+        //     this.vm.selectedEmployeeProfile.profileImage = value[0].profileImage;
+        //     this.vm.currentEmployeeProfile.profileImage = value[0].profileImage;
+
+        // let generateList = [];
+        // let updateList = [];
+        // let service_list = [];
+        // this.vm.currentEmployeeParameterValueList.forEach(x => {
+        //     x.parentEmployee = this.vm.currentEmployeeProfile.id;
+        // });
+        // this.vm.employeeParameterList.forEach(parameter => {
+        //     console.log('parameter')
+        //     console.dir(parameter)
+        //     if (this.vm.checkCustomFieldChanged(parameter)) {
+        //         let temp_obj = this.vm.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        //         if (temp_obj){
+        //             const data = { ...temp_obj}
+        //             const form_data = new FormData();
+        //             Object.keys(data).forEach(key => {
+        //                 if (data[key]){
+        //                     if (key =="document_name"|| key=="document_size"){}
+        //                     else if (key=='document_value'){
+        //                         form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
+        //                         form_data.append('document_size',data['document_size'])
+        //                     }
+        //                     else {
+        //                         form_data.append(key,data[key])   
+        //                     }
+        //                 }
+        //                 else{
+        //                     form_data.append(key,"")
+        //                 } 
+        //             })
+        //             if (temp_obj.id) {
+        //                 updateList.push(form_data)
+        //             } else if (!temp_obj.id) {
+        //                 generateList.push(form_data)
+        //             }
+        //         }
+        //     }
+        // });
+        
+        // if (generateList.length) {
+        //     generateList.forEach(x => {
+        //         service_list.push(this.vm.employeeService.createObject(this.vm.employeeService.employee_parameter_value,x))
+        //     })
+        // }
+
+        // if (updateList.length) {
+        //     updateList.forEach(x => {
+        //         service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_parameter_value,x))
+
+        //     })
+        // }
+
+        // if(this.vm.deleteList.length){
+        //     this.vm.deleteList.forEach(x =>{
+        //         service_list.push(this.vm.employeeService.deleteObject(this.vm.employeeService.employee_parameter_value,{'id':x.id}))
+        //     })
+        // }
+        //     alert('Employee profile updated successfully');
+        //     this.vm.selectedEmployeeProfile = this.vm.currentEmployeeProfile;
+        //     this.vm.selectedEmployeeSessionProfile = this.vm.currentEmployeeSessionProfile;
+        // }, error => {
+        //     this.vm.isLoading = false;
+        // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        this.vm.isLoading = true;
+        let service_list = [];
+        
+        const employee_form_data= new FormData()
+        const data = { ...this.vm.currentEmployeeProfile,content: JSON.stringify(this.vm.currentEmployeeProfile) };
+        console.log(data)
         Object.keys(data).forEach(key => {
-                if (key === 'profileImage' ) {
-                    if(this.vm.currentEmployeeProfile.profileImage){
-                        employee_form_data.append(key, this.dataURLtoFile(this.vm.currentEmployeeProfile.profileImage, 'profileImage.jpeg'));
+                if (key === 'profileImage') {
+                    if(this.vm.profileImage!==null){
+                    	employee_form_data.append(key, this.dataURLtoFile(this.vm.profileImage, 'profileImage.jpeg'));
                     }
-                } else {
+                }
+                else {
                     if (data[key]==this.vm.NULL_CONSTANT){
                         employee_form_data.append(key,"");
                     }
@@ -159,30 +291,27 @@ export class UpdateProfileServiceAdapter {
                         employee_form_data.append(key,data[key]);
                     }
                 }
-            });  
-        this.vm.isLoading = true;
-        Promise.all([
-            this.vm.employeeService.updateObject(this.vm.employeeService.employees,employee_form_data),
-            (this.vm.currentEmployeeSessionProfile.id==null?
-                this.vm.employeeService.createObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])
-                    :this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail,this.vm.currentEmployeeSessionProfile[0])
-            )
-        ]).then(value => {
-            this.vm.isLoading = false;
-            console.log('e')
-            console.log(value[0])
-            this.vm.selectedEmployeeProfile.profileImage = value[0].profileImage;
-            this.vm.currentEmployeeProfile.profileImage = value[0].profileImage;
+        });
+        
+        let employeeSessionProfileData = {
+            id__parentEmployee : this.vm.currentEmployeeProfile.id,
+            paidLeaveNumber : this.vm.currentEmployeeSessionProfile[0].paidLeaveNumber,
+            parentSession : this.vm.user.activeSchool.currentSessionDbId
+        }
+        service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employees,employee_form_data));
+
+        if (this.vm.selectedEmployeeSessionProfile.paidLeaveNumber != this.vm.currentEmployeeSessionProfile.paidLeaveNumber){
+            service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail,employeeSessionProfileData));
+        } else {
+            service_list.push(Promise.resolve(null))
+        }
 
         let generateList = [];
         let updateList = [];
-        let service_list = [];
         this.vm.currentEmployeeParameterValueList.forEach(x => {
-            x.parentEmployee = this.vm.currentEmployeeProfile.id;
+            x.parentEmployee = this.vm.selectedEmployeeProfile.id;
         });
         this.vm.employeeParameterList.forEach(parameter => {
-            console.log('parameter')
-            console.dir(parameter)
             if (this.vm.checkCustomFieldChanged(parameter)) {
                 let temp_obj = this.vm.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
                 if (temp_obj){
@@ -192,7 +321,7 @@ export class UpdateProfileServiceAdapter {
                         if (data[key]){
                             if (key =="document_name"|| key=="document_size"){}
                             else if (key=='document_value'){
-                                form_data.append(key,this.vm.dataURLtoFile(data[key],data['document_name']))
+                                form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
                                 form_data.append('document_size',data['document_size'])
                             }
                             else {
@@ -230,12 +359,63 @@ export class UpdateProfileServiceAdapter {
                 service_list.push(this.vm.employeeService.deleteObject(this.vm.employeeService.employee_parameter_value,{'id':x.id}))
             })
         }
-            alert('Employee profile updated successfully');
-            this.vm.selectedEmployeeProfile = this.vm.currentEmployeeProfile;
-            this.vm.selectedEmployeeSessionProfile = this.vm.currentEmployeeSessionProfile;
-        }, error => {
+
+        Promise.all(service_list).then(value =>{
+            Object.keys(value[0]).forEach(key =>{
+                this.vm.selectedEmployeeProfile[key] = value[0][key];
+            });
+            this.vm.currentEmployeeProfile = this.vm.commonFunctions.copyObject(this.vm.selectedEmployeeProfile);
+            if (this.vm.selectedEmployeeSessionProfile.paidLeaveNumber != this.vm.currentEmployeeSessionProfile.paidLeaveNumber) {
+                Object.keys(value[1]).forEach(key => {
+                    this.vm.selectedEmployeeSessionProfile[key] = value[1][key];
+                });
+                this.vm.currentEmployeeSessionProfile = this.vm.commonFunctions.copyObject(this.vm.selectedEmployeeSessionProfile);
+            }
+            if (generateList.length) {
+                 value.slice(2,2+generateList.length).forEach(item => {
+                     this.vm.employeeParameterValueList.push(item);
+                 })
+            }
+
+            if (updateList.length) {
+                value.slice(2+generateList.length,2+generateList.length+updateList.length).forEach(item => {
+                     this.vm.employeeParameterValueList = this.vm.employeeParameterValueList.filter(x => x.id !== item.id);
+                     this.vm.employeeParameterValueList.push(item);
+                })
+            }
+
+            if (this.vm.deleteList.length){
+                value.slice(2+generateList.length+updateList.length,2+generateList.length+updateList.length+this.vm.deleteList.length).forEach(item => {
+                    this.vm.employeeParameterValueList = this.vm.employeeParameterValueList.filter(x => x.id !== toInteger(item));
+                })
+            }
+            
+            this.vm.currentEmployeeParameterValueList = [];
+            this.vm.employeeParameterValueList.filter(x => x.parentEmployee === this.vm.currentEmployeeProfile.id).forEach(item => {
+                this.vm.currentEmployeeParameterValueList.push(this.vm.commonFunctions.copyObject(item))
+            });
+            
+            this.vm.deleteList=[]
+            this.vm.profileImage=null;
+            alert('Employee: ' + this.vm.selectedEmployeeProfile.name + ' updated successfully');
+            this.vm.isLoading = false;
+
+        },error => {
+            this.vm.profileImage=null;
             this.vm.isLoading = false;
         });
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
