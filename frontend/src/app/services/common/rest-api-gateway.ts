@@ -40,11 +40,11 @@ export class RestApiGateway {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
-            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${response}`, prompt);
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt);
             alert(jsonResponse.message);
             throw new Error();
         } else {
-            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${response}`, prompt, true);
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true);
             alert('Unexpected response from server');
             return null;
         }
@@ -120,7 +120,7 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    private handleError(error: any): Promise<any> {
+    public handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only
         return Promise.reject(error.message || error);
     }

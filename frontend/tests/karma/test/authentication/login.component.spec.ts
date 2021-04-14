@@ -1,11 +1,11 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {LoginComponent} from '@app/authentication/login.component';
+import {LoginComponent} from '@app/authentication/login/login.component';
 import {ComponentsModule} from '@components/components.module';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AuthenticationService} from '@services/authentication.service';
+import {AuthenticationOldService} from '@services/authentication-old.service';
 
 describe('LoginComponent', () => {
 
@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ LoginComponent ],
             imports: [ ComponentsModule, HttpClientTestingModule, RouterTestingModule, BrowserAnimationsModule ],
-            providers: [ AuthenticationService ],
+            providers: [ AuthenticationOldService ],
         }).compileComponents();
         fixture = TestBed.createComponent(LoginComponent);
         component = fixture.componentInstance;

@@ -45,3 +45,22 @@ class UserListView(CommonListView, APIView):
     Model = User
 
 
+class NewPasswordView(APIView):
+
+    @user_permission
+    def post(request):
+
+        data = json.loads(request.body.decode('utf-8'))
+        data['id'] = request.user.id
+
+        user = User.objects.get(id=data['id'])
+        if not user.check_password(data['oldPassword']):
+            return 'Old password incorrect'
+
+        user.set_password(data['newPassword'])
+        user.save()
+
+        return 'Password updated successfully'
+
+
+

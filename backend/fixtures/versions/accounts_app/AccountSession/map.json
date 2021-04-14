@@ -1,0 +1,12 @@
+[
+    {
+      "file": "four_account_session.json",
+      "file_object_list": [
+        {
+          "app": "accounts_app",
+          "model": "Accounts",
+          "file": "four_account.json"
+        }
+      ]
+    }
+]

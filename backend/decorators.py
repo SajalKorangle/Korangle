@@ -59,6 +59,8 @@ def user_permission_3(function):
     def wrap(*args, **kwargs):
         request = args[1]
 
+        # no need to check authentication because the RestAPIView class by default check for authentication
+
         if ('activeSchoolID' in request.GET.keys()):    # User is requesting as employee
             activeSchoolID = request.GET['activeSchoolID']
             if employeeHasSchoolPermission(request.user, activeSchoolID):

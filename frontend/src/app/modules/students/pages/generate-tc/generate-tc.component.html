@@ -150,15 +150,17 @@
             </div>
         </ng-container>
 
-        <button type="button"
+        <div matTooltip="New module for T.C. is added" style="display: inline-block;">
+        <button type="button" disabled
                 *ngIf="!selectedTransferCertificate.id"
                 (click)="generateTC();"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate T. C.</button>
 
-        <button type="button"
+        <button type="button" disabled
                 *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
                 (click)="updateTC();"
                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Update T.C.</button>
+                </div>
 
         <button type="button"
                 *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"

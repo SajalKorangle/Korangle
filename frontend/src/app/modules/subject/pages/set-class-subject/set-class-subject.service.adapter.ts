@@ -252,6 +252,8 @@ export class SetClassSubjectServiceAdapter {
             this.addSubjectInClassSectionSubjectList(value[0]);
             this.addSubjectInClassSectionStudentSubjectList(value[0], value[1]);
             this.vm.selectedSubject = null;
+            this.vm.selectedEmployee = null;
+            this.vm.orderNumber = 0;
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

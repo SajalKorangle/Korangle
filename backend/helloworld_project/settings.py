@@ -10,12 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
 
+import os
 import datetime
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+
 
 sentry_sdk.init(
     dsn="https://eaa952693a9545d787e92662a961ea25@sentry.io/1437770",
@@ -34,15 +35,11 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '59g0wy_6v_=f7l8getixb1b87!ee_^#lajh^zli2b+9zkvm0jw'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '10.0.2.2']
+ALLOWED_HOSTS = ['localhost']
 
 TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,14 +72,18 @@ INSTALLED_APPS = [
     'information_app',
     'grade_app',
     'id_card_app',
+    'authentication_app',
     'homework_app',
     'feature_app',
     'tutorial_app',
+    'event_gallery_app',
+    'accounts_app',
 
     'report_card_app',
     'report_card_app.report_card_cbse_app',
     'report_card_app.report_card_mp_board_app',
     'errors_app',
+    'tc_app',
 
     'corsheaders',
 
@@ -129,25 +130,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'helloworld_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'CONN_MAX_AGE': None,
-        'OPTIONS': {
-            'timeout': 20,
-        },
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -175,24 +159,17 @@ JWT_AUTH = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 # TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Kolkata'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
-
 MEDIA_URL = '/media/'
 ENV_PATH = os.path.abspath(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(ENV_PATH, 'media/')
@@ -222,56 +199,34 @@ EMAIL_HOST_USER = 'AKIAJALB2TZGPCWOEIQA'
 EMAIL_HOST_PASSWORD = 'AqtgnMQN6VuP6cz9KOOX85r1UUCAR7NpH4xychXFJTBr'
 EMAIL_PORT = 587
 
-import sys
-if 'test' in sys.argv:
-	DATABASES = {
-		'default': {
-			'ENGINE': 'django.db.backends.sqlite3',
-			'USER': 'arnava',
-			'NAME': os.path.join(BASE_DIR, 'test_database'),
-			'TEST': {
-				'NAME': 'test_database',
-			},
-		},
-	}
 
-import subprocess
-command = 'git rev-parse --abbrev-ref HEAD'
-proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
-(out, err) = proc.communicate()
-current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
-if current_branch != 'master':
-    print('Branch: '+current_branch)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
-        }
-    }
-    if 'test' in sys.argv:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'USER': 'arnava',
-                'NAME': os.path.join(BASE_DIR, current_branch+'_test_database'),
-                'TEST': {
-                    'NAME': current_branch+'_test_database',
-                },
-            },
-        }
 
 # AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
 # AWS_SECRET_ACCESS_KEY = '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'
 # AWS_STORAGE_BUCKET_NAME = 'korangle'
-if current_branch != 'master':
-    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'korangletesting'
-    AWS_QUERYSTRING_AUTH = False
-    AWS_S3_SECURE_URLS = False # to use http instead of https
+
+# Check running environment & load config
+if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
+    print("KORANGLE PRODUCTION")
+    
+    # korangle/backend/helloworld_project/prod_conf.py
+    try:
+        from helloworld_project.prod_conf import *
+    except ImportError:
+        print("ERROR!\nProduction Configuration File Not Found: korangle/backend/helloworld_project/prod_conf.py")
+        exit()
+elif ('KORANGLE_STAGING' in os.environ) and (os.environ['KORANGLE_STAGING'] == 'TRUE'):
+    try:
+        from helloworld_project.stag_conf import *
+    except ImportError:
+        print("ERROR!\nStaging Configuration File Not Found: korangle/backend/helloworld_project/stag_conf.py")
+        exit()
 else:
-    AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'korangleplus'
-    AWS_QUERYSTRING_AUTH = False
-    AWS_S3_SECURE_URLS = False # to use http instead of https
+    print("KORANGLE DEVELOPMENT/TESTING")
+
+    # korangle/backend/helloworld_project/dev_conf.py
+    try:
+        from helloworld_project.dev_conf import *
+    except ImportError:
+        print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
+        exit()
