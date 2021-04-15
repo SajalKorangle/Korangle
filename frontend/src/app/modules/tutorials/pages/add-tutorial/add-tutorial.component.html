@@ -7,7 +7,7 @@
                     <mat-select placeholder="Select Class -"
                                 [(ngModel)]="selectedSection"
                                 [disabled]="isLoading"
-                                (selectionChange)="selectedSubject=null">
+                                (selectionChange)="selectedSubject=null;previewBeforeAddTutorialUrl=''">
                             <ng-container *ngFor="let classs of classSectionSubjectList">
                                 <ng-container *ngFor="let section of classs.sectionList">
                                     <mat-option style="width: 100%;"
@@ -22,7 +22,7 @@
                     <mat-select placeholder="Subject"
                                 [ngModel]="selectedSubject"
                                 [disabled]="isLoading"
-                                (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;">
+                                (ngModelChange)="selectedSubject=$event;showTutorialDetails=false;previewBeforeAddTutorialUrl=''">
                         <mat-option *ngFor='let subject of selectedSection.subjectList;'
                                     [value]="subject">
                             {{getSubjectName(subject)}}
@@ -33,12 +33,17 @@
                         style="margin-left: 20px"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         [disabled]="!selectedSubject"
-                        (click)="serviceAdapter.getTutorialList(); serviceAdapter.prepareStudentList()">GET
+                        (click)="serviceAdapter.getTutorialList();">GET
                 </button>
             </div>
         </div>
-        <ng-container *ngIf="showTutorialDetails">
-
+       
+        <ng-container *ngIf="isTutorialDetailsLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </ng-container>
+        
+        
+        <ng-container *ngIf="showTutorialDetails && !isTutorialDetailsLoading">
             <div class="row">
                 <div class="col-md-4" style="margin: 10px;">
                     <div class="row">
@@ -82,7 +87,7 @@
                                       type="text"
                                       cdkTextareaAutosize
                                       [(ngModel)]="newTutorial.link" style="overflow: hidden;min-height: 17px"
-                                      (ngModelChange)="youTubeLinkValid()">
+                                      (ngModelChange)="handleLinkChange();youTubeLinkValid();">
                     </textarea>
                         </mat-form-field>
 
@@ -102,8 +107,14 @@
 
                 <ng-container *ngIf="youTubeLinkValid()">
                     <div class="col-md-6" style="margin-left: 20px">
+                        <ng-container *ngIf="isIFrameLoading">
+                            <app-loading-spinner [user]="user"></app-loading-spinner>
+                        </ng-container>
                         <iframe height="250" width="100%"
+                                id="player"
+                                [class.d-none]="isIFrameLoading"
                                 [src]="previewBeforeAddTutorialUrl | safe"
+                                (load)="listenEvent($event)"
                                 frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
