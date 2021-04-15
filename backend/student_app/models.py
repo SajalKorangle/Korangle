@@ -104,10 +104,12 @@ class Student(models.Model):
     rte = models.CharField(max_length=10, choices=RTE, null=True)
 
     admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
+    parentAdmissionClass = models.ForeignKey(Class, blank=True, null=True, on_delete=models.SET_NULL)
     dateOfAdmission = models.DateField(null=True, verbose_name='dateOfAdmission')
 
     parentTransferCertificate = \
         models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate')
+    
 
     def __str__(self):
         """A string representation of the model."""
