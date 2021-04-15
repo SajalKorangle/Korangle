@@ -1,0 +1,4 @@
+[
+    {"model": "event_gallery_app.eventimage", "pk": 1, "fields": {"parentEvent": 1, "eventImage": "https://www.gstatic.com/webp/gallery/1.jpg", "imageSize": "4384"}},
+    {"model": "event_gallery_app.eventimage", "pk": 2, "fields": {"parentEvent": 1, "eventImage": "https://www.gstatic.com/webp/gallery/4.jpg", "imageSize": "25103"}}
+]

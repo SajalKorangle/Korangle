@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {INSTALLMENT_LIST} from "../../classes/constants";
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
@@ -31,6 +31,8 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() boardList;
     @Input() sessionList = [];
     @Input() isPrinting=false;
+    
+    @Output() receiptCancelled = new EventEmitter<any>();
 
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
@@ -122,6 +124,14 @@ export class FeeReceiptListComponent implements OnInit {
             return employee.id == parentEmployee;
         });
         return employee?employee.name:null;
+    }
+
+    getSessionName(parentSession: any): any {
+
+        let session = this.sessionList.find(session => {
+            return session.id == parentSession;
+        });
+        return session.name;
     }
 
     hasUserPermissionToCancelAndNotPrintPage() {

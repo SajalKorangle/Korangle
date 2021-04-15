@@ -83,8 +83,16 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     updateSchoolProfile(): void {
+        if (this.currentName.trim().length == 0) {
+            alert('Name shouldn\'t be empty');
+            return;
+        }
         if (this.currentName.length > 15) {
             alert('Name length shouldn\'t be greater than 15');
+            return;
+        }
+        if (this.currentPrintName.trim().length == 0) {
+            alert('Print Name shouldn\'t be empty');
             return;
         }
         if (this.currentPrintName.length > 30) {

@@ -11,6 +11,8 @@ export class UpdateMarksServiceAdapter {
     student_section_data_list: any;
     student_data_list: any;
 
+    STUDENT_LIMITER = 200;
+
     constructor() {}
 
     // Data
@@ -89,13 +91,30 @@ export class UpdateMarksServiceAdapter {
                     studentInThisClassSection.push(studentSection.parentStudent);
                 })
 
-                let request_student_mini_profile_data_new = {
+                /* let request_student_mini_profile_data_new = {
                     'id__in': studentInThisClassSection.join(','),
                     'fields__korangle': 'id,name,fathersName,profileImage,gender,scholarNumber,parentTransferCertificate'
-                };
+                }; */
 
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_mini_profile_data_new).then(value => {
-                    this.student_data_list = value;
+                let service_list = [];
+                const iterationCount = Math.ceil(studentInThisClassSection.length / this.STUDENT_LIMITER);
+                let loopVariable = 0;
+
+                while (loopVariable < iterationCount) {
+                    const request_student_mini_profile_data_new = {
+                        'id__in': studentInThisClassSection.slice(this.STUDENT_LIMITER * loopVariable, this.STUDENT_LIMITER * (loopVariable + 1)).join(','),
+                        'fields__korangle': 'id,name,fathersName,profileImage,gender,scholarNumber,parentTransferCertificate'
+                    };
+                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_mini_profile_data_new));
+                    loopVariable = loopVariable + 1;
+                }
+
+                Promise.all(service_list).then(value => {
+                // this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_mini_profile_data_new).then(value => {
+                    this.student_data_list = [];
+                    value.forEach(item => {
+                        this.student_data_list = this.student_data_list.concat(item);
+                    });
 
                     this.student_data_list.forEach(student => {
                         this.student_section_data_list.forEach(stud_sec => {
@@ -122,8 +141,6 @@ export class UpdateMarksServiceAdapter {
                             }
                         });
                     });
-
-
 
                     let service_list = [];
 
@@ -421,7 +438,8 @@ export class UpdateMarksServiceAdapter {
                         item.newMarksObtained = null;
                     }
                     else {
-                        var mark = item.marksObtained
+                        item.marksObtained = Number(item.marksObtained.toString());
+                        let mark = item.marksObtained;
                         item['newMarksObtained'] = mark;
                     }
 
@@ -461,12 +479,13 @@ export class UpdateMarksServiceAdapter {
 
         this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach(item => {
             item.testDetails.forEach(itemTwo => {
-                if (itemTwo.marksObtained == null) {
-                    itemTwo.marksObtained = 0.0;
-                } else {
-                    itemTwo.marksObtained = parseFloat(itemTwo.marksObtained.toString()).toFixed(1);
+                console.log(itemTwo.marksObtained);
+                console.log(itemTwo.newMarksObtained);
+                if (itemTwo.newMarksObtained == null) {
+                    itemTwo.newMarksObtained = 0.0;
                 }
-                if ((itemTwo.newMarksObtained != itemTwo.marksObtained) && (itemTwo.newMarksObtained!= null))
+                itemTwo.newMarksObtained = parseFloat(itemTwo.newMarksObtained.toString()).toFixed(3);
+                if (itemTwo.newMarksObtained != itemTwo.marksObtained)
                 data.push(itemTwo);
             });
         });
@@ -496,7 +515,7 @@ export class UpdateMarksServiceAdapter {
                                 studentTest.newMarksObtained = null;
                             }
                             else {
-                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(1);
+                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(3);
                             } 
                         }
                     });
@@ -514,7 +533,7 @@ export class UpdateMarksServiceAdapter {
                                 studentTest.newMarksObtained = null;
                             }
                             else {
-                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(1);
+                                studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(3);
                             } 
                         }
                     });

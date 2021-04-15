@@ -397,16 +397,7 @@
                 </mat-form-field>
 
             </div>
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
-                <mat-form-field  style="width: 100%;">
-                    <mat-label>Date of Admission</mat-label>
-                    <input matInput
-                           type="date"
-                           (ngModelChange)="currentStudent.dateOfAdmission=$event;"
-                           [ngModel]="selectedStudent.dateOfAdmission">
-                </mat-form-field>
-            </div>
+
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber)">
                     <mat-form-field  style="width: 100%;">
@@ -421,6 +412,28 @@
                                (ngModelChange)="currentStudent.secondMobileNumber=$event"
                                [ngModel]="currentStudent.secondMobileNumber">
                     </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"
+                 [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Date of Admission</mat-label>
+                    <input matInput
+                           type="date"
+                           (ngModelChange)="currentStudent.dateOfAdmission=$event;"
+                           [ngModel]="selectedStudent.dateOfAdmission">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-3">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Admission Class</mat-label>
+                    <mat-select [(ngModel)]="currentStudent.parentAdmissionClass">
+                        <mat-option *ngFor="let class of classList" [value]="class.id">{{class.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </div>
 
@@ -488,39 +501,16 @@
                     		type="file"
                     		multiple="true"
                     		(input)="updateDocuments(parameter,$event,imageInput)" #imageInput>
-                        <label class="documentLabel">{{parameter.name}}</label>
-                        <div *ngIf="getParameterDocumentType(parameter)=='none'">
                             <div class="documentIcon">
-                                <img src="/assets/img/nofile.png">
+                                <img [src]=getIcon(parameter) (click)="openFilePreviewDialog(parameter)" alt="icon">
                             </div>
                             <div class="documentText">
-                                <p class="documentName">Select a file or Drag it here</p>
-                                <button (click)="imageInput.click()" class="documentButton">Upload</button>
+                                <label class="documentLabel" #docLabel>{{parameter.name}}{{resizeContainer(docLabel)}}</label>
+                                <button *ngIf="getParameterDocumentType(parameter)=='none'" (click)="imageInput.click()" class="documentButton">Upload</button>
+                                <button *ngIf="getParameterDocumentType(parameter)!='none'" (click)="imageInput.click()" class="documentButton">Replace</button>
+                                <button *ngIf="getParameterDocumentType(parameter)!='none'" (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
                                 <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
                             </div>
-                        </div>
-                        <div *ngIf="getParameterDocumentType(parameter)=='img'">
-                            <div class="documentIcon">
-                                <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
-                            </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
-                            </div>
-                        </div>
-                        <div *ngIf="getParameterDocumentType(parameter)=='pdf'">
-                            <div class="documentIcon">
-                                <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
-                            </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

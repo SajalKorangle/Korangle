@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v4.2/'
+api_version = 'v4.9/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,9 +31,13 @@ urlpatterns = [
     url(r'^'+api_version+'information/', include('information_app.urls')),
     url(r'^'+api_version+'grade/', include('grade_app.urls')),
     url(r'^'+api_version+'id-card/', include('id_card_app.urls')),
+    url(r'^'+api_version+'authentication/', include('authentication_app.urls')),
     url(r'^'+api_version+'homework/', include('homework_app.urls')),
     url(r'^'+api_version+'feature/', include('feature_app.urls')),
     url(r'^' + api_version + 'tutorial/', include('tutorial_app.urls')),
+    url(r'^' + api_version + 'tc/', include('tc_app.urls')),
     url(r'^'+api_version+'errors/', include('errors_app.urls')),
+    url(r'^'+api_version+'accounts/', include('accounts_app.urls')),
+    url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -136,21 +136,20 @@ export class AddTutorialServiceAdapter {
     }
 
 
-    getTutorialList(): void {
-        this.vm.showTutorialDetails = false;
+    async getTutorialList(){
+        this.vm.showTutorialDetails = true;
+        this.vm.isTutorialDetailsLoading=true;
         let request_class_subject_tutorial_data = {
             'parentClassSubject': this.vm.getParentClassSubject()
         };
-        Promise.all([
+       const value= await Promise.all([
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_class_subject_tutorial_data),
-        ]).then(value => {
-            this.populateTutorialList(value[0]);
-            this.vm.showTutorialDetails = true;
-            this.vm.isAddDisabled = true;
-        }, error => {
-        });
+        ]);
+
+        this.populateTutorialList(value[0]);
+        await this.prepareStudentList();
         this.vm.initializeNewTutorial();
-         // Add button is disabled
+        this.vm.isTutorialDetailsLoading=false;
     }
 
     populateTutorialList(tutorialList) {
@@ -195,8 +194,6 @@ export class AddTutorialServiceAdapter {
         }, error =>{
             this.vm.isLoading = false;
         })
-        this.vm.isAddDisabled = true;
-        this.vm.showPreview = false;
     }
 
     makeEditableOrSave(tutorial: any): void {
@@ -255,7 +252,7 @@ export class AddTutorialServiceAdapter {
             alert('Tutorial topic should not be empty');
             return false;
         }
-        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && !t.id === tutorial.id)) {
+        if (this.vm.tutorialList.some(t => t.chapter === tutorial.chapter && t.topic === tutorial.topic.trim() && t.id != tutorial.id)) {
             alert('The Topic already exists');
             return false;
         }
@@ -266,6 +263,11 @@ export class AddTutorialServiceAdapter {
         if (!this.vm.decimalRegex.test(tutorial.orderNumber) || parseFloat(tutorial.orderNumber) <= 0) {
             alert('OrderNumber should be greater than 0 with 1 decimal place');
             return false;
+        }
+        if(tutorial.link.match(this.vm.youtubeIdMatcher) === null)
+        {
+            alert('Please enter a valid link');
+            return false; 
         }
         if (!this.vm.youtubeRegex.test(tutorial.link.trim())) {
             alert('Please enter a valid link');
@@ -307,7 +309,7 @@ export class AddTutorialServiceAdapter {
     }
 
 
-    prepareStudentList(): any{
+    async prepareStudentList(){
         this.vm.currentClassStudentList = [];
         let student_list = this.fullStudentList.filter(student =>{
             if(student.parentClass == this.vm.selectedClass.id && student.parentDivision == this.vm.selectedSection.id) return true;
@@ -321,12 +323,9 @@ export class AddTutorialServiceAdapter {
             'id__in': studentIdList,
             'fields__korangle': 'id,name,mobileNumber',
         }
-        Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-        ]).then(value =>{
-            this.vm.currentClassStudentList = value[0];
-            this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
-        })
+        const value = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)
+        this.vm.currentClassStudentList = value;
+        this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
     }
 
     populateStudentList(tutorial): any{
