@@ -20,6 +20,7 @@ https.get(lint_data_cloud, function(response) {
 
         // CI env
         if (process.argv[2] === 'ci') {
+            console.log(process.argv[3]);
             if (process.argv[3] > body['tslint-errors']) {
                 console.log('\n\nERROR: Please fix atleast ' + (process.argv[3] - body['tslint-errors']));
                 process.exit(1);    // failed
