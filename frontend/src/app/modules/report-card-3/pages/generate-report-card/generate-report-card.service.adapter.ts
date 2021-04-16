@@ -1,6 +1,8 @@
 import { GenerateReportCardComponent } from './generate-report-card.component';
 import { StudentCustomParameterStructure } from './../../class/constants_3';
 
+const MAX_LENGTH_OF_GET_REQUEST = 900;
+
 export class GenerateReportCardServiceAdapter {
 
     vm: GenerateReportCardComponent
@@ -15,6 +17,7 @@ export class GenerateReportCardServiceAdapter {
 
     // initialize data
     initializeData(): void {
+        this.vm.DATA.currentSession = this.vm.user.activeSchool.currentSessionDbId;
         const report_card_layouts_data = {
             parentSchool: this.vm.user.activeSchool.dbId
         };
@@ -28,6 +31,7 @@ export class GenerateReportCardServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1\
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
         ]).then(data => { 
             this.vm.reportCardLayoutList = data[0];
             this.vm.studentSectionList = data[1];
@@ -35,15 +39,31 @@ export class GenerateReportCardServiceAdapter {
             this.vm.divisionList = data[3];
             this.vm.DATA.data.classList = data[2];
             this.vm.DATA.data.divisionList = data[3];
+            this.vm.DATA.data.sessionList = data[4];
 
-            const request_student_data = {
-                id__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
-            };
+            const service_list = [];
 
-            Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-            ]).then(value => {
-                this.vm.studentList = value[0];
+            const studentIdList = this.vm.studentSectionList.map(item => item.parentStudent);
+            const studentIdChunkList = [];
+            for (let i = 0; i < studentIdList.length; ){    // dividing big id list to smaller chunks until request is satasfiable
+                const chunk = [];
+                while (chunk.join(',').length < MAX_LENGTH_OF_GET_REQUEST && i < studentIdList.length) {
+                    chunk.push(studentIdList[i]);
+                    i++;
+                }
+                studentIdChunkList.push(chunk);
+            }
+            studentIdChunkList.forEach(idChunk => { // requesting students for eahc chunk
+                const request_student_data = {
+                    id__in: idChunk.join(','),
+                };
+                service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data));
+            });
+            
+
+            Promise.all(service_list).then(value => {
+                this.vm.studentList = [];
+                value.forEach(studenkChunk => this.vm.studentList.push(...studenkChunk));
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
                 this.vm.isLoading = false;
             }, error => {
@@ -81,7 +101,7 @@ export class GenerateReportCardServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
             this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data), // 5
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 6
-        ]).then(data => { 
+        ]).then(async data => { 
             this.vm.DATA.data.studentParameterList = data[0];
             this.vm.DATA.data.examinationList = data[1];
             this.vm.DATA.data.testList = data[2];
@@ -111,7 +131,7 @@ export class GenerateReportCardServiceAdapter {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
 
-            Promise.all([
+            await Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 0
                 this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 1
                 this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 2

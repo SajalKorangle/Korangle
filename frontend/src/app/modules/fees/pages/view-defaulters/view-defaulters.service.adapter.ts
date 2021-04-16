@@ -265,7 +265,7 @@ export class ViewDefaultersServiceAdapter {
         if (sms_list.length != 0) {
 
             sms_data = {
-                'contentType': ('english'),
+                'contentType': (this.vm.hasUnicode(this.vm.extraDefaulterMessage)? 'unicode':'english'),
                 'data': sms_converted_data,
                 'content': sms_converted_data[0]['isAdvanceSms'],
                 'parentMessageType': 2,
@@ -279,7 +279,7 @@ export class ViewDefaultersServiceAdapter {
         } else {
 
             sms_data = {
-                'contentType': ('english'),
+                'contentType': (this.vm.hasUnicode(this.vm.extraDefaulterMessage)? 'unicode':'english'),
                 'data': sms_converted_data,
                 'content': this.vm.getMessageFromTemplate(message, notification_list[0]),
                 'parentMessageType': 2,

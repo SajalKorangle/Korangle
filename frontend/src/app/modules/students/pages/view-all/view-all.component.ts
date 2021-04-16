@@ -18,6 +18,8 @@ import {ImagePdfPreviewDialogComponent} from '../../image-pdf-preview-dialog/ima
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
 import { toInteger, filter } from 'lodash';
+import {CommonFunctions} from '@classes/common-functions';
+import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -71,7 +73,11 @@ export class ViewAllComponent implements OnInit {
     session_list = [];
 
     columnFilter: ColumnFilter;
-    documentFilter: ColumnFilter; 
+    documentFilter: ColumnFilter;
+
+    /* Age Check */
+    minAge: any;
+    maxAge: any;
 
     /* Category Options */
     scSelected = false;
@@ -92,6 +98,10 @@ export class ViewAllComponent implements OnInit {
     yesRTE = true;
     noRTE = true;
     noneRTE = true;
+
+    /* TC Options */
+    noTC = true;
+    yesTC = true;
 
     displayStudentNumber = 0;
 
@@ -239,9 +249,7 @@ export class ViewAllComponent implements OnInit {
     }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList.filter( student => {
-            return student.parentTransferCertificate == null;
-        });
+        this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach(studentFullProfile => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
@@ -450,6 +458,29 @@ export class ViewAllComponent implements OnInit {
                 return;
             }
 
+            /* Age Check */
+            let age = student.dateOfBirth
+                ? Math.floor(((new Date()).getTime() - (new Date(student.dateOfBirth).getTime()))/(1000 * 60 * 60 * 24 * 365.25))
+                : null;
+            if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                if (!age) {
+                    student.show = false;
+                    return;
+                } else if (age < this.minAge) {
+                    student.show = false;
+                    return;
+                }
+            }
+            if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                if (!age) {
+                    student.show = false;
+                    return;
+                } else if (age > this.maxAge) {
+                    student.show = false;
+                    return;
+                }
+            }
+
             /* Category Check */
             if (!(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected)
                 && !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)) {
@@ -531,6 +562,12 @@ export class ViewAllComponent implements OnInit {
                 || (this.noRTE && student.rte === "NO")
                 || (this.noneRTE && student.rte != "YES" && student.rte != "NO")
             )) { // First we are checking for which conditions student should be visible then we are applying a 'NOT' to the whole to get student invisible condition
+                student.show = false;
+                return;
+            }
+
+            // Transfer Certiicate Check
+            if(!((this.noTC && !student.parentTransferCertificate) || (this.yesTC && student.parentTransferCertificate) )){
                 student.show = false;
                 return;
             }
@@ -693,7 +730,7 @@ export class ViewAllComponent implements OnInit {
 
 		    ];
 		    this.studentFullProfileList.forEach(student => {
-		        if (student.selectProfile) {
+		        if (student.selectProfile && student.show) {
 		            template.push(this.getStudentDisplayInfo(student));
 		        }
 		    });
@@ -714,14 +751,26 @@ export class ViewAllComponent implements OnInit {
             } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
                 type = "img"
             }
-            const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
-                width: '600px',
-                data: {'file': file, 'type': type}
+            let dummyImageList=[];
+            if(type=="img"){
+                let data={'imageUrl':file};
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: {'imageList':dummyImageList,'file':file,'index':0,'type': 1, 'fileType': type, 'isMobile': this.isMobile()}
             });
             dialogRef.afterClosed().subscribe(result => {
                 console.log('The dialog was closed');
             });
         }
+    }
+    
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 
     getHeaderValues(): any {

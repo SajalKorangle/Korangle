@@ -1,0 +1,12 @@
+[
+  {
+    "file": "two_images.json",
+    "file_object_list": [
+      {
+        "app": "event_gallery_app",
+        "model": "Event",
+        "file": "one_event.json"
+      }
+    ]
+  }
+]

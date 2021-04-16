@@ -1,0 +1,6 @@
+[
+	{ "model": "accounts_app.heads", "pk": 1, "fields": {"title": "Expenses"} },
+	{ "model": "accounts_app.heads", "pk": 2, "fields": {"title": "Income"} },
+    { "model": "accounts_app.heads", "pk": 3, "fields": {"title": "Assets"} },
+    { "model": "accounts_app.heads", "pk": 4, "fields": {"title": "Liabilities"} }
+]

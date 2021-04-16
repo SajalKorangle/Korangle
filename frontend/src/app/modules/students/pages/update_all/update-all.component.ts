@@ -99,6 +99,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Father\'s Annual Income', 'fatherAnnualIncome', 'text', false, ''), // 24
         new ColumnHandle('RTE', 'rte', 'list', false, RTE_LIST), // 25
         new ColumnHandle('Date Of Admission', 'dateOfAdmission', 'date', false, ''), // 26
+        new ColumnHandle('Admission Class', 'parentAdmissionClass', 'classList', false, ''), // 27
     ];
 
     NULL_CONSTANT = null;
@@ -153,7 +154,8 @@ export class UpdateAllComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new UpdateAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData()
+        this.serviceAdapter.initializeData();
+        console.log('this: ', this);
     }
 
     initializeClassSectionList(classSectionList: any): void {

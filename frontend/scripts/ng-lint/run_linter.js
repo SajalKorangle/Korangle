@@ -2,7 +2,7 @@ const fs = require('fs');
 const https = require('https');
 
 
-const lint_data_cloud = 'https://korangletesting.s3.amazonaws.com/benchmark-linting-error-count.json'
+const lint_data_cloud = 'https://korangleplus.s3.amazonaws.com/benchmark-linting-error-count.json'
 const lint_data_local = './scripts/ng-lint/benchmark-linting-error-count.json';
 
 

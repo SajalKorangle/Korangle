@@ -1,0 +1,27 @@
+<mat-card style="padding: 0; width: 100%; overflow: hidden;">
+    <div style="background-color: grey; text-align: center;">
+        <i class="material-icons" style="margin-top: 4px;">open_with</i>
+    </div>
+    <div style="margin: 4px; padding: 4px;">
+
+        <div class="flex-row">
+            <mat-form-field style="max-width: 50px;">
+                <mat-label>
+                    X(mm)
+                </mat-label>
+                <input matInput type="number" step="1" [ngModel]="getXCoordinate()" (ngModelChange)="layer.x=$event/getPixelTommFactor(); canvasRefresh();">
+            </mat-form-field>
+
+            <mat-form-field style="max-width: 50px; margin-left: 10px;margin-right: 10px;">
+                <mat-label>
+                    Y(mm)
+                </mat-label>
+                <input matInput type="number" [ngModel]="getYCoordinate()" (ngModelChange)="layer.y=$event/getPixelTommFactor(); canvasRefresh();">
+            </mat-form-field>
+
+            <mat-button-toggle [checked]="layer.isLocked" (change)="lockToggle($event);"><span class="material-icons" >{{layer.isLocked?'lock':'lock_open'}}</span></mat-button-toggle>
+        </div>
+
+        
+    </div>
+</mat-card>

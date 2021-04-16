@@ -8,8 +8,8 @@ if [[ ! -f benchmark-linting-error-count.json ]]; then
 fi
 
 echo $'CI: Testing linting error count...\n'
-node ./scripts/ng-lint/run_linter.js "ci" $(ng lint | grep -c "ERROR: /") || exit
+node ./scripts/ng-lint/run_linter.js "ci" $(./node_modules/@angular/cli/bin/ng lint | grep -c "ERROR: /") || exit
 
 # upload to aws
-# aws cp benchmark-linting-error-count.json ...
+aws s3 cp ./scripts/ng-lint/benchmark-linting-error-count.json s3://korangleplus/benchmark-linting-error-count.json
 echo $'\nLinter benchmark updated.\n'

@@ -60,7 +60,7 @@
 
     <div *ngIf="!user.isAuthenticated" style="min-height: 100%;background-color: white">
         <ng-container *ngIf="isMobile()">
-            <app-login-form></app-login-form>
+            <app-authentication></app-authentication>
         </ng-container>
         <ng-container *ngIf="!isMobile()">
             <app-frontpage [user]="user"></app-frontpage>
