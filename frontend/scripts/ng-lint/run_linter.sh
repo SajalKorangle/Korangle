@@ -6,11 +6,17 @@ if [ "$1" == "-show" ]; then
 
         ng lint
 
+    elif [ -z "$3" ]; then
+
+        echo $"Showing \"$2\" linting errors "
+
+        ng lint | grep -m$2 "ERROR: /"
+    
     else
 
-        echo $"Searching linting errors for \"$2\""
+        echo $"Searching \"$2\" linting errors for \"$3\""
 
-        ng lint | grep $2
+        ng lint | grep -m$2 $3
 
     fi
 
@@ -32,9 +38,10 @@ elif [ "$1" == "-count" ]; then
 
 else
 
-    echo $"run_linter.sh -count:           Count the total number of linting errors."
-    echo $"run_linter.sh -count [pattern]: Count number of linting errors matching with [pattern]."
-    echo $"run_linter.sh -show:            Show all linting errors."
-    echo $"run_linter.sh -show [pattern]:  Show linting errors matching with [pattern]."
+    echo $"run_linter.sh -count:               Count the total number of linting errors."
+    echo $"run_linter.sh -count [pattern]:     Count number of linting errors matching with [pattern]."
+    echo $"run_linter.sh -show:                Show all linting errors"
+    echo $"run_linter.sh -show [n]:            Show n number of linting errors"
+    echo $"run_linter.sh -show [n] [pattern]:  Show n number of linting errors  with [pattern]"
 
 fi
