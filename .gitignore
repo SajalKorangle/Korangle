@@ -9,6 +9,7 @@ frontend/school.iml
 frontend/preparePackage.sh
 frontend/prepareStagingPackage.sh
 frontend/tmp
+frontend/scripts/ng-lint/benchmark-linting-error-count.json
 frontend/src/src.iml
 frontend/.DS_Store
 frontend/md-angular-v1.4.1.iml
