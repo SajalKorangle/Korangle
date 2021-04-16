@@ -37,8 +37,6 @@ https.get(lint_data_cloud, function(response) {
         // local dev env
         if (process.argv[2] === 'dev') {
             if (process.argv[3] > body['tslint-errors']) {
-                console.log(process.argv);
-                console.log(body['tslint-errors']);
                 console.log('\n\nERROR: Please fix atleast ' + (process.argv[3] - body['tslint-errors']));
                 process.exit(1);
             }
