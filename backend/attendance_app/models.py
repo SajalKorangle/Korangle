@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 
 from employee_app.models import Employee
+from information_app.models import SentUpdateType
+from sms_app.models import SMSEvent, SMSTemplate
 from student_app.models import Student
 from school_app.model.models import School, Session
 from class_app.models import Division, Class
@@ -89,22 +91,14 @@ class AttendancePermission(models.Model):
 
 #setting_page_model
 
+
 class AttendanceSettings(models.Model):
 
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, default=0, verbose_name='parentEvent')
 
-    SMS_UPDATE = 'SMS'
-    NOTIFICATION_UPDATE = 'NOTIFICATION'
-    NOTIFSMS_UPDATE = 'NOTIF./SMS'
-    NO_UPDATE = 'NULL'
-    SENTUPDATE_CHOICES = [
-        (SMS_UPDATE, 'SMS'),
-        (NOTIFICATION_UPDATE, 'NOTIFICATION'),
-        (NOTIFSMS_UPDATE, 'NOTIF./SMS'),
-        (NO_UPDATE, 'NULL')
-    ]
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, verbose_name='parentSMSTemplate')
 
-    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NO_UPDATE, verbose_name='sentUpdateType')
+    sentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, default=0)
 
     UPDATE_ALL = 'All Students'
     UPDATE_ABSENT = 'Only Absent Students'

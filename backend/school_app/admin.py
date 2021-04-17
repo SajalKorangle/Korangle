@@ -4,8 +4,7 @@ from django.contrib import admin
 
 # from school_app.model.models import Student, Fee, Concession, SubFee, School, Session
 
-from school_app.model.models import School, Session, SchoolSession
-
+from school_app.model.models import School, Session, SchoolSession, SMSId
 
 from student_app.models import StudentSection
 from fees_third_app.models import SubFeeReceipt
@@ -13,6 +12,20 @@ from subject_app.models import ClassSubject
 from examination_app.models import StudentTest
 
 admin.site.register(Session)
+@admin.register(SMSId)
+class SmsIdAdmin(admin.ModelAdmin):
+    search_fields = ('parentSchool__printName', 'parentSchool__id')
+    list_display = ('School_Name', 'SMS_ID', 'Status')
+    list_filter = ('smsIdStatus',)
+
+    def School_Name(self,obj):
+        return str(obj.parentSchool.id) + ' - ' + obj.parentSchool.printName
+
+    def SMS_ID(self, obj):
+        return str(obj.smsId)
+
+    def Status(self, obj):
+        return str(obj.smsIdStatus)
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):

@@ -1,7 +1,8 @@
 from django.db import models
 
 # Create your models here.
-
+from information_app.models import SentUpdateType
+from sms_app.models import SMSEvent, SMSTemplate
 from subject_app.models import ClassSubject
 from student_app.models import Student
 from school_app.model.models import School
@@ -64,7 +65,7 @@ class HomeworkAnswer(models.Model):
     submissionTime = models.TimeField(null=True, verbose_name='submissionTime')
     answerText = models.TextField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True, verbose_name='remark')
-    
+
     class Meta:
         db_table = 'homework_answer'
         unique_together = ('parentStudent', 'parentHomeworkQuestion')
@@ -80,29 +81,13 @@ class HomeworkAnswerImage(models.Model):
         db_table = 'homework_answer_image'
 
 class HomeworkSettings(models.Model):
-    
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
-    SMS_UPDATE = 'SMS'
-    NOTIFICATION_UPDATE = 'NOTIFICATION'
-    NOTIFSMS_UPDATE = 'NOTIF./SMS'
-    NO_UPDATE = 'NULL'
-    SENTUPDATE_CHOICES = [
-        (SMS_UPDATE, 'SMS'),
-        (NOTIFICATION_UPDATE, 'NOTIFICATION'),
-        (NOTIFSMS_UPDATE, 'NOTIF./SMS'),
-        (NO_UPDATE, 'NULL')
-    ]
+    parentEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, default=0, verbose_name='parentEvent')
 
-    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NO_UPDATE, verbose_name='sentUpdateType')
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0,
+                                          verbose_name='parentSMSTemplate')
 
-    sendCreateUpdate = models.BooleanField(null=False, default=False, verbose_name='sendCreateUpdate')
-    sendEditUpdate = models.BooleanField(null=False, default=False, verbose_name='sendEditUpdate')
-    sendDeleteUpdate = models.BooleanField(null=False, default=False, verbose_name='sendDeleteUpdate')
-    sendCheckUpdate = models.BooleanField(null=False, default=False, verbose_name='sendCheckUpdate')
-    sendResubmissionUpdate = models.BooleanField(null=False, default=False, verbose_name='sendResubmissionUpdate')
-    
-
+    sentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, default=0)
 
     class Meta:
         db_table = 'homework_settings'

@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+from sms_app.models import SMSEvent, SMSTemplate
 from subject_app.models import ClassSubject
 from school_app.model.models import School
 from information_app.models import SentUpdateType
@@ -20,11 +21,12 @@ class Tutorial(models.Model):
         db_table = 'tutorial'
 
 class TutorialSettings(models.Model):
-    
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
+    parentEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, default=0, verbose_name='parentEvent')
+
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0,
+                                          verbose_name='parentSMSTemplate')
     sentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, default=0)
 
-    sendCreateUpdate = models.BooleanField(null=False, default=True, verbose_name='sendCreateUpdate')
-    sendEditUpdate = models.BooleanField(null=False, default=True, verbose_name='sendEditUpdate')
-    sendDeleteUpdate = models.BooleanField(null=False, default=True, verbose_name='sendDeleteUpdate')
+    class Meta:
+        db_table = 'tutorial_settings'
