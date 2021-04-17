@@ -59,7 +59,7 @@ export class FeeReceiptListComponentServiceAdapter {
             
             Object.assign(this.vm.feeReceiptList.find(t => t.id === feeReceipt.id), JSON.parse(JSON.stringify(value[0])));
             this.vm.isLoading = false;
-
+            this.vm.receiptCancelled.emit();
         }, error => {
             this.vm.isLoading = false;
         });

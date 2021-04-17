@@ -28,7 +28,7 @@ class GCMDeviceListView(CommonListView, APIView):
 
 class NotificationView(CommonView, APIView):
     Model = Notification
-    RelationsToSchool = ['parentSchool__id']
+    # RelationsToSchool = ['parentSchool__id']
 
     def post(self, request):
         response = super().post(request)
@@ -38,7 +38,7 @@ class NotificationView(CommonView, APIView):
 
 class NotificationListView(CommonListView, APIView):
     Model = Notification
-    RelationsToSchool = ['parentSchool__id']
+    # RelationsToSchool = ['parentSchool__id']
 
     def post(self, request):
         response = super().post(request)
