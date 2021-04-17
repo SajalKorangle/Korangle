@@ -65,7 +65,7 @@ class HomeworkAnswer(models.Model):
     submissionTime = models.TimeField(null=True, verbose_name='submissionTime')
     answerText = models.TextField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True, verbose_name='remark')
-
+    
     class Meta:
         db_table = 'homework_answer'
         unique_together = ('parentStudent', 'parentHomeworkQuestion')
@@ -88,6 +88,7 @@ class HomeworkSettings(models.Model):
                                           verbose_name='parentSMSTemplate')
 
     sentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, default=0)
+
 
     class Meta:
         db_table = 'homework_settings'
