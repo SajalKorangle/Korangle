@@ -17,12 +17,7 @@ export class ServiceObject extends RestApiGateway {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
         }
-
         let url = this.module_url + object_url + '?';
-        // let searchParams = new URLSearchParams();
-        // Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
-        // url = url + searchParams.toString();
-        
         return super.getData(url, data);
     }
 
@@ -31,9 +26,6 @@ export class ServiceObject extends RestApiGateway {
             return Promise.resolve(this.constant_list[object_url]);
         }
         let url = this.module_url + object_url + '/batch?e=';
-        // Object.keys(data).forEach(key => {
-        //     url += '&' + key + '=' + data[key];
-        // });
         return super.getData(url, data);
     }
 

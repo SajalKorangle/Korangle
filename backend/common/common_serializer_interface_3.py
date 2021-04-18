@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 def get_object(data, query_set, ModelSerializer):
     try:
-        object = query_set.get(**dict(data))
+        object = query_set.get(**data.dict())
     except ObjectDoesNotExist:
         return None
     return ModelSerializer(object).data

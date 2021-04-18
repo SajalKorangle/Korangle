@@ -7,7 +7,7 @@ import { HttpHeaders, HttpClient, } from '@angular/common/http';
 import {DataStorage} from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 
-const MAX_URL_LENGTH = 900;
+const MAX_URL_LENGTH = 8000;
 
 @Injectable()
 export class RestApiGateway {
@@ -127,7 +127,7 @@ export class RestApiGateway {
     public getData(url: any, params?: any): Promise<any> { // check here
         const headers = new HttpHeaders({ 'Authorization': 'JWT ' + this.getToken() });
         const absoluteURL = this.getAbsoluteURL(url, params);
-        if (absoluteURL.length > MAX_URL_LENGTH || true) {
+        if (absoluteURL.length > MAX_URL_LENGTH) {
             return this.getDataWithPost(url, params);
         }
         return this.http.get(absoluteURL, {headers: headers})
