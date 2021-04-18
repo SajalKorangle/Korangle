@@ -40,12 +40,12 @@ describe('Website -> Refresh and Back button', () => {
         browser.waitForAngular();
         browser.navigate().back();
         expect(browser.getCurrentUrl()).toBe(url);
-        const name=await page.$x('//input[1]');
+        const name = await page.$x('//input[1]');
         expect(nameBeforeRefresh.value).toBe(name.value); // checking whether the component values are correct
 
     });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });
