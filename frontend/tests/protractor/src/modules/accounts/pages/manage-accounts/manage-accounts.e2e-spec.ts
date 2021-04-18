@@ -8,27 +8,27 @@ describe('Accounts -> Manage Accounts', () => {
     let confirmDeleteDialog = async dialog => {
         expect(dialog.message()).toBe('Are you sure you want to delete this account?');
         await dialog.accept();
-        page.removeListener('dialog',confirmDeleteDialog);
-        page.on('dialog',deleteDialog);
+        page.removeListener('dialog', confirmDeleteDialog);
+        page.on('dialog', deleteDialog);
     };
 
-    let deleteDialog = async dialog =>{
+    let deleteDialog = async dialog => {
         expect(dialog.message()).toBe('Account Deleted Successfully');
         await dialog.accept();
-        page.removeListener('dialog',deleteDialog);
-    }
+        page.removeListener('dialog', deleteDialog);
+    };
 
-    let successDialog = async dialog =>{
+    let successDialog = async dialog => {
         expect(dialog.message()).toBe('Account Updated Successfully');
         await dialog.dismiss();
-        page.removeListener('dialog',successDialog);     
-    }
+        page.removeListener('dialog', successDialog);
+    };
 
-    let accountCreated = async dialog =>{
+    let accountCreated = async dialog => {
         expect(dialog.message()).toBe('Account Created Successfully');
         await dialog.dismiss();
-        page.removeListener('dialog',accountCreated); 
-    }
+        page.removeListener('dialog', accountCreated);
+    };
 
 
 
@@ -45,7 +45,7 @@ describe('Accounts -> Manage Accounts', () => {
         await page.waitForTimeout(3000);
     });
     it('Edit Account', async () => {
-        page.on('dialog',successDialog);
+        page.on('dialog', successDialog);
 
         node = await containsFirst('span', 'expense');
         await node.click();
@@ -61,8 +61,8 @@ describe('Accounts -> Manage Accounts', () => {
 
         await page.waitForTimeout(3000);
     });
-    it ('Delete Account', async ()=>{
-        page.on('dialog',confirmDeleteDialog);
+    it ('Delete Account', async () => {
+        page.on('dialog', confirmDeleteDialog);
 
         await page.waitForTimeout(1000);
 
@@ -74,8 +74,8 @@ describe('Accounts -> Manage Accounts', () => {
         await page.waitForTimeout(1000);
     });
 
-    it ('Add Account', async () =>{
-        page.on('dialog',accountCreated);
+    it ('Add Account', async () => {
+        page.on('dialog', accountCreated);
 
         node = await containsFirst('button', 'Create Account');
         await node.click();
@@ -93,5 +93,5 @@ describe('Accounts -> Manage Accounts', () => {
         await node.click();
 
         await page.waitForTimeout(1000);
-    })
+    });
 });

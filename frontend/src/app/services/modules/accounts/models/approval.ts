@@ -1,10 +1,10 @@
 export const APPROVAL_STATUS_CHOICES = {
-    'APPROVED': 'APPROVED',
-    'PENDING': 'PENDING',
-    'DECLINED': 'DECLINED',
+    APPROVED: 'APPROVED',
+    PENDING: 'PENDING',
+    DECLINED: 'DECLINED',
 };
 
-export class Approval{
+export class Approval {
     id: number;
     parentEmployeeRequestedBy: number;
     parentEmployeeApprovedBy: number = null;
@@ -17,4 +17,4 @@ export class Approval{
     transactionDate: string = null;
 
     requestStatus: 'APPROVED' | 'PENDING' | 'DECLINED';
-};
+}

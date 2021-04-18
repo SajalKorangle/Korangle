@@ -1,21 +1,20 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
 export class ExaminationOldService extends CommonServiceRequirements {
-
     // Examination
     getExaminationList(data: any, token: any): Promise<any> {
         if ('sessionId' in data) {
-            return super.getData(token, '/examinations/examinations/batch?sessionId='+data['sessionId']
-                +'&schoolId='+data['schoolId']);
+            return super.getData(
+                token,
+                '/examinations/examinations/batch?sessionId=' + data['sessionId'] + '&schoolId=' + data['schoolId']
+            );
         } else {
             let url = '/examinations/examinations/batch?e=';
-            Object.keys(data).forEach(key => {
-                url += '&'+key+'='+data[key];
+            Object.keys(data).forEach((key) => {
+                url += '&' + key + '=' + data[key];
             });
             return super.getData(token, url);
         }
@@ -32,8 +31,8 @@ export class ExaminationOldService extends CommonServiceRequirements {
     // Test
     getTestList(data: any, token: any): Promise<any> {
         let url = '/examinations/tests/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
     }
@@ -52,12 +51,18 @@ export class ExaminationOldService extends CommonServiceRequirements {
 
     // Student Test
     getStudentTestList(data: any, token: any): Promise<any> {
-        let url = '/examinations/student-tests/batch' +
-            '?studentList=' + data['studentList'].join() +
-            '&examinationList=' + data['examinationList'].join() +
-            '&subjectList=' + data['subjectList'].join() +
-            '&testTypeList=' + data['testTypeList'].join() +
-            '&marksObtainedList=' + data['marksObtainedList'].join();
+        let url =
+            '/examinations/student-tests/batch' +
+            '?studentList=' +
+            data['studentList'].join() +
+            '&examinationList=' +
+            data['examinationList'].join() +
+            '&subjectList=' +
+            data['subjectList'].join() +
+            '&testTypeList=' +
+            data['testTypeList'].join() +
+            '&marksObtainedList=' +
+            data['marksObtainedList'].join();
         return super.getData(token, url);
     }
 
@@ -76,8 +81,8 @@ export class ExaminationOldService extends CommonServiceRequirements {
     // CCE Marks
     getCCEMarksList(data: any, token: any): Promise<any> {
         let url = '/examinations/old-cce-marks/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
     }
@@ -93,8 +98,8 @@ export class ExaminationOldService extends CommonServiceRequirements {
     // Student Extra Sub Field
     getStudentExtraSubFieldList(data: any, token: any): Promise<any> {
         let url = '/examinations/old-student-extra-sub-fields/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
     }
@@ -110,8 +115,8 @@ export class ExaminationOldService extends CommonServiceRequirements {
     // Mp Board Report Card Mapping
     getMpBoardReportCardMapping(data: any, token: any): Promise<any> {
         let url = '/examinations/mp-board-report-card-mappings?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
     }
@@ -123,5 +128,4 @@ export class ExaminationOldService extends CommonServiceRequirements {
     updateMpBoardReportCardMapping(data: any, token: any): Promise<any> {
         return super.putData(data, token, '/examinations/mp-board-report-card-mappings');
     }
-
 }

@@ -1,4 +1,3 @@
-
 // Board
 export const BOARD_LIST = [
     {

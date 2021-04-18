@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
 export class EnquiryOldService extends CommonServiceRequirements {
-
     // Enquiry
     createEnquiry(data: any, token: any): Promise<any> {
         const url = '/enquiry/enquiries';
@@ -19,8 +16,7 @@ export class EnquiryOldService extends CommonServiceRequirements {
     }
 
     getEnquiryList(data: any, token: any): Promise<any> {
-        const url = '/enquiry/school/' + data['parentSchool']
-            + '/enquiries?startDate=' + data['startDate'] + '&endDate=' + data['endDate'];
+        const url = '/enquiry/school/' + data['parentSchool'] + '/enquiries?startDate=' + data['startDate'] + '&endDate=' + data['endDate'];
         return super.getData(token, url);
     }
 
@@ -39,5 +35,4 @@ export class EnquiryOldService extends CommonServiceRequirements {
         const url = '/enquiry/school/' + data['parentSchool'] + '/mini-enquiries';
         return super.getData(token, url);
     }
-
 }

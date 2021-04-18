@@ -1,127 +1,134 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isInitialLoading">
-
         <div class="row">
             <div class="col-md-12" *ngIf="examinationList.length > 0 && classSectionList.length > 0">
-
                 <mat-form-field>
-                    <mat-select placeholder="Select Examination"
-                                [ngModel]="selectedExamination"
-                                [disabled]="isLoading"
-                                (ngModelChange)="selectedExamination=$event;detectChanges();">
-                        <mat-option *ngFor='let examination of examinationList;' [value]="examination">
-                            {{examination.name}}
+                    <mat-select
+                        placeholder="Select Examination"
+                        [ngModel]="selectedExamination"
+                        [disabled]="isLoading"
+                        (ngModelChange)="selectedExamination = $event; detectChanges()"
+                    >
+                        <mat-option *ngFor="let examination of examinationList" [value]="examination">
+                            {{ examination.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Class"
-                                [disabled]="isLoading"
-                                [ngModel]="selectedClassSection"
-                                (ngModelChange)="selectedClassSection=$event;detectChanges();">
-                        <mat-option *ngFor='let classs of classSectionList;' [value]="classs">
-                            {{classs.class.name}} - {{classs.section.name}}
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
+                    <mat-select
+                        placeholder="Select Class"
+                        [disabled]="isLoading"
+                        [ngModel]="selectedClassSection"
+                        (ngModelChange)="selectedClassSection = $event; detectChanges()"
+                    >
+                        <mat-option *ngFor="let classs of classSectionList" [value]="classs">
+                            {{ classs.class.name }} - {{ classs.section.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Field"
-                                [disabled]="isLoading"
-                                [ngModel]="selectedField"
-                                (ngModelChange)="selectedField=$event;detectChanges();">
-                        <mat-option *ngFor='let field of fieldList;' [value]="field">
-                            {{field.name}}
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
+                    <mat-select
+                        placeholder="Select Field"
+                        [disabled]="isLoading"
+                        [ngModel]="selectedField"
+                        (ngModelChange)="selectedField = $event; detectChanges()"
+                    >
+                        <mat-option *ngFor="let field of fieldList" [value]="field">
+                            {{ field.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <button type="submit"
-                        style="margin-left: 20px;"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getStudentFieldDetails()">GET</button>
+                <button
+                    type="submit"
+                    style="margin-left: 20px"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.getStudentFieldDetails()"
+                >
+                    GET
+                </button>
             </div>
 
-            <div class="col-md-9" *ngIf="examinationList.length === 0">
-                No Examination for you to update fields!
-            </div>
+            <div class="col-md-9" *ngIf="examinationList.length === 0">No Examination for you to update fields!</div>
 
-            <div class="col-md-9" *ngIf="classSectionList.length === 0">
-                No Class permission for you to update fields!
-            </div>
-
+            <div class="col-md-9" *ngIf="classSectionList.length === 0">No Class permission for you to update fields!</div>
         </div>
 
         <ng-container *ngIf="showTestDetails && !isLoading">
-
-            <div class="row" style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px;box-shadow: 5px;">
+            <div class="row" style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px; box-shadow: 5px">
                 <div class="col-md-12"><b>Alert : </b><i>Marks scaling has been changed from 10 to 2</i></div>
             </div>
 
-            <div class="row"
-                 *ngIf="unpopulatedFieldsLength() > 0"
-                 style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px;box-shadow: 5px;">
+            <div
+                class="row"
+                *ngIf="unpopulatedFieldsLength() > 0"
+                style="border-bottom: 0px solid black; margin-top: 15px; margin-bottom: 15px; box-shadow: 5px"
+            >
                 <div class="col-md-12">
                     Generate Random Marks b/w
-                    <input type="number"
-                           placeholder="Min. marks"
-                           style="border-bottom: 1px solid black; width: 35px;"
-                           [(ngModel)]="minimumMarks"
-                           min="0"
-                           max="2"/>
+                    <input
+                        type="number"
+                        placeholder="Min. marks"
+                        style="border-bottom: 1px solid black; width: 35px"
+                        [(ngModel)]="minimumMarks"
+                        min="0"
+                        max="2"
+                    />
                     &
-                    <input type="number"
-                           placeholder="Min. marks"
-                           style="border-bottom: 1px solid black; width: 35px;"
-                           [(ngModel)]="maximumMarks"
-                           min="0"
-                           max="2"/>
-                    <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
-                    <button type="submit"
-                            style="padding: 3px 8px;"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.updateAllRemainingStudentFields()">Generate</button>
+                    <input
+                        type="number"
+                        placeholder="Min. marks"
+                        style="border-bottom: 1px solid black; width: 35px"
+                        [(ngModel)]="maximumMarks"
+                        min="0"
+                        max="2"
+                    />
+                    <br class="visible-sm visible-xs" style="margin-bottom: 10px" />
+                    <button
+                        type="submit"
+                        style="padding: 3px 8px"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="serviceAdapter.updateAllRemainingStudentFields()"
+                    >
+                        Generate
+                    </button>
                 </div>
             </div>
 
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
-                    <th *ngFor="let subField of selectedField.subFieldList">
-                        {{subField.name}} (2)
-                    </th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student</th>
+                        <th>Roll No.</th>
+                        <th *ngFor="let subField of selectedField.subFieldList">{{ subField.name }} (2)</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let student of getFilteredStudentList(); let i=index;">
-                    <td>{{(i+1)}}.</td>
-                    <td>{{student.name}}</td>
-                    <td>{{student.studentSection.rollNumber}}</td>
-                    <td *ngFor="let studentSubField of student.subFieldList">
-                        <input type="number"
-                               placeholder="Type marks here"
-                               [attr.id]="student.id+'_'+studentSubField.parentExtraSubField"
-                               [ngModel]="studentSubField.marksObtained"
-                               min="0"
-                               max="2"
-                               (blur)="serviceAdapter.updateStudentField(studentSubField,$event.target.value)"/>
-                    </td>
-                </tr>
+                    <tr *ngFor="let student of getFilteredStudentList(); let i = index">
+                        <td>{{ i + 1 }}.</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.studentSection.rollNumber }}</td>
+                        <td *ngFor="let studentSubField of student.subFieldList">
+                            <input
+                                type="number"
+                                placeholder="Type marks here"
+                                [attr.id]="student.id + '_' + studentSubField.parentExtraSubField"
+                                [ngModel]="studentSubField.marksObtained"
+                                min="0"
+                                max="2"
+                                (blur)="serviceAdapter.updateStudentField(studentSubField, $event.target.value)"
+                            />
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-
         </ng-container>
-
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

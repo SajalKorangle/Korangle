@@ -1,74 +1,79 @@
 <h3 mat-dialog-title>
     Add Account
-    <i class="material-icons" mat-dialog-close style="float: right;cursor:pointer">close</i>
+    <i class="material-icons" mat-dialog-close style="float: right; cursor: pointer">close</i>
 </h3>
 <ng-container *ngIf="!isLoading">
-<mat-dialog-content style="overflow: hidden;">
-    
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <input type="text" matInput required [(ngModel)]="accountName" placeholder="Account Name">
-            <span matSuffix>A/c</span>
-        </mat-form-field>
-    </div>
-    <div class="col-md-12" *ngIf="accountName.trim().length == 0" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Account Name Can Not Be Blank</span>
-    </div>
-    <div class="col-md-12" *ngIf="htmlRenderer.isAccountNameAlreadyExists()" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Account Name already exists</span>
-    </div>
+    <mat-dialog-content style="overflow: hidden">
+        <div class="row col-md-12">
+            <mat-form-field style="width: 100%">
+                <input type="text" matInput required [(ngModel)]="accountName" placeholder="Account Name" />
+                <span matSuffix>A/c</span>
+            </mat-form-field>
+        </div>
+        <div class="col-md-12" *ngIf="accountName.trim().length == 0" style="padding-left: 0px; margin-top: -15px; margin-bottom: 5px">
+            <span style="font-size: 11px; color: red">Account Name Can Not Be Blank</span>
+        </div>
+        <div
+            class="col-md-12"
+            *ngIf="htmlRenderer.isAccountNameAlreadyExists()"
+            style="padding-left: 0px; margin-top: -15px; margin-bottom: 5px"
+        >
+            <span style="font-size: 11px; color: red">Account Name already exists</span>
+        </div>
 
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <mat-select placeholder="Add Group" [ngModel]="parentGroup"
-                (ngModelChange)="parentGroup = $event;assignHeadFromGroup()">
-                <mat-option (click)="parentGroup = null; parentHead = null">
-                    None
-                </mat-option>
-                <mat-option *ngFor="let group of data.vm.groupsList"
-                    [value]="group">
-                    {{group.title}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+        <div class="row col-md-12">
+            <mat-form-field style="width: 100%">
+                <mat-select placeholder="Add Group" [ngModel]="parentGroup" (ngModelChange)="parentGroup = $event; assignHeadFromGroup()">
+                    <mat-option (click)="parentGroup = null; parentHead = null"> None </mat-option>
+                    <mat-option *ngFor="let group of data.vm.groupsList" [value]="group">
+                        {{ group.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
+        <div class="row col-md-12">
+            <mat-form-field style="width: 100%">
+                <mat-select
+                    placeholder="Add Head *"
+                    [ngModel]="parentHead"
+                    [disabled]="parentGroup != null"
+                    (ngModelChange)="parentHead = $event"
+                >
+                    <mat-option *ngFor="let head of data.vm.headsList" [value]="head">
+                        {{ head.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-12" *ngIf="parentHead == null" style="padding-left: 0px; margin-top: -15px; margin-bottom: 5px">
+            <span style="font-size: 11px; color: red">Head Can Not Be Empty</span>
+        </div>
 
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <mat-select placeholder="Add Head *" [ngModel]="parentHead"
-                [disabled]="parentGroup != null"
-                (ngModelChange)="parentHead = $event">
-                <mat-option *ngFor="let head of data.vm.headsList"
-                    [value]="head">
-                    {{head.title}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="col-md-12" *ngIf="parentHead == null" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Head Can Not Be Empty</span>
-    </div>
-
-    
-
-    <div class="row col-md-12">
-        <customized-number-input [placeHolder]="'Opening Balance'"
+        <div class="row col-md-12">
+            <customized-number-input
+                [placeHolder]="'Opening Balance'"
                 [minimum]="0"
                 [maximumDecimal]="2"
                 [inputValue]="openingBalance"
-                (outputValue)="openingBalance=$event;"></customized-number-input>
+                (outputValue)="openingBalance = $event"
+            ></customized-number-input>
+        </div>
+    </mat-dialog-content>
+    <div mat-dialog-actions>
+        <div class="row col-md-12">
+            <span
+                *ngIf="htmlRenderer.isAddButtonDisplayed()"
+                mat-button
+                style="color: rgba(255, 152, 0, 1); cursor: pointer"
+                (click)="addAccount()"
+                >Add Account</span
+            >
+        </div>
     </div>
-
-</mat-dialog-content>
-<div mat-dialog-actions>
-    <div class="row col-md-12">
-        <span *ngIf="htmlRenderer.isAddButtonDisplayed()" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addAccount()">Add Account</span>
-    </div>
-</div>
 </ng-container>
 <ng-container *ngIf="isLoading">
-    <mat-dialog-content style="overflow: hidden;">
+    <mat-dialog-content style="overflow: hidden">
         <app-loading-spinner [user]="data.user"></app-loading-spinner>
     </mat-dialog-content>
 </ng-container>

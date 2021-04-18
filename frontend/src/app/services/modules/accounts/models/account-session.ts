@@ -1,4 +1,3 @@
-
 export class AccountSession {
     id: number;
     parentAccount: number;

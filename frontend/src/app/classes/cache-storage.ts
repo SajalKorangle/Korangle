@@ -1,6 +1,4 @@
-
 export class CacheStorage {
-
     static cacheStorage: CacheStorage;
 
     classList: any;
@@ -14,5 +12,4 @@ export class CacheStorage {
         }
         return CacheStorage.cacheStorage;
     }
-
 }

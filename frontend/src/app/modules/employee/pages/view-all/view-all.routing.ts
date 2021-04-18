@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {ViewAllComponent} from "./view-all.component";
+import { ViewAllComponent } from './view-all.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: ViewAllComponent ,
-    }
+        component: ViewAllComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class ViewAllRoutingModule { }
+export class ViewAllRoutingModule {}

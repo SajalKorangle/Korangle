@@ -8,14 +8,14 @@ import {containsFirst} from '../../../../contains';
 describe('Parents -> View Homework', () => {
 
     let page: any;
-    let node,prop;
+    let node, prop;
 
     beforeAll(async () => {
 
         startBackendServer(getFixtureFiles('modules/parent/pages/view-homework/view-homework.json'));
         page = await BeforeAfterEach.beforeEach();
-        await page.select('select[ng-reflect-model="Employee"]','Parent'); 
-        await openModuleAndPage('Homework','');
+        await page.select('select[ng-reflect-model="Employee"]', 'Parent');
+        await openModuleAndPage('Homework', '');
 
     });
 
@@ -27,7 +27,7 @@ describe('Parents -> View Homework', () => {
         await page.waitForXPath('//textarea');
         let nodes = await containsFirst('textarea', '');
         await nodes.type('Answer for the first homework');
-        
+
 
         page.on('dialog', async dialogs => {
             page.on('dialog', async dialog => {
@@ -36,14 +36,14 @@ describe('Parents -> View Homework', () => {
             await dialogs.accept();
 
         });
-        
+
 
 
         await (await containsFirst('button', 'Submit Answer')).click();
 
 
-        await page.select('select[ng-reflect-model="Parent"]','Employee'); 
-        await openModuleAndPage('Homework','Check Homework');
+        await page.select('select[ng-reflect-model="Parent"]', 'Employee');
+        await openModuleAndPage('Homework', 'Check Homework');
 
 
         await BeforeAfterEach.page.waitForXPath('//a[@testId="homeworkCount"]');

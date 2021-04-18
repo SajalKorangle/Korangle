@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {AddEventComponent} from '@modules/event-gallery/pages/add-event/add-event.component';
+import { CommonModule } from '@angular/common';
+import { AddEventComponent } from '@modules/event-gallery/pages/add-event/add-event.component';
 
-
-const routes: Routes = [ {
+const routes: Routes = [
+    {
         path: '',
-        component: AddEventComponent ,
-    }];
+        component: AddEventComponent,
+    },
+];
 
 @NgModule({
-  imports: [CommonModule,
-      RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class AddEventRoutingModule { }
+export class AddEventRoutingModule {}

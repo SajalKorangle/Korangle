@@ -1,108 +1,122 @@
 <div class="card-content table-responsive" *ngIf="!isLoading; else spinner">
-    <div style="display: inline-block;">
-        <h3 class="text-{{user.activeSchool.secondaryThemeColor}}">Upload Sheet</h3>
-        <input type='file' (change)="uploadSheet($event)" multiple="false" accept=".xlsx">
+    <div style="display: inline-block">
+        <h3 class="text-{{ user.activeSchool.secondaryThemeColor }}">Upload Sheet</h3>
+        <input type="file" (change)="uploadSheet($event)" multiple="false" accept=".xlsx" />
     </div>
 
-    <ng-container *ngIf="excelDataFromUser.length!==0">
-        
-        <h6 *ngIf="errorCount()+warningCount()>0">
-            <span [style.color]="errorCount()>0?'red':'green'">{{errorCount()}} Errors </span> and 
-            <span [style.color]="warningCount()>0?'#FFCC00':'green'">{{warningCount()}} warnings</span>
+    <ng-container *ngIf="excelDataFromUser.length !== 0">
+        <h6 *ngIf="errorCount() + warningCount() > 0">
+            <span [style.color]="errorCount() > 0 ? 'red' : 'green'">{{ errorCount() }} Errors </span> and
+            <span [style.color]="warningCount() > 0 ? '#FFCC00' : 'green'">{{ warningCount() }} warnings</span>
         </h6>
-        
-        <mat-card style="overflow: auto; margin-top: 16px;">
-        <button *ngIf="isUploadable" style="position: sticky; left: 0; float: left; z-index: 1;"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="uploadToServer()">Upload Data</button>
 
-        <div style="text-align: right; position: sticky; left: 0">
-            <mat-button-toggle-group>
-                <mat-button-toggle value="all" [checked]="activeFilter==='all'"  (click)="filterBy('all')">All</mat-button-toggle>
-                <mat-button-toggle value="errors" (click)="filterBy('errors')">Errors</mat-button-toggle>
-                <mat-button-toggle value="warnings" (click)="filterBy('warnings')">Warnings</mat-button-toggle>
-            </mat-button-toggle-group>
-        </div>
+        <mat-card style="overflow: auto; margin-top: 16px">
+            <button
+                *ngIf="isUploadable"
+                style="position: sticky; left: 0; float: left; z-index: 1"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="uploadToServer()"
+            >
+                Upload Data
+            </button>
 
-        <table class="table table-hover table-responsive">
-            <thead>
-                <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
-                    <th>1</th>
-                    <th *ngFor="let col of getVisibleColumnIndexList()" [class.bgDanger]="errorCells['0,'+col]" [matTooltip]="errorCells['0,'+col]">
-                        {{excelDataFromUser[0][col]}}
-                    </th>
-                </tr>
-            </thead>
+            <div style="text-align: right; position: sticky; left: 0">
+                <mat-button-toggle-group>
+                    <mat-button-toggle value="all" [checked]="activeFilter === 'all'" (click)="filterBy('all')">All</mat-button-toggle>
+                    <mat-button-toggle value="errors" (click)="filterBy('errors')">Errors</mat-button-toggle>
+                    <mat-button-toggle value="warnings" (click)="filterBy('warnings')">Warnings</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
 
-            <tbody>
-            <ng-container *ngFor="let row of filteredRows">
-                <tr [class.bgDanger]="errorRows[row]" [matTooltip]="errorRows[row]">
-                    <td>{{row+1}}</td>
-                    <ng-container *ngFor="let col of getVisibleColumnIndexList()">
-                        <td [class.bgWarning]="warningCells[(row)+','+col]" [class.bgDanger]="errorCells[(row)+','+col]" [matTooltip]="errorCells[(row)+','+col]?errorCells[(row)+','+col]:warningCells[(row)+','+col]">{{excelDataFromUser[row][col]}}</td>
+            <table class="table table-hover table-responsive">
+                <thead>
+                    <tr class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <th>1</th>
+                        <th
+                            *ngFor="let col of getVisibleColumnIndexList()"
+                            [class.bgDanger]="errorCells['0,' + col]"
+                            [matTooltip]="errorCells['0,' + col]"
+                        >
+                            {{ excelDataFromUser[0][col] }}
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <ng-container *ngFor="let row of filteredRows">
+                        <tr [class.bgDanger]="errorRows[row]" [matTooltip]="errorRows[row]">
+                            <td>{{ row + 1 }}</td>
+                            <ng-container *ngFor="let col of getVisibleColumnIndexList()">
+                                <td
+                                    [class.bgWarning]="warningCells[row + ',' + col]"
+                                    [class.bgDanger]="errorCells[row + ',' + col]"
+                                    [matTooltip]="errorCells[row + ',' + col] ? errorCells[row + ',' + col] : warningCells[row + ',' + col]"
+                                >
+                                    {{ excelDataFromUser[row][col] }}
+                                </td>
+                            </ng-container>
+                        </tr>
                     </ng-container>
-                </tr>
-            </ng-container>
-            </tbody>
-
-        </table>
+                </tbody>
+            </table>
         </mat-card>
     </ng-container>
 
-    <hr/>
+    <hr />
 
-    <h3 class="text-{{user.activeSchool.secondaryThemeColor}}">Download Template</h3>
-    <h3 style="display: block;">{{selectionCount}} / {{studentsCount}}</h3>
-    
+    <h3 class="text-{{ user.activeSchool.secondaryThemeColor }}">Download Template</h3>
+    <h3 style="display: block">{{ selectionCount }} / {{ studentsCount }}</h3>
+
     <!-- Class Filter -->
-    <mat-form-field style="margin-right: 25px;">
-        <mat-select placeholder="Select Class" id="select-class" style="width: 100%;">
-
+    <mat-form-field style="margin-right: 25px">
+        <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
             <mat-option>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        id="select-all-classes"
-                        (click)="updateAllClassesSelection(true); $event.stopPropagation();">
-                        Select All
+                <button
+                    class="btn"
+                    style="padding: 4px 7px"
+                    id="select-all-classes"
+                    (click)="updateAllClassesSelection(true); $event.stopPropagation()"
+                >
+                    Select All
                 </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="updateAllClassesSelection(false); $event.stopPropagation();">Clear All
+                <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(false); $event.stopPropagation()">
+                    Clear All
                 </button>
             </mat-option>
 
             <ng-container *ngFor="let class of classList">
                 <ng-container *ngFor="let section of divisionList">
-                    <mat-option *ngIf="studentListMappedByClassIdDivisionId[class.id][section.id]" style="width: 100%;">
-                        <mat-checkbox [(ngModel)]="classDivisionSelectionMappedByClassIdDivisionId[class.id][section.id]"
-                                      (ngModelChange)="selectionCount = $event ?
-                                                                       selectionCount + studentListMappedByClassIdDivisionId[class.id][section.id].length :
-                                                                       selectionCount - studentListMappedByClassIdDivisionId[class.id][section.id].length"
-                                      (click)="$event.stopPropagation();">
-                            {{class.name}}
-                            <span *ngIf="showSection(class)">, {{section.name}}</span>
+                    <mat-option *ngIf="studentListMappedByClassIdDivisionId[class.id][section.id]" style="width: 100%">
+                        <mat-checkbox
+                            [(ngModel)]="classDivisionSelectionMappedByClassIdDivisionId[class.id][section.id]"
+                            (ngModelChange)="
+                                selectionCount = $event
+                                    ? selectionCount + studentListMappedByClassIdDivisionId[class.id][section.id].length
+                                    : selectionCount - studentListMappedByClassIdDivisionId[class.id][section.id].length
+                            "
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ class.name }}
+                            <span *ngIf="showSection(class)">, {{ section.name }}</span>
                         </mat-checkbox>
                     </mat-option>
                 </ng-container>
             </ng-container>
 
             <mat-option>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="updateAllClassesSelection(true); $event.stopPropagation();">Select All
+                <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(true); $event.stopPropagation()">
+                    Select All
                 </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="updateAllClassesSelection(false); $event.stopPropagation();">Clear All
+                <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(false); $event.stopPropagation()">
+                    Clear All
                 </button>
             </mat-option>
-
         </mat-select>
     </mat-form-field>
-    
-    <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="downloadSheetTemplate()">Download Template</button>
+
+    <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="downloadSheetTemplate()">
+        Download Template
+    </button>
 </div>
 
 <ng-template #spinner>

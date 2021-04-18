@@ -1,8 +1,6 @@
-
-import {CreateExaminationComponent} from './create-examination.component';
+import { CreateExaminationComponent } from './create-examination.component';
 
 export class CreateExaminationServiceAdapter {
-
     vm: CreateExaminationComponent;
 
     constructor() {}
@@ -15,7 +13,6 @@ export class CreateExaminationServiceAdapter {
 
     // initialize data
     initializeData(): void {
-
         this.vm.isLoading = true;
 
         let request_examination_data = {
@@ -23,35 +20,35 @@ export class CreateExaminationServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-        this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data).then(value => {
-            this.populateExaminationList(value);
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data).then(
+            (value) => {
+                this.populateExaminationList(value);
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     populateExaminationList(examinationList: any): void {
         this.vm.examinationList = examinationList;
-        this.vm.examinationList.forEach(examination => {
+        this.vm.examinationList.forEach((examination) => {
             examination['newName'] = examination['name'];
             examination['newStatus'] = examination['status'];
             examination['updating'] = false;
-        })
+        });
     }
 
     // Create Examination
     createExamination(): void {
-
-        if (this.vm.examinationNameToBeAdded === null
-            || this.vm.examinationNameToBeAdded == "") {
+        if (this.vm.examinationNameToBeAdded === null || this.vm.examinationNameToBeAdded == '') {
             alert('Examination Name should be populated');
             return;
         }
 
         let nameAlreadyExists = false;
-        this.vm.examinationList.every(examination => {
+        this.vm.examinationList.every((examination) => {
             if (examination.name === this.vm.examinationNameToBeAdded) {
                 nameAlreadyExists = true;
                 return false;
@@ -71,23 +68,25 @@ export class CreateExaminationServiceAdapter {
         }*/
 
         let data = {
-            'name': this.vm.examinationNameToBeAdded,
-            'status': 'Created', // this.vm.examinationStatusToBeAdded,
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            name: this.vm.examinationNameToBeAdded,
+            status: 'Created', // this.vm.examinationStatusToBeAdded,
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         console.log(data);
 
-        this.vm.examinationService.createObject(this.vm.examinationService.examination, data).then(value => {
-            this.addToExaminationList(value);
-            this.vm.examinationNameToBeAdded = null;
-            // this.vm.examinationStatusToBeAdded = null;
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        this.vm.examinationService.createObject(this.vm.examinationService.examination, data).then(
+            (value) => {
+                this.addToExaminationList(value);
+                this.vm.examinationNameToBeAdded = null;
+                // this.vm.examinationStatusToBeAdded = null;
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     addToExaminationList(examination: any): void {
@@ -99,15 +98,13 @@ export class CreateExaminationServiceAdapter {
 
     // Update Examination
     updateExamination(examination: any): void {
-
-        if (examination.newName === null
-            || examination.newName == "") {
+        if (examination.newName === null || examination.newName == '') {
             alert('Examination Name should be populated');
             return;
         }
 
         let nameAlreadyExists = false;
-        this.vm.examinationList.every(item => {
+        this.vm.examinationList.every((item) => {
             if (item.name === examination.newName && item.id !== examination.id) {
                 nameAlreadyExists = true;
                 return false;
@@ -129,24 +126,25 @@ export class CreateExaminationServiceAdapter {
         }
 
         let data = {
-            'id': examination.id,
-            'name': examination.newName,
-            'status': examination.newStatus,
-            'parentSchool': examination.parentSchool,
-            'parentSession': examination.parentSession,
+            id: examination.id,
+            name: examination.newName,
+            status: examination.newStatus,
+            parentSchool: examination.parentSchool,
+            parentSession: examination.parentSession,
         };
 
-        this.vm.examinationService.updateObject(this.vm.examinationService.examination, data).then(value => {
-            alert("Examination updated successfully");
-            examination.name = value.name;
-            examination.status = value.status;
-            examination.updating = false;
-            this.vm.isLoading = false;
-        }, error => {
-            examination.updating = false;
-            this.vm.isLoading = false;
-        });
-
+        this.vm.examinationService.updateObject(this.vm.examinationService.examination, data).then(
+            (value) => {
+                alert('Examination updated successfully');
+                examination.name = value.name;
+                examination.status = value.status;
+                examination.updating = false;
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                examination.updating = false;
+                this.vm.isLoading = false;
+            }
+        );
     }
-
 }

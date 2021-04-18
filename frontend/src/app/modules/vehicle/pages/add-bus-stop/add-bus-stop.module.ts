@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {AddBusStopRoutingModule} from './add-bus-stop.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {AddBusStopComponent} from "./add-bus-stop.component";
-
+import { AddBusStopRoutingModule } from './add-bus-stop.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { AddBusStopComponent } from './add-bus-stop.component';
 
 @NgModule({
-    declarations: [
-        AddBusStopComponent
-    ],
+    declarations: [AddBusStopComponent],
 
-    imports: [
-        AddBusStopRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [AddBusStopRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [AddBusStopComponent]
+    bootstrap: [AddBusStopComponent],
 })
-export class AddBusStopModule { }
+export class AddBusStopModule {}

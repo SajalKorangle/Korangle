@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {PrintProfileComponent} from './print-profile.component';
+import { PrintProfileComponent } from './print-profile.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: PrintProfileComponent ,
-    }
+        component: PrintProfileComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class PrintProfileRoutingModule { }
+export class PrintProfileRoutingModule {}

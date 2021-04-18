@@ -1,37 +1,37 @@
 <div class="card-content">
-
     <div class="row">
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">Start Date</label>
-                <input type="date" class="form-control" [(ngModel)]="startDate" (ngModelChange)="expenseList = []">
+                <input type="date" class="form-control" [(ngModel)]="startDate" (ngModelChange)="expenseList = []" />
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">End Date</label>
-                <input type="date" class="form-control" [(ngModel)]="endDate" (ngModelChange)="expenseList = []">
+                <input type="date" class="form-control" [(ngModel)]="endDate" (ngModelChange)="expenseList = []" />
             </div>
         </div>
         <div class="col-md-3">
-            <button type="button"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="getExpenseList();">Submit</button><br>
+            <button type="button" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="getExpenseList()">Submit</button
+            ><br />
         </div>
         <div class="col-md-3">
-            <button type="button"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    [disabled]='expenseList.length == 0'
-                    (click)="printExpenses();">Print</button><br>
+            <button
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                [disabled]="expenseList.length == 0"
+                (click)="printExpenses()"
+            >
+                Print</button
+            ><br />
         </div>
     </div>
 
     <div class="row" *ngIf="!isLoading && expenseList.length > 0">
-        <div class="col-md-6">
-            Total Expenses: {{totalExpenses | indianCurrency:true}}
-        </div>
+        <div class="col-md-6">Total Expenses: {{ totalExpenses | indianCurrency: true }}</div>
         <div class="col-md-6" align="right">
-            From: {{displayStartDate | date: 'dd - MMM - yyyy'}}, To: {{displayEndDate | date: 'dd - MMM - yyyy'}}
+            From: {{ displayStartDate | date: 'dd - MMM - yyyy' }}, To: {{ displayEndDate | date: 'dd - MMM - yyyy' }}
         </div>
     </div>
 
@@ -45,18 +45,16 @@
                     <td align="center">Remark</td>
                 </tr>
                 <tr *ngFor="let expenseEntry of expenseList">
-                    <td align="left">{{expenseEntry.voucherNumber}}</td>
-                    <td align="right">{{expenseEntry.amount}}</td>
-                    <td align="center">{{expenseEntry.voucherDate | date: 'dd - MMM - yyyy'}}</td>
-                    <td align="center">{{expenseEntry.remark}}</td>
+                    <td align="left">{{ expenseEntry.voucherNumber }}</td>
+                    <td align="right">{{ expenseEntry.amount }}</td>
+                    <td align="center">{{ expenseEntry.voucherDate | date: 'dd - MMM - yyyy' }}</td>
+                    <td align="center">{{ expenseEntry.remark }}</td>
                 </tr>
             </table>
         </div>
     </div>
-
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

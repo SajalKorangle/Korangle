@@ -1,138 +1,78 @@
-
 export const FONT_FAMILY_LIST = [
     {
         displayName: 'Arial',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
     {
         displayName: 'Bell MT',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Blackadder ITC',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Bodoni MT',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Bodoni MT Black',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Book Antiquai',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
     {
         displayName: 'Brush Script MT',
-        styleList: [
-            'Italic',
-        ]
+        styleList: ['Italic'],
     },
     {
         displayName: 'Calibri',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
     {
         displayName: 'Century',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
     {
         displayName: 'Century Gothic',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
     {
         displayName: 'Copperplate Gothic Bold',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Courier',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
     {
         displayName: 'Elephant',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Forte',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Harlow Solid Italic',
-        styleList: [
-            'Italic',
-        ]
+        styleList: ['Italic'],
     },
     {
         displayName: 'Lucida Calligraphy',
-        styleList: [
-            'Italic',
-        ]
+        styleList: ['Italic'],
     },
     {
         displayName: 'Lucida Handwriting',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Mongolian Baiti',
-        styleList: [
-            'Normal',
-        ]
+        styleList: ['Normal'],
     },
     {
         displayName: 'Times New Roman',
-        styleList: [
-            'Normal',
-            'Bold',
-            'Italic',
-            'BoldItalic',
-        ]
+        styleList: ['Normal', 'Bold', 'Italic', 'BoldItalic'],
     },
 ];

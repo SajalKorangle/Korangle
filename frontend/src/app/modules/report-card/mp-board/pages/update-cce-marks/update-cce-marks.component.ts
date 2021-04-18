@@ -6,21 +6,19 @@ import { ClassService } from '../../../../../services/modules/class/class.servic
 import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
 
 import { UpdateCceMarksServiceAdapter } from './update-cce-marks.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../../classes/constants/test-type';
-import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
+import { TEST_TYPE_LIST } from '../../../../../classes/constants/test-type';
+import { StudentOldService } from '../../../../../services/modules/student/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {DataStorage} from "../../../../../classes/data-storage";
+import { DataStorage } from '../../../../../classes/data-storage';
 
 @Component({
     selector: 'update-cce-marks',
     templateUrl: './update-cce-marks.component.html',
     styleUrls: ['./update-cce-marks.component.css'],
-    providers: [ ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService ],
+    providers: [ExaminationOldService, ClassService, SubjectOldService, StudentOldService, ExaminationService],
 })
-
 export class UpdateCceMarksComponent implements OnInit {
-
     user;
 
     classStudentCCEMarksList: any;
@@ -31,12 +29,14 @@ export class UpdateCceMarksComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
-                public classService: ClassService,
-                public subjectService: SubjectOldService,
-                public studentService: StudentOldService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(
+        public examinationOldService: ExaminationOldService,
+        public examinationService: ExaminationService,
+        public classService: ClassService,
+        public subjectService: SubjectOldService,
+        public studentService: StudentOldService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -51,12 +51,11 @@ export class UpdateCceMarksComponent implements OnInit {
     }
 
     getFilteredStudentList(list: any): any {
-        return list.filter(item => {
+        return list.filter((item) => {
             if (item.parentTransferCertificate === null) {
                 return true;
             }
             return false;
-        })
+        });
     }
-
 }

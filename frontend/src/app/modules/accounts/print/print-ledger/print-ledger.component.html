@@ -1,15 +1,11 @@
 <div class="row col-md-12">
-    <span>
-        Account - {{account.title}}&nbsp;A/c
-    </span>
-    <span style="float: right;">
-        Current Balance: {{account.currentBalance}} 
-    </span>
+    <span> Account - {{ account.title }}&nbsp;A/c </span>
+    <span style="float: right"> Current Balance: {{ account.currentBalance }} </span>
 </div>
 
 <table class="table table-hover">
-    <thead style="color: rgba(255, 152, 0, 1);">
-        <tr> 
+    <thead style="color: rgba(255, 152, 0, 1)">
+        <tr>
             <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
             <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
             <th *ngIf="columnFilter.accounts.value" class="text-left"><span>Account</span></th>
@@ -18,35 +14,42 @@
             <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
             <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
             <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
-            
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let transaction of transactionsList">
-            
-            <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
-            <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
-            <td *ngIf="columnFilter.accounts.value" class="text-left" style="vertical-align: top;" >
-                <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
-                    <span>{{account.accountTitle}}&nbsp;A/c</span><br>
+            <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top">
+                <span>{{ transaction.voucherNumber }}</span>
+            </td>
+            <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top">
+                <span>{{ getDisplayDateFormat(transaction.transactionDate) }}</span>
+            </td>
+            <td *ngIf="columnFilter.accounts.value" class="text-left" style="vertical-align: top">
+                <div *ngFor="let account of transaction.accounts" style="margin-bottom: 10px">
+                    <span>{{ account.accountTitle }}&nbsp;A/c</span><br />
                 </div>
             </td>
-            <td *ngIf="columnFilter.debitAmount.value" class="text-left" style="vertical-align: top;" >
-                <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
-                    <span style="color: rgba(76, 175, 80, 1);" *ngIf="account.type == 'DEBIT'">{{account.amount}}</span><br>
+            <td *ngIf="columnFilter.debitAmount.value" class="text-left" style="vertical-align: top">
+                <div *ngFor="let account of transaction.accounts" style="margin-bottom: 10px">
+                    <span style="color: rgba(76, 175, 80, 1)" *ngIf="account.type == 'DEBIT'">{{ account.amount }}</span
+                    ><br />
                 </div>
             </td>
-            <td *ngIf="columnFilter.creditAmount.value" class="text-left" style="vertical-align: top;" >
-                <div *ngFor="let account of transaction.accounts;" style="margin-bottom: 10px;">
-                    <span style="color:rgba(86, 142, 174, 1)" *ngIf="account.type == 'CREDIT'">{{account.amount}}</span><br>
+            <td *ngIf="columnFilter.creditAmount.value" class="text-left" style="vertical-align: top">
+                <div *ngFor="let account of transaction.accounts" style="margin-bottom: 10px">
+                    <span style="color: rgba(86, 142, 174, 1)" *ngIf="account.type == 'CREDIT'">{{ account.amount }}</span
+                    ><br />
                 </div>
             </td>
-            <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
-            <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
-            <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
-            
+            <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top">
+                <span>{{ transaction.remark }}</span>
+            </td>
+            <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top">
+                <span>{{ transaction.approvalId }}</span>
+            </td>
+            <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top">
+                <span>{{ transaction.parentEmployeeName }}</span>
+            </td>
         </tr>
-        
     </tbody>
-
 </table>

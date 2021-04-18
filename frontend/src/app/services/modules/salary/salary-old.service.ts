@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
 export class SalaryOldService extends CommonServiceRequirements {
-
     // Payslip
     getSchoolPayslips(data: any, token: any): Promise<any> {
         let url = '/salary/payslips/school/' + data['parentSchool'];
@@ -30,8 +27,8 @@ export class SalaryOldService extends CommonServiceRequirements {
 
     getPayslipList(data: any, token: any): Promise<any> {
         let url = '/salary/payslips/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         // url.replace("&", "?");
         return super.getData(token, url);
@@ -54,12 +51,12 @@ export class SalaryOldService extends CommonServiceRequirements {
 
     // Employee Payment
     getSchoolEmployeePaymentList(data: any, token: any): Promise<any> {
-        let url = '/salary/employee-payments/school/'+data['parentSchool'];
+        let url = '/salary/employee-payments/school/' + data['parentSchool'];
         return super.getData(token, url);
     }
 
     getEmployeePaymentList(data: any, token: any): Promise<any> {
-        let url = '/salary/employee-payments/employee/'+data['parentEmployee'];
+        let url = '/salary/employee-payments/employee/' + data['parentEmployee'];
         return super.getData(token, url);
     }
 
@@ -72,5 +69,4 @@ export class SalaryOldService extends CommonServiceRequirements {
         const url = '/salary/employee-payments/' + data['id'];
         return super.deleteData(token, url);
     }
-
 }

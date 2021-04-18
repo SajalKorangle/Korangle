@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
-import { RecordPaymentRoutingModule} from './record-payment.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {RecordPaymentComponent} from "./record-payment.component";
-
+import { RecordPaymentRoutingModule } from './record-payment.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { RecordPaymentComponent } from './record-payment.component';
 
 @NgModule({
-    declarations: [
-        RecordPaymentComponent
-    ],
+    declarations: [RecordPaymentComponent],
 
-    imports: [
-        RecordPaymentRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [RecordPaymentRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [RecordPaymentComponent]
+    bootstrap: [RecordPaymentComponent],
 })
-export class RecordPaymentModule { }
+export class RecordPaymentModule {}

@@ -5,20 +5,17 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 
-
 import { SetClassSubjectServiceAdapter } from './set-class-subject.service.adapter';
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
-import {DataStorage} from "../../../../classes/data-storage";
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'set-class-subject',
     templateUrl: './set-class-subject.component.html',
     styleUrls: ['./set-class-subject.component.css'],
-    providers: [ SubjectOldService, ClassService, StudentOldService, SchoolService, EmployeeOldService ],
+    providers: [SubjectOldService, ClassService, StudentOldService, SchoolService, EmployeeOldService],
 })
-
 export class SetClassSubjectComponent implements OnInit {
-
     user;
 
     serviceAdapter: SetClassSubjectServiceAdapter;
@@ -42,11 +39,13 @@ export class SetClassSubjectComponent implements OnInit {
 
     employeeList: any;
 
-    constructor(public subjectService: SubjectOldService,
-                public classService: ClassService,
-                public studentService: StudentOldService,
-                public schoolService: SchoolService,
-                public employeeService: EmployeeOldService) {}
+    constructor(
+        public subjectService: SubjectOldService,
+        public classService: ClassService,
+        public studentService: StudentOldService,
+        public schoolService: SchoolService,
+        public employeeService: EmployeeOldService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -58,9 +57,9 @@ export class SetClassSubjectComponent implements OnInit {
 
     getFilteredSubjectList(): void {
         this.filteredSubjectList = [];
-        this.subjectList.forEach(subject => {
+        this.subjectList.forEach((subject) => {
             let shouldBeAdded = true;
-            this.selectedClass.selectedSection.subjectList.every(subjectTwo => {
+            this.selectedClass.selectedSection.subjectList.every((subjectTwo) => {
                 if (subjectTwo.parentSubject === subject.id) {
                     shouldBeAdded = false;
                     return false;
@@ -76,7 +75,7 @@ export class SetClassSubjectComponent implements OnInit {
 
     getSubjectName(subject: any): any {
         let result = '';
-        this.subjectList.every(subj => {
+        this.subjectList.every((subj) => {
             if (subj.id === subject.parentSubject) {
                 result = subj.name;
                 return false;
@@ -87,13 +86,14 @@ export class SetClassSubjectComponent implements OnInit {
     }
 
     isSubjectUpdateDisabled(subject: any): boolean {
-        if (subject.newEmployee.id !== subject.parentEmployee
-            || subject.newMainSubject !== subject.mainSubject
-            || subject.newOrderNumber !== subject.orderNumber
-            || subject.newOnlyGrade !== subject.onlyGrade) {
+        if (
+            subject.newEmployee.id !== subject.parentEmployee ||
+            subject.newMainSubject !== subject.mainSubject ||
+            subject.newOrderNumber !== subject.orderNumber ||
+            subject.newOnlyGrade !== subject.onlyGrade
+        ) {
             return false;
         }
         return true;
     }
-
 }

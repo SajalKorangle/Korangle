@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
 import { SettingsRoutingModule } from './settings.routing';
-import { ComponentsModule } from "../../../../components/components.module";
-import { SettingsComponent } from "./settings.component";
-
+import { ComponentsModule } from '../../../../components/components.module';
+import { SettingsComponent } from './settings.component';
 
 @NgModule({
-    declarations: [
-        SettingsComponent
-    ],
+    declarations: [SettingsComponent],
 
-    imports: [
-        SettingsRoutingModule,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [SettingsRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [SettingsComponent]
+    bootstrap: [SettingsComponent],
 })
-export class SettingsModule { }
+export class SettingsModule {}

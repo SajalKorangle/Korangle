@@ -1,6 +1,2 @@
-
 // School Medium
-export const MEDIUM_LIST = [
-    'ENGLISH',
-    'HINDI',
-];
+export const MEDIUM_LIST = ['ENGLISH', 'HINDI'];

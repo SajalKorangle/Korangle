@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
-import {ExperienceCertiRoutingModule } from './experience-certi.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ExperienceCertiComponent} from "./experience-certi.component";
-
+import { ExperienceCertiRoutingModule } from './experience-certi.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ExperienceCertiComponent } from './experience-certi.component';
 
 @NgModule({
-    declarations: [
-        ExperienceCertiComponent
-    ],
+    declarations: [ExperienceCertiComponent],
 
-    imports: [
-        ExperienceCertiRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ExperienceCertiRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ExperienceCertiComponent]
+    bootstrap: [ExperienceCertiComponent],
 })
-export class ExperienceCertiModule { }
+export class ExperienceCertiModule {}

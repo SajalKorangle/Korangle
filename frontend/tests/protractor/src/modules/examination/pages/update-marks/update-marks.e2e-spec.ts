@@ -9,7 +9,7 @@ import { containsAll, containsFirst } from '../../../../contains';
 describe('Examination -> Update Marks', () => {
 
     let page: any;
-    
+
     beforeAll(async () => {
 
         startBackendServer(getFixtureFiles('modules/examination/pages/update-marks/update-marks.json'));
@@ -17,7 +17,7 @@ describe('Examination -> Update Marks', () => {
         page = await BeforeAfterEach.beforeEach();
 
         // Opening Page
-        await openModuleAndPage('Examination', 'Update marks');        
+        await openModuleAndPage('Examination', 'Update marks');
 
         (await containsFirst('button', 'GET')).click();
     });
@@ -36,16 +36,16 @@ describe('Examination -> Update Marks', () => {
 
         const [marks] = await page.$x('//input[1]');
         await marks.type('75');
-        
+
         (await containsFirst('button', 'Update')).click();
 
-        await page.waitForTimeout(3000);   
+        await page.waitForTimeout(3000);
 
     });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 
-    
+
 });

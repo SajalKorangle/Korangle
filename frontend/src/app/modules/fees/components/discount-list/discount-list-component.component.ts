@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {INSTALLMENT_LIST} from "../../classes/constants";
-import {SchoolService} from "../../../../services/modules/school/school.service"
+import { INSTALLMENT_LIST } from '../../classes/constants';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 // import {EmitterService} from '../../services/emitter.service';
 
@@ -9,8 +9,7 @@ import {SchoolService} from "../../../../services/modules/school/school.service"
     templateUrl: './discount-list-component.component.html',
     styleUrls: ['./discount-list-component.component.css'],
 })
-export class DiscountListComponent implements OnInit{
-
+export class DiscountListComponent implements OnInit {
     @Input() user;
     @Input() discountColumnFilter;
     @Input() feeTypeList;
@@ -23,24 +22,31 @@ export class DiscountListComponent implements OnInit{
     @Input() employeeList;
     @Input() number = 3;
     @Input() sessionList = [];
-    
+
     // Constant Lists
     installmentList = INSTALLMENT_LIST;
 
-    constructor() { }
+    constructor() {}
 
-    ngOnInit() { }
+    ngOnInit() {}
 
     getDiscountTotalAmount(discount: any): number {
-        return this.subDiscountList.filter(subDiscount => {
-            return subDiscount.parentDiscount == discount.id;
-        }).reduce((totalSubDiscount, subDiscount) => {
-            return totalSubDiscount + this.installmentList.reduce((totalInstallment, installment) => {
-                return totalInstallment
-                    + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
-                    + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
+        return this.subDiscountList
+            .filter((subDiscount) => {
+                return subDiscount.parentDiscount == discount.id;
+            })
+            .reduce((totalSubDiscount, subDiscount) => {
+                return (
+                    totalSubDiscount +
+                    this.installmentList.reduce((totalInstallment, installment) => {
+                        return (
+                            totalInstallment +
+                            (subDiscount[installment + 'Amount'] ? subDiscount[installment + 'Amount'] : 0) +
+                            (subDiscount[installment + 'LateFee'] ? subDiscount[installment + 'LateFee'] : 0)
+                        );
+                    }, 0)
+                );
             }, 0);
-        }, 0);
     }
 
     increaseNumber(): void {
@@ -48,38 +54,43 @@ export class DiscountListComponent implements OnInit{
     }
 
     getStudentName(studentId: number): any {
-        return this.studentList.find(student => {
+        return this.studentList.find((student) => {
             return student.id == studentId;
         }).name;
     }
 
     getStudentScholarNumber(studentId: number): any {
-        return this.studentList.find(student => {
+        return this.studentList.find((student) => {
             return student.id == studentId;
         }).scholarNumber;
     }
 
     getClassName(studentId: any, sessionId: any): any {
-        return this.classList.find(classs => {
-            return classs.id == this.studentSectionList.find(studentSection => {
-                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
-            }).parentClass;
+        return this.classList.find((classs) => {
+            return (
+                classs.id ==
+                this.studentSectionList.find((studentSection) => {
+                    return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+                }).parentClass
+            );
         }).name;
     }
 
     getSectionName(studentId: any, sessionId: any): any {
-        return this.sectionList.find(section => {
-            return section.id == this.studentSectionList.find(studentSection => {
-                return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
-            }).parentDivision;
+        return this.sectionList.find((section) => {
+            return (
+                section.id ==
+                this.studentSectionList.find((studentSection) => {
+                    return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
+                }).parentDivision
+            );
         }).name;
     }
 
     getEmployeeName(discount: any): any {
-        let employee = this.employeeList.find(employee => {
+        let employee = this.employeeList.find((employee) => {
             return employee.id == discount.parentEmployee;
         });
-        return employee?employee.name:null;
+        return employee ? employee.name : null;
     }
-
 }

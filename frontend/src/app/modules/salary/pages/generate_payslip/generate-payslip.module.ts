@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {GeneratePayslipRoutingModule} from './generate-payslip.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {GeneratePayslipComponent} from "./generate-payslip.component";
-
+import { GeneratePayslipRoutingModule } from './generate-payslip.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { GeneratePayslipComponent } from './generate-payslip.component';
 
 @NgModule({
-    declarations: [
-        GeneratePayslipComponent
-    ],
+    declarations: [GeneratePayslipComponent],
 
-    imports: [
-        GeneratePayslipRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [GeneratePayslipRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [GeneratePayslipComponent]
+    bootstrap: [GeneratePayslipComponent],
 })
-export class GeneratePayslipModule { }
+export class GeneratePayslipModule {}
