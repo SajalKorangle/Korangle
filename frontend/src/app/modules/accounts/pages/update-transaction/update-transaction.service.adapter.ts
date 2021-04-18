@@ -74,11 +74,11 @@ export class UpdateTransactionServiceAdapter {
         })
     }
 
-    findTransactionByVNumber(event: any){
+    findTransactionByVNumber(vNumber: any){
         this.vm.transactionsList = [];
         this.vm.isLoadingTransaction = true;
         let data = {
-            voucherNumber: event.target.value,
+            voucherNumber: vNumber,
             transactionDate__gte: this.vm.minimumDate,
             transactionDate__lte: this.vm.maximumDate, 
         }

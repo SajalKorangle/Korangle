@@ -217,8 +217,8 @@ export class CollectFeeServiceAdapter {
         }
 
         if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
-            transactionFromAccountId = transactionFromAccountSession.parentAccount;
-            transactionToAccountId = this.vm.studentFeePaymentAccount;
+            transactionFromAccountId = this.vm.studentFeePaymentAccount;
+            transactionToAccountId = transactionFromAccountSession.parentAccount;
             value[0].forEach(fee_receipt => {
                 if (this.vm.feeSettings) {
                     const newTransaction = {
