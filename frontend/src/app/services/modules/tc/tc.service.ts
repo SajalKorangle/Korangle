@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class TCService extends ServiceObject {
-
     protected module_url = '/tc';
 
     // objects urls
@@ -14,5 +12,4 @@ export class TCService extends ServiceObject {
     public tc_image_assets = '/tc-image-assets';
     public tc_settings = '/transfer-certificate-settings';
     public transfer_certificate = '/transfer-certificate-new';
-
 }

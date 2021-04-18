@@ -1,24 +1,18 @@
 import { NgModule } from '@angular/core';
 
-import { RecordEmployeeAttendanceComponent } from "./record-employee-attendance.component";
+import { RecordEmployeeAttendanceComponent } from './record-employee-attendance.component';
 
 // import {RecordEmployeeAttendanceRoutingModule } from './record-employee-attendance.routing';
-import  {RecordEmployeeAttendanceRoutingModule} from './record-employee-attendance.routing';
-import {ComponentsModule} from "../../../../components/components.module";
+import { RecordEmployeeAttendanceRoutingModule } from './record-employee-attendance.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 
 // RecordEmployeeAttendanceComponent
 @NgModule({
-    declarations: [
-        RecordEmployeeAttendanceComponent
-    ],
+    declarations: [RecordEmployeeAttendanceComponent],
 
-    imports: [
-        RecordEmployeeAttendanceRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [RecordEmployeeAttendanceRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [RecordEmployeeAttendanceComponent]
+    bootstrap: [RecordEmployeeAttendanceComponent],
 })
-export class RecordEmployeeAttendanceModule { }
+export class RecordEmployeeAttendanceModule {}

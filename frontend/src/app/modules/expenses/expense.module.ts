@@ -4,27 +4,15 @@ import { ComponentsModule } from '../../components/components.module';
 
 import { ExpenseComponent } from './expense.component';
 
-import {ExpenseRoutingModule} from './expense.routing';
+import { ExpenseRoutingModule } from './expense.routing';
 import { PrintExpensesComponent } from './print/print-expenses/print-expenses.component';
 
-
 @NgModule({
-    declarations: [
+    declarations: [ExpenseComponent, PrintExpensesComponent],
 
-        ExpenseComponent,
-        PrintExpensesComponent
-
-    ],
-
-    imports: [
-
-        ExpenseRoutingModule,
-        ComponentsModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ExpenseRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ExpenseComponent]
+    bootstrap: [ExpenseComponent],
 })
-export class ExpenseModule { }
+export class ExpenseModule {}

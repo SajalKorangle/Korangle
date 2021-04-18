@@ -1,13 +1,12 @@
 import { DesignTCComponent } from './design-tc.component';
-import { FIELDS, PARAMETER_LIST, ParameterAsset, PageResolution, DPI_LIST, Layer, CanvasImage, sleep} from './../../class/constants';
+import { FIELDS, PARAMETER_LIST, ParameterAsset, PageResolution, DPI_LIST, Layer, CanvasImage, sleep } from './../../class/constants';
 import { PageResolutionDialogComponent } from '../../components/dialogs/page-resolution-dialog/page-resolution-dialog.component';
-import {LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component'
+import { LayoutSharingDialogComponent } from '../../components/dialogs/layout-sharing-dialog/layout-sharing-dialog.component';
 import { InventoryDialogComponent } from '../../components/dialogs/inventory-dialog/inventory-dialog.component';
 import { LayerReplacementDialogComponent } from '../../components/dialogs/layer-replacement-dialog/layer-replacement-dialog.component';
-import {TCDefaultParametersDialogComponent } from './../../components//dialogs/tc-default-parameters-dialog/tc-default-parameters-dialog.component'
+import { TCDefaultParametersDialogComponent } from './../../components//dialogs/tc-default-parameters-dialog/tc-default-parameters-dialog.component';
 
 export class DesignTCHtmlAdapter {
-
     fields: any = FIELDS;
     parameterList: any[] = [...PARAMETER_LIST];
     dpiList: number[] = DPI_LIST;
@@ -15,12 +14,12 @@ export class DesignTCHtmlAdapter {
     vm: DesignTCComponent;
     canvasMargin = 24;
 
-    isSaving:boolean = false;
-    isLoading:boolean = false;
-    isFullScreen:boolean = false;
+    isSaving: boolean = false;
+    isLoading: boolean = false;
+    isFullScreen: boolean = false;
     openedDialog: any = null;
 
-    customMenuDisplay:boolean = false;
+    customMenuDisplay: boolean = false;
     customMenuTop: number = 0;
     customMenuLeft: number = 0;
 
@@ -31,27 +30,25 @@ export class DesignTCHtmlAdapter {
 
     activeLeftColumn: string = 'layers';
 
-    constructor() {
-    }
+    constructor() {}
 
     // Data
 
     initializeAdapter(vm: DesignTCComponent): void {
         this.vm = vm;
         this.vm.canvasAdapter.layerClickEvents.push(async (layer) => {
-            let el = document.getElementById('layer_#' + layer.id)
+            let el = document.getElementById('layer_#' + layer.id);
             let count = 10;
             while (!el && count--) {
                 await sleep(50);
                 el = document.getElementById('layer_#' + layer.id);
             }
-            if(el)
-                el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            
-        })
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
     }
 
-    canvasSetUp(doScale:boolean=false):void {    // Setting canvas height and width to according to parent div
+    canvasSetUp(doScale: boolean = false): void {
+        // Setting canvas height and width to according to parent div
         let canvasWrapper = document.getElementById('canvasWrapper');
         let wrapperBoundingDimensions = canvasWrapper.getBoundingClientRect();
         let computedCanvasWidth = wrapperBoundingDimensions.width - 2 * this.canvasMargin;
@@ -62,63 +59,77 @@ export class DesignTCHtmlAdapter {
         this.vm.canvasAdapter.canvasSizing(computedCanvasHeight, computedCanvasWidth, doScale);
     }
 
-    getFieldKeys(): any{
+    getFieldKeys(): any {
         return Object.keys(this.fields);
     }
 
     getFilteredParameterList(field: any): any[] {
-        return this.parameterList.filter(item => {
+        return this.parameterList.filter((item) => {
             return item.field.fieldStructureKey === field.fieldStructureKey;
         });
     }
 
     addNewLayerForAsset(asset: ParameterAsset): void {
         if (asset.layerType == CanvasImage)
-            this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset, width: 25 / this.vm.canvasAdapter.pixelTommFactor }, this.vm.canvasAdapter));
+            this.vm.canvasAdapter.newLayerInitilization(
+                new asset.layerType(
+                    { dataSourceType: 'DATA', source: asset, width: 25 / this.vm.canvasAdapter.pixelTommFactor },
+                    this.vm.canvasAdapter
+                )
+            );
         else
-            this.vm.canvasAdapter.newLayerInitilization(new asset.layerType({ 'dataSourceType': 'DATA', 'source': asset }, this.vm.canvasAdapter));   
+            this.vm.canvasAdapter.newLayerInitilization(
+                new asset.layerType({ dataSourceType: 'DATA', source: asset }, this.vm.canvasAdapter)
+            );
     }
 
-    fullScreenExitHandler = ():void=> {
+    fullScreenExitHandler = (): void => {
         const element = document.getElementById('dtc-mainCard');
         if (this.isFullScreen) {
             element.classList.remove('fullScreen');
             document.getElementById('dtc-wrapper').appendChild(element);
             if (document.fullscreenElement && document.exitFullscreen) {
-                document.exitFullscreen()
-                    .then(() => setTimeout(() => {
-                    this.canvasSetUp(true);
-                    },500))
-                    .catch(err=>console.log(err));
+                document
+                    .exitFullscreen()
+                    .then(() =>
+                        setTimeout(() => {
+                            this.canvasSetUp(true);
+                        }, 500)
+                    )
+                    .catch((err) => console.log(err));
             }
             document.removeEventListener('fullscreenchange', this.fullScreenExitHandler);
             this.isFullScreen = false;
         }
-    }
+    };
 
-    fullScreenToggle(): void{   // check after adding html
+    fullScreenToggle(): void {
+        // check after adding html
         let element = document.getElementById('dtc-mainCard');
         if (this.isFullScreen) {
             this.fullScreenExitHandler();
-        } else{
+        } else {
             element.classList.add('fullScreen');
             document.body.appendChild(element);
             if (document.body.requestFullscreen)
-                document.body.requestFullscreen()
-                    .then(() => setTimeout(() => {
-                        this.canvasSetUp(true);
-                        document.addEventListener('fullscreenchange', this.fullScreenExitHandler);
-                    }, 500))    // bad design f we specify the time, is there is any way to wait until the css styles are loaded?
-                .catch(err=>console.log(err));
+                document.body
+                    .requestFullscreen()
+                    .then(() =>
+                        setTimeout(() => {
+                            this.canvasSetUp(true);
+                            document.addEventListener('fullscreenchange', this.fullScreenExitHandler);
+                        }, 500)
+                    ) // bad design f we specify the time, is there is any way to wait until the css styles are loaded?
+                    .catch((err) => console.log(err));
             this.isFullScreen = true;
-        }  
+        }
     }
 
-    openPageResolutionDialog():void {
+    openPageResolutionDialog(): void {
         this.openedDialog = this.vm.dialog.open(PageResolutionDialogComponent, {
             data: {
-                activePageResolution: this.vm.canvasAdapter.actualresolution
-            }
+                activePageResolution: this.vm.canvasAdapter.actualresolution,
+            },
         });
         this.openedDialog.afterClosed().subscribe((result: PageResolution) => {
             if (result) {
@@ -128,19 +139,19 @@ export class DesignTCHtmlAdapter {
         });
     }
 
-    openLayoutSharingDialog():void {
+    openLayoutSharingDialog(): void {
         this.openedDialog = this.vm.dialog.open(LayoutSharingDialogComponent, {
             data: {
-                vm: this.vm
-            }
+                vm: this.vm,
+            },
         });
     }
 
-    openTCDeafultParametersDialog():void {
+    openTCDeafultParametersDialog(): void {
         this.openedDialog = this.vm.dialog.open(TCDefaultParametersDialogComponent, {
             data: {
-                ca: this.vm.canvasAdapter
-            }
+                ca: this.vm.canvasAdapter,
+            },
         });
 
         this.openedDialog.afterClosed().subscribe(() => {
@@ -148,39 +159,38 @@ export class DesignTCHtmlAdapter {
         });
     }
 
-    openLayerReplacementDialog(layer:Layer): void{
+    openLayerReplacementDialog(layer: Layer): void {
         this.openedDialog = this.vm.dialog.open(LayerReplacementDialogComponent, {
             data: {
                 ca: this.vm.canvasAdapter,
-                layer: layer
+                layer: layer,
+            },
+        });
+        this.openedDialog.afterClosed().subscribe((parameterAsset: any) => {
+            if (parameterAsset) {
+                this.vm.canvasAdapter.replaceLayerWithNewLayerType(layer, { dataSourceType: 'DATA', source: parameterAsset });
             }
         });
-        this.openedDialog.afterClosed().subscribe((parameterAsset: any) => { 
-            if (parameterAsset) {
-                this.vm.canvasAdapter.replaceLayerWithNewLayerType(layer, { 'dataSourceType': 'DATA', 'source': parameterAsset });
-            }
-        })
     }
 
-    openInventory(): void{
+    openInventory(): void {
         const data = { vm: this.vm, selectedLayout: {} };
         if (this.vm.currentLayout.id) {
-            data.selectedLayout = { type: 'myLayout', index: this.vm.tcLayoutList.findIndex(l=>l.id==this.vm.currentLayout.id) };
-        }
-        else {
+            data.selectedLayout = { type: 'myLayout', index: this.vm.tcLayoutList.findIndex((l) => l.id == this.vm.currentLayout.id) };
+        } else {
             data.selectedLayout = { type: 'myLayout', index: -1 };
         }
         this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
-            data
+            data,
         });
         this.openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {
                 switch (selection.type) {
                     case 'myLayout':
-                        if (selection.index == -1) { // -1 is representing add new layout
+                        if (selection.index == -1) {
+                            // -1 is representing add new layout
                             this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING);
-                        }
-                        else {
+                        } else {
                             this.vm.populateCurrentLayoutWithGivenValue(this.vm.tcLayoutList[selection.index]);
                         }
                         break;
@@ -189,7 +199,9 @@ export class DesignTCHtmlAdapter {
                             parentSchool: this.vm.user.activeSchool.dbId,
                             name: '',
                             publiclyShared: false,
-                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.publicLayoutList[selection.index].content))
+                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(
+                                JSON.parse(this.vm.publicLayoutList[selection.index].content)
+                            ),
                         };
                         this.vm.populateCurrentLayoutWithGivenValue(newLayout1, true);
                         break;
@@ -198,16 +210,18 @@ export class DesignTCHtmlAdapter {
                             parentSchool: this.vm.user.activeSchool.dbId,
                             name: '',
                             publiclyShared: false,
-                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(this.vm.sharedLayoutList[selection.index].content))
+                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(
+                                JSON.parse(this.vm.sharedLayoutList[selection.index].content)
+                            ),
                         };
                         this.vm.populateCurrentLayoutWithGivenValue(newLayout2, true);
                         break;
                 }
             }
-        })
+        });
     }
 
-    dropAssistanceDisplay(id:number) {
+    dropAssistanceDisplay(id: number) {
         document.getElementById(id.toString()).style.display = 'inline-block';
     }
 
@@ -215,15 +229,15 @@ export class DesignTCHtmlAdapter {
         document.getElementById(id.toString()).style.display = 'none';
     }
 
-    openContextMenu(event: MouseEvent): void{
+    openContextMenu(event: MouseEvent): void {
         this.customMenuDisplay = true;
 
         let layersListContainerRect = document.getElementById('canvasDesigningWrapper').getBoundingClientRect();
-        this.customMenuLeft = event.x - layersListContainerRect.left+5;
-        this.customMenuTop = event.y - layersListContainerRect.top+5;
+        this.customMenuLeft = event.x - layersListContainerRect.left + 5;
+        this.customMenuTop = event.y - layersListContainerRect.top + 5;
     }
 
-    closeContextMenu(): void{
+    closeContextMenu(): void {
         this.customMenuDisplay = false;
     }
 
@@ -239,6 +253,4 @@ export class DesignTCHtmlAdapter {
             this.vm.canvasAdapter.scheduleCanvasReDraw(0);
         }
     }
-
 }
-

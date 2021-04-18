@@ -2,9 +2,9 @@ import { Component, OnInit, OnChanges } from '@angular/core';
 import * as moment from 'moment';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
-import {ATTENDANCE_STATUS_LIST} from '../../../attendance/classes/constants';
-import {DataStorage} from "../../../../classes/data-storage";
-import {CommonFunctions} from "../../../../classes/common-functions";
+import { ATTENDANCE_STATUS_LIST } from '../../../attendance/classes/constants';
+import { DataStorage } from '../../../../classes/data-storage';
+import { CommonFunctions } from '../../../../classes/common-functions';
 
 export interface CalendarDate {
     mDate: moment.Moment;
@@ -14,11 +14,9 @@ export interface CalendarDate {
     selector: 'view-attendance',
     templateUrl: './view-attendance.component.html',
     styleUrls: ['./view-attendance.component.css', './view-attendance.component.scss'],
-    providers: [AttendanceOldService]
+    providers: [AttendanceOldService],
 })
-
 export class ViewAttendanceComponent implements OnInit, OnChanges {
-
     user;
 
     currentMoment: any;
@@ -35,7 +33,7 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     showCalendar = false;
     isLoading = false;
 
-    constructor (private attendanceService: AttendanceOldService) { }
+    constructor(private attendanceService: AttendanceOldService) {}
 
     ngOnChanges(): void {
         this.ngOnInit();
@@ -65,7 +63,6 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     }
 
     getStudentAttendanceStatusList(): void {
-
         let data = {
             studentIdList: [this.user.section.student.id],
             startDate: this.startDate,
@@ -75,21 +72,23 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
         this.isLoading = true;
         this.showCalendar = false;
 
-        this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(attendanceList => {
-            this.isLoading = false;
-            this.attendanceStatusList = attendanceList;
-            this.showCalendar = true;
-            this.generateCalendar();
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.attendanceService.getStudentAttendanceList(data, this.user.jwt).then(
+            (attendanceList) => {
+                this.isLoading = false;
+                this.attendanceStatusList = attendanceList;
+                this.showCalendar = true;
+                this.generateCalendar();
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     getDateColor(date: any): any {
         let result = '';
-        this.attendanceStatusList.every(attendanceStatus => {
-            if(attendanceStatus.dateOfAttendance === this.formatDate(date.mDate.toString(),'')) {
+        this.attendanceStatusList.every((attendanceStatus) => {
+            if (attendanceStatus.dateOfAttendance === this.formatDate(date.mDate.toString(), '')) {
                 if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
                     result = 'green';
                 } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
@@ -115,20 +114,20 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     }
 
     fillDates(currentMoment: moment.Moment): CalendarDate[] {
-
         const firstOfMonth = moment(currentMoment).startOf('month').day();
         const firstDayOfGrid = moment(currentMoment).startOf('month').subtract(firstOfMonth, 'days');
         const start = firstDayOfGrid.date();
         const numberOfDays = moment(currentMoment).daysInMonth();
-        const numberTobeAdded = Math.ceil((numberOfDays+firstOfMonth)/7)*7;
+        const numberTobeAdded = Math.ceil((numberOfDays + firstOfMonth) / 7) * 7;
 
-        return CommonFunctions.getArrayFromRange(start, start+numberTobeAdded)
-            .map((date: number): CalendarDate => {
+        return CommonFunctions.getArrayFromRange(start, start + numberTobeAdded).map(
+            (date: number): CalendarDate => {
                 const d = moment(firstDayOfGrid).date(date);
                 return {
                     mDate: d,
                 };
-            });
+            }
+        );
     }
 
     // date checkers
@@ -137,7 +136,6 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
     }
 
     formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -158,12 +156,11 @@ export class ViewAttendanceComponent implements OnInit, OnChanges {
 
     getAttendanceStatusNumber(status: any): any {
         let result = 0;
-        this.attendanceStatusList.forEach(attendanceStatus => {
+        this.attendanceStatusList.forEach((attendanceStatus) => {
             if (attendanceStatus.status === status) {
                 result += 1;
             }
         });
         return result;
     }
-
 }

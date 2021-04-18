@@ -1,6 +1,4 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
@@ -63,7 +61,7 @@ export class EmployeeOldService extends CommonServiceRequirements {
     // Employee Permission
     getEmployeePermissionList(data: any, token: any): Promise<any> {
         const url = '/employee/' + data['parentEmployee'] + '/employee-permissions-old';
-        return super.getData(token, url)
+        return super.getData(token, url);
     }
 
     addEmployeePermission(data: any, token: any): Promise<any> {
@@ -80,5 +78,4 @@ export class EmployeeOldService extends CommonServiceRequirements {
         const url = '/employee/employee-permissions-old/' + data['id'];
         return super.deleteData(token, url);
     }
-
 }

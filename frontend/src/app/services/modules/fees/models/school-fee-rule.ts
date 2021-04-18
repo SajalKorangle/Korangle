@@ -1,6 +1,4 @@
-
 export class SchoolFeeRule {
-
     id: number = null;
     parentFeeType: number = null;
     name: string = null;
@@ -83,5 +81,4 @@ export class SchoolFeeRule {
     marchLastDate: any = null;
     marchLateFee: number = null;
     marchMaximumLateFee: number = null;
-
 }

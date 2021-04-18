@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 // import { utils, WorkSheet, WorkBook, read } from 'xlsx';
-import { Angular5Csv } from "angular5-csv/dist/Angular5-csv";
+import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 import { parse } from 'papaparse';
 
 type AOA = any[][];
 
 @Injectable()
 export class ExcelService {
-
     csvOptions = {
         nullToEmptyString: true,
     };
 
-    constructor() { }
+    constructor() {}
 
     /*downloadFile(data: any, fileName: any): void {
         // generate worksheet
@@ -51,5 +50,4 @@ export class ExcelService {
             complete: callBackFunction,
         });
     }
-
 }

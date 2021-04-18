@@ -2,15 +2,12 @@ import { NgModule } from '@angular/core';
 
 import { ComponentsModule } from '../../components/components.module';
 
-import { TCComponent} from './tc.component'
-import { TCRoutingModule} from './tc.routing';
+import { TCComponent } from './tc.component';
+import { TCRoutingModule } from './tc.routing';
 
 @NgModule({
-  declarations: [TCComponent],
-  imports: [
-    ComponentsModule,
-    TCRoutingModule
-  ],
-  bootstrap: [TCComponent]
+    declarations: [TCComponent],
+    imports: [ComponentsModule, TCRoutingModule],
+    bootstrap: [TCComponent],
 })
-export class TCModule { }
+export class TCModule {}

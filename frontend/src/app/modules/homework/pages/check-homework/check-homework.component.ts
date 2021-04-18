@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
+import { Component, Input, OnInit } from '@angular/core';
+import { DataStorage } from '../../../../classes/data-storage';
 
 import { UpdateService } from '../../../../update/update-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
@@ -7,33 +7,21 @@ import { SubjectService } from '../../../../services/modules/subject/subject.ser
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { HomeworkService } from '../../../../services/modules/homework/homework.service';
 import { CheckHomeworkServiceAdapter } from './check-homework.service.adapter';
-import {NotificationService} from '../../../../services/modules/notification/notification.service';
-import {SmsService} from '../../../../services/modules/sms/sms.service';
-import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
-import {UserService} from '../../../../services/modules/user/user.service';
-import {MatDialog} from '@angular/material';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { SmsService } from '../../../../services/modules/sms/sms.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { UserService } from '../../../../services/modules/user/user.service';
+import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { isMobile } from '../../../../classes/common.js';
 
-
 @Component({
-  selector: 'check-homework',
-  templateUrl: './check-homework.component.html',
-  styleUrls: ['./check-homework.component.css'],
-    providers: [
-        SubjectService,
-        StudentService,
-        ClassService,
-        HomeworkService,
-        NotificationService,
-        UserService,
-        SmsService,
-        SmsOldService,
-    ],
+    selector: 'check-homework',
+    templateUrl: './check-homework.component.html',
+    styleUrls: ['./check-homework.component.css'],
+    providers: [SubjectService, StudentService, ClassService, HomeworkService, NotificationService, UserService, SmsService, SmsOldService],
 })
-
 export class CheckHomeworkComponent implements OnInit {
-
     // @Input() user;
     user: any;
 
@@ -41,7 +29,7 @@ export class CheckHomeworkComponent implements OnInit {
     isInitialLoading: any;
     isLoading: any;
     isChecking: any;
-    
+
     STUDENT_LIMITER = 200;
     notif_usernames = [];
     smsBalance = 0;
@@ -64,16 +52,11 @@ export class CheckHomeworkComponent implements OnInit {
 
     homeworkReport: any;
 
-    HOMEWORK_STATUS = [
-        'GIVEN',
-        'SUBMITTED',
-        'CHECKED',
-        'ASKED FOR RESUBMISSION',
-    ];
+    HOMEWORK_STATUS = ['GIVEN', 'SUBMITTED', 'CHECKED', 'ASKED FOR RESUBMISSION'];
 
     updateService: any;
-    
-    constructor( 
+
+    constructor(
         public classService: ClassService,
         public subjectService: SubjectService,
         public studentService: StudentService,
@@ -82,8 +65,8 @@ export class CheckHomeworkComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
-        public dialog: MatDialog,
-    ){ }
+        public dialog: MatDialog
+    ) {}
     // Server Handling - Initial
     ngOnInit(): void {
         this.currentHomework = null;
@@ -94,75 +77,73 @@ export class CheckHomeworkComponent implements OnInit {
 
         this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
 
-        this.serviceAdapter = new CheckHomeworkServiceAdapter;
+        this.serviceAdapter = new CheckHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
 
-    changeClassSection(): any{
+    changeClassSection(): any {
         this.selectedSubject = this.selectedClassSection.subjectList[0];
     }
 
-    displayDateTime(date: any, time: any): any{
-        let str='';
-        let tempStr ='';
+    displayDateTime(date: any, time: any): any {
+        let str = '';
+        let tempStr = '';
 
-        if(date == null){
+        if (date == null) {
             str = 'No deadline';
             return str;
         }
-        for(let i =0; i<date.length; i++){
-            if(date[i] == '-'){
+        for (let i = 0; i < date.length; i++) {
+            if (date[i] == '-') {
                 str = '-' + tempStr + str;
                 tempStr = '';
-
-            }
-            else{
-                tempStr+= date[i];
+            } else {
+                tempStr += date[i];
             }
         }
         str = tempStr + str + ' ; ';
-        for(let i =0;i<5;i++){
+        for (let i = 0; i < 5; i++) {
             str = str + time[i];
         }
-        
+
         return str;
     }
 
     getButtonClass(status: any): any {
-        let classs = "btn";
+        let classs = 'btn';
         switch (status) {
             case this.HOMEWORK_STATUS[3]:
-                classs += " btn-danger";
+                classs += ' btn-danger';
                 break;
             case this.HOMEWORK_STATUS[2]:
-                classs += " btn-success";
+                classs += ' btn-success';
                 break;
             case this.HOMEWORK_STATUS[1]:
-                classs += " btn-warning";
+                classs += ' btn-warning';
                 break;
             case this.HOMEWORK_STATUS[0]:
-                classs += " btn-secondary";
+                classs += ' btn-secondary';
                 break;
         }
         return classs;
     }
 
     getLoaderClass(studentHomework: any): any {
-        let classs = "";
+        let classs = '';
         switch (studentHomework.isStatusLoading) {
             case true:
-                classs += "loader-custom";
+                classs += 'loader-custom';
                 break;
             case false:
-                classs += "loader-hide";
+                classs += 'loader-hide';
                 break;
         }
         return classs;
     }
 
     changeStudentHomeworkStatus(temp: any): void {
-        if(!temp.status) {
+        if (!temp.status) {
             temp.status = this.HOMEWORK_STATUS[0];
             return;
         }
@@ -173,50 +154,48 @@ export class CheckHomeworkComponent implements OnInit {
                 break;
             }
         }
-        let nextCounter = (counter+1)%(this.HOMEWORK_STATUS.length);
-        if(counter == 3){
-            nextCounter = (counter+3)%(this.HOMEWORK_STATUS.length);
-        }
-        else if(nextCounter == 3){
-            nextCounter = (counter+2)%(this.HOMEWORK_STATUS.length);
+        let nextCounter = (counter + 1) % this.HOMEWORK_STATUS.length;
+        if (counter == 3) {
+            nextCounter = (counter + 3) % this.HOMEWORK_STATUS.length;
+        } else if (nextCounter == 3) {
+            nextCounter = (counter + 2) % this.HOMEWORK_STATUS.length;
         }
         temp.status = this.HOMEWORK_STATUS[nextCounter];
     }
 
-    askForResubmission(temp: any): void{
+    askForResubmission(temp: any): void {
         temp.status = this.HOMEWORK_STATUS[3];
     }
 
     getButtonString(status: any): any {
-        let str = "";
+        let str = '';
         switch (status) {
             case this.HOMEWORK_STATUS[3]:
-                str += "R";
+                str += 'R';
                 break;
             case this.HOMEWORK_STATUS[2]:
-                str += "C";
+                str += 'C';
                 break;
             case this.HOMEWORK_STATUS[1]:
-                str += "S";
+                str += 'S';
                 break;
             case this.HOMEWORK_STATUS[0]:
-                str += "G";
+                str += 'G';
                 break;
         }
         return str;
     }
 
-    
     getMessageFromTemplate = (message, obj) => {
         let ret = message;
-        for(let key in obj){
-            ret = ret.replace('<'+key+'>', obj[key]);
+        for (let key in obj) {
+            ret = ret.replace('<' + key + '>', obj[key]);
         }
         return ret;
-    }
+    };
 
     hasUnicode(message): boolean {
-        for (let i=0; i<message.length; ++i) {
+        for (let i = 0; i < message.length; ++i) {
             if (message.charCodeAt(i) > 127) {
                 return true;
             }
@@ -226,34 +205,36 @@ export class CheckHomeworkComponent implements OnInit {
 
     getEstimatedSMSCount = (message: any) => {
         let count = 0;
-        if(this.sendUpdateType=='NOTIFICATION')return 0;
-            this.studentList.filter(item => item.mobileNumber).forEach((item, i) => {
-                if(this.sendUpdateType=='SMS' || item.notification==false){
+        if (this.sendUpdateType == 'NOTIFICATION') return 0;
+        this.studentList
+            .filter((item) => item.mobileNumber)
+            .forEach((item, i) => {
+                if (this.sendUpdateType == 'SMS' || item.notification == false) {
                     count += this.getMessageCount(this.getMessageFromTemplate(message, item));
                 }
-            })
+            });
 
         return count;
-    }
+    };
 
     getMessageCount = (message) => {
-        if (this.hasUnicode(message)){
-            return Math.ceil(message.length/70);
-        }else{
-            return Math.ceil( message.length/160);
+        if (this.hasUnicode(message)) {
+            return Math.ceil(message.length / 70);
+        } else {
+            return Math.ceil(message.length / 160);
         }
-    }
+    };
 
     getEstimatedNotificationCount = () => {
         let count = 0;
-        if(this.sendUpdateType=='SMS')return 0;
+        if (this.sendUpdateType == 'SMS') return 0;
 
         count = this.studentList.filter((item) => {
             return item.mobileNumber && item.notification;
         }).length;
 
         return count;
-    }   
+    };
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
@@ -261,30 +242,25 @@ export class CheckHomeworkComponent implements OnInit {
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
+            data: { homeworkImages: homeworkImages, index: index, editable: editable, isMobile: this.isMobile() },
         });
-    
-        dialogRef.afterClosed().subscribe(result => {
-            
-        });
+
+        dialogRef.afterClosed().subscribe((result) => {});
     }
 
     isMobile(): boolean {
         return isMobile();
     }
 
-    isSubmittedLate(homeworkDate, homeworkTime, studentDate, studentTime): boolean{
-        if(homeworkDate == null || studentDate == null){
+    isSubmittedLate(homeworkDate, homeworkTime, studentDate, studentTime): boolean {
+        if (homeworkDate == null || studentDate == null) {
             return false;
-        }
-        else if(studentDate > homeworkDate){
+        } else if (studentDate > homeworkDate) {
             return true;
-        }
-        else if(studentDate < homeworkDate){
+        } else if (studentDate < homeworkDate) {
             return false;
-        }
-        else{
-            if(studentTime > homeworkTime){
+        } else {
+            if (studentTime > homeworkTime) {
                 return true;
             }
         }

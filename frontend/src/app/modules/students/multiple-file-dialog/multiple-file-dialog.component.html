@@ -1,17 +1,22 @@
 <h1 mat-dialog-title>Select Mapping</h1>
 <div mat-dialog-content>
-    <div *ngFor="let file of data.files;let i = index">
+    <div *ngFor="let file of data.files; let i = index">
         <div class="row">
             <div class="col-sm-6">
-                <div *ngIf="file.type=='application/pdf'">
-                    <img src="/assets/img/pdf.png"></div>
-                <div *ngIf="file.type!=='application/pdf'"><img src="/assets/img/img.png"></div>
-                <p>{{file.name}}</p>
+                <div *ngIf="file.type == 'application/pdf'">
+                    <img src="/assets/img/pdf.png" />
+                </div>
+                <div *ngIf="file.type !== 'application/pdf'"><img src="/assets/img/img.png" /></div>
+                <p>{{ file.name }}</p>
             </div>
             <div class="col-sm-6">
                 <mat-form-field>
-                    <mat-select [ngModel]="data.choiceList[i]['id']" (ngModelChange)="changeList($event,i)" (click)="$event.stopPropagation();">
-                        <mat-option *ngFor=" let parameter of data.options" [value]="parameter.id">{{parameter.name}}</mat-option>
+                    <mat-select
+                        [ngModel]="data.choiceList[i]['id']"
+                        (ngModelChange)="changeList($event, i)"
+                        (click)="$event.stopPropagation()"
+                    >
+                        <mat-option *ngFor="let parameter of data.options" [value]="parameter.id">{{ parameter.name }}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <button mat-mini-fab color="basic" class="clear" (click)="removeFile(i)"><mat-icon>clear</mat-icon></button>
@@ -20,5 +25,7 @@
     </div>
 </div>
 <div mat-dialog-actions>
-    <button id="confirm" mat-raised-button [mat-dialog-close]="{'list':data.choiceList,'files':data.files}" cdkFocusInitial>Confirm</button>
+    <button id="confirm" mat-raised-button [mat-dialog-close]="{ list: data.choiceList, files: data.files }" cdkFocusInitial>
+        Confirm
+    </button>
 </div>

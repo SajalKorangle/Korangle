@@ -9,8 +9,7 @@ import { PrintService } from '../../../../../print/print-service';
     styleUrls: ['./print-student-elegant-final-report-list.component.css'],
 })
 export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
-
-    user : any;
+    user: any;
 
     viewChecked = true;
 
@@ -25,7 +24,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
 
     marksDecimalPoint: any;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -38,7 +37,8 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
         this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
 
-        this.marksDecimalPoint = '1.'+this.reportCardMapping.minimumDecimalPoints.toString()+'-'+this.reportCardMapping.maximumDecimalPoints;
+        this.marksDecimalPoint =
+            '1.' + this.reportCardMapping.minimumDecimalPoints.toString() + '-' + this.reportCardMapping.maximumDecimalPoints;
 
         this.populateIncludeProject();
         this.viewChecked = false;
@@ -62,7 +62,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
     }
 
     populateIncludeProject(): void {
-        switch(this.studentFinalReportList[0].className) {
+        switch (this.studentFinalReportList[0].className) {
             case 'Class - 6':
             case 'Class - 7':
             case 'Class - 8':
@@ -75,7 +75,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(subject => {
+        this.subjectList.every((subject) => {
             if (subject.id == subjectId) {
                 result = subject.name;
                 return false;
@@ -149,7 +149,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
 
     getGrade(marksObtained: any, maximumMarks: any): any {
         let grade = '';
-        let percentage = marksObtained*100/maximumMarks;
+        let percentage = (marksObtained * 100) / maximumMarks;
         if (percentage >= 75) {
             grade = 'A';
         } else if (percentage >= 60) {
@@ -193,13 +193,13 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
     getOverallStudentTotalExtraFieldMarks(student: any, index1: any): any {
         let result = 0;
         this.extraFieldList[index1].extraSubFieldList.forEach((extraSubField, index2) => {
-            result += this.getOverallStudentExtraSubFieldMarks(student, index1*5+index2);
+            result += this.getOverallStudentExtraSubFieldMarks(student, index1 * 5 + index2);
         });
         return result;
     }
 
     getOverallStudentTotalExtraFieldMaxMarks(index: any): any {
-        return this.extraFieldList[index].extraSubFieldList.length*18;
+        return this.extraFieldList[index].extraSubFieldList.length * 18;
     }
 
     getOverallStudentAttendance(student: any): any {
@@ -231,23 +231,27 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
     }
 
     getOverallStudentMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMarks(student)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 0)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 1);
+        return (
+            this.getOverallStudentTotalSubjectMarks(student) +
+            this.getOverallStudentTotalExtraFieldMarks(student, 0) +
+            this.getOverallStudentTotalExtraFieldMarks(student, 1)
+        );
     }
     getOverallStudentPercentage(student: any) {
-        return this.getOverallStudentMarks(student)/this.getOverallStudentMaxMarks(student)*100;
+        return (this.getOverallStudentMarks(student) / this.getOverallStudentMaxMarks(student)) * 100;
     }
 
     getOverallStudentMaxMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMaxMarks(student)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(0)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(1);
+        return (
+            this.getOverallStudentTotalSubjectMaxMarks(student) +
+            this.getOverallStudentTotalExtraFieldMaxMarks(0) +
+            this.getOverallStudentTotalExtraFieldMaxMarks(1)
+        );
     }
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -263,7 +267,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
 
     getNextStep(student: any): any {
         let result = '';
-        switch(student.className) {
+        switch (student.className) {
             case 'Play Group':
                 result = 'Promoted to Nursery';
                 break;
@@ -315,5 +319,4 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
         }
         return result;
     }
-
 }

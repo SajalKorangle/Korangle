@@ -1,113 +1,113 @@
 <div class="card-content table-responsive">
-
     <div class="row">
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">Start Date</label>
-                <input type="date" class="form-control" [(ngModel)]="startDate">
+                <input type="date" class="form-control" [(ngModel)]="startDate" />
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">End Date</label>
-                <input type="date" class="form-control" [(ngModel)]="endDate">
+                <input type="date" class="form-control" [(ngModel)]="endDate" />
             </div>
         </div>
         <div class="col-md-3">
-            <button type="button"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    style="padding: 12px 15px"
-                    matTooltip="Get all the enquiries b/w start and end date"
-                    tooltip-position="right"
-                    (click)="getEnquiryList();">
-                <i class="material-icons">search</i></button><br>
+            <button
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 12px 15px"
+                matTooltip="Get all the enquiries b/w start and end date"
+                tooltip-position="right"
+                (click)="getEnquiryList()"
+            >
+                <i class="material-icons">search</i></button
+            ><br />
         </div>
-        <div  *ngIf="enquiryList.length>=1"  class="col-md-3" align="left">
-            <button type="button"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    style="padding: 12px 15px;"
-                    matTooltip="Print the following list"
-                    tooltip-position="left"
-                    (click)="printEnquiryList();">
-                Print<i class="material-icons" style="margin-left: 15px;">print</i></button><br>
+        <div *ngIf="enquiryList.length >= 1" class="col-md-3" align="left">
+            <button
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 12px 15px"
+                matTooltip="Print the following list"
+                tooltip-position="left"
+                (click)="printEnquiryList()"
+            >
+                Print<i class="material-icons" style="margin-left: 15px">print</i></button
+            ><br />
         </div>
-
     </div>
 
     <i>
-        Displaying {{enquiryList.length}}
-        <span *ngIf="enquiryList.length<=1">enquiry</span>
-        <span *ngIf="enquiryList.length>1">enquiries</span>
-    </i> <br> <br>
+        Displaying {{ enquiryList.length }}
+        <span *ngIf="enquiryList.length <= 1">enquiry</span>
+        <span *ngIf="enquiryList.length > 1">enquiries</span>
+    </i>
+    <br />
+    <br />
 
     <!-- Enquiry Table List -->
     <ng-container *ngIf="!isLoading && enquiryList">
-
         <ng-container *ngIf="enquiryList.length > 0">
-
-            <mat-form-field style="margin-right: 15px;">
+            <mat-form-field style="margin-right: 15px">
                 <mat-select placeholder="Collected By" [(ngModel)]="selectedEmployee">
-                    <mat-option *ngFor="let employee of getFilteredEmployeeList();" [value]="employee">
-                        {{employee.name}}
+                    <mat-option *ngFor="let employee of getFilteredEmployeeList()" [value]="employee">
+                        {{ employee.name }}
                     </mat-option>
-                    <mat-option [value]="nullValue">
-                        All
-                    </mat-option>
+                    <mat-option [value]="nullValue"> All </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field style="margin-right: 15px;">
+            <mat-form-field style="margin-right: 15px">
                 <mat-select placeholder="Collection of Classes" [(ngModel)]="selectedClass">
-                    <mat-option *ngFor="let classs of getFilteredClassList();" [value]="classs">
-                        {{classs.name}}
+                    <mat-option *ngFor="let classs of getFilteredClassList()" [value]="classs">
+                        {{ classs.name }}
                     </mat-option>
-                    <mat-option [value]="nullValue">
-                        All
-                    </mat-option>
+                    <mat-option [value]="nullValue"> All </mat-option>
                 </mat-select>
             </mat-form-field>
 
-        <table class="table table-hover">
-            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-            <tr>
-                <th>S No.</th>
-                <th>Enquiry Date</th>
-                <th>Enquirer's Name</th>
-                <th>Mobile No.</th>
-                <th>Student's Name</th>
-                <th>Class</th>
-                <th>Address</th>
-                <th>Remark</th>
-                <th>Employee Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <ng-container *ngFor="let enquiry of getFilteredEnquiryList(); let i = index">
-                <tr>
-                    <ng-container>
-                        <td>{{i+1}}.</td>
-                        <td>{{enquiry.dateOfEnquiry | date: 'dd - MMM - yyyy'}}</td>
-                        <td>{{enquiry.enquirerName}}</td>
-                        <td >
-                            <span class="hidden-xs hidden-sm">{{enquiry.mobileNumber}}</span>
-                            <a *ngIf="enquiry.mobileNumber" class="visible-xs visible-sm" href="tel:{{enquiry.mobileNumber}}">Call Me</a>
-                        </td>
-                        <td>{{enquiry.studentName}}</td>
-                        <td>{{getClassName(enquiry.parentClass)}}</td>
-                        <td>{{enquiry.address}}</td>
-                        <td>{{enquiry.remark}}</td>
-                        <td>{{getEmployeeName(enquiry.parentEmployee)}}</td>
+            <table class="table table-hover">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Enquiry Date</th>
+                        <th>Enquirer's Name</th>
+                        <th>Mobile No.</th>
+                        <th>Student's Name</th>
+                        <th>Class</th>
+                        <th>Address</th>
+                        <th>Remark</th>
+                        <th>Employee Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let enquiry of getFilteredEnquiryList(); let i = index">
+                        <tr>
+                            <ng-container>
+                                <td>{{ i + 1 }}.</td>
+                                <td>{{ enquiry.dateOfEnquiry | date: 'dd - MMM - yyyy' }}</td>
+                                <td>{{ enquiry.enquirerName }}</td>
+                                <td>
+                                    <span class="hidden-xs hidden-sm">{{ enquiry.mobileNumber }}</span>
+                                    <a *ngIf="enquiry.mobileNumber" class="visible-xs visible-sm" href="tel:{{ enquiry.mobileNumber }}"
+                                        >Call Me</a
+                                    >
+                                </td>
+                                <td>{{ enquiry.studentName }}</td>
+                                <td>{{ getClassName(enquiry.parentClass) }}</td>
+                                <td>{{ enquiry.address }}</td>
+                                <td>{{ enquiry.remark }}</td>
+                                <td>{{ getEmployeeName(enquiry.parentEmployee) }}</td>
+                            </ng-container>
+                        </tr>
                     </ng-container>
-                </tr>
-            </ng-container>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         </ng-container>
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

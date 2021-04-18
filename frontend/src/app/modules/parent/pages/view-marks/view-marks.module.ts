@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {ViewMarksRoutingModule} from './view-marks.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ViewMarksComponent} from "./view-marks.component";
-
+import { ViewMarksRoutingModule } from './view-marks.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ViewMarksComponent } from './view-marks.component';
 
 @NgModule({
-    declarations: [
-        ViewMarksComponent
-    ],
+    declarations: [ViewMarksComponent],
 
-    imports: [
-        ViewMarksRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ViewMarksRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ViewMarksComponent]
+    bootstrap: [ViewMarksComponent],
 })
-export class ViewMarksModule { }
+export class ViewMarksModule {}

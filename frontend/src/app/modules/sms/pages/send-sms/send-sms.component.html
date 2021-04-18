@@ -1,18 +1,20 @@
 <div class="card-content table-responsive" [class.hidden]="isLoading">
-
     <!-- Gap -->
-    <div class="row"
-         style="margin-bottom: 30px;">
+    <div class="row" style="margin-bottom: 30px">
         <div class="col-xs-12"></div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <span style="font-size: 16px">SMS Balance: <b><i>{{smsBalance}}</i></b><br/></span>
+            <span style="font-size: 16px"
+                >SMS Balance:
+                <b
+                    ><i>{{ smsBalance }}</i></b
+                ><br
+            /></span>
         </div>
         <div class="col-md-6" align="end">
-            <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
-               target="_blank">
+            <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab" target="_blank">
                 Hindi Typing Extension
             </a>
         </div>
@@ -21,53 +23,72 @@
     <div class="row">
         <div class="col-md-6">
             <mat-form-field class="rowTextArea">
-                    <textarea matInput
-                              style="padding-top: 10px; padding-bottom: 10px;"
-                              rows="8"
-                              placeholder="Message"
-                              [(ngModel)]="message"></textarea>
+                <textarea
+                    matInput
+                    style="padding-top: 10px; padding-bottom: 10px"
+                    rows="8"
+                    placeholder="Message"
+                    [(ngModel)]="message"
+                ></textarea>
             </mat-form-field>
         </div>
         <div class="col-md-3">
-            <mat-form-field style="margin-top: 23px;">
-                <mat-select placeholder="Send via"
-                            [(ngModel)]="selectedSentType">
-                    <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
-                        {{sentType}}
+            <mat-form-field style="margin-top: 23px">
+                <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
+                    <mat-option *ngFor="let sentType of sentTypeList" [value]="sentType">
+                        {{ sentType }}
                     </mat-option>
-                </mat-select>
-            </mat-form-field><br/>
-            <span  style="font-size: 14px; margin-top: 5px;">
-                # of Characters/SMS: {{message.length}}/{{getSMSCount()}}<br/>
-                # of Mobile devices: {{getMobileNumberList('both').length}}<br/>
-                Estimated SMS Count: {{getMobileNumberList('sms').length*getSMSCount()}}<br/>
-                Estimated Notification Count: {{getMobileNumberList('notification').length}}<br/>
+                </mat-select> </mat-form-field
+            ><br />
+            <span style="font-size: 14px; margin-top: 5px">
+                # of Characters/SMS: {{ message.length }}/{{ getSMSCount() }}<br />
+                # of Mobile devices: {{ getMobileNumberList('both').length }}<br />
+                Estimated SMS Count: {{ getMobileNumberList('sms').length * getSMSCount() }}<br />
+                Estimated Notification Count: {{ getMobileNumberList('notification').length }}<br />
             </span>
             <span *ngIf="getMobileNumberList('both').length !== 0 && message.length > 0">
-                <span *ngIf="(selectedSentType==sentTypeList[0] || selectedSentType==sentTypeList[2]) && smsBalance<getMobileNumberList('sms').length*getSMSCount()" style="font-size: 16px;">
-                    You are short by <b>{{(getMobileNumberList('sms').length*getSMSCount()) - smsBalance}}</b> SMS.
+                <span
+                    *ngIf="
+                        (selectedSentType == sentTypeList[0] || selectedSentType == sentTypeList[2]) &&
+                        smsBalance < getMobileNumberList('sms').length * getSMSCount()
+                    "
+                    style="font-size: 16px"
+                >
+                    You are short by <b>{{ getMobileNumberList('sms').length * getSMSCount() - smsBalance }}</b> SMS.
                 </span>
-                <ng-container *ngIf="smsBalance>=(getMobileNumberList('sms').length*getSMSCount())">
-                    <button type="submit"
-                            *ngIf="selectedSentType==sentTypeList[0]"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS</button>
-                    <button type="submit"
-                            *ngIf="selectedSentType==sentTypeList[2]"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('sms').length*getSMSCount()}} SMS & {{getMobileNumberList('notification').length}} notifications</button>
+                <ng-container *ngIf="smsBalance >= getMobileNumberList('sms').length * getSMSCount()">
+                    <button
+                        type="submit"
+                        *ngIf="selectedSentType == sentTypeList[0]"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="serviceAdapter.sendSMSAndNotification()"
+                    >
+                        Send {{ getMobileNumberList('sms').length * getSMSCount() }} SMS
+                    </button>
+                    <button
+                        type="submit"
+                        *ngIf="selectedSentType == sentTypeList[2]"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="serviceAdapter.sendSMSAndNotification()"
+                    >
+                        Send {{ getMobileNumberList('sms').length * getSMSCount() }} SMS &
+                        {{ getMobileNumberList('notification').length }} notifications
+                    </button>
                 </ng-container>
-                <button type="submit"
-                        *ngIf="selectedSentType==sentTypeList[1]"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.sendSMSAndNotification()">Send {{getMobileNumberList('notification').length}} notifications</button>
+                <button
+                    type="submit"
+                    *ngIf="selectedSentType == sentTypeList[1]"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.sendSMSAndNotification()"
+                >
+                    Send {{ getMobileNumberList('notification').length }} notifications
+                </button>
             </span>
         </div>
     </div>
 
     <!-- Gap Line -->
-    <div class="row"
-         style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px;">
+    <div class="row" style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px">
         <div class="col-xs-12"></div>
     </div>
 
@@ -75,132 +96,106 @@
     <div class="row">
         <div class="col-md-6">
             <span style="font-size: 16px; font-weight: 600"><i>Student List</i></span>
-            <button class="btn"
-                    style="padding: 4px 7px; margin-left: 15px;"
-                    (click)="showStudentList = !showStudentList; $event.stopPropagation();">
+            <button
+                class="btn"
+                style="padding: 4px 7px; margin-left: 15px"
+                (click)="showStudentList = !showStudentList; $event.stopPropagation()"
+            >
                 <span *ngIf="showStudentList; else hideStudentList">Hide</span>
                 <ng-template #hideStudentList>Show</ng-template>
             </button>
         </div>
     </div>
 
-    <div [class.hidden]="!showStudentList || studentList.length===0">
-
+    <div [class.hidden]="!showStudentList || studentList.length === 0">
         <!-- Class Filter -->
-        <mat-form-field style="margin-right: 15px;">
-            <mat-select placeholder="Select Class" style="width: 100%;">
-
+        <mat-form-field style="margin-right: 15px">
+            <mat-select placeholder="Select Class" style="width: 100%">
                 <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllClasses(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
-                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
 
-                <mat-option *ngFor="let classSection of classSectionList" style="width: 100%;">
-                    <mat-checkbox [(ngModel)]="classSection.selected"
-                                  (click)="$event.stopPropagation();">
-                        {{getClassSectionName(classSection.class.id,classSection.section.id)}}
+                <mat-option *ngFor="let classSection of classSectionList" style="width: 100%">
+                    <mat-checkbox [(ngModel)]="classSection.selected" (click)="$event.stopPropagation()">
+                        {{ getClassSectionName(classSection.class.id, classSection.section.id) }}
                     </mat-checkbox>
                 </mat-option>
 
                 <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllClasses(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
-                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
-
             </mat-select>
         </mat-form-field>
 
-        <mat-checkbox [(ngModel)]="includeSecondMobileNumber"
-                      (click)="$event.stopPropagation();">
+        <mat-checkbox [(ngModel)]="includeSecondMobileNumber" (click)="$event.stopPropagation()">
             Include Alternate Mobile Number
         </mat-checkbox>
 
-        <mat-checkbox [(ngModel)]="invalidmobilenumber"
-                      style="margin-left: 15px;"
-                      (click)="$event.stopPropagation();">
+        <mat-checkbox [(ngModel)]="invalidmobilenumber" style="margin-left: 15px" (click)="$event.stopPropagation()">
             Show Invalid Mobile Number
         </mat-checkbox>
 
         <!-- Search by student's or father's name -->
-        <br>
+        <br />
         <mat-form-field>
-            <input matInput
-                   testId="nameFilter"
-                   placeholder="Enter student's name, father's name.."
-                   type="text"
-                   [(ngModel)]="nameFilter">
+            <input matInput testId="nameFilter" placeholder="Enter student's name, father's name.." type="text" [(ngModel)]="nameFilter" />
         </mat-form-field>
         <!-- EOF Search by student's or father's name -->
 
         <!-- Custom Filters -->
         <ng-container>
-
-            <br/>
-            <button class="btn"
-                    style="padding: 4px 7px"
-                    (click)="showFilters=!showFilters">
+            <br />
+            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
                 <ng-container *ngIf="!showFilters">Show Filters</ng-container>
-                <ng-container *ngIf="showFilters">Hide Filters</ng-container>
-            </button><br/>
+                <ng-container *ngIf="showFilters">Hide Filters</ng-container></button
+            ><br />
 
             <ng-container *ngIf="showFilters">
-
-                <br/>
-                <b>Default Filters</b><br/>
+                <br />
+                <b>Default Filters</b><br />
 
                 <div class="row">
                     <div class="col-md-6">
                         <!-- Category Filter -->
                         <mat-form-field>
                             <mat-label>Category</mat-label>
-                            <input matInput disabled = true>
-                        </mat-form-field><br>
-                        <mat-checkbox [(ngModel)]="studentFilters.category.sc"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">SC
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.category.st"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">ST
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.category.obc"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">OBC
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.category.general"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">GEN
+                            <input matInput disabled="true" /> </mat-form-field
+                        ><br />
+                        <mat-checkbox [(ngModel)]="studentFilters.category.sc" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >SC </mat-checkbox
+                        >,
+                        <mat-checkbox [(ngModel)]="studentFilters.category.st" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >ST </mat-checkbox
+                        >,
+                        <mat-checkbox [(ngModel)]="studentFilters.category.obc" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >OBC </mat-checkbox
+                        >,
+                        <mat-checkbox
+                            [(ngModel)]="studentFilters.category.general"
+                            style="margin-right: 5px"
+                            (click)="$event.stopPropagation()"
+                            >GEN
                         </mat-checkbox>
                     </div>
                     <div class="col-md-6">
                         <!-- Gender Filter -->
                         <mat-form-field>
                             <mat-label>Gender</mat-label>
-                            <input matInput disabled = true>
-                        </mat-form-field><br>
-                        <mat-checkbox [(ngModel)]="studentFilters.gender.male"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">M
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.gender.female"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">F
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.gender.other"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">Other
+                            <input matInput disabled="true" /> </mat-form-field
+                        ><br />
+                        <mat-checkbox [(ngModel)]="studentFilters.gender.male" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >M </mat-checkbox
+                        >,
+                        <mat-checkbox
+                            [(ngModel)]="studentFilters.gender.female"
+                            style="margin-right: 5px"
+                            (click)="$event.stopPropagation()"
+                            >F </mat-checkbox
+                        >,
+                        <mat-checkbox [(ngModel)]="studentFilters.gender.other" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >Other
                         </mat-checkbox>
                     </div>
                 </div>
@@ -210,138 +205,133 @@
                         <!-- Admission Filter -->
                         <mat-form-field>
                             <mat-label>Admission</mat-label>
-                            <input matInput disabled = true>
-                        </mat-form-field><br>
-                        <mat-checkbox [(ngModel)]="studentFilters.admission.new"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">New
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.admission.old"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">Old
+                            <input matInput disabled="true" /> </mat-form-field
+                        ><br />
+                        <mat-checkbox
+                            [(ngModel)]="studentFilters.admission.new"
+                            style="margin-right: 5px"
+                            (click)="$event.stopPropagation()"
+                            >New </mat-checkbox
+                        >,
+                        <mat-checkbox
+                            [(ngModel)]="studentFilters.admission.old"
+                            style="margin-right: 5px"
+                            (click)="$event.stopPropagation()"
+                            >Old
                         </mat-checkbox>
                     </div>
                     <div class="col-md-6">
                         <!-- RTE Filter -->
                         <mat-form-field>
                             <mat-label>RTE</mat-label>
-                            <input matInput disabled = true>
-                        </mat-form-field><br>
-                        <mat-checkbox [(ngModel)]="studentFilters.rte.yes"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">Yes
-                        </mat-checkbox>,
-                        <mat-checkbox [(ngModel)]="studentFilters.rte.no"
-                                      style="margin-right: 5px;"
-                                      (click)="$event.stopPropagation();">No
+                            <input matInput disabled="true" /> </mat-form-field
+                        ><br />
+                        <mat-checkbox [(ngModel)]="studentFilters.rte.yes" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >Yes </mat-checkbox
+                        >,
+                        <mat-checkbox [(ngModel)]="studentFilters.rte.no" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                            >No
                         </mat-checkbox>
                     </div>
                 </div>
 
-                <div style="border: 1px dotted black; margin: 15px 0px; width: 100%;"></div>
+                <div style="border: 1px dotted black; margin: 15px 0px; width: 100%"></div>
 
-                <b>Custom Filters</b><br/>
+                <b>Custom Filters</b><br />
 
                 <!-- Other Filters-->
                 <ng-container *ngFor="let parameter of studentParameterList">
-
                     <mat-form-field>
-                        <mat-label>{{parameter.name}}</mat-label>
-                        <input matInput
-                               type="text"
-                               [(ngModel)]="parameter.filterFilterValues">
-                    </mat-form-field><br/>
-                    <mat-checkbox [(ngModel)]="parameter.showNone"
-                                  style="margin-right: 5px;"
-                                  (click)="$event.stopPropagation();">None
+                        <mat-label>{{ parameter.name }}</mat-label>
+                        <input matInput type="text" [(ngModel)]="parameter.filterFilterValues" /> </mat-form-field
+                    ><br />
+                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                        >None
                     </mat-checkbox>
-                    <mat-checkbox *ngFor="let filter of getFilteredFilterValues(parameter)" [(ngModel)]="filter.show"
-                                  style="margin-right: 5px;"
-                                  (click)="$event.stopPropagation();">{{filter.name}}
-                    </mat-checkbox><br/>
-
+                    <mat-checkbox
+                        *ngFor="let filter of getFilteredFilterValues(parameter)"
+                        [(ngModel)]="filter.show"
+                        style="margin-right: 5px"
+                        (click)="$event.stopPropagation()"
+                        >{{ filter.name }} </mat-checkbox
+                    ><br />
                 </ng-container>
 
-                <div style="border: 1px solid black; margin: 15px 0px; width: 100%;"></div>
-
+                <div style="border: 1px solid black; margin: 15px 0px; width: 100%"></div>
             </ng-container>
         </ng-container>
 
-        <br>
-            Total Students: <i>{{studentSectionList.length}}</i>,
-            Displaying: <i>{{getDisplayStudentNumber()}}</i>,
-            Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
-        <br/>
+        <br />
+        Total Students: <i>{{ studentSectionList.length }}</i
+        >, Displaying: <i>{{ getDisplayStudentNumber() }}</i
+        >, Selected:
+        <b
+            ><i>{{ getSelectedStudentNumber() }}</i></b
+        >
+        <br />
 
-        <button class="btn"
-                style="padding: 4px 7px"
-                (click)="selectAllStudents(); $event.stopPropagation();">Select All
-        </button>
-        <button class="btn"
-                style="padding: 4px 7px"
-                (click)="unSelectAllStudents(); $event.stopPropagation();">Clear All
-        </button>
+        <button class="btn" style="padding: 4px 7px" (click)="selectAllStudents(); $event.stopPropagation()">Select All</button>
+        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllStudents(); $event.stopPropagation()">Clear All</button>
 
         <ngx-datatable
-                class='material ngxDataTable'
-                *ngIf="showStudentList && studentSectionList.length>0"
-                [rows]='getFilteredStudentList()'
-                [columnMode]="'force'"
-                [headerHeight]="50"
-                [footerHeight]="50"
-                [rowHeight]="getRowHeight"
-                [rowClass]="getRowClass"
-                [scrollbarV]="true"
-                [scrollbarH]="true"
-                (page)="onPage($event)">
+            class="material ngxDataTable"
+            *ngIf="showStudentList && studentSectionList.length > 0"
+            [rows]="getFilteredStudentList()"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="getRowHeight"
+            [rowClass]="getRowClass"
+            [scrollbarV]="true"
+            [scrollbarH]="true"
+            (page)="onPage($event)"
+        >
             <ngx-datatable-column name="Selected">
-                <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <mat-checkbox [ngModel]="row['selected']"
-                                  (ngModelChange)="updateRowValue(row, $event)"
-                                  [disabled]="!row.validMobileNumber"></mat-checkbox>
+                <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <mat-checkbox
+                        [ngModel]="row['selected']"
+                        (ngModelChange)="updateRowValue(row, $event)"
+                        [disabled]="!row.validMobileNumber"
+                    ></mat-checkbox>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Name">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <strong>{{row.student.name}}</strong>
+                    <strong>{{ row.student.name }}</strong>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Class">
-                <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
-                    <strong>{{getClassSectionName(row.parentClass,row.parentDivision)}}</strong>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <strong>{{ getClassSectionName(row.parentClass, row.parentDivision) }}</strong>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Scholar No.">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.student.scholarNumber}}</i>
+                    <i>{{ row.student.scholarNumber }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Father's Name">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.student.fathersName}}</i>
+                    <i>{{ row.student.fathersName }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Mobile No.">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.student.mobileNumber}}</i>
+                    <i>{{ row.student.mobileNumber }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Alt. Mobile No.">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.student.secondMobileNumber}}</i>
+                    <i>{{ row.student.secondMobileNumber }}</i>
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>
-
     </div>
 
-    <div [class.hidden]="!showStudentList || studentList.length>0">
-        Students need to be added or promoted in this session.
-    </div>
+    <div [class.hidden]="!showStudentList || studentList.length > 0">Students need to be added or promoted in this session.</div>
 
     <!-- Gap Line -->
-    <div class="row"
-         style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px;">
+    <div class="row" style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px">
         <div class="col-xs-12"></div>
     </div>
 
@@ -349,76 +339,67 @@
     <div class="row">
         <div class="col-md-6">
             <span style="font-size: 16px; font-weight: 600"><i>Employee List</i></span>
-            <button class="btn"
-                    style="padding: 4px 7px; margin-left: 15px;"
-                    (click)="showEmployeeList = !showEmployeeList; $event.stopPropagation();">
+            <button
+                class="btn"
+                style="padding: 4px 7px; margin-left: 15px"
+                (click)="showEmployeeList = !showEmployeeList; $event.stopPropagation()"
+            >
                 <span *ngIf="showEmployeeList; else hideEmployeeList">Hide</span>
                 <ng-template #hideEmployeeList>Show</ng-template>
             </button>
         </div>
     </div>
 
-    <div [class.hidden]="!showEmployeeList || employeeList.length===0">
+    <div [class.hidden]="!showEmployeeList || employeeList.length === 0">
+        <br />
+        Total Employees: <i> {{ employeeList.length }} employee<span *ngIf="employeeList.length > 1">s</span></i
+        >, Selected:
+        <b
+            ><i>{{ getSelectedEmployeeNumber() }}</i></b
+        >
+        <br />
 
-        <br>
-        Total Employees: <i> {{employeeList.length}} employee<span *ngIf="employeeList.length>1">s</span></i>,
-        Selected: <b><i>{{getSelectedEmployeeNumber()}}</i></b>
-        <br/>
-
-        <button class="btn"
-                style="padding: 4px 7px"
-                (click)="selectAllEmployees(); $event.stopPropagation();">Select All
-        </button>
-        <button class="btn"
-                style="padding: 4px 7px"
-                (click)="unSelectAllEmployees(); $event.stopPropagation();">Clear All
-        </button>
+        <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">Select All</button>
+        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllEmployees(); $event.stopPropagation()">Clear All</button>
 
         <!-- Employee Table List -->
         <ng-container *ngIf="!isLoading">
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th></th>
-                    <th>S No.</th>
-                    <th>Name</th>
-                    <!-- th>Employee No.</th -->
-                    <th>Father's Name</th>
-                    <th>Mobile No.</th>
-                    <!-- th>Post</th -->
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th></th>
+                        <th>S No.</th>
+                        <th>Name</th>
+                        <!-- th>Employee No.</th -->
+                        <th>Father's Name</th>
+                        <th>Mobile No.</th>
+                        <!-- th>Post</th -->
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let employee of employeeList; let i = index">
-                    <tr>
-                        <ng-container>
-                            <td>
-                                <mat-checkbox [(ngModel)]="employee.selected"
-                                              [disabled]="!employee.validMobileNumber">
-                                </mat-checkbox>
-                            </td>
-                            <td>{{i+1}}.</td>
-                            <td>{{employee.name}}</td>
-                            <!-- td>{{employee.employeeNumber}}</td -->
-                            <td>{{employee.fatherName}}</td>
-                            <td>{{employee.mobileNumber}}</td>
-                            <!-- td>{{employee.currentPost}}</td -->
-                        </ng-container>
-                    </tr>
-                </ng-container>
+                    <ng-container *ngFor="let employee of employeeList; let i = index">
+                        <tr>
+                            <ng-container>
+                                <td>
+                                    <mat-checkbox [(ngModel)]="employee.selected" [disabled]="!employee.validMobileNumber"> </mat-checkbox>
+                                </td>
+                                <td>{{ i + 1 }}.</td>
+                                <td>{{ employee.name }}</td>
+                                <!-- td>{{employee.employeeNumber}}</td -->
+                                <td>{{ employee.fatherName }}</td>
+                                <td>{{ employee.mobileNumber }}</td>
+                                <!-- td>{{employee.currentPost}}</td -->
+                            </ng-container>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </ng-container>
-
     </div>
 
-    <div [class.hidden]="!showEmployeeList || employeeList.length>0">
-        Employees need to be added.
-    </div>
-
+    <div [class.hidden]="!showEmployeeList || employeeList.length > 0">Employees need to be added.</div>
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

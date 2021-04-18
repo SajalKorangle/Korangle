@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {CreateExaminationtRoutingModule} from './create-examination.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {CreateExaminationComponent} from "./create-examination.component";
-
+import { CreateExaminationtRoutingModule } from './create-examination.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { CreateExaminationComponent } from './create-examination.component';
 
 @NgModule({
-    declarations: [
-        CreateExaminationComponent
-    ],
+    declarations: [CreateExaminationComponent],
 
-    imports: [
-        CreateExaminationtRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [CreateExaminationtRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [CreateExaminationComponent]
+    bootstrap: [CreateExaminationComponent],
 })
-export class CreateExaminationModule { }
+export class CreateExaminationModule {}

@@ -1,24 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {ScheduleTestComponent} from "./schedule-test.component";
+import { ScheduleTestComponent } from './schedule-test.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: ScheduleTestComponent ,
-        
-    }
+        component: ScheduleTestComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class ScheduleTestRoutingModule { }
+export class ScheduleTestRoutingModule {}

@@ -1,124 +1,121 @@
 <div class="card-content">
-    <parent-student-filter [user]="user"
-                           (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
-                           (onStudentListSelected)="handleStudentListSelection($event)"
-                           (onStudentListLoading)="isStudentListLoading=$event"
-                           [selectedFilterType]="'Student'"
-                           [studentTcGenerated]="true"
-                           [bothFilters]="false"></parent-student-filter>
+    <parent-student-filter
+        [user]="user"
+        (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+        (onStudentListSelected)="handleStudentListSelection($event)"
+        (onStudentListLoading)="isStudentListLoading = $event"
+        [selectedFilterType]="'Student'"
+        [studentTcGenerated]="true"
+        [bothFilters]="false"
+    ></parent-student-filter>
 
-
-    <hr>
+    <hr />
 
     <ng-container *ngIf="!isLoading && !isStudentListLoading">
+        <!--        &lt;!&ndash; Student Profile &ndash;&gt;-->
+        <!--        <ng-container *ngIf="!isMobileMenu() && selectedStudent!=null">-->
 
-<!--        &lt;!&ndash; Student Profile &ndash;&gt;-->
-<!--        <ng-container *ngIf="!isMobileMenu() && selectedStudent!=null">-->
+        <!--            <mat-accordion>-->
 
-<!--            <mat-accordion>-->
+        <!--                <mat-expansion-panel expanded="true">-->
 
-<!--                <mat-expansion-panel expanded="true">-->
+        <!--                    <mat-expansion-panel-header>-->
+        <!--                        <mat-panel-title>-->
+        <!--                            <img *ngIf="selectedStudent.profileImage"-->
+        <!--                                 style="width: 40px; height: 40px;"-->
+        <!--                                 src="{{selectedStudent.profileImage}}">-->
+        <!--                            <img *ngIf="!selectedStudent.profileImage"-->
+        <!--                                 style="width: 40px; height: 40px;"-->
+        <!--                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">-->
+        <!--                            <span style="margin-left: 20px; margin-top: 10px;">{{selectedStudent.name}}</span>-->
+        <!--                        </mat-panel-title>-->
+        <!--                    </mat-expansion-panel-header>-->
 
-<!--                    <mat-expansion-panel-header>-->
-<!--                        <mat-panel-title>-->
-<!--                            <img *ngIf="selectedStudent.profileImage"-->
-<!--                                 style="width: 40px; height: 40px;"-->
-<!--                                 src="{{selectedStudent.profileImage}}">-->
-<!--                            <img *ngIf="!selectedStudent.profileImage"-->
-<!--                                 style="width: 40px; height: 40px;"-->
-<!--                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">-->
-<!--                            <span style="margin-left: 20px; margin-top: 10px;">{{selectedStudent.name}}</span>-->
-<!--                        </mat-panel-title>-->
-<!--                    </mat-expansion-panel-header>-->
+        <!--                    <div class="row hidden-xs">-->
+        <!--                        <div class="col-md-10">-->
 
-<!--                    <div class="row hidden-xs">-->
-<!--                        <div class="col-md-10">-->
+        <!--                            <div class="row" style="font-size: 16px;">-->
+        <!--                                <div class="col-md-2">-->
+        <!--                                    Name-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-5">-->
+        <!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.name}}</span>-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-2">-->
+        <!--                                    Scholar No.-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-3">-->
+        <!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.scholarNumber}}</span>-->
+        <!--                                </div>-->
+        <!--                            </div>-->
 
-<!--                            <div class="row" style="font-size: 16px;">-->
-<!--                                <div class="col-md-2">-->
-<!--                                    Name-->
-<!--                                </div>-->
-<!--                                <div class="col-md-5">-->
-<!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.name}}</span>-->
-<!--                                </div>-->
-<!--                                <div class="col-md-2">-->
-<!--                                    Scholar No.-->
-<!--                                </div>-->
-<!--                                <div class="col-md-3">-->
-<!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.scholarNumber}}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
+        <!--                            <div class="row" style="font-size: 16px;">-->
+        <!--                                <div class="col-md-2">-->
+        <!--                                    Father's Name-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-5">-->
+        <!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.fathersName}}</span>-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-2">-->
+        <!--                                    Class Name-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-3">-->
+        <!--                                    :-->
+        <!--                                    <span style="font-weight: 600; margin-left: 5px;">-->
+        <!--                                            {{getClassName(selectedStudentSection.parentClass)}},-->
+        <!--                                        {{getSectionName(selectedStudentSection.parentDivision)}}-->
+        <!--                                        </span>-->
+        <!--                                </div>-->
+        <!--                            </div>-->
 
-<!--                            <div class="row" style="font-size: 16px;">-->
-<!--                                <div class="col-md-2">-->
-<!--                                    Father's Name-->
-<!--                                </div>-->
-<!--                                <div class="col-md-5">-->
-<!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.fathersName}}</span>-->
-<!--                                </div>-->
-<!--                                <div class="col-md-2">-->
-<!--                                    Class Name-->
-<!--                                </div>-->
-<!--                                <div class="col-md-3">-->
-<!--                                    :-->
-<!--                                    <span style="font-weight: 600; margin-left: 5px;">-->
-<!--                                            {{getClassName(selectedStudentSection.parentClass)}},-->
-<!--                                        {{getSectionName(selectedStudentSection.parentDivision)}}-->
-<!--                                        </span>-->
-<!--                                </div>-->
-<!--                            </div>-->
+        <!--                            <div class="row" style="font-size: 16px;">-->
+        <!--                                <ng-container *ngIf="selectedStudent.currentBusStop">-->
+        <!--                                    <div class="col-md-2">-->
+        <!--                                        BusStop-->
+        <!--                                    </div>-->
+        <!--                                    <div class="col-md-5">-->
+        <!--                                        : <span style="font-weight: 600; margin-left: 5px;">{{getCurrentBusStop(selectedStudent.currentBusStop)}}</span>-->
+        <!--                                    </div>-->
+        <!--                                </ng-container>-->
+        <!--                                <ng-container *ngIf="selectedStudent.rte">-->
+        <!--                                    <div class="col-md-2">-->
+        <!--                                        RTE-->
+        <!--                                    </div>-->
+        <!--                                    <div class="col-md-3">-->
+        <!--                                        : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.rte}}</span>-->
+        <!--                                    </div>-->
+        <!--                                </ng-container>-->
+        <!--                            </div>-->
 
-<!--                            <div class="row" style="font-size: 16px;">-->
-<!--                                <ng-container *ngIf="selectedStudent.currentBusStop">-->
-<!--                                    <div class="col-md-2">-->
-<!--                                        BusStop-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-5">-->
-<!--                                        : <span style="font-weight: 600; margin-left: 5px;">{{getCurrentBusStop(selectedStudent.currentBusStop)}}</span>-->
-<!--                                    </div>-->
-<!--                                </ng-container>-->
-<!--                                <ng-container *ngIf="selectedStudent.rte">-->
-<!--                                    <div class="col-md-2">-->
-<!--                                        RTE-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-3">-->
-<!--                                        : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.rte}}</span>-->
-<!--                                    </div>-->
-<!--                                </ng-container>-->
-<!--                            </div>-->
+        <!--                            <div class="row" style="font-size: 16px;" *ngIf="selectedStudent.address">-->
+        <!--                                <div class="col-md-2">-->
+        <!--                                    Address-->
+        <!--                                </div>-->
+        <!--                                <div class="col-md-10">-->
+        <!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.address}}</span>-->
+        <!--                                </div>-->
+        <!--                            </div>-->
 
-<!--                            <div class="row" style="font-size: 16px;" *ngIf="selectedStudent.address">-->
-<!--                                <div class="col-md-2">-->
-<!--                                    Address-->
-<!--                                </div>-->
-<!--                                <div class="col-md-10">-->
-<!--                                    : <span style="font-weight: 600; margin-left: 5px;">{{selectedStudent.address}}</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
+        <!--                        </div>-->
+        <!--                        <div class="col-md-2">-->
+        <!--                            <img *ngIf="selectedStudent.profileImage"-->
+        <!--                                 style="width: 50%"-->
+        <!--                                 src="{{selectedStudent.profileImage}}">-->
+        <!--                            <img *ngIf="!selectedStudent.profileImage"-->
+        <!--                                 style="width: 50%"-->
+        <!--                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">-->
+        <!--                        </div>-->
+        <!--                    </div>-->
 
-<!--                        </div>-->
-<!--                        <div class="col-md-2">-->
-<!--                            <img *ngIf="selectedStudent.profileImage"-->
-<!--                                 style="width: 50%"-->
-<!--                                 src="{{selectedStudent.profileImage}}">-->
-<!--                            <img *ngIf="!selectedStudent.profileImage"-->
-<!--                                 style="width: 50%"-->
-<!--                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">-->
-<!--                        </div>-->
-<!--                    </div>-->
+        <!--                </mat-expansion-panel>-->
 
-<!--                </mat-expansion-panel>-->
+        <!--            </mat-accordion>-->
 
-<!--            </mat-accordion>-->
+        <!--        </ng-container>-->
 
-
-<!--        </ng-container>-->
-
-        <div *ngIf="selectedStudent!=null" style="padding-top: 5px">
-            <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="printProfile();">Print</button>
+        <div *ngIf="selectedStudent != null" style="padding-top: 5px">
+            <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="printProfile()">Print</button>
         </div>
-
-
     </ng-container>
 </div>
 <ng-container *ngIf="isLoading || isStudentListLoading">

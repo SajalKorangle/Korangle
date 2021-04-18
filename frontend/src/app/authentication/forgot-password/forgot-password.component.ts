@@ -1,11 +1,11 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { User } from '@classes/user';
-import {NotificationService} from '@services/modules/notification/notification.service';
-import {CommonFunctions} from '@classes/common-functions';
-import {DataStorage} from '@classes/data-storage';
-import {ForgotPasswordServiceAdapter} from './forgot-password.service.adapter';
-import {AuthenticationService} from '@services/modules/authentication/authentication.service';
-import {UserService} from '@services/modules/user/user.service';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { CommonFunctions } from '@classes/common-functions';
+import { DataStorage } from '@classes/data-storage';
+import { ForgotPasswordServiceAdapter } from './forgot-password.service.adapter';
+import { AuthenticationService } from '@services/modules/authentication/authentication.service';
+import { UserService } from '@services/modules/user/user.service';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
@@ -14,9 +14,7 @@ import { VALIDATORS_REGX } from '@classes/regx-validators';
     templateUrl: './forgot-password.component.html',
     styleUrls: ['./forgot-password.component.css'],
 })
-
 export class ForgotPasswordComponent implements OnInit {
-
     @Input() chosenComponent;
 
     user: User;
@@ -39,9 +37,11 @@ export class ForgotPasswordComponent implements OnInit {
 
     serviceAdapter: ForgotPasswordServiceAdapter;
 
-    constructor(public authenticationService: AuthenticationService,
-                public userService: UserService,
-                public notificationService: NotificationService) {}
+    constructor(
+        public authenticationService: AuthenticationService,
+        public userService: UserService,
+        public notificationService: NotificationService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -68,5 +68,4 @@ export class ForgotPasswordComponent implements OnInit {
     isMobileNumberValid(): boolean {
         return this.validators.phoneNumber.test(this.mobileNumber);
     }
-
 }

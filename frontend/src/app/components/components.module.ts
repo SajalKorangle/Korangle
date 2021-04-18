@@ -25,13 +25,13 @@ import { MatSliderModule } from '@angular/material/slider';
 
 import 'hammerjs';
 
-import { BasicComponentsModule } from "../basic-components/basic-components.module";
+import { BasicComponentsModule } from '../basic-components/basic-components.module';
 
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateOldComponent } from './day-date-old/day-date-old.component';
-import { DayDateComponent } from "./day-date/day-date.component";
+import { DayDateComponent } from './day-date/day-date.component';
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
-import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
+import { ParentStudentFilterComponent } from './parent-student-filter/parent-student-filter.component';
 import { CustomizedNumberInputComponent } from './customized-number-input/customized-number-input.component';
 import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component';
 import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
@@ -44,10 +44,8 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 import { LocalDatePipe } from './../pipes/local-date-format.pipe';
 import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
 
-
 @NgModule({
     declarations: [
-
         ParentStudentFilterComponent,
         MonthDateComponent,
         DayDateOldComponent,
@@ -63,10 +61,8 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         NumberAndStringPipe,
 
         EmployeeFilterComponent,
-
     ],
     imports: [
-
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -94,10 +90,8 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatSlideToggleModule,
 
         BasicComponentsModule,
-
     ],
     exports: [
-
         BasicComponentsModule,
 
         ParentStudentFilterComponent,
@@ -137,7 +131,6 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatDialogModule,
         MatListModule,
         MatSlideToggleModule,
-
     ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

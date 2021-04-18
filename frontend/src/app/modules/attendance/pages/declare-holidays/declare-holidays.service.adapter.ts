@@ -1,10 +1,9 @@
 import { DeclareHolidaysComponent } from './declare-holidays.component';
 
 export class DeclareHolidaysServiceAdapter {
-
     vm: DeclareHolidaysComponent;
 
-    informationMessageType : any; 
+    informationMessageType: any;
 
     constructor() {}
     // Data
@@ -14,7 +13,6 @@ export class DeclareHolidaysServiceAdapter {
     }
 
     initializeData(): void {
-
         this.vm.isLoading = true;
 
         let request_student_data = {
@@ -26,18 +24,20 @@ export class DeclareHolidaysServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-
         Promise.all([
             this.vm.studentService.getClassSectionStudentList(request_student_data, this.vm.user.jwt),
             this.vm.employeeService.getEmployeeMiniProfileList(request_employee_data, this.vm.user.jwt),
-        ]).then(value => {
-            this.vm.initializeClassSectionStudentList(value[0]);
-            this.vm.initializeEmployeeList(value[1]);
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
-    };
+        ]).then(
+            (value) => {
+                this.vm.initializeClassSectionStudentList(value[0]);
+                this.vm.initializeEmployeeList(value[1]);
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
+    }
 
     declareHoliday(): void {
         let student_data = this.vm.prepareStudentAttendanceStatusListData();
@@ -50,18 +50,18 @@ export class DeclareHolidaysServiceAdapter {
 
         this.vm.isLoading = true;
         Promise.all([
-
             //old services
             this.vm.attendanceService.recordStudentAttendance(student_data, this.vm.user.jwt),
-            this.vm.attendanceService.recordEmployeeAttendance(employee_data, this.vm.user.jwt)
-
-        ]).then(response => {
-            this.vm.isLoading = false;
-            alert('Holidays recorded successfully');
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+            this.vm.attendanceService.recordEmployeeAttendance(employee_data, this.vm.user.jwt),
+        ]).then(
+            (response) => {
+                this.vm.isLoading = false;
+                alert('Holidays recorded successfully');
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     deleteAttendance(): void {
@@ -71,44 +71,44 @@ export class DeclareHolidaysServiceAdapter {
 
         let studentList = this.vm.getStudentIdList();
         let employeeList = this.vm.getEmployeeIdList();
-        let service_list = []
+        let service_list = [];
 
         if (studentList.length === 0 && employeeList.length === 0) {
             alert('Nothing to delete');
             return;
         }
 
-        this.vm.isLoading=true;
-        if (studentList.length != 0 ){
+        this.vm.isLoading = true;
+        if (studentList.length != 0) {
             let student_data = {
-                parentStudent__in:studentList,
-                dateOfAttendance__gte : this.vm.startDate,
-                dateOfAttendance__lte : this.vm.endDate
+                parentStudent__in: studentList,
+                dateOfAttendance__gte: this.vm.startDate,
+                dateOfAttendance__lte: this.vm.endDate,
             };
 
             //new attendance service
-            service_list.push(this.vm.attendanceService2.deleteObjectList(this.vm.attendanceService2.student_attendance,student_data));
-        };
+            service_list.push(this.vm.attendanceService2.deleteObjectList(this.vm.attendanceService2.student_attendance, student_data));
+        }
 
-        if (employeeList.length != 0 ){
+        if (employeeList.length != 0) {
             let employee_data = {
-                parentEmployee__in : employeeList,
-                dateOfAttendance__gte : this.vm.startDate,
-                dateOfAttendance__lte : this.vm.endDate    
-            }
+                parentEmployee__in: employeeList,
+                dateOfAttendance__gte: this.vm.startDate,
+                dateOfAttendance__lte: this.vm.endDate,
+            };
 
             //new attendance service
-            service_list.push(this.vm.attendanceService2.deleteObjectList(this.vm.attendanceService2.employee_attendance,employee_data));
-        };
+            service_list.push(this.vm.attendanceService2.deleteObjectList(this.vm.attendanceService2.employee_attendance, employee_data));
+        }
 
-        
-        Promise.all(service_list).then(value => {
-            this.vm.isLoading = false;
-            alert('All records for the selected dates are deleted');
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        Promise.all(service_list).then(
+            (value) => {
+                this.vm.isLoading = false;
+                alert('All records for the selected dates are deleted');
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
-
 }

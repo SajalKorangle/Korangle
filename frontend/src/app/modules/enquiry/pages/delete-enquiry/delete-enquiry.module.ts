@@ -1,27 +1,16 @@
 import { NgModule } from '@angular/core';
 
-import { DeleteEnquiryComponent } from "./delete-enquiry.component";
+import { DeleteEnquiryComponent } from './delete-enquiry.component';
 
-import {DeleteEnquiryRoutingModule} from './delete-enquiry.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-
+import { DeleteEnquiryRoutingModule } from './delete-enquiry.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 
 @NgModule({
-    declarations: [
+    declarations: [DeleteEnquiryComponent],
 
-        DeleteEnquiryComponent,
-
-    ],
-
-    imports: [
-
-        DeleteEnquiryRoutingModule,
-        ComponentsModule,
-
-    ],
-    exports: [
-    ],
+    imports: [DeleteEnquiryRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [DeleteEnquiryComponent]
+    bootstrap: [DeleteEnquiryComponent],
 })
-export class DeleteEnquiryModule { }
+export class DeleteEnquiryModule {}

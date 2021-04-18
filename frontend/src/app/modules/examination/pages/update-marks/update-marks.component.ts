@@ -4,10 +4,10 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { ClassService } from '../../../../services/modules/class/class.service';
 
 import { UpdateMarksServiceAdapter } from './update-marks.service.adapter';
-import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { StudentService } from 'app/services/modules/student/student.service';
 
@@ -17,10 +17,8 @@ import { StudentService } from 'app/services/modules/student/student.service';
     styleUrls: ['./update-marks.component.css'],
     providers: [ClassService, SubjectService, ExaminationService, StudentService],
 })
-
 export class UpdateMarksComponent implements OnInit {
-
-   user;
+    user;
 
     showTestDetails = false;
 
@@ -40,11 +38,13 @@ export class UpdateMarksComponent implements OnInit {
     isLoading = false;
     isUpdated = false;
 
-    constructor(public examinationService : ExaminationService,
-                public classService: ClassService,
-                public subjectService: SubjectService,
-                public studentService: StudentService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(
+        public examinationService: ExaminationService,
+        public classService: ClassService,
+        public subjectService: SubjectService,
+        public studentService: StudentService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -61,7 +61,7 @@ export class UpdateMarksComponent implements OnInit {
 
     getStudentName(studentId: any): any {
         let result = '';
-        this.student_mini_profile_list.every(item => {
+        this.student_mini_profile_list.every((item) => {
             if (item.dbId === studentId) {
                 result = item.name;
                 return false;
@@ -72,43 +72,36 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     getFilteredStudentList(list: any): any {
-        return list.filter(item => {
+        return list.filter((item) => {
             if (item.parentTransferCertificate === null) {
                 return true;
             }
             return false;
-        })
+        });
     }
 
     handleUpdate(event: any, student: any): void {
-
-
-        student.testDetails.forEach(item => {
+        student.testDetails.forEach((item) => {
             if (event != item.marksObtained) {
                 item.newMarksObtained = event;
-
             }
         });
 
         this.activateUpdate();
-
     }
     activateUpdate(): void {
         var updateCheck = false;
 
         let student_list = this.getFilteredStudentList(this.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList);
 
-        student_list.forEach(st => {
-            st.testDetails.forEach(test => {
-                if ((test.newMarksObtained != test.marksObtained) && !(test.newMarksObtained == null && test.marksObtained==0.0))
-                    updateCheck = true;;
+        student_list.forEach((st) => {
+            st.testDetails.forEach((test) => {
+                if (test.newMarksObtained != test.marksObtained && !(test.newMarksObtained == null && test.marksObtained == 0.0))
+                    updateCheck = true;
             });
         });
 
-        if (updateCheck)
-            this.isUpdated = true;
-        else
-            this.isUpdated = false;
+        if (updateCheck) this.isUpdated = true;
+        else this.isUpdated = false;
     }
-
 }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { GrantApprovalComponent } from './grant-approval.component';
@@ -7,17 +7,12 @@ import { GrantApprovalComponent } from './grant-approval.component';
 const routes: Routes = [
     {
         path: '',
-        component: GrantApprovalComponent ,
-    }
+        component: GrantApprovalComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class GrantApprovalRoutingModule { }
+export class GrantApprovalRoutingModule {}

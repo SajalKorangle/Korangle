@@ -1,57 +1,67 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<div class="main-content" style="min-height: 100vh;">
+<div class="main-content" style="min-height: 100vh">
     <div class="container-fluid">
-        <div class="card table-responsive" style="min-height: 100vh; margin: 0;">
+        <div class="card table-responsive" style="min-height: 100vh; margin: 0">
             <div class="card-content" style="padding-top: 20vh" *ngIf="!isLoading">
-
                 <ng-container *ngIf="!isMobile()">
                     <div class="row" align="center">
-                        <div style="height: 100px;margin-bottom: 10vh" align="center">
-                            <img src="assets/img/korangle.jpg" style="height: 100%;width:100px;">
+                        <div style="height: 100px; margin-bottom: 10vh" align="center">
+                            <img src="assets/img/korangle.jpg" style="height: 100%; width: 100px" />
                         </div>
                     </div>
                 </ng-container>
 
-                <form (ngSubmit)="serviceAdapter.submitCaptcha()" *ngIf="section=='userDetails'">
-
+                <form (ngSubmit)="serviceAdapter.submitCaptcha()" *ngIf="section == 'userDetails'">
                     <ng-container *ngIf="isMobile()">
                         <div class="row" align="center">
                             <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="firstName"
-                                           type="text"
-                                           name="firstName"
-                                           [pattern]="validators.name"
-                                           [(ngModel)]="firstName"
-                                           placeholder="*First Name">
+                                    <input
+                                        matInput
+                                        id="firstName"
+                                        type="text"
+                                        name="firstName"
+                                        [pattern]="validators.name"
+                                        [(ngModel)]="firstName"
+                                        placeholder="*First Name"
+                                    />
                                     <mat-error>Invalid name</mat-error>
                                 </mat-form-field>
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="lastName"
-                                           type="text"
-                                           name="lastName"
-                                           [pattern]="validators.name"
-                                           [(ngModel)]="lastName"
-                                           placeholder="Last Name (optional)">
+                                    <input
+                                        matInput
+                                        id="lastName"
+                                        type="text"
+                                        name="lastName"
+                                        [pattern]="validators.name"
+                                        [(ngModel)]="lastName"
+                                        placeholder="Last Name (optional)"
+                                    />
                                     <mat-error>Invalid name</mat-error>
                                 </mat-form-field>
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="mobileNumber"
-                                           type="text"
-                                           name="mobileNumber"
-                                           [pattern]="validators.phoneNumber"
-                                           maxlength="10"
-                                           [(ngModel)]="mobileNumber"
-                                           placeholder="*Mobile No. (example: 7897854213)">
+                                    <input
+                                        matInput
+                                        id="mobileNumber"
+                                        type="text"
+                                        name="mobileNumber"
+                                        [pattern]="validators.phoneNumber"
+                                        maxlength="10"
+                                        [(ngModel)]="mobileNumber"
+                                        placeholder="*Mobile No. (example: 7897854213)"
+                                    />
                                     <mat-error>Please provide correct 10 digits mobile number</mat-error>
                                 </mat-form-field>
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="emailAddress"
-                                           type="text"
-                                           name="emailAddress"
-                                           [pattern]="validators.email"
-                                           [(ngModel)]="emailAddress"
-                                           placeholder="Email Address (optional)">
+                                    <input
+                                        matInput
+                                        id="emailAddress"
+                                        type="text"
+                                        name="emailAddress"
+                                        [pattern]="validators.email"
+                                        [(ngModel)]="emailAddress"
+                                        placeholder="Email Address (optional)"
+                                    />
                                     <mat-error>Please provide correct email</mat-error>
                                 </mat-form-field>
                             </div>
@@ -62,41 +72,53 @@
                         <div class="row" align="center">
                             <div style="width: 75%" align="start">
                                 <mat-form-field style="width: 45%">
-                                    <input matInput id="firstName"
-                                           type="text"
-                                           name="firstName"
-                                           [pattern]="validators.name"
-                                           [(ngModel)]="firstName"
-                                           placeholder="*First Name">
+                                    <input
+                                        matInput
+                                        id="firstName"
+                                        type="text"
+                                        name="firstName"
+                                        [pattern]="validators.name"
+                                        [(ngModel)]="firstName"
+                                        placeholder="*First Name"
+                                    />
                                     <mat-error>Invalid name</mat-error>
                                 </mat-form-field>
                                 <div style="display: inline-block; width: 10%"></div>
                                 <mat-form-field style="width: 45%" align="end">
-                                    <input matInput id="lastName"
-                                           type="text"
-                                           name="lastName"
-                                           [pattern]="validators.name"
-                                           [(ngModel)]="lastName"
-                                           placeholder="Last Name (optional)">
+                                    <input
+                                        matInput
+                                        id="lastName"
+                                        type="text"
+                                        name="lastName"
+                                        [pattern]="validators.name"
+                                        [(ngModel)]="lastName"
+                                        placeholder="Last Name (optional)"
+                                    />
                                     <mat-error>Invalid name</mat-error>
                                 </mat-form-field>
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="mobileNumber"
-                                           type="text"
-                                           name="mobileNumber"
-                                           [(ngModel)]="mobileNumber"
-                                           [pattern]="validators.phoneNumber"
-                                           maxlength="10"
-                                           placeholder="*Mobile No. (example: 7897854213)">
+                                    <input
+                                        matInput
+                                        id="mobileNumber"
+                                        type="text"
+                                        name="mobileNumber"
+                                        [(ngModel)]="mobileNumber"
+                                        [pattern]="validators.phoneNumber"
+                                        maxlength="10"
+                                        placeholder="*Mobile No. (example: 7897854213)"
+                                    />
                                     <mat-error>Please provide correct 10 digits mobile number</mat-error>
                                 </mat-form-field>
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="emailAddress"
-                                           type="text"
-                                           name="emailAddress"
-                                           [pattern]="validators.email"
-                                           [(ngModel)]="emailAddress"
-                                           placeholder="Email Address (optional)">
+                                    <input
+                                        matInput
+                                        id="emailAddress"
+                                        type="text"
+                                        name="emailAddress"
+                                        [pattern]="validators.email"
+                                        [(ngModel)]="emailAddress"
+                                        placeholder="Email Address (optional)"
+                                    />
                                     <mat-error>Please provide correct email</mat-error>
                                 </mat-form-field>
                             </div>
@@ -111,8 +133,7 @@
                     </ng-container -->
 
                     <div class="row">
-                        <div class="col-md-12"
-                             align="center">
+                        <div class="col-md-12" align="center">
                             <button type="submit" [disabled]="!isFormValid()" class="btn btn-danger">Submit</button>
                         </div>
                     </div>
@@ -120,26 +141,25 @@
                     <div class="clearfix"></div>
 
                     <div class="row">
-                        <div class="col-md-12"
-                             align="center">
+                        <div class="col-md-12" align="center">
                             <a style="cursor: pointer" (click)="changePage.emit('login')">Back to login</a>
                         </div>
                     </div>
-
                 </form>
 
-                <form (ngSubmit)="serviceAdapter.verifyOTP()" *ngIf="section=='otp'">
-
+                <form (ngSubmit)="serviceAdapter.verifyOTP()" *ngIf="section == 'otp'">
                     <ng-container *ngIf="isMobile()">
-
                         <div class="row" align="center">
                             <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="otp"
-                                           type="text"
-                                           name="otp"
-                                           [(ngModel)]="otp"
-                                           placeholder="Type received otp here">
+                                    <input
+                                        matInput
+                                        id="otp"
+                                        type="text"
+                                        name="otp"
+                                        [(ngModel)]="otp"
+                                        placeholder="Type received otp here"
+                                    />
                                 </mat-form-field>
                             </div>
                         </div>
@@ -147,59 +167,56 @@
                         <div class="row" align="center">
                             <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="password"
-                                           type="{{visibilityMode ? 'text':'password'}}"
-                                           placeholder="Password"
-                                           [(ngModel)]="password"
-                                           name="password">
-                                    <i matSuffix
-                                       class="material-icons"
-                                       (click)="toggleVisibilityMode()"
-                                    >{{getVisibilityMode()}}</i>
+                                    <input
+                                        matInput
+                                        id="password"
+                                        type="{{ visibilityMode ? 'text' : 'password' }}"
+                                        placeholder="Password"
+                                        [(ngModel)]="password"
+                                        name="password"
+                                    />
+                                    <i matSuffix class="material-icons" (click)="toggleVisibilityMode()">{{ getVisibilityMode() }}</i>
                                 </mat-form-field>
-
                             </div>
                         </div>
 
                         <div class="row" align="center">
                             <div class="col-md-3 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2" align="center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="confirmPassword"
-                                           type="{{visibilityMode ? 'text':'password'}}"
-                                           placeholder="Confirm Password"
-                                           [(ngModel)]="confirmPassword"
-                                           name="confirmPassword">
-                                    <i matSuffix
-                                       class="material-icons"
-                                       (click)="toggleVisibilityMode()"
-                                    >{{getVisibilityMode()}}</i>
+                                    <input
+                                        matInput
+                                        id="confirmPassword"
+                                        type="{{ visibilityMode ? 'text' : 'password' }}"
+                                        placeholder="Confirm Password"
+                                        [(ngModel)]="confirmPassword"
+                                        name="confirmPassword"
+                                    />
+                                    <i matSuffix class="material-icons" (click)="toggleVisibilityMode()">{{ getVisibilityMode() }}</i>
                                 </mat-form-field>
-
                             </div>
                         </div>
-
 
                         <div class="clearfix"></div>
 
                         <div class="row">
-                            <div class="col-md-12"
-                                 align="center">
-                                <a style="cursor: pointer" (click)="section='userDetails'">Go Back</a>
+                            <div class="col-md-12" align="center">
+                                <a style="cursor: pointer" (click)="section = 'userDetails'">Go Back</a>
                             </div>
                         </div>
-
                     </ng-container>
 
                     <ng-container *ngIf="!isMobile()">
-
                         <div class="row" align="center">
                             <div style="width: 75%">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="otp"
-                                           type="text"
-                                           name="otp"
-                                           [(ngModel)]="otp"
-                                           placeholder="Type received otp here">
+                                    <input
+                                        matInput
+                                        id="otp"
+                                        type="text"
+                                        name="otp"
+                                        [(ngModel)]="otp"
+                                        placeholder="Type received otp here"
+                                    />
                                 </mat-form-field>
                             </div>
                         </div>
@@ -207,42 +224,42 @@
                         <div class="row" align="center">
                             <div style="width: 75%">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="password"
-                                           type="{{visibilityMode ? 'text':'password'}}"
-                                           placeholder="Password"
-                                           [(ngModel)]="password"
-                                           name="password">
-                                    <i matSuffix style="cursor: pointer;"
-                                       class="material-icons"
-                                       (click)="toggleVisibilityMode()"
-                                    >{{getVisibilityMode()}}</i>
+                                    <input
+                                        matInput
+                                        id="password"
+                                        type="{{ visibilityMode ? 'text' : 'password' }}"
+                                        placeholder="Password"
+                                        [(ngModel)]="password"
+                                        name="password"
+                                    />
+                                    <i matSuffix style="cursor: pointer" class="material-icons" (click)="toggleVisibilityMode()">{{
+                                        getVisibilityMode()
+                                    }}</i>
                                 </mat-form-field>
-
                             </div>
                         </div>
 
                         <div class="row" align="center">
                             <div style="width: 75%">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput id="confirmPassword"
-                                           type="{{visibilityMode ? 'text':'password'}}"
-                                           placeholder="Confirm Password"
-                                           [(ngModel)]="confirmPassword"
-                                           name="confirmPassword">
-                                    <i matSuffix style="cursor: pointer;"
-                                       class="material-icons"
-                                       (click)="toggleVisibilityMode()"
-                                    >{{getVisibilityMode()}}</i>
+                                    <input
+                                        matInput
+                                        id="confirmPassword"
+                                        type="{{ visibilityMode ? 'text' : 'password' }}"
+                                        placeholder="Confirm Password"
+                                        [(ngModel)]="confirmPassword"
+                                        name="confirmPassword"
+                                    />
+                                    <i matSuffix style="cursor: pointer" class="material-icons" (click)="toggleVisibilityMode()">{{
+                                        getVisibilityMode()
+                                    }}</i>
                                 </mat-form-field>
-
                             </div>
                         </div>
-
                     </ng-container>
 
                     <div class="row">
-                        <div class="col-md-12"
-                             align="center">
+                        <div class="col-md-12" align="center">
                             <button type="submit" class="btn btn-danger">Submit</button>
                         </div>
                     </div>
@@ -250,14 +267,11 @@
                     <div class="clearfix"></div>
 
                     <div class="row">
-                        <div class="col-md-12"
-                             align="center">
-                            <a style="cursor: pointer" (click)="section='userDetails'">Go Back</a>
+                        <div class="col-md-12" align="center">
+                            <a style="cursor: pointer" (click)="section = 'userDetails'">Go Back</a>
                         </div>
                     </div>
-
                 </form>
-
             </div>
 
             <ng-container *ngIf="isLoading">

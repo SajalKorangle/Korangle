@@ -1,25 +1,22 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { ManageParameterServiceAdapter } from './manage-parameter.service.adapter';
-import {DataStorage} from '../../../../classes/data-storage';
-import {StudentService} from './../../../../services/modules/student/student.service'
-
+import { DataStorage } from '../../../../classes/data-storage';
+import { StudentService } from './../../../../services/modules/student/student.service';
 
 @Component({
-  selector: 'manage-parameter',
-  templateUrl: './manage-parameter.component.html',
-  styleUrls: ['./manage-parameter.component.css'],
-    providers: [ StudentService ],
+    selector: 'manage-parameter',
+    templateUrl: './manage-parameter.component.html',
+    styleUrls: ['./manage-parameter.component.css'],
+    providers: [StudentService],
 })
-
 export class ManageParameterComponent implements OnInit {
-
     user: any;
 
     globalParametersList = [
         'Name',
-        'Father\'s Name',
-        'Mother\'s Name',
+        "Father's Name",
+        "Mother's Name",
         'Roll No.',
         'Scholar No.',
         'Date of Birth',
@@ -38,22 +35,18 @@ export class ManageParameterComponent implements OnInit {
         'Bank Name',
         'Account Number',
         'Bank IFSC Code',
-        'Father\'s Occupation',
-        'Father\'s Annual Income',
+        "Father's Occupation",
+        "Father's Annual Income",
         'Date Of Admission',
         'Alternate Mobile Number',
         'Address',
-        'Remark'
+        'Remark',
     ];
 
-    ADD_PARAMETER_STRING='<Add New Parameter>';
+    ADD_PARAMETER_STRING = '<Add New Parameter>';
 
     // customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}];
-    customParameterTypeList = [
-        'TEXT',
-        'FILTER',
-        'DOCUMENT'
-    ];
+    customParameterTypeList = ['TEXT', 'FILTER', 'DOCUMENT'];
     customParameterList = [];
     currentParameter: any;
     oldFilterValueList = [];
@@ -63,9 +56,7 @@ export class ManageParameterComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (
-        public studentService: StudentService
-    ) { }
+    constructor(public studentService: StudentService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -82,22 +73,22 @@ export class ManageParameterComponent implements OnInit {
         }
     }
 
-    setActiveParameter = parameter => {
-        this.currentParameter = {...parameter, filterValues: JSON.parse(parameter.filterValues)};
+    setActiveParameter = (parameter) => {
+        this.currentParameter = { ...parameter, filterValues: JSON.parse(parameter.filterValues) };
         this.oldFilterValueList = this.currentParameter.filterValues;
-    }
+    };
 
     addNewParameter = () => {
         this.currentParameter = {
             parentSchool: this.user.activeSchool.dbId,
             name: '',
             parameterType: 'TEXT',
-            filterValues: []
-        }
-    }
+            filterValues: [],
+        };
+    };
 
     deleteFilter(filter: any) {
-        this.currentParameter.filterValues = this.currentParameter.filterValues.filter(x => x!==filter);
+        this.currentParameter.filterValues = this.currentParameter.filterValues.filter((x) => x !== filter);
     }
 
     addFilter(filter: any) {
@@ -111,7 +102,9 @@ export class ManageParameterComponent implements OnInit {
     }
 
     isValidParameterName() {
-        return !(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
+        return !(
+            this.globalParametersList.find((x) => x === this.currentParameter.name) ||
+            this.customParameterList.find((x) => x.name === this.currentParameter.name && x.id !== this.currentParameter.id)
+        );
     }
-
 }

@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {SetRollNumberComponent} from './set-roll-number.component';
+import { SetRollNumberComponent } from './set-roll-number.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: SetRollNumberComponent ,
-    }
+        component: SetRollNumberComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class SetRollNumberRoutingModule { }
+export class SetRollNumberRoutingModule {}

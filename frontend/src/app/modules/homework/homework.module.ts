@@ -6,18 +6,12 @@ import { HomeworkComponent } from './homework.component';
 
 import { HomeworkRoutingModule } from './homework.routing';
 
-
 @NgModule({
-    declarations: [
-        HomeworkComponent,
-    ],
+    declarations: [HomeworkComponent],
 
-    imports: [
-        ComponentsModule,
-        HomeworkRoutingModule,
-    ],
+    imports: [ComponentsModule, HomeworkRoutingModule],
     exports: [],
     providers: [],
-    bootstrap: [HomeworkComponent]
+    bootstrap: [HomeworkComponent],
 })
-export class HomeworkModule { }
+export class HomeworkModule {}

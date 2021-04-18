@@ -1,27 +1,16 @@
 import { NgModule } from '@angular/core';
 
-import { ViewAllComponent } from "./view-all.component";
+import { ViewAllComponent } from './view-all.component';
 
 import { ViewAllRoutingModule } from './view-all.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-
+import { ComponentsModule } from '../../../../components/components.module';
 
 @NgModule({
-    declarations: [
+    declarations: [ViewAllComponent],
 
-        ViewAllComponent,
-
-    ],
-
-    imports: [
-
-        ViewAllRoutingModule,
-        ComponentsModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ViewAllRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ViewAllComponent]
+    bootstrap: [ViewAllComponent],
 })
-export class ViewAllModule { }
+export class ViewAllModule {}

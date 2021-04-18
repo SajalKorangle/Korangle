@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -6,14 +6,14 @@ export class PrintService {
     private data: any;
     private isPrinting: boolean = false;
 
-    constructor(private router: Router) { }
+    constructor(private router: Router) {}
 
-    public navigateToPrintRoute(routeName : string, data: any ) {
-        if(!this.isPrinting) {
+    public navigateToPrintRoute(routeName: string, data: any) {
+        if (!this.isPrinting) {
             this.isPrinting = true;
             this.data = data;
             const moduleName = window.location.pathname.split('/')[1];
-            this.router.navigate([{ outlets: { print: ['print', moduleName, routeName]}}]);
+            this.router.navigate([{ outlets: { print: ['print', moduleName, routeName] } }]);
         }
     }
 
@@ -22,11 +22,11 @@ export class PrintService {
     }
 
     public print() {
-        if(this.isPrinting) {
+        if (this.isPrinting) {
             window.print();
-            this.router.navigate([{ outlets: { print: null }}]);
+            this.router.navigate([{ outlets: { print: null } }]);
             this.isPrinting = false;
-            this.data = null
-        }    
+            this.data = null;
+        }
     }
 }

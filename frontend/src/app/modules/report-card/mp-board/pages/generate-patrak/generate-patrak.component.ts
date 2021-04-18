@@ -4,26 +4,24 @@ import { ExaminationOldService } from '../../../../../services/modules/examinati
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 
 import { GeneratePatrakServiceAdapter } from './generate-patrak.service.adapter';
-import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
+import { REPORT_CARD_TYPE_LIST } from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {ClassService} from '../../../../../services/modules/class/class.service';
-import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
-import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
-import {AttendanceOldService} from '../../../../../services/modules/attendance/attendance-old.service';
-import {ExcelService} from "../../../../../excel/excel-service";
-import {DataStorage} from "../../../../../classes/data-storage";
+import { ClassService } from '../../../../../services/modules/class/class.service';
+import { StudentOldService } from '../../../../../services/modules/student/student-old.service';
+import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
+import { AttendanceOldService } from '../../../../../services/modules/attendance/attendance-old.service';
+import { ExcelService } from '../../../../../excel/excel-service';
+import { DataStorage } from '../../../../../classes/data-storage';
 
 @Component({
     selector: 'generate-patrak',
     templateUrl: './generate-patrak.component.html',
     styleUrls: ['./generate-patrak.component.css'],
-    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService, AttendanceOldService, ExaminationService ],
+    providers: [ExaminationOldService, ClassService, StudentOldService, SubjectOldService, AttendanceOldService, ExaminationService],
 })
-
 export class GeneratePatrakComponent implements OnInit {
-
-     user;
+    user;
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
 
@@ -43,14 +41,16 @@ export class GeneratePatrakComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
-                public classService: ClassService,
-                public studentService: StudentOldService,
-                public subjectService: SubjectOldService,
-                public attendanceService: AttendanceOldService,
-                private excelService: ExcelService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(
+        public examinationOldService: ExaminationOldService,
+        public examinationService: ExaminationService,
+        public classService: ClassService,
+        public studentService: StudentOldService,
+        public subjectService: SubjectOldService,
+        public attendanceService: AttendanceOldService,
+        private excelService: ExcelService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -65,7 +65,6 @@ export class GeneratePatrakComponent implements OnInit {
     }
 
     downloadClassPatrak(): void {
-
         let template = [];
 
         template.push(this.getClassHeaderValues());
@@ -75,10 +74,10 @@ export class GeneratePatrakComponent implements OnInit {
         template.push(this.getStudentHeaderValues());
 
         this.studentFinalReportCardList.forEach((student, index) => {
-            template.push(this.getStudentPatrakData(student, index+1));
+            template.push(this.getStudentPatrakData(student, index + 1));
             template.push([
                 'Aadhar No.',
-                (student.aadharNum?student.aadharNum.toString():''),
+                student.aadharNum ? student.aadharNum.toString() : '',
                 'SSSMID',
                 student.childSSMID,
                 'Family Id',
@@ -86,30 +85,29 @@ export class GeneratePatrakComponent implements OnInit {
             ]);
         });
 
-        this.excelService.downloadFile(template, this.selectedClass.name+'_patrak.csv');
+        this.excelService.downloadFile(template, this.selectedClass.name + '_patrak.csv');
     }
 
     getStudentHeaderValues(): any {
         let studentHeaderValues = [
-
             'S No.',
             'Roll No.',
             'Scholar No.',
             'Name',
-            'Mother\'s Name',
-            'Father\'s Name',
+            "Mother's Name",
+            "Father's Name",
             'Day',
             'Month',
             'Year',
             'Category',
-
-
         ];
-        this.classSubjectList.forEach(classSubject => {
-            studentHeaderValues.push(this.getSubjectName(classSubject.parentSubject) + " (" + this.getOverallStudentSubjectMaxMarks() + ")");
+        this.classSubjectList.forEach((classSubject) => {
+            studentHeaderValues.push(
+                this.getSubjectName(classSubject.parentSubject) + ' (' + this.getOverallStudentSubjectMaxMarks() + ')'
+            );
         });
         this.extraFieldList.forEach((extraField, index) => {
-            studentHeaderValues.push(extraField.name + " (" + this.getOverallStudentTotalExtraFieldMaxMarks(index) + ")");
+            studentHeaderValues.push(extraField.name + ' (' + this.getOverallStudentTotalExtraFieldMaxMarks(index) + ')');
         });
 
         let totalMarksHeader = 'Overall Marks (' + this.getOverallStudentMaxMarks(this.studentFinalReportCardList[0]) + ')';
@@ -119,9 +117,9 @@ export class GeneratePatrakComponent implements OnInit {
 
         let totalAttendanceHeader = 'Total Teaching Days';
         if (this.reportCardMapping.autoAttendance) {
-            totalAttendanceHeader += " (" + this.getOverallStudentWorkingDays(this.studentFinalReportCardList[0]) + ")";
+            totalAttendanceHeader += ' (' + this.getOverallStudentWorkingDays(this.studentFinalReportCardList[0]) + ')';
         } else {
-            totalAttendanceHeader += "......";
+            totalAttendanceHeader += '......';
         }
         studentHeaderValues.push(totalAttendanceHeader);
         return studentHeaderValues;
@@ -135,12 +133,12 @@ export class GeneratePatrakComponent implements OnInit {
             student.name,
             student.motherName,
             student.fathersName,
-            (student.dateOfBirth?(new Date(student.dateOfBirth)).getDate():''),
-            (student.dateOfBirth?(new Date(student.dateOfBirth)).getMonth()+1:''),
-            (student.dateOfBirth?(new Date(student.dateOfBirth)).getFullYear()%100:''),
+            student.dateOfBirth ? new Date(student.dateOfBirth).getDate() : '',
+            student.dateOfBirth ? new Date(student.dateOfBirth).getMonth() + 1 : '',
+            student.dateOfBirth ? new Date(student.dateOfBirth).getFullYear() % 100 : '',
             student.category,
         ];
-        student.mainSubjectList.forEach((subject,index) => {
+        student.mainSubjectList.forEach((subject, index) => {
             studentValues.push(this.getOverallStudentSubjectMarks(student, subject, index));
         });
         this.extraFieldList.forEach((extraField, index) => {
@@ -157,29 +155,19 @@ export class GeneratePatrakComponent implements OnInit {
     }
 
     getClassHeaderValues(): any {
-        let classHeaderValues = [
-            'Class Name',
-            'Total Students',
-            'A Grade',
-            'B Grade',
-            'C Grade',
-            'D Grade',
-        ];
-        this.classSubjectList.forEach(classSubject => {
-            classHeaderValues.push("E Grade - " + this.getSubjectName(classSubject.parentSubject));
+        let classHeaderValues = ['Class Name', 'Total Students', 'A Grade', 'B Grade', 'C Grade', 'D Grade'];
+        this.classSubjectList.forEach((classSubject) => {
+            classHeaderValues.push('E Grade - ' + this.getSubjectName(classSubject.parentSubject));
         });
         return classHeaderValues;
     }
 
     getClassPatrakData(): any {
-        let classValues = [
-            this.selectedClass.name,
-            this.studentFinalReportCardList.length  ,
-        ];
-        classValues.push(this.getTotalStudentsInGrade("A"));
-        classValues.push(this.getTotalStudentsInGrade("B"));
-        classValues.push(this.getTotalStudentsInGrade("C"));
-        classValues.push(this.getTotalStudentsInGrade("D"));
+        let classValues = [this.selectedClass.name, this.studentFinalReportCardList.length];
+        classValues.push(this.getTotalStudentsInGrade('A'));
+        classValues.push(this.getTotalStudentsInGrade('B'));
+        classValues.push(this.getTotalStudentsInGrade('C'));
+        classValues.push(this.getTotalStudentsInGrade('D'));
         this.classSubjectList.forEach((classSubject, index) => {
             classValues.push(this.getTotalStudentsInEGrade(classSubject, index));
         });
@@ -187,7 +175,7 @@ export class GeneratePatrakComponent implements OnInit {
     }
 
     getTotalStudentsInGrade(grade: any): any {
-        return this.studentFinalReportCardList.filter(student => {
+        return this.studentFinalReportCardList.filter((student) => {
             if (this.getGrade(this.getOverallStudentMarks(student), this.getOverallStudentMaxMarks(student)) == grade) {
                 return true;
             }
@@ -196,9 +184,10 @@ export class GeneratePatrakComponent implements OnInit {
     }
 
     getTotalStudentsInEGrade(subject: any, index: any): any {
-        return this.studentFinalReportCardList.filter(student => {
-            if (this.getGrade(this.getOverallStudentSubjectMarks(student, subject, index),
-                    this.getOverallStudentSubjectMaxMarks()) == "E") {
+        return this.studentFinalReportCardList.filter((student) => {
+            if (
+                this.getGrade(this.getOverallStudentSubjectMarks(student, subject, index), this.getOverallStudentSubjectMaxMarks()) == 'E'
+            ) {
                 return true;
             }
             return false;
@@ -207,7 +196,7 @@ export class GeneratePatrakComponent implements OnInit {
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(subject => {
+        this.subjectList.every((subject) => {
             if (subject.id == subjectId) {
                 result = subject.name;
                 return false;
@@ -259,7 +248,7 @@ export class GeneratePatrakComponent implements OnInit {
 
     getGrade(marksObtained: any, maximumMarks: any): any {
         let grade = '';
-        let percentage = marksObtained*100/maximumMarks;
+        let percentage = (marksObtained * 100) / maximumMarks;
         if (percentage >= 75) {
             grade = 'A';
         } else if (percentage >= 60) {
@@ -303,13 +292,13 @@ export class GeneratePatrakComponent implements OnInit {
     getOverallStudentTotalExtraFieldMarks(student: any, index1: any): any {
         let result = 0;
         this.extraFieldList[index1].extraSubFieldList.forEach((extraSubField, index2) => {
-            result += this.getOverallStudentExtraSubFieldMarks(student, index1*5+index2);
+            result += this.getOverallStudentExtraSubFieldMarks(student, index1 * 5 + index2);
         });
         return result;
     }
 
     getOverallStudentTotalExtraFieldMaxMarks(index: any): any {
-        return this.extraFieldList[index].extraSubFieldList.length*18;
+        return this.extraFieldList[index].extraSubFieldList.length * 18;
     }
 
     getOverallStudentAttendance(student: any): any {
@@ -341,20 +330,24 @@ export class GeneratePatrakComponent implements OnInit {
     }
 
     getOverallStudentMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMarks(student)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 0)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 1);
+        return (
+            this.getOverallStudentTotalSubjectMarks(student) +
+            this.getOverallStudentTotalExtraFieldMarks(student, 0) +
+            this.getOverallStudentTotalExtraFieldMarks(student, 1)
+        );
     }
 
     getOverallStudentMaxMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMaxMarks(student)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(0)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(1);
+        return (
+            this.getOverallStudentTotalSubjectMaxMarks(student) +
+            this.getOverallStudentTotalExtraFieldMaxMarks(0) +
+            this.getOverallStudentTotalExtraFieldMaxMarks(1)
+        );
     }
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -370,7 +363,7 @@ export class GeneratePatrakComponent implements OnInit {
 
     getNextStep(student: any): any {
         let result = '';
-        switch(student.className) {
+        switch (student.className) {
             case 'Play Group':
                 result = 'Promoted to Nursery';
                 break;
@@ -439,5 +432,4 @@ export class GeneratePatrakComponent implements OnInit {
         }
         alert('This may take a while');
     }*/
-
 }

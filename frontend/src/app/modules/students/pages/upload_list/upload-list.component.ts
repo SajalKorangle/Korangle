@@ -1,12 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {ClassService} from '../../../../services/modules/class/class.service';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
-import {VehicleOldService} from '../../../../services/modules/vehicle/vehicle-old.service';
-import {SchoolService} from '../../../../services/modules/school/school.service'
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
-import {ExcelService} from "../../../../excel/excel-service";
-import {DataStorage} from "../../../../classes/data-storage";
+import { ExcelService } from '../../../../excel/excel-service';
+import { DataStorage } from '../../../../classes/data-storage';
 
 // Constants
 const NAME = 0;
@@ -43,8 +43,8 @@ const SECOND_MOBILE_NUMBER = 28;
 const HEADERS = [];
 
 HEADERS[NAME] = '*Name';
-HEADERS[FATHER_NAME] = '*Father\'s Name';
-HEADERS[MOTHER_NAME] = 'Mother\'s Name';
+HEADERS[FATHER_NAME] = "*Father's Name";
+HEADERS[MOTHER_NAME] = "Mother's Name";
 HEADERS[CLASS] = '*Class';
 HEADERS[SECTION] = 'Section';
 HEADERS[MOBILE_NUMBER] = 'Mobile Number';
@@ -65,8 +65,8 @@ HEADERS[CASTE] = 'Caste';
 HEADERS[BANK_NAME] = 'Bank Name';
 HEADERS[Bank_IFSC_CODE] = 'Bank Ifsc Code';
 HEADERS[BANK_ACCOUNT_NUMBER] = 'Bank Account Number';
-HEADERS[FATHER_OCCUPATION] = 'Father\'s Occupation';
-HEADERS[FATHER_ANNUAL_INCOME] = 'Father\'s Annual Income';
+HEADERS[FATHER_OCCUPATION] = "Father's Occupation";
+HEADERS[FATHER_ANNUAL_INCOME] = "Father's Annual Income";
 HEADERS[BUS_STOP] = 'Bus Stop';
 HEADERS[RTE] = 'RTE';
 HEADERS[ADDRESS] = 'Address';
@@ -109,69 +109,30 @@ const SECTION_VALUES = [
 ];
 
 // Admission Session Values
-const ADMISSION_SESSION_VALUES = [
-    'Admission Session Values',
-    'Session 2017-18',
-    'Session 2018-19',
-    'Session 2019-20',
-];
+const ADMISSION_SESSION_VALUES = ['Admission Session Values', 'Session 2017-18', 'Session 2018-19', 'Session 2019-20'];
 
 // Gender Values
-const GENDER_VALUES = [
-    'Gender Values',
-    'Male',
-    'Female',
-    'Other',
-];
+const GENDER_VALUES = ['Gender Values', 'Male', 'Female', 'Other'];
 
 // Category Values
-const CATEGORY_VALUES = [
-    'Category Values',
-    'SC',
-    'ST',
-    'OBC',
-    'Gen.',
-];
+const CATEGORY_VALUES = ['Category Values', 'SC', 'ST', 'OBC', 'Gen.'];
 
-    // Religion Values
-const RELIGION_VALUES = [
-    'Religion Values',
-    'Hinduism',
-    'Jainism',
-    'Islam',
-    'Christianity',
-];
+// Religion Values
+const RELIGION_VALUES = ['Religion Values', 'Hinduism', 'Jainism', 'Islam', 'Christianity'];
 
 // Blood Group Values
-const BLOOD_GROUP_VALUES = [
-    'Blood Group Values',
-    'O +',
-    'O -',
-    'A +',
-    'A -',
-    'B +',
-    'B -',
-    'AB +',
-    'AB -',
-];
+const BLOOD_GROUP_VALUES = ['Blood Group Values', 'O +', 'O -', 'A +', 'A -', 'B +', 'B -', 'AB +', 'AB -'];
 
 // RTE Values
-const RTE_VALUES = [
-    'RTE Values',
-    'YES',
-    'NO',
-];
-
+const RTE_VALUES = ['RTE Values', 'YES', 'NO'];
 
 @Component({
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [SchoolService, StudentOldService, ClassService, VehicleOldService,],
+    providers: [SchoolService, StudentOldService, ClassService, VehicleOldService],
 })
-
 export class UploadListComponent implements OnInit {
-
     user;
 
     displayStudentNumber = 0;
@@ -192,7 +153,6 @@ export class UploadListComponent implements OnInit {
     classList = [];
     sectionList = [];
 
-
     selectedSession: any;
 
     studentList: any;
@@ -204,11 +164,13 @@ export class UploadListComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private studentService: StudentOldService,
-                public classService: ClassService,
-                private schoolService: SchoolService,
-                private excelService: ExcelService,
-                private vehicleService: VehicleOldService) { }
+    constructor(
+        private studentService: StudentOldService,
+        public classService: ClassService,
+        private schoolService: SchoolService,
+        private excelService: ExcelService,
+        private vehicleService: VehicleOldService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -222,25 +184,28 @@ export class UploadListComponent implements OnInit {
         this.isLoading = true;
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
-            this.classService.getObjectList(this.classService.classs,{}),
-            this.schoolService.getObjectList(this.schoolService.session,{}),
-            this.classService.getObjectList(this.classService.division,{}),
-        ]).then(value => {
-            this.isLoading = false;
-            this.busStopList = value[0];
-            this.busStopNameList = this.busStopList.map(a => a.stopName);
-            this.classList = value[1];
-            this.populateSessionList(value[2]);
-            this.sectionList = value[3];
-            this.initializeTemplate();
-        }, error => {
-            this.isLoading = false;
-        });
+            this.classService.getObjectList(this.classService.classs, {}),
+            this.schoolService.getObjectList(this.schoolService.session, {}),
+            this.classService.getObjectList(this.classService.division, {}),
+        ]).then(
+            (value) => {
+                this.isLoading = false;
+                this.busStopList = value[0];
+                this.busStopNameList = this.busStopList.map((a) => a.stopName);
+                this.classList = value[1];
+                this.populateSessionList(value[2]);
+                this.sectionList = value[3];
+                this.initializeTemplate();
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     populateSessionList(sessionList: any): void {
         this.sessionList = sessionList;
-        this.sessionList.every(session => {
+        this.sessionList.every((session) => {
             if (session.id === this.user.activeSchool.currentSessionDbId) {
                 this.selectedSession = session;
                 return false;
@@ -251,7 +216,6 @@ export class UploadListComponent implements OnInit {
 
     initializeTemplate(): void {
         this.template = [
-
             CLASS_VALUES,
 
             SECTION_VALUES,
@@ -273,14 +237,12 @@ export class UploadListComponent implements OnInit {
             ['Date Format', 'dd-mm-yyyy or dd/mm/yyyy'],
 
             HEADERS,
-
         ];
 
         this.numberOfFillerRows = 11;
     }
 
     onFileChange(evt: any) {
-
         if (evt.target.files.length !== 1) throw new Error('Cannot use multiple files');
         this.excelService.getData(evt, (result, file) => {
             console.log(result.data);
@@ -309,14 +271,13 @@ export class UploadListComponent implements OnInit {
     }
 
     validateAndPopulateData(): void {
-
         this.studentList = null;
         this.errorList = [];
         this.deletedList = [];
-        
+
         console.log('prev', this.data);
-        this.data = this.data.filter(value => {
-            if (value.length <= 1 ) {
+        this.data = this.data.filter((value) => {
+            if (value.length <= 1) {
                 return false;
             }
             return true;
@@ -329,14 +290,14 @@ export class UploadListComponent implements OnInit {
                 let deletedColumnList = dualList[1];
                 if (errorColumnList.length > 0) {
                     this.errorList.push({
-                        'row': index-this.numberOfFillerRows,
-                        'column': errorColumnList,
+                        row: index - this.numberOfFillerRows,
+                        column: errorColumnList,
                     });
                 }
                 if (deletedColumnList.length > 0) {
                     this.deletedList.push({
-                        'row': index-this.numberOfFillerRows,
-                        'column': deletedColumnList,
+                        row: index - this.numberOfFillerRows,
+                        column: deletedColumnList,
                     });
                 }
             }
@@ -345,26 +306,25 @@ export class UploadListComponent implements OnInit {
     }
 
     trimCell(student: any, column: any): void {
-        if (typeof student[column] === "string") {
+        if (typeof student[column] === 'string') {
             student[column] = student[column].trim();
         }
     }
 
     toCamelCase(student: any, column: any): void {
-        if (typeof student[column] === "string" && student[column].length > 2) {
+        if (typeof student[column] === 'string' && student[column].length > 2) {
             student[column] = student[column].charAt(0).toUpperCase() + student[column].substr(1).toLowerCase();
         }
     }
 
     validateStudent(student: any): any {
-
         let dualList = [];
 
         let errorColumnList = [];
         let deletedColumnList = [];
 
         student.forEach((item, index) => {
-            if (item == "" || item == undefined) {
+            if (item == '' || item == undefined) {
                 student[index] = null;
             }
         });
@@ -444,7 +404,7 @@ export class UploadListComponent implements OnInit {
         this.trimCell(student, CATEGORY);
         if (student[CATEGORY] !== null) {
             student[CATEGORY] = student[CATEGORY].toUpperCase();
-            if (student[CATEGORY] === "GEN.") {
+            if (student[CATEGORY] === 'GEN.') {
                 this.toCamelCase(student, CATEGORY);
             }
             if (CATEGORY_VALUES.indexOf(student[CATEGORY]) === -1) {
@@ -508,11 +468,9 @@ export class UploadListComponent implements OnInit {
         dualList.push(deletedColumnList);
 
         return dualList;
-
     }
 
     validateDate(inputText: any): boolean {
-
         if (inputText === null || inputText === undefined) {
             return true;
         }
@@ -524,8 +482,7 @@ export class UploadListComponent implements OnInit {
         let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}|\d{2})$/;
 
         // Match the date format through regular expression
-        if(inputText.match(dateformat))
-        {
+        if (inputText.match(dateformat)) {
             //document.form1.text1.focus();
 
             //Test which seperator is used '/' or '-'
@@ -536,16 +493,13 @@ export class UploadListComponent implements OnInit {
 
             // Extract the string into month, date and year
             let pdate;
-            if (lopera1>1)
-            {
+            if (lopera1 > 1) {
                 pdate = inputText.split('/');
-            }
-            else if (lopera2>1)
-            {
+            } else if (lopera2 > 1) {
                 pdate = inputText.split('-');
             }
             let dd = parseInt(pdate[0]);
-            let mm  = parseInt(pdate[1]);
+            let mm = parseInt(pdate[1]);
             let yy = parseInt(pdate[2]);
 
             if (yy < 100 && yy > 30) {
@@ -556,37 +510,28 @@ export class UploadListComponent implements OnInit {
             }
 
             // Create list of days of a month [assume there is no leap year by default]
-            let ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
-            if (mm==1 || mm>2)
-            {
-                if (dd>ListofDays[mm-1])
-                {
+            let ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (mm == 1 || mm > 2) {
+                if (dd > ListofDays[mm - 1]) {
                     return false;
                 }
             }
-            if (mm==2)
-            {
+            if (mm == 2) {
                 var lyear = false;
-                if ( (!(yy % 4) && yy % 100) || !(yy % 400))
-                {
+                if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
                     lyear = true;
                 }
-                if ((lyear==false) && (dd>=29))
-                {
+                if (lyear == false && dd >= 29) {
                     return false;
                 }
-                if ((lyear==true) && (dd>29))
-                {
+                if (lyear == true && dd > 29) {
                     return false;
                 }
             }
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
-
     }
 
     nullOrNumberLength(value: any, length: number): boolean {
@@ -607,55 +552,58 @@ export class UploadListComponent implements OnInit {
 
     uploadStudentList(): void {
         let student_list = [];
-        this.studentList.forEach(student => {
+        this.studentList.forEach((student) => {
             student_list.push(this.getServerRequest(student));
         });
         console.log(student_list);
         this.isLoading = true;
-        this.studentService.createStudentFullProfileBatch(student_list, this.user.jwt).then(response => {
-            this.isLoading = false;
-            this.studentList = null;
-            alert(response.message);
-        }, error => {
-            this.isLoading = false;
-        });
+        this.studentService.createStudentFullProfileBatch(student_list, this.user.jwt).then(
+            (response) => {
+                this.isLoading = false;
+                this.studentList = null;
+                alert(response.message);
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     getServerRequest(student: any): any {
         let data = {
-            'name': student[NAME],
-            'fathersName': student[FATHER_NAME],
-            'motherName': student[MOTHER_NAME],
-            'parentDivision': this.getParentSection(student[SECTION]),
-            'mobileNumber': parseInt(student[MOBILE_NUMBER]),
-            'secondMobileNumber': parseInt(student[SECOND_MOBILE_NUMBER]),
-            'rollNumber': student[ROLL_NUMBER],
-            'scholarNumber': student[SCHOLAR_NUMBER],
-            'dateOfBirth': this.getDate(student[DATE_OF_BIRTH]),
-            'admissionSession': this.getSession(student[ADMISSION_SESSION]),
-            'dateOfAdmission': this.getDate(student[DATE_OF_ADMISSION]),
-            'gender': student[GENDER],
-            'newCategoryField': student[CATEGORY],
-            'newReligionField': student[RELIGION],
-            'bloodGroup': student[BLOOD_GROUP],
-            'familySSMID': parseInt(student[FAMILY_SSMID]),
-            'childSSMID': parseInt(student[CHILD_SSMID]),
-            'aadharNum': parseInt(student[AADHAR_NUMBER]),
-            'caste': student[CASTE],
-            'bankName': student[BANK_NAME],
-            'bankIfscCode': student[Bank_IFSC_CODE],
-            'bankAccountNum': student[BANK_ACCOUNT_NUMBER],
-            'fatherOccupation': student[FATHER_OCCUPATION],
-            'fatherAnnualIncome': student[FATHER_ANNUAL_INCOME],
-            'currentBusStop': this.getBusStop(student[BUS_STOP]),
-            'rte': student[RTE],
-            'address': student[ADDRESS],
-            'remark': student[REMARK],
-            'parentSchool': this.user.activeSchool.dbId,
-            'parentClass': this.getParentClass(student[CLASS]),
-            'parentSession': this.selectedSession.id,
+            name: student[NAME],
+            fathersName: student[FATHER_NAME],
+            motherName: student[MOTHER_NAME],
+            parentDivision: this.getParentSection(student[SECTION]),
+            mobileNumber: parseInt(student[MOBILE_NUMBER]),
+            secondMobileNumber: parseInt(student[SECOND_MOBILE_NUMBER]),
+            rollNumber: student[ROLL_NUMBER],
+            scholarNumber: student[SCHOLAR_NUMBER],
+            dateOfBirth: this.getDate(student[DATE_OF_BIRTH]),
+            admissionSession: this.getSession(student[ADMISSION_SESSION]),
+            dateOfAdmission: this.getDate(student[DATE_OF_ADMISSION]),
+            gender: student[GENDER],
+            newCategoryField: student[CATEGORY],
+            newReligionField: student[RELIGION],
+            bloodGroup: student[BLOOD_GROUP],
+            familySSMID: parseInt(student[FAMILY_SSMID]),
+            childSSMID: parseInt(student[CHILD_SSMID]),
+            aadharNum: parseInt(student[AADHAR_NUMBER]),
+            caste: student[CASTE],
+            bankName: student[BANK_NAME],
+            bankIfscCode: student[Bank_IFSC_CODE],
+            bankAccountNum: student[BANK_ACCOUNT_NUMBER],
+            fatherOccupation: student[FATHER_OCCUPATION],
+            fatherAnnualIncome: student[FATHER_ANNUAL_INCOME],
+            currentBusStop: this.getBusStop(student[BUS_STOP]),
+            rte: student[RTE],
+            address: student[ADDRESS],
+            remark: student[REMARK],
+            parentSchool: this.user.activeSchool.dbId,
+            parentClass: this.getParentClass(student[CLASS]),
+            parentSession: this.selectedSession.id,
         };
-        Object.keys(data).forEach(keys => {
+        Object.keys(data).forEach((keys) => {
             if (data[keys] === undefined) {
                 data[keys] = null;
             }
@@ -669,7 +617,7 @@ export class UploadListComponent implements OnInit {
         }
 
         let result = null;
-        this.busStopList.every(busStop => {
+        this.busStopList.every((busStop) => {
             if (busStop.stopName === data) {
                 result = busStop.id;
                 return false;
@@ -681,7 +629,7 @@ export class UploadListComponent implements OnInit {
 
     getSession(data: any): any {
         let result = null;
-        this.sessionList.every(session => {
+        this.sessionList.every((session) => {
             if (session.name === data) {
                 result = session.id;
                 return false;
@@ -692,7 +640,6 @@ export class UploadListComponent implements OnInit {
     }
 
     getDate(inputText: any): any {
-
         let result = null;
 
         if (inputText === null || inputText === undefined) {
@@ -706,9 +653,7 @@ export class UploadListComponent implements OnInit {
         let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}|\d{2})$/;
 
         // Match the date format through regular expression
-        if(inputText.match(dateformat))
-        {
-
+        if (inputText.match(dateformat)) {
             //Test which seperator is used '/' or '-'
             let opera1 = inputText.split('/');
             let opera2 = inputText.split('-');
@@ -717,16 +662,13 @@ export class UploadListComponent implements OnInit {
 
             // Extract the string into month, date and year
             let pdate;
-            if (lopera1>1)
-            {
+            if (lopera1 > 1) {
                 pdate = inputText.split('/');
-            }
-            else if (lopera2>1)
-            {
+            } else if (lopera2 > 1) {
                 pdate = inputText.split('-');
             }
             let dd = parseInt(pdate[0]);
-            let mm  = parseInt(pdate[1]);
+            let mm = parseInt(pdate[1]);
             let yy = parseInt(pdate[2]);
 
             if (yy < 100 && yy > 30) {
@@ -737,11 +679,9 @@ export class UploadListComponent implements OnInit {
             }
 
             result = yy.toString() + '-' + mm.toString() + '-' + dd.toString();
-
         }
 
         return result;
-
     }
 
     getParentSection(sectionName: any): any {
@@ -749,7 +689,7 @@ export class UploadListComponent implements OnInit {
             sectionName = 'Section - A';
         }
         let result = null;
-        this.sectionList.every(section => {
+        this.sectionList.every((section) => {
             if (section.name === sectionName) {
                 result = section.id;
                 return false;
@@ -764,7 +704,7 @@ export class UploadListComponent implements OnInit {
             className = 'Class - 12';
         }
         let result = null;
-        this.classList.every(classs => {
+        this.classList.every((classs) => {
             if (classs.name === className) {
                 result = classs.id;
                 return false;
@@ -776,7 +716,7 @@ export class UploadListComponent implements OnInit {
 
     getNumberOfErrors(): number {
         let numberOfErrors = 0;
-        this.errorList.forEach(row => {
+        this.errorList.forEach((row) => {
             numberOfErrors += row.column.length;
         });
         console.log(numberOfErrors);
@@ -785,7 +725,7 @@ export class UploadListComponent implements OnInit {
 
     getNumberOfDeletedCells(): number {
         let numberOfDeletedCells = 0;
-        this.deletedList.forEach(row => {
+        this.deletedList.forEach((row) => {
             numberOfDeletedCells += row.column.length;
         });
         console.log(numberOfDeletedCells);
@@ -794,9 +734,9 @@ export class UploadListComponent implements OnInit {
 
     isErrorCell(rowIndex: number, columnIndex: number): boolean {
         let result = false;
-        this.errorList.every(item => {
+        this.errorList.every((item) => {
             if (item.row === rowIndex) {
-                item.column.every(itemTwo => {
+                item.column.every((itemTwo) => {
                     if (itemTwo === columnIndex) {
                         result = true;
                         return false;
@@ -812,9 +752,9 @@ export class UploadListComponent implements OnInit {
 
     isDeletedCell(rowIndex: number, columnIndex: number): boolean {
         let result = false;
-        this.deletedList.every(item => {
+        this.deletedList.every((item) => {
             if (item.row === rowIndex) {
-                item.column.every(itemTwo => {
+                item.column.every((itemTwo) => {
                     if (itemTwo === columnIndex) {
                         result = true;
                         return false;
@@ -827,5 +767,4 @@ export class UploadListComponent implements OnInit {
         });
         return result;
     }
-
 }

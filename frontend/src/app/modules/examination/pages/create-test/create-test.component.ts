@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ChangeDetectorRef} from '@angular/core'
+import { ChangeDetectorRef } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -7,7 +7,7 @@ import { SubjectService } from 'app/services/modules/subject/subject.service';
 
 import { CreateTestServiceAdapter } from './create-test.service.adapter';
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
-import { DataStorage } from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'create-test',
@@ -15,7 +15,6 @@ import { DataStorage } from "../../../../classes/data-storage";
     styleUrls: ['./create-test.component.css'],
     providers: [ExaminationService, ClassService, SubjectService],
 })
-
 export class CreateTestComponent implements OnInit {
     showSelectedClassAndSection: any = [];
     selectedExaminationNew: any;
@@ -91,8 +90,8 @@ export class CreateTestComponent implements OnInit {
     // For New Test
     selectedSubject: any;
     selectedDate: any;
-    selectedStartTime = "10:30";
-    selectedEndTime = "13:30";
+    selectedStartTime = '10:30';
+    selectedEndTime = '13:30';
     selectedTestType = null;
     selectedMaximumMarks = 100;
 
@@ -104,10 +103,12 @@ export class CreateTestComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService: ExaminationService,
+    constructor(
+        public examinationService: ExaminationService,
         public classService: ClassService,
         public subjectNewService: SubjectService,
-        public cdRef: ChangeDetectorRef) { }
+        public cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -122,7 +123,6 @@ export class CreateTestComponent implements OnInit {
     }
 
     formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -169,9 +169,7 @@ export class CreateTestComponent implements OnInit {
 
                 var subIdx = this.newTestList.findIndex(
                     (sub) =>
-                        sub.subjectId === test.parentSubject &&
-                        sub.testType === test.testType &&
-                        sub.maximumMarks === test.maximumMarks
+                        sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks
                 );
 
                 var classIdx = -1,
@@ -181,9 +179,7 @@ export class CreateTestComponent implements OnInit {
                     classIdx = this.newTestList[subIdx].classList.findIndex((cl) => cl.classId === test.parentClass);
 
                     if (classIdx != -1) {
-                        sectionIdx = this.newTestList[subIdx].classList[
-                            classIdx
-                        ].sectionList.findIndex(
+                        sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex(
                             (sec) => sec.sectionId === test.parentDivision
                         );
                     }
@@ -232,9 +228,9 @@ export class CreateTestComponent implements OnInit {
     //It handles which test type can be selected
     handleTestTypeSelection(value: any, ngModelControl: NgModel, test: any) {
         console.log(test);
-        console.dir(this.newTestList , {depth:null})
+        console.dir(this.newTestList, { depth: null });
         if (this.findAnyDuplicate(test, value)) {
-            alert('Test already exists!!')
+            alert('Test already exists!!');
             ngModelControl.control.setValue(test.testType);
             test.newTestType = test.testType;
             this.cdRef.detectChanges();
@@ -243,7 +239,6 @@ export class CreateTestComponent implements OnInit {
 
     //This function creates specific test by chosen subject name
     createSpecificTest() {
-
         if (this.selectedSubject === null) {
             alert('Subject should be selected');
             return;
@@ -274,20 +269,19 @@ export class CreateTestComponent implements OnInit {
             };
 
             var subIdx = this.newTestList.findIndex(
-                (sub) =>
-                    sub.subjectId === test.parentSubject &&
-                    (sub.testType === test.testType || sub.newTestType === test.testType)
+                (sub) => sub.subjectId === test.parentSubject && (sub.testType === test.testType || sub.newTestType === test.testType)
             );
 
             var classIdx = -1,
                 sectionIdx = -1;
 
             if (subIdx != -1) {
-                classIdx = this.newTestList[subIdx].classList.findIndex(
-                    (cl) => cl.classId === test.parentClass);
+                classIdx = this.newTestList[subIdx].classList.findIndex((cl) => cl.classId === test.parentClass);
 
                 if (classIdx != -1) {
-                    sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex((sec) => sec.sectionId === test.parentDivision);
+                    sectionIdx = this.newTestList[subIdx].classList[classIdx].sectionList.findIndex(
+                        (sec) => sec.sectionId === test.parentDivision
+                    );
                 }
             }
 
@@ -327,9 +321,7 @@ export class CreateTestComponent implements OnInit {
             } else if (sectionIdx === -1) {
                 this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
             } else {
-                alert(
-                    'Test already exists!!'
-                );
+                alert('Test already exists!!');
                 this.selectedTestType = null;
                 this.selectedSubject = null;
                 return;
@@ -345,11 +337,9 @@ export class CreateTestComponent implements OnInit {
         this.newTestList.forEach((test) => {
             if (test.classList[0].sectionList[0].testId === null) {
                 if (!test.deleted) update = true;
-            }
-            else {
+            } else {
                 if (test.deleted) update = true;
-                if (test.newMaximumMarks != test.maximumMarks || test.newTestType != test.testType)
-                    update = true;
+                if (test.newMaximumMarks != test.maximumMarks || test.newTestType != test.testType) update = true;
             }
         });
         if (update) this.isUpdated = true;
@@ -367,9 +357,7 @@ export class CreateTestComponent implements OnInit {
             test.classList.forEach((clas) => {
                 if (clas.className === cl) {
                     clFound = true;
-                    var secIndex = clas.sectionList.findIndex(
-                        (secc) => secc.sectionName === sec
-                    );
+                    var secIndex = clas.sectionList.findIndex((secc) => secc.sectionName === sec);
                     if (secIndex === -1) containsAll = false;
                 }
             });
@@ -388,26 +376,19 @@ export class CreateTestComponent implements OnInit {
     //Check for any duplicate test is present or not
     findAnyDuplicate(tempTest: any, value: any): boolean {
         var ans = false;
-        var count =0;
+        var count = 0;
         tempTest.classList.forEach((cl) => {
             cl.sectionList.forEach((sec) => {
                 this.newTestList.forEach((test) => {
-                    if (
-                        test.subjectId === tempTest.subjectId &&
-                        (test.newTestType === value || test.testType === value)
-                    ) {
+                    if (test.subjectId === tempTest.subjectId && (test.newTestType === value || test.testType === value)) {
                         test.classList.forEach((cll) => {
                             if (cll.classId === cl.classId) {
                                 cll.sectionList.forEach((secc) => {
-                                    if (secc.sectionId === sec.sectionId ) 
-                                    {
-                                        if(secc.testId != sec.testId)
-                                        ans = true;
-                                        else
-                                        {
+                                    if (secc.sectionId === sec.sectionId) {
+                                        if (secc.testId != sec.testId) ans = true;
+                                        else {
                                             count++;
-                                            if(count ==2)
-                                            ans= true;
+                                            if (count == 2) ans = true;
                                         }
                                     }
                                 });

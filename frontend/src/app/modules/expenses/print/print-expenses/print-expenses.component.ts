@@ -9,7 +9,6 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-expenses.component.css'],
 })
 export class PrintExpensesComponent implements OnInit {
-
     user: any;
 
     expenseList: any;
@@ -18,7 +17,7 @@ export class PrintExpensesComponent implements OnInit {
     totalExpenses = 0;
     constructor(private printService: PrintService) {}
     ngOnInit(): void {
-        const {user, value} = this.printService.getData();
+        const { user, value } = this.printService.getData();
         this.user = user;
         this.expenseList = value['expenseList'];
         this.startDate = moment(value['startDate']).format('DD-MM-YYYY');
@@ -28,5 +27,4 @@ export class PrintExpensesComponent implements OnInit {
             this.printService.print();
         });
     }
-
 }
