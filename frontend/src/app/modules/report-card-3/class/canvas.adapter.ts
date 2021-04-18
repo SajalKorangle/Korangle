@@ -17,7 +17,7 @@ import { reportError, ERROR_SOURCES } from './../../../services/modules/errors/e
 export class CanvasAdapterBase implements CanvasAdapterInterface {
     vm: any;
 
-    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any };
+    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any; };
 
     DATA: any;
 
@@ -155,7 +155,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         return true;
     }
 
-    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => {}, postCallback: any = () => {}): Promise<any> => {
+    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { }): Promise<any> => {
         clearTimeout(this.virtualPendingReDrawId);
         return new Promise((resolve, reject) => {
             this.layersFullyDrawnPendingPromiseList.push({ resolve, reject });
@@ -239,7 +239,8 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
             // loding Grade Rules
             Data.gradeRuleSetList.forEach((gradeRuleSet) => {
-                gradeRuleSet.gradeRules = gradeRuleSet.gradeRules.map((gradeRule) => new GradeRule(gradeRule)); // creating GradeRules from GradeRules data if GradeRuleSet
+                // creating GradeRules from GradeRules data if GradeRuleSet
+                gradeRuleSet.gradeRules = gradeRuleSet.gradeRules.map((gradeRule) => new GradeRule(gradeRule));
             });
 
             this.gradeRuleSetList = Data.gradeRuleSetList.map((gradeRuleSet) => new GradeRuleSet(gradeRuleSet)); // creating GradeRuleSet
@@ -302,10 +303,10 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         return Promise.reject();
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         // updating required
 
-        let dataToSave: { [key: string]: any } = {
+        let dataToSave: { [key: string]: any; } = {
             actualresolution: {
                 resolutionName: this.actualresolution.resolutionName,
                 orientation: this.actualresolution.orientation,
@@ -379,7 +380,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 }
 
 export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
-    getEmptyLayoutPage(): { [key: string]: any } {
+    getEmptyLayoutPage(): { [key: string]: any; } {
         return {
             actualresolution: {
                 resolutionName: PAGE_RESOLUTIONS[1].resolutionName, // a4 page
@@ -405,7 +406,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
         this.canvasSizing(newHeight, Infinity, true);
     }
 
-    replaceLayerWithNewLayerType(layer: Layer, initialParameters: { [key: string]: any } = {}): Promise<any> {
+    replaceLayerWithNewLayerType(layer: Layer, initialParameters: { [key: string]: any; } = {}): Promise<any> {
         let layerIndex = this.layers.findIndex((l) => l.id == layer.id);
         let layerData = JSON.parse(JSON.stringify(layer.getDataToSave()));
         initialParameters = { ...layerData, ...initialParameters };
@@ -444,7 +445,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
         return this.newLayerInitilization(newLayer);
     }
 
-    mapExamination(examMap: { [key: number]: any }): void {
+    mapExamination(examMap: { [key: number]: any; }): void {
         this.layers.forEach((layer) => {
             switch (layer.LAYER_TYPE) {
                 case 'MARKS':
@@ -475,7 +476,7 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
 
     pendingReDrawId: any;
 
-    documentEventListners: { keydown: any; mouseup: any } = {
+    documentEventListners: { keydown: any; mouseup: any; } = {
         keydown: (event) => {
             if (!this.activeLayer || !(event.target instanceof HTMLBodyElement)) return;
             if (event.key == 'ArrowUp') {

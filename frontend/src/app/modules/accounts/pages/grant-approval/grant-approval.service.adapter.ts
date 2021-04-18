@@ -73,7 +73,8 @@ export class GrantApprovalServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_account_details, approval_details_data), // 0
                         this.vm.accountsService.getObjectList(this.vm.accountsService.approval_images, approval_details_data), // 1
                     ]).then((data) => {
-                        this.initialiseApprovalData(value[3], data[0], data[1]); // val[0]: approval_list, data[0]: approval_account_details_list, data[1]: approval_images_list
+                        // val[0]: approval_list, data[0]: approval_account_details_list, data[1]: approval_images_list
+                        this.initialiseApprovalData(value[3], data[0], data[1]);
                         if (value[3].length < this.vm.loadingCount) {
                             this.vm.loadMoreApprovals = false;
                         }

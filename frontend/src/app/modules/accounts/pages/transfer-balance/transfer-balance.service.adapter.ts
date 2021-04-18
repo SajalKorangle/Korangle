@@ -3,7 +3,7 @@ import { Account } from '@services/modules/accounts/models/account';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 export class TransferBalanceServiceAdapter {
     vm: TransferBalanceComponent;
-    constructor() {}
+    constructor() { }
     // Data
 
     initializeAdapter(vm: TransferBalanceComponent): void {
@@ -177,7 +177,8 @@ export class TransferBalanceServiceAdapter {
 
                 val[1].forEach((accountSession) => {
                     const accountSessionRef = this.vm.nextSessionAccountSessionList.find((acc) => acc.id == accountSession.id);
-                    accountSessionRef.currentBalance += accountSession.openingBalance - accountSessionRef.openingBalance; // curent blance += diff in opening balance
+                    // curent blance += diff in opening balance
+                    accountSessionRef.currentBalance += accountSession.openingBalance - accountSessionRef.openingBalance;
                     accountSessionRef.openingBalance = accountSession.openingBalance;
                 });
 

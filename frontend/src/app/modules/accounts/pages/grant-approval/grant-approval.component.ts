@@ -39,7 +39,7 @@ export class GrantApprovalComponent implements OnInit {
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
         public schoolService: SchoolService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -97,15 +97,16 @@ export class GrantApprovalComponent implements OnInit {
             data: { images: images, index: index, editable: editable, isMobile: false },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {});
+        dialogRef.afterClosed().subscribe((result) => { });
     }
 
-    // @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-    //     const mainPannel = document.getElementById('main-pannel');
-    //     if((mainPannel.clientHeight + mainPannel.scrollTop) > (0.7*mainPannel.scrollHeight) && this.loadMoreApprovals == true && this.isLoadingApproval == false){
-    //         this.serviceAdapter.loadMoreApprovals();
-    //     }
-    // }
+    /* @HostListener('window:scroll', ['$event']) onScrollEvent(event){
+         const mainPannel = document.getElementById('main-pannel');
+         if((mainPannel.clientHeight + mainPannel.scrollTop) > (0.7*mainPannel.scrollHeight)
+            && this.loadMoreApprovals == true && this.isLoadingApproval == false){
+             this.serviceAdapter.loadMoreApprovals();
+         }
+    }*/
 
     getDisplayDateFormat(str: any) {
         // return str;

@@ -4,7 +4,7 @@ import { toInteger } from 'lodash';
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent;
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: UpdateProfileComponent): void {
         this.vm = vm;
@@ -16,7 +16,7 @@ export class UpdateProfileServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }),
-            // this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {parentStudent__parentSchool: this.vm.user.activeSchool.dbId}),
+
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }),

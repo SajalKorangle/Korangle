@@ -224,7 +224,7 @@ function getYear(year: number): string {
     }
 }
 
-function getDateReplacements(date: any): { [key: string]: string } {
+function getDateReplacements(date: any): { [key: string]: string; } {
     // maps components(day, month , year) of given date to different available format
 
     // Calculating dddValue
@@ -416,9 +416,9 @@ export class PageResolution {
         height: number;
         width: number;
     } = {
-        height: 0,
-        width: 0,
-    };
+            height: 0,
+            width: 0,
+        };
 
     constructor(name: string, mmHeight: number, mmWidth: number, orientation: string = 'p') {
         this.resolutionName = name;
@@ -533,7 +533,7 @@ export const HORIZONTAL_ALIGNMENT_LIST = ['left', 'right', 'center'];
 export interface CanvasAdapterInterface {
     vm: any;
 
-    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any };
+    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any; };
     DATA: any;
 
     virtualCanvas: HTMLCanvasElement;
@@ -569,7 +569,7 @@ export interface CanvasAdapterInterface {
     updateResolution(newResolution: PageResolution): Promise<any>;
     getLayerFromLayerData(layerData: any, constructor: any): Layer;
     loadData(Data): Promise<any>;
-    getDataToSave(): { [object: string]: any };
+    getDataToSave(): { [object: string]: any; };
     resetActiveLayer(): Promise<any>;
     updateActiveLayer(activeLayerIndex: number, shiftKey: boolean): Promise<any>;
     newLayerInitilization(layer: Layer): Promise<any>;
@@ -591,17 +591,20 @@ export interface Layer {
     width: number; // box model width
     isLocked: boolean; // if element is locked on the canvas
     parameterToolPannels: string[]; // list of right pannel parameter toolbar
-    dataSourceType: string; // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data
-    source?: { [key: string]: any }; // object containing information about the source of data, stores reference of element from PARAMETER_LIST
+    // options: DATA_SOURCE_TYPE, if 'N/A', all data of layer is constant; if 'DATA' use source class variable to get data
+    dataSourceType: string;
+    // object containing information about the source of data, stores reference of element from PARAMETER_LIST
+    source?: { [key: string]: any; };
     alternateText: string;
     ca: CanvasAdapterInterface; // canvas adapter,
     highlightLayer(ctx: CanvasRenderingContext2D): void;
     layerDataUpdate(): void; // gets data of layer if dataSourceType is 'DATA',
     updatePosition(dx: number, dy: number): void;
-    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean; // draws layer to canavs or schedules redraw after some time if layer is not ready yet
+    // draws layer to canavs or schedules redraw after some time if layer is not ready yet
+    drawOnCanvas(ctx: CanvasRenderingContext2D, scheduleReDraw: any): boolean;
     isClicked(mouseX: number, mouseY: number, shiftKey: boolean): boolean; // given clicked x and y if this layer is clicked or not
     scale(scaleFactor: number): void; // scales all parameters of layer by given scale factor, used while zooming, fullscreen etc.
-    getDataToSave(): { [object: string]: any }; // retunn data to be saved to database
+    getDataToSave(): { [object: string]: any; }; // retunn data to be saved to database
 
     dateFormatting?(): void; // formats data according to selectd format
 
@@ -655,7 +658,7 @@ export class BaseLayer {
     parameterToolPannels: string[] = ['position', 'settings']; // position right toolbar pannel is present in all layers
     isLocked: boolean = false;
     dataSourceType: string = 'N/A';
-    source?: { [key: string]: any };
+    source?: { [key: string]: any; };
 
     ca: CanvasAdapterInterface; // canvas adapter
 
@@ -709,7 +712,7 @@ export class BaseLayer {
         );
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         // common data to be saved in database
         let savingData: any = {
             id: this.id,
@@ -835,7 +838,7 @@ export class CanvasImage extends BaseLayer implements Layer {
         this.width *= scaleFactor;
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
         savingData = {
             ...savingData,
@@ -944,7 +947,7 @@ export class CanvasTable extends BaseLayer implements Layer {
         }
     }
 
-    layerDataUpdate(): void {}
+    layerDataUpdate(): void { }
 
     updateTableMetrix(): void {
         // computing height and width of table from its rows and columns
@@ -1144,7 +1147,7 @@ export class CanvasTable extends BaseLayer implements Layer {
         this.updateTableMetrix();
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
         savingData = {
             ...savingData,
@@ -1182,11 +1185,11 @@ class ShapeBaseLayer extends BaseLayer {
         fillStyle: string;
         // globalAlpha: number,
     } = {
-        lineWidth: 2,
-        strokeStyle: '#000000',
-        fillStyle: 'transparent',
-        // globalAlpha: 1,
-    };
+            lineWidth: 2,
+            strokeStyle: '#000000',
+            fillStyle: 'transparent',
+            // globalAlpha: 1,
+        };
 
     constructor(ca: CanvasAdapterInterface) {
         super(ca);
@@ -1633,7 +1636,7 @@ export class CanvasText extends BaseLayer implements Layer {
                 }
                 return displayName;
             },
-            set: function (v) {}, // dummy set function
+            set: function (v) { }, // dummy set function
         });
     }
 
@@ -1680,7 +1683,7 @@ export class CanvasText extends BaseLayer implements Layer {
         this.maxWidth *= scaleFactor;
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
 
         savingData = {
@@ -1740,7 +1743,7 @@ export class CanvasDate extends CanvasText implements Layer {
     }
 
     dateFormatting(): void {
-        const dateReplacements: { [key: string]: string } = getDateReplacements(this.date);
+        const dateReplacements: { [key: string]: string; } = getDateReplacements(this.date);
         let dateValue = this.dateFormat;
         Object.entries(dateReplacements).forEach(([dataReplacementKey, dateReplacementvalue]) => {
             dateValue = dateValue.replace(dataReplacementKey, dateReplacementvalue);
@@ -1748,7 +1751,7 @@ export class CanvasDate extends CanvasText implements Layer {
         this.text = dateValue;
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
         delete savingData.text;
         savingData = {
@@ -1819,7 +1822,7 @@ export class CanvasGroup extends BaseLayer implements Layer {
         });
     }
 
-    layerDataUpdate(): void {}
+    layerDataUpdate(): void { }
 
     updatePosition(dx = 0, dy = 0): void {
         if (this.isLocked) {
@@ -1862,7 +1865,7 @@ export class AttendanceLayer extends CanvasText implements Layer {
     endDate: Date = new Date();
 
     dataSourceType: string = 'DATA';
-    source: { [key: string]: any }; // required attribute
+    source: { [key: string]: any; }; // required attribute
 
     constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
@@ -1880,7 +1883,7 @@ export class AttendanceLayer extends CanvasText implements Layer {
         this.text = this.source.getValueFunc(DATA, this.startDate, this.endDate); // check PARAMETER_LIST with field = attendance
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
         delete savingData.text;
         savingData = {
@@ -1894,7 +1897,7 @@ export class AttendanceLayer extends CanvasText implements Layer {
 
 export class CurrentSession extends CanvasText implements Layer {
     dataSourceType: string = 'DATA';
-    source: { [key: string]: any }; // required attribute
+    source: { [key: string]: any; }; // required attribute
 
     startDate: Date = new Date();
     endDate: Date = new Date();
@@ -1904,10 +1907,10 @@ export class CurrentSession extends CanvasText implements Layer {
         seperator: string;
         date2: string;
     } = {
-        date1: '<yyy>',
-        seperator: '-',
-        date2: '<yy>',
-    };
+            date1: '<yyy>',
+            seperator: '-',
+            date2: '<yy>',
+        };
 
     constructor(attributes: object, ca: CanvasAdapterInterface) {
         super(attributes, ca, false);
@@ -1937,7 +1940,7 @@ export class CurrentSession extends CanvasText implements Layer {
         this.text = dateValue1 + this.format.seperator + dateValue2;
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
         savingData = {
             ...savingData,
@@ -1947,7 +1950,7 @@ export class CurrentSession extends CanvasText implements Layer {
     }
 }
 
-export const LayersMappedByType: { [key: string]: any } = {
+export const LayersMappedByType: { [key: string]: any; } = {
     IMAGE: CanvasImage,
     TABLE: CanvasTable,
     LINE: CanvasLine,
@@ -2087,8 +2090,8 @@ class AttendanceParameterStructure {
                                 (attendance.status === ATTENDANCE_STATUS_LIST[0]
                                     ? 1
                                     : attendance.status === ATTENDANCE_STATUS_LIST[3]
-                                    ? 0.5
-                                    : 0)
+                                        ? 0.5
+                                        : 0)
                             );
                         case ATTENDANCE_TYPE_LIST[1]:
                             return total + (attendance.status === ATTENDANCE_STATUS_LIST[1] ? 1 : 0);
@@ -2214,9 +2217,9 @@ export const PARAMETER_LIST = [
             const classTeacherSignature = dataObject.data.classSectionSignatureList.find(
                 (classs) =>
                     classs.parentClass ==
-                        dataObject.data.studentSectionList.find((x) => x.parentStudent === dataObject.studentId).parentClass &&
+                    dataObject.data.studentSectionList.find((x) => x.parentStudent === dataObject.studentId).parentClass &&
                     classs.parentDivision ==
-                        dataObject.data.studentSectionList.find((x) => x.parentStudent === dataObject.studentId).parentDivision
+                    dataObject.data.studentSectionList.find((x) => x.parentStudent === dataObject.studentId).parentDivision
             );
             if (classTeacherSignature) return classTeacherSignature.signatureImage;
             else return null;

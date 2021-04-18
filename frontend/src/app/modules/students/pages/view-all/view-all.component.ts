@@ -147,7 +147,7 @@ export class ViewAllComponent implements OnInit {
         public printService: PrintService,
         public busStopService: BusStopService,
         public dialog: MatDialog
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -552,7 +552,10 @@ export class ViewAllComponent implements OnInit {
                     (this.noneRTE && student.rte != 'YES' && student.rte != 'NO')
                 )
             ) {
-                // First we are checking for which conditions student should be visible then we are applying a 'NOT' to the whole to get student invisible condition
+                /*
+                 First we are checking for which conditions student should be visible then we are applying a 'NOT'
+                 to the whole to get student invisible condition
+                 */
                 student.show = false;
                 return;
             }

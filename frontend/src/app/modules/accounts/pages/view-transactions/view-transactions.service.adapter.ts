@@ -51,8 +51,9 @@ export class ViewTransactionsServiceAdapter {
             if (value[4].length > 0) {
                 this.vm.maximumPermittedAmount = value[4][0].restrictedAmount;
             }
-            // console.log(value);
-            this.vm.minimumDate = value[3].find((session) => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate; // change for current session
+
+            // change for current session
+            this.vm.minimumDate = value[3].find((session) => session.id == this.vm.user.activeSchool.currentSessionDbId).startDate;
             this.vm.maximumDate = value[3].find((session) => session.id == this.vm.user.activeSchool.currentSessionDbId).endDate;
             this.vm.initilizeDate();
             console.log(this.vm.minimumDate, this.vm.maximumDate);
