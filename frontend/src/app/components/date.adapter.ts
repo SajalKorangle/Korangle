@@ -25,7 +25,7 @@ export class AppDateAdapter extends NativeDateAdapter {
         } else if (displayFormat == "inputMonth") {
             let month = date.getMonth() + 1;
             let year = date.getFullYear();
-            return  this._to2digit(month) + '/' + year;
+            return this._to2digit(month) + '/' + year;
         } else {
             return date.toDateString();
         }
@@ -36,7 +36,7 @@ export class AppDateAdapter extends NativeDateAdapter {
     }
 
     getMonthShortString(value: any): any {
-        switch(value) {
+        switch (value) {
             case 0:
                 return 'Jan';
             case 1:
@@ -67,16 +67,16 @@ export class AppDateAdapter extends NativeDateAdapter {
 }
 
 export const APP_DATE_FORMATS =
-    {
-        parse: {
-            dateInput: {month: 'short', year: 'numeric', day: 'numeric'}
-        },
-        display: {
-            // dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
-            dateInput: 'input',
-            // monthYearLabel: { month: 'short', year: 'numeric', day: 'numeric' },
-            monthYearLabel: 'inputMonth',
-            dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric'},
-            monthYearA11yLabel: {year: 'numeric', month: 'long'},
-        }
+{
+    parse: {
+        dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
+    },
+    display: {
+        // dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
+        dateInput: 'input',
+        // monthYearLabel: { month: 'short', year: 'numeric', day: 'numeric' },
+        monthYearLabel: 'inputMonth',
+        dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+        monthYearA11yLabel: { year: 'numeric', month: 'long' },
     }
+};
