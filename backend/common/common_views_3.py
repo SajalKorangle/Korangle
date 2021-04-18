@@ -116,9 +116,9 @@ class CommonView(CommonBaseView):
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         self.preValidation(request, request.data)
-        print(request.GET)
-        if('method' in request.GET):
-            print(request.GET['method']=='GET')
+        # print(request.GET)
+        # if('method' in request.GET):
+        #     print(request.GET['method']=='GET')
         if ('method' in request.GET and request.GET['method']=='GET'):
             filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
             return get_object(request.data, filtered_query_set, self.ModelSerializer)
