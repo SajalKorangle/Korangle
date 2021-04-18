@@ -7,6 +7,7 @@ import { HttpHeaders, HttpClient, } from '@angular/common/http';
 import {DataStorage} from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 
+const MAX_URL_LENGTH = 900;
 
 @Injectable()
 export class RestApiGateway {
@@ -19,7 +20,7 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
-    getAbsoluteURL(url: string): string{
+    getAbsoluteURL(url: string, params?:{[key:string]: string}): string{
         let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
         let user = DataStorage.getInstance().getUser();
         if (user.activeSchool) {
@@ -31,7 +32,10 @@ export class RestApiGateway {
                 alert('Alert: Contact Admin');
             }
         }
-        return absolute_url.toString()
+        if (params) {
+            Object.entries(params).forEach(([key, value]) => absolute_url.searchParams.append(key, value));
+        }
+        return absolute_url.toString();
     }
 
     public returnResponse(response: any, url:any = null, prompt:string = null): any {
@@ -106,9 +110,27 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public getData(url: any, params?: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Authorization': 'JWT ' + this.getToken()});
-        return this.http.get(this.getAbsoluteURL(url), {headers: headers})
+    public getDataWithPost(url: any, data?: any) {
+        const headers = new HttpHeaders({'Authorization' : 'JWT ' + this.getToken() });
+        return this.http.post(this.getAbsoluteURL(url, {method: 'GET'}), data, {headers: headers})
+            .toPromise()
+            .then(response => {
+                return this.returnResponse(response, url, 'from getDataWithPost');
+            }, error => {
+                this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getDataWithPost')
+                alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                return null;
+            })
+            .catch(this.handleError);
+    }
+
+    public getData(url: any, params?: any): Promise<any> { // check here
+        const headers = new HttpHeaders({ 'Authorization': 'JWT ' + this.getToken() });
+        const absoluteURL = this.getAbsoluteURL(url, params);
+        if (absoluteURL.length > MAX_URL_LENGTH || true) {
+            return this.getDataWithPost(url, params);
+        }
+        return this.http.get(absoluteURL, {headers: headers})
             .toPromise()
             .then(response => {
                 return this.returnResponse(response, url, 'from getData');

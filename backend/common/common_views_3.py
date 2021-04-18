@@ -31,6 +31,12 @@ def get_model_serializer(Model, fields__korangle, validator):
 
         def is_valid(self, raise_exception=False, *args, **kwargs):
             original_response = super().is_valid(raise_exception=raise_exception)
+            if (getattr(self, 'many', False)):
+                itr = 0
+                while original_response and itr < len(self.validated_data):
+                    original_response = original_response and validator(self.validated_data[itr], *args, **kwargs)
+                    itr += 1
+                return original_response
             return original_response and validator(self.validated_data, *args, **kwargs) 
 
         class Meta:
@@ -90,6 +96,15 @@ class CommonBaseView():
 
         return self.Model.objects.filter(**query_filters)
 
+    def preValidation(self, request, rawData):
+        pass
+
+    def preSave(self, processedData, rawData):
+        pass
+    
+    def postSave(self, processedData, rawData):
+        pass
+
 
 class CommonView(CommonBaseView):
     
@@ -100,7 +115,15 @@ class CommonView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        return create_object(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
+        self.preValidation(request, request.data)
+        print(request.GET)
+        if('method' in request.GET):
+            print(request.GET['method']=='GET')
+        if ('method' in request.GET and request.GET['method']=='GET'):
+            filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+            return get_object(request.data, filtered_query_set, self.ModelSerializer)
+
+        return create_object(request.data, self.ModelSerializer, self, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):
@@ -129,7 +152,13 @@ class CommonListView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        return create_list(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
+        self.preValidation(request, request.data)
+        if ('method' in request.GET and request.GET['method']=='GET'):
+            filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
+            if 'fields__korangle' in request.data:
+                self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.data['fields__korangle'], validator=self.validator)
+            return get_list(request.data, filtered_query_set, self.ModelSerializer)
+        return create_list(request.data, self.ModelSerializer, self, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):

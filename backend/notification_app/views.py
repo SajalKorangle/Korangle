@@ -30,18 +30,13 @@ class NotificationView(CommonView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
 
-    def post(self, request):
-        response = super().post(request)
-        send_notification([].append(request.data))
-        return response
-
+    def postSave(self, processedData, rawData):
+        send_notification([].append(rawData))
 
 class NotificationListView(CommonListView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
 
-    def post(self, request):
-        response = super().post(request)
-        send_notification(request.data)
-        return response
+    def postSave(self, processedData, rawData):
+        send_notification(rawData)
 

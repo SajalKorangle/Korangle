@@ -19,11 +19,11 @@ export class ServiceObject extends RestApiGateway {
         }
 
         let url = this.module_url + object_url + '?';
-        let searchParams = new URLSearchParams();
-        Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
-        url = url + searchParams.toString();
+        // let searchParams = new URLSearchParams();
+        // Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
+        // url = url + searchParams.toString();
         
-        return super.getData(url);
+        return super.getData(url, data);
     }
 
     getObjectList(object_url: any, data: any): Promise<any> {
@@ -31,10 +31,10 @@ export class ServiceObject extends RestApiGateway {
             return Promise.resolve(this.constant_list[object_url]);
         }
         let url = this.module_url + object_url + '/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&' + key + '=' + data[key];
-        });
-        return super.getData(url);
+        // Object.keys(data).forEach(key => {
+        //     url += '&' + key + '=' + data[key];
+        // });
+        return super.getData(url, data);
     }
 
     createObject(object_url: any, data: any): Promise<any> {
