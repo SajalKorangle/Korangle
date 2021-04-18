@@ -1,8 +1,8 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Fees 3.0 -> Collect Fee', () => {
 
@@ -54,7 +54,7 @@ describe('Fees 3.0 -> Collect Fee', () => {
 
         // Entering a cheque no
         await page.waitForXPath('//label[contains(.,\'Cheque No\')]//following::input[1]');
-         [node] = await page.$x('//label[contains(.,\'Cheque No\')]//following::input[1]');
+        [node] = await page.$x('//label[contains(.,\'Cheque No\')]//following::input[1]');
         node.type('12345678');
 
         // Checking generate button
@@ -68,13 +68,13 @@ describe('Fees 3.0 -> Collect Fee', () => {
 
         let node;
 
-         page.on('dialog', async dialog => {
+        page.on('dialog', async dialog => {
 
             expect(dialog.message()).toBe('Fees submitted successfully');
             await dialog.dismiss();
         });
 
-         // Generating a receipt
+        // Generating a receipt
         [node] = await page.$x('//button[contains(.,\'Generate\')]');
         await node.click();
 
@@ -93,7 +93,8 @@ describe('Fees 3.0 -> Collect Fee', () => {
         // checking the receipt is added in the receipts expansion panel
         await page.waitForXPath('//mat-expansion-panel//following::mat-expansion-panel');
         let nodes = await page.$x('//mat-expansion-panel//following::mat-expansion-panel//following::tr');
-        expect(nodes.length).toBe(4); // 4 rows after generate button  -> 1 mat panel heading , 2 receipts ( 1 already in fixtures, 1 now created ) , 1 discount panel heading
+        expect(nodes.length).toBe(4);
+        // 4 rows after generate button  -> 1 mat panel heading , 2 receipts ( 1 already in fixtures, 1 now created ) , 1 discount panel heading
 
     });
 

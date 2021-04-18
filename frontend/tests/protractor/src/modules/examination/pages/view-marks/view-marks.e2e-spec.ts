@@ -1,9 +1,9 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 // import { getFixtureFiles } from '@fixtures/fixture-map';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import { openModuleAndPage } from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Examination -> View Marks', () => {
 
@@ -59,7 +59,12 @@ describe('Examination -> View Marks', () => {
 
             // Click on Hindi Filter to make the column disappear
             node = await page.evaluate(() => {
-                nodes = document.evaluate('//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input', document, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null);
+                nodes = document.evaluate(
+                    '//label[contains(text(), "Hindi")]/parent::span/preceding-sibling::div/input',
+                    document,
+                    null,
+                    XPathResult.UNORDERED_NODE_ITERATOR_TYPE,
+                    null);
                 node = nodes.iterateNext();
                 node.click();
             });

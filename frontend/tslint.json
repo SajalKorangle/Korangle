@@ -4,7 +4,7 @@
       "node_modules/codelyzer"
     ],
     "rules": {
-      "max-line-length": [true, 140],
+      "max-line-length": [true, 160],
       "indent": [true, "spaces", 4],
       "semicolon": [true, "always"],
       "no-trailing-whitespace": true,
