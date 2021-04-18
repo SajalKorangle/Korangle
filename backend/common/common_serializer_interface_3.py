@@ -87,21 +87,17 @@ def get_list(data, query_set, ModelSerializer):
     return return_data
 
 
-def create_list(data_list, ModelSerializer, View, activeSchoolID, activeStudentID):
-    serializer = ModelSerializer(data=data_list, many=True)
-    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID), serializer.errors
-    View.preSave(serializer.validated_data, data)
-    serializer.save()
-    View.postSave(serializer.data, data_list)
-    return serializer.data
+def create_list(data_list, ModelSerializer, activeSchoolID, activeStudentID):
+    return_data = []
+    for data in data_list:
+        return_data.append(create_object(data, ModelSerializer, activeSchoolID, activeStudentID))
+    return return_data
 
 
-def create_object(data, ModelSerializer, View, activeSchoolID, activeStudentID):
+def create_object(data, ModelSerializer, activeSchoolID, activeStudentID):
     serializer = ModelSerializer(data=data)
     assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID = activeStudentID), serializer.errors
-    View.preSave(serializer.validated_data, data)
     serializer.save()
-    View.postSave(serializer.data, data)
     return serializer.data
 
 
