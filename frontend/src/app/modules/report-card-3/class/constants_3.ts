@@ -670,10 +670,15 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
 export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image Layer
     displayName: string = 'Image'; 
 
-    image: HTMLImageElement = null;  
+    image: HTMLImageElement = null;
+    radius:number = 0;
 
     // uses height and width of the base layer for image height and width
-
+    borderStyle = {
+        lineWidth:  0,
+        strokeStyle: '#000000',
+    }
+    
     uri: string;
     aspectRatio: any = null;    
     maintainAspectRatio = true; 
@@ -764,7 +769,43 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             return true;
 
         if (this.image.complete && this.image.naturalHeight != 0) {
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            
+            const lineWidth = 2 * this.borderStyle.lineWidth;   // correcting for clipping
+            const x = this.x + this.borderStyle.lineWidth;   // adjisted for line Width
+            const y = this.y + this.borderStyle.lineWidth;   // adjusted for line Width
+            const width = this.width - lineWidth;
+            const height = this.height - lineWidth;
+            let maxRadius = Math.min(this.width, this.height) / 2;
+            let computedRadius= Math.ceil(Math.min(this.radius, maxRadius));
+           
+            ctx.save();
+
+            // Cliping path
+            ctx.beginPath();
+            ctx.moveTo(this.x + computedRadius, this.y);
+            ctx.lineTo(this.x + this.width - computedRadius, this.y);
+            ctx.arcTo(this.x + this.width, this.y, this.x + this.width, this.y + computedRadius, computedRadius);
+            ctx.lineTo(this.x + this.width, this.y + this.height - computedRadius);
+            ctx.arcTo(this.x + this.width, this.y + this.height, this.x + this.width - computedRadius, this.y + this.height, computedRadius);
+            ctx.lineTo(this.x + computedRadius, this.y + this.height);
+            ctx.arcTo(this.x, this.y + this.height, this.x, this.y + this.height - computedRadius, computedRadius);
+            ctx.lineTo(this.x, this.y + computedRadius);
+            ctx.arcTo(this.x, this.y, this.x + computedRadius, this.y, computedRadius);
+            ctx.closePath();
+            ctx.clip();
+
+            if (lineWidth > 0) {
+                Object.entries(this.borderStyle).forEach(([key, value]) => ctx[key] = value);
+                ctx.lineWidth = lineWidth;
+                const correction = 1;
+                ctx.drawImage(this.image, x-correction, y-correction, width+(2*correction), height+(2*correction));    // with correction
+                ctx.stroke();
+            }
+            else {
+                ctx.drawImage(this.image, x, y, width, height);
+            }
+            
+            ctx.restore();
             return true;    // Drawn successfully on canvas
         }
         scheduleReDraw();   // draw again after some time
@@ -776,6 +817,8 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
         this.y *= scaleFactor;
         this.height *= scaleFactor;
         this.width *= scaleFactor;
+        this.radius *= scaleFactor;
+        this.borderStyle.lineWidth *= scaleFactor;
     }
 
     getDataToSave(): {[object:string]:any} {
@@ -785,6 +828,8 @@ export class CanvasImage extends BaseLayer implements Layer{  // Canvas Image La
             height: this.height * this.ca.pixelTommFactor,
             width: this.width * this.ca.pixelTommFactor,
             maintainAspectRatio: this.maintainAspectRatio,
+            radius: this.radius * this.ca.pixelTommFactor,
+            borderStyle: {...this.borderStyle, lineWidth: this.borderStyle.lineWidth * this.ca.pixelTommFactor,}
         };
         if (this.dataSourceType == DATA_SOUCE_TYPE[0]) {
             savingData.uri = this.uri;
@@ -1450,8 +1495,9 @@ export class CanvasRoundedRectangle extends ShapeBaseLayer implements Layer{
         const y = this.y + this.shapeStyle.lineWidth / 2;   // adjusted for line Width
         const width = this.width - this.shapeStyle.lineWidth ;
         const height = this.height - this.shapeStyle.lineWidth;
-        const radius = this.radius - this.shapeStyle.lineWidth / 2;
-        const offSet = this.shapeStyle.lineWidth / 2
+        const offSet = this.shapeStyle.lineWidth / 2;
+        const maxRadius = Math.round(Math.min(this.width,this.height)/ 2);
+        const radius = Math.max(Math.min(this.radius, maxRadius) - this.shapeStyle.lineWidth / 2, 0);
         ctx.beginPath();
         ctx.moveTo(x + radius, y+offSet);
         ctx.lineTo(x + width - radius, y+offSet);
