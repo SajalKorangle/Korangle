@@ -397,16 +397,7 @@
                 </mat-form-field>
 
             </div>
-            <div class="col-md-3"
-                 [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
-                <mat-form-field  style="width: 100%;">
-                    <mat-label>Date of Admission</mat-label>
-                    <input matInput
-                           type="date"
-                           (ngModelChange)="currentStudent.dateOfAdmission=$event;"
-                           [ngModel]="selectedStudent.dateOfAdmission">
-                </mat-form-field>
-            </div>
+
             <div class="col-md-3"
                  [class.fieldChanged]="checkFieldChanged(selectedStudent.secondMobileNumber,currentStudent.secondMobileNumber)">
                     <mat-form-field  style="width: 100%;">
@@ -421,6 +412,28 @@
                                (ngModelChange)="currentStudent.secondMobileNumber=$event"
                                [ngModel]="currentStudent.secondMobileNumber">
                     </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"
+                 [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission,currentStudent.dateOfAdmission)">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Date of Admission</mat-label>
+                    <input matInput
+                           type="date"
+                           (ngModelChange)="currentStudent.dateOfAdmission=$event;"
+                           [ngModel]="selectedStudent.dateOfAdmission">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-3">
+                <mat-form-field  style="width: 100%;">
+                    <mat-label>Admission Class</mat-label>
+                    <mat-select [(ngModel)]="currentStudent.parentAdmissionClass">
+                        <mat-option *ngFor="let class of classList" [value]="class.id">{{class.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
         </div>
 

@@ -7,7 +7,9 @@ frontend/protractorFailuresReport/
 frontend/node_modules/
 frontend/school.iml
 frontend/preparePackage.sh
+frontend/prepareStagingPackage.sh
 frontend/tmp
+frontend/scripts/ng-lint/benchmark-linting-error-count.json
 frontend/src/src.iml
 frontend/.DS_Store
 frontend/md-angular-v1.4.1.iml
@@ -16,12 +18,12 @@ frontend/build/post-build.js
 frontend/korangle/
 frontend/korangle.*
 frontend/version.json
-frontend/preparePackage.sh
 frontend/src/environments/environment.prod.ts
 frontend/dist/
 frontend/src/coverage-report/
 frontend/src/coverage/*.json
 frontend/copytoserver.sh
+frontend/copytostagingserver.sh
 frontend/tests/karma/dummy.spec.ts
 backend/*db.sqlite3*
 *.pyc
@@ -37,6 +39,7 @@ backend/*.idea
 backend/staticpages/.*
 backend/sms_file
 backend/backupdb
+backend/prod_db
 backend/copydatabase.sh
 backend/prev_db
 backend/start_server.sh
@@ -45,6 +48,7 @@ backend/helloworld_project/logs
 backend/helloworld_project/nginx.conf
 backend/helloworld_project/gunicorn.conf.py
 backend/helloworld_project/prod_conf.py
+backend/helloworld_project/stag_conf.py
 backend/backup_database.sh
 
 *.DS_Store

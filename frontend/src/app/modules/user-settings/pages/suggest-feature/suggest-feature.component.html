@@ -91,24 +91,24 @@
         <mat-expansion-panel *ngFor="let feature of featureList; let i=index;">
 
             <mat-expansion-panel-header class="mat-row" [collapsedHeight]="'64px'" [expandedHeight]="'44px'">
-                {{i + 1}}. {{feature.title}}
+                {{i + 1}}. {{feature.title}}&nbsp; <i style="font-size: 80%;" [style.color]="htmlRenderer.getStatusColor(feature.status)">({{feature.status}})</i>
             </mat-expansion-panel-header>
 
             <div class="row">
                 <div class="col-md-12" style="white-space: pre-line;">
                     <i class="font-s-12">Description :</i><br>
-                    <span class="font-s-16">{{feature.description}}</span>
+                    <span class="font-s-16">{{feature.description}}</span><br/><br/>
                     <div *ngIf="feature.advantage" class="mt-5">
-                        <i class="font-s-12">{{advantageQues}} :</i><br>
-                        <span class="font-s-16">{{feature.advantage}}</span>
+                        <i class="font-s-12">Advantage :</i><br>
+                        <span class="font-s-16">{{feature.advantage}}</span><br/><br/>
                     </div>
                     <div *ngIf="feature.frequency" class="mt-5">
-                        <i class="font-s-12">{{frequencyQues}} :</i><br>
-                        <span class="font-s-16">{{feature.frequency}}</span>
+                        <i class="font-s-12">Frequency :</i><br>
+                        <span class="font-s-16">{{feature.frequency}}</span><br/><br/>
                     </div>
                     <div *ngIf="feature.managedBy" class="mt-5">
-                        <i class="font-s-12">{{managedQues}} :</i><br>
-                        <span class="font-s-16">{{feature.managedBy}} </span>
+                        <i class="font-s-12">Current Solution :</i><br>
+                        <span class="font-s-16">{{feature.managedBy}} </span><br/><br/>
                     </div>
                 </div>
             </div>

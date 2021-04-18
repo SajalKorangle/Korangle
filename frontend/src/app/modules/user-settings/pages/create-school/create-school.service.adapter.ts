@@ -61,7 +61,6 @@ export class CreateSchoolServiceAdapter {
         data.mobileNumber = this.vm.user.username;
         data.primaryThemeColor = "green";
         data.secondaryThemeColor = "warning";
-        data.complexFeeStructure = false;
         data.currentSession = 3;
         data.smsId = "KORNGL";
         if (data.printName && data.printName.length > 15) {
