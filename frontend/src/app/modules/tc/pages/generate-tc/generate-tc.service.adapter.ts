@@ -26,7 +26,8 @@ export class GenerateTCServiceAdapter {
         };
 
         const request_next_session_student_section_data = {
-            parentSession: this.vm.user.activeSchool.currentSessionDbId+1,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId + 1,
+            fields__korangle: ['parentSchool'],
         }
 
         const request_tc_settings = {
@@ -60,10 +61,12 @@ export class GenerateTCServiceAdapter {
 
             const request_student_data = {
                 id__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
+                fields__korangle: ['id', 'name', 'fathersName']
             };
 
             const request_tc_data = {
-                id_in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
+                parentStudent__in: this.vm.studentSectionList.map(item => item.parentStudent).join(','),
+                status__in: ['Generated', 'Issued']
             }
 
             const tc_student_fee_data = {
@@ -92,7 +95,7 @@ export class GenerateTCServiceAdapter {
                     name: TC_SCHOOL_FEE_RULE_NAME,
                     parentFeeType: this.vm.tcSettings.parentFeeType,
                 };
-                const tc_fee_rule_request = this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule).then(tcSchoolFeeRule => {
+                const tc_fee_rule_request = this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule).then(async tcSchoolFeeRule => {
                     if (!tcSchoolFeeRule) {    // is school Fee Rule is not present
                         const newSchoolFeeRule = {
                             name: TC_SCHOOL_FEE_RULE_NAME,
@@ -101,7 +104,7 @@ export class GenerateTCServiceAdapter {
                             isAnnually: true,
                             aprilAmount: this.vm.tcSettings.tcFee
                         }
-                        this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(savedSchoolFeeRule => {
+                        await this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(async savedSchoolFeeRule => {
                             this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
                         })
                     }
@@ -128,25 +131,31 @@ export class GenerateTCServiceAdapter {
         })
     }
 
-    getDataForGeneratingTC() {
+    async getDataForGeneratingTC() {
         const request_student_parameter_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
+
+        const request_student_full_data = {
+            id__in: this.vm.getSelectedStudentList().map(ss=>ss.parentStudent),
+        }
         // this.vm.isLoading = true;
-        return Promise.all([
+        await Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 0
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 1
-        ]).then(async data => { 
+            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_full_data), // 2
+        ]).then(async data => {
             this.vm.DATA.data.studentParameterList = data[0];
             this.vm.DATA.data.subjectList = data[1];
+            this.vm.DATA.data.studentList = data[2];
 
             const request_student_parameter_value_data = {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
             };
             const request_attendance_data = {
                 parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-                'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
-                'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
+                'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId; }).startDate)).getFullYear() + '-01-01',
+                'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId; }).endDate)).getFullYear() + '-12-31',
             };
 
             await Promise.all([
@@ -155,11 +164,9 @@ export class GenerateTCServiceAdapter {
             ]).then(value => {
                 this.vm.DATA.data.studentParameterValueList = value[0];
                 this.vm.DATA.data.attendanceList = value[1];
-            }, error => {
             });
             this.populateParameterListWithStudentCustomField();
-        }).catch(err => {
-        })
+        });
     }
 
     populateParameterListWithStudentCustomField(): void {

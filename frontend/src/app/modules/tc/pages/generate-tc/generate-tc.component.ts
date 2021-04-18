@@ -133,7 +133,7 @@ export class GenerateTCComponent implements OnInit {
 
     this.canvasAdapter = new GenerateTCCanvasAdapter();
     this.canvasAdapter.initilizeAdapter(this);
-    // console.log('comp: ', this);
+    console.log('comp: ', this);
   }
 
   populateClassSectionList(classList, divisionList):void {
@@ -246,7 +246,6 @@ export class GenerateTCComponent implements OnInit {
     let selectedLayutContent = JSON.parse(this.selectedLayout.content);
 
     this.DATA.data.studentSectionList = this.getSelectedStudentList();
-    this.DATA.data.studentList = this.DATA.data.studentSectionList.map(ss => this.studentList.find(s => s.id == ss.parentStudent));
     await this.serviceAdapter.getDataForGeneratingTC();
     
     let doc = new jsPDF({ orientation: 'p', unit: 'pt' });
