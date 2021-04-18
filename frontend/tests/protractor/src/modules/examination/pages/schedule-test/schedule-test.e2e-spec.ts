@@ -10,7 +10,7 @@ import { Keys } from '@swimlane/ngx-datatable/release/utils';
 describe('Examination -> Schedule Test', () => {
 
     let page: any;
-    
+
     beforeAll(async () => {
 
         startBackendServer(getFixtureFiles('modules/examination/pages/schedule-test/schedule-test.json'));
@@ -32,7 +32,7 @@ describe('Examination -> Schedule Test', () => {
         //Check if this line works or not
         // const option = (await containsFirst('mat-option', 'Class-3, Section-A'));
         // await option.click({ clickCount: 2 })
-        
+
         (await containsFirst('button', 'GET')).click();
         (await containsFirst('button', 'GET')).click();
     });
@@ -46,15 +46,15 @@ describe('Examination -> Schedule Test', () => {
     });
 
 
-    it('Schedule a Test and update', async () => {    
-        
+    it('Schedule a Test and update', async () => {
+
         const Date = await page.$('input');
         await page.waitForXPath('//input[@testId="startTime"]');
         const startTime = await page.$x('//input[@testId="startTime"]');
 
 
-        await Date.click({ clickCount: 3 })
-        await Date.type('10/10/2018')
+        await Date.click({ clickCount: 3 });
+        await Date.type('10/10/2018');
         await Date.press('Enter');
 
         await startTime[0].type('1030');
@@ -69,12 +69,12 @@ describe('Examination -> Schedule Test', () => {
 
         await page.waitForTimeout(3000);
 
-        
+
     });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 
-    
+
 });

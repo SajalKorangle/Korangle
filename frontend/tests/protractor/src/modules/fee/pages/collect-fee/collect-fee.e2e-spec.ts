@@ -27,7 +27,7 @@ describe('Fees 3.0 -> Collect Fee', () => {
     });
 
     it('Collect Fee: Check Generate Receipt Button Disabling Properly', async () => {
-        let nodes,node;
+        let nodes, node;
 
         await page.waitForXPath('//button[contains(.,\'Generate\')]');
         [node] = await page.$x('//button[contains(.,\'Generate\')]');
@@ -81,7 +81,7 @@ describe('Fees 3.0 -> Collect Fee', () => {
         await page.waitForTimeout(1000);
         await page.goBack(); // to go back from print popup box
 
-        
+
         // type again the student
         await page.waitForXPath('//input');
         const [input] = await page.$x('//input');
@@ -89,10 +89,10 @@ describe('Fees 3.0 -> Collect Fee', () => {
         node = await getNode('span', 'FALAK KHAN');
         await node.click();
         await page.waitForTimeout(1000);
-        
+
         // checking the receipt is added in the receipts expansion panel
         await page.waitForXPath('//mat-expansion-panel//following::mat-expansion-panel');
-        let nodes=await page.$x('//mat-expansion-panel//following::mat-expansion-panel//following::tr')
+        let nodes = await page.$x('//mat-expansion-panel//following::mat-expansion-panel//following::tr');
         expect(nodes.length).toBe(4); // 4 rows after generate button  -> 1 mat panel heading , 2 receipts ( 1 already in fixtures, 1 now created ) , 1 discount panel heading
 
     });
@@ -100,5 +100,5 @@ describe('Fees 3.0 -> Collect Fee', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

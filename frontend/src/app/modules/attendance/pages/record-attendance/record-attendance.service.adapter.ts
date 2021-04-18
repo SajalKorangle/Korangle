@@ -377,7 +377,7 @@ export class RecordAttendanceServiceAdapter {
 
             this.vm.isLoading = false;
         });
-    };
+    }
 
     sendSMSNotification: any = (mobile_list: any) => {
         if (mobile_list.length == 0) {
@@ -509,7 +509,7 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    };
+    }
 
     getStudentIdList(): any {
         let studentIdList = [];
@@ -538,7 +538,7 @@ export class RecordAttendanceServiceAdapter {
             ret = ret.replace('<' + key + '>', obj[key]);
         }
         return ret;
-    };
+    }
 
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
@@ -561,7 +561,7 @@ export class RecordAttendanceServiceAdapter {
             });
 
         return count;
-    };
+    }
 
     getMessageCount = (message) => {
         if (this.hasUnicode(message)) {
@@ -569,7 +569,7 @@ export class RecordAttendanceServiceAdapter {
         } else {
             return Math.ceil(message.length / 160);
         }
-    };
+    }
 
     getEstimatedNotificationCount = () => {
         let count = 0;
@@ -580,5 +580,5 @@ export class RecordAttendanceServiceAdapter {
         }).length;
 
         return count;
-    };
+    }
 }

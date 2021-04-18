@@ -310,5 +310,5 @@ export class MyApprovalRequestsServiceAdapter {
                 resolve(base64data);
             };
         });
-    };
+    }
 }

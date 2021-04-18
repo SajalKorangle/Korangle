@@ -341,7 +341,7 @@ export class UpdateAllComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    };
+    }
 
     getDocumentName(student, parameter) {
         let item = this.studentParameterValueList.find(

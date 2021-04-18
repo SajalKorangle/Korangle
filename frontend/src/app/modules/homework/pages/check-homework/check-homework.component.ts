@@ -192,7 +192,7 @@ export class CheckHomeworkComponent implements OnInit {
             ret = ret.replace('<' + key + '>', obj[key]);
         }
         return ret;
-    };
+    }
 
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
@@ -215,7 +215,7 @@ export class CheckHomeworkComponent implements OnInit {
             });
 
         return count;
-    };
+    }
 
     getMessageCount = (message) => {
         if (this.hasUnicode(message)) {
@@ -223,7 +223,7 @@ export class CheckHomeworkComponent implements OnInit {
         } else {
             return Math.ceil(message.length / 160);
         }
-    };
+    }
 
     getEstimatedNotificationCount = () => {
         let count = 0;
@@ -234,7 +234,7 @@ export class CheckHomeworkComponent implements OnInit {
         }).length;
 
         return count;
-    };
+    }
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {

@@ -178,7 +178,7 @@ export class GenerateReportCardComponent implements OnInit {
                 );
             });
         });
-    };
+    }
 
     selectAllStudents(): void {
         this.filteredStudentSectionList.forEach((studentSection) => (studentSection.selected = true));

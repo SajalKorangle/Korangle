@@ -430,7 +430,7 @@ export class CheckHomeworkServiceAdapter {
 
             this.vm.isLoading = false;
         });
-    };
+    }
 
     sendSMSNotification: any = (mobile_list: any, message: any) => {
         let service_list = [];
@@ -531,5 +531,5 @@ export class CheckHomeworkServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    };
+    }
 }

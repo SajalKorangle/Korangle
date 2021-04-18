@@ -3,7 +3,7 @@ import { NotificationService } from '../services/modules/notification/notificati
 import { SmsService } from '../services/modules/sms/sms.service';
 
 /*
-SentUpdateType - 
+SentUpdateType -
     1- NULL
     2- SMS
     3- NOTIFICATION
@@ -89,7 +89,7 @@ export class UpdateService {
                 item.notification = true;
             });
         });
-    };
+    }
 
     sendSMSNotificationNew: any = (
         mobile_list: any,
@@ -189,7 +189,7 @@ export class UpdateService {
                 }
             }
         });
-    };
+    }
 
     checkMobileNumber(mobileNumber: number): boolean {
         if (mobileNumber && mobileNumber.toString().length == 10) {
@@ -204,7 +204,7 @@ export class UpdateService {
             ret = ret.replace('<' + key + '>', obj[key]);
         }
         return ret;
-    };
+    }
 
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
@@ -227,7 +227,7 @@ export class UpdateService {
             });
 
         return count;
-    };
+    }
 
     getEstimatedNotificationCount = (sentUpdateType: any, student_list: any) => {
         let count = 0;
@@ -238,7 +238,7 @@ export class UpdateService {
         }).length;
 
         return count;
-    };
+    }
 
     getMessageCount = (message) => {
         if (this.hasUnicode(message)) {
@@ -246,5 +246,5 @@ export class UpdateService {
         } else {
             return Math.ceil(message.length / 160);
         }
-    };
+    }
 }

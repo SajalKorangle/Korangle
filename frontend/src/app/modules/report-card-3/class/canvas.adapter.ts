@@ -165,7 +165,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 postCallback();
             }, duration);
         });
-    };
+    }
 
     fullCanavsRefresh(): Promise<any> {
         this.layers.forEach((layer: Layer) => {

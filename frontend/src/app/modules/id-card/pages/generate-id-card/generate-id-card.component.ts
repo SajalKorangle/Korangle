@@ -79,7 +79,7 @@ export class GenerateIdCardComponent implements OnInit {
                 }
             });
         });
-    };
+    }
 
     getStudent = (id) => this.studentList.find((x) => x.id === id);
     getClass = (id) => this.classList.find((x) => x.id === id);
@@ -96,7 +96,7 @@ export class GenerateIdCardComponent implements OnInit {
             divisionList: this.sectionList,
             sessionList: this.sessionList,
         };
-    };
+    }
 
     getSelectedStudentList = () => {
         let student_list = [];
@@ -106,7 +106,7 @@ export class GenerateIdCardComponent implements OnInit {
                 student_list.push(this.getStudent(x.parentStudent));
             });
         return student_list;
-    };
+    }
 
     printIdCards = async () => {
         if (this.getSelectedStudentList().length === 0) {
@@ -129,21 +129,21 @@ export class GenerateIdCardComponent implements OnInit {
         document.getElementById('iFrameDisplay').setAttribute('src', card.pdf.output('bloburi'));
         this.isIFrameLoading = false;
         // card.download()
-    };
+    }
 
     selectAllClasses = () => {
         this.classSectionList.forEach((classSection) => {
             classSection.selected = true;
         });
         this.handleStudentDisplay();
-    };
+    }
 
     unselectAllClasses = () => {
         this.classSectionList.forEach((classSection) => {
             classSection.selected = false;
         });
         this.handleStudentDisplay();
-    };
+    }
 
     handleStudentDisplay = () => {
         this.filteredStudentSectionList = this.studentSectionList.filter((studentSection) => {
@@ -155,17 +155,17 @@ export class GenerateIdCardComponent implements OnInit {
                 );
             });
         });
-    };
+    }
 
     selectAllStudents = () => {
         this.filteredStudentSectionList.forEach((x) => {
             x.selected = true;
         });
-    };
+    }
 
     clearAllStudents = () => {
         this.filteredStudentSectionList.forEach((x) => {
             x.selected = false;
         });
-    };
+    }
 }

@@ -212,7 +212,7 @@ export class GenerateTCComponent implements OnInit {
                 );
             });
         });
-    };
+    }
 
     selectAllStudents(): void {
         this.filteredStudentSectionList.forEach((studentSection) => (studentSection.selected = !studentSection.disabled && true));

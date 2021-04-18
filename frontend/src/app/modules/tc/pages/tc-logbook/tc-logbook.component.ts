@@ -146,7 +146,7 @@ export class TCLogbookComponent implements OnInit {
         } else {
             return classSection.class.name;
         }
-    };
+    }
 
     getColumnKeys(): Array<string> {
         return Object.keys(this.columnsList);

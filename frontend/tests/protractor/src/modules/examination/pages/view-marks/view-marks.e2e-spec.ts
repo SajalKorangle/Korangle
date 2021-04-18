@@ -11,7 +11,7 @@ describe('Examination -> View Marks', () => {
 
     beforeAll(async () => {
         startBackendServer(getFixtureFiles('modules/examination/pages/view-marks/view-marks.json'));
-        
+
         page = await BeforeAfterEach.beforeEach();
         page.on('dialog', async dialog => {
             console.log(dialog.message());
@@ -28,7 +28,7 @@ describe('Examination -> View Marks', () => {
         await page.waitForTimeout(1000);
     });
 
-    describe('set1', () => { 
+    describe('set1', () => {
 
         it('View Marks: Student`s Count', async () => {
             let nodes;
@@ -37,7 +37,7 @@ describe('Examination -> View Marks', () => {
             nodes = await containsAll('tr', '');  //count check
             expect(nodes.length).toBe(70);
         });
-        
+
         it('View Marks: Subjects Filter', async () => {
 
             // Checking that filters are not shown by default
@@ -70,7 +70,7 @@ describe('Examination -> View Marks', () => {
             nodes = await getNodes('th', '');  // columns count
             col_count = nodes.length;
             expect(col_count).toBe(8);
-    
+
         });
 
         it('View Marks: Default Ordering', async () => {
@@ -88,7 +88,7 @@ describe('Examination -> View Marks', () => {
         });
     });
 
-    describe('set2', () => { 
+    describe('set2', () => {
         beforeAll(async () => {
             // Ordering rows in the 'Rank' order
             let node;
@@ -115,11 +115,11 @@ describe('Examination -> View Marks', () => {
                 expect(prop).toBeLessThanOrEqual(tot);
                 tot = prop;
             });
-        })
+        });
 
     });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

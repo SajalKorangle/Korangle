@@ -76,7 +76,7 @@ export class ManageParameterComponent implements OnInit {
     setActiveParameter = (parameter) => {
         this.currentParameter = { ...parameter, filterValues: JSON.parse(parameter.filterValues) };
         this.oldFilterValueList = this.currentParameter.filterValues;
-    };
+    }
 
     addNewParameter = () => {
         this.currentParameter = {
@@ -85,7 +85,7 @@ export class ManageParameterComponent implements OnInit {
             parameterType: 'TEXT',
             filterValues: [],
         };
-    };
+    }
 
     deleteFilter(filter: any) {
         this.currentParameter.filterValues = this.currentParameter.filterValues.filter((x) => x !== filter);

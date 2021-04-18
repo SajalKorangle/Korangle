@@ -120,7 +120,7 @@ export class DesignReportCardHtmlAdapter {
             document.removeEventListener('fullscreenchange', this.fullScreenExitHandler);
             this.isFullScreen = false;
         }
-    };
+    }
 
     fullScreenToggle(): void {
         let element = document.getElementById('drc-mainCard');

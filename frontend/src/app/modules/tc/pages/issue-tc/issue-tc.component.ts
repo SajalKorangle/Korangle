@@ -200,7 +200,7 @@ export class IssueTCComponent implements OnInit {
         } else {
             return classSection.class.name;
         }
-    };
+    }
 
     getFilteredStudentSectionList() {
         return this.studentSestionWithTC.filter(

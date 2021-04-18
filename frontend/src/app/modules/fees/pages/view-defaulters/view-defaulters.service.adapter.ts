@@ -207,7 +207,7 @@ export class ViewDefaultersServiceAdapter {
 
             this.vm.isLoading = false;
         });
-    };
+    }
 
     sendSMSNotificationDefaulter: any = (mobile_list: any, message: string) => {
         let service_list = [];
@@ -322,5 +322,5 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    };
+    }
 }

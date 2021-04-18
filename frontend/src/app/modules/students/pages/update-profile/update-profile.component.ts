@@ -81,7 +81,7 @@ export class UpdateProfileComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    };
+    }
 
     updateParameterValue = (parameter, value) => {
         let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
@@ -91,7 +91,7 @@ export class UpdateProfileComponent implements OnInit {
         } else {
             item.value = value;
         }
-    };
+    }
 
     checkCustomFieldChanged = (parameter) => {
         const item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
@@ -105,7 +105,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         }
         return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
-    };
+    }
 
     getBusStopName(busStopDbId: any) {
         let stopName = 'None';
@@ -422,7 +422,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         }
         element.value = '';
-    };
+    }
 
     updateDocumentValue = (parameter, file) => {
         let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
@@ -460,7 +460,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         };
         reader.readAsDataURL(document_value);
-    };
+    }
 
     dragEnter(value) {
         $('.dropinput').css({ 'z-index': '6' });

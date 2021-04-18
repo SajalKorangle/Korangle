@@ -28,7 +28,7 @@ describe('View All', () => {
             await page.click('mat-select[id="select-class"]');
             await page.click('button[id="select-all-classes"]');
             rows = await page.$$('tr');
-            await expect(rows.length).toBe(21); //total 21 -> 20 students + 1 header 
+            await expect(rows.length).toBe(21); //total 21 -> 20 students + 1 header
         });
         it('Download List', async () => {
             await page.click('button[id="download"]');

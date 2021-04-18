@@ -22,7 +22,7 @@ describe('Attendance -> Change Attendance Settings', () => {
         // Opening Page
         await openModuleAndPage('Attendance', 'Settings');
 
-        
+
         await page.waitForXPath('//mat-select');
 
 
@@ -35,13 +35,13 @@ describe('Attendance -> Change Attendance Settings', () => {
         nodes = await containsFirst('mat-option', 'SMS');
         await nodes.click();
 
-        
+
         nodes = await containsFirst('mat-select', 'Only Absent Students');
         await nodes.click();
         await page.waitForXPath('//mat-option');
         nodes = await containsFirst('mat-option', 'All Students');
         await nodes.click();
-        
+
         page.on('dialog', async dialog => {
             expect(dialog.message()).toBe('Settings Updated Successfully');
             await dialog.dismiss();
@@ -50,14 +50,14 @@ describe('Attendance -> Change Attendance Settings', () => {
         // Update Settings
         await (await containsFirst('button', 'Update')).click();
 
-        // // Refresh Page        
+        // // Refresh Page
         await reClickPage('Settings');
         await page.waitForXPath('//mat-select');
 
         // // Check Expected Settings
         expect((await containsAll('mat-select', 'SMS')).length).toBe(1);
         expect((await containsAll('mat-select', 'All Students')).length).toBe(1);
-        
+
     });
 
 });

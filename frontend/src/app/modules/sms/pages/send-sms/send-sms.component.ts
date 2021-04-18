@@ -275,7 +275,7 @@ export class SendSmsComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    };
+    }
 
     getFilteredFilterValues(parameter: any): any {
         if (parameter.filterFilterValues === '') {
@@ -399,7 +399,7 @@ export class SendSmsComponent implements OnInit {
         return this.getFilteredStudentList().reduce((acc, x) => {
             return x.selected ? acc + 1 : acc;
         }, 0);
-    };
+    }
 
     getDisplayStudentNumber = () => this.getFilteredStudentList().length;
 

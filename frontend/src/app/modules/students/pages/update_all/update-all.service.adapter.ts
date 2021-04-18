@@ -184,7 +184,7 @@ export class UpdateAllServiceAdapter {
                 alert('Failed to update value');
             }
         );
-    };
+    }
 
     check_document(value): boolean {
         let type = value.type;
@@ -242,5 +242,5 @@ export class UpdateAllServiceAdapter {
         } else {
             document.getElementById(student.dbId + '-' + parameter.id + '-text').innerHTML = '';
         }
-    };
+    }
 }

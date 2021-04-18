@@ -328,5 +328,5 @@ export class GrantApprovalServiceAdapter {
                 resolve(base64data);
             };
         });
-    };
+    }
 }

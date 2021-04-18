@@ -469,7 +469,7 @@ export class ViewDefaultersComponent implements OnInit {
             ret += student.name + ': ' + this.getCurrencyInINR(student.feesDueTillMonth) + '\n';
         });
         return ret;
-    };
+    }
 
     getMessageFromTemplate = (message, obj) => {
         let ret = message;
@@ -477,7 +477,7 @@ export class ViewDefaultersComponent implements OnInit {
             ret = ret.replace('<' + key + '>', obj[key]);
         }
         return ret;
-    };
+    }
 
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
@@ -494,7 +494,7 @@ export class ViewDefaultersComponent implements OnInit {
         } else {
             return Math.ceil(message.length / 160);
         }
-    };
+    }
 
     notifyDefaulters(): void {
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -549,7 +549,7 @@ export class ViewDefaultersComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    };
+    }
 
     getFilteredFilterValues(parameter: any): any {
         if (parameter.filterFilterValues === '') {
@@ -609,7 +609,7 @@ export class ViewDefaultersComponent implements OnInit {
                 item.selected = true;
             });
         }
-    };
+    }
 
     clearAllHandler = () => {
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -621,7 +621,7 @@ export class ViewDefaultersComponent implements OnInit {
                 item.selected = false;
             });
         }
-    };
+    }
 
     getFilteredStudentListFeesDueTillMonth(): any {
         return this.getFilteredStudentList().reduce((total, student) => {
@@ -778,11 +778,11 @@ export class ViewDefaultersComponent implements OnInit {
         return this.getFilteredParentList().filter((item) => {
             return item.selected && item.selected == true;
         }).length;
-    };
+    }
 
     getSelectedChildrenCount = () => {
         return this.getFilteredStudentList().filter((item) => item.selected).length;
-    };
+    }
 
     printStudentFeesReport(): void {
         let template: any;
@@ -993,7 +993,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     getExtraMessageLength = () => {
         return this.extraDefaulterMessage.length;
-    };
+    }
 
     getNumberOfMobileDevice = () => {
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -1005,7 +1005,7 @@ export class ViewDefaultersComponent implements OnInit {
                 return item.mobileNumber && item.selected;
             }).length;
         }
-    };
+    }
 
     getEstimatedNotificationCount = () => {
         let count = 0;
@@ -1020,7 +1020,7 @@ export class ViewDefaultersComponent implements OnInit {
             }).length;
         }
         return count;
-    };
+    }
 
     getEstimatedSMSCount = () => {
         let count = 0;
@@ -1047,7 +1047,7 @@ export class ViewDefaultersComponent implements OnInit {
                 });
         }
         return count;
-    };
+    }
 
     getButtonText(): any {
         return 'Send ' + this.getEstimatedSMSCount() + ' SMS and ' + this.getEstimatedNotificationCount() + ' notifications';
@@ -1055,7 +1055,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     getCurrencyInINR = (data) => {
         return 'Rs. ' + Number(data).toLocaleString('en-IN');
-    };
+    }
 
     isMobile(): boolean {
         return isMobile();

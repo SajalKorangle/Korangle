@@ -107,7 +107,7 @@ export class ViewMarksComponent implements OnInit {
                 ret = this.getStudentMarks(a, this.sortBy) - this.getStudentMarks(b, this.sortBy);
         }
         return ret * this.sortingOrder;
-    };
+    }
 
     getSortedFilteredStudentSectionList(): any {
         let list = this.getFilteredStudentSectionList(); //filtered student result
