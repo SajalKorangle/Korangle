@@ -4,7 +4,7 @@ import { StudentCustomParameterStructure } from './../../class/constants';
 export class DesignTCServiceAdapter {
     vm: DesignTCComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -66,7 +66,7 @@ export class DesignTCServiceAdapter {
                 this.vm.DATA.data.sessionList = data[6];
                 this.vm.publicLayoutList = data[7];
                 this.vm.DATA.data.classSectionSignatureList = data[8];
-                this.vm.DATA.certificateNumber = data[10].nextCertificateNumber;
+                this.vm.DATA.certificateNumber = data[10] ? data[10].nextCertificateNumber : 1;
                 // console.log('DATA: ', this.vm.DATA);
                 const request_student_data = {
                     id__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
@@ -120,15 +120,9 @@ export class DesignTCServiceAdapter {
                         this.populateLayoutSharingData(value[3]);
                         this.vm.htmlAdapter.isLoading = false;
                         this.vm.htmlAdapter.openInventory();
-                    },
-                    (error) => {
-                        this.vm.htmlAdapter.isLoading = false;
                     }
                 );
                 this.populateParameterListWithStudentCustomField();
-            })
-            .catch((err) => {
-                this.vm.htmlAdapter.isLoading = false;
             });
     }
 
@@ -197,7 +191,7 @@ export class DesignTCServiceAdapter {
     }
 
     async uploadCurrentLayout() {
-        const layoutToUpload: { [key: string]: any } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
+        const layoutToUpload: { [key: string]: any; } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
         if (this.vm.currentLayout.thumbnail.startsWith('data')) {
             // converting data uri to blob
             layoutToUpload.thumbnail = await fetch(this.vm.currentLayout.thumbnail).then((response) => response.blob());
