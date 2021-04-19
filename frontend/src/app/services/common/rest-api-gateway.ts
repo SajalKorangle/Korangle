@@ -31,9 +31,6 @@ export class RestApiGateway {
                 alert('Alert: Contact Admin');
             }
         }
-        if (params) {
-            Object.entries(params).forEach(([key, value]) => absolute_url.searchParams.append(key, value));
-        }
         return absolute_url.toString();
     }
 
@@ -147,9 +144,11 @@ export class RestApiGateway {
         // check here
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = this.getAbsoluteURL(url, params);
+        /*console.log(absoluteURL);
         if (absoluteURL.length > MAX_URL_LENGTH) {
+            console.log('going with get data with post');
             return this.getDataWithPost(url, params);
-        }
+        }*/
         return this.http
             .get(absoluteURL, { headers: headers })
             .toPromise()
