@@ -3,8 +3,6 @@ from django.db import models
 # Create your models here.
 
 from employee_app.models import Employee
-from information_app.models import SentUpdateType
-from sms_app.models import SMSEvent, SMSTemplate
 from student_app.models import Student
 from school_app.model.models import School, Session
 from class_app.models import Division, Class
@@ -88,26 +86,3 @@ class AttendancePermission(models.Model):
 
         db_table = 'attendance_permission'
         unique_together = ('parentEmployee', 'parentDivision', 'parentClass', 'parentSession')
-
-#setting_page_model
-
-
-class AttendanceSettings(models.Model):
-
-    parentEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, default=0, verbose_name='parentEvent')
-
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, verbose_name='parentSMSTemplate')
-
-    sentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, default=0)
-
-    UPDATE_ALL = 'All Students'
-    UPDATE_ABSENT = 'Only Absent Students'
-    UPDATETO_CHOICES = [
-        (UPDATE_ALL, 'All Students'),
-        (UPDATE_ABSENT, 'Only Absent Students')
-    ]
-
-    receiverType = models.CharField(max_length=20, choices=UPDATETO_CHOICES, null=False, default=UPDATE_ALL, verbose_name='receiverType')
-
-    class Meta:
-        db_table = 'attendance_settings'

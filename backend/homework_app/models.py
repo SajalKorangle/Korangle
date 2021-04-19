@@ -79,16 +79,3 @@ class HomeworkAnswerImage(models.Model):
 
     class Meta:
         db_table = 'homework_answer_image'
-
-class HomeworkSettings(models.Model):
-
-    parentEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, default=0, verbose_name='parentEvent')
-
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0,
-                                          verbose_name='parentSMSTemplate')
-
-    sentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, default=0)
-
-
-    class Meta:
-        db_table = 'homework_settings'

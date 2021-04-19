@@ -158,24 +158,3 @@ class BusStop(models.Model):
     class Meta:
         db_table = 'bus_stop'
         unique_together = ( 'parentSchool', 'stopName' )
-
-
-class SMSId(models.Model):
-
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-    smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
-    registrationNumber = models.TextField(null=True, verbose_name='registrationNumber')
-
-    ACTIVATED = 'ACTIVATED'
-    PENDING = 'PENDING'
-    NOT_REGISTERED = 'NOT REGISTERED'
-    STATUS = (
-        (ACTIVATED, 'ACTIVATED'),
-        (PENDING, 'PENDING'),
-        (NOT_REGISTERED, 'NOT REGISTERED')
-    )
-
-    smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=NOT_REGISTERED)
-
-    class Meta:
-        db_table = 'sms_id'

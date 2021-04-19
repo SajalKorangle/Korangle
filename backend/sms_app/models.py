@@ -1,6 +1,6 @@
 from django.db import models
 
-from school_app.model.models import School, SMSId
+from school_app.model.models import School
 from information_app.models import MessageType
 
 
@@ -95,15 +95,34 @@ class SMSPurchase(models.Model):
         db_table = 'sms_purchase'
 
 
+class SMSId(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
+    smsId = models.CharField(max_length=10, null=False, verbose_name='smsId')
+    registrationNumber = models.TextField(null=True, verbose_name='registrationNumber')
+
+    ACTIVATED = 'ACTIVATED'
+    PENDING = 'PENDING'
+    STATUS = (
+        (ACTIVATED, 'ACTIVATED'),
+        (PENDING, 'PENDING'),
+    )
+
+    smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
+
+    class Meta:
+        db_table = 'sms_id'
+
+
 class SMSTemplate(models.Model):
 
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.PROTECT, default=0, verbose_name='parentSMSId')
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSMSId')
     createdDate = models.DateField(null=False, auto_now_add=True, verbose_name='createdDate')
 
     smsTemplateId = models.TextField(null=False, verbose_name='smsTemplateId')
     smsTemplateName = models.TextField(null=False, verbose_name='smsTemplateName')
     smsRawContent = models.TextField(null=False, verbose_name='smsRawContent')
-    smsMappedContent = models.TextField(null=False, verbose_name='smsMappedContent')
+    smsMappedContent = models.TextField(null=True, verbose_name='smsMappedContent')
 
     APPROVED = 'APPROVED'
     PENDING = 'PENDING'
@@ -128,10 +147,11 @@ class SMSEvent(models.Model):
         db_table = 'sms_event'
 
 
-class MultipleTemplateSetting:
+class SMSEventSettings(models.Model):
 
-    parentEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, default=0, verbose_name='parentEvent')
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, verbose_name='parentSMSTemplate')
+    parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, null=False, verbose_name='parentSMSEvent')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0,
+                                          verbose_name='parentSMSTemplate')
+    jsonEventConditions = models.TextField(null=True, verbose_name='jsonEventConditions')
 
-    class Meta:
-        db_table = 'multiple_template_setting'

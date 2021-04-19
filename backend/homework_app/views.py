@@ -1,7 +1,7 @@
 from common.common_views_file import CommonView, CommonListView
 from rest_framework.views import APIView
 
-from homework_app.models import HomeworkQuestion,HomeworkQuestionImage,HomeworkAnswer, HomeworkAnswerImage, HomeworkSettings
+from homework_app.models import HomeworkQuestion,HomeworkQuestionImage,HomeworkAnswer, HomeworkAnswerImage
 # Create your views here.
 
 ####### HOMEWORK #########
@@ -37,10 +37,6 @@ class HomeworkAnswerImageListView(CommonListView, APIView):
     Model = HomeworkAnswerImage
 
 
-####### HOMEWORK Settings #########
 
-class HomeworkSettingsView(CommonView, APIView):
-    Model = HomeworkSettings
 
-class HomeworkSettingsListView(CommonListView, APIView):
-    Model = HomeworkSettings
+
