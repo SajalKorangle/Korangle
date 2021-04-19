@@ -3,7 +3,7 @@ import { StudentCustomParameterStructure } from './../../class/constants';
 import { TC_SCHOOL_FEE_RULE_NAME, DEFAULT_TC_SETTINGS } from './../../class/constants_tc';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 
-const MAX_LENGTH_OF_GET_REQUEST = 7000;
+const MAX_LENGTH_OF_GET_REQUEST = 900;
 
 export class GenerateTCServiceAdapter {
     vm: GenerateTCComponent;
