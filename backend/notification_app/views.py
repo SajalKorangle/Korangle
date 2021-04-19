@@ -30,8 +30,9 @@ class NotificationView(CommonView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
 
-    def post(self, request):
-        response = super().post(request)
+    @user_permission_3
+    def post(self, request, activeSchoolID, activeStudentID):
+        response = super().post(request, activeSchoolID, activeStudentID)
         send_notification([].append(request.data))
         return response
 
@@ -40,8 +41,9 @@ class NotificationListView(CommonListView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
 
-    def post(self, request):
-        response = super().post(request)
+    @user_permission_3
+    def post(self, request, activeSchoolID, activeStudentID):
+        response = super().post(request, activeSchoolID, activeStudentID)
         send_notification(request.data)
         return response
 
