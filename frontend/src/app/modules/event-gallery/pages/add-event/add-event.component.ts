@@ -1,26 +1,25 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import {DataStorage} from '@classes/data-storage';
-import {AddEventServiceAdapter} from '@modules/event-gallery/pages/add-event/add-event.service.adapter';
-import {ClassService} from '@services/modules/class/class.service';
-import {EventGalleryService} from '@services/modules/event-gallery/event-gallery.service';
-import {FormControl} from '@angular/forms';
-import {formatDate} from '@angular/common';
-import {AddEventHtmlAdapter} from '@modules/event-gallery/pages/add-event/add-event.html.adapter';
-import {StudentService} from '@services/modules/student/student.service';
-import {UpdateService} from '../../../../update/update-service';
-import {NotificationService} from '@services/modules/notification/notification.service';
-import {UserService} from '@services/modules/user/user.service';
-import {SmsService} from '@services/modules/sms/sms.service';
-import {EmployeeService} from '@services/modules/employee/employee.service';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { DataStorage } from '@classes/data-storage';
+import { AddEventServiceAdapter } from '@modules/event-gallery/pages/add-event/add-event.service.adapter';
+import { ClassService } from '@services/modules/class/class.service';
+import { EventGalleryService } from '@services/modules/event-gallery/event-gallery.service';
+import { FormControl } from '@angular/forms';
+import { formatDate } from '@angular/common';
+import { AddEventHtmlAdapter } from '@modules/event-gallery/pages/add-event/add-event.html.adapter';
+import { StudentService } from '@services/modules/student/student.service';
+import { UpdateService } from '../../../../update/update-service';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { UserService } from '@services/modules/user/user.service';
+import { SmsService } from '@services/modules/sms/sms.service';
+import { EmployeeService } from '@services/modules/employee/employee.service';
 
 @Component({
     selector: 'app-add-event',
     templateUrl: './add-event.component.html',
     styleUrls: ['./add-event.component.css'],
-    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService]
+    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService],
 })
 export class AddEventComponent implements OnInit {
-
     user: any;
 
     serviceAdapter: AddEventServiceAdapter;
@@ -41,7 +40,7 @@ export class AddEventComponent implements OnInit {
     notifyPersonData: any;
     eventCount = 0;
     loadingCount = 10;
-    
+
     isLoading = false;
     loadMoreEvents = false;
     isEventListLoading = false;
@@ -49,15 +48,15 @@ export class AddEventComponent implements OnInit {
     eventPostedMessage = 'A New Event "<eventTitle>" has been posted , view the event details in Events page ';
     eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the event list';
 
-
-    constructor(public classService: ClassService,
-                public eventGalleryService: EventGalleryService,
-                public studentService: StudentService,
-                public notificationService: NotificationService,
-                public userService: UserService,
-                public smsService: SmsService,
-                public employeeService: EmployeeService) {
-    }
+    constructor(
+        public classService: ClassService,
+        public eventGalleryService: EventGalleryService,
+        public studentService: StudentService,
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public smsService: SmsService,
+        public employeeService: EmployeeService
+    ) {}
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -74,9 +73,12 @@ export class AddEventComponent implements OnInit {
         this.initializeNewEvent();
     }
 
-
     @HostListener('window:scroll', ['$event']) onScrollEvent(event) {
-        if ((document.documentElement.clientHeight + document.documentElement.scrollTop) > (0.7 * document.documentElement.scrollHeight) && this.loadMoreEvents && !this.isEventListLoading) {
+        if (
+            document.documentElement.clientHeight + document.documentElement.scrollTop > 0.7 * document.documentElement.scrollHeight &&
+            this.loadMoreEvents &&
+            !this.isEventListLoading
+        ) {
             this.serviceAdapter.fetchLoadingCount();
         }
     }
@@ -86,10 +88,9 @@ export class AddEventComponent implements OnInit {
         const todayDate = formatDate(currentDate, 'yyyy-MM-dd', 'en-US');
 
         this.newEvent = {
-            'title': null,
-            'description': null,
-            'heldOn': todayDate,
+            title: null,
+            description: null,
+            heldOn: todayDate,
         };
     }
-
 }

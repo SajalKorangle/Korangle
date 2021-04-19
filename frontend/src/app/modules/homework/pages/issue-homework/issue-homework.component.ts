@@ -1,38 +1,35 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { DataStorage } from '../../../../classes/data-storage';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { UpdateService } from '../../../../update/update-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { HomeworkService } from '../../../../services/modules/homework/homework.service';
-import {NotificationService} from '../../../../services/modules/notification/notification.service';
-import {SmsService} from '../../../../services/modules/sms/sms.service';
-import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { SmsService } from '../../../../services/modules/sms/sms.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { IssueHomeworkServiceAdapter } from './issue-homework.service.adapter';
-import {UserService} from '../../../../services/modules/user/user.service';
+import { UserService } from '../../../../services/modules/user/user.service';
 import { isMobile } from '../../../../classes/common.js';
 
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
 
-
-
 export interface EditHomeworkDialogData {
     id: any;
-    homeworkName: any ;
+    homeworkName: any;
     parentClassSubject: any;
     startDate: any;
     startTime: any;
     endDate: any;
     endTime: any;
-    homeworkText: any ;
+    homeworkText: any;
     homeworkImages: any;
     editRequired: any;
 }
-
 
 export interface ImagePreviewDialogData {
     homeworkImages: any;
@@ -45,31 +42,15 @@ export interface ImagePreviewDialogData {
     selector: 'issue-homework',
     templateUrl: './issue-homework.component.html',
     styleUrls: ['./issue-homework.component.css'],
-    providers: [
-        SubjectService,
-        HomeworkService,
-        ClassService,
-        StudentService,
-        NotificationService,
-        UserService,
-        SmsService,
-        SmsOldService,
-    ],
+    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService],
 })
-
-
-
-
 export class IssueHomeworkComponent implements OnInit {
-
-
     // @Input() user;
     user: any;
 
-    
     STUDENT_LIMITER = 200;
     notif_usernames = [];
- 
+
     classSectionSubjectList: any;
     selectedClassSection: any;
     selectedSubject: any;
@@ -84,15 +65,15 @@ export class IssueHomeworkComponent implements OnInit {
     isLoading: any;
     showContent: any;
     editableHomework: any;
-    
+
     noPermission: any;
-    settings : any;
+    settings: any;
     smsBalance: any;
 
     homeworkCreatedMessage = "New Homework is added in <subject>,\n Title - '<homeworkName>' \n Last date to submit - <deadLine> ";
     homeworkUpdateMessage = "Please note, there are changes in the Homework '<homeworkName>' of <subject>";
     homeworkDeleteMessage = "Please note, the homework '<homeworkName>' of subject <subject> has been removed";
-    
+
     // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
@@ -107,8 +88,8 @@ export class IssueHomeworkComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
-        public dialog: MatDialog,
-    ){ }
+        public dialog: MatDialog
+    ) {}
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -119,7 +100,7 @@ export class IssueHomeworkComponent implements OnInit {
         this.isLoading = false;
         this.showContent = false;
         this.noPermission = false;
-        this.currentHomework = new Homework;
+        this.currentHomework = new Homework();
         this.currentHomeworkImages = [];
 
         this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
@@ -128,11 +109,11 @@ export class IssueHomeworkComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
-    
-    changeClassSection():any{
+
+    changeClassSection(): any {
         this.selectedSubject = this.selectedClassSection.subjectList[0];
     }
-    
+
     readURL(event): void {
         if (event.target.files && event.target.files[0]) {
             let image = event.target.files[0];
@@ -140,67 +121,63 @@ export class IssueHomeworkComponent implements OnInit {
                 alert('File type should be either jpg, jpeg, or png');
                 return;
             }
-            
+
             const reader = new FileReader();
-            reader.onload = e => {
+            reader.onload = (e) => {
                 let tempImageData = {
                     orderNumber: null,
                     parentHomeworkQuestion: null,
                     questionImage: reader.result,
-                }
+                };
                 this.currentHomeworkImages.push(tempImageData);
             };
             reader.readAsDataURL(image);
         }
     }
-    
-    displayDateTime(date: any, time: any): any{
-        let str='';
-        let tempStr ='';
 
-        if(date == null){
+    displayDateTime(date: any, time: any): any {
+        let str = '';
+        let tempStr = '';
+
+        if (date == null) {
             str = 'No deadline';
             return str;
         }
-        for(let i =0; i<date.length; i++){
-            if(date[i] == '-'){
+        for (let i = 0; i < date.length; i++) {
+            if (date[i] == '-') {
                 str = '-' + tempStr + str;
                 tempStr = '';
-
-            }
-            else{
-                tempStr+= date[i];
+            } else {
+                tempStr += date[i];
             }
         }
-        str = tempStr + str +  ' ; ';
-        for(let i =0;i<5;i++){
+        str = tempStr + str + ' ; ';
+        for (let i = 0; i < 5; i++) {
             str = str + time[i];
         }
-        
+
         return str;
     }
 
-    removeImage(index: any):any{
+    removeImage(index: any): any {
         this.currentHomeworkImages.splice(index, 1);
     }
-    
 
-    editHomework(homeworkId:any):any{
-        let tempHomework = this.homeworkList.find( homework => homework.id == homeworkId);
+    editHomework(homeworkId: any): any {
+        let tempHomework = this.homeworkList.find((homework) => homework.id == homeworkId);
         this.editableHomework = JSON.parse(JSON.stringify(tempHomework));
         this.editableHomework.editRequired = true;
     }
 
-    
     openEditHomeworkDialog(): void {
         const dialogRef = this.dialog.open(EditHomeworkDialogComponent, {
             width: '1000px',
             data: this.editableHomework,
             disableClose: true,
         });
-    
-        dialogRef.afterClosed().subscribe(result => {
-            if(this.editableHomework.editRequired){
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (this.editableHomework.editRequired) {
                 this.isLoading = true;
                 this.serviceAdapter.updateHomework(this.editableHomework);
             }
@@ -213,25 +190,23 @@ export class IssueHomeworkComponent implements OnInit {
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'homeworkImages': homeworkImages, 'index': index, 'editable': editable, 'isMobile': this.isMobile()}
+            data: { homeworkImages: homeworkImages, index: index, editable: editable, isMobile: this.isMobile() },
         });
-    
+
         dialogRef.afterClosed();
     }
-    
+
     isMobile(): boolean {
         return isMobile();
     }
 
-    isCreateButtonDisabled(str: string): boolean{
-        if(str == null){
+    isCreateButtonDisabled(str: string): boolean {
+        if (str == null) {
             return true;
         }
-        if((str.trim()).length == 0){
+        if (str.trim().length == 0) {
             return true;
         }
         return false;
     }
-
-
 }

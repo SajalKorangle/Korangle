@@ -1,123 +1,123 @@
 <div *ngIf="!data.isMobile">
     <mat-dialog-actions>
-
         <div class="row" style="width: 100%; margin: 0px">
-
             <ng-container *ngIf="data.fileType=='img'">
-                <div class="col-md-1" style="padding: 0px;">
-                    <span style="font-size: 15px; float:left">Media Viewer</span>
+                <div class="col-md-1" style="padding: 0px">
+                    <span style="font-size: 15px; float: left">Media Viewer</span>
                 </div>
-                <div class="col-md-10" style="text-align: center;">
-                    <strong *ngIf="!data.extraList && data.imageList.length>1">{{counter + 1 }}
-                        /{{data.imageList.length}}</strong>
+                <div class="col-md-10" style="text-align: center">
+                    <strong *ngIf="!data.extraList && data.imageList.length>1">{{counter + 1 }} /{{data.imageList.length}}</strong>
                     <ng-container *ngIf="data.type==2 && data.extraList">
                         <ng-container *ngFor="let tag of getCorrespondingTags()">
-                            <div class="btn"
-                                 style="background:#3BB847;height : 28px;padding:5px;margin-left:5px;text-transform:none">{{tag.tagName}}</div>
+                            <div
+                                class="btn"
+                                style="background: #3bb847; height: 28px; padding: 5px; margin-left: 5px; text-transform: none"
+                            >
+                                {{tag.tagName}}
+                            </div>
                         </ng-container>
                     </ng-container>
                 </div>
             </ng-container>
 
-            <div class="col-md-1" style="padding: 0px;float:right">
-                <span class="material-icons cursor" (click)="onNoClick();"
-                      style="font-size: 35px; float:right">clear</span>
+            <div class="col-md-1" style="padding: 0px; float: right">
+                <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 35px; float: right">clear</span>
             </div>
         </div>
-
     </mat-dialog-actions>
 
     <mat-dialog-content class="row">
-
-        <div *ngIf="data.fileType=='img'"
-             class="imageCol"
-             [@animImageSlider]="counter">
+        <div *ngIf="data.fileType=='img'" class="imageCol" [@animImageSlider]="counter">
             <ng-container *ngFor="let img of data.imageList; let i=index">
-                <img *ngIf="data.imageList.length>0 && data.imageList[counter].imageUrl != undefined && i===counter"
-                     [src]="img.imageUrl" [ngStyle]="imageStyle"/>
+                <img
+                    *ngIf="data.imageList.length>0 && data.imageList[counter].imageUrl != undefined && i===counter"
+                    [src]="img.imageUrl"
+                    [ngStyle]="imageStyle"
+                />
             </ng-container>
         </div>
 
         <div class="imageCol">
-            <iframe *ngIf="data.fileType=='pdf'" style="overflow:hidden;width:100%;height: 80vh;"
-                    [src]="data.file | safe" crossorigin="anonymous"></iframe>
+            <iframe
+                *ngIf="data.fileType=='pdf'"
+                style="overflow: hidden; width: 100%; height: 80vh"
+                [src]="data.file | safe"
+                crossorigin="anonymous"
+            ></iframe>
         </div>
-
     </mat-dialog-content>
 
-
     <mat-dialog-actions *ngIf="data.fileType=='img'">
-
         <div class="row" style="width: 100%; margin: 0px">
-            <div class="col-md-1" style="padding: 0px;" *ngIf="data.imageList.length>1">
+            <div class="col-md-1" style="padding: 0px" *ngIf="data.imageList.length>1">
                 <span class="material-icons cursor" style="font-size: 30px; float: left" (click)="onPrevious()">keyboard_arrow_left</span>
             </div>
-            <div class="col-md-10" style="text-align: center;">
+            <div class="col-md-10" style="text-align: center">
                 <ng-container *ngIf="data.type==1">
                     Zoom
-                    <mat-slider min="50" max="150" step="1" value="50" thumbLabel
-                                (input)=changeImageSize($event)></mat-slider>
+                    <mat-slider min="50" max="150" step="1" value="50" thumbLabel (input)="changeImageSize($event)"></mat-slider>
                 </ng-container>
                 <ng-container *ngIf="data.type==2">
-                      <span *ngIf="!isImageDownloading"><a href="javascript:void(0);" (click)="downloadSelectedImages()"
-                                                           style="color:#FC9700;"> <i
-                              class="material-icons" style="color:#FC9700;">save_alt</i>Download </a></span>
+                    <span *ngIf="!isImageDownloading"
+                        ><a href="javascript:void(0);" (click)="downloadSelectedImages()" style="color: #fc9700">
+                            <i class="material-icons" style="color: #fc9700">save_alt</i>Download
+                        </a></span
+                    >
                     <ng-container *ngIf="isImageDownloading">
-                        <div class="loader__dot"
-                             style="display: inline-block;color:#ff9800;text-decoration: underline">Downloading
-                            Media<span class="loader__dot">.</span><span class="loader__dot">.</span><span
-                                    class="loader__dot">.</span></div>
+                        <div class="loader__dot" style="display: inline-block; color: #ff9800; text-decoration: underline">
+                            Downloading Media<span class="loader__dot">.</span><span class="loader__dot">.</span
+                            ><span class="loader__dot">.</span>
+                        </div>
                     </ng-container>
                 </ng-container>
             </div>
 
-            <div class="col-md-1" style="padding: 0px;" *ngIf="data.imageList.length>1">
+            <div class="col-md-1" style="padding: 0px" *ngIf="data.imageList.length>1">
                 <span class="material-icons cursor" style="font-size: 30px; float: right" (click)="onNext()">keyboard_arrow_right</span>
             </div>
         </div>
-
     </mat-dialog-actions>
 </div>
 
 <!-- Mobile Image Preview Code -->
 
 <div *ngIf="data.isMobile">
-
     <mat-dialog-actions>
         <div class="row" style="width: 100%; margin: 0px">
-            <div class="col-xs-1" style="padding: 0px;float:right">
-                <span class="material-icons cursor" (click)="onNoClick();"
-                      style="font-size: 25px; float:right">clear</span>
+            <div class="col-xs-1" style="padding: 0px; float: right">
+                <span class="material-icons cursor" (click)="onNoClick();" style="font-size: 25px; float: right">clear</span>
             </div>
         </div>
     </mat-dialog-actions>
 
     <mat-dialog-content class="row">
-
-        <div *ngIf="data.fileType=='img'"
-             class="imageCol"
-             [@animImageSlider]="counter">
-            <ng-container *ngFor="let img of data.imageList; let i=index"
-                          class="imageCol">
-                <img (swipeleft)="onNext()" (swiperight)="onPrevious()"
-                     (tap)="showImageInGallery(data.imageList[counter])"
-                     *ngIf="data.imageList.length>0 && data.imageList[counter].imageUrl != undefined && i===counter"
-                     [src]="img.imageUrl" [ngStyle]="imageStyleMobile"/>
+        <div *ngIf="data.fileType=='img'" class="imageCol" [@animImageSlider]="counter">
+            <ng-container *ngFor="let img of data.imageList; let i=index" class="imageCol">
+                <img
+                    (swipeleft)="onNext()"
+                    (swiperight)="onPrevious()"
+                    (tap)="showImageInGallery(data.imageList[counter])"
+                    *ngIf="data.imageList.length>0 && data.imageList[counter].imageUrl != undefined && i===counter"
+                    [src]="img.imageUrl"
+                    [ngStyle]="imageStyleMobile"
+                />
             </ng-container>
         </div>
 
         <div class="imageCol">
-            <iframe *ngIf="data.fileType=='pdf'" style="width: 100%;height: 80vh;" [src]="data.file | safe"
-                    crossorigin="anonymous"></iframe>
+            <iframe
+                *ngIf="data.fileType=='pdf'"
+                style="width: 100%; height: 80vh"
+                [src]="data.file | safe"
+                crossorigin="anonymous"
+            ></iframe>
         </div>
-
     </mat-dialog-content>
 
     <mat-dialog-actions *ngIf="data.fileType=='img'">
         <div class="row" style="width: 100%; margin: 0px; text-align: center">
             <strong>{{counter + 1 }}/{{data.imageList.length}}</strong>
-            <span class="material-icons" style="float: right;" (click)="showImageInGallery(data.imageList[counter])">crop_free</span>
+            <span class="material-icons" style="float: right" (click)="showImageInGallery(data.imageList[counter])">crop_free</span>
         </div>
     </mat-dialog-actions>
-
 </div>

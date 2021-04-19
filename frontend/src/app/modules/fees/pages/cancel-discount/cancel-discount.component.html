@@ -1,117 +1,92 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
         <div class="row">
             <div class="col-sm-6">
                 <form class="example-form">
                     <mat-form-field class="example-full-width">
-                        <input matInput
-                               name="searchParamter"
-                               type="number"
-                               (keypress)="policeNumberInput($event)"
-                               [(ngModel)]="searchParameter"
-                               placeholder="Type Discount No. here ..."value="Sushi">
+                        <input
+                            matInput
+                            name="searchParamter"
+                            type="number"
+                            (keypress)="policeNumberInput($event)"
+                            [(ngModel)]="searchParameter"
+                            placeholder="Type Discount No. here ..."
+                            value="Sushi"
+                        />
                     </mat-form-field>
                 </form>
             </div>
             <div class="col-sm-3">
-                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getDiscountList()">
-                    Get
-                </button>
+                <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="serviceAdapter.getDiscountList()">Get</button>
             </div>
         </div>
 
         <ng-container *ngIf="discountList">
-
-            <div class="row" style="margin-bottom: 30px;">
-                <div class="col-md-12"
-                     style="border-bottom: 1px solid lightgrey;"></div>
+            <div class="row" style="margin-bottom: 30px">
+                <div class="col-md-12" style="border-bottom: 1px solid lightgrey"></div>
             </div>
 
             <ng-container *ngIf="discountList.length > 0; else emptyDiscountList">
-
                 <mat-accordion>
-
-                    <ng-container *ngFor="let discount of discountList; let i=index; let first=first">
-
+                    <ng-container *ngFor="let discount of discountList; let i = index; let first = first">
                         <mat-expansion-panel [expanded]="discountList.length == 1 && first">
-
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <span>
-                                        {{getStudent(discount).name}},
-                                        Amount: {{getDiscountTotalAmount(discount)}}
-                                    </span>
+                                    <span> {{ getStudent(discount).name }}, Amount: {{ getDiscountTotalAmount(discount) }} </span>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
 
                             <div class="row">
+                                <div class="col-sm-2 col-xs-6">Discount No. :</div>
                                 <div class="col-sm-2 col-xs-6">
-                                    Discount No. :
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{discount.discountNumber}}
+                                    {{ discount.discountNumber }}
                                 </div>
                             </div>
 
                             <div class="row">
+                                <div class="col-sm-2 col-xs-6">Father's Name:</div>
                                 <div class="col-sm-2 col-xs-6">
-                                    Father's Name:
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{getStudent(discount).fathersName}}
+                                    {{ getStudent(discount).fathersName }}
                                 </div>
                             </div>
 
                             <div class="row">
+                                <div class="col-sm-2 col-xs-6">Remark:</div>
                                 <div class="col-sm-2 col-xs-6">
-                                    Remark:
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{discount.remark}}
+                                    {{ discount.remark }}
                                 </div>
                             </div>
 
                             <div class="row">
+                                <div class="col-sm-2 col-xs-6">Collected By:</div>
                                 <div class="col-sm-2 col-xs-6">
-                                    Collected By:
-                                </div>
-                                <div class="col-sm-2 col-xs-6">
-                                    {{getEmployeeName(discount)}}
+                                    {{ getEmployeeName(discount) }}
                                 </div>
                             </div>
 
-                            <button type="button"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    *ngIf="!discount.cancelled"
-                                    style="padding: 12px 15px"
-                                    matTooltip="Cancel the receipt"
-                                    tooltip-position="right"
-                                    (click)="serviceAdapter.cancelDiscount(discount);">
-                                Cancel</button>
+                            <button
+                                type="button"
+                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                *ngIf="!discount.cancelled"
+                                style="padding: 12px 15px"
+                                matTooltip="Cancel the receipt"
+                                tooltip-position="right"
+                                (click)="serviceAdapter.cancelDiscount(discount)"
+                            >
+                                Cancel
+                            </button>
 
                             <span *ngIf="discount.cancelled">This discount is cancelled</span>
-
                         </mat-expansion-panel>
-
                     </ng-container>
-
                 </mat-accordion>
-
             </ng-container>
 
-            <ng-template #emptyDiscountList>
-                No Discount Found
-            </ng-template>
-
+            <ng-template #emptyDiscountList> No Discount Found </ng-template>
         </ng-container>
-
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

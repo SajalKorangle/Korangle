@@ -1,18 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
-import {DataStorage} from "../../../../classes/data-storage";
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'view-profile',
-  templateUrl: './view-profile.component.html',
-  styleUrls: ['./view-profile.component.css'],
-    providers: [ EmployeeOldService ],
+    selector: 'view-profile',
+    templateUrl: './view-profile.component.html',
+    styleUrls: ['./view-profile.component.css'],
+    providers: [EmployeeOldService],
 })
-
 export class ViewProfileComponent implements OnInit {
-
-     user;
+    user;
 
     selectedEmployee: any;
 
@@ -20,7 +18,7 @@ export class ViewProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService) { }
+    constructor(private employeeService: EmployeeOldService) {}
 
     ngOnChanges(): void {
         this.ngOnInit();
@@ -41,17 +39,17 @@ export class ViewProfileComponent implements OnInit {
     getEmployeeProfile(): void {
         this.isLoading = true;
         const data = {
-            'id': this.user.activeSchool.employeeId,
+            id: this.user.activeSchool.employeeId,
         };
         this.employeeService.getEmployeeProfile(data, this.user.jwt).then(
-            employee => {
+            (employee) => {
                 this.isLoading = false;
                 console.log(employee);
                 this.selectedEmployee = employee;
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
             }
         );
     }
-
 }

@@ -1,19 +1,17 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import { LockFeesServiceAdapter } from "./lock-fees.service.adapter";
-import { FeeService } from "../../../../services/modules/fees/fee.service";
-import {DataStorage} from "../../../../classes/data-storage";
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { LockFeesServiceAdapter } from './lock-fees.service.adapter';
+import { FeeService } from '../../../../services/modules/fees/fee.service';
+import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'lock-fees',
     templateUrl: './lock-fees.component.html',
     styleUrls: ['./lock-fees.component.css'],
-    providers: [ FeeService, SchoolService ],
+    providers: [FeeService, SchoolService],
 })
-
 export class LockFeesComponent implements OnInit {
-
-    sessionList = [] ;
+    sessionList = [];
 
     user;
 
@@ -23,9 +21,7 @@ export class LockFeesComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public schoolService : SchoolService,
-                public feeService: FeeService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(public schoolService: SchoolService, public feeService: FeeService, private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -40,9 +36,8 @@ export class LockFeesComponent implements OnInit {
     }
 
     getSession(sessionId: any): any {
-        return this.sessionList.find(session => {
+        return this.sessionList.find((session) => {
             return session.id == sessionId;
         });
     }
-
 }

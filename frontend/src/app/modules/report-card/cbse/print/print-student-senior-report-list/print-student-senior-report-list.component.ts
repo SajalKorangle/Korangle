@@ -2,15 +2,14 @@ import { Component, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../../print/print-service';
-import { ATTENDANCE_STATUS_LIST } from "../../../../attendance/classes/constants";
+import { ATTENDANCE_STATUS_LIST } from '../../../../attendance/classes/constants';
 
 @Component({
     templateUrl: './print-student-senior-report-list.component.html',
-    styleUrls: ['./print-student-senior-report-list.component.css']
+    styleUrls: ['./print-student-senior-report-list.component.css'],
 })
 export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
-
-    user : any;
+    user: any;
 
     viewChecked = true;
 
@@ -36,10 +35,10 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     absentValue = 'Abs.';
     attendance_status_list = ATTENDANCE_STATUS_LIST;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
-        const {user, value} = this.printService.getData();
+        const { user, value } = this.printService.getData();
         this.user = user;
 
         console.log(value);
@@ -80,7 +79,7 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(subject => {
+        this.subjectList.every((subject) => {
             if (subject.id == subjectId) {
                 result = subject.name;
                 return false;
@@ -95,13 +94,13 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getStudentRollNo(student: any): any {
-        return this.studentSectionList.find(studentSection => {
+        return this.studentSectionList.find((studentSection) => {
             return studentSection.parentStudent == student.id;
         }).rollNumber;
     }
 
     getStudentRemark(student: any): any {
-        let studentRemark = this.studentRemarkList.find(studentRemark => {
+        let studentRemark = this.studentRemarkList.find((studentRemark) => {
             return studentRemark.parentStudent == student.id;
         });
         if (studentRemark) {
@@ -113,7 +112,7 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -135,35 +134,41 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
 
     getExaminationMarks(student: any, classSubject: any, examinationId: any, baseMarks: any): any {
         let testTypeList = [];
-        let filteredTestList = this.testList.filter(test => {
-            return test.parentExamination == examinationId
-                && test.parentSubject == classSubject.parentSubject
-                && test.parentClass == classSubject.parentClass
-                && test.parentDivision == classSubject.parentDivision;
+        let filteredTestList = this.testList.filter((test) => {
+            return (
+                test.parentExamination == examinationId &&
+                test.parentSubject == classSubject.parentSubject &&
+                test.parentClass == classSubject.parentClass &&
+                test.parentDivision == classSubject.parentDivision
+            );
         });
-        filteredTestList.forEach(test => {
+        filteredTestList.forEach((test) => {
             testTypeList.push(test.testType);
         });
         let maximumMarks = filteredTestList.reduce((total, a) => {
-            return total+Number(a.maximumMarks);
+            return total + Number(a.maximumMarks);
         }, 0);
         if (maximumMarks == 0) {
             console.log('Maximum Marks is coming to be zero');
             return 0;
         }
-        let studentMarks = this.studentTestList.filter(studentTest => {
-            return studentTest.parentExamination == examinationId
-                && studentTest.parentSubject == classSubject.parentSubject
-                && testTypeList.includes(studentTest.testType)
-                && studentTest.parentStudent == student.id;
-        }).reduce((total, a) => {
-            return total+Number(a.marksObtained);
-        }, 0);
-        return (studentMarks*baseMarks/maximumMarks);
+        let studentMarks = this.studentTestList
+            .filter((studentTest) => {
+                return (
+                    studentTest.parentExamination == examinationId &&
+                    studentTest.parentSubject == classSubject.parentSubject &&
+                    testTypeList.includes(studentTest.testType) &&
+                    studentTest.parentStudent == student.id
+                );
+            })
+            .reduce((total, a) => {
+                return total + Number(a.marksObtained);
+            }, 0);
+        return (studentMarks * baseMarks) / maximumMarks;
     }
 
     getPeriodicTestMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
-        let examinationId = this.reportCardMappingList.find(reportCardMapping => {
+        let examinationId = this.reportCardMappingList.find((reportCardMapping) => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationPeriodicTest;
         let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 10);
@@ -171,7 +176,7 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getNoteBookMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
-        let examinationId = this.reportCardMappingList.find(reportCardMapping => {
+        let examinationId = this.reportCardMappingList.find((reportCardMapping) => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationNoteBook;
         let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 5);
@@ -179,7 +184,7 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getSubEnrichmentMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
-        let examinationId = this.reportCardMappingList.find(reportCardMapping => {
+        let examinationId = this.reportCardMappingList.find((reportCardMapping) => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationSubEnrichment;
         let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 5);
@@ -187,7 +192,7 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getFinalTermMarks(student: any, classSubject: any, term: any, handleAbsent = false): any {
-        let examinationId = this.reportCardMappingList.find(reportCardMapping => {
+        let examinationId = this.reportCardMappingList.find((reportCardMapping) => {
             return reportCardMapping.parentTerm == term.id;
         }).parentExaminationFinalTerm;
         let examinationMarks = this.getExaminationMarks(student, classSubject, examinationId, 80);
@@ -195,10 +200,12 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getOverallMarks(student: any, classSubject: any, term: any): any {
-        return this.getPeriodicTestMarks(student, classSubject, term)
-            + this.getNoteBookMarks(student,classSubject, term)
-            + this.getSubEnrichmentMarks(student, classSubject, term)
-            + this.getFinalTermMarks(student, classSubject, term);
+        return (
+            this.getPeriodicTestMarks(student, classSubject, term) +
+            this.getNoteBookMarks(student, classSubject, term) +
+            this.getSubEnrichmentMarks(student, classSubject, term) +
+            this.getFinalTermMarks(student, classSubject, term)
+        );
     }
 
     getOverallGrade(student: any, classSubject: any, term: any): any {
@@ -223,10 +230,12 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getStudentExtraFieldGrade(student: any, extraField: any, term: any): any {
-        let studentExtraField = this.studentExtraFieldList.find(studentExtraField => {
-            return studentExtraField.parentStudent == student.id
-                && studentExtraField.parentExtraField == extraField.id
-                && studentExtraField.parentTerm == term.id;
+        let studentExtraField = this.studentExtraFieldList.find((studentExtraField) => {
+            return (
+                studentExtraField.parentStudent == student.id &&
+                studentExtraField.parentExtraField == extraField.id &&
+                studentExtraField.parentTerm == term.id
+            );
         });
         if (studentExtraField) {
             return studentExtraField.grade;
@@ -237,7 +246,7 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
 
     getNextStep(): any {
         let result = '';
-        switch(this.selectedClassSection.class.name) {
+        switch (this.selectedClassSection.class.name) {
             case 'Play Group':
                 result = 'Promoted to Nursery';
                 break;
@@ -291,17 +300,14 @@ export class PrintStudentSeniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getPresentDays(student: any, termIndex: any): any {
-        return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
-            return termStudentAttendance.parentStudent == student.id
-                && termStudentAttendance.status == this.attendance_status_list[0];
+        return this.termStudentAttendanceList[termIndex].filter((termStudentAttendance) => {
+            return termStudentAttendance.parentStudent == student.id && termStudentAttendance.status == this.attendance_status_list[0];
         }).length;
     }
 
     getWorkingDays(student: any, termIndex: any): any {
-        return this.termStudentAttendanceList[termIndex].filter(termStudentAttendance => {
-            return termStudentAttendance.parentStudent == student.id
-                && termStudentAttendance.status != this.attendance_status_list[2];
+        return this.termStudentAttendanceList[termIndex].filter((termStudentAttendance) => {
+            return termStudentAttendance.parentStudent == student.id && termStudentAttendance.status != this.attendance_status_list[2];
         }).length;
     }
-
 }

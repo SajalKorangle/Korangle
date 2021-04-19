@@ -2,29 +2,27 @@ import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import * as moment from 'moment';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
-import {ATTENDANCE_STATUS_LIST, LEAVE_STATUS_LIST, LEAVE_OPTION_LIST} from '../../../attendance/classes/constants';
-import {DataStorage} from "../../../../classes/data-storage";
-import {CommonFunctions} from "../../../../classes/common-functions";
+import { ATTENDANCE_STATUS_LIST, LEAVE_STATUS_LIST, LEAVE_OPTION_LIST } from '../../../attendance/classes/constants';
+import { DataStorage } from '../../../../classes/data-storage';
+import { CommonFunctions } from '../../../../classes/common-functions';
 
 export interface CalendarDate {
     mDate: moment.Moment;
-    color: any,
-    isHalfDay: any,
-    attendanceStatus: any,
-    leaveStatus: any,
-    leaveOption: any,
-    inSelectedMonth: any,
+    color: any;
+    isHalfDay: any;
+    attendanceStatus: any;
+    leaveStatus: any;
+    leaveOption: any;
+    inSelectedMonth: any;
 }
 
 @Component({
     selector: 'apply-leave',
     templateUrl: './apply-leave.component.html',
     styleUrls: ['./apply-leave.component.css', './apply-leave.component.scss'],
-    providers: [AttendanceOldService]
+    providers: [AttendanceOldService],
 })
-
 export class ApplyLeaveComponent implements OnInit, OnChanges {
-
     user;
     @Input() studentId;
 
@@ -45,7 +43,7 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
     showCalendar = false;
     isLoading = false;
 
-    constructor (private attendanceService: AttendanceOldService) { }
+    constructor(private attendanceService: AttendanceOldService) {}
 
     ngOnChanges(): void {
         this.ngOnInit();
@@ -60,7 +58,7 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
         this.endDate = null;
         this.attendanceStatusList = null;
         this.leaveLengthList = [];
-        Object.keys(LEAVE_OPTION_LIST).forEach(key => {
+        Object.keys(LEAVE_OPTION_LIST).forEach((key) => {
             this.leaveLengthList[key] = LEAVE_OPTION_LIST[key];
         });
         this.leaveLengthList.push('NONE');
@@ -82,7 +80,6 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
 
     // Server Handling - 1
     getEmployeeAttendanceStatusList(): void {
-
         let data = {
             employeeIdList: [this.user.activeSchool.employeeId],
             startDate: this.startDate,
@@ -95,29 +92,31 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
         Promise.all([
             this.attendanceService.getEmployeeAttendanceList(data, this.user.jwt),
             this.attendanceService.getEmployeeAppliedLeaveList(data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            this.attendanceStatusList = value[0];
-            this.leaveStatusList = value[1];
-            this.showCalendar = true;
-            this.generateCalendar();
-        }, error => {
-            this.isLoading = false;
-        });
-
+        ]).then(
+            (value) => {
+                this.isLoading = false;
+                this.attendanceStatusList = value[0];
+                this.leaveStatusList = value[1];
+                this.showCalendar = true;
+                this.generateCalendar();
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     // Server Handling - 2
     prepareEmployeeLeaveData(): any {
         let result = [];
-        this.weeks.forEach(week => {
-            week.forEach(day => {
+        this.weeks.forEach((week) => {
+            week.forEach((day) => {
                 if (day.leaveOption !== this.leaveLengthList[2]) {
                     let temp = {
                         parentEmployee: this.user.activeSchool.employeeId,
                         dateOfLeave: this.formatDate(day.mDate.toString(), ''),
                         status: LEAVE_STATUS_LIST[0],
-                        halfDay: (day.leaveOption === this.leaveLengthList[1]),
+                        halfDay: day.leaveOption === this.leaveLengthList[1],
                         paidLeave: false,
                     };
                     result.push(temp);
@@ -136,27 +135,29 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
         }
 
         this.isLoading = true;
-        this.attendanceService.recordEmployeeAppliedLeaveList(data, this.user.jwt).then(response => {
-            this.isLoading = false;
-            this.weeks.forEach(week => {
-                week.forEach(day => {
-                    if (day.leaveOption !== this.leaveLengthList[2]) {
-                        day.leaveOption = null;
-                        day.leaveStatus = LEAVE_STATUS_LIST[0];
-                    }
+        this.attendanceService.recordEmployeeAppliedLeaveList(data, this.user.jwt).then(
+            (response) => {
+                this.isLoading = false;
+                this.weeks.forEach((week) => {
+                    week.forEach((day) => {
+                        if (day.leaveOption !== this.leaveLengthList[2]) {
+                            day.leaveOption = null;
+                            day.leaveStatus = LEAVE_STATUS_LIST[0];
+                        }
+                    });
                 });
-            });
-            alert('Leave applied successfully');
-        }, error => {
-            this.isLoading = false;
-        });
-
+                alert('Leave applied successfully');
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     getDateColor(date: any): any {
         let result = 'blue';
-        this.attendanceStatusList.every(attendanceStatus => {
-            if(attendanceStatus.dateOfAttendance === this.formatDate(date.toString(),'')) {
+        this.attendanceStatusList.every((attendanceStatus) => {
+            if (attendanceStatus.dateOfAttendance === this.formatDate(date.toString(), '')) {
                 if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
                     result = 'green';
                 } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
@@ -175,8 +176,8 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
 
     isHalfDay(date: any): boolean {
         let result = false;
-        this.attendanceStatusList.every(attendanceStatus => {
-            if(attendanceStatus.dateOfAttendance === this.formatDate(date.toString(),'')) {
+        this.attendanceStatusList.every((attendanceStatus) => {
+            if (attendanceStatus.dateOfAttendance === this.formatDate(date.toString(), '')) {
                 if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[3]) {
                     result = true;
                 }
@@ -198,15 +199,14 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
     }
 
     fillDates(currentMoment: moment.Moment): CalendarDate[] {
-
         const firstOfMonth = moment(currentMoment).startOf('month').day();
         const firstDayOfGrid = moment(currentMoment).startOf('month').subtract(firstOfMonth, 'days');
         const start = firstDayOfGrid.date();
         const numberOfDays = moment(currentMoment).daysInMonth();
-        const numberTobeAdded = Math.ceil((numberOfDays+firstOfMonth)/7)*7;
+        const numberTobeAdded = Math.ceil((numberOfDays + firstOfMonth) / 7) * 7;
 
-        return CommonFunctions.getArrayFromRange(start, start+numberTobeAdded)
-            .map((date: number): CalendarDate => {
+        return CommonFunctions.getArrayFromRange(start, start + numberTobeAdded).map(
+            (date: number): CalendarDate => {
                 const d = moment(firstDayOfGrid).date(date);
                 return {
                     mDate: d,
@@ -217,13 +217,14 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
                     leaveOption: this.leaveLengthList[2],
                     inSelectedMonth: this.isSelectedMonth(d),
                 };
-            });
+            }
+        );
     }
 
     getAttendanceStatusByDate(date: any): any {
         let result = null;
-        this.attendanceStatusList.every(attendanceStatus => {
-            if(attendanceStatus.dateOfAttendance === this.formatDate(date.toString(),'')) {
+        this.attendanceStatusList.every((attendanceStatus) => {
+            if (attendanceStatus.dateOfAttendance === this.formatDate(date.toString(), '')) {
                 result = attendanceStatus.status;
                 return false;
             }
@@ -234,8 +235,8 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
 
     getLeaveStatusByDate(date: any): any {
         let result = null;
-        this.leaveStatusList.every(leaveStatus => {
-            if(leaveStatus.dateOfLeave === this.formatDate(date.toString(),'')) {
+        this.leaveStatusList.every((leaveStatus) => {
+            if (leaveStatus.dateOfLeave === this.formatDate(date.toString(), '')) {
                 result = leaveStatus.status;
                 return false;
             }
@@ -250,7 +251,6 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
     }
 
     formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -271,7 +271,7 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
 
     getAttendanceStatusNumber(status: any): any {
         let result = 0;
-        this.attendanceStatusList.forEach(attendanceStatus => {
+        this.attendanceStatusList.forEach((attendanceStatus) => {
             if (attendanceStatus.status === status) {
                 result += 1;
             }
@@ -295,8 +295,8 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
 
     getTotalLeave(): any {
         let totalLeavesApplied = 0;
-        this.weeks.forEach(week => {
-            week.forEach(day => {
+        this.weeks.forEach((week) => {
+            week.forEach((day) => {
                 if (day.leaveOption === this.leaveLengthList[0]) {
                     totalLeavesApplied += 1;
                 } else if (day.leaveOption === this.leaveLengthList[1]) {
@@ -306,5 +306,4 @@ export class ApplyLeaveComponent implements OnInit, OnChanges {
         });
         return totalLeavesApplied;
     }
-
 }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { RecordEmployeeAttendanceComponent } from './record-employee-attendance.component';
@@ -7,17 +7,12 @@ import { RecordEmployeeAttendanceComponent } from './record-employee-attendance.
 const routes: Routes = [
     {
         path: '',
-        component: RecordEmployeeAttendanceComponent ,
-    }
+        component: RecordEmployeeAttendanceComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class RecordEmployeeAttendanceRoutingModule { }
+export class RecordEmployeeAttendanceRoutingModule {}

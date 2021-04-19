@@ -1,25 +1,16 @@
 import { NgModule } from '@angular/core';
 
-
-import {GiveDiscountRoutingModule} from './give-discount.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {GiveDiscountComponent} from "./give-discount.component";
-import {FeesComponentsModule} from "../../components/fees-components.module";
-
+import { GiveDiscountRoutingModule } from './give-discount.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { GiveDiscountComponent } from './give-discount.component';
+import { FeesComponentsModule } from '../../components/fees-components.module';
 
 @NgModule({
-    declarations: [
-        GiveDiscountComponent
-    ],
+    declarations: [GiveDiscountComponent],
 
-    imports: [
-        GiveDiscountRoutingModule ,
-        ComponentsModule,
-        FeesComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [GiveDiscountRoutingModule, ComponentsModule, FeesComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [GiveDiscountComponent]
+    bootstrap: [GiveDiscountComponent],
 })
-export class GiveDiscountModule { }
+export class GiveDiscountModule {}

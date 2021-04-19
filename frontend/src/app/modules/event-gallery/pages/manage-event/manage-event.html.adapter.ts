@@ -1,11 +1,9 @@
-import {ManageEventComponent} from '@modules/event-gallery/pages/manage-event/manage-event.component';
+import { ManageEventComponent } from '@modules/event-gallery/pages/manage-event/manage-event.component';
 
 export class ManageEventHtmlAdapter {
     vm: ManageEventComponent;
 
-    constructor() {
-    }
-
+    constructor() {}
 
     initializeAdapter(vm: ManageEventComponent): void {
         this.vm = vm;
@@ -21,7 +19,7 @@ export class ManageEventHtmlAdapter {
             if (typeof event == 'string') {
                 return event;
             } else {
-                return event.title
+                return event.title;
             }
         }
         return '';
@@ -34,14 +32,14 @@ export class ManageEventHtmlAdapter {
     }
 
     createTag($event: any) {
-          $event.target.innerHTML = $event.target.innerHTML.replaceAll('&nbsp;', " ");
+        $event.target.innerHTML = $event.target.innerHTML.replaceAll('&nbsp;', ' ');
         if ($event.target.innerHTML != '' && $event.target.innerHTML.trim() != '') {
             this.vm.serviceAdapter.createTag($event.target.innerHTML);
             $event.target.innerHTML = '';
             $event.target.style.display = 'none';
-        }else{
-             let newTag = document.getElementById('new-tag');
-             newTag.style.display='none';
+        } else {
+            let newTag = document.getElementById('new-tag');
+            newTag.style.display = 'none';
         }
     }
 
@@ -52,7 +50,12 @@ export class ManageEventHtmlAdapter {
     }
 
     selectTag($event: any, eventTag: any) {
-        if ($event.target.innerHTML != '' && ($event.target.contentEditable == 'false' || $event.target.contentEditable == 'inherit') && !this.vm.isImageUploading && !this.vm.isDeletingImages) {
+        if (
+            $event.target.innerHTML != '' &&
+            ($event.target.contentEditable == 'false' || $event.target.contentEditable == 'inherit') &&
+            !this.vm.isImageUploading &&
+            !this.vm.isDeletingImages
+        ) {
             eventTag.selected = !eventTag.selected;
             this.selectTaggedImages(eventTag);
         }
@@ -70,9 +73,8 @@ export class ManageEventHtmlAdapter {
         $event.target.contentEditable = 'false';
     }
 
-
     checkTagSelected(): string {
-        let selectedTagsLength = this.vm.eventTagList.filter(tag => tag.selected == true).length;
+        let selectedTagsLength = this.vm.eventTagList.filter((tag) => tag.selected == true).length;
         if (selectedTagsLength > 0) {
             return 'active';
         } else {
@@ -81,7 +83,7 @@ export class ManageEventHtmlAdapter {
     }
 
     checkMediaSelected(): any {
-        if (this.vm.eventImageList.filter(img => img.selected == true).length > 0) {
+        if (this.vm.eventImageList.filter((img) => img.selected == true).length > 0) {
             return 'active';
         } else {
             return 'inactive';
@@ -90,17 +92,17 @@ export class ManageEventHtmlAdapter {
 
     deleteSelectedMedia() {
         if (this.checkMediaSelected() == 'active' && !this.vm.isDeletingImages) {
-            let images = this.vm.eventImageList.filter(image => image.selected == true);
-            images.forEach(image => {
+            let images = this.vm.eventImageList.filter((image) => image.selected == true);
+            images.forEach((image) => {
                 this.vm.serviceAdapter.deleteSelectedImage(image);
             });
         }
     }
 
     assignSelectedTags() {
-        if(this.getAssignStatus()) {
+        if (this.getAssignStatus()) {
             this.vm.serviceAdapter.assignImageTags();
-        }else{
+        } else {
             this.vm.serviceAdapter.unAssignImageTags();
         }
     }
@@ -116,9 +118,9 @@ export class ManageEventHtmlAdapter {
     }
 
     checkTagEditable(): string {
-        let selectedTagsLength = this.vm.eventTagList.filter(tag => tag.selected == true).length;
-        let selectedTag=this.vm.eventTagList.find(tag => tag.selected == true);
-        if (selectedTag!=undefined && selectedTagsLength == 1 && !this.vm.isDeletingImages && !this.vm.isAssigning) {
+        let selectedTagsLength = this.vm.eventTagList.filter((tag) => tag.selected == true).length;
+        let selectedTag = this.vm.eventTagList.find((tag) => tag.selected == true);
+        if (selectedTag != undefined && selectedTagsLength == 1 && !this.vm.isDeletingImages && !this.vm.isAssigning) {
             return 'active';
         } else {
             return 'inactive';
@@ -131,11 +133,10 @@ export class ManageEventHtmlAdapter {
         }
     }
 
-
     readURL(event): void {
         if (event.target.files && event.target.files[0] && !this.vm.isImageUploading) {
             this.vm.isImageUploading = true;
-            let files = []
+            let files = [];
             for (let i = 0; i < event.target.files.length; i++) {
                 if (event.target.files[i].type !== 'image/jpeg' && event.target.files[i].type !== 'image/png') {
                     alert('File type should be either jpg, jpeg, or png');
@@ -144,16 +145,16 @@ export class ManageEventHtmlAdapter {
                     files.push(event.target.files[i]);
                 }
             }
-            this.vm.totalImagesUploaded=files.length;
+            this.vm.totalImagesUploaded = files.length;
 
-            files.forEach(image => {
+            files.forEach((image) => {
                 const reader = new FileReader();
-                reader.onload = e => {
+                reader.onload = (e) => {
                     let tempImageData = {
                         parentEvent: this.vm.selectedEvent.id,
                         eventImage: reader.result,
                         imageSize: image.size,
-                    }
+                    };
                     this.vm.serviceAdapter.uploadImage(tempImageData, image.type.split('/')[1]);
                 };
                 reader.readAsDataURL(image);
@@ -163,25 +164,24 @@ export class ManageEventHtmlAdapter {
 
     selectAllMedia($event) {
         if ($event.checked) {
-            this.vm.eventImageList.forEach(image => image.selected = true);
+            this.vm.eventImageList.forEach((image) => (image.selected = true));
         } else {
-            this.vm.eventImageList.forEach(image => image.selected = false);
+            this.vm.eventImageList.forEach((image) => (image.selected = false));
         }
     }
 
     getSelectedImagesCount(): any {
-        return this.vm.eventImageList.filter(img => img.selected == true).length;
+        return this.vm.eventImageList.filter((img) => img.selected == true).length;
     }
-
 
     showPreview($event: any, image: any, i: number) {
         $event.preventDefault();
-        this.vm.openImagePreviewDialog(this.vm.eventImageList, i, true)
+        this.vm.openImagePreviewDialog(this.vm.eventImageList, i, true);
     }
 
     selectTaggedImages(eventTag: any) {
-        this.vm.eventImageList.forEach(img => {
-            img.tagList.some(tag => {
+        this.vm.eventImageList.forEach((img) => {
+            img.tagList.some((tag) => {
                 if (tag === eventTag.id) {
                     img.selected = eventTag.selected;
                 }
@@ -196,16 +196,16 @@ export class ManageEventHtmlAdapter {
     }
 
     getAssignStatus() {
-        let assign=false;
-        if(this.vm.eventImageList.filter(img => img.selected).length>=1){
-            let selectedImageList=this.vm.eventImageList.filter(img => img.selected);
-             let selectedTag=this.vm.eventTagList.find(tag => tag.selected);
-             selectedImageList.forEach(selectedImage=> {
-                 if (selectedTag && !selectedImage.tagList.find(t => t == selectedTag.id)) {
-                     assign = true;
-                 }
-             });
-        }else{
+        let assign = false;
+        if (this.vm.eventImageList.filter((img) => img.selected).length >= 1) {
+            let selectedImageList = this.vm.eventImageList.filter((img) => img.selected);
+            let selectedTag = this.vm.eventTagList.find((tag) => tag.selected);
+            selectedImageList.forEach((selectedImage) => {
+                if (selectedTag && !selectedImage.tagList.find((t) => t == selectedTag.id)) {
+                    assign = true;
+                }
+            });
+        } else {
             assign = true;
         }
         return assign;

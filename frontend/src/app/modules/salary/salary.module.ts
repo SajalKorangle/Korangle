@@ -14,25 +14,17 @@ import { PrintSalarySheetListComponent } from './print/print-salary-sheet-list/p
 
 @NgModule({
     declarations: [
-
         SalaryComponent,
         // GeneratePayslipComponent,
         // RecordPaymentComponent,
         // ViewRecordComponent,
         // PrintSalarySheetComponent,
-        PrintSalarySheetListComponent
-
+        PrintSalarySheetListComponent,
     ],
 
-    imports: [
-
-        ComponentsModule,
-        SalaryRoutingModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, SalaryRoutingModule],
+    exports: [],
     providers: [SalaryOldService],
-    bootstrap: [SalaryComponent]
+    bootstrap: [SalaryComponent],
 })
-export class SalaryModule { }
+export class SalaryModule {}

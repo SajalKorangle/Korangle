@@ -1,75 +1,86 @@
 <h2 mat-dialog-title>Edit Account</h2>
 <ng-container *ngIf="!isLoading">
-<mat-dialog-content style="overflow: hidden;">
+    <mat-dialog-content style="overflow: hidden">
+        <div class="row col-md-12">
+            <mat-form-field style="width: 100%">
+                <input
+                    type="text"
+                    matInput
+                    [ngModel]="account.title"
+                    (ngModelChange)="account.title = $event"
+                    placeholder="Change Account Name *"
+                />
+                <span matSuffix>A/c</span>
+            </mat-form-field>
+        </div>
+        <div class="col-md-12" *ngIf="account.title.trim().length == 0" style="padding-left: 0px; margin-top: -15px; margin-bottom: 5px">
+            <span style="font-size: 11px; color: red">Account Name Can Not Be Blank</span>
+        </div>
+        <div
+            class="col-md-12"
+            *ngIf="htmlRenderer.isAccountNameAlreadyExists()"
+            style="padding-left: 0px; margin-top: -15px; margin-bottom: 5px"
+        >
+            <span style="font-size: 11px; color: red">Name already exists</span>
+        </div>
 
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <input type="text" matInput [ngModel]="account.title" (ngModelChange)="account.title=$event;" placeholder="Change Account Name *">
-            <span matSuffix>A/c</span>
-        </mat-form-field>
-    </div>
-    <div class="col-md-12" *ngIf="account.title.trim().length == 0" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Account Name Can Not Be Blank</span>
-    </div>
-    <div class="col-md-12" *ngIf="htmlRenderer.isAccountNameAlreadyExists()" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Name already exists</span>
-    </div>
+        <div class="row col-md-12">
+            <mat-form-field style="width: 100%">
+                <mat-select placeholder="Change Group" [ngModel]="getGroup()">
+                    <mat-option (click)="assignGroup(null)"> None </mat-option>
+                    <mat-option *ngFor="let group of data.vm.groupsList" (click)="assignGroup(group)" [value]="group">
+                        {{ group.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <mat-select placeholder="Change Group" [ngModel]="getGroup()">
-                <mat-option (click)="assignGroup(null)">
-                    None
-                </mat-option>
-                <mat-option *ngFor="let group of data.vm.groupsList"
-                    (click)="assignGroup(group)"
-                    [value]="group">
-                    {{group.title}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+        <div class="row col-md-12">
+            <mat-form-field style="width: 100%">
+                <mat-select placeholder="Change Head *" [ngModel]="getHead()" [disabled]="account.parentGroup != null">
+                    <mat-option *ngFor="let head of data.vm.headsList" (click)="account.parentHead = head.id" [value]="head">
+                        {{ head.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-12" *ngIf="account.parentHead == null" style="padding-left: 0px; margin-top: -15px; margin-bottom: 5px">
+            <span style="font-size: 11px; color: red">Head Can Not Be Empty</span>
+        </div>
 
-
-    <div class="row col-md-12">
-        <mat-form-field style="width: 100%;">
-            <mat-select placeholder="Change Head *" [ngModel]="getHead()"
-                [disabled]="account.parentGroup != null">
-                <mat-option *ngFor="let head of data.vm.headsList"
-                    (click)="account.parentHead = head.id"
-                    [value]="head">
-                    {{head.title}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <div class="col-md-12" *ngIf="account.parentHead == null" style="padding-left: 0px;margin-top: -15px;margin-bottom: 5px;">
-        <span style="font-size: 11px; color:red">Head Can Not Be Empty</span>
-    </div>
-
-    
-
-    <div class="row col-md-12">
-        <customized-number-input [placeHolder]="'Opening Balance'"
+        <div class="row col-md-12">
+            <customized-number-input
+                [placeHolder]="'Opening Balance'"
                 [minimum]="0"
                 [maximumDecimal]="2"
                 [inputValue]="account.openingBalance"
-                (outputValue)="account.openingBalance=$event;"></customized-number-input>
+                (outputValue)="account.openingBalance = $event"
+            ></customized-number-input>
+        </div>
+    </mat-dialog-content>
+    <div mat-dialog-actions>
+        <div class="row col-md-12" style="margin-bottom: 10px">
+            <span
+                *ngIf="isDeletable"
+                mat-button
+                style="font-size: 14px; color: rgba(255, 152, 0, 1); cursor: pointer"
+                (click)="deleteAccount()"
+                ><u>Delete Account</u></span
+            >
+        </div>
+        <div class="row col-md-12">
+            <span
+                *ngIf="htmlRenderer.isAddButtonDisplayed()"
+                mat-button
+                style="color: rgba(255, 152, 0, 1); cursor: pointer"
+                (click)="editAccount()"
+                >Edit Account</span
+            >
+        </div>
     </div>
-
-
-</mat-dialog-content>
-<div mat-dialog-actions>
-    <div class="row col-md-12" style="margin-bottom: 10px;">
-        <span *ngIf="isDeletable" mat-button style="font-size:14px;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="deleteAccount()"><u>Delete Account</u></span>
-    </div>
-    <div class="row col-md-12">
-        <span *ngIf="htmlRenderer.isAddButtonDisplayed()" mat-button style="color: rgba(255, 152, 0, 1); cursor: pointer" (click)="editAccount()">Edit Account</span>
-    </div>
-</div>
 </ng-container>
 <ng-container *ngIf="isLoading">
-    <mat-dialog-content style="overflow: hidden;">
+    <mat-dialog-content style="overflow: hidden">
         <app-loading-spinner [user]="data.user"></app-loading-spinner>
     </mat-dialog-content>
 </ng-container>

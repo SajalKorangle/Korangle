@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
 export class VehicleOldService extends CommonServiceRequirements {
-
     // BusStop
     createBusStop(data: any, token: any): Promise<any> {
         const url = '/vehicle/bus-stops';
@@ -27,5 +24,4 @@ export class VehicleOldService extends CommonServiceRequirements {
         const url = '/vehicle/bus-stops/' + data['id'];
         return super.deleteData(token, url);
     }
-
 }

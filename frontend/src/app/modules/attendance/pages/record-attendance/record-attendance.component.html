@@ -1,147 +1,147 @@
 <div class="card-content table-responsive">
-
     <ng-container *ngIf="selectedClass">
-
         Class:
-        <select [ngModel]="selectedClass"
-                (ngModelChange)="selectedClass=$event;changeSelectedSectionToFirst();this.showStudentList=false;"
-                style="margin-right: 15px; margin-bottom: 10px;">
-            <option *ngFor="let class of classSectionStudentList;" [ngValue]="class">
-                {{class.name}}
+        <select
+            [ngModel]="selectedClass"
+            (ngModelChange)="selectedClass = $event; changeSelectedSectionToFirst(); this.showStudentList = false"
+            style="margin-right: 15px; margin-bottom: 10px"
+        >
+            <option *ngFor="let class of classSectionStudentList" [ngValue]="class">
+                {{ class.name }}
             </option>
         </select>
-        <br class="visible-sm visible-xs">
+        <br class="visible-sm visible-xs" />
 
-        <span *ngIf='selectedClass' [class.hidden]="selectedClass.sectionList.length == 1">
+        <span *ngIf="selectedClass" [class.hidden]="selectedClass.sectionList.length == 1">
             Section:
-            <select [ngModel]="selectedSection"
-                    (ngModelChange)="selectedSection=$event; this.showStudentList=false;"
-                    style="margin-right: 15px; margin-bottom: 20px;">
+            <select
+                [ngModel]="selectedSection"
+                (ngModelChange)="selectedSection = $event; this.showStudentList = false"
+                style="margin-right: 15px; margin-bottom: 20px"
+            >
                 <option *ngFor="let section of selectedClass.sectionList" [ngValue]="section">
-                    {{section.name}}
+                    {{ section.name }}
                 </option>
             </select>
-            <br class="visible-sm visible-xs">
+            <br class="visible-sm visible-xs" />
         </span>
 
-        <b class="hidden-sm hidden-xs" style="margin-left: 15px; margin-right: 15px;">|</b>
+        <b class="hidden-sm hidden-xs" style="margin-left: 15px; margin-right: 15px">|</b>
 
-        <select [ngModel]="by"
-                (ngModelChange)="handleModeChange($event);"
-                style="margin-right: 15px; margin-bottom: 20px;">
+        <select [ngModel]="by" (ngModelChange)="handleModeChange($event)" style="margin-right: 15px; margin-bottom: 20px">
             <option value="date">Date</option>
             <option value="month">Month</option>
         </select>
 
-        <ng-container *ngIf="by==='date'">
+        <ng-container *ngIf="by === 'date'">
             <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
         </ng-container>
 
-        <ng-container *ngIf="by==='month'">
+        <ng-container *ngIf="by === 'month'">
             <month-date (onMonthSelected)="onMonthSelected($event)"></month-date>
         </ng-container>
 
-        <br class="visible-sm visible-xs"  style="margin-bottom: 10px;">
-        <button type="submit"
-                style="padding: 3px 8px;"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="serviceAdapter.getStudentsAttendanceStatusList()">Get</button>
-
+        <br class="visible-sm visible-xs" style="margin-bottom: 10px" />
+        <button
+            type="submit"
+            style="padding: 3px 8px"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="serviceAdapter.getStudentsAttendanceStatusList()"
+        >
+            Get
+        </button>
     </ng-container>
 
-    <ng-container *ngIf="!selectedClass && !isInitialLoading">
-        No permission for any class.
-    </ng-container>
+    <ng-container *ngIf="!selectedClass && !isInitialLoading"> No permission for any class. </ng-container>
 
     <div class="row" *ngIf="selectedClass">
-        <div class="col-md-12"
-             style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px;"></div>
+        <div class="col-md-12" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px"></div>
     </div>
 
     <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
-
-        <button type="submit"
-                style="padding: 3px 8px;"
-                class="btn"
-                (click)="declareAllPresent()">
-            All Present
-        </button>
+        <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllPresent()">All Present</button>
 
         <table class="table table-hover">
-            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-            <tr>
-                <th>S No.</th>
-                <th>Student</th>
-                <th *ngIf="by==='month'">Abs./Total</th>
-                <ng-container *ngFor="let date of getDateList()">
-                    <th style="text-align: center" *ngIf="by==='month'">{{date.getDate()}}</th>
-                    <th style="text-align: center" *ngIf="by==='date'">Attendance</th>
-                </ng-container>
-            </tr>
-            </thead>
-            <tbody>
-            <ng-container *ngFor="let student of studentAttendanceStatusList; let i=index;">
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
-                    <td>{{i+1}}.</td>
-                    <td>
-                        {{student.name}}
-                        <ng-container *ngIf="student.scholarNumber">
-                            ({{student.scholarNumber}})
-                        </ng-container>
-                    </td>
-                    <td *ngIf="by==='month'">
-                        {{getStudentRecord(student)}}
-                    </td>
-                    <ng-container *ngFor="let attendance of student.attendanceStatusList">
-                        <td align="center">
-                            <button type="submit"
-                                    style="padding: 3px 8px;"
-                                    class="{{getButtonClass(attendance.status)}}"
-                                    [disabled]="attendance.status===attendanceStatusList[2]"
-                                    (click)="changeStudentAttendanceStatus(attendance)"
-                                    matTooltip="{{getMatTooltip(student, attendance)}}"
-                                    matTooltipShowDelay="1000"
-                                    [matTooltipDisabled]="attendance.status===attendanceStatusList[2] || by==='date'">
-                                {{getButtonString(attendance.status)}}
-                            </button>
-                        </td>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th *ngIf="by === 'month'">Abs./Total</th>
+                    <ng-container *ngFor="let date of getDateList()">
+                        <th style="text-align: center" *ngIf="by === 'month'">{{ date.getDate() }}</th>
+                        <th style="text-align: center" *ngIf="by === 'date'">Attendance</th>
                     </ng-container>
                 </tr>
-            </ng-container>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let student of studentAttendanceStatusList; let i = index">
+                    <tr>
+                        <td>{{ i + 1 }}.</td>
+                        <td>
+                            {{ student.name }}
+                            <ng-container *ngIf="student.scholarNumber"> ({{ student.scholarNumber }}) </ng-container>
+                        </td>
+                        <td *ngIf="by === 'month'">
+                            {{ getStudentRecord(student) }}
+                        </td>
+                        <ng-container *ngFor="let attendance of student.attendanceStatusList">
+                            <td align="center">
+                                <button
+                                    type="submit"
+                                    style="padding: 3px 8px"
+                                    class="{{ getButtonClass(attendance.status) }}"
+                                    [disabled]="attendance.status === attendanceStatusList[2]"
+                                    (click)="changeStudentAttendanceStatus(attendance)"
+                                    matTooltip="{{ getMatTooltip(student, attendance) }}"
+                                    matTooltipShowDelay="1000"
+                                    [matTooltipDisabled]="attendance.status === attendanceStatusList[2] || by === 'date'"
+                                >
+                                    {{ getButtonString(attendance.status) }}
+                                </button>
+                            </td>
+                        </ng-container>
+                    </tr>
+                </ng-container>
             </tbody>
         </table>
 
-        <ng-container *ngIf="by==='date'">
+        <ng-container *ngIf="by === 'date'">
             <div class="row">
-                <div class="col-md-2" *ngIf="getStatusNumber()>0">Not Taken: {{getStatusNumber()}}</div>
-                <div class="col-md-1">A: {{getStatusNumber(attendanceStatusList[1])}}</div>
-                <div class="col-md-1">P: {{getStatusNumber(attendanceStatusList[0])}}</div>
+                <div class="col-md-2" *ngIf="getStatusNumber() > 0">Not Taken: {{ getStatusNumber() }}</div>
+                <div class="col-md-1">A: {{ getStatusNumber(attendanceStatusList[1]) }}</div>
+                <div class="col-md-1">P: {{ getStatusNumber(attendanceStatusList[0]) }}</div>
             </div>
         </ng-container>
 
-        <button type="submit"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                [disabled]="prepareStudentAttendanceStatusListData().length == 0"
-                (click)="serviceAdapter.updateStudentAttendanceList()">Update</button>
+        <button
+            type="submit"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            [disabled]="prepareStudentAttendanceStatusListData().length == 0"
+            (click)="serviceAdapter.updateStudentAttendanceList()"
+        >
+            Update
+        </button>
 
-        <button type="submit"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                style="padding: 12px 15px; margin-left: 15px;"
-                (click)="printStudentAttendanceList()">
+        <button
+            type="submit"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-left: 15px"
+            (click)="printStudentAttendanceList()"
+        >
             <i class="material-icons">print</i>
         </button>
 
-        <button type="submit"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                style="padding: 12px 15px; margin-left: 5px;"
-                (click)="downloadList()">
+        <button
+            type="submit"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-left: 5px"
+            (click)="downloadList()"
+        >
             <i class="material-icons">save_alt</i>
         </button>
 
-        <br/>A: Absent, P: Present, H: Holiday, N: Not Recorded <br/>
-
+        <br />A: Absent, P: Present, H: Holiday, N: Not Recorded <br />
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading || isInitialLoading">

@@ -1,30 +1,27 @@
 <div class="card-content">
-
     <form class="example-form" *ngIf="enquiryList">
         <mat-form-field class="example-full-width">
-            <input type="text"
-                   placeholder="Type enquirer name here...."
-                   aria-label="Student"
-                   matInput
-                   [formControl]="myControl"
-                   [matAutocomplete]="auto"
-                   [ngModel]="selectedEnquiry">
-            <mat-autocomplete #auto="matAutocomplete"
-                              (optionSelected)="getEnquiry($event.option.value)"
-                              [displayWith]="displayFn">
+            <input
+                type="text"
+                placeholder="Type enquirer name here...."
+                aria-label="Student"
+                matInput
+                [formControl]="myControl"
+                [matAutocomplete]="auto"
+                [ngModel]="selectedEnquiry"
+            />
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="getEnquiry($event.option.value)" [displayWith]="displayFn">
                 <mat-option *ngFor="let enquiry of filteredEnquiryList | async" [value]="enquiry">
-                    {{displayFn(enquiry)}}
+                    {{ displayFn(enquiry) }}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
     </form>
 
-
-    <ng-container *ngIf= " selectedEnquiry!=null &&  selectedEnquiry && !isLoading">
-
+    <ng-container *ngIf="selectedEnquiry != null && selectedEnquiry && !isLoading">
         <div class="row hidden-md hidden-lg hidden-sm">
             <div class="col-xs-3">
-                <a href="tel:{{selectedEnquiry.mobileNumber}}">Call Me</a>
+                <a href="tel:{{ selectedEnquiry.mobileNumber }}">Call Me</a>
             </div>
         </div>
 
@@ -32,40 +29,26 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Enquirer's Name"
-                           disabled
-                           [ngModel]="selectedEnquiry.enquirerName">
+                    <input matInput type="text" placeholder="Enquirer's Name" disabled [ngModel]="selectedEnquiry.enquirerName" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Student Name"
-                           disabled
-                           [ngModel]="selectedEnquiry.studentName">
+                    <input matInput type="text" placeholder="Student Name" disabled [ngModel]="selectedEnquiry.studentName" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="getClass(selectedEnquiry.parentClass)"
-                                disabled>
-                        <mat-option *ngFor='let classs of classList;' [value]="classs">
-                            {{classs.name}}
+                    <mat-select placeholder="Select Class" [ngModel]="getClass(selectedEnquiry.parentClass)" disabled>
+                        <mat-option *ngFor="let classs of classList" [value]="classs">
+                            {{ classs.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Mobile Number"
-                           disabled
-                           [ngModel]="selectedEnquiry.mobileNumber">
+                    <input matInput type="number" placeholder="Mobile Number" disabled [ngModel]="selectedEnquiry.mobileNumber" />
                 </mat-form-field>
             </div>
         </div>
@@ -74,33 +57,22 @@
         <div class="row">
             <div class="col-md-6">
                 <mat-form-field>
-                    <textarea matInput
-                              rows="4"
-                              placeholder="Address"
-                              disabled
-                              [ngModel]="selectedEnquiry.address"></textarea>
+                    <textarea matInput rows="4" placeholder="Address" disabled [ngModel]="selectedEnquiry.address"></textarea>
                 </mat-form-field>
             </div>
             <div class="col-md-6">
                 <mat-form-field>
-                    <textarea matInput
-                              rows="4"
-                              placeholder="Remark"
-                              disabled
-                              [ngModel]="selectedEnquiry.remark"></textarea>
+                    <textarea matInput rows="4" placeholder="Remark" disabled [ngModel]="selectedEnquiry.remark"></textarea>
                 </mat-form-field>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="deleteEnquiry();">Delete</button>
+        <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="deleteEnquiry()">Delete</button>
 
         <div class="clearfix"></div>
-
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

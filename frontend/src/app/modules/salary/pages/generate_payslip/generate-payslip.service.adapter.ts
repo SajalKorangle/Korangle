@@ -1,9 +1,7 @@
-
 import { GeneratePayslipComponent } from './generate-payslip.component';
-import {ATTENDANCE_STATUS_LIST, LEAVE_OPTION_LIST, LEAVE_STATUS_LIST} from '../../../attendance/classes/constants';
+import { ATTENDANCE_STATUS_LIST, LEAVE_OPTION_LIST, LEAVE_STATUS_LIST } from '../../../attendance/classes/constants';
 
 export class GeneratePayslipServiceAdapter {
-
     vm: GeneratePayslipComponent;
 
     constructor() {}
@@ -14,19 +12,22 @@ export class GeneratePayslipServiceAdapter {
 
     // Server Handling - 1
     public getEmployeeList(): void {
-        let data =  {
+        let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
         this.vm.isInitialLoading = true;
-        this.vm.employeeService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(employeeList => {
-            this.vm.employeeList = employeeList.filter(employee => {
-                return employee.dateOfLeaving===null;
-            });
-            this.vm.selectedEmployee = this.vm.employeeList[0];
-            this.vm.isInitialLoading = false;
-        }, error => {
-            this.vm.isInitialLoading = false;
-        });
+        this.vm.employeeService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(
+            (employeeList) => {
+                this.vm.employeeList = employeeList.filter((employee) => {
+                    return employee.dateOfLeaving === null;
+                });
+                this.vm.selectedEmployee = this.vm.employeeList[0];
+                this.vm.isInitialLoading = false;
+            },
+            (error) => {
+                this.vm.isInitialLoading = false;
+            }
+        );
     }
 
     // Server Handling - 2
@@ -65,24 +66,27 @@ export class GeneratePayslipServiceAdapter {
             this.vm.attendanceService.getEmployeeAppliedLeaveList(request_leave_data, this.vm.user.jwt),
             this.vm.employeeService.getEmployeeProfile(request_employee_profile, this.vm.user.jwt),
             this.vm.salaryService.getPayslip(request_employee_payslip, this.vm.user.jwt),
-        ]).then(value => {
-            this.prepareEmployeeDetails(value);
-            this.vm.isLoading = false;
-            this.vm.showEmployeeDetails = true;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+        ]).then(
+            (value) => {
+                this.prepareEmployeeDetails(value);
+                this.vm.isLoading = false;
+                this.vm.showEmployeeDetails = true;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     prepareEmployeeDetails(value: any): void {
         this.vm.employeeDetails = {};
-        Object.keys(value[2]).forEach(key => {
+        Object.keys(value[2]).forEach((key) => {
             this.vm.employeeDetails[key] = value[2][key];
         });
         let numberOfWorkingDays = 0;
         let numberOfUnpaidLeaves = 0;
         let numberofUnannouncedAbsents = 0;
-        value[0].forEach(attendanceStatus => {
+        value[0].forEach((attendanceStatus) => {
             switch (attendanceStatus.status) {
                 case ATTENDANCE_STATUS_LIST[0]:
                     numberOfWorkingDays += 1;
@@ -99,9 +103,11 @@ export class GeneratePayslipServiceAdapter {
         this.vm.employeeDetails['numberOfUnpaidLeaves'] = numberOfUnpaidLeaves;
         this.vm.employeeDetails['numberOfUnannouncedAbsents'] = numberofUnannouncedAbsents;
         this.vm.employeeDetails['payslip'] = value[3];
-        if(this.vm.employeeDetails.monthlySalary) {
-            this.vm.employeeDetails.estimatedSalary = Math.round(this.vm.employeeDetails.monthlySalary * (1 - ((numberOfUnpaidLeaves+numberofUnannouncedAbsents)/30)));
-            this.vm.employeeDetails.amountDeductedPerUnpaidDay = Math.round(this.vm.employeeDetails.monthlySalary/30);
+        if (this.vm.employeeDetails.monthlySalary) {
+            this.vm.employeeDetails.estimatedSalary = Math.round(
+                this.vm.employeeDetails.monthlySalary * (1 - (numberOfUnpaidLeaves + numberofUnannouncedAbsents) / 30)
+            );
+            this.vm.employeeDetails.amountDeductedPerUnpaidDay = Math.round(this.vm.employeeDetails.monthlySalary / 30);
         } else {
             this.vm.employeeDetails.estimatedSalary = 0;
             this.vm.employeeDetails.amountDeductedPerUnpaidDay = 0;
@@ -114,15 +120,15 @@ export class GeneratePayslipServiceAdapter {
                 month: this.vm.selectedMonth,
                 year: this.vm.selectedYear,
                 remark: null,
-            }
+            };
         }
         console.log(this.vm.employeeDetails);
     }
 
     isUnpaidLeave(attendanceStatus: any, leaveStatusList: any): any {
         let result = 0;
-        leaveStatusList.every(leaveStatus => {
-            if(attendanceStatus.dateOfAttendance === leaveStatus.dateOfLeave) {
+        leaveStatusList.every((leaveStatus) => {
+            if (attendanceStatus.dateOfAttendance === leaveStatus.dateOfLeave) {
                 /*if (leaveStatus.status !== LEAVE_STATUS_LIST[1] || !leaveStatus.paidLeave) {
                     if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                         result = 1;
@@ -155,8 +161,8 @@ export class GeneratePayslipServiceAdapter {
 
     isUnannouncedAbsent(attendanceStatus: any, leaveStatusList: any): any {
         let result = 1;
-        leaveStatusList.every(leaveStatus => {
-            if(attendanceStatus.dateOfAttendance === leaveStatus.dateOfLeave) {
+        leaveStatusList.every((leaveStatus) => {
+            if (attendanceStatus.dateOfAttendance === leaveStatus.dateOfLeave) {
                 // if (leaveStatus.status === LEAVE_STATUS_LIST[1] || leaveStatus.paidLeave) {
                 if (leaveStatus.status === LEAVE_STATUS_LIST[1]) {
                     if (leaveStatus.halfDay && attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
@@ -174,37 +180,40 @@ export class GeneratePayslipServiceAdapter {
 
     // Server Handling - 3
     generatePayslip(): void {
-        if (this.vm.employeeDetails.payslip.amount === null ||
-            this.vm.employeeDetails.payslip.amount === '') {
+        if (this.vm.employeeDetails.payslip.amount === null || this.vm.employeeDetails.payslip.amount === '') {
             alert('amount can not be null');
             return;
         }
         this.vm.isLoading = true;
-        this.vm.salaryService.createPayslip(this.vm.employeeDetails.payslip, this.vm.user.jwt).then(value => {
-            alert(value.message);
-            this.vm.employeeDetails.payslip.id = value.id,
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+        this.vm.salaryService.createPayslip(this.vm.employeeDetails.payslip, this.vm.user.jwt).then(
+            (value) => {
+                alert(value.message);
+                (this.vm.employeeDetails.payslip.id = value.id), (this.vm.isLoading = false);
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     deletePayslip(): void {
         this.vm.isLoading = true;
-        this.vm.salaryService.deletePayslip(this.vm.employeeDetails.payslip, this.vm.user.jwt).then(value => {
-            alert(value);
-            this.vm.employeeDetails.payslip = {
-                id: null,
-                parentEmployee: this.vm.employeeDetails.id,
-                amount: this.vm.employeeDetails.estimatedSalary,
-                month: this.vm.selectedMonth,
-                year: this.vm.selectedYear,
-                remark: null,
-            };
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+        this.vm.salaryService.deletePayslip(this.vm.employeeDetails.payslip, this.vm.user.jwt).then(
+            (value) => {
+                alert(value);
+                this.vm.employeeDetails.payslip = {
+                    id: null,
+                    parentEmployee: this.vm.employeeDetails.id,
+                    amount: this.vm.employeeDetails.estimatedSalary,
+                    month: this.vm.selectedMonth,
+                    year: this.vm.selectedYear,
+                    remark: null,
+                };
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
-
 }

@@ -1,9 +1,9 @@
 .selectedTag {
-    background: #3BB847 !important;
+    background: #3bb847 !important;
 }
 
 .tag {
-    background-color: #ABABAB;
+    background-color: #ababab;
     height: 28px;
     padding: 5px;
     margin-left: 5px;
@@ -24,13 +24,13 @@
     border-radius: 5px;
 }
 
-.view-eye{
-    color:white;
+.view-eye {
+    color: white;
     font-size: 25px;
 }
 
 .btn-inactive {
-    background-color: #ABABAB;
+    background-color: #ababab;
 }
 
 .loader-custom {
@@ -55,7 +55,7 @@
 }
 
 .inactive {
-    color: #ABABAB;
+    color: #ababab;
     cursor: default;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .image-row:after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
 }
@@ -89,7 +89,7 @@
     max-width: 0.525in;
     height: 0.525in;
     margin-right: 5px;
-    margin-top: 5px
+    margin-top: 5px;
 }
 
 .sticky {
@@ -150,12 +150,10 @@ img.hover-shadow {
     height: 170px;
 }
 
-
 .mat-card.scrollable-content {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-
 }
 
 .mat-card.scrollable-content > .mat-card-title-group {
@@ -171,23 +169,22 @@ img.hover-shadow {
     background: transparent; /* Optional: just make scrollbar invisible */
 }
 
-
 @keyframes blink {
     50% {
-        color: transparent
+        color: transparent;
     }
 }
 
 .loader__dot {
-    animation: 1s blink infinite
+    animation: 1s blink infinite;
 }
 
 .loader__dot:nth-child(2) {
-    animation-delay: 250ms
+    animation-delay: 250ms;
 }
 
 .loader__dot:nth-child(3) {
-    animation-delay: 500ms
+    animation-delay: 500ms;
 }
 
 @media only screen and (max-width: 992px) {
@@ -205,17 +202,16 @@ img.hover-shadow {
         max-height: 82px;
         width: 100%;
     }
-    
-    .view-image-icon-container{
+
+    .view-image-icon-container {
         height: 17px;
         width: 23px;
     }
-    
-    .view-eye{
+
+    .view-eye {
         font-size: 17px;
     }
 }
-
 
 ul {
     list-style-type: none;
@@ -225,7 +221,7 @@ li {
     display: inline-block;
 }
 
-input[type="checkbox"][id^="myCheckbox"] {
+input[type='checkbox'][id^='myCheckbox'] {
     display: none;
 }
 
@@ -238,7 +234,7 @@ label {
 label:before {
     background-color: white;
     color: white;
-    content: " ";
+    content: ' ';
     display: block;
     border-radius: 50%;
     border: 1px solid grey;
@@ -265,7 +261,7 @@ label img {
 }
 
 :checked + label:before {
-    content: "✓";
+    content: '✓';
     font-size: 20px;
     background-color: green;
     transform: scale(1);

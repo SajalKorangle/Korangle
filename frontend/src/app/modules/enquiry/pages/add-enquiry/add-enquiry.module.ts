@@ -1,27 +1,16 @@
 import { NgModule } from '@angular/core';
 
-import { AddEnquiryComponent } from "./add-enquiry.component";
+import { AddEnquiryComponent } from './add-enquiry.component';
 
-import {AddEnquiryRoutingModule} from './add-enquiry.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-
+import { AddEnquiryRoutingModule } from './add-enquiry.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 
 @NgModule({
-    declarations: [
+    declarations: [AddEnquiryComponent],
 
-        AddEnquiryComponent,
-
-    ],
-
-    imports: [
-
-        AddEnquiryRoutingModule,
-        ComponentsModule,
-
-    ],
-    exports: [
-    ],
+    imports: [AddEnquiryRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [AddEnquiryComponent]
+    bootstrap: [AddEnquiryComponent],
 })
-export class AddEnquiryModule { }
+export class AddEnquiryModule {}

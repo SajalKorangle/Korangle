@@ -17,7 +17,7 @@ describe('Students -> Add Student', () => {
             console.log(dialog.message());
             await dialog.dismiss();
         });
-        
+
         let node;
         let nodes;
 
@@ -34,14 +34,14 @@ describe('Students -> Add Student', () => {
         await page.waitForSelector('#section-button-6');
         await page.click('#section-button-6');
         await page.waitForTimeout(500);
-        nodes = await containsAll('input','');
+        nodes = await containsAll('input', '');
         await nodes[3].type('1234567890');
         await page.waitForTimeout(500);
-        await nodes[nodes.length-3].type('HouseWife');
+        await nodes[nodes.length - 3].type('HouseWife');
         await page.waitForTimeout(500);
-        nodes = await containsAll('mat-select','');
-        await nodes[nodes.length-1].click();
-        node = await containsAll('mat-option','');
+        nodes = await containsAll('mat-select', '');
+        await nodes[nodes.length - 1].click();
+        node = await containsAll('mat-option', '');
         await node[1].click();
         await page.waitForTimeout(500);
         await page.click('#action-add-student');

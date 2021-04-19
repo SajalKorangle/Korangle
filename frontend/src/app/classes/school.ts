@@ -1,6 +1,4 @@
-
 export class School {
-
     dbId = 0;
     name: string; // School Name (for sidebar)
     printName: string;
@@ -73,47 +71,47 @@ export class School {
 
         this.employeeId = schoolData.employeeId;
 
-        this.expired = schoolData.expired
+        this.expired = schoolData.expired;
 
         this.parentBoard = schoolData.parentBoard;
 
         if ('employeeId' in schoolData && schoolData['employeeId'] !== null) {
             this.moduleList = schoolData.moduleList;
             this.moduleList.push({
-                'dbId': null,
-                'path': 'job',
-                'title': 'Job Details',
-                'icon': 'work',
-                'taskList': [
+                dbId: null,
+                path: 'job',
+                title: 'Job Details',
+                icon: 'work',
+                taskList: [
                     {
-                        'dbId': null,
-                        'path': 'view_profile',
-                        'title': 'View Profile',
+                        dbId: null,
+                        path: 'view_profile',
+                        title: 'View Profile',
                     },
                     {
-                        'dbId': null,
-                        'path': 'view_attendance',
-                        'title': 'View Attendance',
+                        dbId: null,
+                        path: 'view_attendance',
+                        title: 'View Attendance',
                     },
                     {
-                        'dbId': null,
-                        'path': 'apply_leave',
-                        'title': 'Apply Leave',
+                        dbId: null,
+                        path: 'apply_leave',
+                        title: 'Apply Leave',
                     },
                     {
-                        'dbId': null,
-                        'path': 'view_payment',
-                        'title': 'View Payment',
+                        dbId: null,
+                        path: 'view_payment',
+                        title: 'View Payment',
                     },
-                ]
+                ],
             });
-            this.moduleList.forEach(module => {
+            this.moduleList.forEach((module) => {
                 module.showTaskList = false;
             });
         }
 
         this.studentList = schoolData.studentList;
-        this.studentList.forEach(student => {
+        this.studentList.forEach((student) => {
             student.showTaskList = false;
             student.taskList = [
                 {
@@ -132,45 +130,43 @@ export class School {
                     icon: 'receipt',
                 },
                 {
-                    title:'Tutorials',
-                    path:'view_tutorials',
-                    icon:'video_library',
+                    title: 'Tutorials',
+                    path: 'view_tutorials',
+                    icon: 'video_library',
                 },
                 {
                     title: 'Homework',
                     path: 'view_homework',
                     icon: 'assignment',
-                }
+                },
             ];
         });
 
         if (this.studentList.length > 0) {
             this.parentModuleList.push({
-                'name': this.studentList[0].fathersName,
-                'studentList': this.studentList,
-                'id': this.studentList[0].id,
-                'taskList': [
+                name: this.studentList[0].fathersName,
+                studentList: this.studentList,
+                id: this.studentList[0].id,
+                taskList: [
                     {
                         title: 'Fees',
                         path: 'view_fee',
                         icon: 'receipt',
                     },
-                ]
+                ],
             });
-             this.parentModuleList.push({
-                'name': this.name,
-                'studentList': this.studentList,
-                'id': this.studentList[0].id,
-                'taskList': [
+            this.parentModuleList.push({
+                name: this.name,
+                studentList: this.studentList,
+                id: this.studentList[0].id,
+                taskList: [
                     {
                         title: 'Events',
                         path: 'view_event',
                         icon: 'event',
                     },
-                ]
+                ],
             });
         }
-
     }
-
 }

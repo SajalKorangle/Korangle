@@ -1,12 +1,12 @@
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { AuthenticationOldService } from '@services/authentication-old.service';
 import { User } from '@classes/user';
-import {registerForNotification} from '@classes/common.js';
-import {NotificationService} from '@services/modules/notification/notification.service';
-import {Constants} from '@classes/constants';
-import {environment} from '../../../environments/environment';
-import {CommonFunctions} from '@classes/common-functions';
-import {DataStorage} from '@classes/data-storage';
+import { registerForNotification } from '@classes/common.js';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { Constants } from '@classes/constants';
+import { environment } from '../../../environments/environment';
+import { CommonFunctions } from '@classes/common-functions';
+import { DataStorage } from '@classes/data-storage';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
@@ -15,9 +15,7 @@ import { VALIDATORS_REGX } from '@classes/regx-validators';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
 })
-
 export class LoginComponent implements OnInit {
-
     user: User;
 
     @Output() showFrontPageProgressBar = new EventEmitter();
@@ -31,8 +29,7 @@ export class LoginComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private authenticationService: AuthenticationOldService,
-                private notificationService: NotificationService) {}
+    constructor(private authenticationService: AuthenticationOldService, private notificationService: NotificationService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -40,32 +37,37 @@ export class LoginComponent implements OnInit {
 
     login() {
         this.isLoading = true;
-        this.authenticationService.loginUserDetails(this.username, this.password).then( data => {
-            this.isLoading = false;
-            this.showFrontPageProgressBar.emit('false');
-            if (data.username === 'invalidUsername') {
-                alert('Login failed: Invalid username or password');
-
-            } else {
-                localStorage.setItem('schoolJWT', data.token);
-                this.user.jwt = data.token;
-                this.user.isAuthenticated = true;
-                this.user.initializeUserData(data);
-                //Sending the user-id of user to google-analytics to monitor per user flow
-                // (<any>window).ga('set', 'userId', 'id: '+data.id+' user-name: '+data.username+ ' name: '+data.first_name+' '+data.last_name);
-                (<any>window).ga('set', 'userId', 'id: '+data.id);
-                (<any>window).ga('send', 'event', 'authentication', 'Login');
-                registerForNotification({
-                    'user': this.user.id,
-                    'jwt': this.user.jwt,
-                    'url': environment.DJANGO_SERVER + Constants.api_version
-                        + this.notificationService.module_url + this.notificationService.gcm_device,
-                });
+        this.authenticationService.loginUserDetails(this.username, this.password).then(
+            (data) => {
+                this.isLoading = false;
+                this.showFrontPageProgressBar.emit('false');
+                if (data.username === 'invalidUsername') {
+                    alert('Login failed: Invalid username or password');
+                } else {
+                    localStorage.setItem('schoolJWT', data.token);
+                    this.user.jwt = data.token;
+                    this.user.isAuthenticated = true;
+                    this.user.initializeUserData(data);
+                    //Sending the user-id of user to google-analytics to monitor per user flow
+                    // (<any>window).ga('set', 'userId', 'id: '+data.id+' user-name: '+data.username+ ' name: '+data.first_name+' '+data.last_name);
+                    (<any>window).ga('set', 'userId', 'id: ' + data.id);
+                    (<any>window).ga('send', 'event', 'authentication', 'Login');
+                    registerForNotification({
+                        user: this.user.id,
+                        jwt: this.user.jwt,
+                        url:
+                            environment.DJANGO_SERVER +
+                            Constants.api_version +
+                            this.notificationService.module_url +
+                            this.notificationService.gcm_device,
+                    });
+                }
+            },
+            (error) => {
+                this.showFrontPageProgressBar.emit('false');
+                this.isLoading = false;
             }
-        }, error => {
-            this.showFrontPageProgressBar.emit('false');
-            this.isLoading = false;
-        });
+        );
     }
 
     submit() {
@@ -76,7 +78,6 @@ export class LoginComponent implements OnInit {
             this.showFrontPageProgressBar.emit('true');
             this.login();
         }
-
     }
 
     toggleVisibilityMode(): void {
@@ -95,8 +96,7 @@ export class LoginComponent implements OnInit {
         return CommonFunctions.getInstance().isMobileMenu();
     }
 
-    isFormValid(): boolean{
+    isFormValid(): boolean {
         return this.validators.phoneNumber.test(this.username);
     }
-
 }

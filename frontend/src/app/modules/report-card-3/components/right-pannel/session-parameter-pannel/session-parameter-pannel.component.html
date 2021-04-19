@@ -1,31 +1,27 @@
-<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
-    <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">design_services</i>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">design_services</i>
     </div>
-    <div style="margin: 4px; padding: 4px;">
-
+    <div style="margin: 4px; padding: 4px">
         <mat-form-field>
             <mat-label>Start Date</mat-label>
-            <mat-select [(ngModel)]="layer.format.date1" (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate);">
-                <mat-option [value]="'<yyy>'">{{layer.startDate.getFullYear()}}</mat-option>
-                <mat-option [value]="'<yy>'">{{layer.startDate.getFullYear().toString().slice(-2)}}</mat-option>
+            <mat-select [(ngModel)]="layer.format.date1" (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate)">
+                <mat-option [value]="'<yyy>'">{{ layer.startDate.getFullYear() }}</mat-option>
+                <mat-option [value]="'<yy>'">{{ layer.startDate.getFullYear().toString().slice(-2) }}</mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>End Date</mat-label>
-            <mat-select [(ngModel)]="layer.format.date2" (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate);">
-                <mat-option [value]="'<yyy>'">{{layer.endDate.getFullYear()}}</mat-option>
-                <mat-option [value]="'<yy>'">{{layer.endDate.getFullYear().toString().slice(-2)}}</mat-option>
+            <mat-select [(ngModel)]="layer.format.date2" (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate)">
+                <mat-option [value]="'<yyy>'">{{ layer.endDate.getFullYear() }}</mat-option>
+                <mat-option [value]="'<yy>'">{{ layer.endDate.getFullYear().toString().slice(-2) }}</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field> 
+        <mat-form-field>
             <mat-label>Seperator</mat-label>
-            <input matInput [(ngModel)]="layer.format.seperator"
-                (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate);">
+            <input matInput [(ngModel)]="layer.format.seperator" (ngModelChange)="canvasRefresh(500, layer.layerDataUpdate)" />
         </mat-form-field>
-
     </div>
-
 </mat-card>

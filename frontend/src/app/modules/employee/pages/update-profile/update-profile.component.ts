@@ -2,17 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 
-import {FormControl} from '@angular/forms';
-import {DataStorage} from "../../../../classes/data-storage";
+import { FormControl } from '@angular/forms';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'update-profile',
-  templateUrl: './update-profile.component.html',
-  styleUrls: ['./update-profile.component.css'],
+    selector: 'update-profile',
+    templateUrl: './update-profile.component.html',
+    styleUrls: ['./update-profile.component.css'],
 })
-
 export class UpdateProfileComponent implements OnInit {
-
     user;
 
     employeeList: any;
@@ -27,7 +25,7 @@ export class UpdateProfileComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeService: EmployeeOldService) { }
+    constructor(private employeeService: EmployeeOldService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -41,7 +39,6 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     getEmployeeProfile(employee: any): void {
-
         const data = {
             id: employee.id,
         };
@@ -55,26 +52,27 @@ export class UpdateProfileComponent implements OnInit {
         Promise.all([
             this.employeeService.getEmployeeProfile(data, this.user.jwt),
             this.employeeService.getEmployeeSessionDetail(session_data, this.user.jwt),
-        ]).then(value => {
-            this.isLoading = false;
-            this.selectedEmployeeProfile = value[0];
-            Object.keys(this.selectedEmployeeProfile).forEach(key => {
-                this. currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
-            });
-            this.selectedEmployeeSessionProfile = value[1];
-            Object.keys(this.selectedEmployeeSessionProfile).forEach(key => {
-                this.currentEmployeeSessionProfile[key] = this.selectedEmployeeSessionProfile[key];
-            });
-        }, error => {
-            this.isLoading = false;
-        });
-
+        ]).then(
+            (value) => {
+                this.isLoading = false;
+                this.selectedEmployeeProfile = value[0];
+                Object.keys(this.selectedEmployeeProfile).forEach((key) => {
+                    this.currentEmployeeProfile[key] = this.selectedEmployeeProfile[key];
+                });
+                this.selectedEmployeeSessionProfile = value[1];
+                Object.keys(this.selectedEmployeeSessionProfile).forEach((key) => {
+                    this.currentEmployeeSessionProfile[key] = this.selectedEmployeeSessionProfile[key];
+                });
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
-
     checkFieldChanged(selectedValue, currentValue): boolean {
-        if(selectedValue!==null && currentValue!==null ){
-            if (selectedValue !== currentValue){
+        if (selectedValue !== null && currentValue !== null) {
+            if (selectedValue !== currentValue) {
                 return true;
             }
             return false;
@@ -97,23 +95,31 @@ export class UpdateProfileComponent implements OnInit {
 
     policeNumberInput(event: any): boolean {
         let value = event.key;
-        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
-            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
-            value !== '8' && value !== '9') {
+        if (
+            value !== '0' &&
+            value !== '1' &&
+            value !== '2' &&
+            value !== '3' &&
+            value !== '4' &&
+            value !== '5' &&
+            value !== '6' &&
+            value !== '7' &&
+            value !== '8' &&
+            value !== '9'
+        ) {
             return false;
         }
         return true;
     }
 
     updateEmployeeProfile(): void {
-
         if (this.currentEmployeeProfile.name === undefined || this.currentEmployeeProfile.name === '') {
             alert('Name should be populated');
             return;
         }
 
         if (this.currentEmployeeProfile.fatherName === undefined || this.currentEmployeeProfile.fatherName === '') {
-            alert('Father\'s Name should be populated');
+            alert("Father's Name should be populated");
             return;
         }
 
@@ -138,47 +144,45 @@ export class UpdateProfileComponent implements OnInit {
             return;
         } else {
             let selectedEmployee = null;
-            this.employeeList.forEach(employee => {
-                if (employee.mobileNumber === this.currentEmployeeProfile.mobileNumber
-                    && employee.id !== this.currentEmployeeProfile.id) {
+            this.employeeList.forEach((employee) => {
+                if (employee.mobileNumber === this.currentEmployeeProfile.mobileNumber && employee.id !== this.currentEmployeeProfile.id) {
                     selectedEmployee = employee;
                 }
             });
             if (selectedEmployee) {
-                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                alert('Mobile Number already exists in ' + selectedEmployee.name + "'s profile");
                 return;
             }
         }
 
-        if (this.currentEmployeeProfile.aadharNumber != null
-            && this.currentEmployeeProfile.aadharNumber.toString().length != 12) {
-            alert("Aadhar No. should be 12 digits");
+        if (this.currentEmployeeProfile.aadharNumber != null && this.currentEmployeeProfile.aadharNumber.toString().length != 12) {
+            alert('Aadhar No. should be 12 digits');
             return;
         }
 
         this.isLoading = true;
         Promise.all([
             this.employeeService.updateEmployeeProfile(this.currentEmployeeProfile, this.user.jwt),
-            (this.currentEmployeeSessionProfile.id==null?
-                this.employeeService.createEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
-                    :this.employeeService.updateEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
-            )
-        ]).then(value => {
-            this.isLoading = false;
-            alert('Employee profile updated successfully');
-            this.selectedEmployeeProfile = this.currentEmployeeProfile;
-            this.selectedEmployeeSessionProfile = this.currentEmployeeSessionProfile;
-        }, error => {
-            this.isLoading = false;
-        });
-
+            this.currentEmployeeSessionProfile.id == null
+                ? this.employeeService.createEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt)
+                : this.employeeService.updateEmployeeSessionDetail(this.currentEmployeeSessionProfile, this.user.jwt),
+        ]).then(
+            (value) => {
+                this.isLoading = false;
+                alert('Employee profile updated successfully');
+                this.selectedEmployeeProfile = this.currentEmployeeProfile;
+                this.selectedEmployeeSessionProfile = this.currentEmployeeSessionProfile;
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
     cropImage(file: File, aspectRatio: any): Promise<Blob> {
         return new Promise((resolve, reject) => {
             let image = new Image();
             image.src = URL.createObjectURL(file);
             image.onload = () => {
-
                 let dx = 0;
                 let dy = 0;
                 let dw = image.width;
@@ -189,13 +193,13 @@ export class UpdateProfileComponent implements OnInit {
                 let sw = dw;
                 let sh = dh;
 
-                if (sw > (aspectRatio[1]*sh/aspectRatio[0])) {
-                    sx = (sw - (aspectRatio[1]*sh/aspectRatio[0]))/2;
-                    sw = (aspectRatio[1]*sh/aspectRatio[0]);
+                if (sw > (aspectRatio[1] * sh) / aspectRatio[0]) {
+                    sx = (sw - (aspectRatio[1] * sh) / aspectRatio[0]) / 2;
+                    sw = (aspectRatio[1] * sh) / aspectRatio[0];
                     dw = sw;
-                } else if (sh > (aspectRatio[0]*sw/aspectRatio[1])) {
-                    sy = (sh - (aspectRatio[0]*sw/aspectRatio[1]))/2;
-                    sh = (aspectRatio[0]*sw/aspectRatio[1]);
+                } else if (sh > (aspectRatio[0] * sw) / aspectRatio[1]) {
+                    sy = (sh - (aspectRatio[0] * sw) / aspectRatio[1]) / 2;
+                    sh = (aspectRatio[0] * sw) / aspectRatio[1];
                     dh = sh;
                 }
 
@@ -217,11 +221,11 @@ export class UpdateProfileComponent implements OnInit {
         let image = evt.target.files[0];
 
         if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-            alert("Image type should be either jpg, jpeg, or png");
+            alert('Image type should be either jpg, jpeg, or png');
             return;
         }
 
-        image = await this.cropImage(image, [1,1]);
+        image = await this.cropImage(image, [1, 1]);
 
         while (image.size > 512000) {
             image = await this.resizeImage(image);
@@ -236,19 +240,22 @@ export class UpdateProfileComponent implements OnInit {
             id: this.selectedEmployeeProfile.id,
         };
         this.isLoading = true;
-        this.employeeService.uploadProfileImage(image, data, this.user.jwt).then( response => {
-            this.isLoading = false;
-            alert(response.message);
-            if (response.status === 'success') {
-                this.selectedEmployeeProfile.profileImage = response.url;
-                this.currentEmployeeProfile.profileImage = response.url;
+        this.employeeService.uploadProfileImage(image, data, this.user.jwt).then(
+            (response) => {
+                this.isLoading = false;
+                alert(response.message);
+                if (response.status === 'success') {
+                    this.selectedEmployeeProfile.profileImage = response.url;
+                    this.currentEmployeeProfile.profileImage = response.url;
+                }
+            },
+            (error) => {
+                this.isLoading = false;
             }
-        }, error => {
-            this.isLoading = false;
-        });
+        );
     }
 
-    resizeImage(file:File):Promise<Blob> {
+    resizeImage(file: File): Promise<Blob> {
         return new Promise((resolve, reject) => {
             let image = new Image();
             image.src = URL.createObjectURL(file);
@@ -256,8 +263,8 @@ export class UpdateProfileComponent implements OnInit {
                 let width = image.width;
                 let height = image.height;
 
-                let maxWidth = image.width/2;
-                let maxHeight = image.height/2;
+                let maxWidth = image.width / 2;
+                let maxHeight = image.height / 2;
 
                 // if (width <= maxWidth && height <= maxHeight) {
                 //     resolve(file);
@@ -287,5 +294,4 @@ export class UpdateProfileComponent implements OnInit {
             image.onerror = reject;
         });
     }
-
 }

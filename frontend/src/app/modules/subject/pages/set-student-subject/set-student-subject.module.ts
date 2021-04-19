@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import { SetStudentSubjectRoutingModule} from './set-student-subject.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {SetStudentSubjectComponent} from "./set-student-subject.component";
-
+import { SetStudentSubjectRoutingModule } from './set-student-subject.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { SetStudentSubjectComponent } from './set-student-subject.component';
 
 @NgModule({
-    declarations: [
-        SetStudentSubjectComponent
-    ],
+    declarations: [SetStudentSubjectComponent],
 
-    imports: [
-        SetStudentSubjectRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [SetStudentSubjectRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [SetStudentSubjectComponent]
+    bootstrap: [SetStudentSubjectComponent],
 })
-export class SetStudentSubjectModule { }
+export class SetStudentSubjectModule {}

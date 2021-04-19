@@ -13,25 +13,17 @@ import { JobRoutingModule } from './job.routing';
 
 @NgModule({
     declarations: [
-
         JobComponent,
 
         // ViewProfileComponent,
         // ViewAttendanceComponent,
         // ApplyLeaveComponent,
         // ViewPaymentComponent,
-
     ],
 
-    imports: [
-
-        ComponentsModule,
-        JobRoutingModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, JobRoutingModule],
+    exports: [],
     providers: [],
-    bootstrap: [JobComponent]
+    bootstrap: [JobComponent],
 })
-export class JobModule { }
+export class JobModule {}

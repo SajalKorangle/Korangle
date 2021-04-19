@@ -1,83 +1,67 @@
 <div class="card-content table-responsive">
-
     <ng-container *ngIf="!isLoading">
-
-        <div class="row" style="margin-top: 30px; font-size: 20px; font-weight: 800; color: blue;">
-            <div class="col-xs-12">
-                Session Fee
-            </div>
+        <div class="row" style="margin-top: 30px; font-size: 20px; font-weight: 800; color: blue">
+            <div class="col-xs-12">Session Fee</div>
         </div>
 
-        <div class="row" style="font-size: 17px;">
-            <div class="col-xs-5">
-                Total Fees (Academic Session {{getSession().name}})
-            </div>
+        <div class="row" style="font-size: 17px">
+            <div class="col-xs-5">Total Fees (Academic Session {{ getSession().name }})</div>
             <div class="col-xs-7">
-                : <b>{{getAllParentTotalFees() | indianCurrency:true}}</b><br/>
+                : <b>{{ getAllParentTotalFees() | indianCurrency: true }}</b
+                ><br />
             </div>
         </div>
 
-        <div class="row" style="font-size: 17px;">
-            <div class="col-xs-5">
-                Total Discount (Academic Session {{getSession().name}})
-            </div>
+        <div class="row" style="font-size: 17px">
+            <div class="col-xs-5">Total Discount (Academic Session {{ getSession().name }})</div>
             <div class="col-xs-7">
-                : <b>{{getAllParentDiscount() | indianCurrency:true}}</b><br/>
+                : <b>{{ getAllParentDiscount() | indianCurrency: true }}</b
+                ><br />
             </div>
         </div>
 
-        <div class="row" style="margin-top: 30px; font-size: 20px; font-weight: 800; color: blue;">
-            <div class="col-xs-12">
-                Revenue
-            </div>
+        <div class="row" style="margin-top: 30px; font-size: 20px; font-weight: 800; color: blue">
+            <div class="col-xs-12">Revenue</div>
         </div>
 
-        <div class="row" style="font-size: 17px;">
-            <div class="col-xs-5">
-                Expected Revenue (Financial Year {{getSession().name}})
-            </div>
+        <div class="row" style="font-size: 17px">
+            <div class="col-xs-5">Expected Revenue (Financial Year {{ getSession().name }})</div>
             <div class="col-xs-7">
-                : <b>{{getExpectedRevenue() | indianCurrency:true}}</b><br/>
+                : <b>{{ getExpectedRevenue() | indianCurrency: true }}</b
+                ><br />
             </div>
         </div>
 
-        <div class="row" style="font-size: 17px;">
-            <div class="col-xs-5">
-                Total Collection (Financial Year {{getSession().name}})
-            </div>
+        <div class="row" style="font-size: 17px">
+            <div class="col-xs-5">Total Collection (Financial Year {{ getSession().name }})</div>
             <div class="col-xs-7">
-                : <b>{{getTotalCollection() | indianCurrency:true}}</b><br/>
+                : <b>{{ getTotalCollection() | indianCurrency: true }}</b
+                ><br />
             </div>
         </div>
 
-        <div class="row" style="font-size: 17px;">
-            <div class="col-xs-5">
-                Fees Due (Overall)
-            </div>
+        <div class="row" style="font-size: 17px">
+            <div class="col-xs-5">Fees Due (Overall)</div>
             <div class="col-xs-7">
-                : <b>{{getAllParentFeesDueOverall() | indianCurrency:true}}</b><br/>
+                : <b>{{ getAllParentFeesDueOverall() | indianCurrency: true }}</b
+                ><br />
             </div>
         </div>
 
-        <div class="row" style="margin-top: 30px; font-size: 20px; font-weight: 800; color: blue;">
-            <div class="col-xs-12">
-                Current Status
-            </div>
+        <div class="row" style="margin-top: 30px; font-size: 20px; font-weight: 800; color: blue">
+            <div class="col-xs-12">Current Status</div>
         </div>
 
-        <div class="row" style="font-size: 17px;">
-            <div class="col-xs-5">
-                Fees Due (Till Month)
-            </div>
+        <div class="row" style="font-size: 17px">
+            <div class="col-xs-5">Fees Due (Till Month)</div>
             <div class="col-xs-7">
-                : <b>{{getAllParentFeesDueTillMonth() | indianCurrency:true}}</b><br/>
+                : <b>{{ getAllParentFeesDueTillMonth() | indianCurrency: true }}</b
+                ><br />
             </div>
         </div>
-
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user" [timer]="60"></app-loading-spinner>
     </ng-container>
-
 </div>

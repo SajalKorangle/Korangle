@@ -11,7 +11,6 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-transfer-certificate-second-format.component.css'],
 })
 export class PrintTransferCertificateSecondFormatComponent implements OnInit, OnDestroy, AfterViewChecked {
-
     user: any;
 
     mediumList = MEDIUM_LIST;
@@ -26,15 +25,15 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
 
     numberOfCopies = 1;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
-        const {user, value} = this.printService.getData();
+        const { user, value } = this.printService.getData();
         this.user = user;
         this.studentProfile = value.studentProfile;
         this.boardList = value.boardList;
         this.transferCertificate.copy(value.transferCertificate);
-        if(value.twoCopies) {
+        if (value.twoCopies) {
             this.numberOfCopies = 2;
         } else {
             this.numberOfCopies = 1;
@@ -57,5 +56,4 @@ export class PrintTransferCertificateSecondFormatComponent implements OnInit, On
         this.studentProfile = null;
         this.transferCertificate.clean();
     }
-
 }

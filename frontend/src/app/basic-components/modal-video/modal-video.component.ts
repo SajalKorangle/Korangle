@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {DataStorage} from '@classes/data-storage';
-import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core';
+import { DataStorage } from '@classes/data-storage';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
     selector: 'app-modal-video',
@@ -8,18 +8,14 @@ import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
     styleUrls: ['./modal-video.component.css'],
 })
 export class ModalVideoComponent implements OnInit {
-
     user: any;
-    videoUrl:string;
+    videoUrl: string;
 
-    constructor(
-        public dialogRef: MatDialogRef<ModalVideoComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.videoUrl=this.data.videoUrl;
+    constructor(public dialogRef: MatDialogRef<ModalVideoComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.videoUrl = this.data.videoUrl;
     }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
     }
-
 }

@@ -1,19 +1,17 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
 
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import {BusStopService} from '../../../../services/modules/school/bus-stop.service';
-import {DataStorage} from "../../../../classes/data-storage";
+import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'view-profile',
-  templateUrl: './view-profile.component.html',
-  styleUrls: ['./view-profile.component.css'],
-    providers: [ StudentOldService, BusStopService ],
+    selector: 'view-profile',
+    templateUrl: './view-profile.component.html',
+    styleUrls: ['./view-profile.component.css'],
+    providers: [StudentOldService, BusStopService],
 })
-
 export class ViewProfileComponent implements OnInit, OnChanges {
-
-     user;
+    user;
 
     selectedStudent: any;
 
@@ -21,8 +19,7 @@ export class ViewProfileComponent implements OnInit, OnChanges {
 
     isLoading = false;
 
-    constructor (private studentService: StudentOldService,
-                 private busStopService: BusStopService) { }
+    constructor(private studentService: StudentOldService, private busStopService: BusStopService) {}
 
     ngOnChanges(): void {
         this.ngOnInit();
@@ -43,7 +40,7 @@ export class ViewProfileComponent implements OnInit, OnChanges {
             schoolDbId: this.user.activeSchool.dbId,
         };
 
-        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then( busStopList => {
+        this.busStopService.getBusStopList(dataForBusStop, this.user.jwt).then((busStopList) => {
             this.busStopList = busStopList;
         });
     }
@@ -55,11 +52,12 @@ export class ViewProfileComponent implements OnInit, OnChanges {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
         this.studentService.getStudentFullProfile(data, this.user.jwt).then(
-            student => {
+            (student) => {
                 this.isLoading = false;
                 console.log(student);
                 this.selectedStudent = student;
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
             }
         );
@@ -68,7 +66,7 @@ export class ViewProfileComponent implements OnInit, OnChanges {
     getBusStopName(busStopDbId: any) {
         let stopName = 'None';
         if (busStopDbId !== null) {
-            this.busStopList.forEach(busStop => {
+            this.busStopList.forEach((busStop) => {
                 if (busStop.dbId == busStopDbId) {
                     stopName = busStop.stopName;
                     return;
@@ -77,5 +75,4 @@ export class ViewProfileComponent implements OnInit, OnChanges {
         }
         return stopName;
     }
-
 }

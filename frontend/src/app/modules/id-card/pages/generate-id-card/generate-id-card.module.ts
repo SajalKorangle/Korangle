@@ -1,24 +1,16 @@
 import { NgModule } from '@angular/core';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
-import {GenerateIdCardRoutingModule} from './generate-id-card.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {GenerateIdCardComponent} from "./generate-id-card.component";
-
+import { GenerateIdCardRoutingModule } from './generate-id-card.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { GenerateIdCardComponent } from './generate-id-card.component';
 
 @NgModule({
-    declarations: [
-        GenerateIdCardComponent
-    ],
+    declarations: [GenerateIdCardComponent],
 
-    imports: [
-        GenerateIdCardRoutingModule ,
-        ComponentsModule,
-        NgxDatatableModule
-    ],
-    exports: [
-    ],
+    imports: [GenerateIdCardRoutingModule, ComponentsModule, NgxDatatableModule],
+    exports: [],
     providers: [],
-    bootstrap: [GenerateIdCardComponent]
+    bootstrap: [GenerateIdCardComponent],
 })
-export class GenerateIdCardModule { }
+export class GenerateIdCardModule {}

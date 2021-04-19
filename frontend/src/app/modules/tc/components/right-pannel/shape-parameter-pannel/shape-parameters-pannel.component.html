@@ -1,61 +1,98 @@
-<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
-    <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">category</i>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">category</i>
     </div>
-    <div style="margin: 4px; padding: 4px;">
-
+    <div style="margin: 4px; padding: 4px">
         <mat-form-field *ngIf="layer.LAYER_TYPE != 'CIRCLE'">
-            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.length)"
-                (ngModelChange)="layer.updateLength($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Length(mm)">
+            <input
+                type="number"
+                step="1"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.length)"
+                (ngModelChange)="layer.updateLength($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Length(mm)"
+            />
         </mat-form-field>
 
-        
         <mat-form-field *ngIf="layer.LAYER_TYPE == 'CIRCLE' || layer.LAYER_TYPE == 'ROUNDED-RECTANGLE'">
-            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.radius)"
-                (ngModelChange)="layer.updateRadius($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Radius(mm)">
+            <input
+                type="number"
+                step="1"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.radius)"
+                (ngModelChange)="layer.updateRadius($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Radius(mm)"
+            />
         </mat-form-field>
 
-        
         <mat-form-field *ngIf="layer.LAYER_TYPE == 'RECTANGLE' || layer.LAYER_TYPE == 'ROUNDED-RECTANGLE'">
-            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.width)"
-                (ngModelChange)="layer.updateWidth($event/getPixelTommFactor());canvasRefresh();" placeholder="Choose Width(mm)">
+            <input
+                type="number"
+                step="1"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.width)"
+                (ngModelChange)="layer.updateWidth($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Width(mm)"
+            />
         </mat-form-field>
 
         <mat-form-field *ngIf="layer.LAYER_TYPE == 'LINE'">
-            <input type="number" step="1" matInput [ngModel]="layer.orientation"
-                (ngModelChange)="layer.updateOrientation($event);canvasRefresh();" placeholder="Choose Orientation(degree)">
+            <input
+                type="number"
+                step="1"
+                matInput
+                [ngModel]="layer.orientation"
+                (ngModelChange)="layer.updateOrientation($event); canvasRefresh()"
+                placeholder="Choose Orientation(degree)"
+            />
         </mat-form-field>
 
         <mat-form-field>
-            <input type="number" step="1" matInput [ngModel]="getMeasurementInMM(layer.shapeStyle.lineWidth)"
-                (ngModelChange)="layer.shapeStyle.lineWidth = $event/getPixelTommFactor(); canvasRefresh();" placeholder="Line Width(mm)">
+            <input
+                type="number"
+                step="1"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.shapeStyle.lineWidth)"
+                (ngModelChange)="layer.shapeStyle.lineWidth = $event / getPixelTommFactor(); canvasRefresh()"
+                placeholder="Line Width(mm)"
+            />
         </mat-form-field>
 
         <mat-form-field>
-            <input type="color" matInput [value]="layer.shapeStyle.strokeStyle"
-                (input)="layer.shapeStyle.strokeStyle = $event.target.value; canvasRefresh(0);" placeholder="Stroke Color">
+            <input
+                type="color"
+                matInput
+                [value]="layer.shapeStyle.strokeStyle"
+                (input)="layer.shapeStyle.strokeStyle = $event.target.value; canvasRefresh(0)"
+                placeholder="Stroke Color"
+            />
         </mat-form-field>
 
         <div *ngIf="layer.LAYER_TYPE != 'LINE'">
             <mat-form-field>
                 <mat-label>Fill Color</mat-label>
-                <div style="display: flex; flex-direction: row; align-items: center;">
-                    <input type="color" matInput [value]="layer.shapeStyle.fillStyle" 
-                        (input)="layer.shapeStyle.fillStyle=$event.target.value; canvasRefresh(0);"> 
-                    <button mat-stroked-button class="material-icons" 
-                            style="transform: scale(0.75);" 
-                            [style.color]="layer.shapeStyle.fillStyle=='transparent'?'white':''" 
-                            [style.backgroundColor]="layer.shapeStyle.fillStyle=='transparent'?'blue':''" 
-                            (click)="layer.shapeStyle.fillStyle='transparent'; canvasRefresh(0);">
-                            <mat-icon>format_color_reset</mat-icon></button>
+                <div style="display: flex; flex-direction: row; align-items: center">
+                    <input
+                        type="color"
+                        matInput
+                        [value]="layer.shapeStyle.fillStyle"
+                        (input)="layer.shapeStyle.fillStyle = $event.target.value; canvasRefresh(0)"
+                    />
+                    <button
+                        mat-stroked-button
+                        class="material-icons"
+                        style="transform: scale(0.75)"
+                        [style.color]="layer.shapeStyle.fillStyle == 'transparent' ? 'white' : ''"
+                        [style.backgroundColor]="layer.shapeStyle.fillStyle == 'transparent' ? 'blue' : ''"
+                        (click)="layer.shapeStyle.fillStyle = 'transparent'; canvasRefresh(0)"
+                    >
+                        <mat-icon>format_color_reset</mat-icon>
+                    </button>
                 </div>
             </mat-form-field>
 
             <!-- <span style="font-size: small;">Opacity</span>
             <mat-slider thumbLabel [displayWith]="formalLabelForSlider" min="0" max="1" step="0.01" [value]="layer.shapeStyle.globalAlpha" (input)="layer.shapeStyle.globalAlpha=$event.value; canvasRefresh(0);"></mat-slider> -->
-
         </div>
-        
     </div>
-
 </mat-card>

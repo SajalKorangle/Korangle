@@ -2,22 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {CancelTCComponent} from "./cancel-tc.component";
+import { CancelTCComponent } from './cancel-tc.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: CancelTCComponent ,
-    }
+        component: CancelTCComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class CancleTCRoutingModule { }
+export class CancleTCRoutingModule {}

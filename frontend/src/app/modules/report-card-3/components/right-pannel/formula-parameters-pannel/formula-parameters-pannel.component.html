@@ -1,41 +1,40 @@
-<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
-    <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">functions</i>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">functions</i>
     </div>
-    <div style="margin: 4px; padding: 4px;">
+    <div style="margin: 4px; padding: 4px">
+        <mat-form-field appearence="fill">
+            <mat-label> Formula </mat-label>
+            <textarea matInput [(ngModel)]="layer.formula" (ngModelChange)="smartLayerUpdate()" matTextareaAutosize="true"></textarea>
+        </mat-form-field>
 
         <mat-form-field appearence="fill">
-            <mat-label>
-                Formula
-            </mat-label>
-            <textarea matInput  [(ngModel)]="layer.formula" (ngModelChange)="smartLayerUpdate()" matTextareaAutosize="true"></textarea>
-        </mat-form-field>
-        
-        <mat-form-field appearence="fill">
-            <mat-label>
-                Decimal Places
-            </mat-label>
-            <input matInput type="number" min="0"  [(ngModel)]="layer.decimalPlaces" (ngModelChange)="smartLayerUpdate(750)">
+            <mat-label> Decimal Places </mat-label>
+            <input matInput type="number" min="0" [(ngModel)]="layer.decimalPlaces" (ngModelChange)="smartLayerUpdate(750)" />
         </mat-form-field>
 
         <mat-form-field>
-            <mat-select placeholder="Grade Rule Set"
-            [ngModel]="layer.gradeRuleSet"
-            (ngModelChange)="layer.gradeRuleSet=$event; layer.layerDataUpdate(); canvasRefresh(0);">
+            <mat-select
+                placeholder="Grade Rule Set"
+                [ngModel]="layer.gradeRuleSet"
+                (ngModelChange)="layer.gradeRuleSet = $event; layer.layerDataUpdate(); canvasRefresh(0)"
+            >
                 <mat-option [value]="null">None</mat-option>
-                <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{gradeRuleSet.name}}</mat-option>
+                <mat-option *ngFor="let gradeRuleSet of layer.ca.gradeRuleSetList" [value]="gradeRuleSet">{{
+                    gradeRuleSet.name
+                }}</mat-option>
             </mat-select>
         </mat-form-field>
-        
+
         <mat-form-field>
-            <mat-select placeholder="Marks In Words"
-            [ngModel]="layer.inWords"
-            (ngModelChange)="layer.inWords=$event; layer.layerDataUpdate(); canvasRefresh(0);">
+            <mat-select
+                placeholder="Marks In Words"
+                [ngModel]="layer.inWords"
+                (ngModelChange)="layer.inWords = $event; layer.layerDataUpdate(); canvasRefresh(0)"
+            >
                 <mat-option [value]="true">True</mat-option>
                 <mat-option [value]="false">False</mat-option>
             </mat-select>
         </mat-form-field>
-
-
     </div>
 </mat-card>

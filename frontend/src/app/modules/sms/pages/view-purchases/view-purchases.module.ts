@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import { ViewPurchasesRoutingModule} from './view-purchases.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ViewPurchasesComponent} from "./view-purchases.component";
-
+import { ViewPurchasesRoutingModule } from './view-purchases.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ViewPurchasesComponent } from './view-purchases.component';
 
 @NgModule({
-    declarations: [
-        ViewPurchasesComponent
-    ],
+    declarations: [ViewPurchasesComponent],
 
-    imports: [
-        ViewPurchasesRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ViewPurchasesRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ViewPurchasesComponent]
+    bootstrap: [ViewPurchasesComponent],
 })
-export class ViewPurchasesModule { }
+export class ViewPurchasesModule {}

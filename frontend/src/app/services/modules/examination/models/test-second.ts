@@ -1,7 +1,5 @@
-
 // Representing ClassTest
 export class TestSecond {
-
     id: number = null;
 
     parentExamination: number = null;
@@ -12,5 +10,4 @@ export class TestSecond {
     endTime: any = null;
     testType: string = null; // Oral, Written, Theory, Practical
     maximumMarks: number = null;
-
 }

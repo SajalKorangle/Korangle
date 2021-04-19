@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {CreateSchoolRoutingModule} from './create-school.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {CreateSchoolComponent} from "./create-school.component";
-
+import { CreateSchoolRoutingModule } from './create-school.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { CreateSchoolComponent } from './create-school.component';
 
 @NgModule({
-    declarations: [
-        CreateSchoolComponent
-    ],
+    declarations: [CreateSchoolComponent],
 
-    imports: [
-        CreateSchoolRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [CreateSchoolRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [CreateSchoolComponent]
+    bootstrap: [CreateSchoolComponent],
 })
-export class CreateSchoolModule { }
+export class CreateSchoolModule {}
