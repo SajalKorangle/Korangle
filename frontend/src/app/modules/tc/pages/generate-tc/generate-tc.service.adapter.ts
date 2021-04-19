@@ -3,7 +3,7 @@ import { StudentCustomParameterStructure } from './../../class/constants';
 import { TC_SCHOOL_FEE_RULE_NAME, DEFAULT_TC_SETTINGS } from './../../class/constants_tc';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 
-const MAX_LENGTH_OF_GET_REQUEST = 900;
+const MAX_LENGTH_OF_GET_REQUEST = 7000;
 
 export class GenerateTCServiceAdapter {
     vm: GenerateTCComponent;
@@ -75,11 +75,17 @@ export class GenerateTCServiceAdapter {
             ).then(studentChunks => studentChunks.reduce((accumulator, nextChunk) => [...accumulator, ...nextChunk], []));
 
             const tcCombinedRequest = Promise.all(
-                studentIdChunkList.map(studentIdChunk => this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, { parentStudent__in: studentIdChunk, status__in: ['Generated', 'Issued'] }))
+                studentIdChunkList.map(studentIdChunk => this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, {
+                    parentStudent__in: studentIdChunk,
+                    status__in: ['Generated', 'Issued']
+                }))
             ).then(tcChunks => tcChunks.reduce((accumulator, nextChunk) => [...accumulator, ...nextChunk], []));
 
             const studentTcFeeCombined = Promise.all(
-                studentIdChunkList.map(studentIdChunk => this.vm.feeService.getObjectList(this.vm.feeService.student_fees, { parentStudent__in: studentIdChunk, parentSchoolFeeRule__name: TC_SCHOOL_FEE_RULE_NAME }))
+                studentIdChunkList.map(studentIdChunk => this.vm.feeService.getObjectList(this.vm.feeService.student_fees, {
+                    parentStudent__in: studentIdChunk,
+                    parentSchoolFeeRule__name: TC_SCHOOL_FEE_RULE_NAME
+                }))
             ).then(feeChunks => feeChunks.reduce((accumulator, nextChunk) => [...accumulator, ...nextChunk], []));
 
 
@@ -106,23 +112,24 @@ export class GenerateTCServiceAdapter {
                     name: TC_SCHOOL_FEE_RULE_NAME,
                     parentFeeType: this.vm.tcSettings.parentFeeType,
                 };
-                const tc_fee_rule_request = this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule).then(async tcSchoolFeeRule => {
-                    if (!tcSchoolFeeRule) {    // is school Fee Rule is not present
-                        const newSchoolFeeRule = {
-                            name: TC_SCHOOL_FEE_RULE_NAME,
-                            parentFeeType: this.vm.tcSettings.parentFeeType,
-                            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                            isAnnually: true,
-                            aprilAmount: this.vm.tcSettings.tcFee
-                        };
-                        await this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(savedSchoolFeeRule => {
-                            this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
-                        });
-                    }
-                    else {
-                        this.vm.tcSchoolFeeRule = tcSchoolFeeRule;
-                    }
-                });
+                const tc_fee_rule_request = this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule)
+                    .then(async tcSchoolFeeRule => {
+                        if (!tcSchoolFeeRule) {    // is school Fee Rule is not present
+                            const newSchoolFeeRule = {
+                                name: TC_SCHOOL_FEE_RULE_NAME,
+                                parentFeeType: this.vm.tcSettings.parentFeeType,
+                                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                                isAnnually: true,
+                                aprilAmount: this.vm.tcSettings.tcFee
+                            };
+                            await this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(savedSchoolFeeRule => {
+                                this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
+                            });
+                        }
+                        else {
+                            this.vm.tcSchoolFeeRule = tcSchoolFeeRule;
+                        }
+                    });
                 serviceList.push(tc_fee_rule_request);
             }
 
@@ -228,7 +235,8 @@ export class GenerateTCServiceAdapter {
                 aprilAmount: this.vm.tcSettings.tcFee
             };
 
-            serviceList.push(this.vm.feeService.createObject(this.vm.feeService.student_fees, student_tc_fee).then(tcStudentFee => this.vm.tcStudentFeeList.push(tcStudentFee)));
+            serviceList.push(this.vm.feeService.createObject(this.vm.feeService.student_fees, student_tc_fee)
+                .then(tcStudentFee => this.vm.tcStudentFeeList.push(tcStudentFee)));
         }
 
         return Promise.all(serviceList).then((res) => res[0]);

@@ -59,14 +59,21 @@ class TCImageAssetsListView(CommonListView, APIView):
 
 
 class TransferCertificateSettingsView(CommonView, APIView):
+    RelationsToSchool = ['parentSchool__id']
     Model = TransferCertificateSettings
+    
 
 class TransferCertificateSettingsListView(CommonListView, APIView):
+    RelationsToSchool = ['parentSchool__id']
     Model = TransferCertificateSettings
 
 
 class TransferCertificateNewView(CommonView, APIView):
+    RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id', 'parentStudentSection__parentStudent__id']
     Model = TransferCertificateNew
 
 class TransferCertificateNewListView(CommonListView, APIView):
+    RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id', 'parentStudentSection__parentStudent__id']
     Model = TransferCertificateNew

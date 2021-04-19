@@ -17,6 +17,7 @@ export class ServiceObject extends RestApiGateway {
         let url = this.module_url + object_url + '?';
         let searchParams = new URLSearchParams();
         Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
+        url = url + searchParams.toString();
         return super.getData(url, data);
     }
 
