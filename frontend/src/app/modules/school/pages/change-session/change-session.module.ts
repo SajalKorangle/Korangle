@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
 import { ChangeSessionRoutingModule } from './change-session.routing';
-import { ComponentsModule } from "../../../../components/components.module";
-import { ChangeSessionComponent } from "./change-session.component";
-
+import { ComponentsModule } from '../../../../components/components.module';
+import { ChangeSessionComponent } from './change-session.component';
 
 @NgModule({
-    declarations: [
-        ChangeSessionComponent,
-    ],
+    declarations: [ChangeSessionComponent],
 
-    imports: [
-        ChangeSessionRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ChangeSessionRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ChangeSessionComponent]
+    bootstrap: [ChangeSessionComponent],
 })
-export class ChangeSessionModule { }
+export class ChangeSessionModule {}

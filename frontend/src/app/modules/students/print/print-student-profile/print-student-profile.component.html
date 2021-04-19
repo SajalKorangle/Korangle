@@ -1,326 +1,392 @@
 <ng-container>
-
-    <div class="container-fluid"
-         *ngIf="selectedStudent"
-         style="width: 100%; height: 100%;
-         border: 4px double blue;
-         border-radius: 8px;
-         outline: 1px solid blue;
-         outline-offset: -5px;
-         position: relative;
-         font-weight: 800 !important">
-
-
+    <div
+        class="container-fluid"
+        *ngIf="selectedStudent"
+        style="
+            width: 100%;
+            height: 100%;
+            border: 4px double blue;
+            border-radius: 8px;
+            outline: 1px solid blue;
+            outline-offset: -5px;
+            position: relative;
+            font-weight: 800 !important;
+        "
+    >
         <!-- School Logo -->
-        <img src="{{user.activeSchool.profileImage}}"
-             style="border-radius: 2px;
-                        position: absolute; top: 100px; left: 30px;
-                        opacity: 0.8;
-                        width: 100px; height: 100px;"/>
+        <img
+            src="{{ user.activeSchool.profileImage }}"
+            style="border-radius: 2px; position: absolute; top: 100px; left: 30px; opacity: 0.8; width: 100px; height: 100px"
+        />
 
         <!-- Student Photo -->
-        <img src="{{selectedStudent.profileImage}}"
-             style="border: 1px solid black;
-                             border-radius: 10px;
-                             position: absolute; top: 100px; left: 580px;
-                             width: 100px; height: 100px;"/>
+        <img
+            src="{{ selectedStudent.profileImage }}"
+            style="border: 1px solid black; border-radius: 10px; position: absolute; top: 100px; left: 580px; width: 100px; height: 100px"
+        />
 
         <!-- Reg. No. , Dise Code -->
-        <div class="row no-gutters" style="margin-bottom: 0px !important;">
-            <div class="col-xs-6 d-flex custom-padding">
-                Dise code : {{user.activeSchool.diseCode}}
-            </div>
+        <div class="row no-gutters" style="margin-bottom: 0px !important">
+            <div class="col-xs-6 d-flex custom-padding">Dise code : {{ user.activeSchool.diseCode }}</div>
             <div class="col-xs-6 d-flex custom-padding" align="end">
-                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
-                    School Code :
-                </ng-container>
-                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
-                    Affiliation No. :
-                </ng-container>
-                {{user.activeSchool.affiliationNumber}}
+                <ng-container *ngIf="user.activeSchool.parentBoard == boardList[0].id"> School Code : </ng-container>
+                <ng-container *ngIf="user.activeSchool.parentBoard == boardList[1].id"> Affiliation No. : </ng-container>
+                {{ user.activeSchool.affiliationNumber }}
             </div>
         </div>
 
         <!-- School Name -->
-        <div class="row no-gutters" style="margin-top: 25px;">
-            <div class="col-xs-12 " align="center">
-                    <span style="font-size: 45px; font-weight: 800; color: red !important;">
-                        {{user.activeSchool.printName}}
-                    </span>
+        <div class="row no-gutters" style="margin-top: 25px">
+            <div class="col-xs-12" align="center">
+                <span style="font-size: 45px; font-weight: 800; color: red !important">
+                    {{ user.activeSchool.printName }}
+                </span>
             </div>
         </div>
 
         <!-- Address -->
-        <div class="row no-gutters" style="margin-top: 5px !important; line-height: normal !important;">
+        <div class="row no-gutters" style="margin-top: 5px !important; line-height: normal !important">
             <div class="col-xs-12" align="center">
-                    <span style="font-size: 22px;">
-                        {{user.activeSchool.address}}
-                    </span>
+                <span style="font-size: 22px">
+                    {{ user.activeSchool.address }}
+                </span>
             </div>
         </div>
 
         <!-- Session -->
-        <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+        <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important">
             <div class="col-xs-12" align="center">
-                <span style="font-size: 23px;">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
+                <span style="font-size: 23px">{{ getSessionName(user.activeSchool.currentSessionDbId) }}</span>
             </div>
         </div>
 
         <!-- Annual Report, Class, Session -->
-        <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+        <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important">
             <div class="col-xs-12" align="center">
                 <span style="font-size: 30px">STUDENT PROFILE</span>
             </div>
         </div>
 
+        <!--        &lt;!&ndash; Reg. No. , Dise Code &ndash;&gt;-->
+        <!--        <div class="row no-gutters">-->
+        <!--            <div class="col-xs-6 d-flex custom-padding">-->
+        <!--                Dise code : {{user.activeSchool.diseCode}}-->
+        <!--            </div>-->
+        <!--            <div class="col-xs-6 d-flex custom-padding" align="end">-->
+        <!--                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">-->
+        <!--                    School Code :-->
+        <!--                </ng-container>-->
+        <!--                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">-->
+        <!--                    Affiliation No. :-->
+        <!--                </ng-container>-->
+        <!--                {{user.activeSchool.affiliationNumber}}-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-<!--        &lt;!&ndash; Reg. No. , Dise Code &ndash;&gt;-->
-<!--        <div class="row no-gutters">-->
-<!--            <div class="col-xs-6 d-flex custom-padding">-->
-<!--                Dise code : {{user.activeSchool.diseCode}}-->
-<!--            </div>-->
-<!--            <div class="col-xs-6 d-flex custom-padding" align="end">-->
-<!--                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">-->
-<!--                    School Code :-->
-<!--                </ng-container>-->
-<!--                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">-->
-<!--                    Affiliation No. :-->
-<!--                </ng-container>-->
-<!--                {{user.activeSchool.affiliationNumber}}-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <ng-container>-->
+        <!--            <img src="{{user.activeSchool.profileImage}}"-->
+        <!--                 style="border-radius: 2px; position: absolute;-->
+        <!--         top: 40px; left: 20px;-->
+        <!--         width: 80px; height: 80px;"/>-->
 
-<!--        <ng-container>-->
-<!--            <img src="{{user.activeSchool.profileImage}}"-->
-<!--                 style="border-radius: 2px; position: absolute;-->
-<!--         top: 40px; left: 20px;-->
-<!--         width: 80px; height: 80px;"/>-->
+        <!--            &lt;!&ndash; Background Watermark &ndash;&gt;-->
+        <!--            <img src="{{user.activeSchool.profileImage}}"-->
+        <!--                 style="border-radius: 2px; position: absolute;-->
+        <!--         top: 350px; left: 198px;-->
+        <!--         width: 350px; height: 350px;-->
+        <!--         opacity: 0.07;-->
+        <!--         filter: grayscale(100%);-->
+        <!--         z-index: 10;"/>-->
 
-<!--            &lt;!&ndash; Background Watermark &ndash;&gt;-->
-<!--            <img src="{{user.activeSchool.profileImage}}"-->
-<!--                 style="border-radius: 2px; position: absolute;-->
-<!--         top: 350px; left: 198px;-->
-<!--         width: 350px; height: 350px;-->
-<!--         opacity: 0.07;-->
-<!--         filter: grayscale(100%);-->
-<!--         z-index: 10;"/>-->
+        <!--            &lt;!&ndash; School Name &ndash;&gt;-->
+        <!--            <div class="row no-gutters" style="margin-top: 20px;margin-bottom: 10px">-->
+        <!--                <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">-->
+        <!--                    <span style="background-color: yellow; font-size: 35px">-->
+        <!--                        {{user.activeSchool.printName}}-->
+        <!--                    </span>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </ng-container>-->
 
-<!--            &lt;!&ndash; School Name &ndash;&gt;-->
-<!--            <div class="row no-gutters" style="margin-top: 20px;margin-bottom: 10px">-->
-<!--                <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">-->
-<!--                    <span style="background-color: yellow; font-size: 35px">-->
-<!--                        {{user.activeSchool.printName}}-->
-<!--                    </span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </ng-container>-->
+        <!--        &lt;!&ndash; Address &ndash;&gt;-->
+        <!--        <div class="row no-gutters">-->
+        <!--            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">-->
+        <!--            <span   style="font-size: 15px;">-->
+        <!--                {{user.activeSchool.address}}<br/>-->
+        <!--                (Regd. and Recognised by M.P. Govt.)-->
+        <!--            </span>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-<!--        &lt;!&ndash; Address &ndash;&gt;-->
-<!--        <div class="row no-gutters">-->
-<!--            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">-->
-<!--            <span   style="font-size: 15px;">-->
-<!--                {{user.activeSchool.address}}<br/>-->
-<!--                (Regd. and Recognised by M.P. Govt.)-->
-<!--            </span>-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        &lt;!&ndash; School Transfer Certificate &ndash;&gt;-->
+        <!--        <div class="row no-gutters" style="margin-top: 20px;margin-bottom: 1.5vh">-->
+        <!--            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">-->
+        <!--                <span style="font-size: 28px;"><u>STUDENT PROFILE</u></span><br/>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-<!--        &lt;!&ndash; School Transfer Certificate &ndash;&gt;-->
-<!--        <div class="row no-gutters" style="margin-top: 20px;margin-bottom: 1.5vh">-->
-<!--            <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">-->
-<!--                <span style="font-size: 28px;"><u>STUDENT PROFILE</u></span><br/>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div style="padding-left: 20px; margin-top: 40px; padding-right: 20px; font-size: 15px">
+            <!--                <div class="col-xs-2" align="center">-->
+            <!--                    <img *ngIf="selectedStudent.profileImage"-->
+            <!--                         src="{{selectedStudent.profileImage}}"-->
+            <!--                         style="width: 100%">-->
 
-        <div style="padding-left: 20px; margin-top: 40px;padding-right: 20px;font-size: 15px;">
-<!--                <div class="col-xs-2" align="center">-->
-<!--                    <img *ngIf="selectedStudent.profileImage"-->
-<!--                         src="{{selectedStudent.profileImage}}"-->
-<!--                         style="width: 100%">-->
-
-<!--                    <img *ngIf="!selectedStudent.profileImage"-->
-<!--                         src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"-->
-<!--                         style="width: 100%"/>-->
-<!--                </div>-->
+            <!--                    <img *ngIf="!selectedStudent.profileImage"-->
+            <!--                         src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"-->
+            <!--                         style="width: 100%"/>-->
+            <!--                </div>-->
             <div class="row" style="margin-bottom: 1.3vh">
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Student Name :</span><br>
-                    <span >{{selectedStudent.name}}</span>
+                    <span style="font-weight: normal">Student Name :</span><br />
+                    <span>{{ selectedStudent.name }}</span>
                 </div>
                 <div class="col-xs-8">
-                    <span style="font-weight: normal">Father's Name :</span><br>
-                    <span  *ngIf="selectedStudent.fathersName!=null">{{selectedStudent.fathersName}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.fathersName==null" >_______________</span>
+                    <span style="font-weight: normal">Father's Name :</span><br />
+                    <span *ngIf="selectedStudent.fathersName != null">{{ selectedStudent.fathersName }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.fathersName == null"
+                        >_______________</span
+                    >
                 </div>
             </div>
             <div class="row" style="margin-bottom: 1.3vh">
-                <div class="col-xs-4" >
-                    <span style="font-weight: normal">Mother's Name :</span><br>
-                    <span  *ngIf="selectedStudent.motherName!=null">{{selectedStudent.motherName}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.motherName==null" >_______________</span>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Mother's Name :</span><br />
+                    <span *ngIf="selectedStudent.motherName != null">{{ selectedStudent.motherName }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.motherName == null"
+                        >_______________</span
+                    >
                 </div>
                 <div class="col-xs-8">
                     <span style="font-weight: normal">Date Of Birth : </span>
-                    <span  *ngIf="selectedStudent.dateOfBirth!=null"> {{selectedStudent.dateOfBirth | date: 'dd/MM/yyyy'}}</span>
-                    <br>
-                    <span  *ngIf="selectedStudent.dateOfBirth!=null">({{selectedStudent.dateOfBirth | dateInWords}})</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.dateOfBirth==null" >________________</span>
+                    <span *ngIf="selectedStudent.dateOfBirth != null"> {{ selectedStudent.dateOfBirth | date: 'dd/MM/yyyy' }}</span>
+                    <br />
+                    <span *ngIf="selectedStudent.dateOfBirth != null">({{ selectedStudent.dateOfBirth | dateInWords }})</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.dateOfBirth == null"
+                        >________________</span
+                    >
                 </div>
             </div>
 
             <div class="row no-gutters" style="margin-bottom: 1.3vh">
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Admission Session :</span><br>
-                    <span  *ngIf="selectedStudent.admissionSession!=null">{{getSessionName(selectedStudent.admissionSession)}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.admissionSession==null" >___________________</span>
+                    <span style="font-weight: normal">Admission Session :</span><br />
+                    <span *ngIf="selectedStudent.admissionSession != null">{{ getSessionName(selectedStudent.admissionSession) }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.admissionSession == null"
+                        >___________________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Date Of Admission :</span><br>
-                    <span  *ngIf="selectedStudent.dateOfAdmission!=null">{{selectedStudent.dateOfAdmission | date: 'dd/MM/yyyy'}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.dateOfAdmission==null" >___________________</span>
+                    <span style="font-weight: normal">Date Of Admission :</span><br />
+                    <span *ngIf="selectedStudent.dateOfAdmission != null">{{ selectedStudent.dateOfAdmission | date: 'dd/MM/yyyy' }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.dateOfAdmission == null"
+                        >___________________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">RTE Status :</span><br>
-                    <span  *ngIf="selectedStudent.rte!=null">{{selectedStudent.rte}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.rte==null" >____________</span>
-                </div>
-            </div>
-            <div class="row no-gutters" style="margin-bottom: 1.3vh">
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Scholar Number :</span><br>
-                    <span  *ngIf="selectedStudent.scholarNumber!=null && selectedStudent.scholarNumber!=''">{{selectedStudent.scholarNumber}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.scholarNumber==null || selectedStudent.scholarNumber==''" >________________</span>
-                </div>
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Class :</span><br>
-                    <span  *ngIf="studentSection.parentClass!=null">{{getClassName(studentSection.parentClass)}}  {{getSectionName(studentSection.parentDivision)}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="studentSection.parentClass==null" >_______</span>
-                </div>
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Roll Number :</span><br>
-                    <span  *ngIf="studentSection.rollNumber!=null">{{studentSection.rollNumber}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="studentSection.rollNumber==null" >_____________</span>
+                    <span style="font-weight: normal">RTE Status :</span><br />
+                    <span *ngIf="selectedStudent.rte != null">{{ selectedStudent.rte }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.rte == null"
+                        >____________</span
+                    >
                 </div>
             </div>
             <div class="row no-gutters" style="margin-bottom: 1.3vh">
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Gender :</span><br>
-                    <span  *ngIf="selectedStudent.gender!=null">{{selectedStudent.gender}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.gender==null" >________</span>
+                    <span style="font-weight: normal">Scholar Number :</span><br />
+                    <span *ngIf="selectedStudent.scholarNumber != null && selectedStudent.scholarNumber != ''">{{
+                        selectedStudent.scholarNumber
+                    }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.scholarNumber == null || selectedStudent.scholarNumber == ''"
+                        >________________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Blood Group :</span><br>
-                    <span  *ngIf="selectedStudent.bloodGroup!=null">{{selectedStudent.bloodGroup}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bloodGroup==null" >_____________</span>
+                    <span style="font-weight: normal">Class :</span><br />
+                    <span *ngIf="studentSection.parentClass != null"
+                        >{{ getClassName(studentSection.parentClass) }} {{ getSectionName(studentSection.parentDivision) }}</span
+                    >
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="studentSection.parentClass == null"
+                        >_______</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Bus Stop :</span><br>
-                    <span  *ngIf="selectedStudent.currentBusStop!=null">{{getCurrentBusStop(selectedStudent.currentBusStop)}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.currentBusStop==null" >__________</span>
-                </div>
-            </div>
-            <div class="row no-gutters" style="margin-bottom: 1.3vh">
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Category :</span><br>
-                    <span  *ngIf="selectedStudent.newCategoryField!=null">{{selectedStudent.newCategoryField}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.newCategoryField==null" >__________</span>
-                </div>
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Religion :</span><br>
-                    <span  *ngIf="selectedStudent.newReligionField!=null">{{selectedStudent.newReligionField}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.newReligionField==null" >__________</span>
-                </div>
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Caste :</span><br>
-                    <span  *ngIf="selectedStudent.caste!=null">{{selectedStudent.caste}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.caste==null" >_______</span>
+                    <span style="font-weight: normal">Roll Number :</span><br />
+                    <span *ngIf="studentSection.rollNumber != null">{{ studentSection.rollNumber }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="studentSection.rollNumber == null"
+                        >_____________</span
+                    >
                 </div>
             </div>
             <div class="row no-gutters" style="margin-bottom: 1.3vh">
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Aadhar Number :</span><br>
-                    <span  *ngIf="selectedStudent.aadharNum!=null">{{selectedStudent.aadharNum}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.aadharNum==null" >_______________</span>
+                    <span style="font-weight: normal">Gender :</span><br />
+                    <span *ngIf="selectedStudent.gender != null">{{ selectedStudent.gender }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.gender == null"
+                        >________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">SSSMID :</span><br>
-                    <span  *ngIf="selectedStudent.childSSMID!=null">{{selectedStudent.childSSMID}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.childSSMID==null" >________</span>
+                    <span style="font-weight: normal">Blood Group :</span><br />
+                    <span *ngIf="selectedStudent.bloodGroup != null">{{ selectedStudent.bloodGroup }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bloodGroup == null"
+                        >_____________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Family ID :</span><br>
-                    <span  *ngIf="selectedStudent.familySSMID!=null">{{selectedStudent.familySSMID}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.familySSMID==null" >___________</span>
-                </div>
-            </div>
-            <div class="row no-gutters" style="margin-bottom: 1.3vh">
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Father Occupation :</span><br>
-                    <span  *ngIf="selectedStudent.fatherOccupation!=null">{{selectedStudent.fatherOccupation}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.fatherOccupation==null" >___________________</span>
-                </div>
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Annual Income :</span><br>
-                    <span  *ngIf="selectedStudent.fatherAnnualIncome!=null">{{selectedStudent.fatherAnnualIncome  | indianCurrency}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.fatherAnnualIncome==null" >_______________</span>
-                </div>
-                <div class="col-xs-4">
-                    <span style="font-weight: normal">Mobile Number :</span><br>
-                    <span  *ngIf="selectedStudent.mobileNumber!=null">{{selectedStudent.mobileNumber}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.mobileNumber==null" >_______________</span>
+                    <span style="font-weight: normal">Bus Stop :</span><br />
+                    <span *ngIf="selectedStudent.currentBusStop != null">{{ getCurrentBusStop(selectedStudent.currentBusStop) }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.currentBusStop == null"
+                        >__________</span
+                    >
                 </div>
             </div>
             <div class="row no-gutters" style="margin-bottom: 1.3vh">
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Bank Name :</span><br>
-                    <span  *ngIf="selectedStudent.bankName!=null">{{selectedStudent.bankName}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bankName==null" >___________</span>
+                    <span style="font-weight: normal">Category :</span><br />
+                    <span *ngIf="selectedStudent.newCategoryField != null">{{ selectedStudent.newCategoryField }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.newCategoryField == null"
+                        >__________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Bank A/c Number :</span><br>
-                    <span  *ngIf="selectedStudent.bankAccountNum!=null">{{selectedStudent.bankAccountNum}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bankAccountNum==null" >_________________</span>
+                    <span style="font-weight: normal">Religion :</span><br />
+                    <span *ngIf="selectedStudent.newReligionField != null">{{ selectedStudent.newReligionField }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.newReligionField == null"
+                        >__________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">IFSC :</span><br>
-                    <span  *ngIf="selectedStudent.bankIfscCode!=null">{{selectedStudent.bankIfscCode}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bankIfscCode==null" >______</span>
+                    <span style="font-weight: normal">Caste :</span><br />
+                    <span *ngIf="selectedStudent.caste != null">{{ selectedStudent.caste }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.caste == null"
+                        >_______</span
+                    >
+                </div>
+            </div>
+            <div class="row no-gutters" style="margin-bottom: 1.3vh">
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Aadhar Number :</span><br />
+                    <span *ngIf="selectedStudent.aadharNum != null">{{ selectedStudent.aadharNum }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.aadharNum == null"
+                        >_______________</span
+                    >
+                </div>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">SSSMID :</span><br />
+                    <span *ngIf="selectedStudent.childSSMID != null">{{ selectedStudent.childSSMID }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.childSSMID == null"
+                        >________</span
+                    >
+                </div>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Family ID :</span><br />
+                    <span *ngIf="selectedStudent.familySSMID != null">{{ selectedStudent.familySSMID }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.familySSMID == null"
+                        >___________</span
+                    >
+                </div>
+            </div>
+            <div class="row no-gutters" style="margin-bottom: 1.3vh">
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Father Occupation :</span><br />
+                    <span *ngIf="selectedStudent.fatherOccupation != null">{{ selectedStudent.fatherOccupation }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.fatherOccupation == null"
+                        >___________________</span
+                    >
+                </div>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Annual Income :</span><br />
+                    <span *ngIf="selectedStudent.fatherAnnualIncome != null">{{
+                        selectedStudent.fatherAnnualIncome | indianCurrency
+                    }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.fatherAnnualIncome == null"
+                        >_______________</span
+                    >
+                </div>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Mobile Number :</span><br />
+                    <span *ngIf="selectedStudent.mobileNumber != null">{{ selectedStudent.mobileNumber }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.mobileNumber == null"
+                        >_______________</span
+                    >
+                </div>
+            </div>
+            <div class="row no-gutters" style="margin-bottom: 1.3vh">
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Bank Name :</span><br />
+                    <span *ngIf="selectedStudent.bankName != null">{{ selectedStudent.bankName }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bankName == null"
+                        >___________</span
+                    >
+                </div>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">Bank A/c Number :</span><br />
+                    <span *ngIf="selectedStudent.bankAccountNum != null">{{ selectedStudent.bankAccountNum }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.bankAccountNum == null"
+                        >_________________</span
+                    >
+                </div>
+                <div class="col-xs-4">
+                    <span style="font-weight: normal">IFSC :</span><br />
+                    <span *ngIf="selectedStudent.bankIfscCode != null">{{ selectedStudent.bankIfscCode }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.bankIfscCode == null"
+                        >______</span
+                    >
                 </div>
             </div>
             <div class="row no-gutters" style="margin-bottom: 1.3vh">
                 <div class="col-xs-8">
-                    <span style="font-weight: normal">Address :</span><br>
-                    <span  *ngIf="selectedStudent.address!=null">{{selectedStudent.address}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.address==null" >__________________</span>
+                    <span style="font-weight: normal">Address :</span><br />
+                    <span *ngIf="selectedStudent.address != null">{{ selectedStudent.address }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.address == null"
+                        >__________________</span
+                    >
                 </div>
                 <div class="col-xs-4">
-                    <span style="font-weight: normal">Alternate Mobile Number </span><br>
-                    <span  *ngIf="selectedStudent.secondMobileNumber!=null && selectedStudent.secondMobileNumber!='0'">{{selectedStudent.secondMobileNumber}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.secondMobileNumber==null || selectedStudent.secondMobileNumber=='0'" >________________________</span>
+                    <span style="font-weight: normal">Alternate Mobile Number </span><br />
+                    <span *ngIf="selectedStudent.secondMobileNumber != null && selectedStudent.secondMobileNumber != '0'">{{
+                        selectedStudent.secondMobileNumber
+                    }}</span>
+                    <span
+                        style="font-family: Courier, Monaco, monospace; font-weight: normal"
+                        *ngIf="selectedStudent.secondMobileNumber == null || selectedStudent.secondMobileNumber == '0'"
+                        >________________________</span
+                    >
                 </div>
             </div>
             <div class="row no-gutters">
                 <div class="col-xs-12">
-                    <span style="font-weight: normal">Remarks :</span><br>
-                    <span  *ngIf="selectedStudent.remark!=null">{{selectedStudent.remark}}</span>
-                    <span style=" font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.remark==null" >__________________</span>
+                    <span style="font-weight: normal">Remarks :</span><br />
+                    <span *ngIf="selectedStudent.remark != null">{{ selectedStudent.remark }}</span>
+                    <span style="font-family: Courier, Monaco, monospace; font-weight: normal" *ngIf="selectedStudent.remark == null"
+                        >__________________</span
+                    >
                 </div>
             </div>
         </div>
 
-        <div class="row no-gutters"
-             style="position: absolute; bottom: 10px; width: 100%;">
-            <div class="col-xs-4" align="center">
-                Student's Signature
-            </div>
-            <div class="col-xs-4" align="center">
-                Parent's Signature
-            </div>
-            <div class="col-xs-4" align="center">
-                Principal's Signature
-            </div>
+        <div class="row no-gutters" style="position: absolute; bottom: 10px; width: 100%">
+            <div class="col-xs-4" align="center">Student's Signature</div>
+            <div class="col-xs-4" align="center">Parent's Signature</div>
+            <div class="col-xs-4" align="center">Principal's Signature</div>
         </div>
-
     </div>
-
 </ng-container>

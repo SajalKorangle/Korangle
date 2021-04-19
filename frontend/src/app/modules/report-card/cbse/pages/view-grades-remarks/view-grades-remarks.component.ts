@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 
 import { ViewGradesRemarksServiceAdapter } from './view-grades-remarks.service.adapter';
 
-import { isMobile } from '../../../../../classes/common.js'
+import { isMobile } from '../../../../../classes/common.js';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {DataStorage} from "../../../../../classes/data-storage";
-import {ExaminationService} from "../../../../../services/modules/examination/examination.service";
-import {ReportCardCbseService} from "../../../../../services/modules/report-card/cbse/report-card-cbse.service";
-import {ClassService} from "../../../../../services/modules/class/class.service";
-import {EmployeeService} from "../../../../../services/modules/employee/employee.service";
-import {AttendanceService} from "../../../../../services/modules/attendance/attendance.service";
-import {StudentService} from "../../../../../services/modules/student/student.service";
+import { DataStorage } from '../../../../../classes/data-storage';
+import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
+import { ReportCardCbseService } from '../../../../../services/modules/report-card/cbse/report-card-cbse.service';
+import { ClassService } from '../../../../../services/modules/class/class.service';
+import { EmployeeService } from '../../../../../services/modules/employee/employee.service';
+import { AttendanceService } from '../../../../../services/modules/attendance/attendance.service';
+import { StudentService } from '../../../../../services/modules/student/student.service';
 
 declare const $: any;
 
@@ -19,18 +19,9 @@ declare const $: any;
     selector: 'view-grades-remarks',
     templateUrl: './view-grades-remarks.component.html',
     styleUrls: ['./view-grades-remarks.component.css'],
-    providers: [
-        ReportCardCbseService,
-        ExaminationService,
-        ClassService,
-        EmployeeService,
-        AttendanceService,
-        StudentService
-    ],
+    providers: [ReportCardCbseService, ExaminationService, ClassService, EmployeeService, AttendanceService, StudentService],
 })
-
 export class ViewGradesRemarksComponent implements OnInit {
-
     user;
 
     classSectionList = [];
@@ -57,12 +48,14 @@ export class ViewGradesRemarksComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public reportCardCbseService: ReportCardCbseService,
-                public classService: ClassService,
-                public employeeService: EmployeeService,
-                public attendanceService: AttendanceService,
-                public studentService: StudentService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(
+        public reportCardCbseService: ReportCardCbseService,
+        public classService: ClassService,
+        public employeeService: EmployeeService,
+        public attendanceService: AttendanceService,
+        public studentService: StudentService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -81,12 +74,12 @@ export class ViewGradesRemarksComponent implements OnInit {
         this.handleTermChange(this.selectedTerm);
     }
 
-    handleTermChange(term: any): void{
+    handleTermChange(term: any): void {
         this.selectedTerm = term;
         this.showStudentList = false;
-        if(this.showTermList() && this.selectedTerm ===this.termList[0]){
-            this.showRemark=false;
-        }else{
+        if (this.showTermList() && this.selectedTerm === this.termList[0]) {
+            this.showRemark = false;
+        } else {
             this.showRemark = true;
         }
     }
@@ -96,24 +89,28 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getFilteredStudentSectionList(): any {
-        return this.studentSectionList.filter(studentSection => {
-            return studentSection.parentClass == this.selectedClassSection.class.id
-                && studentSection.parentDivision == this.selectedClassSection.section.id;
-        }).sort( (a,b) => {
-            if (a.rollNumber && b.rollNumber) {
-                return a.rollNumber - b.rollNumber;
-            }
-        });
+        return this.studentSectionList
+            .filter((studentSection) => {
+                return (
+                    studentSection.parentClass == this.selectedClassSection.class.id &&
+                    studentSection.parentDivision == this.selectedClassSection.section.id
+                );
+            })
+            .sort((a, b) => {
+                if (a.rollNumber && b.rollNumber) {
+                    return a.rollNumber - b.rollNumber;
+                }
+            });
     }
 
     getStudent(studentSection: any): any {
-        return this.studentList.find(student => {
+        return this.studentList.find((student) => {
             return student.id == studentSection.parentStudent;
         });
     }
 
     getStudentRemark(studentSection: any): any {
-        let item = this.studentRemarkList.find(studentRemark => {
+        let item = this.studentRemarkList.find((studentRemark) => {
             return studentRemark.parentStudent == studentSection.parentStudent;
         });
         if (item) {
@@ -124,7 +121,7 @@ export class ViewGradesRemarksComponent implements OnInit {
     }
 
     getGrade(studentSection: any, index: number): any {
-        let item = this.studentExtraFieldList[index].find(studentExtraField => {
+        let item = this.studentExtraFieldList[index].find((studentExtraField) => {
             return studentExtraField.parentStudent == studentSection.parentStudent;
         });
         if (item) {
@@ -141,5 +138,4 @@ export class ViewGradesRemarksComponent implements OnInit {
         }
         return true;
     }
-
 }

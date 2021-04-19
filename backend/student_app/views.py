@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 
 import json
 
-from common.common_views import CommonView as OldCommonView, CommonListView as OldCommonListView
 from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission, user_permission_new, user_permission_3
 from student_app.models import Student, StudentSection, StudentParameter, StudentParameterValue
@@ -161,7 +160,7 @@ from .business.transfer_certificate import create_transfer_certificate, \
     get_transfer_certificate, update_transfer_certificate, delete_transfer_certificate
 
 
-class TransferCertificateView(APIView):
+class TransferCertificateView(APIView): # outdated
 
     @user_permission
     def get(request, transfer_certificate_id):
@@ -231,7 +230,6 @@ class StudentParameterListView(CommonListView, APIView):
 
 ########### Student Parameter Value#############
 
-from common.common_views_file import CommonView, CommonListView  #for file handling
 class StudentParameterValueView(CommonView, APIView):
     Model = StudentParameterValue
     RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentParameter__parentSchool__id']

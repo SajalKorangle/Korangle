@@ -9,17 +9,16 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-student-list.component.css'],
 })
 export class PrintStudentListComponent implements OnInit, AfterViewChecked {
-
     studentList: any;
     // classSectionStudentList: any;
     columnFilter: any;
 
     viewChecked = true;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
-        const {value} = this.printService.getData();
+        const { value } = this.printService.getData();
         this.studentList = value['studentList'];
         this.columnFilter = value['columnFilter'];
         this.viewChecked = false;
@@ -34,5 +33,4 @@ export class PrintStudentListComponent implements OnInit, AfterViewChecked {
             this.cdRef.detectChanges();
         }
     }
-
 }

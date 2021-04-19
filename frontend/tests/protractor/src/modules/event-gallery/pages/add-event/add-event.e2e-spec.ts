@@ -16,34 +16,34 @@ describe('Event Gallery -> Add Event', () => {
         // Opening Page
         await openModuleAndPage('Event Gallery', 'Add Event');
         await page.waitForTimeout(1000);
-        
+
     });
 
     it('Add Event : Adds a New Event', async () => {
         let nodes, node;
-        
+
         nodes = await containsAll('mat-card', '');  //count check
         expect(nodes.length).toBe(1);
-        
-        node = await containsFirst('input','');
+
+        node = await containsFirst('input', '');
         await node.type('Sports Day');
-        node = await containsFirst('textarea','');
+        node = await containsFirst('textarea', '');
         await node.type('There were many participants for the event');
-        
+
         node = await containsFirst('mat-select', '');
         await node.click();
-        
+
         node = await containsFirst('button', 'Select All');
         await node.click();
-        
+
         node = await containsFirst('button', 'Post Event');
         await node.click();
         await node.click();
-        
+
         await page.waitForXPath('//mat-card//following::mat-card');
         nodes = await containsAll('mat-card', '');  //count check
         expect(nodes.length).toBe(2);
-        
+
     });
 
     it('Add Event : Deletes an exiting Event', async () => {
@@ -58,7 +58,7 @@ describe('Event Gallery -> Add Event', () => {
         node = await containsFirst('button', 'Edit Event');
         await node.click();
 
-        node = await containsFirst('a','Delete Event');
+        node = await containsFirst('a', 'Delete Event');
         await node.click();
 
         nodes = await containsAll('mat-card', '');  //count check
@@ -73,11 +73,11 @@ describe('Event Gallery -> Add Event', () => {
         node = await containsFirst('button', 'Edit Event');
         await node.click();
 
-        node=await containsFirst("input",'');
-        await node.type(' edited')
+        node = await containsFirst("input", '');
+        await node.type(' edited');
 
-        node=await containsFirst("textarea",'');
-        await node.type(' edited')
+        node = await containsFirst("textarea", '');
+        await node.type(' edited');
 
         node = await containsFirst('button', 'Save Changes');
         await node.click();
@@ -92,5 +92,5 @@ describe('Event Gallery -> Add Event', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

@@ -29,9 +29,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         let nodes, node;
 
         // Typing Receipt Number And click Get button
-        node = await containsFirst('input','');
+        node = await containsFirst('input', '');
         await node.type('1');
-        node = await containsFirst('button','Get');
+        node = await containsFirst('button', 'Get');
         await node.click();
 
         // Checking Mat Card ( Fee receipts ) Count
@@ -45,9 +45,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
 
         // Typing the Cancel remark and clicking cancel in modal
         await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
-        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]', '');
         await node.type('Invalid Receipt 1');
-        node = await containsFirst('mat-dialog-container//following::button[2]','');  // click show subject filter button
+        node = await containsFirst('mat-dialog-container//following::button[2]', '');  // click show subject filter button
         await node.click();
 
         // Checking the cancelled text exists in the mat card
@@ -55,9 +55,9 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         expect(nodes.length).toBe(1);
 
         // Typing Cheque no.
-        node=await containsFirst("input",'');
-        await page.evaluate(el => el.value = '12345',node);
-        node = await containsFirst('button','Get');
+        node = await containsFirst("input", '');
+        await page.evaluate(el => el.value = '12345', node);
+        node = await containsFirst('button', 'Get');
         await node.click();
 
         // Checking Mat Card ( Fee receipts ) Count
@@ -73,11 +73,11 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         node = await containsFirst('mat-select', '');
         await node.click();
 
-        node = await containsFirst('mat-option','Student');
+        node = await containsFirst('mat-option', 'Student');
         await node.click();
 
         // Entering the student name and selecting a student
-        node = await containsFirst('input','');
+        node = await containsFirst('input', '');
         await node.type('Falak');
         node = await containsFirst('span', 'FALAK KHAN');
         await node.click();
@@ -92,10 +92,10 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await node.click();
 
         // Typing the Cancel remark and clicking cancel in modal
-        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]', '');
         await node.type('Invalid Receipt 2');
-        
-        node = await containsFirst('mat-dialog-container//following::button[2]','Cancel'); 
+
+        node = await containsFirst('mat-dialog-container//following::button[2]', 'Cancel');
         await node.click();
 
         // Checking the cancelled text exists in the mat cards
@@ -113,11 +113,11 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await nodes.click();
         nodes = await containsFirst('mat-option', 'Parent');
         await nodes.click();
-        
-        
+
+
         // Entering the Parent Number and selecting the parent
-        
-        node = await containsFirst('input','');
+
+        node = await containsFirst('input', '');
         await node.type('961715942');
         node = await containsFirst('span', ' 9617159429, VIJAY PARCHHE');
         await node.click();
@@ -131,10 +131,10 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         await node.click();
 
         // Typing the Cancel remark and clicking cancel in modal
-        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]', '');
         await node.type('Invalid Receipt 3');
 
-         node = await containsFirst('mat-dialog-container//following::button[2]','Cancel');  // click show subject filter button
+         node = await containsFirst('mat-dialog-container//following::button[2]', 'Cancel');  // click show subject filter button
          await node.click();
 
         // Checking the cancelled text exists in the mat cards
@@ -145,5 +145,5 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

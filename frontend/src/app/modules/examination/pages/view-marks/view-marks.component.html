@@ -1,119 +1,117 @@
 <div class="card-content table-responsive">
-
     <ng-container *ngIf="!isInitialLoading">
-
         <ng-container *ngIf="examinationList.length > 0 && classSectionList.length > 0">
-
-            <mat-form-field style="margin-right: 20px;">
-                <mat-select placeholder="Select Examination"
-                            [ngModel]="selectedExamination"
-                            [disabled]="isLoading"
-                            (ngModelChange)="selectedExamination=$event;showTestDetails=false;">
-                    <mat-option *ngFor='let examination of examinationList;' [value]="examination">
-                        {{examination.name}}
+            <mat-form-field style="margin-right: 20px">
+                <mat-select
+                    placeholder="Select Examination"
+                    [ngModel]="selectedExamination"
+                    [disabled]="isLoading"
+                    (ngModelChange)="selectedExamination = $event; showTestDetails = false"
+                >
+                    <mat-option *ngFor="let examination of examinationList" [value]="examination">
+                        {{ examination.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field style="margin-right: 20px;">
-                <mat-select placeholder="Select Class"
-                            [ngModel]="selectedClassSection"
-                            [disabled]="isLoading"
-                            (ngModelChange)="selectedClassSection=$event;showTestDetails=false;">
-                    <mat-option *ngFor='let classSection of classSectionList;' [value]="classSection">
-                        {{classSection.class.name}}<span *ngIf="showSectionName(classSection)">, {{classSection.section.name}}</span>
+            <mat-form-field style="margin-right: 20px">
+                <mat-select
+                    placeholder="Select Class"
+                    [ngModel]="selectedClassSection"
+                    [disabled]="isLoading"
+                    (ngModelChange)="selectedClassSection = $event; showTestDetails = false"
+                >
+                    <mat-option *ngFor="let classSection of classSectionList" [value]="classSection">
+                        {{ classSection.class.name }}<span *ngIf="showSectionName(classSection)">, {{ classSection.section.name }}</span>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.getStudentTestDetails()">GET</button>
-
+            <button
+                type="submit"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.getStudentTestDetails()"
+            >
+                GET
+            </button>
         </ng-container>
 
-        <ng-container *ngIf="examinationList.length == 0">
-            *No examinations declared in this session
-        </ng-container>
+        <ng-container *ngIf="examinationList.length == 0"> *No examinations declared in this session </ng-container>
 
-        <ng-container *ngIf="classSectionList.length == 0">
-            *No students added in this session
-        </ng-container>
+        <ng-container *ngIf="classSectionList.length == 0"> *No students added in this session </ng-container>
 
         <ng-container *ngIf="showTestDetails && !isLoading">
-
             <!-- div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
                 <div class="col-md-12"></div>
             </div -->
-            <button class="btn" style="padding: 4px 7px; display: block" (click)="subjectFilterDisplay=!subjectFilterDisplay">
-                {{subjectFilterDisplay?'Hide Subjects Filter':'Show Subjects Filter'}}
+            <button class="btn" style="padding: 4px 7px; display: block" (click)="subjectFilterDisplay = !subjectFilterDisplay">
+                {{ subjectFilterDisplay ? 'Hide Subjects Filter' : 'Show Subjects Filter' }}
             </button>
 
             <div class="subject-selection" *ngIf="subjectFilterDisplay">
-                <div *ngFor="let test of testList; let i=index" style="white-space: nowrap;">
-                    <mat-checkbox  [ngModel]="showSubjectTestList[i]" (ngModelChange)="showSubjectTestListSwitch(i)">
-                        <label>{{getSubject(test).name}} <span *ngIf="test.testType">- {{test.testType}}</span> ({{test.maximumMarks}})</label>
+                <div *ngFor="let test of testList; let i = index" style="white-space: nowrap">
+                    <mat-checkbox [ngModel]="showSubjectTestList[i]" (ngModelChange)="showSubjectTestListSwitch(i)">
+                        <label
+                            >{{ getSubject(test).name }} <span *ngIf="test.testType">- {{ test.testType }}</span> ({{
+                                test.maximumMarks
+                            }})</label
+                        >
                     </mat-checkbox>
                 </div>
             </div>
 
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th class="no-wrap" (click)="updateSortingParameters('rank')">Rank</th>
-                    <th (click)="updateSortingParameters('name')">Student</th>
-                    <th (click)="updateSortingParameters('rollNumber')">Roll No.</th>
-                    <th (click)="updateSortingParameters('rank')">Total ({{getFilteredTotalMaximumMarks()}})</th>
-                    <th *ngFor="let test of getFilteredTestList(); let i=index" (click)="updateSortingParameters(test)">
-                        {{getSubject(test).name}} <span *ngIf="test.testType">- {{test.testType}}</span> ({{test.maximumMarks}})
-                    </th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th class="no-wrap" (click)="updateSortingParameters('rank')">Rank</th>
+                        <th (click)="updateSortingParameters('name')">Student</th>
+                        <th (click)="updateSortingParameters('rollNumber')">Roll No.</th>
+                        <th (click)="updateSortingParameters('rank')">Total ({{ getFilteredTotalMaximumMarks() }})</th>
+                        <th *ngFor="let test of getFilteredTestList(); let i = index" (click)="updateSortingParameters(test)">
+                            {{ getSubject(test).name }} <span *ngIf="test.testType">- {{ test.testType }}</span> ({{ test.maximumMarks }})
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let studentSection of getSortedFilteredStudentSectionList(); let i=index;">
-                    <td>{{studentSection.rank}}.</td>
-                    <td>{{getStudent(studentSection).name}}</td>
-                    <td>{{studentSection.rollNumber}}</td>
-                    <td class="no-wrap">  
-                        {{getStudentFilteredTotalMarks(studentSection)}} 
-                        <span style="color: rgb(0,79,208);">
-                            ({{(getStudentFilteredTotalMarks(studentSection)*100/getFilteredTotalMaximumMarks()).toFixed(2)}}%)
-                        </span>
-                    </td>
-                    <ng-container *ngFor="let test of getFilteredTestList()">
-                        <td [class.yellow]="getStudentMarks(studentSection, test) == 0">
-                            {{getStudentMarks(studentSection, test)}}
+                    <tr *ngFor="let studentSection of getSortedFilteredStudentSectionList(); let i = index">
+                        <td>{{ studentSection.rank }}.</td>
+                        <td>{{ getStudent(studentSection).name }}</td>
+                        <td>{{ studentSection.rollNumber }}</td>
+                        <td class="no-wrap">
+                            {{ getStudentFilteredTotalMarks(studentSection) }}
+                            <span style="color: rgb(0, 79, 208)">
+                                ({{ ((getStudentFilteredTotalMarks(studentSection) * 100) / getFilteredTotalMaximumMarks()).toFixed(2) }}%)
+                            </span>
                         </td>
-                    </ng-container>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td *ngFor="let test of getFilteredTestList()">
-                        <ng-container *ngIf="!isMobile()">
-                            {{getEmployeeName(test)}}<br/>
-                            {{getEmployeeMobileNumber(test)}}
+                        <ng-container *ngFor="let test of getFilteredTestList()">
+                            <td [class.yellow]="getStudentMarks(studentSection, test) == 0">
+                                {{ getStudentMarks(studentSection, test) }}
+                            </td>
                         </ng-container>
-                        <a *ngIf="isMobile()" href="tel:{{getEmployeeMobileNumber(test)}}">{{getEmployeeName(test)}}</a>
-                    </td>
-                </tr>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td *ngFor="let test of getFilteredTestList()">
+                            <ng-container *ngIf="!isMobile()">
+                                {{ getEmployeeName(test) }}<br />
+                                {{ getEmployeeMobileNumber(test) }}
+                            </ng-container>
+                            <a *ngIf="isMobile()" href="tel:{{ getEmployeeMobileNumber(test) }}">{{ getEmployeeName(test) }}</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
-            <button type="submit"
-                    *ngIf="!isMobile()"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="downloadList()">Download</button>
-
+            <button type="submit" *ngIf="!isMobile()" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="downloadList()">
+                Download
+            </button>
         </ng-container>
-
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

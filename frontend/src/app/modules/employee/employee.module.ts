@@ -12,13 +12,13 @@ import { AssignTaskComponent } from './pages/assign-task/assign-task.component';
 import { EmployeeRoutingModule } from './employee.routing';
 
 import { EmployeeOldService } from '../../services/modules/employee/employee-old.service';
-import {ICardsComponent} from './pages/i-cards/i-cards.component';
-import {NgxDatatableModule} from '@swimlane/ngx-datatable';
-import {ExperienceCertiComponent} from './pages/experience-certi/experience-certi.component';
+import { ICardsComponent } from './pages/i-cards/i-cards.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ExperienceCertiComponent } from './pages/experience-certi/experience-certi.component';
 import { PrintEmployeeExpCertiComponent } from './print/print-employee-exp-certi/print-employee-exp-certi.component';
 import { PrintEmployeeICardsComponent } from './print/print-employee-i-card/print-employee-i-cards.component';
 import { PrintEmployeeListComponent } from './print/print-employee-list/print-employee-list.component';
-import {ExcelService} from "../../excel/excel-service";
+import { ExcelService } from '../../excel/excel-service';
 
 @NgModule({
     declarations: [
@@ -31,18 +31,12 @@ import {ExcelService} from "../../excel/excel-service";
         // ExperienceCertiComponent,
         PrintEmployeeExpCertiComponent,
         PrintEmployeeICardsComponent,
-        PrintEmployeeListComponent
+        PrintEmployeeListComponent,
     ],
 
-    imports: [
-        ComponentsModule,
-        EmployeeRoutingModule,
-        NgxDatatableModule
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, EmployeeRoutingModule, NgxDatatableModule],
+    exports: [],
     providers: [EmployeeOldService, ExcelService],
-    bootstrap: [EmployeeComponent]
+    bootstrap: [EmployeeComponent],
 })
-export class EmployeeModule { }
+export class EmployeeModule {}

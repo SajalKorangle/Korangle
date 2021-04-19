@@ -1,34 +1,21 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
         <!-- Stop Name, Distance (km) -->
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Stop Name"
-                           [(ngModel)]="newBusStop.stopName">
+                    <input matInput type="text" placeholder="Stop Name" [(ngModel)]="newBusStop.stopName" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Distance (km)"
-                           [(ngModel)]="newBusStop.kmDistance">
+                    <input matInput type="number" placeholder="Distance (km)" [(ngModel)]="newBusStop.kmDistance" />
                 </mat-form-field>
             </div>
         </div>
 
-        <button type="submit"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="createNewBusStop()">Add Bus Stop
-        </button>
-
+        <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="createNewBusStop()">Add Bus Stop</button>
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">

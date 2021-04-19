@@ -58,7 +58,12 @@ def user_permission_new(function):
 def user_permission_3(function):
     def wrap(*args, **kwargs):
         request = args[1]
-
+        # if ('method' in request.GET and request.GET['method'] == 'GET'):
+        #    request.GET._mutable = True
+        #    del request.GET['method']
+        #    request.GET._mutable = False
+        #    return args[0].get(request)
+            
         # no need to check authentication because the RestAPIView class by default check for authentication
 
         if ('activeSchoolID' in request.GET.keys()):    # User is requesting as employee

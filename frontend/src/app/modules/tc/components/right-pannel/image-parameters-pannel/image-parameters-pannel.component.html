@@ -1,19 +1,33 @@
-<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
-    <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">settings_overscan</i>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">settings_overscan</i>
     </div>
-    <div style="margin: 4px; padding: 4px;">
-
+    <div style="margin: 4px; padding: 4px">
         <mat-form-field>
-            <input type="number" matInput [ngModel]="getImageHeight()"
-                (ngModelChange)="layer.updateHeight($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Height(mm)">
+            <input
+                type="number"
+                matInput
+                [ngModel]="getImageHeight()"
+                (ngModelChange)="layer.updateHeight($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Height(mm)"
+            />
         </mat-form-field>
-        <button class="btn material-icons" style="padding: 4px; display: block; margin: auto;" [style.backgroundColor]="layer.maintainAspectRatio==true?'blue':''" (click)="layer.maintainAspectRatio=!layer.maintainAspectRatio; layer.aspectRatio=layer.width/layer.height; ">link</button>
-        <mat-form-field style="margin-top: 16px;">
-            <input type="number" matInput [ngModel]="getImageWidth()"
-                (ngModelChange)="layer.updateWidth($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Width(mm)">
+        <button
+            class="btn material-icons"
+            style="padding: 4px; display: block; margin: auto"
+            [style.backgroundColor]="layer.maintainAspectRatio == true ? 'blue' : ''"
+            (click)="layer.maintainAspectRatio = !layer.maintainAspectRatio; layer.aspectRatio = layer.width / layer.height"
+        >
+            link
+        </button>
+        <mat-form-field style="margin-top: 16px">
+            <input
+                type="number"
+                matInput
+                [ngModel]="getImageWidth()"
+                (ngModelChange)="layer.updateWidth($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Width(mm)"
+            />
         </mat-form-field>
-       
     </div>
-
 </mat-card>

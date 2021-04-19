@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-@Pipe({name: 'indianCurrency'})
+@Pipe({ name: 'indianCurrency' })
 export class IndianCurrencyPipe implements PipeTransform {
     constructor(private sanitizer: DomSanitizer) {}
     transform(money, symbol: boolean = false) {

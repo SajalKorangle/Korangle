@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import { UpdateBusStopRoutingModule} from './update-bus-stop.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {UpdateBusStopComponent} from "./update-bus-stop.component";
-
+import { UpdateBusStopRoutingModule } from './update-bus-stop.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { UpdateBusStopComponent } from './update-bus-stop.component';
 
 @NgModule({
-    declarations: [
-        UpdateBusStopComponent
-    ],
+    declarations: [UpdateBusStopComponent],
 
-    imports: [
-        UpdateBusStopRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [UpdateBusStopRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [UpdateBusStopComponent]
+    bootstrap: [UpdateBusStopComponent],
 })
-export class UpdateBusStopModule { }
+export class UpdateBusStopModule {}

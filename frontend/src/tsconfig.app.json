@@ -1,27 +1,20 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "module": "commonjs",
-    "baseUrl": "./",
-    "types": ["node"],
-    "paths": {
-      "@modules/*": ["app/modules/*"],
-      "@basic-components/*": ["app/basic-components/*"],
-      "@classes/*": ["app/classes/*"],
-      "@components/*": ["app/components/*"],
-      "@services/*": ["app/services/*"],
-      "@urls/*": ["app/urls/*"],
-      "moment": [
-        "../node_modules/moment/min/moment.min.js"
-      ],
-      "xlsx": [
-        "../node_modules/xlsx/dist/xlsx.mini.min.js"
-      ]
-    }
-  },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "module": "commonjs",
+        "baseUrl": "./",
+        "types": ["node"],
+        "paths": {
+            "@modules/*": ["app/modules/*"],
+            "@basic-components/*": ["app/basic-components/*"],
+            "@classes/*": ["app/classes/*"],
+            "@components/*": ["app/components/*"],
+            "@services/*": ["app/services/*"],
+            "@urls/*": ["app/urls/*"],
+            "moment": ["../node_modules/moment/min/moment.min.js"],
+            "xlsx": ["../node_modules/xlsx/dist/xlsx.mini.min.js"]
+        }
+    },
+    "exclude": ["test.ts", "**/*.spec.ts"]
 }

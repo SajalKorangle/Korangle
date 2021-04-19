@@ -20,7 +20,7 @@ describe('Homework -> Issue Homework', () => {
 
         // Get Homework Create Template
         await (await containsFirst('button', 'GET')).click();
-        
+
         await BeforeAfterEach.page.waitForXPath('//input[@testId="homeworkName"]');
         const [inputElement] = await BeforeAfterEach.page.$x('//input[@testId="homeworkName"]');
         await inputElement.type('Chapter 1, Ex 1');

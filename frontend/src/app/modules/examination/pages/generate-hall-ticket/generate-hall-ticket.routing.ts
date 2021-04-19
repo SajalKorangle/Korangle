@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {GenerateHallTicketComponent} from "./generate-hall-ticket.component";
+import { GenerateHallTicketComponent } from './generate-hall-ticket.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: GenerateHallTicketComponent ,
-    }
+        component: GenerateHallTicketComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class GenerateHallTicketRoutingModule { }
+export class GenerateHallTicketRoutingModule {}

@@ -1,25 +1,17 @@
 import { NgModule } from '@angular/core';
 
-import {ComponentsModule} from "../../components/components.module";
+import { ComponentsModule } from '../../components/components.module';
 
 import { ClassComponent } from './class.component';
 
 import { ClassRoutingModule } from './class.routing';
 
-
 @NgModule({
-    declarations: [
+    declarations: [ClassComponent],
 
-        ClassComponent,
-
-    ],
-
-    imports: [
-        ComponentsModule,
-        ClassRoutingModule,
-    ],
+    imports: [ComponentsModule, ClassRoutingModule],
     exports: [],
     providers: [],
     bootstrap: [ClassComponent],
 })
-export class ClassModule { }
+export class ClassModule {}

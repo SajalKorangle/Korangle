@@ -4,9 +4,9 @@ import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 
 import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
-import {DataStorage} from '../../../../classes/data-storage';
+import { DataStorage } from '../../../../classes/data-storage';
 
-import {PARAMETER_LIST, DATA_TYPES, FIELDS, UserHandleStructure} from '@modules/id-card/class/constants';
+import { PARAMETER_LIST, DATA_TYPES, FIELDS, UserHandleStructure } from '@modules/id-card/class/constants';
 import DefaultIdCard from '@modules/id-card/class/id-card';
 import { FONT_FAMILY_LIST } from '@modules/id-card/class/font';
 
@@ -36,14 +36,12 @@ Con: number variable like 'x' & 'y' can not hold a text value. Things will be ti
 Con: Decimal Field returns string from backend, so every field needs to be handled explicitly in id-card.ts file.
 Con: 15.4 is showing as 15.400 which feels odd from aesthetic point of view.
  */
-
 export class DesignLayoutComponent implements OnInit {
-
     user;
 
     fields = FIELDS;
     dataTypes = DATA_TYPES;
-    parameterList = Object.assign([],PARAMETER_LIST);
+    parameterList = Object.assign([], PARAMETER_LIST);
     fontFamilyList = FONT_FAMILY_LIST;
 
     idCardLayoutList: any[] = [];
@@ -75,12 +73,7 @@ export class DesignLayoutComponent implements OnInit {
         divisionList: [],
     };
 
-
-    constructor(
-        public idCardService: IdCardService,
-        public studentService: StudentService,
-        public classService: ClassService,
-    ) {}
+    constructor(public idCardService: IdCardService, public studentService: StudentService, public classService: ClassService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -92,19 +85,29 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     downloadFont(): void {
-        this.fontFamilyList.forEach(fontFamily => {
+        this.fontFamilyList.forEach((fontFamily) => {
             const newStyle = document.createElement('style');
-            newStyle.appendChild(document.createTextNode(
-                '@font-face {' +
-                'font-family: ' + fontFamily.displayName + ';' +
-                'src: url("'
-                    + 'https://korangleplus.s3.amazonaws.com/'
-                    + this.encodeURIComponent('assets/fonts/' +
+            newStyle.appendChild(
+                document.createTextNode(
+                    '@font-face {' +
+                        'font-family: ' +
                         fontFamily.displayName +
-                        '/' + fontFamily.displayName + '-' + this.getFontStyleList(fontFamily.displayName)[0] + '.ttf')
-                + '");' +
-                '}'
-            ));
+                        ';' +
+                        'src: url("' +
+                        'https://korangleplus.s3.amazonaws.com/' +
+                        this.encodeURIComponent(
+                            'assets/fonts/' +
+                                fontFamily.displayName +
+                                '/' +
+                                fontFamily.displayName +
+                                '-' +
+                                this.getFontStyleList(fontFamily.displayName)[0] +
+                                '.ttf'
+                        ) +
+                        '");' +
+                        '}'
+                )
+            );
             document.head.appendChild(newStyle);
         });
     }
@@ -136,14 +139,15 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     doesCurrentLayoutHasUniqueName(): boolean {
-        return this.idCardLayoutList.filter(idCardLayout => {
-            return this.currentLayout.id !== idCardLayout.id
-                && idCardLayout.name === this.currentLayout.name;
-        }).length === 0;
-    };
+        return (
+            this.idCardLayoutList.filter((idCardLayout) => {
+                return this.currentLayout.id !== idCardLayout.id && idCardLayout.name === this.currentLayout.name;
+            }).length === 0
+        );
+    }
 
     resetCurrentLayout(): void {
-        const layout = this.idCardLayoutList.find(item => {
+        const layout = this.idCardLayoutList.find((item) => {
             return item.id === this.currentLayout.id;
         });
         this.populateCurrentLayoutWithGivenValue(layout === undefined ? this.ADD_LAYOUT_STRING : layout);
@@ -154,15 +158,15 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     getFilteredParameterList(field: any): any {
-        return this.parameterList.filter(item => {
+        return this.parameterList.filter((item) => {
             return item.field.fieldStructureKey === field.fieldStructureKey;
         });
     }
 
     getFilteredCurrentUserHandleListByGivenField(field: any): any {
-        return this.currentLayout.content.filter(userHandle => {
+        return this.currentLayout.content.filter((userHandle) => {
             return this.getParameter(userHandle.key).field.fieldStructureKey === field.fieldStructureKey;
-        })
+        });
     }
 
     resetBackground(): void {
@@ -187,7 +191,7 @@ export class DesignLayoutComponent implements OnInit {
                 return;
             }
             const reader = new FileReader();
-            reader.onload = e => {
+            reader.onload = (e) => {
                 this.currentLayout.background = reader.result;
                 this.updatePDF();
             };
@@ -196,40 +200,36 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     getParameter(key: any): any {
-        return this.parameterList.find(parameter => parameter.key === key);
+        return this.parameterList.find((parameter) => parameter.key === key);
     }
 
     addToCurrentUserHandleList(parameter: any): void {
-        this.currentLayout.content.push(
-            UserHandleStructure.getStructure(
-                parameter.key,
-                parameter.dataType
-            )
-        );
+        this.currentLayout.content.push(UserHandleStructure.getStructure(parameter.key, parameter.dataType));
         this.currentField = parameter.field;
         this.currentUserHandle = this.currentLayout.content[this.currentLayout.content.length - 1];
         if (parameter.field.fieldStructureKey === this.fields.CONSTANT.fieldStructureKey) {
-            this.currentUserHandle.value = 'Text - ' + (this.getFilteredCurrentUserHandleListByGivenField(parameter.field).length);
+            this.currentUserHandle.value = 'Text - ' + this.getFilteredCurrentUserHandleListByGivenField(parameter.field).length;
         }
     }
 
     getSelectedFieldKeyListInCurrentLayout(): any {
-        return Object.keys(this.fields).filter(fieldKey => {
-            return this.currentLayout.content.filter(userHandleStructure => {
-                return this.getParameter(userHandleStructure.key).field.fieldStructureKey === this.fields[fieldKey].fieldStructureKey;
-            }).length > 0;
+        return Object.keys(this.fields).filter((fieldKey) => {
+            return (
+                this.currentLayout.content.filter((userHandleStructure) => {
+                    return this.getParameter(userHandleStructure.key).field.fieldStructureKey === this.fields[fieldKey].fieldStructureKey;
+                }).length > 0
+            );
         });
     }
 
     pickAndSetCurrentUserHandle(): any {
-        this.currentUserHandle = this.currentLayout.content.find(userHandleStructure => {
+        this.currentUserHandle = this.currentLayout.content.find((userHandleStructure) => {
             return this.getParameter(userHandleStructure.key).field.fieldStructureKey === this.currentField.fieldStructureKey;
         });
     }
 
     deleteFromCurrentUserHandleList(userHandle: any): void {
-
-        this.currentLayout.content = this.currentLayout.content.filter(x => x !== userHandle);
+        this.currentLayout.content = this.currentLayout.content.filter((x) => x !== userHandle);
 
         if (this.currentLayout.content.length > 0) {
             this.currentField = this.fields[this.getSelectedFieldKeyListInCurrentLayout()[0]];
@@ -246,7 +246,7 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     getFontStyleList(fontFamilyDisplayName: any): any {
-        return this.fontFamilyList.find(fontFamily => {
+        return this.fontFamilyList.find((fontFamily) => {
             return fontFamily.displayName === fontFamilyDisplayName;
         }).styleList;
     }
@@ -257,11 +257,10 @@ export class DesignLayoutComponent implements OnInit {
     }
 
     async updatePDF(delay = 2000) {
-
         this.debounceFunction(async () => {
             let card;
             if (!this.printMultiple) {
-                const singleStudentData = {...this.data};
+                const singleStudentData = { ...this.data };
                 singleStudentData.studentList = [singleStudentData.studentList[0]];
                 card = new DefaultIdCard(this.printMultiple, this.currentLayout, singleStudentData, this.parameterList);
             } else {
@@ -270,7 +269,5 @@ export class DesignLayoutComponent implements OnInit {
             await card.generate();
             document.getElementById('iFrameDisplay').setAttribute('src', card.pdf.output('bloburi'));
         }, delay);
-
     }
-
 }

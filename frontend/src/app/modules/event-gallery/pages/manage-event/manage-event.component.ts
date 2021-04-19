@@ -1,28 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {DataStorage} from '@classes/data-storage';
-import {CommonFunctions} from '@classes/common-functions';
-import {MatDialog} from '@angular/material/dialog';
-import {FormControl} from '@angular/forms';
-import {EventGalleryService} from '@services/modules/event-gallery/event-gallery.service';
-import {map} from 'rxjs/operators';
-import {ManageEventServiceAdapter} from '@modules/event-gallery/pages/manage-event/manage-event.service.adapter';
-import {ViewImageModalComponent} from '@components/view-image-modal/view-image-modal.component';
-import {ManageEventHtmlAdapter} from '@modules/event-gallery/pages/manage-event/manage-event.html.adapter';
-
+import { Component, OnInit } from '@angular/core';
+import { DataStorage } from '@classes/data-storage';
+import { CommonFunctions } from '@classes/common-functions';
+import { MatDialog } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
+import { EventGalleryService } from '@services/modules/event-gallery/event-gallery.service';
+import { map } from 'rxjs/operators';
+import { ManageEventServiceAdapter } from '@modules/event-gallery/pages/manage-event/manage-event.service.adapter';
+import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
+import { ManageEventHtmlAdapter } from '@modules/event-gallery/pages/manage-event/manage-event.html.adapter';
 
 @Component({
     selector: 'app-manage-event',
     templateUrl: './manage-event.component.html',
     styleUrls: ['./manage-event.component.css'],
-    providers: [EventGalleryService]
+    providers: [EventGalleryService],
 })
 export class ManageEventComponent implements OnInit {
-
     user: any;
 
     serviceAdapter: ManageEventServiceAdapter;
     htmlAdapter: ManageEventHtmlAdapter;
-
 
     eventTagList: any;
     eventImageTagList: any;
@@ -35,9 +32,9 @@ export class ManageEventComponent implements OnInit {
     selectedImagesCount = 0;
     eventFormControl = new FormControl();
     selectedEvent: any;
-    imageCount=0;
-    totalImagesUploaded=0;
-  
+    imageCount = 0;
+    totalImagesUploaded = 0;
+
     isLoading: boolean;
     isImageUploading = false;
     isTagCreating: boolean;
@@ -45,11 +42,7 @@ export class ManageEventComponent implements OnInit {
     isDeletingImages: boolean;
     isAssigning: boolean;
 
-
-    constructor(public dialog: MatDialog,
-                public eventGalleryService: EventGalleryService) {
-    }
-
+    constructor(public dialog: MatDialog, public eventGalleryService: EventGalleryService) {}
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -61,8 +54,8 @@ export class ManageEventComponent implements OnInit {
         this.htmlAdapter.initializeAdapter(this);
 
         this.filteredEventList = this.eventFormControl.valueChanges.pipe(
-            map(value => typeof value === 'string' ? value : (value as any).title),
-            map(name => this.filterEventList(name.toString()))
+            map((value) => (typeof value === 'string' ? value : (value as any).title)),
+            map((name) => this.filterEventList(name.toString()))
         );
     }
 
@@ -70,13 +63,13 @@ export class ManageEventComponent implements OnInit {
         if (value === null || value === '') {
             return [];
         }
-        return this.eventList.filter(event => {
+        return this.eventList.filter((event) => {
             return event.title.toLowerCase().indexOf(value.toLowerCase()) === 0;
         });
     }
 
     openImagePreviewDialog(eventImages: any, index: any, editable: any): void {
-        eventImages.forEach(img => {
+        eventImages.forEach((img) => {
             img.imageUrl = img.eventImage;
         });
         const dialogRef = this.dialog.open(ViewImageModalComponent, {
@@ -84,14 +77,12 @@ export class ManageEventComponent implements OnInit {
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: {'imageList': eventImages, 'index': index, 'type': 1, 'fileType': 'img', 'isMobile': this.isMobile()}
+            data: { imageList: eventImages, index: index, type: 1, fileType: 'img', isMobile: this.isMobile() },
         });
         dialogRef.afterClosed();
     }
 
-
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
     }
-
 }

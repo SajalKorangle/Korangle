@@ -8,34 +8,34 @@ describe('Update All', () => {
 
     let page: any;
     let columns;
-    let rows;    
+    let rows;
         beforeAll(async () => {
             startBackendServer(getFixtureFiles('modules/students/pages/update-all/update-all.json'));
             page = await BeforeAfterEach.beforeEach();
-            await openModuleAndPage('Students','Update All');
+            await openModuleAndPage('Students', 'Update All');
         });
-        it ('Update All : Update fix parameters',async()=>{
-        	await page.waitForSelector('mat-select');
+        it ('Update All : Update fix parameters', async() => {
+            await page.waitForSelector('mat-select');
             await page.click('mat-select');
             await page.waitForTimeout(500);
             await page.waitForSelector('mat-checkbox');
-            await (await containsFirst('mat-checkbox','')).click();
+            await (await containsFirst('mat-checkbox', '')).click();
             await page.waitForTimeout(500);
             await page.click('body');
-            await page.type('input[ng-reflect-model="Aditi Musunur"]',' sarbalia');
+            await page.type('input[ng-reflect-model="Aditi Musunur"]', ' sarbalia');
             await page.click('body');
             await page.waitForSelector('input[ng-reflect-model="Aditi Musunur sarbalia"]');
-            await page.type('input[ng-reflect-model="Advitiya Sujeet"]',' Tewariya');
+            await page.type('input[ng-reflect-model="Advitiya Sujeet"]', ' Tewariya');
             await page.click('body');
             await page.waitForSelector('input[ng-reflect-model="Advitiya Sujeet Tewariya"]');
-            await page.type('input[ng-reflect-model="Sam Poduri"]',' Jank');
+            await page.type('input[ng-reflect-model="Sam Poduri"]', ' Jank');
             await page.click('body');
             await page.waitForSelector('input[ng-reflect-model="Sam Poduri Jank"]');
-            await page.type('input[id="4mobileNumber"]','9935727534');
+            await page.type('input[id="4mobileNumber"]', '9935727534');
             await page.click('body');
             await page.waitForSelector('input[ng-reflect-model="9935727534"]');
             await page.waitForTimeout(500);
-            await BeforeAfterEach.afterEach()
+            await BeforeAfterEach.afterEach();
         });
         // it('Update All : Update Documents',async()=>{
         //     let node;

@@ -5,7 +5,6 @@ backend/test_mobile_backend.sh      //start backend for mobile testing
 frontend/test_mobile_frontend.sh    //start frontend for mobile testing
 */
 
-
 export const environment = {
     production: false,
     versionCheckURL: 'www.korangle.com/version.json',

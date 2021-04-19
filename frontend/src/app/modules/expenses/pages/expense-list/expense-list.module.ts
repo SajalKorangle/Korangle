@@ -2,26 +2,15 @@ import { NgModule } from '@angular/core';
 
 import { ExpenseListComponent } from './expense-list.component';
 
-import {ExpenseListRoutingModule} from './expense-list.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-
+import { ExpenseListRoutingModule } from './expense-list.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 
 @NgModule({
-    declarations: [
+    declarations: [ExpenseListComponent],
 
-        ExpenseListComponent,
-
-    ],
-
-    imports: [
-
-        ExpenseListRoutingModule,
-        ComponentsModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ExpenseListRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ExpenseListComponent]
+    bootstrap: [ExpenseListComponent],
 })
-export class ExpenseListModule { }
+export class ExpenseListModule {}

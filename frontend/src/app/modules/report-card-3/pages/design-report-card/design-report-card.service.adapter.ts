@@ -1,9 +1,8 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import { StudentCustomParameterStructure} from './../../class/constants_3'
+import { StudentCustomParameterStructure } from './../../class/constants_3';
 import { values } from 'lodash';
 
 export class DesignReportCardServiceAdapter {
-
     vm: DesignReportCardComponent;
 
     constructor() {}
@@ -18,19 +17,19 @@ export class DesignReportCardServiceAdapter {
     initializeData(): void {
         this.vm.DATA.currentSession = this.vm.user.activeSchool.currentSessionDbId;
         const report_card_layouts_data = {
-            parentSchool: this.vm.user.activeSchool.dbId
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
         const request_student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            korangle__count: '0,1'
+            korangle__count: '0,1',
         };
         const request_student_parameter_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
         const request_examination_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
         const request_grade_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -40,18 +39,18 @@ export class DesignReportCardServiceAdapter {
         };
         const request_test_data = {
             parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
-            parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId
+            parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
         const public_layouts_data = {
-            publiclyShared: 'True'
+            publiclyShared: 'True',
         };
         const shared_layout_list_data = {
-            parentSchool: this.vm.user.activeSchool.dbId
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         const request_class_signature_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
-        }
+        };
 
         this.vm.htmlAdapter.isLoading = true;
         Promise.all([
@@ -69,96 +68,115 @@ export class DesignReportCardServiceAdapter {
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, public_layouts_data), //11
             this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, shared_layout_list_data), //12
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //13
-        ]).then(data => { 
-            // console.log(data);
-            this.vm.reportCardLayoutList = data[0];
-            this.vm.DATA.data.studentSectionList = data[1];
-            this.vm.DATA.data.studentParameterList = data[2];
-            this.vm.DATA.data.classList = data[3];
-            this.vm.DATA.data.divisionList = data[4];
-            this.vm.DATA.data.examinationList = data[5];
-            this.vm.DATA.data.testList = data[6];
-            this.vm.DATA.data.subjectList = data[7];
-            this.vm.DATA.data.sessionList = data[8];
-            this.vm.DATA.data.gradeList = data[9];
-            this.vm.DATA.data.subGradeList = data[10];
-            this.vm.publicLayoutList = data[11];
-            this.vm.DATA.data.classSectionSignatureList = data[13];
-            // console.log('DATA: ', this.vm.DATA);
-            const request_student_data = {
-                id__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-            };
-            const request_student_parameter_value_data = {
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-            };
-            const request_student_test_data = {
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-                parentExamination__in: this.vm.DATA.data.examinationList.map(item => item.id).join(','),
-            };
-            const request_attendance_data = {
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-                'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
-                'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
-            };
-            const request_student_sub_grade_data = {
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-            };
-            const request_student_examination_remarks_data = {
-                parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
-                parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                parentStudent__in: this.vm.DATA.data.studentSectionList.map(item => item.parentStudent).join(','),
-            };
+        ])
+            .then((data) => {
+                // console.log(data);
+                this.vm.reportCardLayoutList = data[0];
+                this.vm.DATA.data.studentSectionList = data[1];
+                this.vm.DATA.data.studentParameterList = data[2];
+                this.vm.DATA.data.classList = data[3];
+                this.vm.DATA.data.divisionList = data[4];
+                this.vm.DATA.data.examinationList = data[5];
+                this.vm.DATA.data.testList = data[6];
+                this.vm.DATA.data.subjectList = data[7];
+                this.vm.DATA.data.sessionList = data[8];
+                this.vm.DATA.data.gradeList = data[9];
+                this.vm.DATA.data.subGradeList = data[10];
+                this.vm.publicLayoutList = data[11];
+                this.vm.DATA.data.classSectionSignatureList = data[13];
+                // console.log('DATA: ', this.vm.DATA);
+                const request_student_data = {
+                    id__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                };
+                const request_student_parameter_value_data = {
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                };
+                const request_student_test_data = {
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                    parentExamination__in: this.vm.DATA.data.examinationList.map((item) => item.id).join(','),
+                };
+                const request_attendance_data = {
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                    dateOfAttendance__gte:
+                        new Date(
+                            this.vm.DATA.data.sessionList.find((session) => {
+                                return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                            }).startDate
+                        ).getFullYear() + '-01-01',
+                    dateOfAttendance__lte:
+                        new Date(
+                            this.vm.DATA.data.sessionList.find((session) => {
+                                return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                            }).endDate
+                        ).getFullYear() + '-12-31',
+                };
+                const request_student_sub_grade_data = {
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                };
+                const request_student_examination_remarks_data = {
+                    parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
+                    parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                };
 
-            const request_layout_sharing_data = {
-                parentLayout__in: this.vm.reportCardLayoutList.map(l => l.id).join(',')
-            }
+                const request_layout_sharing_data = {
+                    parentLayout__in: this.vm.reportCardLayoutList.map((l) => l.id).join(','),
+                };
 
-            const shared_layout_data = {
-                id__in: data[12].map(sharedLayoutRelation => sharedLayoutRelation.parentLayout).join(',')
-            };
+                const shared_layout_data = {
+                    id__in: data[12].map((sharedLayoutRelation) => sharedLayoutRelation.parentLayout).join(','),
+                };
 
-            // console.log(shared_layout_data);
+                // console.log(shared_layout_data);
 
-            Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-                this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 1
-                this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
-                this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
-                this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
-                this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
-                this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, request_layout_sharing_data),//6
-                this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, shared_layout_data), //7
-            ]).then(value => {
-                // console.log(value);
-                this.vm.DATA.data.studentList = value[0];
-                this.vm.DATA.data.studentParameterValueList = value[1];
-                this.vm.DATA.data.studentTestList = value[2];
-                this.vm.DATA.data.attendanceList = value[3];
-                this.vm.DATA.data.studentSubGradeList = value[4];
-                this.vm.DATA.data.studentExaminationRemarksList = value[5];
-                this.vm.sharedLayoutList = value[7];
+                Promise.all([
+                    this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
+                    this.vm.studentService.getObjectList(
+                        this.vm.studentService.student_parameter_value,
+                        request_student_parameter_value_data
+                    ), // 1
+                    this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
+                    this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
+                    this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
+                    this.vm.examinationService.getObjectList(
+                        this.vm.examinationService.student_examination_remarks,
+                        request_student_examination_remarks_data
+                    ), // 5
+                    this.vm.reportCardService.getObjectList(this.vm.reportCardService.layout_sharing, request_layout_sharing_data), //6
+                    this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, shared_layout_data), //7
+                ]).then(
+                    (value) => {
+                        // console.log(value);
+                        this.vm.DATA.data.studentList = value[0];
+                        this.vm.DATA.data.studentParameterValueList = value[1];
+                        this.vm.DATA.data.studentTestList = value[2];
+                        this.vm.DATA.data.attendanceList = value[3];
+                        this.vm.DATA.data.studentSubGradeList = value[4];
+                        this.vm.DATA.data.studentExaminationRemarksList = value[5];
+                        this.vm.sharedLayoutList = value[7];
 
-                if (this.vm.DATA.data.studentList.length > 0)
-                    this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
-                else
-                    alert('Student Data unavaiable');
-                this.populateLayoutSharingData(value[6]);
-                this.vm.htmlAdapter.isLoading = false;
-                this.vm.htmlAdapter.openInventory();
-            }, error => {
+                        if (this.vm.DATA.data.studentList.length > 0) this.vm.DATA.studentId = this.vm.DATA.data.studentList[0].id;
+                        else alert('Student Data unavaiable');
+                        this.populateLayoutSharingData(value[6]);
+                        this.vm.htmlAdapter.isLoading = false;
+                        this.vm.htmlAdapter.openInventory();
+                    },
+                    (error) => {
+                        this.vm.htmlAdapter.isLoading = false;
+                    }
+                );
+                this.populateParameterListWithStudentCustomField();
+            })
+            .catch((err) => {
                 this.vm.htmlAdapter.isLoading = false;
             });
-            this.populateParameterListWithStudentCustomField();
-        }).catch(err => {
-            this.vm.htmlAdapter.isLoading = false;
-        })
     }
 
     populateParameterListWithStudentCustomField(): void {
-        this.vm.DATA.data.studentParameterList.forEach(studentParameter => {
-            this.vm.htmlAdapter.parameterList.push(StudentCustomParameterStructure.getStructure(
-                studentParameter.name, studentParameter.id
-            ));
+        this.vm.DATA.data.studentParameterList.forEach((studentParameter) => {
+            this.vm.htmlAdapter.parameterList.push(
+                StudentCustomParameterStructure.getStructure(studentParameter.name, studentParameter.id)
+            );
         });
     }
 
@@ -177,12 +195,22 @@ export class DesignReportCardServiceAdapter {
         };
         const request_student_test_data = {
             parentStudent: this.vm.selectedStudent.id,
-            parentExamination__in: this.vm.DATA.data.examinationList.map(item => item.id).join(','),
+            parentExamination__in: this.vm.DATA.data.examinationList.map((item) => item.id).join(','),
         };
         const request_attendance_data = {
             parentStudent: this.vm.selectedStudent,
-            'dateOfAttendance__gte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).startDate)).getFullYear() + '-01-01',
-            'dateOfAttendance__lte': (new Date(this.vm.DATA.data.sessionList.find(session => { return session.id === this.vm.user.activeSchool.currentSessionDbId}).endDate)).getFullYear() + '-12-31',
+            dateOfAttendance__gte:
+                new Date(
+                    this.vm.DATA.data.sessionList.find((session) => {
+                        return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                    }).startDate
+                ).getFullYear() + '-01-01',
+            dateOfAttendance__lte:
+                new Date(
+                    this.vm.DATA.data.sessionList.find((session) => {
+                        return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                    }).endDate
+                ).getFullYear() + '-12-31',
         };
         const request_student_sub_grade_data = {
             parentStudent: this.vm.selectedStudent,
@@ -200,9 +228,11 @@ export class DesignReportCardServiceAdapter {
             this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 2
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
             this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 4
-            this.vm.examinationService.getObjectList(this.vm.examinationService.student_examination_remarks, request_student_examination_remarks_data), // 5
-            
-        ]).then (value =>{
+            this.vm.examinationService.getObjectList(
+                this.vm.examinationService.student_examination_remarks,
+                request_student_examination_remarks_data
+            ), // 5
+        ]).then((value) => {
             // console.log(value);
             this.vm.DATA.data.studentSectionList.push(...value[0]);
             this.vm.DATA.data.studentList.push(...value[1]);
@@ -215,48 +245,59 @@ export class DesignReportCardServiceAdapter {
             this.vm.DATA.studentId = this.vm.selectedStudent.id;
 
             this.vm.canvasAdapter.fullCanavsRefresh();
-            
+
             this.vm.htmlAdapter.isSaving = false;
-        })
+        });
     }
 
-    populateLayoutSharingData(layoutSharingDataList:Array<any>):void {
-        this.vm.reportCardLayoutList.forEach(layout => this.vm.layoutSharingData[layout.id] = []);
-        layoutSharingDataList.forEach(layoutSharingData => {
+    populateLayoutSharingData(layoutSharingDataList: Array<any>): void {
+        this.vm.reportCardLayoutList.forEach((layout) => (this.vm.layoutSharingData[layout.id] = []));
+        layoutSharingDataList.forEach((layoutSharingData) => {
             this.vm.layoutSharingData[layoutSharingData.parentLayout].push(layoutSharingData);
         });
     }
 
     async uploadCurrentLayout() {
-        const layoutToUpload:{[key:string]:any} = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
-        if (this.vm.currentLayout.thumbnail.startsWith('data')) { // converting data uri to blob
-            layoutToUpload.thumbnail = await fetch(this.vm.currentLayout.thumbnail).then(response => response.blob());
+        const layoutToUpload: { [key: string]: any } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
+        if (this.vm.currentLayout.thumbnail.startsWith('data')) {
+            // converting data uri to blob
+            layoutToUpload.thumbnail = await fetch(this.vm.currentLayout.thumbnail).then((response) => response.blob());
         } else {
-            delete layoutToUpload.thumbnail
+            delete layoutToUpload.thumbnail;
         }
 
         const form_data = new FormData();
         Object.entries(layoutToUpload).forEach(([key, value]) => {
-            if (key === 'thumbnail' ) {
+            if (key === 'thumbnail') {
                 form_data.append(key, value, `${this.vm.currentLayout.parentSchool}-${this.vm.currentLayout.name}.png`);
             } else {
                 form_data.append(key, value);
             }
         });
 
-        if (layoutToUpload.id) {    // if previously saved then update
-            return this.vm.reportCardService.partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, form_data).then(savedLayout => {
-                let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
-                this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = { ...this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList], ...savedLayout };
-            });
-        }
-        else {  // if previously not saved then create
-            return this.vm.reportCardService.createObject(this.vm.reportCardService.report_card_layout_new, form_data).then(savedLayout => {
-                savedLayout.id = parseInt(savedLayout.id);
-                this.vm.currentLayout.id = savedLayout.id;
-                this.vm.reportCardLayoutList.push(savedLayout);
-                this.vm.layoutSharingData[savedLayout.id] = []
-            })
+        if (layoutToUpload.id) {
+            // if previously saved then update
+            return this.vm.reportCardService
+                .partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, form_data)
+                .then((savedLayout) => {
+                    let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(
+                        (layout) => layout.id == savedLayout.id
+                    );
+                    this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList] = {
+                        ...this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList],
+                        ...savedLayout,
+                    };
+                });
+        } else {
+            // if previously not saved then create
+            return this.vm.reportCardService
+                .createObject(this.vm.reportCardService.report_card_layout_new, form_data)
+                .then((savedLayout) => {
+                    savedLayout.id = parseInt(savedLayout.id);
+                    this.vm.currentLayout.id = savedLayout.id;
+                    this.vm.reportCardLayoutList.push(savedLayout);
+                    this.vm.layoutSharingData[savedLayout.id] = [];
+                });
         }
     }
 
@@ -264,25 +305,27 @@ export class DesignReportCardServiceAdapter {
         let formdata = new FormData();
         formdata.append('parentLayout', this.vm.currentLayout.id);
         formdata.append('image', image, file_name);
-        return this.vm.reportCardService.createObject(this.vm.reportCardService.image_assets, formdata).then(response => response.image);
+        return this.vm.reportCardService.createObject(this.vm.reportCardService.image_assets, formdata).then((response) => response.image);
     }
 
-    deleteCurrentLayout(): void{
+    deleteCurrentLayout(): void {
         if (this.vm.currentLayout.id) {
-            if(!confirm('Are you sure you want to delete the current layout')){
-                return ;
+            if (!confirm('Are you sure you want to delete the current layout')) {
+                return;
             }
-            const current_layut_id = this.vm.currentLayout.id
+            const current_layut_id = this.vm.currentLayout.id;
             const layout_delete_request = {
-                id: current_layut_id
+                id: current_layut_id,
             };
             this.vm.htmlAdapter.isSaving = true;
-            this.vm.reportCardService.deleteObject(this.vm.reportCardService.report_card_layout_new, layout_delete_request).then(response => {
-                const currentLayoutIndex = this.vm.reportCardLayoutList.findIndex(layout => layout.id == current_layut_id);
-                this.vm.reportCardLayoutList.splice(currentLayoutIndex, 1);
-                this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING, false, true);
-                this.vm.htmlAdapter.isSaving = false;
-            })
+            this.vm.reportCardService
+                .deleteObject(this.vm.reportCardService.report_card_layout_new, layout_delete_request)
+                .then((response) => {
+                    const currentLayoutIndex = this.vm.reportCardLayoutList.findIndex((layout) => layout.id == current_layut_id);
+                    this.vm.reportCardLayoutList.splice(currentLayoutIndex, 1);
+                    this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING, false, true);
+                    this.vm.htmlAdapter.isSaving = false;
+                });
         }
     }
 
@@ -296,21 +339,24 @@ export class DesignReportCardServiceAdapter {
 
     currentLayoutPublicToggle() {
         const layoutToUpload = { id: this.vm.currentLayout.id, publiclyShared: !this.vm.currentLayout.publiclyShared };
-        return this.vm.reportCardService.partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, layoutToUpload).then(savedLayout => {
-            let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(layout => layout.id == savedLayout.id);
-            this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared = savedLayout.publiclyShared;
-            if (this.vm.currentLayout.id == savedLayout.id) {
-                this.vm.currentLayout.publiclyShared = savedLayout.publiclyShared;
-            }
-            // adjusting public layout list accordingly
-            if (this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared) {
-                this.vm.publicLayoutList.push(this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList])
-            }
-            else {
-                let prevPublicIndex = this.vm.publicLayoutList.findIndex(l => l.id == savedLayout.id);
-                this.vm.publicLayoutList.splice(prevPublicIndex, 1);
-            }
-        })
+        return this.vm.reportCardService
+            .partiallyUpdateObject(this.vm.reportCardService.report_card_layout_new, layoutToUpload)
+            .then((savedLayout) => {
+                let indexOfSavedLayoutInReportCardLayoutList = this.vm.reportCardLayoutList.findIndex(
+                    (layout) => layout.id == savedLayout.id
+                );
+                this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared = savedLayout.publiclyShared;
+                if (this.vm.currentLayout.id == savedLayout.id) {
+                    this.vm.currentLayout.publiclyShared = savedLayout.publiclyShared;
+                }
+                // adjusting public layout list accordingly
+                if (this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList].publiclyShared) {
+                    this.vm.publicLayoutList.push(this.vm.reportCardLayoutList[indexOfSavedLayoutInReportCardLayoutList]);
+                } else {
+                    let prevPublicIndex = this.vm.publicLayoutList.findIndex((l) => l.id == savedLayout.id);
+                    this.vm.publicLayoutList.splice(prevPublicIndex, 1);
+                }
+            });
     }
 
     deleteLayoutSharing(layoutSharingData: any) {
@@ -318,10 +364,7 @@ export class DesignReportCardServiceAdapter {
         return this.vm.reportCardService.deleteObject(this.vm.reportCardService.layout_sharing, delete_request);
     }
 
-    getSchoolList(data:any) {
-        return this.vm.schoolService.getObjectList(this.vm.schoolService.school_summary, data)
+    getSchoolList(data: any) {
+        return this.vm.schoolService.getObjectList(this.vm.schoolService.school_summary, data);
     }
 }
-
-
-

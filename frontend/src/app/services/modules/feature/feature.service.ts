@@ -1,12 +1,10 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
-import {HttpClient} from "@angular/common/http";
+import { ServiceObject } from '../../common/service-object';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class FeatureService extends ServiceObject {
-
     protected module_url = '/feature';
 
     // objects urls
@@ -15,5 +13,4 @@ export class FeatureService extends ServiceObject {
     constructor(private http_class: HttpClient) {
         super(http_class);
     }
-
 }

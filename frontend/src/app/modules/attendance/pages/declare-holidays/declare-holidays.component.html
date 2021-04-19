@@ -1,134 +1,120 @@
 <div class="card-content">
-
     <ng-container *ngIf="classSectionStudentList && employeeList && !isLoading">
-
         <div class="row">
             <div class="col-md-2">
                 <!-- Class Filter -->
-                <mat-form-field style="margin-right: 15px;">
-                    <mat-select placeholder="Select Class" style="width: 100%;">
-
+                <mat-form-field style="margin-right: 15px">
+                    <mat-select placeholder="Select Class" style="width: 100%">
                         <mat-option>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">
+                                Select All
                             </button>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">
+                                Clear All
                             </button>
                         </mat-option>
 
                         <ng-container *ngFor="let class of classSectionStudentList">
                             <ng-container *ngFor="let section of class.sectionList">
-                                <mat-option style="width: 100%;">
-                                    <mat-checkbox [(ngModel)]="section.selected"
-                                                  (click)="$event.stopPropagation();">
-                                        {{class.name}}<span *ngIf="class.sectionList.length>1">, {{section.name}}</span>
+                                <mat-option style="width: 100%">
+                                    <mat-checkbox [(ngModel)]="section.selected" (click)="$event.stopPropagation()">
+                                        {{ class.name }}<span *ngIf="class.sectionList.length > 1">, {{ section.name }}</span>
                                     </mat-checkbox>
                                 </mat-option>
                             </ng-container>
                         </ng-container>
 
                         <mat-option>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="selectAllClasses(); $event.stopPropagation();">Select All
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">
+                                Select All
                             </button>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
+                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">
+                                Clear All
                             </button>
                         </mat-option>
-
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-10" style="padding-top: 16px;">
-                <b>{{getSelectedClasses()}}</b>
+            <div class="col-md-10" style="padding-top: 16px">
+                <b>{{ getSelectedClasses() }}</b>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-2">
                 <!-- Employee Filter -->
-                <mat-form-field style="margin-right: 15px;">
-                    <mat-select placeholder="Select Employees" style="width: 100%;">
-
+                <mat-form-field style="margin-right: 15px">
+                    <mat-select placeholder="Select Employees" style="width: 100%">
                         <mat-option>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="selectAllEmployees(); $event.stopPropagation();">Select All
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">
+                                Select All
                             </button>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="unselectAllEmployees(); $event.stopPropagation();">Clear All
+                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllEmployees(); $event.stopPropagation()">
+                                Clear All
                             </button>
                         </mat-option>
 
                         <ng-container *ngFor="let employee of employeeList">
-                            <mat-option style="width: 100%;">
-                                <mat-checkbox [(ngModel)]="employee.selected"
-                                              (click)="$event.stopPropagation();">
-                                    {{employee.name | titlecase}}
-                                    <ng-container *ngIf="employee.employeeNumber">({{employee.employeeNumber}})</ng-container>
+                            <mat-option style="width: 100%">
+                                <mat-checkbox [(ngModel)]="employee.selected" (click)="$event.stopPropagation()">
+                                    {{ employee.name | titlecase }}
+                                    <ng-container *ngIf="employee.employeeNumber">({{ employee.employeeNumber }})</ng-container>
                                 </mat-checkbox>
                             </mat-option>
                         </ng-container>
 
                         <mat-option>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="selectAllEmployees(); $event.stopPropagation();">Select All
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">
+                                Select All
                             </button>
-                            <button class="btn"
-                                    style="padding: 4px 7px"
-                                    (click)="unselectAllEmployees(); $event.stopPropagation();">Clear All
+                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllEmployees(); $event.stopPropagation()">
+                                Clear All
                             </button>
                         </mat-option>
-
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-10" style="padding-top: 16px;">
-                <b>{{getSelectedEmployees()}}</b>
+            <div class="col-md-10" style="padding-top: 16px">
+                <b>{{ getSelectedEmployees() }}</b>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-2">
                 <!-- Date -->
-                <mat-form-field style="margin-right: 15px;">
-                    <mat-select placeholder="Date or Range"
-                                [(ngModel)]="by"
-                                style="width: 100%;">
+                <mat-form-field style="margin-right: 15px">
+                    <mat-select placeholder="Date or Range" [(ngModel)]="by" style="width: 100%">
                         <mat-option value="date">Date</mat-option>
                         <mat-option value="range">Range</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="col-md-10">
-                <ng-container *ngIf="by==='date'">
+                <ng-container *ngIf="by === 'date'">
                     <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
                 </ng-container>
-                <ng-container *ngIf="by==='range'">
-                    <span style="margin-left: 10px; margin-right: 5px;">From:</span><day-date-old (onDateSelected)="onStartDateSelected($event)"></day-date-old>
-                    <span style="margin-left: 10px; margin-right: 5px;">To:</span><day-date-old (onDateSelected)="onEndDateSelected($event)"></day-date-old>
+                <ng-container *ngIf="by === 'range'">
+                    <span style="margin-left: 10px; margin-right: 5px">From:</span
+                    ><day-date-old (onDateSelected)="onStartDateSelected($event)"></day-date-old>
+                    <span style="margin-left: 10px; margin-right: 5px">To:</span
+                    ><day-date-old (onDateSelected)="onEndDateSelected($event)"></day-date-old>
                 </ng-container>
             </div>
         </div>
 
-        <button type="submit"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="serviceAdapter.declareHoliday()">Declare</button>
+        <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="serviceAdapter.declareHoliday()">
+            Declare
+        </button>
 
-        <button type="submit"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                style="margin-left: 30px;"
-                (click)="serviceAdapter.deleteAttendance()">Delete All Records</button>
-
+        <button
+            type="submit"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="margin-left: 30px"
+            (click)="serviceAdapter.deleteAttendance()"
+        >
+            Delete All Records
+        </button>
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">

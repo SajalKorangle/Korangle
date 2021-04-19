@@ -1,33 +1,25 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
-        <ng-container *ngIf="lockFees; else feesUnlocked;">
-            <span style="font-size: 16px;">
-                Unlock fees structure for session {{getSession(this.user.activeSchool.currentSessionDbId).name}}
-            </span><br/><br/>
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.unlockFees()">
+        <ng-container *ngIf="lockFees; else feesUnlocked">
+            <span style="font-size: 16px">
+                Unlock fees structure for session {{ getSession(this.user.activeSchool.currentSessionDbId).name }} </span
+            ><br /><br />
+            <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="serviceAdapter.unlockFees()">
                 Unlock
             </button>
         </ng-container>
 
         <ng-template #feesUnlocked>
-            <span style="font-size: 16px;">
-                Lock fees structure for session {{getSession(this.user.activeSchool.currentSessionDbId).name}}
-            </span><br/><br/>
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.lockFees()">
+            <span style="font-size: 16px">
+                Lock fees structure for session {{ getSession(this.user.activeSchool.currentSessionDbId).name }} </span
+            ><br /><br />
+            <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="serviceAdapter.lockFees()">
                 Lock
             </button>
         </ng-template>
-
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

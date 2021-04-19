@@ -9,7 +9,7 @@ import { containsAll, containsFirst } from '../../../../contains';
 describe('Examination -> Create Test', () => {
 
     let page: any;
-    
+
     beforeAll(async () => {
 
         startBackendServer(getFixtureFiles('modules/examination/pages/create-test/create-test.json'));
@@ -32,7 +32,7 @@ describe('Examination -> Create Test', () => {
         //Check if this line works or not
         // const option = (await containsFirst('mat-option', 'Class-3, Section-A'));
         // await option.click({ clickCount: 2 })
-        
+
 
         (await containsFirst('button', 'GET')).click();
         (await containsFirst('button', 'GET')).click();
@@ -50,7 +50,7 @@ describe('Examination -> Create Test', () => {
 
 
     it('Delete a Test and verify', async () => {
-        
+
         (await containsFirst('button', 'DEL')).click();
 
         await page.waitForTimeout(1000);
@@ -62,11 +62,11 @@ describe('Examination -> Create Test', () => {
             expect(dialog.message()).toBe('Test/s updated successfully');
             await dialog.dismiss();
         });
-        
+
     });
 
-    it('Add a Test and verify', async () => {    
-        
+    it('Add a Test and verify', async () => {
+
         await page.waitForSelector('#selectSubject');
         await page.click('#selectSubject');
         await page.click('mat-option[ng-reflect-value="3"]');
@@ -91,7 +91,7 @@ describe('Examination -> Create Test', () => {
         await page.waitForXPath('//td[@testId="count"]');
         const newlist = await page.$x('//td[@testId="count"]');
         expect(newlist.length).toBe(5);
-        
+
 
 
 
@@ -99,7 +99,7 @@ describe('Examination -> Create Test', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 
-    
+
 });

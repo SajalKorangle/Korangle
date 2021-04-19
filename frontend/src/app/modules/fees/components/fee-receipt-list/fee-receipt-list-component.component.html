@@ -1,82 +1,90 @@
 <ng-container *ngIf="!isLoading">
-<table class="table table-hover">
-    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-        <tr>
-            <th *ngIf="receiptColumnFilter.receiptNumber">Receipt No.</th>
-            <th *ngIf="receiptColumnFilter.nameClass" class="text-center">Name & Class</th>
-            <th *ngIf="receiptColumnFilter.session" class="text-center">Session</th>
-            <th *ngIf="receiptColumnFilter.scholarNumber" class="text-center">Scholar No.</th>
-            <th *ngIf="receiptColumnFilter.amount" class="text-right">Amount</th>
-            <th *ngIf="receiptColumnFilter.mobileNumber" class="text-right">Mobile Number</th>
-            <th *ngIf="receiptColumnFilter.modeOfPayment" class="text-right">Payment Mode</th>
-            <th *ngIf="receiptColumnFilter.chequeNumber" class="text-right">Cheque No.</th>
-            <th *ngIf="receiptColumnFilter.date" class="text-center">Collected Date</th>
-            <th *ngIf="receiptColumnFilter.remark" class="text-center">Remark</th>
-            <th *ngIf="receiptColumnFilter.employee" class="text-left">Collected By</th>
-            <th *ngIf="receiptColumnFilter.cancelledBy" class="text-left">Cancelled By</th>
-            <th *ngIf="receiptColumnFilter.cancelledRemark" class="text-center">Cancelled Remark</th>
-            <th *ngIf="receiptColumnFilter.cancelledDate" class="text-center">Cancelled Date</th>
-            <th *ngIf="receiptColumnFilter.status" class="text-center">Status</th>
-            <th *ngIf="receiptColumnFilter.printButton" class="text-center">-</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let feeReceipt of feeReceiptList | slice:0:number">
-            <td *ngIf="receiptColumnFilter.receiptNumber">{{feeReceipt.receiptNumber}}</td>
-            <td *ngIf="receiptColumnFilter.nameClass" align="center">
-                <ng-container *ngIf="!feeReceipt.parentStudent">Deleted Student</ng-container>
-                <ng-container *ngIf="feeReceipt.parentStudent">
-                    {{getStudent(feeReceipt.parentStudent).name}}<br>
-                    {{getClassName(feeReceipt.parentStudent, feeReceipt.parentSession)}},
-                    {{getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession)}}
-                </ng-container>
-            </td>
-            <td *ngIf="receiptColumnFilter.session" align="center">{{getSessionName(feeReceipt.parentSession)}}</td>
-            <td *ngIf="receiptColumnFilter.scholarNumber" align="center">
-                <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
-                <ng-container *ngIf="feeReceipt.parentStudent">{{getStudentScholarNumber(feeReceipt.parentStudent)}}</ng-container>
-            </td>
-            <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px;" align="right">{{getFeeReceiptTotalAmount(feeReceipt)}}</td>
-            <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px;" align="right">
-                <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
-                <ng-container *ngIf="feeReceipt.parentStudent">{{getStudentMobileNumber(feeReceipt)}}</ng-container>
-            </td>
-            <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{feeReceipt.modeOfPayment}}</td>
-            <td *ngIf="receiptColumnFilter.chequeNumber" align="center">{{feeReceipt.chequeNumber}}</td>
-            <td *ngIf="receiptColumnFilter.date" align="center">{{feeReceipt.generationDateTime | date: 'dd - MMM - yyyy'}}</td>
-            <td *ngIf="receiptColumnFilter.remark" align="center">{{feeReceipt.remark}}</td>
-            <td *ngIf="receiptColumnFilter.employee" align="left">{{getEmployeeName(feeReceipt.parentEmployee)}}</td>
-            <td *ngIf="receiptColumnFilter.cancelledBy" align="left">{{getEmployeeName(feeReceipt.cancelledBy)}}</td>
-            <td *ngIf="receiptColumnFilter.cancelledRemark" align="left">{{feeReceipt.cancelledRemark}}</td>
-            <td *ngIf="receiptColumnFilter.cancelledDate" align="left">{{feeReceipt.cancelledDateTime | date: 'dd - MMM - yyyy'}}</td>
-            <td *ngIf="receiptColumnFilter.status" align="center">
-                <ng-container *ngIf="!feeReceipt.cancelled">
-                    <a href="javascript:void(0)"  (click)="showCancelReceiptModal(feeReceipt)" *ngIf="hasUserPermissionToCancelAndNotPrintPage()"
-                       style="text-decoration: underline;color: orange">Cancel Receipt</a>
-                    <span *ngIf="!hasUserPermissionToCancelAndNotPrintPage()">Valid</span>
-                </ng-container>
-                <span *ngIf="feeReceipt.cancelled">Cancelled</span>
-            <td *ngIf="receiptColumnFilter.printButton" align="center">
-                <button type="button"
+    <table class="table table-hover">
+        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+            <tr>
+                <th *ngIf="receiptColumnFilter.receiptNumber">Receipt No.</th>
+                <th *ngIf="receiptColumnFilter.nameClass" class="text-center">Name & Class</th>
+                <th *ngIf="receiptColumnFilter.session" class="text-center">Session</th>
+                <th *ngIf="receiptColumnFilter.scholarNumber" class="text-center">Scholar No.</th>
+                <th *ngIf="receiptColumnFilter.amount" class="text-right">Amount</th>
+                <th *ngIf="receiptColumnFilter.mobileNumber" class="text-right">Mobile Number</th>
+                <th *ngIf="receiptColumnFilter.modeOfPayment" class="text-right">Payment Mode</th>
+                <th *ngIf="receiptColumnFilter.chequeNumber" class="text-right">Cheque No.</th>
+                <th *ngIf="receiptColumnFilter.date" class="text-center">Collected Date</th>
+                <th *ngIf="receiptColumnFilter.remark" class="text-center">Remark</th>
+                <th *ngIf="receiptColumnFilter.employee" class="text-left">Collected By</th>
+                <th *ngIf="receiptColumnFilter.cancelledBy" class="text-left">Cancelled By</th>
+                <th *ngIf="receiptColumnFilter.cancelledRemark" class="text-center">Cancelled Remark</th>
+                <th *ngIf="receiptColumnFilter.cancelledDate" class="text-center">Cancelled Date</th>
+                <th *ngIf="receiptColumnFilter.status" class="text-center">Status</th>
+                <th *ngIf="receiptColumnFilter.printButton" class="text-center">-</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let feeReceipt of feeReceiptList | slice: 0:number">
+                <td *ngIf="receiptColumnFilter.receiptNumber">{{ feeReceipt.receiptNumber }}</td>
+                <td *ngIf="receiptColumnFilter.nameClass" align="center">
+                    <ng-container *ngIf="!feeReceipt.parentStudent">Deleted Student</ng-container>
+                    <ng-container *ngIf="feeReceipt.parentStudent">
+                        {{ getStudent(feeReceipt.parentStudent).name }}<br />
+                        {{ getClassName(feeReceipt.parentStudent, feeReceipt.parentSession) }},
+                        {{ getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession) }}
+                    </ng-container>
+                </td>
+                <td *ngIf="receiptColumnFilter.session" align="center">{{ getSessionName(feeReceipt.parentSession) }}</td>
+                <td *ngIf="receiptColumnFilter.scholarNumber" align="center">
+                    <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
+                    <ng-container *ngIf="feeReceipt.parentStudent">{{ getStudentScholarNumber(feeReceipt.parentStudent) }}</ng-container>
+                </td>
+                <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px" align="right">
+                    {{ getFeeReceiptTotalAmount(feeReceipt) }}
+                </td>
+                <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px" align="right">
+                    <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
+                    <ng-container *ngIf="feeReceipt.parentStudent">{{ getStudentMobileNumber(feeReceipt) }}</ng-container>
+                </td>
+                <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{ feeReceipt.modeOfPayment }}</td>
+                <td *ngIf="receiptColumnFilter.chequeNumber" align="center">{{ feeReceipt.chequeNumber }}</td>
+                <td *ngIf="receiptColumnFilter.date" align="center">{{ feeReceipt.generationDateTime | date: 'dd - MMM - yyyy' }}</td>
+                <td *ngIf="receiptColumnFilter.remark" align="center">{{ feeReceipt.remark }}</td>
+                <td *ngIf="receiptColumnFilter.employee" align="left">{{ getEmployeeName(feeReceipt.parentEmployee) }}</td>
+                <td *ngIf="receiptColumnFilter.cancelledBy" align="left">{{ getEmployeeName(feeReceipt.cancelledBy) }}</td>
+                <td *ngIf="receiptColumnFilter.cancelledRemark" align="left">{{ feeReceipt.cancelledRemark }}</td>
+                <td *ngIf="receiptColumnFilter.cancelledDate" align="left">{{ feeReceipt.cancelledDateTime | date: 'dd - MMM - yyyy' }}</td>
+                <td *ngIf="receiptColumnFilter.status" align="center">
+                    <ng-container *ngIf="!feeReceipt.cancelled">
+                        <a
+                            href="javascript:void(0)"
+                            (click)="showCancelReceiptModal(feeReceipt)"
+                            *ngIf="hasUserPermissionToCancelAndNotPrintPage()"
+                            style="text-decoration: underline; color: orange"
+                            >Cancel Receipt</a
+                        >
+                        <span *ngIf="!hasUserPermissionToCancelAndNotPrintPage()">Valid</span>
+                    </ng-container>
+                    <span *ngIf="feeReceipt.cancelled">Cancelled</span>
+                </td>
+
+                <td *ngIf="receiptColumnFilter.printButton" align="center">
+                    <button
+                        type="button"
                         style="padding: 8px 11px; margin: 0px"
                         matTooltip="Print"
                         tooltip-position="right"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="printFeeReceipt(feeReceipt)">
-                    <i class="material-icons">print</i></button>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<ng-container *ngIf="feeReceiptList.length>number">
-    <u *ngIf="number<feeReceiptList.length"
-       style="color: deepskyblue; cursor: pointer"
-       (click)="increaseNumber()">
-        Show More
-    </u>
-</ng-container>
-Total Receipts: {{feeReceiptList.length}}
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="printFeeReceipt(feeReceipt)"
+                    >
+                        <i class="material-icons">print</i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-container *ngIf="feeReceiptList.length > number">
+        <u *ngIf="number < feeReceiptList.length" style="color: deepskyblue; cursor: pointer" (click)="increaseNumber()"> Show More </u>
+    </ng-container>
+    Total Receipts: {{ feeReceiptList.length }}
 </ng-container>
 <div *ngIf="isLoading" class="loader-cont">
-        <app-loading-spinner [user]="user"></app-loading-spinner>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
 </div>

@@ -1,75 +1,78 @@
 <table *ngIf="studentList && columnFilter" class="table table-hover">
     <thead style="font-weight: 400">
-    <tr>
-        <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-        <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
-        <th [class.hidden]="!columnFilter.showName">Name</th>
-        <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
-        <th [class.hidden]="!columnFilter.showSectionName">Section Name</th>
-        <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
-        <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
-        <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
-        <th [class.hidden]="!columnFilter.showSecondMobileNumber">Mobile No.</th>
-        <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
-        <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
-        <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
-        <th [class.hidden]="!columnFilter.showGender">Gender</th>
-        <th [class.hidden]="!columnFilter.showCaste">Caste</th>
-        <th [class.hidden]="!columnFilter.showCategory">Category</th>
-        <th [class.hidden]="!columnFilter.showReligion">Religion</th>
-        <th [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
-        <th [class.hidden]="!columnFilter.showAddress">Address</th>
-        <th [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
-        <th [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
-        <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
-        <th [class.hidden]="!columnFilter.showBankIfscCode">Bank Ifsc Code</th>
-        <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
-        <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
-        <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
-        <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
-        <th [class.hidden]="!columnFilter.showRTE">RTE</th>
-        <th [class.hidden]="!columnFilter.showFeesDue">Fees Due</th>
-    </tr>
+        <tr>
+            <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+            <th [class.hidden]="!columnFilter.showProfileImage" style="text-align: center">Profile Image</th>
+            <th [class.hidden]="!columnFilter.showName">Name</th>
+            <th [class.hidden]="!columnFilter.showClassName">Class Name</th>
+            <th [class.hidden]="!columnFilter.showSectionName">Section Name</th>
+            <th [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
+            <th [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
+            <th [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
+            <th [class.hidden]="!columnFilter.showSecondMobileNumber">Mobile No.</th>
+            <th [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
+            <th [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
+            <th [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
+            <th [class.hidden]="!columnFilter.showGender">Gender</th>
+            <th [class.hidden]="!columnFilter.showCaste">Caste</th>
+            <th [class.hidden]="!columnFilter.showCategory">Category</th>
+            <th [class.hidden]="!columnFilter.showReligion">Religion</th>
+            <th [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
+            <th [class.hidden]="!columnFilter.showAddress">Address</th>
+            <th [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
+            <th [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
+            <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
+            <th [class.hidden]="!columnFilter.showBankIfscCode">Bank Ifsc Code</th>
+            <th [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
+            <th [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
+            <th [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
+            <th [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
+            <th [class.hidden]="!columnFilter.showRTE">RTE</th>
+            <th [class.hidden]="!columnFilter.showFeesDue">Fees Due</th>
+        </tr>
     </thead>
     <tbody>
-        <ng-container *ngFor="let student of studentList; let i=index;">
+        <ng-container *ngFor="let student of studentList; let i = index">
             <tr [class.hidden]="!student.show">
                 <ng-container>
-                    <td [class.hidden]="!columnFilter.showSerialNumber">{{i+1}}.</td>
+                    <td [class.hidden]="!columnFilter.showSerialNumber">{{ i + 1 }}.</td>
                     <td [class.hidden]="!columnFilter.showProfileImage" align="center">
-                        <img *ngIf="student.profileImage"
-                             src="{{student.profileImage}}"
-                             style="width: 50px">
-                        <img *ngIf="!student.profileImage"
-                             src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                             style="width: 50px"/>
+                        <img *ngIf="student.profileImage" src="{{ student.profileImage }}" style="width: 50px" />
+                        <img
+                            *ngIf="!student.profileImage"
+                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            style="width: 50px"
+                        />
                     </td>
                     <td [class.hidden]="!columnFilter.showName">{{ student.name | titlecase }}</td>
-                    <td [class.hidden]="!columnFilter.showClassName">{{student.className}}<!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span --></td>
-                    <td [class.hidden]="!columnFilter.showSectionName">{{student.sectionName}}</td>
-                    <td [class.hidden]="!columnFilter.showRollNumber">{{student.rollNumber}}</td>
+                    <td [class.hidden]="!columnFilter.showClassName">
+                        {{ student.className
+                        }}<!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
+                    </td>
+                    <td [class.hidden]="!columnFilter.showSectionName">{{ student.sectionName }}</td>
+                    <td [class.hidden]="!columnFilter.showRollNumber">{{ student.rollNumber }}</td>
                     <td [class.hidden]="!columnFilter.showFathersName">{{ student.fathersName | titlecase }}</td>
-                    <td [class.hidden]="!columnFilter.showMobileNumber">{{student.mobileNumber}}</td>
-                    <td [class.hidden]="!columnFilter.showSecondMobileNumber">{{student.secondMobileNumber}}</td>
-                    <td [class.hidden]="!columnFilter.showScholarNumber">{{student.scholarNumber}}</td>
-                    <td [class.hidden]="!columnFilter.showDateOfBirth">{{student.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+                    <td [class.hidden]="!columnFilter.showMobileNumber">{{ student.mobileNumber }}</td>
+                    <td [class.hidden]="!columnFilter.showSecondMobileNumber">{{ student.secondMobileNumber }}</td>
+                    <td [class.hidden]="!columnFilter.showScholarNumber">{{ student.scholarNumber }}</td>
+                    <td [class.hidden]="!columnFilter.showDateOfBirth">{{ student.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
                     <td [class.hidden]="!columnFilter.showMotherName">{{ student.motherName | titlecase }}</td>
-                    <td [class.hidden]="!columnFilter.showGender">{{student.gender}}</td>
-                    <td [class.hidden]="!columnFilter.showCaste">{{student.caste}}</td>
-                    <td [class.hidden]="!columnFilter.showCategory">{{student.category}}</td>
-                    <td [class.hidden]="!columnFilter.showReligion">{{student.religion}}</td>
-                    <td [class.hidden]="!columnFilter.showFatherOccupation">{{student.fatherOccupation}}</td>
+                    <td [class.hidden]="!columnFilter.showGender">{{ student.gender }}</td>
+                    <td [class.hidden]="!columnFilter.showCaste">{{ student.caste }}</td>
+                    <td [class.hidden]="!columnFilter.showCategory">{{ student.category }}</td>
+                    <td [class.hidden]="!columnFilter.showReligion">{{ student.religion }}</td>
+                    <td [class.hidden]="!columnFilter.showFatherOccupation">{{ student.fatherOccupation }}</td>
                     <td [class.hidden]="!columnFilter.showAddress">{{ student.address | titlecase }}</td>
-                    <td [class.hidden]="!columnFilter.showChildSSMID">{{student.childSSMID}}</td>
-                    <td [class.hidden]="!columnFilter.showFamilySSMID">{{student.familySSMID}}</td>
-                    <td [class.hidden]="!columnFilter.showBankName">{{student.bankName}}</td>
-                    <td [class.hidden]="!columnFilter.showBankIfscCode">{{student.bankIfscCode}}</td>
-                    <td [class.hidden]="!columnFilter.showBankAccountNum">{{student.bankAccountNum}}</td>
-                    <td [class.hidden]="!columnFilter.showAadharNum">{{student.aadharNum}}</td>
-                    <td [class.hidden]="!columnFilter.showBloodGroup">{{student.bloodGroup}}</td>
-                    <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{student.fatherAnnualIncome}}</td>
-                    <td [class.hidden]="!columnFilter.showRTE">{{student.rte}}</td>
-                    <td [class.hidden]="!columnFilter.showFeesDue">{{student.feesDue}}</td>
+                    <td [class.hidden]="!columnFilter.showChildSSMID">{{ student.childSSMID }}</td>
+                    <td [class.hidden]="!columnFilter.showFamilySSMID">{{ student.familySSMID }}</td>
+                    <td [class.hidden]="!columnFilter.showBankName">{{ student.bankName }}</td>
+                    <td [class.hidden]="!columnFilter.showBankIfscCode">{{ student.bankIfscCode }}</td>
+                    <td [class.hidden]="!columnFilter.showBankAccountNum">{{ student.bankAccountNum }}</td>
+                    <td [class.hidden]="!columnFilter.showAadharNum">{{ student.aadharNum }}</td>
+                    <td [class.hidden]="!columnFilter.showBloodGroup">{{ student.bloodGroup }}</td>
+                    <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{ student.fatherAnnualIncome }}</td>
+                    <td [class.hidden]="!columnFilter.showRTE">{{ student.rte }}</td>
+                    <td [class.hidden]="!columnFilter.showFeesDue">{{ student.feesDue }}</td>
                 </ng-container>
             </tr>
         </ng-container>

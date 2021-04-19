@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { TextParametersPannelComponent} from './right-pannel/text-parameters-pannel/text-parameters-pannel.component'
-import { ComponentsModule } from './../../../components/components.module'
+import { TextParametersPannelComponent } from './right-pannel/text-parameters-pannel/text-parameters-pannel.component';
+import { ComponentsModule } from './../../../components/components.module';
 import { MatButtonToggleModule } from '@angular/material';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AttendanceParametersPannelComponent } from './right-pannel/attendance-parameters-pannel/attendance-parameters-pannel.component';
 import { PositionParameterPannelComponent } from './right-pannel/position-parameter-pannel/position-parameter-pannel.component';
 import { PageResolutionDialogComponent } from './dialogs/page-resolution-dialog/page-resolution-dialog.component';
@@ -21,47 +21,42 @@ import { GroupParametersPannelComponent } from './right-pannel/group-parameters-
 import { TCDefaultParametersDialogComponent } from './dialogs/tc-default-parameters-dialog/tc-default-parameters-dialog.component';
 
 @NgModule({
-  declarations: [
-    TextParametersPannelComponent,
-    AttendanceParametersPannelComponent,
-    PositionParameterPannelComponent,
-    PageResolutionDialogComponent,
-    ImageParametersPannelComponent,
-    ShapeParametersPannelComponent,
-    DateParametersPannelComponent,
-    CustomMenuComponent,
-    TableParameterPannelComponent,
-    LayoutSharingDialogComponent,
-    InventoryDialogComponent,
-    LayerReplacementDialogComponent,
-    SettingsParametersPannelComponent,
-    SessionParameterPannelComponent,
-    GroupParametersPannelComponent,
-    TCDefaultParametersDialogComponent,
-  ],
-  imports: [
-    ComponentsModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule
-  ],
-  exports: [
-    TextParametersPannelComponent,
-    AttendanceParametersPannelComponent,
-    PositionParameterPannelComponent,
-    PageResolutionDialogComponent,
-    ImageParametersPannelComponent,
-    ShapeParametersPannelComponent,
-    DateParametersPannelComponent,
-    CustomMenuComponent,
-    TableParameterPannelComponent,
-    LayoutSharingDialogComponent,
-    InventoryDialogComponent,
-    LayerReplacementDialogComponent,
-    SettingsParametersPannelComponent,
-    SessionParameterPannelComponent,
-    GroupParametersPannelComponent,
-    TCDefaultParametersDialogComponent
-  ]
+    declarations: [
+        TextParametersPannelComponent,
+        AttendanceParametersPannelComponent,
+        PositionParameterPannelComponent,
+        PageResolutionDialogComponent,
+        ImageParametersPannelComponent,
+        ShapeParametersPannelComponent,
+        DateParametersPannelComponent,
+        CustomMenuComponent,
+        TableParameterPannelComponent,
+        LayoutSharingDialogComponent,
+        InventoryDialogComponent,
+        LayerReplacementDialogComponent,
+        SettingsParametersPannelComponent,
+        SessionParameterPannelComponent,
+        GroupParametersPannelComponent,
+        TCDefaultParametersDialogComponent,
+    ],
+    imports: [ComponentsModule, MatButtonToggleModule, MatSlideToggleModule, MatProgressSpinnerModule],
+    exports: [
+        TextParametersPannelComponent,
+        AttendanceParametersPannelComponent,
+        PositionParameterPannelComponent,
+        PageResolutionDialogComponent,
+        ImageParametersPannelComponent,
+        ShapeParametersPannelComponent,
+        DateParametersPannelComponent,
+        CustomMenuComponent,
+        TableParameterPannelComponent,
+        LayoutSharingDialogComponent,
+        InventoryDialogComponent,
+        LayerReplacementDialogComponent,
+        SettingsParametersPannelComponent,
+        SessionParameterPannelComponent,
+        GroupParametersPannelComponent,
+        TCDefaultParametersDialogComponent,
+    ],
 })
-export class ParametersPannelModule { }
+export class ParametersPannelModule {}
