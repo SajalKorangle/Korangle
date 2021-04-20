@@ -101,7 +101,7 @@ export class DesignTCHtmlAdapter {
             document.removeEventListener('fullscreenchange', this.fullScreenExitHandler);
             this.isFullScreen = false;
         }
-    };
+    }
 
     fullScreenToggle(): void {
         // check after adding html

@@ -569,7 +569,8 @@ export class ViewAllComponent implements OnInit {
             }
 
             // Transfer Certiicate Check
-            if (!((this.noTC && !student.parentTransferCertificate && !student.newTransferCertificate) || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
+            if (!((this.noTC && !student.parentTransferCertificate && !student.newTransferCertificate)
+                || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
                 student.show = false;
                 return;
             }
