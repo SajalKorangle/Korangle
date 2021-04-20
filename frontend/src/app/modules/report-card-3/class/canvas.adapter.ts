@@ -10,29 +10,30 @@ import {
     BaseLayer,
     GradeRuleSet,
     CanvasGroup,
-    LayersMappedByType,
+    LayersMappedByType
 } from './constants_3';
 import { reportError, ERROR_SOURCES } from './../../../services/modules/errors/error-reporting.service';
 
 export class CanvasAdapterBase implements CanvasAdapterInterface {
+
     vm: any;
 
-    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any; };
+    currentLayout: { name: string, thumbnail?: any, publiclyShared: boolean, content: any; };
 
     DATA: any;
 
     virtualCanvas: HTMLCanvasElement;
     virtualContext: CanvasRenderingContext2D;
 
-    canvasHeight: number = null; // current height and width are in pixels
+    canvasHeight: number = null;   // current height and width are in pixels
     canvasWidth: number = null;
 
     actualresolution: PageResolution = PAGE_RESOLUTIONS[1]; // A4 size by default
     dpi: number = 72;
 
-    pixelTommFactor: number; // width(height) in mm / Canvas width(height) in pixel
+    pixelTommFactor: number;    // width(height) in mm / Canvas width(height) in pixel
 
-    layers: Array<Layer> = []; // layers in thier order from back to front
+    layers: Array<Layer> = [];  // layers in thier order from back to front
     activeLayer: Layer = null;
     activeLayerIndexes: Array<number> = [];
 
@@ -47,7 +48,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
     layerClickEvents: any[] = [];
 
-    metaDrawings: boolean = false; // meta drawings includes things like hilighter, assistance etc.
+    metaDrawings: boolean = false;   // meta drawings includes things like hilighter, assistance etc.
 
     isLoading: boolean = false;
 
@@ -55,18 +56,16 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         this.virtualCanvas = document.createElement('canvas');
         this.virtualContext = this.virtualCanvas.getContext('2d');
 
-        Object.defineProperty(this, 'canvasHeight', {
-            // alias for this.canvas.height and this.virtualCanvas.height
+        Object.defineProperty(this, 'canvasHeight', {   // alias for this.canvas.height and this.virtualCanvas.height
             get: () => this.virtualCanvas.height,
-            set: (newHeight) => (this.virtualCanvas.height = newHeight),
-            configurable: true,
+            set: (newHeight) => this.virtualCanvas.height = newHeight,
+            configurable: true
         });
 
-        Object.defineProperty(this, 'canvasWidth', {
-            // alias for this.canvas.width and this.virtualCanvas.width
+        Object.defineProperty(this, 'canvasWidth', {    // alias for this.canvas.width and this.virtualCanvas.width
             get: () => this.virtualCanvas.width,
-            set: (newWidth) => (this.virtualCanvas.width = newWidth),
-            configurable: true,
+            set: (newWidth) => this.virtualCanvas.width = newWidth,
+            configurable: true
         });
     }
 
@@ -93,7 +92,8 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
     }
 
     updatePage(pageIndex: number): Promise<any> {
-        if (this.activePageIndex == pageIndex) return;
+        if (this.activePageIndex == pageIndex)
+            return;
         if (this.activePageIndex == 0) {
             this.storeThumbnail();
         }
@@ -107,8 +107,10 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         if (confirm('This Page will be deleted permanently')) {
             let lastPage = this.activePageIndex;
             let promise;
-            if (this.activePageIndex == 0) promise = this.updatePage(1);
-            else promise = this.updatePage(this.activePageIndex - 1);
+            if (this.activePageIndex == 0)
+                promise = this.updatePage(1);
+            else
+                promise = this.updatePage(this.activePageIndex - 1);
             this.vm.currentLayout.content.splice(lastPage, 1);
             return promise;
         }
@@ -120,7 +122,8 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         if (maxWidth / maxHeight > this.actualresolution.getAspectRatio()) {
             this.canvasHeight = maxHeight;
             this.canvasWidth = this.actualresolution.getCorrospondingWidth(maxHeight);
-        } else {
+        }
+        else {
             this.canvasWidth = maxWidth;
             this.canvasHeight = this.actualresolution.getCorrospondingHeight(maxWidth);
         }
@@ -170,7 +173,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 postCallback();
             }, duration);
         });
-    };
+    }
 
     fullCanavsRefresh(): Promise<any> {
         this.layers.forEach((layer: Layer) => {
@@ -180,15 +183,11 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
     }
 
     updateResolution(newResolution: PageResolution): Promise<any> {
-        this.actualresolution = new PageResolution(
-            newResolution.resolutionName,
-            newResolution.mm.height,
-            newResolution.mm.width,
-            newResolution.orientation
-        ); // copy of standard resolution
-        this.layers.forEach((l) => l.scale(this.pixelTommFactor)); // to convert all pixel data to mm
+        this.actualresolution = new PageResolution(newResolution.resolutionName,
+            newResolution.mm.height, newResolution.mm.width, newResolution.orientation);    // copy of standard resolution
+        this.layers.forEach(l => l.scale(this.pixelTommFactor)); // to convert all pixel data to mm
         this.canvasSizing(this.actualresolution.getHeightInPixel(this.dpi), this.actualresolution.getWidthInPixel(this.dpi));
-        this.layers.forEach((l) => l.scale(1 / this.pixelTommFactor));
+        this.layers.forEach(l => l.scale(1 / this.pixelTommFactor));
         return this.scheduleCanvasReDraw(0);
     }
 
@@ -204,38 +203,33 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 break;
             case 'MARKS':
                 if (layerData.gradeRuleSet) {
-                    layerData.gradeRuleSet = this.gradeRuleSetList.find((gradeRuleSet) => gradeRuleSet.id == layerData.gradeRuleSet);
+                    layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
                 }
                 break;
             case 'FORMULA':
                 if (layerData.gradeRuleSet) {
-                    layerData.gradeRuleSet = this.gradeRuleSetList.find((gradeRuleSet) => gradeRuleSet.id == layerData.gradeRuleSet);
+                    layerData.gradeRuleSet = this.gradeRuleSetList.find(gradeRuleSet => gradeRuleSet.id == layerData.gradeRuleSet);
                 }
                 break;
             case 'RESULT':
-                layerData.marksLayers = layerData.marksLayers.map((layerId) => this.layers.find((layer) => layer && layer.id == layerId));
+                layerData.marksLayers = layerData.marksLayers.map(layerId => this.layers.find(layer => layer && layer.id == layerId));
         }
         return new constructor(layerData, this);
     }
 
-    loadData(Data): Promise<any> {
-        // handle this method
+    loadData(Data): Promise<any> {   // handle this method
         this.clearCanvas();
         Data = JSON.parse(JSON.stringify(Data)); // deep copy of layoutPageData
 
         BaseLayer.maxID = 0;
         try {
+
             // loading resolution
             let resolution;
             if (Data.actualresolution.resolutionName == 'Custom') {
-                resolution = new PageResolution(
-                    'Custom',
-                    Data.actualresolution.mmHeight,
-                    Data.actualresolution.mmWidth,
-                    Data.actualresolution.orientation
-                );
+                resolution = new PageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation);
             } else {
-                resolution = PAGE_RESOLUTIONS.find((pr) => pr.resolutionName == Data.actualresolution.resolutionName);
+                resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
                 resolution.orientation = Data.actualresolution.orientation;
             }
 
@@ -243,12 +237,13 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             this.updateResolution(resolution);
 
             // loding Grade Rules
-            Data.gradeRuleSetList.forEach((gradeRuleSet) => {
+            Data.gradeRuleSetList.forEach(gradeRuleSet => {
                 // creating GradeRules from GradeRules data if GradeRuleSet
-                gradeRuleSet.gradeRules = gradeRuleSet.gradeRules.map((gradeRule) => new GradeRule(gradeRule));
+                gradeRuleSet.gradeRules = gradeRuleSet.gradeRules.map(gradeRule => new GradeRule(gradeRule));
             });
 
-            this.gradeRuleSetList = Data.gradeRuleSetList.map((gradeRuleSet) => new GradeRuleSet(gradeRuleSet)); // creating GradeRuleSet
+            this.gradeRuleSetList = Data.gradeRuleSetList.map(gradeRuleSet => new GradeRuleSet(gradeRuleSet));  // creating GradeRuleSet
+
 
             let mmToPixelScaleFactor = 1 / this.pixelTommFactor;
 
@@ -257,7 +252,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             for (let i = 0; i < Data.layers.length; i++) {
                 let layerData = Data.layers[i];
 
-                let newLayerFromLayerData: Layer; // update this for new architecture
+                let newLayerFromLayerData: Layer;   // update this for new architecture
                 switch (layerData.LAYER_TYPE) {
                     case 'FORMULA':
                         this.layers.push(null); // This null will be replaces during formula layer initilization
@@ -271,8 +266,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 this.layers.push(newLayerFromLayerData);
             }
 
-            Data.layers.forEach((layerData, index) => {
-                // For Formula layers
+            Data.layers.forEach((layerData, index) => { // For Formula layers
                 if (layerData.LAYER_TYPE == 'FORMULA') {
                     let newLayerFromLayerData = this.getLayerFromLayerData(layerData, Formula);
                     newLayerFromLayerData.scale(mmToPixelScaleFactor);
@@ -280,8 +274,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 }
             });
 
-            Data.layers.forEach((layerData, index) => {
-                // For Result layers
+            Data.layers.forEach((layerData, index) => { // For Result layers
                 if (layerData.LAYER_TYPE == 'RESULT') {
                     let newLayerFromLayerData = this.getLayerFromLayerData(layerData, Result);
                     newLayerFromLayerData.scale(mmToPixelScaleFactor);
@@ -296,34 +289,27 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             return this.fullCanavsRefresh();
         } catch (err) {
             console.error(err);
-            reportError(
-                ERROR_SOURCES[1],
-                location.pathname + location.search,
-                err.toString(),
-                'error in loading saved layout page; data croupted'
-            );
+            reportError(ERROR_SOURCES[1], location.pathname + location.search, err.toString(), 'error in loading saved layout page; data croupted');
             alert('data corrupted');
             this.clearCanvas();
         }
         return Promise.reject();
     }
 
-    getDataToSave(): { [object: string]: any; } {
-        // updating required
+    getDataToSave(): { [object: string]: any; } {   // updating required
 
         let dataToSave: { [key: string]: any; } = {
             actualresolution: {
                 resolutionName: this.actualresolution.resolutionName,
-                orientation: this.actualresolution.orientation,
+                orientation: this.actualresolution.orientation
             },
             backgroundColor: this.backgroundColor,
 
-            gradeRuleSetList: this.gradeRuleSetList.map((gradeRuleSet) => gradeRuleSet.getDataToSave()),
-            layers: this.layers.map((l) => l.getDataToSave()),
+            gradeRuleSetList: this.gradeRuleSetList.map(gradeRuleSet => gradeRuleSet.getDataToSave()),
+            layers: this.layers.map(l => l.getDataToSave())
         };
 
-        if (this.actualresolution.resolutionName == 'Custom') {
-            //custom resolution
+        if (this.actualresolution.resolutionName == 'Custom') {   //custom resolution
             dataToSave.actualresolution.mmHeight = this.actualresolution.mm.height;
             dataToSave.actualresolution.mmWidth = this.actualresolution.mm.width;
         }
@@ -337,30 +323,31 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         return this.scheduleCanvasReDraw(0);
     }
 
-    updateActiveLayer(activeLayerIndex: number, shiftKey: boolean = false): Promise<any> {
-        // used by left layer pannel
+    updateActiveLayer(activeLayerIndex: number, shiftKey: boolean = false): Promise<any> {   // used by left layer pannel
         if (shiftKey && this.activeLayerIndexes.length > 0) {
-            let currIndex = this.activeLayerIndexes.findIndex((i) => i == activeLayerIndex);
+            let currIndex = this.activeLayerIndexes.findIndex(i => i == activeLayerIndex);
             if (currIndex == -1) {
                 this.activeLayerIndexes.push(activeLayerIndex);
-                this.layerClickEvents.forEach((eventToTrigger) => eventToTrigger(this.layers[activeLayerIndex]));
-            } else {
+                this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.layers[activeLayerIndex]));
+            }
+            else {
                 this.activeLayerIndexes.splice(currIndex, 1);
             }
 
             // updating active layer accoding to activeLayerIndexes
             if (this.activeLayerIndexes.length == 0) {
                 this.activeLayer = null;
-            } else if (this.activeLayerIndexes.length == 1) {
+            }
+            else if (this.activeLayerIndexes.length == 1) {
                 this.activeLayer = this.layers[this.activeLayerIndexes[0]];
-            } else {
-                // create group here
-                this.activeLayer = new CanvasGroup({ id: -1, layers: this.activeLayerIndexes.map((i) => this.layers[i]) }, this);
+            }
+            else {  // create group here
+                this.activeLayer = new CanvasGroup({ id: -1, layers: this.activeLayerIndexes.map(i => this.layers[i]) }, this);
             }
         } else {
             this.activeLayerIndexes = [activeLayerIndex];
             this.activeLayer = this.layers[activeLayerIndex];
-            this.layerClickEvents.forEach((eventToTrigger) => eventToTrigger(this.activeLayer));
+            this.layerClickEvents.forEach(eventToTrigger => eventToTrigger(this.activeLayer));
         }
         return this.scheduleCanvasReDraw(0);
     }
@@ -372,7 +359,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 
     deleteGradeRuleSet(index: number): Promise<any> {
         const gradeRuleSet = this.gradeRuleSetList[index];
-        this.layers.forEach((l) => {
+        this.layers.forEach(l => {
             if (l.LAYER_TYPE == 'MARKS' || l.LAYER_TYPE == 'FORMULA') {
                 if (l.gradeRuleSet == gradeRuleSet) {
                     l.gradeRuleSet = undefined;
@@ -382,9 +369,14 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         this.gradeRuleSetList.splice(index, 1);
         return this.fullCanavsRefresh();
     }
+
 }
 
+
+
+
 export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
+
     getEmptyLayoutPage(): { [key: string]: any; } {
         return {
             actualresolution: {
@@ -393,7 +385,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
             },
             backgroundColor: DEFAULT_BACKGROUND_COLOR,
             gradeRuleSetList: [],
-            layers: [],
+            layers: []
         };
     }
 
@@ -412,7 +404,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
     }
 
     replaceLayerWithNewLayerType(layer: Layer, initialParameters: { [key: string]: any; } = {}): Promise<any> {
-        let layerIndex = this.layers.findIndex((l) => l.id == layer.id);
+        let layerIndex = this.layers.findIndex(l => l.id == layer.id);
         let layerData = JSON.parse(JSON.stringify(layer.getDataToSave()));
         initialParameters = { ...layerData, ...initialParameters };
 
@@ -425,16 +417,15 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
         return this.scheduleCanvasReDraw();
     }
 
-    layerMove(id1: number, id2: number): Promise<any> {
-        // move layer of id2 above layer of id1
-        let layer1Index: number = this.layers.findIndex((l) => l.id == id1);
-        let layer2Index: number = this.layers.findIndex((l) => l.id == id2);
+    layerMove(id1: number, id2: number): Promise<any> {   // move layer of id2 above layer of id1
+        let layer1Index: number = this.layers.findIndex(l => l.id == id1);
+        let layer2Index: number = this.layers.findIndex(l => l.id == id2);
         let layerToMove = this.layers[layer2Index];
         delete this.layers[layer2Index];
         this.layers.splice(layer1Index, 0, layerToMove);
         this.layers = this.layers.filter(Boolean);
         this.activeLayer = layerToMove;
-        this.activeLayerIndexes = [this.layers.findIndex((l) => l.id == layerToMove.id)];
+        this.activeLayerIndexes = [this.layers.findIndex(l => l.id == layerToMove.id)];
         return this.scheduleCanvasReDraw(0);
     }
 
@@ -445,18 +436,19 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
         let newLayer = this.getLayerFromLayerData(deepCopyLayerData, layer.constructor);
         // let mmToPixelScaleFactor = this.canvasHeight / this.actualresolution.mm.height;
         newLayer.scale(1 / this.pixelTommFactor);
-        newLayer.x += 15; // slightly shifting layer
+        newLayer.x += 15;   // slightly shifting layer
         newLayer.y += 15;
         return this.newLayerInitilization(newLayer);
     }
 
     mapExamination(examMap: { [key: number]: any; }): void {
-        this.layers.forEach((layer) => {
+        this.layers.forEach(layer => {
             switch (layer.LAYER_TYPE) {
                 case 'MARKS':
                 case 'REMARK':
                 case 'GRADE':
-                    if (examMap[layer.examinationName] != undefined) layer.parentExamination = examMap[layer.examinationName];
+                    if (examMap[layer.examinationName] != undefined)
+                        layer.parentExamination = examMap[layer.examinationName];
                     break;
             }
         });
@@ -464,8 +456,11 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
     }
 }
 
+
+
+
 export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
-    canvas: HTMLCanvasElement; // html canvas rendered on screen
+    canvas: HTMLCanvasElement;  // html canvas rendered on screen
     context: CanvasRenderingContext2D;
 
     maxVisibleHeight: number;
@@ -477,13 +472,14 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
     selectDragedOverLayers: boolean = false;
     selectionAssistanceRef: HTMLDivElement;
 
-    isSaved = true; // if canvas is not saved then give warning; to be implemented
+    isSaved = true;    // if canvas is not saved then give warning; to be implemented
 
     pendingReDrawId: any;
 
-    documentEventListners: { keydown: any; mouseup: any; } = {
+    documentEventListners: { keydown: any, mouseup: any; } = {
         keydown: (event) => {
-            if (!this.activeLayer || !(event.target instanceof HTMLBodyElement)) return;
+            if (!this.activeLayer || !(event.target instanceof HTMLBodyElement))
+                return;
             if (event.key == 'ArrowUp') {
                 this.activeLayer.updatePosition(0, -1);
                 event.preventDefault();
@@ -510,31 +506,29 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
                 document.body.removeChild(this.selectionAssistanceRef);
                 this.selectionAssistanceRef = null;
             }
-        },
+        }
     };
 
     metaDrawings: boolean = true;
 
     constructor() {
         super();
-        Object.defineProperty(this, 'canvasHeight', {
-            // alias for this.canvas.height and this.virtualCanvas.height
+        Object.defineProperty(this, 'canvasHeight', {   // alias for this.canvas.height and this.virtualCanvas.height
             get: () => this.virtualCanvas.height,
             set: (newHeight) => {
                 this.virtualCanvas.height = newHeight;
                 this.canvas.height = newHeight;
             },
-            configurable: true,
+            configurable: true
         });
 
-        Object.defineProperty(this, 'canvasWidth', {
-            // alias for this.canvas.width and this.virtualCanvas.width
+        Object.defineProperty(this, 'canvasWidth', {    // alias for this.canvas.width and this.virtualCanvas.width
             get: () => this.virtualCanvas.width,
             set: (newWidth) => {
                 this.virtualCanvas.width = newWidth;
                 this.canvas.width = newWidth;
             },
-            configurable: true,
+            configurable: true
         });
     }
 
@@ -562,13 +556,10 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
             clickedX = event.offsetX;
             clickedY = event.offsetY;
             // console.log('clicked point = ', clickedX, clickedY);
-            let flag = true; // true: no layer is at clicked position
+            let flag = true;    // true: no layer is at clicked position
 
-            if (
-                this.activeLayer &&
-                this.activeLayer.id == -1 && // if active layer is group, check if it is clicked
-                this.activeLayer.isClicked(clickedX, clickedY, event.shiftKey)
-            ) {
+            if (this.activeLayer && this.activeLayer.id == -1 &&    // if active layer is group, check if it is clicked
+                this.activeLayer.isClicked(clickedX, clickedY, event.shiftKey)) {
                 flag = false;
             }
             if (flag || event.shiftKey) {
@@ -581,9 +572,10 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
                 }
             }
 
+
+
             this.selectDragedOverLayers = event.shiftKey || flag; // if shift key or empty area, select dragged over layers
-            if (!event.shiftKey && flag) {
-                // if shift key not pressed and no layer resides at mouse down clicked point
+            if (!event.shiftKey && flag) { // if shift key not pressed and no layer resides at mouse down clicked point
                 this.resetActiveLayer();
             }
 
@@ -592,8 +584,7 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
             this.lastMouseX = clickedX;
             this.lastMouseY = clickedY;
 
-            if (this.selectDragedOverLayers) {
-                // selection assistance
+            if (this.selectDragedOverLayers) {  // selection assistance
                 let div = document.createElement('div');
                 div.id = 'selection_asistance';
                 div.style.pointerEvents = 'None';
@@ -612,32 +603,32 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
             }
         });
 
-        this.canvas.addEventListener('mousemove', (event) => {
-            // Handling movement via mouse
-            if (!this.currentMouseDown) return;
+        this.canvas.addEventListener('mousemove', (event) => {  // Handling movement via mouse
+            if (!this.currentMouseDown)
+                return;
             if (this.selectDragedOverLayers && this.selectionAssistanceRef) {
                 let height = event.offsetY - this.lastMouseY;
                 let width = event.offsetX - this.lastMouseX;
                 if (height < 0) {
                     this.selectionAssistanceRef.style.top = event.clientY + 'px';
-                } else {
-                    this.selectionAssistanceRef.style.top = event.clientY - height + 'px';
+                }
+                else {
+                    this.selectionAssistanceRef.style.top = (event.clientY - height) + 'px';
                 }
                 if (width < 0) {
                     this.selectionAssistanceRef.style.left = event.screenX + 'px';
-                } else {
-                    this.selectionAssistanceRef.style.left = event.screenX - width + 'px';
+                }
+                else {
+                    this.selectionAssistanceRef.style.left = (event.screenX - width) + 'px';
                 }
                 this.selectionAssistanceRef.style.height = Math.abs(height) + 'px';
                 this.selectionAssistanceRef.style.width = Math.abs(width) + 'px';
-            } else if (this.activeLayer) {
-                let mouseX = event.offsetX,
-                    mouseY = event.offsetY,
-                    dx,
-                    dy;
-                dx = mouseX - this.lastMouseX; // Change in x
-                dy = mouseY - this.lastMouseY; // Change in y
-                this.activeLayer.updatePosition(dx, dy); // Update x and y of layer
+            }
+            else if (this.activeLayer) {
+                let mouseX = event.offsetX, mouseY = event.offsetY, dx, dy;
+                dx = mouseX - this.lastMouseX;  // Change in x
+                dy = mouseY - this.lastMouseY;  // Change in y
+                this.activeLayer.updatePosition(dx, dy);  // Update x and y of layer
                 this.lastMouseX = mouseX;
                 this.lastMouseY = mouseY;
                 this.drawAllLayers();
@@ -651,17 +642,16 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
                 y1 = Math.min(event.offsetY, this.lastMouseY);
                 x2 = Math.max(event.offsetX, this.lastMouseX);
                 y2 = Math.max(event.offsetY, this.lastMouseY);
-                if (!(x2 - x1 < 2 && y2 - y1 < 2)) {
-                    // if mouse was clicked and dragged
+                if (!(x2 - x1 < 2 && y2 - y1 < 2)) {    // if mouse was clicked and dragged
                     let selectedLayers = [];
                     let layer;
                     for (let index = this.layers.length - 1; index >= 0; index--) {
                         layer = this.layers[index];
-                        if (x2 > layer.x && layer.x + layer.width > x1 && y2 > layer.y && layer.y + layer.height > y1) {
+                        if ((x2 > layer.x && (layer.x + layer.width) > x1) && (y2 > layer.y && (layer.y + layer.height) > y1)) {
                             selectedLayers.push(index);
                         }
                     }
-                    selectedLayers.forEach((i) => this.updateActiveLayer(i, true));
+                    selectedLayers.forEach(i => this.updateActiveLayer(i, true));
                 }
             }
             this.currentMouseDown = false;
@@ -674,15 +664,11 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
     }
 
     updateResolution(newResolution: PageResolution): Promise<any> {
-        this.actualresolution = new PageResolution(
-            newResolution.resolutionName,
-            newResolution.mm.height,
-            newResolution.mm.width,
-            newResolution.orientation
-        ); // copy of standard resolution
-        this.layers.forEach((l) => l.scale(this.pixelTommFactor)); // to convert all pixel data to mm
+        this.actualresolution = new PageResolution(newResolution.resolutionName,
+            newResolution.mm.height, newResolution.mm.width, newResolution.orientation);    // copy of standard resolution
+        this.layers.forEach(l => l.scale(this.pixelTommFactor)); // to convert all pixel data to mm
         this.canvasSizing(this.maxVisibleHeight, this.maxVisibleWidth);
-        this.layers.forEach((l) => l.scale(1 / this.pixelTommFactor)); // back to pixel according to new resolution
+        this.layers.forEach(l => l.scale(1 / this.pixelTommFactor));    // back to pixel according to new resolution
         return this.scheduleCanvasReDraw(0);
     }
 
@@ -692,4 +678,5 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
         this.pendingReDrawId = setTimeout(() => this.context.drawImage(this.virtualCanvas, 0, 0));
         return true;
     }
+
 }
