@@ -112,8 +112,6 @@ export class SetSchoolFeesServiceAdapter {
 
             this.vm.isLoading = false;
 
-        }, error => {
-            this.vm.isLoading = false;
         });
 
     }
