@@ -1,111 +1,102 @@
-<ng-container *ngFor="let student of studentList; let i=index;let isLast = last;">
+<ng-container *ngFor="let student of studentList; let i = index; let isLast = last">
+    <div
+        class="container-fluid"
+        [class.pageBreakAfter]="auto"
+        style="width: 100%; height: 48%; border-radius: 20px; position: relative; overflow: hidden; font-weight: 800 !important"
+    >
+        <img
+            src="{{ user.activeSchool.profileImage }}"
+            style="border-radius: 2px; position: absolute; top: 40px; left: 14px; width: 70px; height: 70px"
+        />
 
-    <div class="container-fluid" [class.pageBreakAfter]="auto"
-         style="width: 100%; height: 48%;
-         border-radius: 20px;
-         position: relative;
-         overflow: hidden;
-         font-weight: 800 !important">
+        <img src="{{ student.profileImage }}" style="border-radius: 4px; position: absolute; top: 40px; right: 14px; height: 70px" />
 
-
-        <img src="{{user.activeSchool.profileImage}}"
-             style="border-radius: 2px; position: absolute;
-             top: 40px; left: 14px;
-             width: 70px; height: 70px;"/>
-
-         <img src="{{student.profileImage}}"
-             style="border-radius: 4px; position: absolute;
-             top: 40px; right: 14px;
-             height: 70px;"/>
-
-        <img src="{{user.activeSchool.profileImage}}"
-             [ngStyle]="opacity"
-             style="border-radius: 2px; position: absolute;
-             top: 160px; left: 210px;
-             width: 300px; height: 300px;
-             filter: grayscale(100%) !important;
-             z-index: -1;"/>
+        <img
+            src="{{ user.activeSchool.profileImage }}"
+            [ngStyle]="opacity"
+            style="
+                border-radius: 2px;
+                position: absolute;
+                top: 160px;
+                left: 210px;
+                width: 300px;
+                height: 300px;
+                filter: grayscale(100%) !important;
+                z-index: -1;
+            "
+        />
 
         <!-- opacity: 0.5 !important; -->
         <!-- Reg. No. , Dise Code -->
-        <div class="row " style="margin-top: 0px;">
-            <div class="col-xs-6 d-flex custom-padding">
-                Dise code : {{user.activeSchool.diseCode}}
-            </div>
+        <div class="row" style="margin-top: 0px">
+            <div class="col-xs-6 d-flex custom-padding">Dise code : {{ user.activeSchool.diseCode }}</div>
             <div class="col-xs-6 d-flex custom-padding" align="end">
-                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
-                    School Code :
-                </ng-container>
-                <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
-                    Affiliation No. :
-                </ng-container>
-                {{user.activeSchool.affiliationNumber}}
+                <ng-container *ngIf="user.activeSchool.parentBoard == boardList[0].id"> School Code : </ng-container>
+                <ng-container *ngIf="user.activeSchool.parentBoard == boardList[1].id"> Affiliation No. : </ng-container>
+                {{ user.activeSchool.affiliationNumber }}
             </div>
         </div>
 
         <!-- School Name -->
-        <div class="row " style="margin-top: 0px !important;">
-            <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px;">
-            <span style="background-color: yellow; font-size: 24px">
-                {{user.activeSchool.printName}}
-            </span>
+        <div class="row" style="margin-top: 0px !important">
+            <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px">
+                <span style="background-color: yellow; font-size: 24px">
+                    {{ user.activeSchool.printName }}
+                </span>
             </div>
         </div>
 
         <!-- Address -->
-        <div class="row " style="margin-top: 0px !important;">
-            <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px; font-size: 14px;">
-                {{user.activeSchool.address}}
+        <div class="row" style="margin-top: 0px !important">
+            <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px; font-size: 14px">
+                {{ user.activeSchool.address }}
             </div>
         </div>
 
         <!-- Examination -->
-        <div class="row " style="margin-top: 5px !important;">
+        <div class="row" style="margin-top: 5px !important">
             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-                <span style="font-size: 17px;"><u>{{examination.name}}</u></span><br/>
+                <span style="font-size: 17px"
+                    ><u>{{ examination.name }}</u></span
+                ><br />
             </div>
         </div>
 
         <!-- Session -->
-        <div class="row no-gutters" style="margin-top: 1px !important;">
+        <div class="row no-gutters" style="margin-top: 1px !important">
             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-                <span style="font-size: 15px">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
+                <span style="font-size: 15px">{{ getSessionName(user.activeSchool.currentSessionDbId) }}</span>
             </div>
         </div>
 
         <!-- Hall Ticket -->
-        <div class="row " style="margin-top: 5px !important;">
+        <div class="row" style="margin-top: 5px !important">
             <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-                <span style="font-size: 21px;"><u>Hall Ticket</u></span><br/>
+                <span style="font-size: 21px"><u>Hall Ticket</u></span
+                ><br />
             </div>
         </div>
 
         <!-- Name, Roll No. -->
-        <div class="row" style="margin-right: 0px; margin-top: 5px;">
-            <div class="col-xs-3">
-                Name <span style="float: right">:</span>
-            </div>
-            <div class="col-xs-5" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
-                <span *ngIf="student.gender=='Male'">Master</span>
-                <span *ngIf="student.gender=='Female'">Miss</span>
+        <div class="row" style="margin-right: 0px; margin-top: 5px">
+            <div class="col-xs-3">Name <span style="float: right">:</span></div>
+            <div class="col-xs-5" style="border-bottom: 1px solid lightgrey; padding-left: 5px">
+                <span *ngIf="student.gender == 'Male'">Master</span>
+                <span *ngIf="student.gender == 'Female'">Miss</span>
                 {{ student.name | titlecase }}
             </div>
-            <div class="col-xs-4" align="right">
-                Roll No. : {{student.rollNumber}}
-            </div>
+            <div class="col-xs-4" align="right">Roll No. : {{ student.rollNumber }}</div>
         </div>
 
         <!-- Father's Name -->
-        <div class="row" style="margin-right: 0px;">
-            <div class="col-xs-3">
-                Father's Name <span style="float: right">:</span>
-            </div>
-            <div class="col-xs-5" style="border-bottom: 1px solid lightgrey; padding-left: 5px;">
+        <div class="row" style="margin-right: 0px">
+            <div class="col-xs-3">Father's Name <span style="float: right">:</span></div>
+            <div class="col-xs-5" style="border-bottom: 1px solid lightgrey; padding-left: 5px">
                 Mr. {{ student.fathersName | titlecase }}
             </div>
             <div class="col-xs-4" align="right">
-                Standard : {{student.className}}
-                <ng-container *ngIf="student.sectionName">, {{student.sectionName}}</ng-container>
+                Standard : {{ student.className }}
+                <ng-container *ngIf="student.sectionName">, {{ student.sectionName }}</ng-container>
             </div>
         </div>
 
@@ -122,69 +113,71 @@
 
         <!-- Subject , Date, Timings -->
         <ng-container *ngIf="student.testList.length < 9">
-            <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px;" >
-                <div class="col-xs-6" >
-                    <span style="font-weight: 400;">Subject</span>
-                </div>
-                <div class="col-xs-3"  align="center">
-                    <span style="font-weight: 400;">Date</span>
-                </div>
-                <div class="col-xs-3"  align="right" style="padding-right: 65px;">
-                    <span style="font-weight: 400;">Timings</span>
-                </div>
-            </div>
-            <div class="row" *ngFor="let test of student.testList; let i=index;">
+            <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px">
                 <div class="col-xs-6">
-                    {{test.subjectName}}
+                    <span style="font-weight: 400">Subject</span>
                 </div>
                 <div class="col-xs-3" align="center">
-                    {{test.startTime | date: 'dd - MMM - yyyy'}}
+                    <span style="font-weight: 400">Date</span>
                 </div>
-                <div class="col-xs-3" align="right">
-                    {{test.startTime | date: 'hh:mm a'}} - {{test.endTime | date: 'hh:mm a'}}
+                <div class="col-xs-3" align="right" style="padding-right: 65px">
+                    <span style="font-weight: 400">Timings</span>
                 </div>
+            </div>
+            <div class="row" *ngFor="let test of student.testList; let i = index">
+                <div class="col-xs-6">
+                    {{ test.subjectName }}
+                </div>
+                <div class="col-xs-3" align="center">
+                    {{ test.startTime | date: 'dd - MMM - yyyy' }}
+                </div>
+                <div class="col-xs-3" align="right">{{ test.startTime | date: 'hh:mm a' }} - {{ test.endTime | date: 'hh:mm a' }}</div>
             </div>
         </ng-container>
 
         <!-- Subject , Date, Timings -->
         <ng-container *ngIf="student.testList.length >= 9">
-            <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px;" >
-                <div class="col-xs-7" >
-                    <span style="font-weight: 400;">Subject</span>
+            <div class="row" style="border-bottom: 1px solid black; border-top: 1px solid black; margin-top: 5px">
+                <div class="col-xs-7">
+                    <span style="font-weight: 400">Subject</span>
                 </div>
-                <div class="col-xs-2"  align="center">
-                    <span style="font-weight: 400;">Date</span>
+                <div class="col-xs-2" align="center">
+                    <span style="font-weight: 400">Date</span>
                 </div>
-                <div class="col-xs-3"  align="right" style="padding-right: 65px;">
-                    <span style="font-weight: 400;">Timings</span>
+                <div class="col-xs-3" align="right" style="padding-right: 65px">
+                    <span style="font-weight: 400">Timings</span>
                 </div>
             </div>
-            <div class="row" *ngFor="let test of student.testList; let i=index;"
-                 style="font-size: 12px !important;
-                        margin-top: 2px !important;
-                        padding-top: 0px !important;
-                        padding-bottom: 0px !important;
-                        margin-bottom: 0px !important;">
+            <div
+                class="row"
+                *ngFor="let test of student.testList; let i = index"
+                style="
+                    font-size: 12px !important;
+                    margin-top: 2px !important;
+                    padding-top: 0px !important;
+                    padding-bottom: 0px !important;
+                    margin-bottom: 0px !important;
+                "
+            >
                 <!-- div class="col-xs-2" align="center">{{i+1}}.</div -->
-                <div class="col-xs-7" style="line-height: normal !important;">
-                    {{test.subjectName}}
+                <div class="col-xs-7" style="line-height: normal !important">
+                    {{ test.subjectName }}
                 </div>
-                <div class="col-xs-2" align="center" style="line-height: normal !important;">
-                    {{test.startTime | date: 'dd - MMM - yyyy'}}
+                <div class="col-xs-2" align="center" style="line-height: normal !important">
+                    {{ test.startTime | date: 'dd - MMM - yyyy' }}
                 </div>
-                <div class="col-xs-3" align="right" style="line-height: normal !important;">
-                    {{test.startTime | date: 'hh:mm a'}} - {{test.endTime | date: 'hh:mm a'}}
+                <div class="col-xs-3" align="right" style="line-height: normal !important">
+                    {{ test.startTime | date: 'hh:mm a' }} - {{ test.endTime | date: 'hh:mm a' }}
                 </div>
             </div>
         </ng-container>
 
         <!-- Principal Signature Image -->
-        <img src="{{user.activeSchool.principalSignatureImage}}"
-             *ngIf="showPrincipalSignature && user.activeSchool.principalSignatureImage != null"
-             style="position: absolute;
-             bottom: 25px; left: 600px;
-             width: 100px; height: 50px;
-             z-index: 1;"/>
+        <img
+            src="{{ user.activeSchool.principalSignatureImage }}"
+            *ngIf="showPrincipalSignature && user.activeSchool.principalSignatureImage != null"
+            style="position: absolute; bottom: 25px; left: 600px; width: 100px; height: 50px; z-index: 1"
+        />
         <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
              style="position: absolute;
              bottom: 25px; left: 600px;
@@ -192,17 +185,9 @@
              z-index: 1;"/ -->
 
         <!-- Signature -->
-        <div class="row no-gutters" style="position: absolute; bottom: 0px; width: 100%;">
-            <div class="col-xs-12 custom-padding" style="padding-right: 40px" align="end">
-                (Signature)
-            </div>
+        <div class="row no-gutters" style="position: absolute; bottom: 0px; width: 100%">
+            <div class="col-xs-12 custom-padding" style="padding-right: 40px" align="end">(Signature)</div>
         </div>
-
     </div>
-    <hr *ngIf = "i%2 == 0">
-
-
-
-
+    <hr *ngIf="i % 2 == 0" />
 </ng-container>
-

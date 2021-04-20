@@ -1,32 +1,27 @@
-import {ManageEventComponent} from '@modules/event-gallery/pages/manage-event/manage-event.component';
-import {CommonFunctions} from '@classes/common-functions';
+import { ManageEventComponent } from '@modules/event-gallery/pages/manage-event/manage-event.component';
+import { CommonFunctions } from '@classes/common-functions';
 
 export class ManageEventServiceAdapter {
     vm: ManageEventComponent;
 
-
-    constructor() {
-    }
-
+    constructor() {}
 
     initializeAdapter(vm: ManageEventComponent): void {
         this.vm = vm;
     }
-
 
     initializeData(): void {
         this.vm.isLoading = true;
         this.vm.eventList = [];
         this.vm.filteredEventList = [];
         let event_data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         Promise.all([
-            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data),//1
-
-        ]).then(value => {
+            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data), //1
+        ]).then((value) => {
             this.vm.eventList = value[0];
             this.vm.isLoading = false;
         });
@@ -40,30 +35,30 @@ export class ManageEventServiceAdapter {
         this.vm.eventImageTagList = [];
 
         let image_data = {
-            'parentEvent': event.id,
-            'korangle__order': '-id',
+            parentEvent: event.id,
+            korangle__order: '-id',
         };
         let notify_data = {
-            'parentEvent': event.id,
+            parentEvent: event.id,
         };
         let tag_data = {
-            'parentEvent': event.id,
-            'korangle__order': '-id',
+            parentEvent: event.id,
+            korangle__order: '-id',
         };
         let image_tag_data = {
-            'parentEventImage__parentEvent': event.id,
+            parentEventImage__parentEvent: event.id,
         };
 
         Promise.all([
-            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image, image_data),//0
-            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_notify_class, notify_data),//1
-            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_tag, tag_data),//2
-            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image_tag, image_tag_data),//3
-        ]).then(value => {
-            value[0].forEach(image => {
+            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image, image_data), //0
+            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_notify_class, notify_data), //1
+            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_tag, tag_data), //2
+            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image_tag, image_tag_data), //3
+        ]).then((value) => {
+            value[0].forEach((image) => {
                 image['selected'] = false;
                 image['tagList'] = [];
-                value[3].forEach(imageEvent => {
+                value[3].forEach((imageEvent) => {
                     if (imageEvent.parentEventImage == image.id) {
                         image['tagList'].push(imageEvent.parentEventTag);
                     }
@@ -71,7 +66,7 @@ export class ManageEventServiceAdapter {
                 this.vm.eventImageList.push(image);
             });
             this.vm.notifyToList = value[1];
-            value[2].forEach(evenTag => {
+            value[2].forEach((evenTag) => {
                 evenTag['selected'] = false;
                 this.vm.eventTagList.push(evenTag);
             });
@@ -84,16 +79,16 @@ export class ManageEventServiceAdapter {
     createTag(tagName: any) {
         this.vm.isTagCreating = true;
         let tag_data = {
-            'parentEvent': this.vm.selectedEvent.id,
-            'tagName': tagName,
-        }
+            parentEvent: this.vm.selectedEvent.id,
+            tagName: tagName,
+        };
         Promise.all([
-            this.vm.eventGalleryService.createObject(this.vm.eventGalleryService.event_tag, tag_data),//0
-        ]).then(value => {
+            this.vm.eventGalleryService.createObject(this.vm.eventGalleryService.event_tag, tag_data), //0
+        ]).then((value) => {
             value[0]['selected'] = false;
             this.vm.eventTagList.push(value[0]);
             this.vm.eventTagList = this.vm.eventTagList.sort((a, b) => {
-                return b.id - a.id
+                return b.id - a.id;
             });
             this.vm.isTagCreating = false;
         });
@@ -101,34 +96,40 @@ export class ManageEventServiceAdapter {
 
     updateTag(eventTag: any, newTagName: any) {
         let tag_data = {
-            'id': eventTag.id,
-            'parentEvent': this.vm.selectedEvent.id,
-            'tagName': newTagName,
-        }
+            id: eventTag.id,
+            parentEvent: this.vm.selectedEvent.id,
+            tagName: newTagName,
+        };
         Promise.all([
-            this.vm.eventGalleryService.updateObject(this.vm.eventGalleryService.event_tag, tag_data),//0
-        ]).then(value => {
+            this.vm.eventGalleryService.updateObject(this.vm.eventGalleryService.event_tag, tag_data), //0
+        ]).then((value) => {
             value[0]['selected'] = false;
-            Object.assign(this.vm.eventTagList.find(t => t.id === value[0].id), JSON.parse(JSON.stringify(value[0])));
+            Object.assign(
+                this.vm.eventTagList.find((t) => t.id === value[0].id),
+                JSON.parse(JSON.stringify(value[0]))
+            );
         });
     }
 
     deleteSelectedTagList() {
         let tag_data = {
-            'id__in': this.vm.eventTagList.filter(tags => tags.selected == true).map(tag => tag.id).join(),
-        }
+            id__in: this.vm.eventTagList
+                .filter((tags) => tags.selected == true)
+                .map((tag) => tag.id)
+                .join(),
+        };
         Promise.all([
-            this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_tag, tag_data),//0
-        ]).then(value => {
-            this.vm.eventTagList = this.vm.eventTagList.filter(tags => tags.selected != true);
+            this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_tag, tag_data), //0
+        ]).then((value) => {
+            this.vm.eventTagList = this.vm.eventTagList.filter((tags) => tags.selected != true);
         });
     }
 
     async uploadImage(tempImageData: any, type: any) {
         this.vm.isImageUploading = true;
         let temp_form_data = new FormData();
-        const layout_data = {...tempImageData,};
-        Object.keys(layout_data).forEach(key => {
+        const layout_data = { ...tempImageData };
+        Object.keys(layout_data).forEach((key) => {
             if (key === 'eventImage') {
                 temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'eventImage' + Date.now() + '.' + type));
             } else {
@@ -136,18 +137,18 @@ export class ManageEventServiceAdapter {
             }
         });
         Promise.all([
-            this.vm.eventGalleryService.createObject(this.vm.eventGalleryService.event_image, temp_form_data),//0
-        ]).then(value => {
+            this.vm.eventGalleryService.createObject(this.vm.eventGalleryService.event_image, temp_form_data), //0
+        ]).then((value) => {
             value[0]['selected'] = false;
             value[0]['tagList'] = [];
-            this.vm.eventImageTagList.forEach(imageEvent => {
+            this.vm.eventImageTagList.forEach((imageEvent) => {
                 if (imageEvent.parentImage == value[0].id) {
                     value[0]['tagList'].push(imageEvent.parentTag);
                 }
             });
             this.vm.eventImageList.push(value[0]);
             this.vm.eventImageList = this.vm.eventImageList.sort((a, b) => {
-                return b.id - a.id
+                return b.id - a.id;
             });
             if (this.vm.eventImageList.length == this.vm.imageCount + this.vm.totalImagesUploaded) {
                 this.vm.isImageUploading = false;
@@ -160,14 +161,14 @@ export class ManageEventServiceAdapter {
     deleteSelectedImage(image: any) {
         this.vm.isDeletingImages = true;
         let image_data = {
-            'id': image.id,
-        }
+            id: image.id,
+        };
         Promise.all([
-            this.vm.eventGalleryService.deleteObject(this.vm.eventGalleryService.event_image, image_data),//0
-        ]).then(value => {
-            this.vm.eventImageList = this.vm.eventImageList.filter(img => img.id != image.id);
+            this.vm.eventGalleryService.deleteObject(this.vm.eventGalleryService.event_image, image_data), //0
+        ]).then((value) => {
+            this.vm.eventImageList = this.vm.eventImageList.filter((img) => img.id != image.id);
             this.vm.imageCount--;
-            if (this.vm.eventImageList.filter(image => image.selected == true).length == 0) {
+            if (this.vm.eventImageList.filter((image) => image.selected == true).length == 0) {
                 console.log(this.vm.imageCount);
                 this.vm.isDeletingImages = false;
             }
@@ -177,31 +178,31 @@ export class ManageEventServiceAdapter {
     assignImageTags() {
         this.vm.isAssigning = true;
         let event_image_tag_data = [];
-        let selectedTags = this.vm.eventTagList.filter(tag => tag.selected == true);
-        let selectedImages = this.vm.eventImageList.filter(image => image.selected == true);
+        let selectedTags = this.vm.eventTagList.filter((tag) => tag.selected == true);
+        let selectedImages = this.vm.eventImageList.filter((image) => image.selected == true);
 
-        selectedTags.forEach(tag => {
-            selectedImages.forEach(image => {
-                if (!image.tagList.find(tagId => tagId == tag.id)) {
+        selectedTags.forEach((tag) => {
+            selectedImages.forEach((image) => {
+                if (!image.tagList.find((tagId) => tagId == tag.id)) {
                     event_image_tag_data.push({
-                        'parentEventImage': image.id,
-                        'parentEventTag': tag.id,
+                        parentEventImage: image.id,
+                        parentEventTag: tag.id,
                     });
                 }
-            })
+            });
         });
         Promise.all([
-            this.vm.eventGalleryService.createObjectList(this.vm.eventGalleryService.event_image_tag, event_image_tag_data),//0
-        ]).then(value => {
-            value[0].forEach(imageTag => {
-                let image = this.vm.eventImageList.find(img => img.id == imageTag.parentEventImage);
-                if (image && !image.tagList.find(tagId => tagId == imageTag.id)) {
+            this.vm.eventGalleryService.createObjectList(this.vm.eventGalleryService.event_image_tag, event_image_tag_data), //0
+        ]).then((value) => {
+            value[0].forEach((imageTag) => {
+                let image = this.vm.eventImageList.find((img) => img.id == imageTag.parentEventImage);
+                if (image && !image.tagList.find((tagId) => tagId == imageTag.id)) {
                     image.tagList.push(imageTag.parentEventTag);
                 }
                 this.vm.eventImageTagList.push(imageTag);
             });
-            this.vm.eventTagList.forEach(tag => tag.selected = false);
-            this.vm.eventImageList.forEach(tag => tag.selected = false);
+            this.vm.eventTagList.forEach((tag) => (tag.selected = false));
+            this.vm.eventImageList.forEach((tag) => (tag.selected = false));
             this.vm.isAssigning = false;
         });
     }
@@ -209,30 +210,32 @@ export class ManageEventServiceAdapter {
     unAssignImageTags() {
         this.vm.isAssigning = true;
         let event_image_tag_data = [];
-        let selectedTag = this.vm.eventTagList.find(tag => tag.selected == true);
-        let selectedImageList = this.vm.eventImageList.filter(image => image.selected == true);
-        selectedImageList.forEach(selectedImage=> {
-            if (selectedImage.tagList.find(tagId => tagId == selectedTag.id)) {
-                let delete_id = this.vm.eventImageTagList.find(imageTag => imageTag.parentEventTag == selectedTag.id && imageTag.parentEventImage == selectedImage.id).id;
+        let selectedTag = this.vm.eventTagList.find((tag) => tag.selected == true);
+        let selectedImageList = this.vm.eventImageList.filter((image) => image.selected == true);
+        selectedImageList.forEach((selectedImage) => {
+            if (selectedImage.tagList.find((tagId) => tagId == selectedTag.id)) {
+                let delete_id = this.vm.eventImageTagList.find(
+                    (imageTag) => imageTag.parentEventTag == selectedTag.id && imageTag.parentEventImage == selectedImage.id
+                ).id;
                 event_image_tag_data.push({
-                    'id': delete_id
+                    id: delete_id,
                 });
             }
         });
         Promise.all([
-            this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_image_tag, event_image_tag_data),//0
-        ]).then(value => {
+            this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_image_tag, event_image_tag_data), //0
+        ]).then((value) => {
             console.log(value);
-            event_image_tag_data.forEach(EventImgTag=>{
-                this.vm.eventImageTagList = this.vm.eventImageTagList.filter(it => it.id != EventImgTag.id);
+            event_image_tag_data.forEach((EventImgTag) => {
+                this.vm.eventImageTagList = this.vm.eventImageTagList.filter((it) => it.id != EventImgTag.id);
             });
-            
-            selectedImageList.forEach(selectedImage=>{
-                selectedImage.tagList = selectedImage.tagList.filter(tagId => tagId !== selectedTag.id);
-            })
 
-            this.vm.eventTagList.forEach(tag => tag.selected = false);
-            this.vm.eventImageList.forEach(tag => tag.selected = false);
+            selectedImageList.forEach((selectedImage) => {
+                selectedImage.tagList = selectedImage.tagList.filter((tagId) => tagId !== selectedTag.id);
+            });
+
+            this.vm.eventTagList.forEach((tag) => (tag.selected = false));
+            this.vm.eventImageList.forEach((tag) => (tag.selected = false));
             this.vm.isAssigning = false;
         });
     }

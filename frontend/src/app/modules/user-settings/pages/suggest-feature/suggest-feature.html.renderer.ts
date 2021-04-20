@@ -1,18 +1,16 @@
-import {SuggestFeatureComponent} from './suggest-feature.component';
+import { SuggestFeatureComponent } from './suggest-feature.component';
 
 export class SuggestFeatureHtmlRenderer {
-
     vm: SuggestFeatureComponent;
 
-    constructor() {
-    }
+    constructor() {}
 
     initializeRenderer(vm: SuggestFeatureComponent): void {
         this.vm = vm;
     }
 
     public getStatusColor(featureStatus): any {
-        switch(featureStatus) {
+        switch (featureStatus) {
             case this.vm.featureStatusList.Pending:
                 return 'orange';
             case this.vm.featureStatusList.Rejected:
@@ -21,5 +19,4 @@ export class SuggestFeatureHtmlRenderer {
                 return 'green';
         }
     }
-
 }

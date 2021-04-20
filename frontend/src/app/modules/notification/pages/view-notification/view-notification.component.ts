@@ -1,17 +1,15 @@
 import { Component } from '@angular/core';
 
-import {DataStorage} from "../../../../classes/data-storage";
-import {NotificationService} from "../../../../services/modules/notification/notification.service";
-import {ViewNotificationServiceAdapter} from "./view-notification.service.adapter";
+import { DataStorage } from '../../../../classes/data-storage';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { ViewNotificationServiceAdapter } from './view-notification.service.adapter';
 
 @Component({
-  selector: 'view-notification',
-  templateUrl: './view-notification.component.html',
-  styleUrls: ['./view-notification.component.css'],
+    selector: 'view-notification',
+    templateUrl: './view-notification.component.html',
+    styleUrls: ['./view-notification.component.css'],
 })
-
 export class ViewNotificationComponent {
-
     user;
 
     loadingCount = 20;
@@ -28,7 +26,7 @@ export class ViewNotificationComponent {
 
     notificationBeingDeleted = null;
 
-    constructor (public notificationService: NotificationService) { }
+    constructor(public notificationService: NotificationService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -39,7 +37,7 @@ export class ViewNotificationComponent {
     }
 
     getNotificationTitle(notification: any): any {
-        let result = this.user.schoolList.find(school => {
+        let result = this.user.schoolList.find((school) => {
             return school.dbId == notification.parentSchool;
         });
         if (result != undefined) {
@@ -50,10 +48,9 @@ export class ViewNotificationComponent {
     }
 
     isDeleteClicked(notification: any): boolean {
-        if (this.notificationBeingDeleted === notification){
+        if (this.notificationBeingDeleted === notification) {
             return true;
         }
         return false;
     }
-
 }

@@ -1,121 +1,129 @@
 <div class="card-content">
-
-    <parent-student-filter [user]="user"                           
-                           (onStudentListSelected)="handleStudentListSelection($event)"
-                           (onStudentListLoading)="isStudentListLoading=$event"
-                           [selectedFilterType]="'Student'"
-                           [bothFilters]="false"
-                           [studentTcGenerated]="true"></parent-student-filter>
+    <parent-student-filter
+        [user]="user"
+        (onStudentListSelected)="handleStudentListSelection($event)"
+        (onStudentListLoading)="isStudentListLoading = $event"
+        [selectedFilterType]="'Student'"
+        [bothFilters]="false"
+        [studentTcGenerated]="true"
+    ></parent-student-filter>
 
     <div class="row">
-        <div class="col-md-12"
-             style="border-bottom: 1px solid lightgrey;"></div>
+        <div class="col-md-12" style="border-bottom: 1px solid lightgrey"></div>
     </div>
 
-    <ng-container *ngIf="showDetails==true && !isLoading && !isStudentListLoading">
-
-
-        <div class="row" style="font-weight: 800;">
+    <ng-container *ngIf="showDetails == true && !isLoading && !isStudentListLoading">
+        <div class="row" style="font-weight: 800">
             <div class="col-md-3">
-                {{selectedStudent.name}}
+                {{ selectedStudent.name }}
             </div>
             <div class="col-md-3">
-                {{selectedStudent.fathersName}}
+                {{ selectedStudent.fathersName }}
             </div>
             <div class="col-md-3">
-                {{selectedStudent.scholarNumber}}
+                {{ selectedStudent.scholarNumber }}
             </div>
         </div>
 
-        <div *ngIf="count>0">
+        <div *ngIf="count > 0">
             <p>
-            <span style="color: red">
-                <span *ngIf="!fatherNameIsComing">Fathers Name,&nbsp;</span>
-                <span *ngIf="!motherNameIsComing">Mothers Name,&nbsp;</span>
-                <span *ngIf="!scholarNumberIsComing">Scholar Number,&nbsp;</span>
-                <span *ngIf="!addressIsComing">Address,&nbsp;</span>
-                <span *ngIf="!dateOfBirthIsComing">Date of birth,&nbsp;</span>
-                <span *ngIf="!aadharNumberIsComing">Aadhar number,&nbsp;</span>
-                <span *ngIf="!sssmidIsComing">Child sssmid,&nbsp;</span>
-                <span *ngIf="!genderIsComing">Gender,&nbsp;</span>
-                <span *ngIf="!casteIsComing">Caste,&nbsp;</span>
-                <span *ngIf="!categoryIsComing">Category,&nbsp;</span>
-           </span>
+                <span style="color: red">
+                    <span *ngIf="!fatherNameIsComing">Fathers Name,&nbsp;</span>
+                    <span *ngIf="!motherNameIsComing">Mothers Name,&nbsp;</span>
+                    <span *ngIf="!scholarNumberIsComing">Scholar Number,&nbsp;</span>
+                    <span *ngIf="!addressIsComing">Address,&nbsp;</span>
+                    <span *ngIf="!dateOfBirthIsComing">Date of birth,&nbsp;</span>
+                    <span *ngIf="!aadharNumberIsComing">Aadhar number,&nbsp;</span>
+                    <span *ngIf="!sssmidIsComing">Child sssmid,&nbsp;</span>
+                    <span *ngIf="!genderIsComing">Gender,&nbsp;</span>
+                    <span *ngIf="!casteIsComing">Caste,&nbsp;</span>
+                    <span *ngIf="!categoryIsComing">Category,&nbsp;</span>
+                </span>
                 <span *ngIf="count === 1">
-                is missing in student profile.
-                Please fill it by going in update profile for a valid transfer certificate.
-            </span>
-                <span *ngIf=" count > 1">
-                are missing in student profile.
-                Please fill them by going in update profile for a valid transfer certificate.
-            </span>
+                    is missing in student profile. Please fill it by going in update profile for a valid transfer certificate.
+                </span>
+                <span *ngIf="count > 1">
+                    are missing in student profile. Please fill them by going in update profile for a valid transfer certificate.
+                </span>
             </p>
         </div>
 
-        <div class="row" *ngIf="count>0">
-            <div class="col-md-12"
-                 style="border-bottom: 1px solid lightgrey;"></div>
+        <div class="row" *ngIf="count > 0">
+            <div class="col-md-12" style="border-bottom: 1px solid lightgrey"></div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Certificate No.</div>
             <div class="col-md-3">
-                <input type="number"
-                       [ngModel]="selectedTransferCertificate.certificateNumber"
-                       (ngModelChange)="currentTransferCertificate.certificateNumber=$event"/>
+                <input
+                    type="number"
+                    [ngModel]="selectedTransferCertificate.certificateNumber"
+                    (ngModelChange)="currentTransferCertificate.certificateNumber = $event"
+                />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Issue Date</div>
             <div class="col-md-3">
-                <input type="date"
-                       [ngModel]="selectedTransferCertificate.issueDate"
-                       (ngModelChange)="currentTransferCertificate.issueDate=$event"/>
+                <input
+                    type="date"
+                    [ngModel]="selectedTransferCertificate.issueDate"
+                    (ngModelChange)="currentTransferCertificate.issueDate = $event"
+                />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Leaving Date</div>
             <div class="col-md-3">
-                <input type="date"
-                       [ngModel]="selectedTransferCertificate.leavingDate"
-                       (ngModelChange)="currentTransferCertificate.leavingDate=$event"/>
+                <input
+                    type="date"
+                    [ngModel]="selectedTransferCertificate.leavingDate"
+                    (ngModelChange)="currentTransferCertificate.leavingDate = $event"
+                />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">is leaving school because</div>
             <div class="col-md-6">
-                <input type="text"
-                       [ngModel]="selectedTransferCertificate.leavingReason"
-                       (ngModelChange)="currentTransferCertificate.leavingReason=$event"/>
+                <input
+                    type="text"
+                    [ngModel]="selectedTransferCertificate.leavingReason"
+                    (ngModelChange)="currentTransferCertificate.leavingReason = $event"
+                />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Admission Class</div>
             <div class="col-md-3">
-                <input type="text"
-                       [ngModel]="selectedTransferCertificate.admissionClass"
-                       (ngModelChange)="currentTransferCertificate.admissionClass=$event"/>
+                <input
+                    type="text"
+                    [ngModel]="selectedTransferCertificate.admissionClass"
+                    (ngModelChange)="currentTransferCertificate.admissionClass = $event"
+                />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-3">Last Class Passed</div>
             <div class="col-md-3">
-                <input type="text"
-                       [ngModel]="selectedTransferCertificate.lastClassPassed"
-                       (ngModelChange)="currentTransferCertificate.lastClassPassed=$event"/>
+                <input
+                    type="text"
+                    [ngModel]="selectedTransferCertificate.lastClassPassed"
+                    (ngModelChange)="currentTransferCertificate.lastClassPassed = $event"
+                />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
                 <mat-checkbox
-                        [ngModel]="selectedTransferCertificate.leavingMidSession"
-                        (ngModelChange)="currentTransferCertificate.leavingMidSession=$event">
+                    [ngModel]="selectedTransferCertificate.leavingMidSession"
+                    (ngModelChange)="currentTransferCertificate.leavingMidSession = $event"
+                >
                     Student is leaving mid session.
                 </mat-checkbox>
             </div>
@@ -125,59 +133,81 @@
             <div class="row">
                 <div class="col-md-3">Last Class Attended</div>
                 <div class="col-md-3">
-                    <input type="text"
-                           [ngModel]="selectedTransferCertificate.lastClassAttended"
-                           (ngModelChange)="currentTransferCertificate.lastClassAttended=$event" />
+                    <input
+                        type="text"
+                        [ngModel]="selectedTransferCertificate.lastClassAttended"
+                        (ngModelChange)="currentTransferCertificate.lastClassAttended = $event"
+                    />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-3">Attendance (in last class)</div>
                 <div class="col-md-3">
-                    <input type="number"
-                           [ngModel]="selectedTransferCertificate.lastClassAttendance"
-                           (ngModelChange)="currentTransferCertificate.lastClassAttendance=$event" />
+                    <input
+                        type="number"
+                        [ngModel]="selectedTransferCertificate.lastClassAttendance"
+                        (ngModelChange)="currentTransferCertificate.lastClassAttendance = $event"
+                    />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-3">Total working Days (till attendance)</div>
                 <div class="col-md-3">
-                    <input type="number"
-                           [ngModel]="selectedTransferCertificate.attendanceOutOf"
-                           (ngModelChange)="currentTransferCertificate.attendanceOutOf=$event" />
+                    <input
+                        type="number"
+                        [ngModel]="selectedTransferCertificate.attendanceOutOf"
+                        (ngModelChange)="currentTransferCertificate.attendanceOutOf = $event"
+                    />
                 </div>
             </div>
         </ng-container>
 
-        <div matTooltip="New module for T.C. is added" style="display: inline-block;">
-        <button type="button" disabled
+        <div matTooltip="New module for T.C. is added" style="display: inline-block">
+            <button
+                type="button"
+                disabled
                 *ngIf="!selectedTransferCertificate.id"
-                (click)="generateTC();"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate T. C.</button>
+                (click)="generateTC()"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            >
+                Generate T. C.
+            </button>
 
-        <button type="button" disabled
+            <button
+                type="button"
+                disabled
                 *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
-                (click)="updateTC();"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Update T.C.</button>
-                </div>
+                (click)="updateTC()"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            >
+                Update T.C.
+            </button>
+        </div>
 
-        <button type="button"
-                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
-                (click)="printTCSecondFormat();"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Print T. C.</button>
+        <button
+            type="button"
+            *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
+            (click)="printTCSecondFormat()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        >
+            Print T. C.
+        </button>
 
-        <button type="button"
-                *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
-                (click)="cancelTc()"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Cancel T. C.</button>
+        <button
+            type="button"
+            *ngIf="selectedTransferCertificate.id && selectedTransferCertificate.id != 0"
+            (click)="cancelTc()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        >
+            Cancel T. C.
+        </button>
 
         <mat-checkbox [(ngModel)]="twoCopies">Two Copies</mat-checkbox>
 
         <div class="clearfix"></div>
-
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading || isStudentListLoading">

@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class AccountsService extends ServiceObject {
-
     protected module_url = '/accounts';
 
     // objects urls
@@ -21,5 +19,4 @@ export class AccountsService extends ServiceObject {
     public approval_account_details = '/approval-account-details';
     public approval_images = '/approval-images';
     public lock_accounts = '/lock-accounts';
-
 }

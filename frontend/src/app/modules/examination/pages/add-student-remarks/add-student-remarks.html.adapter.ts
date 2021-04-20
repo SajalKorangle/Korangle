@@ -1,10 +1,8 @@
-
-import {AddStudentRemarksComponent} from './add-student-remarks.component';
+import { AddStudentRemarksComponent } from './add-student-remarks.component';
 
 declare const $: any;
 
 export class AddStudentRemarksHtmlAdapter {
-
     vm: AddStudentRemarksComponent;
 
     selectedExamination: any;
@@ -24,14 +22,18 @@ export class AddStudentRemarksHtmlAdapter {
     handleClassSectionSelection(classSection: any): void {
         this.showStudentList = false;
         this.selectedClassSection = classSection;
-        this.filteredSortedStudentSectionList = this.vm.studentSectionList.filter(studentSection => {
-            return studentSection.parentClass === this.selectedClassSection.class.id
-                && studentSection.parentDivision === this.selectedClassSection.section.id;
-        }).sort( (a, b) => {
-            if (a.rollNumber && b.rollNumber) {
-                return a.rollNumber - b.rollNumber;
-            }
-        });
+        this.filteredSortedStudentSectionList = this.vm.studentSectionList
+            .filter((studentSection) => {
+                return (
+                    studentSection.parentClass === this.selectedClassSection.class.id &&
+                    studentSection.parentDivision === this.selectedClassSection.section.id
+                );
+            })
+            .sort((a, b) => {
+                if (a.rollNumber && b.rollNumber) {
+                    return a.rollNumber - b.rollNumber;
+                }
+            });
     }
 
     /*getFilteredStudentSectionList(): any {
@@ -50,7 +52,7 @@ export class AddStudentRemarksHtmlAdapter {
     }
 
     getRemarkedStudentsCount(): any {
-        return this.vm.studentRemarkList.filter(item => {
+        return this.vm.studentRemarkList.filter((item) => {
             if (item.remark !== '') {
                 return true;
             }
@@ -59,7 +61,7 @@ export class AddStudentRemarksHtmlAdapter {
     }
 
     getStudentRemark(studentSection: any): any {
-        const item = this.vm.studentRemarkList.find(studentRemark => {
+        const item = this.vm.studentRemarkList.find((studentRemark) => {
             return studentRemark.parentStudent === studentSection.parentStudent;
         });
         if (item) {
@@ -75,5 +77,4 @@ export class AddStudentRemarksHtmlAdapter {
         }
         return true;
     }
-
 }

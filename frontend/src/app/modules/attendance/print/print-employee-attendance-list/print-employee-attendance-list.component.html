@@ -1,33 +1,30 @@
 <table class="table table-hover" *ngIf="employeeAttendanceList">
-    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-    <tr>
-        <th>S No.</th>
-        <th>Employee</th>
-        <th *ngIf="by==='month'">A/T</th>
-        <ng-container *ngFor="let date of getDateList()">
-            <th style="text-align: center" *ngIf="by==='month'">{{date.getDate()}}</th>
-            <th style="text-align: center" *ngIf="by==='date'">Attendance</th>
-        </ng-container>
-    </tr>
-    </thead>
-    <tbody>
-    <ng-container *ngFor="let employee of employeeAttendanceList; let i=index;">
+    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
         <tr>
-            <td>{{i+1}}.</td>
-            <td>
-                {{employee.name}}
-                <ng-container *ngIf="employee.employeeNumber">
-                    ({{employee.employeeNumber}})
-                </ng-container>
-            </td>
-            <td *ngIf="by==='month'">{{getEmployeeRecord(employee)}}</td>
-            <ng-container *ngFor="let attendance of employee.attendanceStatusList">
-                <td align="center"
-                    class="{{getTextClass(attendance.status)}}">
-                    {{getStatus(attendance.status)}}
-                </td>
+            <th>S No.</th>
+            <th>Employee</th>
+            <th *ngIf="by === 'month'">A/T</th>
+            <ng-container *ngFor="let date of getDateList()">
+                <th style="text-align: center" *ngIf="by === 'month'">{{ date.getDate() }}</th>
+                <th style="text-align: center" *ngIf="by === 'date'">Attendance</th>
             </ng-container>
         </tr>
-    </ng-container>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let employee of employeeAttendanceList; let i = index">
+            <tr>
+                <td>{{ i + 1 }}.</td>
+                <td>
+                    {{ employee.name }}
+                    <ng-container *ngIf="employee.employeeNumber"> ({{ employee.employeeNumber }}) </ng-container>
+                </td>
+                <td *ngIf="by === 'month'">{{ getEmployeeRecord(employee) }}</td>
+                <ng-container *ngFor="let attendance of employee.attendanceStatusList">
+                    <td align="center" class="{{ getTextClass(attendance.status) }}">
+                        {{ getStatus(attendance.status) }}
+                    </td>
+                </ng-container>
+            </tr>
+        </ng-container>
     </tbody>
 </table>

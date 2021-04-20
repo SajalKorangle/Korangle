@@ -1,134 +1,134 @@
 <div class="card-content">
     <!--Coming Soon!-->
     <ng-container *ngIf="!isInitialLoading">
-
         <ng-container *ngIf="classSectionList.length > 0">
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="selectedClassSection"
-                                [disabled]="isLoading"
-                                (ngModelChange)="handleClassSectionChange($event);showStudentList=false;">
-                        <mat-option *ngFor='let classSection of classSectionList;' [value]="classSection">
-                            {{classSection.class.name}}, {{classSection.section.name}}
+                    <mat-select
+                        placeholder="Select Class"
+                        [ngModel]="selectedClassSection"
+                        [disabled]="isLoading"
+                        (ngModelChange)="handleClassSectionChange($event); showStudentList = false"
+                    >
+                        <mat-option *ngFor="let classSection of classSectionList" [value]="classSection">
+                            {{ classSection.class.name }}, {{ classSection.section.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div class="col-md-3" *ngIf="showTermList()">
-
                 <mat-form-field>
-                    <mat-select placeholder="Select Term"
-                                [ngModel]="selectedTerm"
-                                [disabled]="isLoading"
-                                (ngModelChange)="handleTermChange($event)">
-                        <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
-                            {{term.name}}
+                    <mat-select
+                        placeholder="Select Term"
+                        [ngModel]="selectedTerm"
+                        [disabled]="isLoading"
+                        (ngModelChange)="handleTermChange($event)"
+                    >
+                        <mat-option *ngFor="let term of termList.slice(0, 2)" [value]="term">
+                            {{ term.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-
             </div>
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.getStudentFieldRemarkDetails()">GET</button>
-
+            <button
+                type="submit"
+                style="margin-left: 20px"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.getStudentFieldRemarkDetails()"
+            >
+                GET
+            </button>
         </ng-container>
 
         <ng-container *ngIf="!isLoading && showStudentList">
-
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
-                    <th class="text-center" *ngFor="let extraField of extraFieldList">{{extraField.name}}</th>
-                    <th class="text-center" *ngIf="showRemark">Remark</th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student</th>
+                        <th>Roll No.</th>
+                        <th class="text-center" *ngFor="let extraField of extraFieldList">{{ extraField.name }}</th>
+                        <th class="text-center" *ngIf="showRemark">Remark</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i=index;">
-                    <tr>
-                        <td>{{i+1}}.</td>
-                        <td>
-                            {{getStudent(studentSection).name}}
-                        </td>
-                        <td>
-                            {{studentSection.rollNumber}}
-                        </td>
-                        <td *ngFor="let subject of extraFieldList; let i = index"
-                            align="center"
-                            [ngStyle]="{'background-color': (!(getGrade(studentSection, i))?'yellow':'')}">
-                            {{getGrade(studentSection, i)}}
-                        </td>
-                        <td *ngIf="showRemark"
-                            align="center"
-                            [ngStyle]="{'background-color': (!(getStudentRemark(studentSection))?'yellow':'')}">
-                            {{getStudentRemark(studentSection)}}
-                        </td>
-                        <!--  -->
-                        <!--<td>-->
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i = index">
+                        <tr>
+                            <td>{{ i + 1 }}.</td>
+                            <td>
+                                {{ getStudent(studentSection).name }}
+                            </td>
+                            <td>
+                                {{ studentSection.rollNumber }}
+                            </td>
+                            <td
+                                *ngFor="let subject of extraFieldList; let i = index"
+                                align="center"
+                                [ngStyle]="{ 'background-color': !getGrade(studentSection, i) ? 'yellow' : '' }"
+                            >
+                                {{ getGrade(studentSection, i) }}
+                            </td>
+                            <td
+                                *ngIf="showRemark"
+                                align="center"
+                                [ngStyle]="{ 'background-color': !getStudentRemark(studentSection) ? 'yellow' : '' }"
+                            >
+                                {{ getStudentRemark(studentSection) }}
+                            </td>
+                            <!--  -->
+                            <!--<td>-->
                             <!--{{getRequiredField(studentSection)}}-->
                             <!--&lt;!&ndash;<mat-form-field class="example-full-width">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<textarea matInput&ndash;&gt;-->
-                                          <!--&lt;!&ndash;type="text"&ndash;&gt;-->
-                                          <!--&lt;!&ndash;rows="3"&ndash;&gt;-->
-                                          <!--&lt;!&ndash;[ngModel]="getStudentRemark(studentSection)"&ndash;&gt;-->
-                                          <!--&lt;!&ndash;(blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)">&ndash;&gt;-->
-                                <!--&lt;!&ndash;</textarea>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<textarea matInput&ndash;&gt;-->
+                            <!--&lt;!&ndash;type="text"&ndash;&gt;-->
+                            <!--&lt;!&ndash;rows="3"&ndash;&gt;-->
+                            <!--&lt;!&ndash;[ngModel]="getStudentRemark(studentSection)"&ndash;&gt;-->
+                            <!--&lt;!&ndash;(blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)">&ndash;&gt;-->
+                            <!--&lt;!&ndash;</textarea>&ndash;&gt;-->
                             <!--&lt;!&ndash;</mat-form-field>&ndash;&gt;-->
-                        <!--</td>-->
-                    </tr>
-
-                </ng-container>
+                            <!--</td>-->
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
-            <div class="" style="margin-top: 20px;">
-                    <div *ngFor="let employee of currentEmployeesList">
-                        <ng-container *ngIf="!isMobile()">
-                            {{employee.name}}: {{employee.mobileNumber}}
-                        </ng-container>
-                        <a *ngIf="isMobile()" href="tel:{{employee.mobileNumber}}">{{employee.name}}</a>
-
-                    </div>
+            <div class="" style="margin-top: 20px">
+                <div *ngFor="let employee of currentEmployeesList">
+                    <ng-container *ngIf="!isMobile()"> {{ employee.name }}: {{ employee.mobileNumber }} </ng-container>
+                    <a *ngIf="isMobile()" href="tel:{{ employee.mobileNumber }}">{{ employee.name }}</a>
+                </div>
             </div>
 
             <!--<ng-container *ngFor="let studentSection of studentSectionList">-->
-                <!--<mat-card style="margin-bottom: 10px;">-->
-                    <!--<mat-card-content style="font-weight: 400; font-size: 20px;">-->
-                        <!--<div class="row">-->
-                            <!--<div class="col-xs-3">-->
-                                <!--<img *ngIf="getStudent(studentSection).profileImage"-->
-                                     <!--src="{{getStudent(studentSection).profileImage}}">-->
-                                <!--<img *ngIf="!getStudent(studentSection).profileImage"-->
-                                     <!--src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">-->
-                            <!--</div>-->
-                            <!--<div class="col-xs-9" align="right">-->
-                                <!--{{getStudent(studentSection).name}}<br/>-->
-                                <!--{{getStudent(studentSection).rollNumber}}-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<mat-form-field class="example-full-width">-->
-                                <!--<textarea matInput-->
-                                          <!--style="background-color: mintcream"-->
-                                          <!--type="text"-->
-                                          <!--rows="3"-->
-                                          <!--[ngModel]="getStudentRemark(studentSection)"-->
-                                          <!--(blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)">-->
-                                <!--</textarea>-->
-                        <!--</mat-form-field>-->
-                    <!--</mat-card-content>-->
-                <!--</mat-card>-->
+            <!--<mat-card style="margin-bottom: 10px;">-->
+            <!--<mat-card-content style="font-weight: 400; font-size: 20px;">-->
+            <!--<div class="row">-->
+            <!--<div class="col-xs-3">-->
+            <!--<img *ngIf="getStudent(studentSection).profileImage"-->
+            <!--src="{{getStudent(studentSection).profileImage}}">-->
+            <!--<img *ngIf="!getStudent(studentSection).profileImage"-->
+            <!--src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">-->
+            <!--</div>-->
+            <!--<div class="col-xs-9" align="right">-->
+            <!--{{getStudent(studentSection).name}}<br/>-->
+            <!--{{getStudent(studentSection).rollNumber}}-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<mat-form-field class="example-full-width">-->
+            <!--<textarea matInput-->
+            <!--style="background-color: mintcream"-->
+            <!--type="text"-->
+            <!--rows="3"-->
+            <!--[ngModel]="getStudentRemark(studentSection)"-->
+            <!--(blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)">-->
+            <!--</textarea>-->
+            <!--</mat-form-field>-->
+            <!--</mat-card-content>-->
+            <!--</mat-card>-->
             <!--</ng-container>-->
-
         </ng-container>
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

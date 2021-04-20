@@ -1,6 +1,4 @@
-
 export class StudentFee {
-
     id: number = null;
     parentStudent: number = null;
     parentFeeType: number = null;
@@ -93,5 +91,4 @@ export class StudentFee {
     marchLateFee: number = null;
     marchMaximumLateFee: number = null;
     marchSubmissionDate: any = null;
-
 }

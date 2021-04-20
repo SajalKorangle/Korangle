@@ -1,26 +1,22 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
-import {PrintSalarySheetServiceAdapter} from './print-salary-sheet.service.adapter';
-import {MONTH_LIST} from '../../../../classes/constants/month';
-import {AttendanceOldService} from '../../../../services/modules/attendance/attendance-old.service';
-import {SalaryOldService} from '../../../../services/modules/salary/salary-old.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import { PrintSalarySheetServiceAdapter } from './print-salary-sheet.service.adapter';
+import { MONTH_LIST } from '../../../../classes/constants/month';
+import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
+import { SalaryOldService } from '../../../../services/modules/salary/salary-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_SALARY_SHEET } from '../../../../print/print-routes.constants';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'app-print-salary-sheet',
-  templateUrl: './print-salary-sheet.component.html',
-  styleUrls: ['./print-salary-sheet.component.css'],
-    providers: [
-        EmployeeOldService, AttendanceOldService, SalaryOldService
-    ],
+    selector: 'app-print-salary-sheet',
+    templateUrl: './print-salary-sheet.component.html',
+    styleUrls: ['./print-salary-sheet.component.css'],
+    providers: [EmployeeOldService, AttendanceOldService, SalaryOldService],
 })
-
 export class PrintSalarySheetComponent implements OnInit {
-
-     user;
+    user;
 
     employeeList = null;
 
@@ -33,10 +29,12 @@ export class PrintSalarySheetComponent implements OnInit {
 
     isLoading = true;
 
-    constructor (public employeeService: EmployeeOldService,
-                 public attendanceService: AttendanceOldService,
-                 public salaryService: SalaryOldService,
-                 private printService: PrintService) { }
+    constructor(
+        public employeeService: EmployeeOldService,
+        public attendanceService: AttendanceOldService,
+        public salaryService: SalaryOldService,
+        private printService: PrintService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -59,7 +57,6 @@ export class PrintSalarySheetComponent implements OnInit {
     }
 
     formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -79,20 +76,19 @@ export class PrintSalarySheetComponent implements OnInit {
     }
 
     getFilteredEmployeeList(): any {
-        return this.employeeList.filter(employee => {
+        return this.employeeList.filter((employee) => {
             return employee['netSalary'] !== null;
         });
     }
 
     printSalarySheet(): void {
         let value = {
-            'employeeList': this.employeeList.filter(item => {
+            employeeList: this.employeeList.filter((item) => {
                 return item.netSalary !== null;
             }),
-            'month': this.selectedMonth,
-            'year': this.selectedYear,
+            month: this.selectedMonth,
+            year: this.selectedYear,
         };
-        this.printService.navigateToPrintRoute(PRINT_SALARY_SHEET, {user: this.user, value});
+        this.printService.navigateToPrintRoute(PRINT_SALARY_SHEET, { user: this.user, value });
     }
-
 }

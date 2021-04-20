@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
 import { IssueTCRoutingModule } from './issue-tc.routing';
-import { ComponentsModule } from "../../../../components/components.module";
-import { IssueTCComponent } from "./issue-tc.component";
-
+import { ComponentsModule } from '../../../../components/components.module';
+import { IssueTCComponent } from './issue-tc.component';
 
 @NgModule({
-    declarations: [
-        IssueTCComponent
-    ],
+    declarations: [IssueTCComponent],
 
-    imports: [
-        IssueTCRoutingModule,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [IssueTCRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [IssueTCComponent]
+    bootstrap: [IssueTCComponent],
 })
-export class IssueTCModule { }
+export class IssueTCModule {}

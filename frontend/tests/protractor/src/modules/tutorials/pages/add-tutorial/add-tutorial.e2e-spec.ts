@@ -81,7 +81,7 @@ describe('Tutorials -> Add Tutorial', () => {
 
 
         page.on('dialog', async dialog => {
-	        console.log(dialog.accept());
+            console.log(dialog.accept());
         });
         let nodes;
 

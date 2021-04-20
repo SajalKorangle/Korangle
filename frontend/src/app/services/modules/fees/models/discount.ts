@@ -1,6 +1,4 @@
-
 export class Discount {
-
     id: number = null;
     discountNumber: number = null;
     generationDateTime: any = null;
@@ -10,5 +8,4 @@ export class Discount {
     parentSchool: number = null;
     parentSession: number = null;
     parentEmployee: number = null;
-
 }

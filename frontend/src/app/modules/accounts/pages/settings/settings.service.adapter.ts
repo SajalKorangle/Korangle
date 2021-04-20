@@ -1,7 +1,6 @@
-import { SettingsComponent } from './settings.component'
+import { SettingsComponent } from './settings.component';
 
 export class SettingsServiceAdapter {
-
     vm: SettingsComponent;
 
     constructor() {}
@@ -15,155 +14,144 @@ export class SettingsServiceAdapter {
         this.vm.isLoading = true;
 
         const lock_accounts_data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
-        ]).then(value => {
+        Promise.all([this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data)]).then(
+            (value) => {
+                if (value[0].length == 0) {
+                    this.vm.lockAccounts = null;
+                } else if (value[0].length == 1) {
+                    this.vm.lockAccounts = value[0][0];
+                } else {
+                    alert('Error: Report admin');
+                }
 
-            if (value[0].length == 0) {
-                this.vm.lockAccounts = null;
-            } else if (value[0].length == 1) {
-                this.vm.lockAccounts = value[0][0];
-            } else {
-                alert('Error: Report admin');
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
             }
-
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        })
+        );
     }
-    
-    getEmployeeAmount(employee: any): void{
+
+    getEmployeeAmount(employee: any): void {
         this.vm.isLoading = true;
         let employee_data = {
             parentEmployee: employee.id,
-        }
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),
-        ]).then(value =>{
-            if (value[0].length > 0) {
-                this.vm.selectedEmployeeAccountPermission = value[0][0]
-                this.vm.selectedEmployeeAmount = this.vm.selectedEmployeeAccountPermission.restrictedAmount;
+        };
+        Promise.all([this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data)]).then(
+            (value) => {
+                if (value[0].length > 0) {
+                    this.vm.selectedEmployeeAccountPermission = value[0][0];
+                    this.vm.selectedEmployeeAmount = this.vm.selectedEmployeeAccountPermission.restrictedAmount;
+                } else {
+                    this.vm.selectedEmployeeAccountPermission = null;
+                    this.vm.selectedEmployeeAmount = null;
+                }
+                this.vm.selectedEmployee = employee;
+                this.vm.isLoading = false;
             }
-            else {
-                this.vm.selectedEmployeeAccountPermission = null
-                this.vm.selectedEmployeeAmount = null;
-            }
-            this.vm.selectedEmployee = employee;
-            this.vm.isLoading = false;
-        })
+        );
     }
 
-    changeAmountRestriction(): any{
+    changeAmountRestriction(): any {
         this.vm.isLoading = true;
         if (this.vm.selectedEmployeeAccountPermission) {
             let tempData = {
                 id: this.vm.selectedEmployeeAccountPermission.id,
                 restrictedAmount: this.vm.selectedEmployeeAmount,
-            }
-            Promise.all([
-                this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.employee_amount_permission, tempData),
-            ]).then(value => {
-                this.vm.selectedEmployeeAccountPermission.restrictedAmount = value[0].restrictedAmount;
-                this.vm.isLoading = false;
-            })
-        }
-        else {
+            };
+            Promise.all([this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.employee_amount_permission, tempData)]).then(
+                (value) => {
+                    this.vm.selectedEmployeeAccountPermission.restrictedAmount = value[0].restrictedAmount;
+                    this.vm.isLoading = false;
+                }
+            );
+        } else {
             let tempData = {
                 parentEmployee: this.vm.selectedEmployee.id,
                 restrictedAmount: this.vm.selectedEmployeeAmount,
-            }
-            Promise.all([
-                this.vm.accountsService.createObject(this.vm.accountsService.employee_amount_permission, tempData),
-            ]).then(value =>{
-                this.vm.selectedEmployeeAccountPermission = value[0];
-                this.vm.isLoading = false;
-            })
+            };
+            Promise.all([this.vm.accountsService.createObject(this.vm.accountsService.employee_amount_permission, tempData)]).then(
+                (value) => {
+                    this.vm.selectedEmployeeAccountPermission = value[0];
+                    this.vm.isLoading = false;
+                }
+            );
         }
-
     }
 
-    regenerateVoucherNumber(): any{
+    regenerateVoucherNumber(): any {
         this.vm.isLoading = true;
         let voucherNumber = 1;
         let transaction_data = {
-            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
-            'transactionDate__gte': this.vm.currentSession.startDate,
-            'transactionDate__lte': this.vm.currentSession.endDate,
-            'korangle__order': 'id',
-            'fields__korangle': 'id,voucherNumber'
-        }
-        Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
-        ]).then(value =>{
+            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
+            transactionDate__gte: this.vm.currentSession.startDate,
+            transactionDate__lte: this.vm.currentSession.endDate,
+            korangle__order: 'id',
+            fields__korangle: 'id,voucherNumber',
+        };
+        Promise.all([this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data)]).then((value) => {
             let toUpdateList = [];
-            value[0].forEach(element =>{
+            value[0].forEach((element) => {
                 let tempData = {
-                    'id': element.id,
-                    'voucherNumber': voucherNumber,
-                }
-                
-                if(element.voucherNumber != voucherNumber){ // if voucherNumber is aleady same (edundent update handeled)
+                    id: element.id,
+                    voucherNumber: voucherNumber,
+                };
+
+                if (element.voucherNumber != voucherNumber) {
+                    // if voucherNumber is aleady same (edundent update handeled)
                     toUpdateList.push(tempData);
                 }
                 voucherNumber = voucherNumber + 1;
-            })
-            Promise.all([
-                this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction, toUpdateList),
-            ]).then(val =>{
-                this.vm.isLoading = false;
-                alert('Voucher Number Regenerated Successfully');
-            })
-        })
+            });
+            Promise.all([this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction, toUpdateList)]).then(
+                (val) => {
+                    this.vm.isLoading = false;
+                    alert('Voucher Number Regenerated Successfully');
+                }
+            );
+        });
     }
 
     lockAccounts(): void {
-
         this.vm.isLoading = true;
 
         let lock_accounts_object = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.accountsService.createObject(this.vm.accountsService.lock_accounts, lock_accounts_object).then(value => {
+        this.vm.accountsService.createObject(this.vm.accountsService.lock_accounts, lock_accounts_object).then(
+            (value) => {
+                alert('Accounts locked successfully');
 
-            alert('Accounts locked successfully');
+                this.vm.lockAccounts = value;
 
-            this.vm.lockAccounts = value;
-
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        })
-
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     unlockAccounts(): void {
-
         this.vm.isLoading = true;
 
-        this.vm.accountsService.deleteObject(this.vm.accountsService.lock_accounts, this.vm.lockAccounts).then(value => {
+        this.vm.accountsService.deleteObject(this.vm.accountsService.lock_accounts, this.vm.lockAccounts).then(
+            (value) => {
+                alert('Accounts unlocked successfully');
 
-            alert('Accounts unlocked successfully');
+                this.vm.lockAccounts = null;
 
-            this.vm.lockAccounts = null;
-
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
-    
-    
-    
-
 }

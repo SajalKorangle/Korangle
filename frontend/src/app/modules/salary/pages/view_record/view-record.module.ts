@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import { ViewRecordRoutingModule} from './view-record.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ViewRecordComponent} from "./view-record.component";
-
+import { ViewRecordRoutingModule } from './view-record.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ViewRecordComponent } from './view-record.component';
 
 @NgModule({
-    declarations: [
-        ViewRecordComponent
-    ],
+    declarations: [ViewRecordComponent],
 
-    imports: [
-        ViewRecordRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ViewRecordRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ViewRecordComponent]
+    bootstrap: [ViewRecordComponent],
 })
-export class ViewRecordModule { }
+export class ViewRecordModule {}

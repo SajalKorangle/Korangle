@@ -1,5 +1,5 @@
-import * as jsPDF from 'jspdf'
-import {DATA_TYPES, UserHandleStructure} from './constants'
+import * as jsPDF from 'jspdf';
+import { DATA_TYPES, UserHandleStructure } from './constants';
 
 //// data variable contains following :-
 //// school
@@ -21,14 +21,14 @@ export default class IdCard {
     height: any;
     width: any;
 
-    cardWidth = 86.60; // Adding 1mm to 85.60 to give cutting space.
+    cardWidth = 86.6; // Adding 1mm to 85.60 to give cutting space.
     cardHeight = 54.98; // Adding 1mm to 53.98 to give cutting space.
 
     mmToPoint = 72 / 25.4;
 
     paramterList = [];
 
-    constructor (multiple, layout, data, parameterList) {
+    constructor(multiple, layout, data, parameterList) {
         this.printMultiple = multiple;
         this.layout = layout;
         if (multiple) {
@@ -42,7 +42,7 @@ export default class IdCard {
         this.paramterList = parameterList;
     }
 
-    async fetchImage (url) {
+    async fetchImage(url) {
         if (url) {
             // TODO: Add crossorigin="anonymous" to every request so that header comes from Shitty AWS servers
             // https://bugs.chromium.org/p/chromium/issues/detail?id=158131
@@ -53,7 +53,7 @@ export default class IdCard {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = () => {
-                    return resolve(img)
+                    return resolve(img);
                 };
                 img.onerror = () => {
                     console.error('Error loading image');
@@ -61,9 +61,9 @@ export default class IdCard {
                 };
                 img.setAttribute('crossOrigin', 'anonymous');
                 img.src = url;
-            })
+            });
         }
-        return null
+        return null;
     }
 
     async fetchFont(url) {
@@ -74,11 +74,10 @@ export default class IdCard {
             // url += '?javascript=';
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
+                xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
                         // The request is done; did it work?
                         if (xhr.status === 200) {
-
                             const reader = new FileReader();
                             reader.onload = function (event) {
                                 resolve(reader.result.toString().replace(/data.*base64,/, ''));
@@ -100,8 +99,9 @@ export default class IdCard {
 
     async handleFonts() {
         const alreadyDownloadedList = [];
-        const defaultBase64Content = await this.fetchFont('https://korangleplus.s3.amazonaws.com/' +
-            encodeURIComponent('assets/fonts/Arial/Arial-Normal.ttf'));
+        const defaultBase64Content = await this.fetchFont(
+            'https://korangleplus.s3.amazonaws.com/' + encodeURIComponent('assets/fonts/Arial/Arial-Normal.ttf')
+        );
         // If this error 'jsPDF PubSub Error No unicode cmap for font Error: No unicode cmap for font' shows up
         // Try printing following statement to see whether you have parsed correctly.
         // console.log(defaultBase64Content);
@@ -112,29 +112,33 @@ export default class IdCard {
             fontStyle: 'Normal',
         });
         for (const item of this.layout.content) {
-            if (item.fontFamily && item.fontStyle && alreadyDownloadedList.find(alreadyDownloaded => {
-                return alreadyDownloaded.fontFamily === item.fontFamily
-                    && alreadyDownloaded.fontStyle === item.fontStyle;
-            }) === undefined) {
+            if (
+                item.fontFamily &&
+                item.fontStyle &&
+                alreadyDownloadedList.find((alreadyDownloaded) => {
+                    return alreadyDownloaded.fontFamily === item.fontFamily && alreadyDownloaded.fontStyle === item.fontStyle;
+                }) === undefined
+            ) {
                 const fontFileName = item.fontFamily + '-' + item.fontStyle + '.ttf';
                 const Base64Content = await this.fetchFont(
-                    'https://korangleplus.s3.amazonaws.com/' +
-                    encodeURIComponent('assets/fonts/' + item.fontFamily + '/' + fontFileName));
+                    'https://korangleplus.s3.amazonaws.com/' + encodeURIComponent('assets/fonts/' + item.fontFamily + '/' + fontFileName)
+                );
                 this.pdf.addFileToVFS(fontFileName, Base64Content);
                 this.pdf.addFont(fontFileName, item.fontFamily, item.fontStyle);
                 alreadyDownloadedList.push({
                     fontFamily: item.fontFamily,
-                    fontStyle: item.fontStyle
+                    fontStyle: item.fontStyle,
                 });
             }
         }
     }
 
-    async generate () {
+    async generate() {
         // this.pdf = new jsPDF({orientation: 'l', unit: 'mm', format: this.printMultiple ? 'a4' : 'credit-card'});
-        this.pdf = new jsPDF({orientation: 'l', unit: 'mm', format: [this.height * this.mmToPoint, this.width * this.mmToPoint]});
+        this.pdf = new jsPDF({ orientation: 'l', unit: 'mm', format: [this.height * this.mmToPoint, this.width * this.mmToPoint] });
         await this.handleFonts();
-        if (this.printMultiple) { // For 9 id cards in an A4 size sheet
+        if (this.printMultiple) {
+            // For 9 id cards in an A4 size sheet
             const bucketedStudents = this.getBucketedStudentList();
             for (const [i, bucket] of bucketedStudents.entries()) {
                 if (i) {
@@ -143,35 +147,33 @@ export default class IdCard {
                 }
                 for (const [j, student] of bucket.entries()) {
                     const tempx = (j % this.cols) * (this.width / this.cols) + 5;
-                    const tempy = Math.floor((j / this.cols) % (this.rows)) * (this.height / this.rows) + 5;
-                    await this.createIDCard(tempx, tempy, student)
+                    const tempy = Math.floor((j / this.cols) % this.rows) * (this.height / this.rows) + 5;
+                    await this.createIDCard(tempx, tempy, student);
                 }
             }
-        } else { // For 1 id card in standard id card size sheet
+        } else {
+            // For 1 id card in standard id card size sheet
             for (const [i, student] of this.data.studentList.entries()) {
                 if (i) {
                     // this.pdf.addPage('credit-card', 'l');
                     this.pdf.addPage([this.height * this.mmToPoint, this.width * this.mmToPoint], 'l');
                 }
-                await this.createIDCard(0, 0, student)
+                await this.createIDCard(0, 0, student);
             }
         }
     }
 
     getParameter(key: any): any {
-        return this.paramterList.find(x => x.key === key);
+        return this.paramterList.find((x) => x.key === key);
     }
 
-    async createIDCard (xbase, ybase, student) {
+    async createIDCard(xbase, ybase, student) {
         const background = await this.fetchImage(this.layout.background);
         this.pdf.addImage(background, 'JPEG', xbase, ybase, this.cardWidth, this.cardHeight);
         for (const userHandle of this.layout.content) {
+            const item = { ...UserHandleStructure.getStructure('', '', true), ...userHandle };
 
-            const item = {...UserHandleStructure.getStructure( '', '', true), ...userHandle};
-
-            if (this.getParameter(item.key).dataType === DATA_TYPES.TEXT
-                || this.getParameter(item.key).dataType === DATA_TYPES.DATE) {
-
+            if (this.getParameter(item.key).dataType === DATA_TYPES.TEXT || this.getParameter(item.key).dataType === DATA_TYPES.DATE) {
                 // Font Size
                 // Coversion for mm to jspdf pt
                 const fontSize = item.fontSize * this.mmToPoint;
@@ -184,33 +186,23 @@ export default class IdCard {
                 this.pdf.setTextColor(item.textColor);
 
                 // Underline
-                const text = String(this.getParameter(item.key).getValueFunc({data: this.data, studentId: student.id, userHandle: item}));
+                const text = String(this.getParameter(item.key).getValueFunc({ data: this.data, studentId: student.id, userHandle: item }));
                 let textWidth = this.pdf.getTextWidth(text) + 0.01;
                 textWidth = item.maxWidth > 0 && textWidth > item.maxWidth ? item.maxWidth : textWidth;
                 const textArray = this.pdf.splitTextToSize(text, textWidth);
                 if (item.underline) {
                     const lineHeight = this.pdf.getLineHeightFactor() * item.fontSize * textArray.length;
-                    this.pdf.line(
-                        xbase + item.x,
-                        ybase + item.y + lineHeight,
-                        xbase + item.x + textWidth,
-                        ybase + item.y + lineHeight
-                    );
+                    this.pdf.line(xbase + item.x, ybase + item.y + lineHeight, xbase + item.x + textWidth, ybase + item.y + lineHeight);
                 }
 
                 // Populate text in pdf
-                this.pdf.text(
-                    text,
-                    xbase + item.x,
-                    ybase + item.y,
-                    {
-                        baseline: item.baseline,
-                        align: item.align,
-                        maxWidth: item.maxWidth
-                    }
-                );
+                this.pdf.text(text, xbase + item.x, ybase + item.y, {
+                    baseline: item.baseline,
+                    align: item.align,
+                    maxWidth: item.maxWidth,
+                });
             } else if (this.getParameter(item.key).dataType === DATA_TYPES.IMAGE) {
-                const img = await this.fetchImage(this.getParameter(item.key).getValueFunc({data: this.data, studentId: student.id}));
+                const img = await this.fetchImage(this.getParameter(item.key).getValueFunc({ data: this.data, studentId: student.id }));
                 if (img) {
                     this.pdf.addImage(img, 'JPEG', xbase + item.x, ybase + item.y, item.width, item.height);
                 }
@@ -218,7 +210,7 @@ export default class IdCard {
         }
     }
 
-    getBucketedStudentList () {
+    getBucketedStudentList() {
         const bucketedList = [];
         let i = 0;
         let temp = [];
@@ -237,7 +229,6 @@ export default class IdCard {
     }
 
     download(): void {
-        this.pdf.save('id-card.pdf')
+        this.pdf.save('id-card.pdf');
     }
-
 }

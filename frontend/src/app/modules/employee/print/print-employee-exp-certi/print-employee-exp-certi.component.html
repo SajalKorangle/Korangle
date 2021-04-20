@@ -1,51 +1,53 @@
-<div class="container-fluid"
-     *ngIf="viewChecked === false"
-     style="width: 100%; height: 100%;
-         border: 4px double goldenrod;
-         border-radius: 8px;
-         outline: 1px solid goldenrod;
-         outline-offset: -5px;
-         position: relative;
-         font-weight: 800 !important">
-
+<div
+    class="container-fluid"
+    *ngIf="viewChecked === false"
+    style="
+        width: 100%;
+        height: 100%;
+        border: 4px double goldenrod;
+        border-radius: 8px;
+        outline: 1px solid goldenrod;
+        outline-offset: -5px;
+        position: relative;
+        font-weight: 800 !important;
+    "
+>
     <!-- Reg. No. , Dise Code -->
     <div class="row">
-        <div class="col-xs-6">
-            Dise code : {{user.activeSchool.diseCode}}
-        </div>
+        <div class="col-xs-6">Dise code : {{ user.activeSchool.diseCode }}</div>
         <div class="col-xs-6 d-flex custom-padding" align="end">
-            <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
-                School Code :
-            </ng-container>
-            <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
-                Affiliation No. :
-            </ng-container>
-            {{user.activeSchool.affiliationNumber}}
+            <ng-container *ngIf="user.activeSchool.parentBoard == boardList[0].id"> School Code : </ng-container>
+            <ng-container *ngIf="user.activeSchool.parentBoard == boardList[1].id"> Affiliation No. : </ng-container>
+            {{ user.activeSchool.affiliationNumber }}
         </div>
     </div>
 
     <!-- Background Watermark -->
-    <img src="{{user.activeSchool.profileImage}}"
-         style="border-radius: 2px; position: absolute;
-             top: 350px; left: 181px;
-             width: 350px; height: 350px;
-             opacity: 0.15;
-             filter: grayscale(100%);
-             z-index: 10;"/>
+    <img
+        src="{{ user.activeSchool.profileImage }}"
+        style="
+            border-radius: 2px;
+            position: absolute;
+            top: 350px;
+            left: 181px;
+            width: 350px;
+            height: 350px;
+            opacity: 0.15;
+            filter: grayscale(100%);
+            z-index: 10;
+        "
+    />
 
-    <div class="row" style="margin-top: 15px;">
+    <div class="row" style="margin-top: 15px">
         <div class="col-xs-12" align="center">
-            <img src="{{user.activeSchool.profileImage}}"
-                 style="border-radius: 2px;
-                 width: 80px; height: 80px;"/>
+            <img src="{{ user.activeSchool.profileImage }}" style="border-radius: 2px; width: 80px; height: 80px" />
         </div>
     </div>
 
     <!-- School Name -->
-    <div class="row"
-         style="margin-top: 30px; font-size: 34px !important;">
+    <div class="row" style="margin-top: 30px; font-size: 34px !important">
         <div class="col-xs-12" align="center">
-            {{user.activeSchool.printName}}
+            {{ user.activeSchool.printName }}
         </div>
     </div>
 
@@ -98,78 +100,72 @@
     </ng-container -->
 
     <!-- Address -->
-    <div class="row" style="margin-top: 17px; font-size: 17px !important;">
+    <div class="row" style="margin-top: 17px; font-size: 17px !important">
         <div class="col-xs-12" align="center">
-            {{user.activeSchool.address}}<br/>
+            {{ user.activeSchool.address }}<br />
             (Regd. and Recognised by M.P. Govt.)
         </div>
     </div>
 
     <!-- School Transfer Certificate -->
-    <div class="row" style="margin-top: 70px; font-size: 24px !important;">
+    <div class="row" style="margin-top: 70px; font-size: 24px !important">
         <div class="col-xs-12" align="center">
             <u>EXPERIENCE CERTIFICATE</u>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12" style="height: 45px;"></div>
+        <div class="col-xs-12" style="height: 45px"></div>
     </div>
 
     <!-- Certificate No. , Date -->
-    <div class="row" style="font-size: 17px !important;">
-        <div class="col-xs-6">
-            Certificate No. : {{employeeProfile.certificateNumber}}
-        </div>
-        <div class="col-xs-6" align="right">
-            Date : {{employeeProfile.certificateIssueDate | date: 'dd/MM/yyyy'}}
-        </div>
+    <div class="row" style="font-size: 17px !important">
+        <div class="col-xs-6">Certificate No. : {{ employeeProfile.certificateNumber }}</div>
+        <div class="col-xs-6" align="right">Date : {{ employeeProfile.certificateIssueDate | date: 'dd/MM/yyyy' }}</div>
     </div>
 
     <div class="row">
-        <div class="col-xs-12" style="height: 45px;"></div>
+        <div class="col-xs-12" style="height: 45px"></div>
     </div>
 
-    <div class="row" style="font-weight: normal !important; font-size: 20px; line-height: normal;">
+    <div class="row" style="font-weight: normal !important; font-size: 20px; line-height: normal">
         <div class="col-xs-12">
-            This is to certify that <i><b>
-            <span *ngIf="employee.gender=='Male'">Shri</span>
-            <span *ngIf="employee.gender=='Female'">Smt</span>
-            {{ employee.name | titlecase }}</b></i>&nbsp;
-            <span *ngIf="employee.gender=='Male'">s/o</span>
-            <span *ngIf="employee.gender=='Female'">d/o</span>&nbsp;
-            <i><b>Mr. {{ employee.fatherName | titlecase }}</b></i>&nbsp;
-            joined us on
-            <span>{{employee.dateOfJoining | date: 'MMMM dd, yyyy'}}</span>
+            This is to certify that
+            <i
+                ><b>
+                    <span *ngIf="employee.gender == 'Male'">Shri</span>
+                    <span *ngIf="employee.gender == 'Female'">Smt</span>
+                    {{ employee.name | titlecase }}</b
+                ></i
+            >&nbsp;
+            <span *ngIf="employee.gender == 'Male'">s/o</span>
+            <span *ngIf="employee.gender == 'Female'">d/o</span>&nbsp;
+            <i
+                ><b>Mr. {{ employee.fatherName | titlecase }}</b></i
+            >&nbsp; joined us on
+            <span>{{ employee.dateOfJoining | date: 'MMMM dd, yyyy' }}</span>
             <span *ngIf="employee.dateOfLeaving">
-                and worked with us upto <span>{{employee.dateOfLeaving | date: 'MMMM dd, yyyy'}}</span>
-                as {{employee.currentPost}}.
+                and worked with us upto <span>{{ employee.dateOfLeaving | date: 'MMMM dd, yyyy' }}</span> as {{ employee.currentPost }}.
             </span>
             <span *ngIf="!employee.dateOfLeaving">
-                and is currently working as <span>{{employee.currentPost}}.
-            </span>
-            </span><br/>
-            <span>{{employeeProfile.remark}}</span>
+                and is currently working as <span>{{ employee.currentPost }}. </span> </span
+            ><br />
+            <span>{{ employeeProfile.remark }}</span>
         </div>
     </div>
 
-
-    <div class="row"
-         style="position: absolute; bottom: 220px; width: 100%; font-size: 16px; font-weight: normal; line-height: 100%;">
+    <div class="row" style="position: absolute; bottom: 220px; width: 100%; font-size: 16px; font-weight: normal; line-height: 100%">
         <div class="col-xs-8" align="end">
-            Seal & Signature:<br/><br/>
-            Name:<br><br/>
-            Post:<br><br/>
+            Seal & Signature:<br /><br />
+            Name:<br /><br />
+            Post:<br /><br />
             Mobile no.:
         </div>
-        <div class="col-xs-4" align="start" style="color: grey !important;  font-size: 16px;">
-            _________________________<br/><br/>
-            _________________________<br/><br/>
-            _________________________<br/><br/>
+        <div class="col-xs-4" align="start" style="color: grey !important; font-size: 16px">
+            _________________________<br /><br />
+            _________________________<br /><br />
+            _________________________<br /><br />
             _________________________
         </div>
     </div>
-
-
 </div>
-

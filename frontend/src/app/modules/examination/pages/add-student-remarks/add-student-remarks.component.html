@@ -1,125 +1,130 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isInitialLoading">
-
-        <ng-container *ngIf="examinationList.length == 0">
-            You do not have any exams created.
-        </ng-container>
-        <ng-container *ngIf="attendancePermissionList.length == 0">
-            You do not have any allotted class.
-        </ng-container>
+        <ng-container *ngIf="examinationList.length == 0"> You do not have any exams created. </ng-container>
+        <ng-container *ngIf="attendancePermissionList.length == 0"> You do not have any allotted class. </ng-container>
 
         <ng-container *ngIf="classSectionList.length > 0 && attendancePermissionList.length > 0 && examinationList.length > 0">
-
-            <mat-form-field style="margin-right: 10px;">
-                <mat-select placeholder="Select Examination"
-                            [ngModel]="htmlAdapter.selectedExamination"
-                            [disabled]="isLoading"
-                            (ngModelChange)="htmlAdapter.selectedExamination = $event;htmlAdapter.showStudentList=false;">
-                    <mat-option *ngFor='let examination of examinationList;' [value]="examination">
-                        {{examination.name}}
+            <mat-form-field style="margin-right: 10px">
+                <mat-select
+                    placeholder="Select Examination"
+                    [ngModel]="htmlAdapter.selectedExamination"
+                    [disabled]="isLoading"
+                    (ngModelChange)="htmlAdapter.selectedExamination = $event; htmlAdapter.showStudentList = false"
+                >
+                    <mat-option *ngFor="let examination of examinationList" [value]="examination">
+                        {{ examination.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field>
-                <mat-select placeholder="Select Class"
-                            [ngModel]="htmlAdapter.selectedClassSection"
-                            [disabled]="isLoading"
-                            (ngModelChange)="htmlAdapter.handleClassSectionSelection($event);htmlAdapter.selectedClassSection=$event;htmlAdapter.showStudentList=false;">
-                    <mat-option *ngFor='let classSection of classSectionList;' [value]="classSection">
-                        {{classSection.class.name}}, {{classSection.section.name}}
+                <mat-select
+                    placeholder="Select Class"
+                    [ngModel]="htmlAdapter.selectedClassSection"
+                    [disabled]="isLoading"
+                    (ngModelChange)="
+                        htmlAdapter.handleClassSectionSelection($event);
+                        htmlAdapter.selectedClassSection = $event;
+                        htmlAdapter.showStudentList = false
+                    "
+                >
+                    <mat-option *ngFor="let classSection of classSectionList" [value]="classSection">
+                        {{ classSection.class.name }}, {{ classSection.section.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.getStudentRemarkDetails()">GET</button>
-            
-
+            <button
+                type="submit"
+                style="margin-left: 20px"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.getStudentRemarkDetails()"
+            >
+                GET
+            </button>
         </ng-container>
 
         <ng-container *ngIf="!isLoading && htmlAdapter.showStudentList">
-
             <div class="row">
                 <div class="col-lg-12">
-                    <i>Left {{this.htmlAdapter.getTotalStudentsCount() - this.htmlAdapter.getRemarkedStudentsCount()}} out of {{this.htmlAdapter.getTotalStudentsCount()}}</i>
+                    <i
+                        >Left {{ this.htmlAdapter.getTotalStudentsCount() - this.htmlAdapter.getRemarkedStudentsCount() }} out of
+                        {{ this.htmlAdapter.getTotalStudentsCount() }}</i
+                    >
                 </div>
             </div>
             <table class="table table-hover" *ngIf="!htmlAdapter.isMobile()">
-                
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
-                    <th>Remark</th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student</th>
+                        <th>Roll No.</th>
+                        <th>Remark</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let studentSection of htmlAdapter.filteredSortedStudentSectionList; let i=index;">
-                    <tr [class.highlightRow]="htmlAdapter.getStudentRemark(studentSection) == ''">
-                        <td>{{i+1}}.</td>
-                        <td>
-                            {{studentSection.student.name}}
-                        </td>
-                        <td>
-                            {{studentSection.rollNumber}}
-                        </td>
-                        <td>
-                            <mat-form-field class="example-full-width">
-                                <textarea matInput
-                                          type="text"
-                                          rows="3"
-                                          [ngModel]="htmlAdapter.getStudentRemark(studentSection)"
-                                          (blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)">
-                                </textarea>
-                            </mat-form-field>
-                        </td>
-                    </tr>
-                </ng-container>
+                    <ng-container *ngFor="let studentSection of htmlAdapter.filteredSortedStudentSectionList; let i = index">
+                        <tr [class.highlightRow]="htmlAdapter.getStudentRemark(studentSection) == ''">
+                            <td>{{ i + 1 }}.</td>
+                            <td>
+                                {{ studentSection.student.name }}
+                            </td>
+                            <td>
+                                {{ studentSection.rollNumber }}
+                            </td>
+                            <td>
+                                <mat-form-field class="example-full-width">
+                                    <textarea
+                                        matInput
+                                        type="text"
+                                        rows="3"
+                                        [ngModel]="htmlAdapter.getStudentRemark(studentSection)"
+                                        (blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)"
+                                    >
+                                    </textarea>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
 
             <ng-container *ngIf="htmlAdapter.isMobile()">
                 <ng-container *ngFor="let studentSection of htmlAdapter.filteredSortedStudentSectionList">
-                    <mat-card [class.highlightRow]="htmlAdapter.getStudentRemark(studentSection) == ''" style="margin-bottom: 10px;">
-                        <mat-card-content style="font-weight: 400; font-size: 20px;">
+                    <mat-card [class.highlightRow]="htmlAdapter.getStudentRemark(studentSection) == ''" style="margin-bottom: 10px">
+                        <mat-card-content style="font-weight: 400; font-size: 20px">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <img *ngIf="studentSection.student.profileImage"
-                                         src="{{studentSection.student.profileImage}}">
-                                    <img *ngIf="!studentSection.student.profileImage"
-                                         src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
+                                    <img *ngIf="studentSection.student.profileImage" src="{{ studentSection.student.profileImage }}" />
+                                    <img
+                                        *ngIf="!studentSection.student.profileImage"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                    />
                                 </div>
                                 <div class="col-xs-9" align="right">
-                                    {{studentSection.student.name}}<br/>
-                                    {{studentSection.rollNumber}}
+                                    {{ studentSection.student.name }}<br />
+                                    {{ studentSection.rollNumber }}
                                 </div>
                             </div>
                             <mat-form-field class="example-full-width">
-                                    <textarea matInput
-                                              style="background-color: mintcream"
-                                              type="text"
-                                              rows="3"
-                                              [ngModel]="htmlAdapter.getStudentRemark(studentSection)"
-                                              (blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)">
-                                    </textarea>
+                                <textarea
+                                    matInput
+                                    style="background-color: mintcream"
+                                    type="text"
+                                    rows="3"
+                                    [ngModel]="htmlAdapter.getStudentRemark(studentSection)"
+                                    (blur)="serviceAdapter.updateStudentRemark(studentSection, $event.target.value, $event.target)"
+                                >
+                                </textarea>
                             </mat-form-field>
                         </mat-card-content>
                     </mat-card>
-                </ng-container>    
+                </ng-container>
             </ng-container>
-            
-
         </ng-container>
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

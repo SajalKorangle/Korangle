@@ -1,8 +1,6 @@
-
 import { ViewMarksComponent } from './view-marks.component';
 
 export class ViewMarksServiceAdapter {
-
     vm: ViewMarksComponent;
 
     constructor() {}
@@ -17,14 +15,13 @@ export class ViewMarksServiceAdapter {
 
     student_full_profile: any;
 
-
     initializeAdapter(vm: ViewMarksComponent): void {
         this.vm = vm;
     }
 
     copyObject(object: any): any {
         let tempObject = {};
-        Object.keys(object).forEach(key => {
+        Object.keys(object).forEach((key) => {
             tempObject[key] = object[key];
         });
         return tempObject;
@@ -35,9 +32,9 @@ export class ViewMarksServiceAdapter {
         this.vm.isLoading = true;
 
         let request_examination_data = {
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'status': 'Declared',
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
+            status: 'Declared',
         };
 
         const request_student_data = {
@@ -46,104 +43,104 @@ export class ViewMarksServiceAdapter {
         };
 
         Promise.all([
-            this.vm.examinationService.getObjectList(this.vm.examinationService.examination,request_examination_data),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
             this.vm.studentService.getStudentFullProfile(request_student_data, this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-        ]).then(value => {
+        ]).then(
+            (value) => {
+                this.examinationList = value[0];
+                this.vm.examinationList = this.examinationList;
 
-            this.examinationList = value[0];
-            this.vm.examinationList = this.examinationList;
+                this.student_full_profile = value[1];
+                this.subjectList = value[2];
 
-            this.student_full_profile = value[1];
-            this.subjectList = value[2];
+                this.vm.selectedStudent = value[1];
 
-            this.vm.selectedStudent = value[1];
+                if (this.examinationList.length === 0) {
+                    this.vm.isLoading = false;
+                    return;
+                }
 
-            if (this.examinationList.length === 0) {
-                this.vm.isLoading = false;
-                return;
-            }
+                let request_class_subject_data = {
+                    subjectList: [],
+                    schoolList: [this.vm.user.activeSchool.dbId],
+                    employeeList: [],
+                    classList: [this.student_full_profile.classDbId],
+                    sectionList: [this.student_full_profile.sectionDbId],
+                    sessionList: [this.vm.user.activeSchool.currentSessionDbId],
+                    mainSubject: [],
+                    onlyGrade: [],
+                };
 
-            let request_class_subject_data = {
-                'subjectList': [],
-                'schoolList': [this.vm.user.activeSchool.dbId],
-                'employeeList': [],
-                'classList': [this.student_full_profile.classDbId],
-                'sectionList': [this.student_full_profile.sectionDbId],
-                'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-                'mainSubject': [],
-                'onlyGrade': [],
-            };
+                let request_student_subject_data = {
+                    studentList: [this.student_full_profile.dbId],
+                    subjectList: [],
+                    sessionList: [this.vm.user.activeSchool.currentSessionDbId],
+                };
 
-            let request_student_subject_data = {
-                'studentList': [this.student_full_profile.dbId],
-                'subjectList': [],
-                'sessionList': [this.vm.user.activeSchool.currentSessionDbId],
-            };
-
-            let request_class_test_data = {
-                /*'examinationId': this.vm.selectedExamination.id,
+                let request_class_test_data = {
+                    /*'examinationId': this.vm.selectedExamination.id,
                 'classId': this.vm.selectedExamination.selectedClass.id,
                 'sectionId': this.vm.selectedExamination.selectedClass.selectedSection.id,*/
-                'parentExamination__in': this.getExaminationIdList(),
-                'parentClass': this.student_full_profile.classDbId,
-                'parentDivision': this.student_full_profile.sectionDbId,
-            };
+                    parentExamination__in: this.getExaminationIdList(),
+                    parentClass: this.student_full_profile.classDbId,
+                    parentDivision: this.student_full_profile.sectionDbId,
+                };
 
-            let request_student_test_data = {
-                'studentList': [this.student_full_profile.dbId],
-                'subjectList': [],
-                'examinationList': this.getExaminationIdList(),
-                'testTypeList': [],
-                'marksObtainedList': [],
-            };
+                let request_student_test_data = {
+                    studentList: [this.student_full_profile.dbId],
+                    subjectList: [],
+                    examinationList: this.getExaminationIdList(),
+                    testTypeList: [],
+                    marksObtainedList: [],
+                };
 
-            Promise.all([
-                this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
-                this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
-                this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data),
-                this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
-            ]).then(value2 => {
+                Promise.all([
+                    this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
+                    this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
+                    this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_class_test_data),
+                    this.vm.examinationOldService.getStudentTestList(request_student_test_data, this.vm.user.jwt),
+                ]).then(
+                    (value2) => {
+                        this.classSubjectList = value2[0];
+                        this.studentSubjectList = value2[1];
+                        this.classTestList = value2[2];
+                        this.studentTestList = value2[3];
 
-                this.classSubjectList = value2[0];
-                this.studentSubjectList = value2[1];
-                this.classTestList = value2[2];
-                this.studentTestList = value2[3];
+                        this.populateStudentMarksList();
 
-                this.populateStudentMarksList();
-
+                        this.vm.isLoading = false;
+                    },
+                    (error) => {
+                        this.vm.isLoading = false;
+                    }
+                );
+            },
+            (error) => {
                 this.vm.isLoading = false;
-
-            }, error => {
-                this.vm.isLoading = false;
-            });
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+            }
+        );
     }
 
     getExaminationIdList(): any {
         let id_list = [];
-        this.examinationList.forEach(item => {
+        this.examinationList.forEach((item) => {
             id_list.push(item.id);
         });
         return id_list;
     }
 
     populateStudentMarksList(): void {
-
-        this.vm.examinationList.forEach(examination => {
-
+        this.vm.examinationList.forEach((examination) => {
             examination['marksList'] = [];
 
-            this.studentTestList.forEach(item => {
+            this.studentTestList.forEach((item) => {
                 if (item.parentExamination === examination.id) {
-                    if (this.isSubjectInClassSubjectList(item.parentSubject)
-                        && this.isSubjectInStudentSubjectList(item.parentSubject)
-                        && this.isTestInClassTestList(item.parentSubject, item.testType, examination.id)) {
-
+                    if (
+                        this.isSubjectInClassSubjectList(item.parentSubject) &&
+                        this.isSubjectInStudentSubjectList(item.parentSubject) &&
+                        this.isTestInClassTestList(item.parentSubject, item.testType, examination.id)
+                    ) {
                         let tempItem = {};
 
                         tempItem = this.copyObject(item);
@@ -151,23 +148,19 @@ export class ViewMarksServiceAdapter {
                         tempItem['maximumMarks'] = this.getMaximumMarks(item.parentExamination, item.parentSubject, item.testType);
 
                         examination['marksList'].push(tempItem);
-
                     }
                 }
-
             });
-
         });
 
         if (this.vm.examinationList.length > 0) {
             this.vm.selectedExamination = this.vm.examinationList[0];
         }
-
     }
 
     isSubjectInClassSubjectList(subjectId: any): boolean {
         let result = false;
-        this.classSubjectList.every(item => {
+        this.classSubjectList.every((item) => {
             if (item.parentSubject === subjectId) {
                 result = true;
                 return false;
@@ -179,7 +172,7 @@ export class ViewMarksServiceAdapter {
 
     isSubjectInStudentSubjectList(subjectId: any): boolean {
         let result = false;
-        this.studentSubjectList.every(item => {
+        this.studentSubjectList.every((item) => {
             if (item.parentSubject === subjectId) {
                 result = true;
                 return false;
@@ -191,10 +184,8 @@ export class ViewMarksServiceAdapter {
 
     isTestInClassTestList(subjectId: any, testType: any, examinationId: any): boolean {
         let result = false;
-        this.classTestList.every(item => {
-            if (item.parentSubject === subjectId
-                && item.testType == testType
-                && item.parentExamination === examinationId) {
+        this.classTestList.every((item) => {
+            if (item.parentSubject === subjectId && item.testType == testType && item.parentExamination === examinationId) {
                 result = true;
                 return false;
             }
@@ -205,7 +196,7 @@ export class ViewMarksServiceAdapter {
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(item => {
+        this.subjectList.every((item) => {
             if (item.id === subjectId) {
                 result = item.name;
                 return false;
@@ -217,10 +208,8 @@ export class ViewMarksServiceAdapter {
 
     getMaximumMarks(examId: any, subjectId: any, testType: any): any {
         let result = 100;
-        this.classTestList.every(item => {
-            if (item.parentExamination === examId
-                && item.parentSubject === subjectId
-                && item.testType === testType) {
+        this.classTestList.every((item) => {
+            if (item.parentExamination === examId && item.parentSubject === subjectId && item.testType === testType) {
                 result = item.maximumMarks;
                 return false;
             }
@@ -228,5 +217,4 @@ export class ViewMarksServiceAdapter {
         });
         return result;
     }
-
 }

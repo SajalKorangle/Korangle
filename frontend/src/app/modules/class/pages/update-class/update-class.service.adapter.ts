@@ -1,8 +1,6 @@
-
-import {UpdateClassComponent} from './update-class.component';
+import { UpdateClassComponent } from './update-class.component';
 
 export class UpdateClassServiceAdapter {
-
     vm: UpdateClassComponent;
 
     constructor() {}
@@ -18,18 +16,17 @@ export class UpdateClassServiceAdapter {
 
     copyObject(object: any): any {
         let tempObject = {};
-        Object.keys(object).forEach(key => {
+        Object.keys(object).forEach((key) => {
             tempObject[key] = object[key];
         });
         return tempObject;
     }
 
     initializeData(): void {
-
         let request_student_section_data = {
-            'parentStudent__parentTransferCertificate': 'null__korangle',
-            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         this.vm.isInitialLoading = true;
@@ -38,33 +35,33 @@ export class UpdateClassServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data),
-        ]).then(value => {
+        ]).then(
+            (value) => {
+                this.classList = value[0];
+                this.sectionList = value[1];
+                this.studentSectionList = value[2];
 
-            this.classList = value[0];
-            this.sectionList = value[1];
-            this.studentSectionList = value[2];
+                this.populateClassSectionList();
 
-            this.populateClassSectionList();
-
-            this.vm.isInitialLoading = false;
-
-        }, error => {
-            this.vm.isInitialLoading = false;
-        })
-
+                this.vm.isInitialLoading = false;
+            },
+            (error) => {
+                this.vm.isInitialLoading = false;
+            }
+        );
     }
 
     populateClassSectionList(): void {
-
-        this.classList.forEach(classs => {
-            this.sectionList.forEach(section => {
-                if(this.studentSectionList.find(studentSection => {
-                        return studentSection.parentClass == classs.id
-                            && studentSection.parentDivision == section.id;
-                    }) != undefined) {
+        this.classList.forEach((classs) => {
+            this.sectionList.forEach((section) => {
+                if (
+                    this.studentSectionList.find((studentSection) => {
+                        return studentSection.parentClass == classs.id && studentSection.parentDivision == section.id;
+                    }) != undefined
+                ) {
                     this.vm.classSectionList.push({
-                        'class': classs,
-                        'section': section,
+                        class: classs,
+                        section: section,
                     });
                 }
             });
@@ -73,15 +70,13 @@ export class UpdateClassServiceAdapter {
         if (this.vm.classSectionList.length > 0) {
             this.vm.selectedClassSection = this.vm.classSectionList[0];
         }
-
     }
 
     getClassTeacherSignature(): void {
-
         let request_class_teacher_signature_data = {
-            'parentClass': this.vm.selectedClassSection.class.id,
-            'parentDivision': this.vm.selectedClassSection.section.id,
-            'parentSchool': this.vm.user.activeSchool.dbId,
+            parentClass: this.vm.selectedClassSection.class.id,
+            parentDivision: this.vm.selectedClassSection.section.id,
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         this.vm.isLoading = true;
@@ -90,23 +85,23 @@ export class UpdateClassServiceAdapter {
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_teacher_signature_data),
-        ]).then(value => {
+        ]).then(
+            (value) => {
+                if (value[0].length > 0) {
+                    this.vm.classTeacherSignature = value[0][0];
+                }
 
-            if (value[0].length > 0) {
-                this.vm.classTeacherSignature = value[0][0];
+                this.vm.isLoading = false;
+
+                this.vm.showSignature = true;
+            },
+            (error) => {
+                this.vm.isLoading = false;
             }
-
-            this.vm.isLoading = false;
-
-            this.vm.showSignature = true;
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        );
     }
 
-    resizeImage(file:File, ratio: any): Promise<Blob> {
+    resizeImage(file: File, ratio: any): Promise<Blob> {
         return new Promise((resolve, reject) => {
             let image = new Image();
             image.src = URL.createObjectURL(file);
@@ -114,8 +109,8 @@ export class UpdateClassServiceAdapter {
                 let width = image.width;
                 let height = image.height;
 
-                let maxWidth = image.width/ratio;
-                let maxHeight = image.height/ratio;
+                let maxWidth = image.width / ratio;
+                let maxHeight = image.height / ratio;
 
                 let newWidth;
                 let newHeight;
@@ -147,7 +142,6 @@ export class UpdateClassServiceAdapter {
             let image = new Image();
             image.src = URL.createObjectURL(file);
             image.onload = () => {
-
                 let dx = 0;
                 let dy = 0;
                 let dw = image.width;
@@ -158,13 +152,13 @@ export class UpdateClassServiceAdapter {
                 let sw = dw;
                 let sh = dh;
 
-                if (sw > (aspectRatio[1]*sh/aspectRatio[0])) {
-                    sx = (sw - (aspectRatio[1]*sh/aspectRatio[0]))/2;
-                    sw = (aspectRatio[1]*sh/aspectRatio[0]);
+                if (sw > (aspectRatio[1] * sh) / aspectRatio[0]) {
+                    sx = (sw - (aspectRatio[1] * sh) / aspectRatio[0]) / 2;
+                    sw = (aspectRatio[1] * sh) / aspectRatio[0];
                     dw = sw;
-                } else if (sh > (aspectRatio[0]*sw/aspectRatio[1])) {
-                    sy = (sh - (aspectRatio[0]*sw/aspectRatio[1]))/2;
-                    sh = (aspectRatio[0]*sw/aspectRatio[1]);
+                } else if (sh > (aspectRatio[0] * sw) / aspectRatio[1]) {
+                    sy = (sh - (aspectRatio[0] * sw) / aspectRatio[1]) / 2;
+                    sh = (aspectRatio[0] * sw) / aspectRatio[1];
                     dh = sh;
                 }
 
@@ -183,15 +177,14 @@ export class UpdateClassServiceAdapter {
     }
 
     async onSignatureImageSelect(evt: any) {
-
         let image = evt.target.files[0];
 
         if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-            alert("Image type should be either jpg, jpeg, or png");
+            alert('Image type should be either jpg, jpeg, or png');
             return;
         }
 
-        image = await this.cropImage(image, [1,2]);
+        image = await this.cropImage(image, [1, 2]);
 
         while (image.size > 128000) {
             image = await this.resizeImage(image, 1.5);
@@ -202,42 +195,50 @@ export class UpdateClassServiceAdapter {
         let service: any;
 
         if (!this.vm.classTeacherSignature) {
-
             let signature_data = new FormData();
-            signature_data.append('parentClass', new Blob([this.vm.selectedClassSection.class.id], {
-                type: 'application/json'
-            }));
-            signature_data.append('parentDivision', new Blob([this.vm.selectedClassSection.section.id], {
-                type: 'application/json'
-            }));
-            signature_data.append('parentSchool', new Blob([this.vm.user.activeSchool.dbId], {
-                type: 'application/json'
-            }));
+            signature_data.append(
+                'parentClass',
+                new Blob([this.vm.selectedClassSection.class.id], {
+                    type: 'application/json',
+                })
+            );
+            signature_data.append(
+                'parentDivision',
+                new Blob([this.vm.selectedClassSection.section.id], {
+                    type: 'application/json',
+                })
+            );
+            signature_data.append(
+                'parentSchool',
+                new Blob([this.vm.user.activeSchool.dbId], {
+                    type: 'application/json',
+                })
+            );
             signature_data.append('signatureImage', image);
 
-            service = this.vm.classService.createObject(this.vm.classService.class_teacher_signature, signature_data) ;
-
+            service = this.vm.classService.createObject(this.vm.classService.class_teacher_signature, signature_data);
         } else {
-
             let signature_data = new FormData();
-            signature_data.append('id', new Blob([this.vm.classTeacherSignature.id], {
-                type: 'application/json'
-            }));
+            signature_data.append(
+                'id',
+                new Blob([this.vm.classTeacherSignature.id], {
+                    type: 'application/json',
+                })
+            );
             signature_data.append('signatureImage', image);
 
             service = this.vm.classService.partiallyUpdateObject(this.vm.classService.class_teacher_signature, signature_data);
-
         }
 
-        service.then(value => {
-
-            this.vm.classTeacherSignature = value;
-            this.vm.isLoading = false;
-            this.vm.showSignature = true;
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        service.then(
+            (value) => {
+                this.vm.classTeacherSignature = value;
+                this.vm.isLoading = false;
+                this.vm.showSignature = true;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
-
 }

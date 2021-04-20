@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
-import {Pipe} from '@angular/core';
+import { Pipe } from '@angular/core';
 
-@Pipe({name: 'numberAndString'})
+@Pipe({ name: 'numberAndString' })
 export class NumberAndStringPipe {
     constructor(private _decimalPipe: DecimalPipe) {}
 

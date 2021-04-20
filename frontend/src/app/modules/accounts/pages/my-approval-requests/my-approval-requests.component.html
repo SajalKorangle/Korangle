@@ -1,293 +1,433 @@
-<div class="card-content table-responsive ">
-<ng-container *ngIf="!isLoading else loadingSpinner">
-    <div *ngIf="!accountsLockedForSession && inActiveSession() else notAllowedDescription">
-        <h4 style="color: blue;"><b>New Approval Request</b></h4>
-        
-        <ng-container *ngFor="let approval of newApprovalList, let i = index;">
-            <mat-card>
-            <div class="row">
-                <div class="col-md-1" style="margin-top: 15px; width: 16px;">
-                    <strong>{{i+1}}.</strong>
-                </div>
+<div class="card-content table-responsive">
+    <ng-container *ngIf="!isLoading; else loadingSpinner">
+        <div *ngIf="!accountsLockedForSession && inActiveSession(); else notAllowedDescription">
+            <h4 style="color: blue"><b>New Approval Request</b></h4>
 
-                <div class="col-md-4">
-                    <div *ngFor="let payFrom of approval.payFrom; let j = index">
-                        <div class="row col-md-12">
-                            <mat-form-field style="width: 100%;">
-                                <mat-select placeholder="Pay From" [(ngModel)]="payFrom.account">
-                                    <mat-option *ngFor="let account of accountsList"
-                                        [value]="account.parentAccount">
-                                        {{account.title}}&nbsp;A/c
-                                    </mat-option>   
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="row col-md-12" style="margin-top: -17px">
-                            <span *ngIf="approval.payFrom.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="approval.payFrom.splice(j,1)">
-                                <u>Remove</u>
-                            </span>
-                        </div>
-                        <div class="row col-md-12" style="width: auto;">
-                                <customized-number-input [placeHolder]="'Amount'"
-                                                    [minimum]="0.01"
-                                                    [maximumDecimal]="2"
-                                                    [inputValue]="payFrom.amount"
-                                                    (outputValue)="payFrom.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
-                        </div>
-                    </div>
-                    <div class="row col-md-12" style="text-align: right;">
-                        <span class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payFrom)">
-                            <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div *ngFor="let payTo of approval.payTo; let j = index">
-                        <div class="row col-md-12">
-                            <mat-form-field style="width: 100%;">
-                                <mat-select placeholder="Pay To" [(ngModel)]="payTo.account">
-                                    <mat-option *ngFor="let account of accountsList"
-                                        [value]="account.parentAccount">
-                                        {{account.title}}&nbsp;A/c
-                                    </mat-option>   
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="row col-md-12" style="margin-top: -17px">
-                            <span *ngIf="approval.payTo.length > 1" style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="approval.payTo.splice(j,1)">
-                                <u>Remove</u>
-                            </span>
+            <ng-container *ngFor="let approval of newApprovalList; let i = index">
+                <mat-card>
+                    <div class="row">
+                        <div class="col-md-1" style="margin-top: 15px; width: 16px">
+                            <strong>{{ i + 1 }}.</strong>
                         </div>
 
-                        <div class="row col-md-12" style="width: auto;">
-                            <customized-number-input [placeHolder]="'Amount'"
-                                                    [minimum]="0.01"
-                                                    [maximumDecimal]="2"
-                                                    [inputValue]="payTo.amount"
-                                                    (outputValue)="payTo.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
+                        <div class="col-md-4">
+                            <div *ngFor="let payFrom of approval.payFrom; let j = index">
+                                <div class="row col-md-12">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-select placeholder="Pay From" [(ngModel)]="payFrom.account">
+                                            <mat-option *ngFor="let account of accountsList" [value]="account.parentAccount">
+                                                {{ account.title }}&nbsp;A/c
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row col-md-12" style="margin-top: -17px">
+                                    <span
+                                        *ngIf="approval.payFrom.length > 1"
+                                        style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer"
+                                        (click)="approval.payFrom.splice(j, 1)"
+                                    >
+                                        <u>Remove</u>
+                                    </span>
+                                </div>
+                                <div class="row col-md-12" style="width: auto">
+                                    <customized-number-input
+                                        [placeHolder]="'Amount'"
+                                        [minimum]="0.01"
+                                        [maximumDecimal]="2"
+                                        [inputValue]="payFrom.amount"
+                                        (outputValue)="payFrom.amount = $event; handleAmountChange(approval, $event)"
+                                    ></customized-number-input>
+                                </div>
+                            </div>
+                            <div class="row col-md-12" style="text-align: right">
+                                <span
+                                    class="icon-text-wrapper"
+                                    style="color: rgba(255, 152, 0, 1); cursor: pointer"
+                                    (click)="addNewAccount(approval.payFrom)"
+                                >
+                                    <mat-icon style="font-size: 13px">control_point</mat-icon>
+                                    <span style="font-size: 13px"> &nbsp;Add Account</span>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row col-md-12" style="text-align: right;">
-                        <span class="icon-text-wrapper" style="color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="addNewAccount(approval.payTo)">
-                            <mat-icon style="font-size: 13px;">control_point</mat-icon> <span style="font-size: 13px;"> &nbsp;Add Account</span>
-                        </span>
-                    </div>
-                </div>
 
-                <div class="col-md-3" style="margin-left: 12px;">
-                    <!-- div class="row" style="margin-top: 20px; padding: 0px">
+                        <div class="col-md-4">
+                            <div *ngFor="let payTo of approval.payTo; let j = index">
+                                <div class="row col-md-12">
+                                    <mat-form-field style="width: 100%">
+                                        <mat-select placeholder="Pay To" [(ngModel)]="payTo.account">
+                                            <mat-option *ngFor="let account of accountsList" [value]="account.parentAccount">
+                                                {{ account.title }}&nbsp;A/c
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row col-md-12" style="margin-top: -17px">
+                                    <span
+                                        *ngIf="approval.payTo.length > 1"
+                                        style="float: right; font-size: 13px; color: rgba(255, 152, 0, 1); cursor: pointer"
+                                        (click)="approval.payTo.splice(j, 1)"
+                                    >
+                                        <u>Remove</u>
+                                    </span>
+                                </div>
+
+                                <div class="row col-md-12" style="width: auto">
+                                    <customized-number-input
+                                        [placeHolder]="'Amount'"
+                                        [minimum]="0.01"
+                                        [maximumDecimal]="2"
+                                        [inputValue]="payTo.amount"
+                                        (outputValue)="payTo.amount = $event; handleAmountChange(approval, $event)"
+                                    ></customized-number-input>
+                                </div>
+                            </div>
+                            <div class="row col-md-12" style="text-align: right">
+                                <span
+                                    class="icon-text-wrapper"
+                                    style="color: rgba(255, 152, 0, 1); cursor: pointer"
+                                    (click)="addNewAccount(approval.payTo)"
+                                >
+                                    <mat-icon style="font-size: 13px">control_point</mat-icon>
+                                    <span style="font-size: 13px"> &nbsp;Add Account</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" style="margin-left: 12px">
+                            <!-- div class="row" style="margin-top: 20px; padding: 0px">
                         <mat-slide-toggle [ngModel]="htmlRenderer.isApprovalSimple(approval)"
                                           (ngModelChange)="transaction=htmlRenderer.getFreshTransactionObject(); transaction.simple=$event"
                                           [disabled]="transaction.creditAccountList.length > 1 || transaction.debitAccountList.length > 1">
                             Simple
                         </mat-slide-toggle>
                     </div -->
-                    <div class="row col-md-12" style="margin-top: 20px;padding: 0px">
-                        <span *ngIf="isAccountNotMentioned(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
-                            <mat-icon style="font-size: 12px;">dangerous</mat-icon><span> &nbsp;Please Select An Account</span>
-                        </span>
-                    </div>
-                    <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAmountUnEqual(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
-                            <mat-icon style="font-size: 12px; vertical-align: -3px;">dangerous</mat-icon><span> &nbsp;Total Credit And Debit Amount Should Be Equal</span>
-                        </span>
-                    </div>
-                    <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAmountLessThanMinimum(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
-                            <mat-icon style="font-size: 12px; vertical-align: -3px;">dangerous</mat-icon><span> &nbsp;Minimum Amount should be 0.01</span>
-                        </span>
-                    </div>
-                    <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
-                        <span *ngIf="isAccountRepeated(approval)" class="icon-text-wrapper" style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline;">
-                            <mat-icon style="font-size: 12px;">dangerous</mat-icon><span> &nbsp;Same Account Can Not Be Used In The Same Transaction</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-1" style="width: 16px;"></div>
-                <div class="col-md-4">
-                    <mat-form-field style="width: 100%;">
-                        <input type="text" matInput [(ngModel)]="approval.remark" placeholder="Enter Remark">
-                    </mat-form-field><br>
-                </div>        
-            </div>
-
-            <div class="row">
-                <div class="col-md-1" style="width: 16px;"></div>
-                <div class="col-md-4">
-                    <div class="row col-md-12 custom-font">Add Bill :</div>
-                    <input type='file'  (change)="addAprovalImage($event, 'bill', approval);" multiple="false" style="display: none"
-                                accept="image/jpeg,image/png" #imageInput />
-                    <div style="display: inline-block;">
-                        <button type="submit" class="image-column" (click)="imageInput.click()"
-                        style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228);"
-                        >+</button>
-                    </div>
-                    <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
-                        <img [src]="image.imageURL" class="image-column" style="margin-top: -15px; cursor: pointer" (click)="openImagePreviewDialog(approval.billImages, i, 1)">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row col-md-12 custom-font">Add Quotation :</div>
-                    <input type='file' (change)="addAprovalImage($event, 'quo', approval);" multiple="false" style="display: none"
-                                accept="image/jpeg,image/png" #imageInput1 />
-                    <div style="display: inline-block;">
-                        <button type="submit" class="image-column" (click)="imageInput1.click()"
-                        style="cursor: pointer; font-size: 45px;color: rgb(0, 0, 0);border-radius: 2px; border-color:rgb(231, 228, 228); background-color: rgb(231, 228, 228)"
-                        >+</button>
-                    </div>
-                    <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
-                        <img [src]="image.imageURL" class="image-column" style="margin-top: -15px; cursor: pointer" (click)="openImagePreviewDialog(approval.quotationImages, i, 1)">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <span *ngIf="newApprovalList.length > 1" class="icon-text-wrapper"  style="float: right; margin-top:20px; color: rgba(255, 152, 0, 1); cursor: pointer;" (click)="newApprovalList.splice(i,1)">
-                        <mat-icon class="icon-text-wrapper" style="font-size: 13px;">remove_circle_outline</mat-icon><span style="font-size: 13px;"> &nbsp;Delete</span>
-                    </span>
-                </div>
-            </div>
-            <div class="row" style="margin-top: 12px">
-                <div class="col-md-1" style="width: 16px;"></div>
-                <mat-slide-toggle style="margin-left: 12px;" [(ngModel)]="approval.autoAdd">Auto Add Transaction</mat-slide-toggle>
-            </div>
-            </mat-card>
-            <hr>
-        </ng-container>
-
-        <div style="margin-top: 16px;">
-            <mat-form-field>
-                <input type="number" matInput [(ngModel)]="moreApprovalsCount" placeholder="Add More Approvals">
-            </mat-form-field>
-            <span class="icon-text-wrapper" style="margin-top:20px; color: rgba(255, 152, 0, 1); cursor: pointer" (click)="addApprovals()">
-                <mat-icon style="font-size: 13px;">control_point</mat-icon><span style="font-size: 13px;"> &nbsp;Add</span>
-            </span>
-            <button mat-button style="float: right;"
-                [ngStyle]="checkDataValidity()?{}:{'background':'rgba(196, 196, 196, 1)', 'color': 'white'}"
-                [disabled]="!checkDataValidity()" (click)="requestApproval()" 
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Request Approval</button>
-        </div>
-    </div>
-
-    <ng-template #notAllowedDescription>
-        <div *ngIf="!inActiveSession()">
-        <span style="color: red;">Not in Active Session</span><span> (Request can only be made in active Session)</span>
-        </div>
-        <div *ngIf="accountsLockedForSession">
-            <span  style="color: red;">
-                <h4><b><mat-icon style="vertical-align: -6px;">error_outline</mat-icon>
-                    All Accounts has been locked for this session. No further transctions can be added. </b></h4></span>
-        </div>
-    </ng-template>
-
-    <div style="margin-top: 75px;">
-        <hr  style="margin-top: 24px;"/>
-        <h3 class="icon-text-wrapper"><mat-icon>history</mat-icon><span> History</span></h3>
-    </div>
-    <p *ngIf="approvalsList.length==0">No Records Found</p>
-    <div *ngFor='let approval of approvalsList'>
-        <div class="row">
-            <div class="col-md-10">
-                <mat-card style="width: 100%;margin-bottom: 20px">
-                    <mat-card-title style="margin-bottom: 15px;">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <span style="font-size: 14px;">Approval ID: {{approval.approvalId}}</span>
+                            <div class="row col-md-12" style="margin-top: 20px; padding: 0px">
+                                <span
+                                    *ngIf="isAccountNotMentioned(approval)"
+                                    class="icon-text-wrapper"
+                                    style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline"
+                                >
+                                    <mat-icon style="font-size: 12px">dangerous</mat-icon><span> &nbsp;Please Select An Account</span>
+                                </span>
                             </div>
-                            <div class="col-md-3">
-                                <!-- <span style="font-size: 14px;">{{approval.requestedGenerationDateTime}}</span> -->
+                            <div class="row col-md-12" style="margin-top: 5px; padding: 0px">
+                                <span
+                                    *ngIf="isAmountUnEqual(approval)"
+                                    class="icon-text-wrapper"
+                                    style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline"
+                                >
+                                    <mat-icon style="font-size: 12px; vertical-align: -3px">dangerous</mat-icon
+                                    ><span> &nbsp;Total Credit And Debit Amount Should Be Equal</span>
+                                </span>
                             </div>
-                            <div class="col-md-7">
-                                <span *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'" style="font-size: 14px;float:right;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="openUseForPaymentDialog(approval)"><u>Use For Payment</u></span>
+                            <div class="row col-md-12" style="margin-top: 5px; padding: 0px">
+                                <span
+                                    *ngIf="isAmountLessThanMinimum(approval)"
+                                    class="icon-text-wrapper"
+                                    style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline"
+                                >
+                                    <mat-icon style="font-size: 12px; vertical-align: -3px">dangerous</mat-icon
+                                    ><span> &nbsp;Minimum Amount should be 0.01</span>
+                                </span>
+                            </div>
+                            <div class="row col-md-12" style="margin-top: 5px; padding: 0px">
+                                <span
+                                    *ngIf="isAccountRepeated(approval)"
+                                    class="icon-text-wrapper"
+                                    style="color: rgb(243, 59, 59); font-weight: 550; align-items: baseline"
+                                >
+                                    <mat-icon style="font-size: 12px">dangerous</mat-icon
+                                    ><span> &nbsp;Same Account Can Not Be Used In The Same Transaction</span>
+                                </span>
                             </div>
                         </div>
-                    </mat-card-title>
-                    <mat-card-content>
-                        
-                        <div class="row col-md-12" style="margin-bottom:15px;">
-                            <span style="color: rgba(255, 152, 0, 1);">Requested On: </span><span>{{approval.requestedGenerationDateTime | localDate }}</span>
-                            <span *ngIf="approval.approvedGenerationDateTime != null" style="float:right;">
-                                <span *ngIf="approval.requestStatus == 'APPROVED'" style="color: rgba(255, 152, 0, 1)"> Approved On: </span>
-                                <span *ngIf="approval.requestStatus == 'DECLINED'" style="color: rgba(255, 152, 0, 1)"> Declined On: </span>
-                                {{approval.approvedGenerationDateTime | localDate}}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-1" style="width: 16px"></div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%">
+                                <input type="text" matInput [(ngModel)]="approval.remark" placeholder="Enter Remark" /> </mat-form-field
+                            ><br />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-1" style="width: 16px"></div>
+                        <div class="col-md-4">
+                            <div class="row col-md-12 custom-font">Add Bill :</div>
+                            <input
+                                type="file"
+                                (change)="addAprovalImage($event, 'bill', approval)"
+                                multiple="false"
+                                style="display: none"
+                                accept="image/jpeg,image/png"
+                                #imageInput
+                            />
+                            <div style="display: inline-block">
+                                <button
+                                    type="submit"
+                                    class="image-column"
+                                    (click)="imageInput.click()"
+                                    style="
+                                        cursor: pointer;
+                                        font-size: 45px;
+                                        color: rgb(0, 0, 0);
+                                        border-radius: 2px;
+                                        border-color: rgb(231, 228, 228);
+                                        background-color: rgb(231, 228, 228);
+                                    "
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <div style="display: inline-block" *ngFor="let image of approval.billImages; let i = index">
+                                <img
+                                    [src]="image.imageURL"
+                                    class="image-column"
+                                    style="margin-top: -15px; cursor: pointer"
+                                    (click)="openImagePreviewDialog(approval.billImages, i, 1)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row col-md-12 custom-font">Add Quotation :</div>
+                            <input
+                                type="file"
+                                (change)="addAprovalImage($event, 'quo', approval)"
+                                multiple="false"
+                                style="display: none"
+                                accept="image/jpeg,image/png"
+                                #imageInput1
+                            />
+                            <div style="display: inline-block">
+                                <button
+                                    type="submit"
+                                    class="image-column"
+                                    (click)="imageInput1.click()"
+                                    style="
+                                        cursor: pointer;
+                                        font-size: 45px;
+                                        color: rgb(0, 0, 0);
+                                        border-radius: 2px;
+                                        border-color: rgb(231, 228, 228);
+                                        background-color: rgb(231, 228, 228);
+                                    "
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <div style="display: inline-block" *ngFor="let image of approval.quotationImages; let i = index">
+                                <img
+                                    [src]="image.imageURL"
+                                    class="image-column"
+                                    style="margin-top: -15px; cursor: pointer"
+                                    (click)="openImagePreviewDialog(approval.quotationImages, i, 1)"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span
+                                *ngIf="newApprovalList.length > 1"
+                                class="icon-text-wrapper"
+                                style="float: right; margin-top: 20px; color: rgba(255, 152, 0, 1); cursor: pointer"
+                                (click)="newApprovalList.splice(i, 1)"
+                            >
+                                <mat-icon class="icon-text-wrapper" style="font-size: 13px">remove_circle_outline</mat-icon
+                                ><span style="font-size: 13px"> &nbsp;Delete</span>
                             </span>
                         </div>
-                        <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-3" style="padding-right: 0px;">
-                                        <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
-                                    </div>
-                                    <div class="col-md-9" style="padding: 0px;">
-                                        <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-3" style="padding-right: 0px;">
-                                        <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
-                                    </div>
-                                    <div class="col-md-9" style="padding: 0px;">
-                                        <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row col-md-12" style="margin-bottom: 15px;">
-                            <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
-                            <span style="margin-left: 60px;">{{approval.remark}}</span>
-                        </div>
-                        <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-6">
-                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
-
-                                <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
-                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
-
-                                <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
-                                    <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.quotationImages, i, 0)" >
-                                </div>
-                            </div>
-                        </div>
-
-                    </mat-card-content>
-
+                    </div>
+                    <div class="row" style="margin-top: 12px">
+                        <div class="col-md-1" style="width: 16px"></div>
+                        <mat-slide-toggle style="margin-left: 12px" [(ngModel)]="approval.autoAdd">Auto Add Transaction</mat-slide-toggle>
+                    </div>
                 </mat-card>
+                <hr />
+            </ng-container>
 
+            <div style="margin-top: 16px">
+                <mat-form-field>
+                    <input type="number" matInput [(ngModel)]="moreApprovalsCount" placeholder="Add More Approvals" />
+                </mat-form-field>
+                <span
+                    class="icon-text-wrapper"
+                    style="margin-top: 20px; color: rgba(255, 152, 0, 1); cursor: pointer"
+                    (click)="addApprovals()"
+                >
+                    <mat-icon style="font-size: 13px">control_point</mat-icon><span style="font-size: 13px"> &nbsp;Add</span>
+                </span>
+                <button
+                    mat-button
+                    style="float: right"
+                    [ngStyle]="checkDataValidity() ? {} : { background: 'rgba(196, 196, 196, 1)', color: 'white' }"
+                    [disabled]="!checkDataValidity()"
+                    (click)="requestApproval()"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                >
+                    Request Approval
+                </button>
             </div>
-            <div class="col-md-2" style="align-items:center">
-                <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
-                    <button class="custom-button" style="width:90px; cursor: default; pointer-events: none;" [ngStyle]="getButtonStyle(approval)">{{getButtonString(approval)}}</button>
+        </div>
+
+        <ng-template #notAllowedDescription>
+            <div *ngIf="!inActiveSession()">
+                <span style="color: red">Not in Active Session</span><span> (Request can only be made in active Session)</span>
+            </div>
+            <div *ngIf="accountsLockedForSession">
+                <span style="color: red">
+                    <h4>
+                        <b
+                            ><mat-icon style="vertical-align: -6px">error_outline</mat-icon> All Accounts has been locked for this session.
+                            No further transctions can be added.
+                        </b>
+                    </h4></span
+                >
+            </div>
+        </ng-template>
+
+        <div style="margin-top: 75px">
+            <hr style="margin-top: 24px" />
+            <h3 class="icon-text-wrapper"><mat-icon>history</mat-icon><span> History</span></h3>
+        </div>
+        <p *ngIf="approvalsList.length == 0">No Records Found</p>
+        <div *ngFor="let approval of approvalsList">
+            <div class="row">
+                <div class="col-md-10">
+                    <mat-card style="width: 100%; margin-bottom: 20px">
+                        <mat-card-title style="margin-bottom: 15px">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <span style="font-size: 14px">Approval ID: {{ approval.approvalId }}</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <!-- <span style="font-size: 14px;">{{approval.requestedGenerationDateTime}}</span> -->
+                                </div>
+                                <div class="col-md-7">
+                                    <span
+                                        *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'"
+                                        style="font-size: 14px; float: right; color: rgba(255, 152, 0, 1); cursor: pointer"
+                                        (click)="openUseForPaymentDialog(approval)"
+                                        ><u>Use For Payment</u></span
+                                    >
+                                </div>
+                            </div>
+                        </mat-card-title>
+                        <mat-card-content>
+                            <div class="row col-md-12" style="margin-bottom: 15px">
+                                <span style="color: rgba(255, 152, 0, 1)">Requested On: </span
+                                ><span>{{ approval.requestedGenerationDateTime | localDate }}</span>
+                                <span *ngIf="approval.approvedGenerationDateTime != null" style="float: right">
+                                    <span *ngIf="approval.requestStatus == 'APPROVED'" style="color: rgba(255, 152, 0, 1)">
+                                        Approved On:
+                                    </span>
+                                    <span *ngIf="approval.requestStatus == 'DECLINED'" style="color: rgba(255, 152, 0, 1)">
+                                        Declined On:
+                                    </span>
+                                    {{ approval.approvedGenerationDateTime | localDate }}
+                                </span>
+                            </div>
+                            <div class="row" style="margin-bottom: 15px">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-3" style="padding-right: 0px">
+                                            <span style="color: rgba(255, 152, 0, 1)">Paid To</span>
+                                        </div>
+                                        <div class="col-md-9" style="padding: 0px">
+                                            <div
+                                                *ngFor="let account of approval.debitAccounts"
+                                                style="margin-bottom: 5px; display: inline-block; padding-right: 20px"
+                                            >
+                                                <span style="font-size: 14px">{{ account.account }}&nbsp;A/c</span><br /><span
+                                                    style="color: rgba(76, 175, 80, 1); font-size: 14px"
+                                                    >{{ account.amount }}</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-3" style="padding-right: 0px">
+                                            <span style="color: rgba(255, 152, 0, 1)">Paid From</span>
+                                        </div>
+                                        <div class="col-md-9" style="padding: 0px">
+                                            <div
+                                                *ngFor="let account of approval.creditAccounts"
+                                                style="margin-bottom: 5px; display: inline-block; padding-right: 20px"
+                                            >
+                                                <span style="font-size: 14px">{{ account.account }}&nbsp;A/c</span><br /><span
+                                                    style="color: rgba(86, 142, 174, 1); font-size: 14px"
+                                                    >{{ account.amount }}</span
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row col-md-12" style="margin-bottom: 15px">
+                                <span style="color: rgba(255, 152, 0, 1)">Remark: </span>
+                                <span style="margin-left: 60px">{{ approval.remark }}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 15px">
+                                <div class="col-md-6">
+                                    <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1)">Bill :</span></div>
+
+                                    <div style="display: inline-block" *ngFor="let image of approval.billImages; let i = index">
+                                        <img
+                                            src="{{ image.imageURL }}"
+                                            class="image-column"
+                                            (click)="openImagePreviewDialog(approval.billImages, i, 0)"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row col-md-12 custom-font">
+                                        <span style="color: rgba(255, 152, 0, 1)">Quotation :</span>
+                                    </div>
+
+                                    <div style="display: inline-block" *ngFor="let image of approval.quotationImages; let i = index">
+                                        <img
+                                            src="{{ image.imageURL }}"
+                                            class="image-column"
+                                            (click)="openImagePreviewDialog(approval.quotationImages, i, 0)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="col-md-2" style="align-items: center">
+                    <div class="row col-md-12" style="display: flex; justify-content: center; align-items: center; margin-top: 40px">
+                        <button
+                            class="custom-button"
+                            style="width: 90px; cursor: default; pointer-events: none"
+                            [ngStyle]="getButtonStyle(approval)"
+                        >
+                            {{ getButtonString(approval) }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div *ngIf="moreAprovalsAvailable">
-        <div *ngIf="isLoadingApproval">
-            <div style="width: 100%" align="center">
-                <div class="loaderCustom"></div>
-            </div><br>
+        <div *ngIf="moreAprovalsAvailable">
+            <div *ngIf="isLoadingApproval">
+                <div style="width: 100%" align="center">
+                    <div class="loaderCustom"></div>
+                </div>
+                <br />
+            </div>
+            <span *ngIf="!isLoadingApproval" style="color: #817ae9; cursor: pointer" (click)="serviceAdapter.loadMoreApprovals()"
+                ><u>Load More..</u></span
+            >
         </div>
-        <span *ngIf="!isLoadingApproval" style="color: #817ae9; cursor: pointer;" (click)="serviceAdapter.loadMoreApprovals()"><u>Load More..</u></span>
-    </div>
+    </ng-container>
 
-</ng-container>
-
-<ng-template #loadingSpinner>
-    <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-template>
-
+    <ng-template #loadingSpinner>
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-template>
 </div>
-

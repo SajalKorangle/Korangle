@@ -1,5 +1,4 @@
-
-export class Homework{
+export class Homework {
     id: any = null;
     homeworkName: string = null;
     parentClassSubject: number = null;

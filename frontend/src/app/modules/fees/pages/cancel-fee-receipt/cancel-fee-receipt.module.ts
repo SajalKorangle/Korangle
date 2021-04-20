@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {CancelFeeReceiptRoutingModule} from './cancel-fee-receipt.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {CancelFeeReceiptComponent} from "./cancel-fee-receipt.component";
-
+import { CancelFeeReceiptRoutingModule } from './cancel-fee-receipt.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
 
 @NgModule({
-    declarations: [
-        CancelFeeReceiptComponent
-    ],
+    declarations: [CancelFeeReceiptComponent],
 
-    imports: [
-        CancelFeeReceiptRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [CancelFeeReceiptRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [CancelFeeReceiptComponent]
+    bootstrap: [CancelFeeReceiptComponent],
 })
-export class CancelFeeReceiptModule { }
+export class CancelFeeReceiptModule {}

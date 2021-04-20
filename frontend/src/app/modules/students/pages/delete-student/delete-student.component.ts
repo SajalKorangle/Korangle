@@ -2,21 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
-import {DeleteStudentServiceAdapter} from "./delete-student.service.adapter";
-import {SubjectService} from "../../../../services/modules/subject/subject.service";
-import {ExaminationService} from "../../../../services/modules/examination/examination.service";
+import { DeleteStudentServiceAdapter } from './delete-student.service.adapter';
+import { SubjectService } from '../../../../services/modules/subject/subject.service';
+import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { TCService } from './../../../../services/modules/tc/tc.service';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 
 @Component({
-  selector: 'app-delete-student',
-  templateUrl: './delete-student.component.html',
-  styleUrls: ['./delete-student.component.css'],
-  providers: [FeeService, StudentService, SubjectService, ExaminationService, TCService ],
+    selector: 'app-delete-student',
+    templateUrl: './delete-student.component.html',
+    styleUrls: ['./delete-student.component.css'],
+    providers: [FeeService, StudentService, SubjectService, ExaminationService, TCService],
 })
-
 export class DeleteStudentComponent implements OnInit {
-
     user;
 
     bothFilters = false;
@@ -25,7 +23,7 @@ export class DeleteStudentComponent implements OnInit {
     selectedStudentSectionList = [];
     selectedStudentFeeReceiptList = [];
     selectedStudentDiscountList = [];
-    tcList: Array<TransferCertificateNew> = []
+    tcList: Array<TransferCertificateNew> = [];
 
     // Data from Parent Student Filter
     classList = [];
@@ -42,8 +40,8 @@ export class DeleteStudentComponent implements OnInit {
         public subjectService: SubjectService,
         public examinationOldService: ExaminationService,
         public feeService: FeeService,
-        public tcService: TCService,
-    ) { }
+        public tcService: TCService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -51,7 +49,6 @@ export class DeleteStudentComponent implements OnInit {
         this.serviceAdapter = new DeleteStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
     }
 
     handleDetailsFromParentStudentFilter(details: any): void {
@@ -60,22 +57,27 @@ export class DeleteStudentComponent implements OnInit {
     }
 
     enableDeleteFromSession(): boolean {
-        return !this.selectedStudent.deleted
-            && this.selectedStudentSectionList.length > 1
-            && this.selectedStudentSectionList[this.selectedStudentSectionList.length-1].parentSession == this.user.activeSchool.currentSessionDbId
-            && this.selectedStudentFeeReceiptList.find(feeReceipt => {
-                return feeReceipt.parentStudent == this.selectedStudent.id
-                    && feeReceipt.parentSession == this.user.activeSchool.currentSessionDbId;
-            }) == undefined
-            && this.selectedStudentDiscountList.find(discount => {
-                return discount.parentStudent == this.selectedStudent.id
-                    && discount.parentSession == this.user.activeSchool.currentSessionDbId;
-            }) == undefined
-            && this.selectedStudentHasNoTc();
+        return (
+            !this.selectedStudent.deleted &&
+            this.selectedStudentSectionList.length > 1 &&
+            this.selectedStudentSectionList[this.selectedStudentSectionList.length - 1].parentSession ==
+                this.user.activeSchool.currentSessionDbId &&
+            this.selectedStudentFeeReceiptList.find((feeReceipt) => {
+                return (
+                    feeReceipt.parentStudent == this.selectedStudent.id &&
+                    feeReceipt.parentSession == this.user.activeSchool.currentSessionDbId
+                );
+            }) == undefined &&
+            this.selectedStudentDiscountList.find((discount) => {
+                return (
+                    discount.parentStudent == this.selectedStudent.id && discount.parentSession == this.user.activeSchool.currentSessionDbId
+                );
+            }) == undefined &&
+            this.selectedStudentHasNoTc()
+        );
     }
 
-    selectedStudentHasNoTc(): boolean{
-        return this.tcList.every(tc => tc.parentStudent != this.selectedStudent.id);
+    selectedStudentHasNoTc(): boolean {
+        return this.tcList.every((tc) => tc.parentStudent != this.selectedStudent.id);
     }
-
 }

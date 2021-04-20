@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {ViewAttendanceComponent} from "./view-attendance.component";
+import { ViewAttendanceComponent } from './view-attendance.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: ViewAttendanceComponent ,
-    }
+        component: ViewAttendanceComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class ViewAttendanceRoutingModule { }
+export class ViewAttendanceRoutingModule {}

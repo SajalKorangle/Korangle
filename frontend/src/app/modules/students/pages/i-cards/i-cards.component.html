@@ -1,338 +1,301 @@
 <div class="card-content table-responsive" [class.hidden]="isLoading">
-
     <!-- Student List -->
-    <div *ngIf="studentFullProfileList.length>0">
-
+    <div *ngIf="studentFullProfileList.length > 0">
         <!-- Class Filter -->
-        <mat-form-field style="margin-right: 15px;">
-            <mat-select placeholder="Select Class" style="width: 100%;">
-
+        <mat-form-field style="margin-right: 15px">
+            <mat-select placeholder="Select Class" style="width: 100%">
                 <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllClasses(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
-                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
 
                 <ng-container *ngFor="let class of classSectionList">
                     <ng-container *ngFor="let section of class.sectionList">
-                        <mat-option *ngIf="section.containsStudent" style="width: 100%;">
-                            <mat-checkbox [(ngModel)]="section.selected"
-                                          (ngModelChange)="handleStudentDisplay()"
-                                          (click)="$event.stopPropagation();">
-                                {{class.name}}<span *ngIf="showSectionName(class)">, {{section.name}}</span>
+                        <mat-option *ngIf="section.containsStudent" style="width: 100%">
+                            <mat-checkbox
+                                [(ngModel)]="section.selected"
+                                (ngModelChange)="handleStudentDisplay()"
+                                (click)="$event.stopPropagation()"
+                            >
+                                {{ class.name }}<span *ngIf="showSectionName(class)">, {{ section.name }}</span>
                             </mat-checkbox>
                         </mat-option>
                     </ng-container>
                 </ng-container>
 
                 <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllClasses(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unselectAllClasses(); $event.stopPropagation();">Clear All
-                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
-
             </mat-select>
         </mat-form-field>
 
         <!-- Column Filter -->
-        <mat-form-field style="margin-right: 15px;">
+        <mat-form-field style="margin-right: 15px">
             <mat-select placeholder="Select Columns">
                 <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllColumns(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
-                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation();">Serial No.
+                    <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation()">Serial No. </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()">Name </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation()">Class Name </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showRollNumber" (click)="$event.stopPropagation()">Roll No. </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showFathersName" (click)="$event.stopPropagation()"
+                        >Father's Name
                     </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation();">Name
+                    <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation()">Mobile No. </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation()"
+                        >Scholar No.
                     </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation();">Class Name
+                    <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation()"
+                        >Date of Birth
                     </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showRollNumber" (click)="$event.stopPropagation();">Roll No.
+                    <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation()">Mother's Name </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation()">Gender </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showCaste" (click)="$event.stopPropagation()">Caste </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showCategory" (click)="$event.stopPropagation()">Category </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showReligion" (click)="$event.stopPropagation()">Religion </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showFatherOccupation" (click)="$event.stopPropagation()">
+                        Father's Occupation
                     </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showFathersName" (click)="$event.stopPropagation();">Father's
-                        Name
-                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation()">Address </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation();">Mobile No.
-                    </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation()"> RTE </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation();">Scholar
-                        No.
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation();">Date of
-                        Birth
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation();">Mother's
-                        Name
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation();">Gender
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showCaste" (click)="$event.stopPropagation();">Caste
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showCategory" (click)="$event.stopPropagation();">Category
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showReligion" (click)="$event.stopPropagation();">Religion
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showFatherOccupation" (click)="$event.stopPropagation();">
-                        Father's
-                        Occupation
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation();">Address
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation();">
-                        RTE
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllColumns(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unSelectAllColumns(); $event.stopPropagation();">Clear All
-                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-        <button type="button"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                style="padding: 12px 15px; margin-right: 17px;"
-                matTooltip="Print the following list"
-                tooltip-position="left"
-                (click)="printStudentICards();">
-            Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-right: 17px"
+            matTooltip="Print the following list"
+            tooltip-position="left"
+            (click)="printStudentICards()"
+        >
+            Print<i class="material-icons" style="margin-left: 15px">print</i>
+        </button>
 
         <!-- Other Filters -->
-        <mat-form-field style="float: right;">
+        <mat-form-field style="float: right">
             <mat-select placeholder="Filters">
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="scSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">SC,
+                    <mat-checkbox
+                        [(ngModel)]="scSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >SC,
                     </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="stSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">ST,
+                    <mat-checkbox
+                        [(ngModel)]="stSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >ST,
                     </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="obcSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">OBC,
+                    <mat-checkbox
+                        [(ngModel)]="obcSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >OBC,
                     </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="generalSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">Gen.
+                    <mat-checkbox
+                        [(ngModel)]="generalSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >Gen.
                     </mat-checkbox>
                 </mat-option>
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="maleSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">M
+                    <mat-checkbox
+                        [(ngModel)]="maleSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >M
                     </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="femaleSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">F
+                    <mat-checkbox
+                        [(ngModel)]="femaleSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >F
                     </mat-checkbox>
-                    <mat-checkbox [(ngModel)]="otherGenderSelected"
-                                  style="margin-right: 5px;"
-                                  (ngModelChange)="handleStudentDisplay()"
-                                  (click)="$event.stopPropagation();">Other
+                    <mat-checkbox
+                        [(ngModel)]="otherGenderSelected"
+                        style="margin-right: 5px"
+                        (ngModelChange)="handleStudentDisplay()"
+                        (click)="$event.stopPropagation()"
+                        >Other
                     </mat-checkbox>
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
         <div>
-            <mat-checkbox [(ngModel)]="showClass">
-                Show Class
-            </mat-checkbox>
-            <mat-checkbox [(ngModel)]="printMultipleIcards" style="margin-left: 15px">
-                Print Multiple I-cards
-            </mat-checkbox>
+            <mat-checkbox [(ngModel)]="showClass"> Show Class </mat-checkbox>
+            <mat-checkbox [(ngModel)]="printMultipleIcards" style="margin-left: 15px"> Print Multiple I-cards </mat-checkbox>
         </div>
 
+        <br />
+        Total Students: <i>{{ studentFullProfileList.length }}</i
+        >, Displaying: <i>{{ displayStudentNumber }}</i
+        >, Selected:
+        <b
+            ><i>{{ getSelectedStudentNumber() }}</i></b
+        >
+        <br />
 
-        <br>
-        Total Students: <i>{{studentFullProfileList.length}}</i>,
-        Displaying: <i>{{displayStudentNumber}}</i>,
-        Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
-        <br/>
-
-        <button class="btn"
-                style="padding: 4px 7px"
-                (click)="selectAllStudents(); $event.stopPropagation();">Select All
-        </button>
-        <button class="btn"
-                style="padding: 4px 7px"
-                (click)="unSelectAllStudents(); $event.stopPropagation();">Clear All
-        </button>
+        <button class="btn" style="padding: 4px 7px" (click)="selectAllStudents(); $event.stopPropagation()">Select All</button>
+        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllStudents(); $event.stopPropagation()">Clear All</button>
 
         <ngx-datatable
-                class='material ngxDataTable'
-                *ngIf="studentFullProfileList.length>0"
-                [rows]='filteredStudentFullProfileList'
-                [columnMode]="'force'"
-                [headerHeight]="50"
-                [footerHeight]="50"
-                [rowHeight]="getRowHeight"
-                [rowClass]="getRowClass"
-                [scrollbarV]="true"
-                [scrollbarH]="true"
-                (page)="onPage($event)">
+            class="material ngxDataTable"
+            *ngIf="studentFullProfileList.length > 0"
+            [rows]="filteredStudentFullProfileList"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="getRowHeight"
+            [rowClass]="getRowClass"
+            [scrollbarV]="true"
+            [scrollbarH]="true"
+            (page)="onPage($event)"
+        >
             <ngx-datatable-column name="Selected">
-                <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <mat-checkbox [ngModel]="row['selected']"
-                                  (ngModelChange)="updateRowValue(row, $event)"></mat-checkbox>
+                <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <mat-checkbox [ngModel]="row['selected']" (ngModelChange)="updateRowValue(row, $event)"></mat-checkbox>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Photo">
-                <ng-template let-rowIndex='rowIndex' let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <img *ngIf="row.profileImage" src="{{row.profileImage}}" style="width: 20%;">
+                <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <img *ngIf="row.profileImage" src="{{ row.profileImage }}" style="width: 20%" />
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Name" *ngIf="columnFilter.showName">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <strong>{{value}}</strong>
+                    <strong>{{ value }}</strong>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Class" *ngIf="columnFilter.showClassName">
-                <ng-template let-row="row"  let-value="value" ngx-datatable-cell-template>
-                    <strong>{{row.className}}</strong>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <strong>{{ row.className }}</strong>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Roll No." *ngIf="columnFilter.showRollNumber">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.rollNumber}}</i>
+                    <i>{{ row.rollNumber }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Father's Name" *ngIf="columnFilter.showFathersName">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.fathersName}}</i>
+                    <i>{{ row.fathersName }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Mobile No." *ngIf="columnFilter.showMobileNumber">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.mobileNumber}}</i>
+                    <i>{{ row.mobileNumber }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Scholar No." *ngIf="columnFilter.showScholarNumber">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.scholarNumber}}</i>
+                    <i>{{ row.scholarNumber }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Birth Date" *ngIf="columnFilter.showDateOfBirth">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.dateOfBirth | date: 'dd/MM/yyyy'}}</i>
+                    <i>{{ row.dateOfBirth | date: 'dd/MM/yyyy' }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Mother's Name" *ngIf="columnFilter.showMotherName">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.motherName}}</i>
+                    <i>{{ row.motherName }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Gender" *ngIf="columnFilter.showGender">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.gender}}</i>
+                    <i>{{ row.gender }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Caste" *ngIf="columnFilter.showCaste">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.caste}}</i>
+                    <i>{{ row.caste }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Category" *ngIf="columnFilter.showCategory">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.category}}</i>
+                    <i>{{ row.category }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Religion" *ngIf="columnFilter.showReligion">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.religion}}</i>
+                    <i>{{ row.religion }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Father's Occupation" *ngIf="columnFilter.showFatherOccupation">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.fatherOccupation}}</i>
+                    <i>{{ row.fatherOccupation }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="Address" *ngIf="columnFilter.showAddress">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.address}}</i>
+                    <i>{{ row.address }}</i>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="RTE" *ngIf="columnFilter.showRTE">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{row.rte}}</i>
+                    <i>{{ row.rte }}</i>
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>
 
         <ng-container *ngFor="let studentProfile of studentFullProfileList">
-            <img src="{{studentProfile.profileImage}}" style="width: 0px; height: 0px;">
+            <img src="{{ studentProfile.profileImage }}" style="width: 0px; height: 0px" />
         </ng-container>
-        <img src="{{user.activeSchool.principalSignatureImage}}" style="width: 0px; height: 0px;">
-
+        <img src="{{ user.activeSchool.principalSignatureImage }}" style="width: 0px; height: 0px" />
     </div>
 
-    <div *ngIf="studentFullProfileList.length===0">
-        Students need to be added or promoted in this session.
-    </div>
-
+    <div *ngIf="studentFullProfileList.length === 0">Students need to be added or promoted in this session.</div>
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

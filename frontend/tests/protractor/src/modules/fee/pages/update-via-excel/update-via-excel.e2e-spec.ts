@@ -27,7 +27,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
     beforeAll(async () => {
 
         startBackendServer(getFixtureFiles('modules/fee/pages/update-via-excel/update-via-excel.json'));
-        
+
         page = await BeforeAfterEach.beforeEach();
 
         // Opening and waiting for page load
@@ -35,18 +35,18 @@ describe('Fees 3.0 -> Upload Excel', () => {
         await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for page load after spinner
     });
 
-    describe('set1: Sheet Download', () => { 
+    describe('set1: Sheet Download', () => {
 
         it('Upload Excel: Downloaded Button Check', async () => {
-            let node = await getNode('button', 'Download Template');  
-            expect(node).not.toBeUndefined();        
+            let node = await getNode('button', 'Download Template');
+            expect(node).not.toBeUndefined();
         });
     });
 
     describe('set2: Same Sheet Upload', () => {
         beforeAll(async () => {
             page.on('dialog', failureDialog);
-            
+
             await page.waitForXPath('//button[contains(., "Download Template")]');
         });
 
@@ -57,7 +57,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
             await page.waitForTimeout(500);
             await page.waitForXPath('//button[contains(., "Download Template")]');
             await page.waitForTimeout(500);
-        
+
             //Clicking download button and waiting for the action to finish
             node = await containsFirst('button', 'Upload Data');
             node.click();
@@ -67,7 +67,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
 
         afterAll(async () => {
             page.removeListener('dialog', failureDialog);
-        })
+        });
     });
 
     describe('set3: Error Sheet', () => {
@@ -86,7 +86,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
         it('Cell Error/Warning test', async () => {
             let node, nodes;
 
-            let isWarning = await page.$eval('tbody tr:nth-child(25) td:nth-child(7)', element => isWarning =  element.classList.contains("bgWarning"))
+            let isWarning = await page.$eval('tbody tr:nth-child(25) td:nth-child(7)', element => isWarning =  element.classList.contains("bgWarning"));
             expect(isWarning).toBe(true);
 
             node = await containsFirst('button', 'Errors');
@@ -96,9 +96,9 @@ describe('Fees 3.0 -> Upload Excel', () => {
             expect(nodes.length).toBe(9);
         });
 
-        afterAll(async () =>{
+        afterAll(async () => {
             page.removeListener('dialog', noDialog);
-        })
+        });
     });
 
 
@@ -130,7 +130,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
 
             nodes = await containsAll('tr', '');
             nodes = nodes.slice(1);
-            
+
             for (let i = 0; i < nodes.length; i += 1) {  // counting cells that contains 20, 50 and 100
                 row = nodes[i];
                 let cells;
@@ -144,7 +144,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
                 cells = await row.$x('.//td[position()>6 and contains(., "20")]');
                 count20 += cells.length;
             }
-        
+
             expect(count100).toBe(26);  // checking counts
             expect(count50).toBe(21);
             expect(count20).toBe(22);
@@ -166,7 +166,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
 
         afterAll(async () => {
             let node;
-            
+
             //Clicking download button and waiting for the spinner to disappear
             node = await containsFirst('button', 'Upload Data');
             node.click();
@@ -174,9 +174,9 @@ describe('Fees 3.0 -> Upload Excel', () => {
             await page.waitForXPath('//button[contains(., "Download Template")]');  // waiting for page load after spinner
 
         });
-        
-    });  
-    
+
+    });
+
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
     });

@@ -1,9 +1,9 @@
 export const ACCOUNT_TYPE_CHOICES = {
-    'GROUP': 'GROUP',
-    'ACCOUNT': 'ACCOUNT',
-}
+    GROUP: 'GROUP',
+    ACCOUNT: 'ACCOUNT',
+};
 
-export class Account{
+export class Account {
     id: number;
     parentSchool: number;
     accountType: 'ACCOUNT' | 'GROUP';

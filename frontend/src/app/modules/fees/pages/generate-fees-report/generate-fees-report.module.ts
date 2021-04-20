@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {GenerateFeesReportRoutingModule} from './generate-fees-report.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {GenerateFeesReportComponent} from "./generate-fees-report.component";
-
+import { GenerateFeesReportRoutingModule } from './generate-fees-report.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { GenerateFeesReportComponent } from './generate-fees-report.component';
 
 @NgModule({
-    declarations: [
-        GenerateFeesReportComponent
-    ],
+    declarations: [GenerateFeesReportComponent],
 
-    imports: [
-        GenerateFeesReportRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [GenerateFeesReportRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [GenerateFeesReportComponent]
+    bootstrap: [GenerateFeesReportComponent],
 })
-export class GenerateFeesReportModule { }
+export class GenerateFeesReportModule {}

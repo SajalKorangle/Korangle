@@ -8,7 +8,6 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-hall-ticket.component.css'],
 })
 export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChecked {
-
     user: any;
 
     viewChecked = true;
@@ -21,7 +20,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
 
     opacity: any;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -32,8 +31,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
         this.opacity = {
             opacity: this.user.activeSchool.opacity,
         };
-        this.showPrincipalSignature = value.showPrincipalSignature,
-        this.viewChecked = false;
+        (this.showPrincipalSignature = value.showPrincipalSignature), (this.viewChecked = false);
     }
 
     ngAfterViewChecked(): void {
@@ -53,7 +51,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -66,5 +64,4 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
         }
         return result;
     }
-
 }

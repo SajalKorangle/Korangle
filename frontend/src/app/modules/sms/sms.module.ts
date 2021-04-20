@@ -9,31 +9,22 @@ import { SendSmsComponent } from './pages/send-sms/send-sms.component';
 import { ViewSentComponent } from './pages/view-sent/view-sent.component';
 import { ViewPurchasesComponent } from './pages/view-purchases/view-purchases.component';
 
-import { SmsRoutingModule} from './sms.routing';
+import { SmsRoutingModule } from './sms.routing';
 
 import { SmsOldService } from '../../services/modules/sms/sms-old.service';
 
 @NgModule({
     declarations: [
-
         SmsComponent,
 
         // SendSmsComponent,
         // ViewSentComponent,
         // ViewPurchasesComponent,
-
     ],
 
-    imports: [
-
-        ComponentsModule,
-        SmsRoutingModule,
-        NgxDatatableModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, SmsRoutingModule, NgxDatatableModule],
+    exports: [],
     providers: [SmsOldService],
-    bootstrap: [SmsComponent]
+    bootstrap: [SmsComponent],
 })
-export class SmsModule { }
+export class SmsModule {}

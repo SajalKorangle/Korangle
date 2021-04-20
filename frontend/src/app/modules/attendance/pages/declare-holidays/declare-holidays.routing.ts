@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {DeclareHolidaysComponent} from "./declare-holidays.component";
+import { DeclareHolidaysComponent } from './declare-holidays.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: DeclareHolidaysComponent ,
-    }
+        component: DeclareHolidaysComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class DeclareHolidaysRoutingModule { }
+export class DeclareHolidaysRoutingModule {}

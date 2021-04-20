@@ -1,20 +1,21 @@
 <table *ngIf="template" class="table table-hover">
     <thead style="font-weight: 400">
         <tr>
-            <th *ngFor = "let headers of template[0]">
-                {{headers}}
+            <th *ngFor="let headers of template[0]">
+                {{ headers }}
             </th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor =  "let rows of template">
-            <ng-container *ngIf ="rows!=template[0];">
-                <ng-container *ngFor = "let values of rows;let i=index">
-                    <td *ngIf="i<6">
-                        {{values}}
+        <tr *ngFor="let rows of template">
+            <ng-container *ngIf="rows != template[0]">
+                <ng-container *ngFor="let values of rows; let i = index">
+                    <td *ngIf="i < 6">
+                        {{ values }}
                     </td>
-                    <td *ngIf="i>=6">  <!-- Because these fields are Indian Rupees -->
-                        {{values | indianCurrency}}
+                    <td *ngIf="i >= 6">
+                        <!-- Because these fields are Indian Rupees -->
+                        {{ values | indianCurrency }}
                     </td>
                 </ng-container>
             </ng-container>

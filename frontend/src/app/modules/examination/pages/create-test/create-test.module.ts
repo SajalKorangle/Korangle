@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
-import {CreateTestRoutingModule} from './create-test.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {CreateTestComponent} from "./create-test.component";
-
+import { CreateTestRoutingModule } from './create-test.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { CreateTestComponent } from './create-test.component';
 
 @NgModule({
-    declarations: [
-        CreateTestComponent
-    ],
+    declarations: [CreateTestComponent],
 
-    imports: [
-        CreateTestRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [CreateTestRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [CreateTestComponent]
+    bootstrap: [CreateTestComponent],
 })
-export class CreateTestModule { }
+export class CreateTestModule {}
