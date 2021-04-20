@@ -4,21 +4,30 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
     selector: 'group-hierarchy',
     templateUrl: './group-hierarchy.component.html',
     styleUrls: ['./group-hierarchy.component.css'],
+    
 })
+
 export class GroupHierarchyComponent implements OnInit {
+
     @Input() group;
     @Input() vm;
     @Input() sourcePage;
 
-    constructor() {}
+    constructor (
+    ) { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+    }
 
-    handleClick(element) {
-        if (this.sourcePage == 'Manage') {
+    handleClick(element){
+        if(this.sourcePage == 'Manage'){
             this.vm.openEditDialog(element);
-        } else {
+        }
+        else{
             this.vm.displayLedgerAccount(element);
         }
     }
+
+    
+
 }

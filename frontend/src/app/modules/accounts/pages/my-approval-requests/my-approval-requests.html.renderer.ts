@@ -2,9 +2,10 @@ import { MyApprovalRequestsComponent } from './my-approval-requests.component';
 import { NewCustomApproval } from './my-approval-requests.component';
 
 export class MyApprovalRequestsHtmlRenderer {
-    vm: MyApprovalRequestsComponent;
 
-    initialise(vm: MyApprovalRequestsComponent) {
+    vm : MyApprovalRequestsComponent;
+
+    initialise(vm: MyApprovalRequestsComponent){
         this.vm = vm;
     }
 
@@ -20,4 +21,5 @@ export class MyApprovalRequestsHtmlRenderer {
     getFreshApprovalObject(approval: NewCustomApproval): NewCustomApproval{
         return new NewCustomApproval(this.vm, {autoAdd: approval.autoAdd});
     }
+
 }

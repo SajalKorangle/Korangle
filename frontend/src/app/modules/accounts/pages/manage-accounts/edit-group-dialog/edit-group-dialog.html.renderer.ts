@@ -1,12 +1,11 @@
 import { EditGroupDialogComponent } from './edit-group-dialog.component';
 
 export class EditGroupDialogHtmlRenderer {
-    vm: EditGroupDialogComponent;
-    constructor() { }
 
-    initialize(vm: EditGroupDialogComponent) {
-        this.vm = vm;
-    }
+    vm: EditGroupDialogComponent;
+    constructor() {}
+
+    initialize(vm: EditGroupDialogComponent) { this.vm = vm; }
 
     isAccountNameAlreadyExists(): boolean {
         return this.vm.data.vm.backendData.accountsList.find(account => {
@@ -15,10 +14,9 @@ export class EditGroupDialogHtmlRenderer {
     }
 
     isAddButtonDisplayed(): boolean {
-        return (
-            this.vm.group.title.trim().length > 0 &&
-            (this.vm.group.parentHead != null || this.vm.group.parentGroup != null) &&
-            !this.isAccountNameAlreadyExists()
-        );
+        return this.vm.group.title.trim().length > 0
+         && (this.vm.group.parentHead != null || this.vm.group.parentGroup != null)
+         && !this.isAccountNameAlreadyExists();
     }
+
 }

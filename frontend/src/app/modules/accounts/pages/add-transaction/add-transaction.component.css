@@ -1,12 +1,13 @@
+
 .image-column {
-    max-width: 0.525in;
-    height: 0.525in;
-    margin-right: 10px;
-    margin-top: 10px;
+	max-width: 0.525in; 
+	height: 0.525in; 
+	margin-right: 10px;
+	margin-top: 10px;
     cursor: pointer;
 }
 
-.error-icon {
+.error-icon{
     font-size: 15px;
     display: table-cell;
     padding-right: 5px;
@@ -14,7 +15,7 @@
     top: 3px;
 }
 
-.error-container {
+.error-container{
     color: rgb(243, 59, 59);
     display: table;
     font-weight: 550;
@@ -26,13 +27,13 @@
     font-size: 15px;
     cursor: pointer;
     border-radius: 4px;
-    border: 2px solid #ff9800;
-    color: #ff9800;
+    border:2px solid #ff9800;
+    color:#ff9800;
     background: #ffffff;
     padding: 8px 8px;
 }
 
-.custom-font {
+.custom-font{
     font-family: 'Roboto';
     font-weight: 500;
     font-size: 15px;
@@ -40,16 +41,16 @@
 
 .custom-button:hover {
     background: #ff9800;
-    color: white;
-    box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+    color:white;
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
 }
 
 @media only screen and (max-width: 992px) {
-    .error-container {
+    .error-container{
         margin-left: 15px;
     }
-
-    .toggleButton {
+    
+    .toggleButton{
         margin-left: 0;
     }
 }
