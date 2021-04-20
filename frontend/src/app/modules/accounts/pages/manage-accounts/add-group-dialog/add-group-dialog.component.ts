@@ -16,10 +16,10 @@ export class AddGroupDialogComponent implements OnInit {
   htmlRenderer: AddGroupDialogHtmlRenderer;
 
   isLoading: boolean = false;
-  constructor(@Inject(MAT_DIALOG_DATA) 
+  constructor(@Inject(MAT_DIALOG_DATA)
     public data: {
         [key: string]: any,
-     }) 
+     })
   { }
 
   ngOnInit() {
@@ -31,20 +31,20 @@ export class AddGroupDialogComponent implements OnInit {
   }
 
 
-  assignHeadFromGroup(){
-    if(this.parentGroup == null){
+  assignHeadFromGroup() {
+    if (this.parentGroup == null) {
       return ;
     }
     this.parentHead = this.data.vm.headsList.find(head => head.id == this.parentGroup.parentHead);
   }
 
-  addGroup(): any{
+  addGroup(): any {
     this.isLoading = true;
     let group_data = {
       parentSchool: this.data.vm.user.activeSchool.dbId,
       accountType: 'GROUP',
       title: this.groupName,
-    }
+    };
     Promise.all([
       this.data.vm.accountsService.createObject(this.data.vm.accountsService.accounts, group_data),
     ]).then(value => {
@@ -55,13 +55,13 @@ export class AddGroupDialogComponent implements OnInit {
         openingBalance: 0,
         parentGroup: null,
         parentHead : this.parentHead.id,
-      }
-      if(this.parentGroup != null){
+      };
+      if (this.parentGroup != null) {
         group_session_data.parentGroup = this.parentGroup.parentAccount;
       }
       Promise.all([
         this.data.vm.accountsService.createObject(this.data.vm.accountsService.account_session, group_session_data),
-      ]).then(data =>{
+      ]).then(data => {
         data[0]['type'] = 'GROUP';
         const customAccount = { ...data[0], type: 'GROUP', title: value[0].title };
         this.data.vm.groupsList.push(customAccount);
@@ -71,9 +71,9 @@ export class AddGroupDialogComponent implements OnInit {
         this.parentGroup = null;
         this.parentHead = null;
         this.isLoading = false;
-      })
+      });
 
-    })
+    });
 
   }
 

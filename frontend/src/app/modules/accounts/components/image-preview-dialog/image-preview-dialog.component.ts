@@ -37,10 +37,10 @@ const right = [
 })
 
 export class ImagePreviewDialogComponent {
-    
+
     constructor(
         public dialogRef: MatDialogRef<ImagePreviewDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) 
+        @Inject(MAT_DIALOG_DATA)
         public data: {
             [key: string]: any,
          })  {
@@ -56,31 +56,31 @@ export class ImagePreviewDialogComponent {
         'margin': 'auto',
         'width': '50%',
         'opacity': '1',
-    }
+    };
 
     imageStyleMobile = {
         'display': 'inline-block',
         'margin': 'auto',
         'width': '95vw',
         'max-width': '100%',
-    }
+    };
 
     onNoClick(): void {
         this.dialogRef.close();
     }
-    
-    removeImage(index: any):any{
-        if(this.data.images.length == 1){
+
+    removeImage(index: any): any {
+        if (this.data.images.length == 1) {
             this.dialogRef.close();
         }
-        if(index == this.data.images.length-1){
+        if (index == this.data.images.length - 1) {
             this.counter = this.counter - 1;
         }
         this.data.images.splice(index, 1);
         this.moveToIndex = this.counter;
-    }   
+    }
 
-    moveImage(){
+    moveImage() {
         let temp = this.data.images[this.counter];
         this.data.images.splice(this.counter, 1);
         this.data.images.splice(this.moveToIndex, 0, temp);
@@ -94,7 +94,7 @@ export class ImagePreviewDialogComponent {
         if (this.counter != this.data.images.length - 1) {
             this.counter++;
         }
-        else{
+        else {
             return ;
         }
         this.moveToIndex = this.counter;
@@ -106,7 +106,7 @@ export class ImagePreviewDialogComponent {
         if (this.counter > 0) {
             this.counter--;
         }
-        else{
+        else {
             return ;
         }
         this.moveToIndex = this.counter;
@@ -114,19 +114,19 @@ export class ImagePreviewDialogComponent {
         this.imageStyleMobile.width = '100%';
     }
 
-    showImageInGallery(str: any):any{
+    showImageInGallery(str: any): any {
         let tempStr: string;
-        if(str.imageUrl != undefined){
+        if (str.imageUrl != undefined) {
             tempStr = str.imageUrl;
         }
-        else{
+        else {
             tempStr = str.imageUrl;
         }
         // showPhoto(tempStr)
     }
 
-    changeImageSize(event: any){
+    changeImageSize(event: any) {
         this.imageStyle.width = event.value.toString() + '%';
     }
-    
+
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EditGroupDialogHtmlRenderer } from './edit-group-dialog.html.renderer';
 
 @Component({
@@ -11,15 +11,14 @@ export class EditGroupDialogComponent implements OnInit {
 
   group: any;
 
-    htmlRenderer: EditGroupDialogHtmlRenderer;
+  htmlRenderer: EditGroupDialogHtmlRenderer;
   isLoading: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<EditGroupDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) 
+    @Inject(MAT_DIALOG_DATA)
     public data: {
       [key: string]: any,
-     }) 
-  { }
+    }) { }
 
   ngOnInit() {
     this.group = this.data.group;
@@ -31,11 +30,11 @@ export class EditGroupDialogComponent implements OnInit {
     return this.data.vm.headsList.find(head => head.id == this.group.parentHead);
   }
 
-  assignGroup(group: any){
-    if(group == null){
+  assignGroup(group: any) {
+    if (group == null) {
       this.group.parentGroup = null;
     }
-    else{
+    else {
       this.group.parentGroup = group.parentAccount;
       this.group.parentHead = group.parentHead;
     }
@@ -51,7 +50,7 @@ export class EditGroupDialogComponent implements OnInit {
     if (root.id == this.group.id)
       return root;
     let group = null;
-    root.childs.every(g => { 
+    root.childs.every(g => {
       group = this.findGroupHierarchy(g);
       if (group) {
         return false;
@@ -74,7 +73,7 @@ export class EditGroupDialogComponent implements OnInit {
     return allchildIds;
   }
 
-  getAllChildsIds(): Array<number>{
+  getAllChildsIds(): Array<number> {
     const originalGroup = this.data.vm.groupsList.find(g => g.id == this.group.id);
     const headTitle = this.data.vm.headsList.find(head => head.id == originalGroup.parentHead).title;
     let groupStructure;
@@ -89,18 +88,18 @@ export class EditGroupDialogComponent implements OnInit {
   }
 
   getFilteredGroupList(): Array<any> {
-    let filteredGroup =  this.data.vm.groupsList.filter(group => group.id != this.group.id);
+    let filteredGroup = this.data.vm.groupsList.filter(group => group.id != this.group.id);
     let allChildIds = this.getAllChildsIds();
     return filteredGroup.filter(g => allChildIds.find(c => c == g.id) == undefined);
   }
 
 
-  editGroup(){
+  editGroup() {
     this.isLoading = true;
     let group_update_data = {
       id: this.group.parentAccount,
       title: this.group.title,
-    }
+    };
     const accuntServiceList = [];
 
     const allChilds = this.getAllChildsIds();
@@ -110,10 +109,13 @@ export class EditGroupDialogComponent implements OnInit {
         accountSesion = this.data.vm.accountsList.find(a => a.id == accountSessionId);
       if (accountSesion.parentHead != this.group.parentHead) {
         accuntServiceList.push(
-          this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, {id: accountSesion.id, parentHead: this.group.parentHead}),
-        )
+          this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, {
+            id: accountSesion.id,
+            parentHead: this.group.parentHead
+          }),
+        );
       }
-    })
+    });
 
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.group), // 0
@@ -122,7 +124,7 @@ export class EditGroupDialogComponent implements OnInit {
     ]).then(val => {
       const backendAccountIndex = this.data.vm.backendData.accountsList.findIndex(acc => acc.id == val[1].id);
       this.data.vm.backendData.accountsList[backendAccountIndex] = { ...this.data.vm.backendData.accountsList[backendAccountIndex], ...val[1] };
-      
+
       const indexOfCustomGroupSession = this.data.vm.groupsList.findIndex(groupSession => groupSession.id == val[0].id);
       this.data.vm.groupsList[indexOfCustomGroupSession] = { ...this.data.vm.groupsList[indexOfCustomGroupSession], ...val[0], title: val[1].title };
       val[2].forEach(accountSession => {
@@ -138,21 +140,21 @@ export class EditGroupDialogComponent implements OnInit {
       this.data.vm.serviceAdapter.initialiseDisplayData();
       alert('Group Updated Successfully');
       this.dialogRef.close();
-    })
+    });
   }
 
-  deleteGroup(){
-    if(!confirm('Are you sure you want to delete this group')){
-      return ;
+  deleteGroup() {
+    if (!confirm('Are you sure you want to delete this group')) {
+      return;
     }
     this.isLoading = true;
     Promise.all([
       this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.group),
-    ]).then(val =>{
+    ]).then(val => {
       // this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != val[0].id});
 
-      for(let i=0;i<this.data.vm.groupsList.length ;i++){
-        if(this.data.vm.groupsList[i].id == this.group.id){
+      for (let i = 0; i < this.data.vm.groupsList.length; i++) {
+        if (this.data.vm.groupsList[i].id == this.group.id) {
           this.data.vm.groupsList.splice(i, 1);
           break;
         }
@@ -160,18 +162,18 @@ export class EditGroupDialogComponent implements OnInit {
 
       let account_session_data = {
         parentAccount: this.group.parentAccount,
-      }
+      };
       Promise.all([
         this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.account_session, account_session_data),
-      ]).then(data =>{
-        if(data[0].length == 0){
+      ]).then(data => {
+        if (data[0].length == 0) {
           let account_data = {
             id: this.group.parentAccount,
-          }
+          };
           Promise.all([
             this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.accounts, account_data),
           ]).then(value => {
-            this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != value[0]});
+            this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => { return acc.id != value[0]; });
 
             this.data.vm.serviceAdapter.initialiseDisplayData();
             alert('Group Deleted Successfully');
@@ -179,18 +181,18 @@ export class EditGroupDialogComponent implements OnInit {
 
           });
         }
-        else{
+        else {
           this.data.vm.serviceAdapter.initialiseDisplayData();
           alert('Group Deleted Successfully');
           this.dialogRef.close();
         }
-      })
+      });
 
-    })
+    });
   }
 
-  isGroupDeletable(): boolean{
-    if(this.group.childs.length == 0){
+  isGroupDeletable(): boolean {
+    if (this.group.childs.length == 0) {
       return true;
     }
     return false;

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import {MatDialog} from '@angular/material';
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { SchoolService } from './../../../../services/modules/school/school.service'
-import { ViewBalanceServiceAdapter } from './view-balance.service.adapter'
-import { EmployeeService } from './../../../../services/modules/employee/employee.service'
-import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component'
-import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { SchoolService } from './../../../../services/modules/school/school.service';
+import { ViewBalanceServiceAdapter } from './view-balance.service.adapter';
+import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_LEDGER } from './../../../../print/print-routes.constants';
 import { HEADS_LIST } from '@services/modules/accounts/models/head';
@@ -108,7 +108,7 @@ export class ViewBalanceComponent implements OnInit {
           displayName: 'Date',
           value: true,
         },
-        accounts:{
+        accounts: {
             displayName: 'Account',
             value: true,
         },
@@ -140,22 +140,22 @@ export class ViewBalanceComponent implements OnInit {
           displayName: 'Bills',
           value: false,
         }
-    }
+    };
     filterColumnsList: any;
     transactionsList: any;
     employeeList: any;
-    
+
   lockAccounts: any;
-  
+
   listView: boolean = true;
-      
-    constructor( 
+
+    constructor(
       public dialog: MatDialog,
       public accountsService: AccountsService,
       public schoolService: SchoolService,
       public employeeService: EmployeeService,
       public printService: PrintService,
-    ){ }
+    ) { }
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -167,7 +167,7 @@ export class ViewBalanceComponent implements OnInit {
         this.displayWholeList = true;
         this.displayLedger = false;
     }
-  
+
     getHeadName(id: number) {
       return this.headsList.find(h => h.id == id).title;
   }
@@ -180,17 +180,17 @@ export class ViewBalanceComponent implements OnInit {
             return null;
     }
 
-    handleSearch(event: any){
+    handleSearch(event: any) {
         let str = event.target.value.trim();
-        if(str.length == 0){
+        if (str.length == 0) {
             this.searchList = [];
         }
-        else{
+        else {
             this.searchList = this.getAccountListFromString(str);
         }
     }
 
-    getAccountListFromString(str: any){
+    getAccountListFromString(str: any) {
       let temp = [];
       this.accountsList.forEach(account => {
         if (account.title.includes(str)) {
@@ -200,47 +200,47 @@ export class ViewBalanceComponent implements OnInit {
         return temp;
     }
 
-    displayWholeGroup(group: any){
+    displayWholeGroup(group: any) {
         this.displayWholeList = false;
         this.specificGroup = group;
     }
 
-    canUserUpdate(){
+    canUserUpdate() {
         const module = this.user.activeSchool.moduleList.find(module => module.title === 'Accounts');
         return module.taskList.some(task => task.title === 'Update Transaction');
     }
 
-    displayLedgerAccount(element){
+    displayLedgerAccount(element) {
         this.isLedgerLoading = true;
-        if(element.type == 'GROUP'){
+        if (element.type == 'GROUP') {
             return ;
         }
         this.displayLedger  = true;
         this.ledgerAccount = element;
         this.serviceAdapter.loadTransactions();
-        
+
     }
 
-    popoulateColumnFilter(): any{
+    popoulateColumnFilter(): any {
         let columnFilter = [];
-        for(let filter in this.columnFilter){
-          if(this.columnFilter[filter].displayName != undefined){
+        for (let filter in this.columnFilter) {
+          if (this.columnFilter[filter].displayName != undefined) {
             columnFilter.push(this.columnFilter[filter]);
           }
         }
         this.filterColumnsList = columnFilter;
     }
 
-    getDisplayDateFormat(str :any){
+    getDisplayDateFormat(str : any) {
         // return str;
         let d = new Date(str);
         let month = '' + (d.getMonth() + 1);
         let day = '' + d.getDate();
         let year = d.getFullYear();
-  
+
         if (month.length < 2) month = '0' + month;
         if (day.length < 2) day = '0' + day;
-  
+
         return [day, month, year].join('/');
     }
 
@@ -252,7 +252,7 @@ export class ViewBalanceComponent implements OnInit {
             width: '100%',
             data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
         });
-    
+
         dialogRef.afterClosed().subscribe(result => {
         });
     }
@@ -263,7 +263,7 @@ export class ViewBalanceComponent implements OnInit {
         });
     }
 
-    printTransactionsList(){
+    printTransactionsList() {
         let value = {
             transactionsList: this.transactionsList,
             account: this.ledgerAccount,
@@ -272,18 +272,18 @@ export class ViewBalanceComponent implements OnInit {
         this.printService.navigateToPrintRoute(PRINT_LEDGER, {user: this.user, value});
     }
 
-    isAccountLocked(){
-        if (this.lockAccounts){
+    isAccountLocked() {
+        if (this.lockAccounts) {
             return true;
         }
-        else{
+        else {
             return false;
         }
     }
-  
+
   getHeadBalance(headTitle): number {
     const headChilds: Array<customGroupStructure> = Object.values(this.hierarchyStructure[headTitle]);
-    return headChilds.reduce((accumulator: number, nextEntry: customGroupStructure):number => accumulator + nextEntry.currentBalance, 0);
+    return headChilds.reduce((accumulator: number, nextEntry: customGroupStructure): number => accumulator + nextEntry.currentBalance, 0);
   }
-  
+
 }

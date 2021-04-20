@@ -7,6 +7,6 @@ export class ManageAccountsBackendData {
     vm: ManageAccountsComponent;
     constructor() {}
 
-    initialize(vm: ManageAccountsComponent) { this.vm = vm;}
+    initialize(vm: ManageAccountsComponent) { this.vm = vm; }
 
 }

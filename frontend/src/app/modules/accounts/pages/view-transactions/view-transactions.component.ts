@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { EmployeeService } from './../../../../services/modules/employee/employee.service'
-import { ViewTransactionsServiceAdapter } from './view-transactions.service.adapter'
-import { CommonFunctions } from './../../../../classes/common-functions'
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { ViewTransactionsServiceAdapter } from './view-transactions.service.adapter';
+import { CommonFunctions } from './../../../../classes/common-functions';
 import {MatDialog} from '@angular/material';
-import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component'
+import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { PrintService } from '../../../../print/print-service';
 import {ExcelService} from '../../../../excel/excel-service';
-import { SchoolService } from './../../../../services/modules/school/school.service'
-import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component'
-import { HEADS_LIST } from './../../classes/constants'
+import { SchoolService } from './../../../../services/modules/school/school.service';
+import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
+import { HEADS_LIST } from './../../classes/constants';
 
 
 
@@ -81,7 +81,7 @@ export class ViewTransactionsComponent implements OnInit {
         displayName: 'Voucher Number',
         value: true,
       },
-      
+
       date: {
         displayName: 'Date',
         value: true,
@@ -114,8 +114,8 @@ export class ViewTransactionsComponent implements OnInit {
         displayName: 'Bills',
         value: false,
       }
-    }
-    
+    };
+
 
     transactionsList: any;
     employeeList = [];
@@ -133,15 +133,15 @@ export class ViewTransactionsComponent implements OnInit {
     maximumPermittedAmount: any;
 
   lockAccounts: any;
-  
-  constructor( 
+
+  constructor(
     public accountsService: AccountsService,
     public employeeService: EmployeeService,
     public dialog: MatDialog,
     public printService: PrintService,
     public excelService: ExcelService,
     public schoolService: SchoolService,
-  ){ }
+  ) { }
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -153,7 +153,7 @@ export class ViewTransactionsComponent implements OnInit {
       this.showSelectedOnly = false;
     }
 
-    initilizeDate(): void{
+    initilizeDate(): void {
       const today = new Date();
       const sessionStartDate = new Date(this.minimumDate);
       const sessionEndDate = new Date(this.maximumDate);
@@ -167,18 +167,18 @@ export class ViewTransactionsComponent implements OnInit {
       }
     }
 
-  
-    popoulateColumnFilter(): any{
+
+    popoulateColumnFilter(): any {
       let columnFilter = [];
-      for(let filter in this.columnFilter){
-        if(this.columnFilter[filter].displayName != undefined){
+      for (let filter in this.columnFilter) {
+        if (this.columnFilter[filter].displayName != undefined) {
           columnFilter.push(this.columnFilter[filter]);
         }
       }
       this.filterColumnsList = columnFilter;
     }
 
-    getFilteredTransactionList(): any{
+    getFilteredTransactionList(): any {
       let tempList = [];
       tempList = this.applyAccountFilter(this.transactionsList);
       tempList = this.applyEmployeeFilter(tempList);
@@ -187,108 +187,108 @@ export class ViewTransactionsComponent implements OnInit {
       return tempList;
     }
 
-    applyAccountFilter(list): any{
+    applyAccountFilter(list): any {
       let tempList = [];
-      if(!this.showSelectedOnly){
-        list.forEach(transaction =>{
-          if(this.doesTransactionContainSelectedAccount(transaction)){
+      if (!this.showSelectedOnly) {
+        list.forEach(transaction => {
+          if (this.doesTransactionContainSelectedAccount(transaction)) {
             tempList.push(transaction);
           }
-        })
+        });
       }
-      else{
-        list.forEach(transaction =>{
+      else {
+        list.forEach(transaction => {
           let containAll = true;
-          this.filterAccountsList.forEach(account =>{
-            if(account.selected){
-              if(transaction.debitAccounts.find(acccount => acccount.accountDbId == account.accountDbId) == undefined && 
-              transaction.creditAccounts.find(acccount => acccount.accountDbId == account.accountDbId) == undefined){
+          this.filterAccountsList.forEach(account => {
+            if (account.selected) {
+              if (transaction.debitAccounts.find(acccount => acccount.accountDbId == account.accountDbId) == undefined &&
+              transaction.creditAccounts.find(acccount => acccount.accountDbId == account.accountDbId) == undefined) {
                 containAll = false;
               }
             }
-          })
-          if(containAll){
+          });
+          if (containAll) {
             tempList.push(transaction);
           }
-        })
-          
+        });
+
       }
       return tempList;
     }
 
-    applyEmployeeFilter(list): any{
+    applyEmployeeFilter(list): any {
       let tempList = [];
-      list.forEach(trans =>{
-        if(this.filterEmployeeList.find(employee => trans.parentEmployee == employee.employeeId).selected){
+      list.forEach(trans => {
+        if (this.filterEmployeeList.find(employee => trans.parentEmployee == employee.employeeId).selected) {
           tempList.push(trans);
         }
-      })
+      });
       return tempList;
     }
 
-    applyHeadFilter(list: any){
+    applyHeadFilter(list: any) {
       let tempList = [];
-      list.forEach(trans =>{
+      list.forEach(trans => {
         let containHead = false;
-        trans.debitAccounts.forEach(account =>{
-          if(this.filterHeadsList.find(head => head.headDbId == account.parentHead).selected){
+        trans.debitAccounts.forEach(account => {
+          if (this.filterHeadsList.find(head => head.headDbId == account.parentHead).selected) {
             containHead = true;
           }
-        })
-        trans.creditAccounts.forEach(account =>{
-          if(this.filterHeadsList.find(head => head.headDbId == account.parentHead).selected){
+        });
+        trans.creditAccounts.forEach(account => {
+          if (this.filterHeadsList.find(head => head.headDbId == account.parentHead).selected) {
             containHead = true;
           }
-        })
-        if(containHead){
+        });
+        if (containHead) {
           tempList.push(trans);
         }
-      })
+      });
       return tempList;
     }
 
-    applyGroupFilter(list: any){
+    applyGroupFilter(list: any) {
       let tempList = [];
-      list.forEach(trans =>{
+      list.forEach(trans => {
         let containGroup = false;
-        trans.debitAccounts.forEach(account =>{
-          if(account.parentGroup == null && this.filterGroupsList[0].selected){
+        trans.debitAccounts.forEach(account => {
+          if (account.parentGroup == null && this.filterGroupsList[0].selected) {
             containGroup = true;
           }
-          else if(account.parentGroup != null && this.filterGroupsList.find(group => group.groupDbId == account.parentGroup).selected){
+          else if (account.parentGroup != null && this.filterGroupsList.find(group => group.groupDbId == account.parentGroup).selected) {
             containGroup = true;
           }
-        })
-        trans.creditAccounts.forEach(account =>{
-          if(account.parentGroup == null && this.filterGroupsList[0].selected){
+        });
+        trans.creditAccounts.forEach(account => {
+          if (account.parentGroup == null && this.filterGroupsList[0].selected) {
             containGroup = true;
           }
-          else if(account.parentGroup != null && this.filterGroupsList.find(group => group.groupDbId == account.parentGroup).selected){
+          else if (account.parentGroup != null && this.filterGroupsList.find(group => group.groupDbId == account.parentGroup).selected) {
             containGroup = true;
           }
-        })
-        if(containGroup){
+        });
+        if (containGroup) {
           tempList.push(trans);
         }
-      })
+      });
       return tempList;
     }
 
-    doesTransactionContainSelectedAccount(transaction): boolean{
-      for(let i=0;i<transaction.debitAccounts.length; i++){
-        if(this.filterAccountsList.find(account => account.accountDbId == transaction.debitAccounts[i].accountDbId).selected){
+    doesTransactionContainSelectedAccount(transaction): boolean {
+      for (let i = 0; i < transaction.debitAccounts.length; i++) {
+        if (this.filterAccountsList.find(account => account.accountDbId == transaction.debitAccounts[i].accountDbId).selected) {
           return true;
         }
       }
-      for(let i=0;i<transaction.creditAccounts.length; i++){
-        if(this.filterAccountsList.find(account => account.accountDbId == transaction.creditAccounts[i].accountDbId).selected){
+      for (let i = 0; i < transaction.creditAccounts.length; i++) {
+        if (this.filterAccountsList.find(account => account.accountDbId == transaction.creditAccounts[i].accountDbId).selected) {
           return true;
         }
       }
       return false;
     }
 
-    func(a){
+    func(a) {
       console.log(a);
     }
 
@@ -300,12 +300,12 @@ export class ViewTransactionsComponent implements OnInit {
           width: '100%',
           data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
       });
-  
+
       dialogRef.afterClosed().subscribe(result => {
       });
     }
 
-    getDisplayDateFormat(str :any){
+    getDisplayDateFormat(str : any) {
       // return str;
       let d = new Date(str);
       let month = '' + (d.getMonth() + 1);
@@ -318,7 +318,7 @@ export class ViewTransactionsComponent implements OnInit {
       return [day, month, year].join('/');
     }
 
-    canUserUpdate(){
+    canUserUpdate() {
       const module = this.user.activeSchool.moduleList.find(module => module.title === 'Accounts');
       return module.taskList.some(task => task.title === 'Update Transaction');
     }
@@ -328,24 +328,24 @@ export class ViewTransactionsComponent implements OnInit {
           data: {transaction: JSON.parse(JSON.stringify(transaction)), vm: this, originalTransaction: transaction}
       });
     }
-    
-    selectAll(list:any,value:any){
+
+    selectAll(list: any, value: any) {
         list.forEach(item => {
             item[value] = true;
         });
     }
-    
-    deSelectAll(list:any,value:any){
+
+    deSelectAll(list: any, value: any) {
         list.forEach(item => {
             item[value] = false;
         });
     }
 
-    isAccountLocked(){
-        if (this.lockAccounts){
+    isAccountLocked() {
+        if (this.lockAccounts) {
             return true;
         }
-        else{
+        else {
             return false;
         }
     }

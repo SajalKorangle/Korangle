@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 
 import { TransferBalanceComponent } from "./transfer-balance.component";
-import { TransferBalanceRoutingModule } from "./transfer-balance.routing"
+import { TransferBalanceRoutingModule } from "./transfer-balance.routing";
 import {ComponentsModule} from "../../../../components/components.module";
-import { AccountsComponentsModule } from './../../components/component.module'
+import { AccountsComponentsModule } from './../../components/component.module';
 
 @NgModule({
     declarations: [
@@ -19,4 +19,4 @@ import { AccountsComponentsModule } from './../../components/component.module'
     providers: [],
     bootstrap: [TransferBalanceComponent]
 })
-export class TransferBalanceModule { } 
+export class TransferBalanceModule { }

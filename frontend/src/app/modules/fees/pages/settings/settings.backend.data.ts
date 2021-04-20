@@ -4,8 +4,8 @@ import { FeeSettings, AccountingSettings } from '@services/modules/fees/models/f
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 
 export class SettingsBackendData {
-    vm: SettingsComponent
-        
+    vm: SettingsComponent;
+
     feeSettings: FeeSettings;
     accountsList: Array<Account>;
     accountSessionList: Array<AccountSession>;
@@ -14,7 +14,7 @@ export class SettingsBackendData {
         this.vm = vm;
     }
 
-    applyDefaultSettings(): void{
+    applyDefaultSettings(): void {
         this.feeSettings = new FeeSettings();
         this.feeSettings.parentSchool = this.vm.user.activeSchool.dbId;
         this.feeSettings.parentSession = this.vm.activeSession.id;
@@ -22,14 +22,16 @@ export class SettingsBackendData {
         this.feeSettings.accountingSettings = null; // null value signifies accounting is disabled
     }
 
-    initilizeAccouting(): void{
+    initilizeAccouting(): void {
         this.feeSettings.accountingSettings = new AccountingSettings();
     }
 
-    filterInvalidAccounts(): void{
+    filterInvalidAccounts(): void {
         if (this.feeSettings.accountingSettings) {
             this.vm.getPaymentModeList().forEach(paymentMode => {
-                this.feeSettings.accountingSettings.toAccountsStructure[paymentMode] = this.feeSettings.accountingSettings.toAccountsStructure[paymentMode].filter(accountSessionId => this.accountSessionList.find(accountSession => accountSession.id == accountSessionId));
+                this.feeSettings.accountingSettings.toAccountsStructure[paymentMode] =
+                    this.feeSettings.accountingSettings.toAccountsStructure[paymentMode]
+                        .filter(accountSessionId => this.accountSessionList.find(accountSession => accountSession.id == accountSessionId));
             });
         }
     }

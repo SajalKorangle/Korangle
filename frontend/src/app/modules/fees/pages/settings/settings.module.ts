@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { MatChipsModule } from '@angular/material/chips'
+import { MatChipsModule } from '@angular/material/chips';
 
-import { SettingsRoutingModule,} from './settings.routing';
+import { SettingsRoutingModule, } from './settings.routing';
 import {ComponentsModule} from "../../../../components/components.module";
 import { SettingsComponent } from "./settings.component";
 

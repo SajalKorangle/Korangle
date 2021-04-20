@@ -3,13 +3,13 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {AccountSearchServiceAdapter} from "./account-search.service.adapter";
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 
 @Component({
     selector: 'account-search',
     templateUrl: './account-search.component.html',
     styleUrls: ['./account-search.component.css'],
-    providers: [ 
+    providers: [
         AccountsService,
     ],
 })
@@ -17,7 +17,7 @@ import { AccountsService } from './../../../../services/modules/accounts/account
 export class AccountSearchComponent implements OnInit {
 
     @Input() user;
-    
+
     @Input() includeGroup: any;
     @Output() onDataLoaded = new EventEmitter<any>();
 
@@ -42,7 +42,7 @@ export class AccountSearchComponent implements OnInit {
         this.serviceAdapter.initializeData();
 
         this.filteredAccountList = this.accountsForm.valueChanges.pipe(
-            map(value => typeof value === 'string' ? value: (value as any).title),
+            map(value => typeof value === 'string' ? value : (value as any).title),
             map(title => this.filterAccountList(title.toString()))
         );
     }
@@ -56,7 +56,7 @@ export class AccountSearchComponent implements OnInit {
         });
     }
 
-    handleAccountSelection(event){
+    handleAccountSelection(event) {
         this.onSelection.emit(event);
     }
 
@@ -70,6 +70,6 @@ export class AccountSearchComponent implements OnInit {
         }
         return '';
     }
-    
+
 
 }

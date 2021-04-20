@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { SchoolService } from './../../../../services/modules/school/school.service'
-import { EmployeeService } from './../../../../services/modules/employee/employee.service'
-import { TransferBalanceServiceAdapter } from './transfer-balance.service.adapter'
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { SchoolService } from './../../../../services/modules/school/school.service';
+import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { TransferBalanceServiceAdapter } from './transfer-balance.service.adapter';
 import { HEADS_LIST} from '@services/modules/accounts/models/head';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 import { Account } from '@services/modules/accounts/models/account';
@@ -61,13 +61,13 @@ export class TransferBalanceComponent implements OnInit{
 
     selectedSession: any;
 
-    splitView:false;
-        
-    constructor( 
+    splitView: false;
+
+    constructor(
         public accountsService: AccountsService,
         public schoolService: SchoolService,
         public employeeService: EmployeeService,
-    ){ }
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -76,38 +76,38 @@ export class TransferBalanceComponent implements OnInit{
         this.serviceAdapter.initializeData();
     }
 
-    changeAllAccountsStatusFromHead(parentHeadId, value){
-        for(let i=0;i<this.currentSessionAccountSessionList.length; i++){
-            if(this.currentSessionAccountSessionList[i].parentHead == parentHeadId){
+    changeAllAccountsStatusFromHead(parentHeadId, value) {
+        for (let i = 0; i < this.currentSessionAccountSessionList.length; i++) {
+            if (this.currentSessionAccountSessionList[i].parentHead == parentHeadId) {
                 this.currentSessionAccountSessionList[i].selected = value;
             }
         }
     }
 
-    selectAllAccounts(){
+    selectAllAccounts() {
         this.changeAllAccountsStatusFromHead(1, true);
-        this.changeAllAccountsStatusFromHead(2, true)
-        this.changeAllAccountsStatusFromHead(3, true)
-        this.changeAllAccountsStatusFromHead(4, true)
+        this.changeAllAccountsStatusFromHead(2, true);
+        this.changeAllAccountsStatusFromHead(3, true);
+        this.changeAllAccountsStatusFromHead(4, true);
     }
 
-    deSelectAllAccounts(){
+    deSelectAllAccounts() {
         this.changeAllAccountsStatusFromHead(1, false);
         this.changeAllAccountsStatusFromHead(2, false);
         this.changeAllAccountsStatusFromHead(3, false);
         this.changeAllAccountsStatusFromHead(4, false);
     }
 
-    isAnyOneAccountSelected(parentHead){
-        for(let i=0;i<this.currentSessionAccountSessionList.length; i++){
-            if(this.currentSessionAccountSessionList[i].selected && this.currentSessionAccountSessionList[i].parentHead == parentHead.id){
+    isAnyOneAccountSelected(parentHead) {
+        for (let i = 0; i < this.currentSessionAccountSessionList.length; i++) {
+            if (this.currentSessionAccountSessionList[i].selected && this.currentSessionAccountSessionList[i].parentHead == parentHead.id) {
                 return true;
             }
         }
         return false;
     }
 
-    changeElementStatus(element, value){
+    changeElementStatus(element, value) {
         const account = this.currentSessionAccountSessionList.find(account => account.parentAccount == element.parentAccount);
         account.selected = value;
     }
@@ -121,17 +121,17 @@ export class TransferBalanceComponent implements OnInit{
         }
     }
 
-    isElementSelected(element){
+    isElementSelected(element) {
         return this.currentSessionAccountSessionList.find(account => account.parentAccount == element.parentAccount).selected;
     }
 
-    isElementDisabled(element){
+    isElementDisabled(element) {
         return this.currentSessionAccountSessionList.find(account => account.parentAccount == element.parentAccount).disabled;
     }
 
-    selectParentGroups(element, value){ // check here
-        if(value == true){
-            while(element.parentGroup != null){
+    selectParentGroups(element, value) { // check here
+        if (value == true) {
+            while (element.parentGroup != null) {
                 let account = this.currentSessionAccountSessionList.find(account => account.parentAccount == element.parentGroup);
                 account.selected = value;
                 element =  account;
@@ -139,64 +139,64 @@ export class TransferBalanceComponent implements OnInit{
         }
     }
 
-    changeChildStatus(element, value){
+    changeChildStatus(element, value) {
         this.currentSessionAccountSessionList.forEach(ele => {
-            if(ele.parentGroup == element.parentAccount){
+            if (ele.parentGroup == element.parentAccount) {
                 ele.selected = value;
-                if(ele.type == 'GROUP'){
+                if (ele.type == 'GROUP') {
                     this.changeChildStatus(ele, value);
                 }
             }
-        })
+        });
     }
 
-    countSelectedGroups(){
+    countSelectedGroups() {
         let count = 0;
-        this.currentSessionAccountSessionList.forEach(account=>{
-            if (account.type=="GROUP" && account.selected ==true){
-                count=count+1
+        this.currentSessionAccountSessionList.forEach(account => {
+            if (account.type == "GROUP" && account.selected == true) {
+                count = count + 1;
             }
-        })
+        });
         return count;
     }
 
-    countTotalGroups(){
+    countTotalGroups() {
         let count = 0;
-        this.currentSessionAccountSessionList.forEach(account=>{
-            if (account.type=="GROUP"){
-                count=count+1
+        this.currentSessionAccountSessionList.forEach(account => {
+            if (account.type == "GROUP") {
+                count = count + 1;
             }
-        })
+        });
         return count;
     }
 
-    countSelectedAccounts(){
+    countSelectedAccounts() {
         let count = 0;
-        this.currentSessionAccountSessionList.forEach(account=>{
-            if (account.type=="ACCOUNT" && account.selected ==true){
-                count=count+1
+        this.currentSessionAccountSessionList.forEach(account => {
+            if (account.type == "ACCOUNT" && account.selected == true) {
+                count = count + 1;
             }
-        })
+        });
         return count;
     }
 
-    countTotalAccounts(){
+    countTotalAccounts() {
         let count = 0;
-        this.currentSessionAccountSessionList.forEach(account=>{
-            if (account.type=="ACCOUNT"){
-                count=count+1
+        this.currentSessionAccountSessionList.forEach(account => {
+            if (account.type == "ACCOUNT") {
+                count = count + 1;
             }
-        })
+        });
         return count;
     }
-   
+
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
     }
-};
+}
 
 
 interface customAccount2 extends customAccount{
-    selected?: boolean,
-    disabled?: boolean,
-};
+    selected?: boolean;
+    disabled?: boolean;
+}

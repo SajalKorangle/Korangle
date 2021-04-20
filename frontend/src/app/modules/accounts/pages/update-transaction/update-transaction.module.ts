@@ -4,7 +4,7 @@ import { UpdateTransactionComponent } from "./update-transaction.component";
 
 import {UpdateTransactionRoutingModule } from './update-transaction.routing';
 import {ComponentsModule} from "../../../../components/components.module";
-import { AccountsComponentsModule  } from './../../components/component.module'
+import { AccountsComponentsModule  } from './../../components/component.module';
 
 
 @NgModule({
@@ -22,6 +22,6 @@ import { AccountsComponentsModule  } from './../../components/component.module'
     ],
     providers: [],
     bootstrap: [UpdateTransactionComponent],
-    
+
 })
 export class UpdateTransactionModule { }

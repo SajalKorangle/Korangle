@@ -1,4 +1,4 @@
-import { SettingsComponent } from './settings.component'
+import { SettingsComponent } from './settings.component';
 
 export class SettingsServiceAdapter {
 
@@ -21,7 +21,7 @@ export class SettingsServiceAdapter {
 
         const employee_amount_permission_request = {
             parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
-        }
+        };
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
@@ -39,68 +39,68 @@ export class SettingsServiceAdapter {
         });
     }
 
-    changeAmountRestriction(): any{
+    changeAmountRestriction(): any {
         this.vm.isLoading = true;
         if (this.vm.selectedEmployeeAccountPermission) {
             let tempData = {
                 id: this.vm.selectedEmployeeAccountPermission.id,
                 restrictedAmount: this.vm.selectedEmployeeAmount,
-            }
+            };
             Promise.all([
                 this.vm.accountsService.partiallyUpdateObject(this.vm.accountsService.employee_amount_permission, tempData),
             ]).then(value => {
                 this.vm.selectedEmployeeAccountPermission.restrictedAmount = value[0].restrictedAmount;
                 this.vm.isLoading = false;
-            })
+            });
         }
         else {
             let tempData = {
                 parentEmployee: this.vm.selectedEmployee.id,
                 restrictedAmount: this.vm.selectedEmployeeAmount,
-            }
+            };
             Promise.all([
                 this.vm.accountsService.createObject(this.vm.accountsService.employee_amount_permission, tempData),
             ]).then(value => {
                 this.vm.backendData.employeeAmountPermissionList.push(value[0]);
                 this.vm.selectedEmployeeAccountPermission = value[0];
                 this.vm.isLoading = false;
-            })
+            });
         }
 
     }
 
-    regenerateVoucherNumber(): any{
+    regenerateVoucherNumber(): any {
         this.vm.isLoading = true;
         let voucherNumber = 1;
         let transaction_data = {
-            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,            
+            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
             'transactionDate__gte': this.vm.currentSession.startDate,
             'transactionDate__lte': this.vm.currentSession.endDate,
             'korangle__order': 'id',
             'fields__korangle': 'id,voucherNumber'
-        }
+        };
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
-        ]).then(value =>{
+        ]).then(value => {
             let toUpdateList = [];
-            value[0].forEach(element =>{
+            value[0].forEach(element => {
                 let tempData = {
                     'id': element.id,
                     'voucherNumber': voucherNumber,
-                }
-                
-                if(element.voucherNumber != voucherNumber){ // if voucherNumber is aleady same (edundent update handeled)
+                };
+
+                if (element.voucherNumber != voucherNumber) { // if voucherNumber is aleady same (edundent update handeled)
                     toUpdateList.push(tempData);
                 }
                 voucherNumber = voucherNumber + 1;
-            })
+            });
             Promise.all([
                 this.vm.accountsService.partiallyUpdateObjectList(this.vm.accountsService.transaction, toUpdateList),
-            ]).then(val =>{
+            ]).then(val => {
                 this.vm.isLoading = false;
                 alert('Voucher Number Regenerated Successfully');
-            })
-        })
+            });
+        });
     }
 
     lockAccounts(): void {
@@ -122,7 +122,7 @@ export class SettingsServiceAdapter {
 
         }, error => {
             this.vm.isLoading = false;
-        })
+        });
 
     }
 
@@ -143,8 +143,8 @@ export class SettingsServiceAdapter {
         });
 
     }
-    
-    
-    
+
+
+
 
 }

@@ -17,10 +17,10 @@ export class EditAccountDialogComponent implements OnInit {
   isLoading: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<EditAccountDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) 
+    @Inject(MAT_DIALOG_DATA)
     public data: {
       [key: string]: any,
-     }) 
+     })
   { }
 
   ngOnInit() {
@@ -34,11 +34,11 @@ export class EditAccountDialogComponent implements OnInit {
     return this.data.vm.headsList.find(head => head.id == this.account.parentHead);
   }
 
-  assignGroup(group: any){
-    if(group == null){
+  assignGroup(group: any) {
+    if (group == null) {
       this.account.parentGroup = null;
     }
-    else{
+    else {
       this.account.parentGroup = group.parentAccount;
       this.account.parentHead = group.parentHead;
     }
@@ -54,7 +54,7 @@ export class EditAccountDialogComponent implements OnInit {
     let account_session_update_data = {
       id: this.account.parentAccount,
       title: this.account.title,
-    }
+    };
     Promise.all([
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.account_session, this.account), // 0
       this.data.vm.accountsService.partiallyUpdateObject(this.data.vm.accountsService.accounts, account_session_update_data), // 1
@@ -69,48 +69,48 @@ export class EditAccountDialogComponent implements OnInit {
       alert('Account Updated Successfully');
       // this.isLoading = false;
       this.dialogRef.close();
-    })
+    });
   }
 
-  isAccountDeletable(){
+  isAccountDeletable() {
     let data = {
       parentAccount: this.account.parentAccount,
       parentTransaction__transactionDate__lte: this.data.vm.maximumDate,
       parentTransaction__transactionDate__gte: this.data.vm.minimumDate,
       korangle__count: '0,1',
-    }
+    };
 
     const approval_account_details_request = {
       parentAccount: this.account.parentAccount,
       parentApproval__parentSession: this.data.vm.user.activeSchool.currentSessionDbId,
       korangle__count: '0,1',
-    }
-    
+    };
+
     Promise.all([
       this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.transaction_account_details, data),
       this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.approval_account_details, approval_account_details_request),
     ]).then(val => {
-      if(val[0].length  == 0 && val[1].length == 0){
+      if (val[0].length  == 0 && val[1].length == 0) {
         this.isDeletable = true;
       }
-      else{
+      else {
         this.isDeletable = false;
       }
-    })
+    });
 
   }
 
-  deleteAccount(){
-    if(!confirm('Are you sure you want to delete this account?')){
+  deleteAccount() {
+    if (!confirm('Are you sure you want to delete this account?')) {
       return ;
     }
     this.isLoading = true;
-    
+
     Promise.all([
       this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.account_session, this.account),
-    ]).then(val =>{
-      for(let i=0;i<this.data.vm.accountsList.length ;i++){
-        if(this.data.vm.accountsList[i].id == this.account.id){
+    ]).then(val => {
+      for (let i = 0; i < this.data.vm.accountsList.length ; i++) {
+        if (this.data.vm.accountsList[i].id == this.account.id) {
           this.data.vm.accountsList.splice(i, 1);
           break;
         }
@@ -118,32 +118,32 @@ export class EditAccountDialogComponent implements OnInit {
 
       let account_session_data = {
         parentAccount: this.account.parentAccount,
-      }
+      };
       Promise.all([
         this.data.vm.accountsService.getObjectList(this.data.vm.accountsService.account_session, account_session_data),
-      ]).then(data =>{
-        if(data[0].length == 0){
+      ]).then(data => {
+        if (data[0].length == 0) {
           let account_data = {
             id: this.account.parentAccount,
-          }
+          };
           Promise.all([
             this.data.vm.accountsService.deleteObject(this.data.vm.accountsService.accounts, account_data),
           ]).then(value => {
-            this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != value[0]});
+            this.data.vm.backendData.accountsList = this.data.vm.backendData.accountsList.filter(acc => {return acc.id != value[0]; });
 
             this.data.vm.serviceAdapter.initialiseDisplayData();
             alert('Account Deleted Successfully');
             this.dialogRef.close();
 
-          })
+          });
         }
-        else{
+        else {
             this.data.vm.serviceAdapter.initialiseDisplayData();
             alert('Account Deleted Successfully');
             this.dialogRef.close();
         }
-      })
-    })
+      });
+    });
   }
 
 }

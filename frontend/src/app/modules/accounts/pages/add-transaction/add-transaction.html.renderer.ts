@@ -27,7 +27,7 @@ export class AddTransactionHtmlRenderer {
             return account.id === accountSession.parentAccount;
         });
     }
-    
+
 
     getFreshTransactionObject(): any {
         let transaction = {
@@ -38,7 +38,7 @@ export class AddTransactionHtmlRenderer {
             quotationImages: [],
             approval: null,
             simple: true,
-        }
+        };
         this.addCreditAccount(transaction);
         this.addDebitAccount(transaction);
         return transaction;
@@ -58,8 +58,8 @@ export class AddTransactionHtmlRenderer {
         });
     }
 
-    addNewTransaction(): void{
-        for(let i=0;i<this.moreTransaction; i++){
+    addNewTransaction(): void {
+        for (let i = 0; i < this.moreTransaction; i++) {
             const transaction = this.getFreshTransactionObject();
             this.vm.transactionList.push(transaction);
         }
@@ -74,7 +74,7 @@ export class AddTransactionHtmlRenderer {
         return false;
     }
 
-    assignApproval(approval, transaction){
+    assignApproval(approval, transaction) {
         if (approval == this.NULL_VALUE) {
             const transactionIndex = this.vm.transactionList.findIndex(t => t == transaction);
             this.vm.transactionList[transactionIndex] = this.getFreshTransactionObject();
@@ -134,11 +134,11 @@ export class AddTransactionHtmlRenderer {
         }).length > 1;
     }
 
-    isAddButtonDisabled(): boolean{
-        for(let i=0;i<this.vm.transactionList.length; i++){
-            if(this.vm.isApprovalRequired(this.vm.transactionList[i]) || this.vm.isAmountUnEqual(this.vm.transactionList[i]) || 
-                this.vm.isAccountNotMentioned(this.vm.transactionList[i]) || this.vm.isAccountRepeated(this.vm.transactionList[i]) || 
-                this.vm.isAmountMoreThanApproval(this.vm.transactionList[i]) || this.vm.isAmountLessThanMinimum(this.vm.transactionList[i]) || 
+    isAddButtonDisabled(): boolean {
+        for (let i = 0; i < this.vm.transactionList.length; i++) {
+            if (this.vm.isApprovalRequired(this.vm.transactionList[i]) || this.vm.isAmountUnEqual(this.vm.transactionList[i]) ||
+                this.vm.isAccountNotMentioned(this.vm.transactionList[i]) || this.vm.isAccountRepeated(this.vm.transactionList[i]) ||
+                this.vm.isAmountMoreThanApproval(this.vm.transactionList[i]) || this.vm.isAmountLessThanMinimum(this.vm.transactionList[i]) ||
                 this.isApprovalUsedTwice(this.vm.transactionList[i])) {
                 return true;
             }
@@ -149,5 +149,5 @@ export class AddTransactionHtmlRenderer {
     isMobile(): boolean {
         return isMobile();
     }
-  
+
 }

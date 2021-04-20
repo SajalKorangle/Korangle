@@ -23,6 +23,6 @@ import {AccountsComponentsModule} from '@modules/accounts/components/component.m
     ],
     providers: [],
     bootstrap: [AddTransactionComponent],
-    
+
 })
 export class AddTransactionModule { }

@@ -21,6 +21,6 @@ import {ComponentsModule} from "../../../../components/components.module";
     ],
     providers: [],
     bootstrap: [ViewTransactionsComponent],
-    
+
 })
 export class ViewTransactionsModule { }

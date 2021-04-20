@@ -18,11 +18,11 @@ import { UseFortransactionDialogComponent } from './components/use-for-transacti
         ComponentsModule,
     ],
     providers: [],
-    
+
     bootstrap: [MyApprovalRequestsComponent],
     entryComponents: [
         UseFortransactionDialogComponent,
     ]
-    
+
 })
 export class MyApprovalRequestsModule { }

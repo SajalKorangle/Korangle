@@ -4,26 +4,26 @@ import { AccountSession } from '@services/modules/accounts/models/account-sessio
 export class CollectFeeHTMLRenderer{
 
     vm: CollectFeeComponent;
-    
+
     customAccountSessionList: Array<CustomAccountSession>;
 
     constructor(vm: CollectFeeComponent) {
         this.vm = vm;
     }
 
-    getFilteredPaymentAccounts(): Array<CustomAccountSession>{
+    getFilteredPaymentAccounts(): Array<CustomAccountSession> {
         const filteredAccountsIdList: Array<number> = this.vm.feeSettings.accountingSettings.toAccountsStructure[this.vm.newModeOfPayment];
-        return this.customAccountSessionList.filter(customAccountSession => filteredAccountsIdList.find(id=> id==customAccountSession .id));
+        return this.customAccountSessionList.filter(customAccountSession => filteredAccountsIdList.find(id => id == customAccountSession .id));
     }
 
-    populateCustomAccountSessionList(accountsList: Array<Account>, accountSessionList: Array<AccountSession>): void{
+    populateCustomAccountSessionList(accountsList: Array<Account>, accountSessionList: Array<AccountSession>): void {
         this.customAccountSessionList = accountSessionList.map(accountSession => {
             return {
                 ...accountSession,
                 type: 'ACCOUNT',
-                title: accountsList.find(account=> account.id==accountSession.parentAccount).title,
-            }
-        })
+                title: accountsList.find(account => account.id == accountSession.parentAccount).title,
+            };
+        });
     }
 }
 

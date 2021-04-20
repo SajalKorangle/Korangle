@@ -6,7 +6,7 @@ export class SettingsServiceAdapter {
 
     vm: SettingsComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -25,19 +25,19 @@ export class SettingsServiceAdapter {
 
         const fee_settings_request = {
             'parentSession': activeSession.id,
-        }
+        };
 
         const accounts_request = {
             accountType: 'ACCOUNT',
-        }
+        };
 
         const account_session_request = {
             parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: activeSession.id,
             parentAccount__accountType: 'ACCOUNT',
-        }
+        };
 
-        const [feeSettingsList, accountSessionList, accountsList ] = await Promise.all([
+        const [feeSettingsList, accountSessionList, accountsList] = await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request), //3
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 2
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 4
@@ -49,7 +49,7 @@ export class SettingsServiceAdapter {
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
         } else if (feeSettingsList.length == 1) {
-            this.vm.backendData.feeSettings = { ...feeSettingsList[0], accountingSettings: JSON.parse(feeSettingsList[0].accountingSettings)};
+            this.vm.backendData.feeSettings = { ...feeSettingsList[0], accountingSettings: JSON.parse(feeSettingsList[0].accountingSettings) };
             this.vm.backendData.filterInvalidAccounts();
         } else {
             alert('Error: Report admin');
@@ -69,14 +69,14 @@ export class SettingsServiceAdapter {
         this.vm.isActiveSession = today >= startDate && today <= endDate;
     }
 
-    populateCustomAccountSession(accountsList, accountSessionList): void{
+    populateCustomAccountSession(accountsList, accountSessionList): void {
         this.vm.customAccountSessionList = accountSessionList.map(accountSession => {
             return {
                 ...accountSession,
                 type: 'ACCOUNT',
-                title: accountsList.find(account=> account.id==accountSession.parentAccount).title,
-            }
-        })
+                title: accountsList.find(account => account.id == accountSession.parentAccount).title,
+            };
+        });
     }
 
     async updatePaymentSettings() {
@@ -92,23 +92,31 @@ export class SettingsServiceAdapter {
 
         const serviceList = [];
 
-        const newFeeSettings:any = { ...this.vm.backendData.feeSettings };
+        const newFeeSettings: any = { ...this.vm.backendData.feeSettings };
         if (newFeeSettings.accountingSettings) {
             newFeeSettings.accountingSettings = JSON.stringify(newFeeSettings.accountingSettings);
         }
         if (feeSettingsList.length > 0) {   // i already exists
             newFeeSettings.id = feeSettingsList[0].id;
             serviceList.push(
-                this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings).then(res => this.vm.backendData.feeSettings = { ...res , accountingSettings: JSON.parse(res.accountingSettings)})
+                this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings)
+                    .then(res => this.vm.backendData.feeSettings = {
+                        ...res,
+                        accountingSettings: JSON.parse(res.accountingSettings)
+                    })
             );
         } else {
-            serviceList.push(   // 
-                this.vm.feeService.createObject(this.vm.feeService.fee_settings, newFeeSettings).then(res => this.vm.backendData.feeSettings = { ...res , accountingSettings: JSON.parse(res.accountingSettings)})
+            serviceList.push(   //
+                this.vm.feeService.createObject(this.vm.feeService.fee_settings, newFeeSettings)
+                    .then(res => this.vm.backendData.feeSettings = {
+                        ...res,
+                        accountingSettings: JSON.parse(res.accountingSettings)
+                    })
             );
         }
         await Promise.all(serviceList);
 
-        alert('fees accounting settings updated')
+        alert('fees accounting settings updated');
         this.vm.isLoading = false;
     }
 

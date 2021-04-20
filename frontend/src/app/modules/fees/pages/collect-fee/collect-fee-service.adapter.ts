@@ -207,7 +207,8 @@ export class CollectFeeServiceAdapter {
         const serviceList = [];
         let transactionFromAccountSession;
         if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings) {
-            transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList.find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettings.parentAccountFrom);
+            transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList
+                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettings.parentAccountFrom);
         }
 
         if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {

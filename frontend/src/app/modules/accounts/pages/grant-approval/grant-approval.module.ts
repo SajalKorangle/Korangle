@@ -16,7 +16,7 @@ import {ComponentsModule} from "../../../../components/components.module";
         ComponentsModule,
     ],
     providers: [],
-    
+
     bootstrap: [GrantApprovalComponent],
 })
 export class GrantApprovalModule { }

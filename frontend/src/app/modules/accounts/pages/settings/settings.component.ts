@@ -26,7 +26,7 @@ export class SettingsComponent{
     selectedEmployeeAmount : any;
     selectedEmployee: any;
     selectedEmployeeAccountPermission: any;
-    
+
     currentSession: any;
 
     lockAccounts: any;
@@ -36,11 +36,11 @@ export class SettingsComponent{
     isLoading: boolean;
 
     scrollToTop = CommonFunctions.scrollToTop;
-    
-    constructor( 
+
+    constructor(
         public accountsService: AccountsService,
         public schoolService: SchoolService,
-    ){ }
+    ) { }
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -54,7 +54,7 @@ export class SettingsComponent{
         console.log("this: ", this);
     }
 
-    handleEmployeeSelection(employee: any): void{
+    handleEmployeeSelection(employee: any): void {
         this.selectedEmployee = employee;
         this.selectedEmployeeAccountPermission = this.backendData.getEmployeePermission(employee);
         if (this.selectedEmployeeAccountPermission) {
@@ -64,5 +64,5 @@ export class SettingsComponent{
             this.selectedEmployeeAmount = 0;
         }
     }
-    
-} 
+
+}

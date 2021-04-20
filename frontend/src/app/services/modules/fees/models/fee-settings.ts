@@ -17,6 +17,6 @@ export class AccountingSettings{
     } = {
         'Cash': [],
         'Cheque': [],
-        'Online': [],  
-    }
+        'Online': [],
+    };
 }
