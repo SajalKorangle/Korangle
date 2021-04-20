@@ -11,6 +11,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { BusStopService } from '@services/modules/school/bus-stop.service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { SchoolService } from '@services/modules/school/school.service';
+import { TCService } from './../../../../services/modules/tc/tc.service';
 
 import { MatDialog } from '@angular/material';
 import { ImagePdfPreviewDialogComponent } from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
@@ -20,6 +21,7 @@ import * as FileSaver from 'file-saver';
 import { toInteger, filter } from 'lodash';
 import { CommonFunctions } from '@classes/common-functions';
 import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
+import { ComponentsModule } from 'app/components/components.module';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -59,7 +61,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -146,6 +148,7 @@ export class ViewAllComponent implements OnInit {
         public schoolService: SchoolService,
         public printService: PrintService,
         public busStopService: BusStopService,
+        public tcService: TCService,
         public dialog: MatDialog
     ) { }
 
@@ -243,13 +246,18 @@ export class ViewAllComponent implements OnInit {
         this.sectionList = sectionList;
     }*/
 
-    initializeStudentFullProfileList(studentFullProfileList: any): void {
+    initializeStudentFullProfileList(studentFullProfileList: any, tcList: any): void {
+        console.log("tcList: ", tcList);
         this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach((studentFullProfile) => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
             studentFullProfile['selectProfile'] = false;
             studentFullProfile['selectDocument'] = false;
+            studentFullProfile['newTransferCertificate'] = tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
+            if (studentFullProfile['newTransferCertificate']) {
+                console.log(studentFullProfile);
+            }
         });
         this.handleStudentDisplay();
     }
@@ -561,7 +569,7 @@ export class ViewAllComponent implements OnInit {
             }
 
             // Transfer Certiicate Check
-            if (!((this.noTC && !student.parentTransferCertificate) || (this.yesTC && student.parentTransferCertificate))) {
+            if (!((this.noTC && !student.parentTransferCertificate && !student.newTransferCertificate) || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
                 student.show = false;
                 return;
             }
