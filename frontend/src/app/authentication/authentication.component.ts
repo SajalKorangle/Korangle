@@ -1,21 +1,15 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
     selector: 'app-authentication',
-    templateUrl: './authentication.component.html'
+    templateUrl: './authentication.component.html',
 })
-
 export class AuthenticationComponent {
-
     @Output() showFrontPageProgressBar = new EventEmitter();
 
     chosenComponent = 'login';
 
-    componentList = [
-        'login',
-        'forgot-password',
-        'signup'
-    ];
+    componentList = ['login', 'forgot-password', 'signup'];
 
     constructor() {}
 

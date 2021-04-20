@@ -1,72 +1,81 @@
-<div class="card-content table-responsive" style="height: 90vh;" *ngIf="!isLoading; else spinner">
+<div class="card-content table-responsive" style="height: 90vh" *ngIf="!isLoading; else spinner">
     <ng-container *ngIf="!isLoading">
         <div>
-
-            <mat-form-field style="margin-right: 15px;">
+            <mat-form-field style="margin-right: 15px">
                 <mat-select placeholder="Select Class">
-
                     <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Select All
+                        <button
+                            class="btn"
+                            style="padding: 4px 7px"
+                            (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
+                        >
+                            Select All
                         </button>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Clear All
+                        <button
+                            class="btn"
+                            style="padding: 4px 7px"
+                            (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
+                        >
+                            Clear All
                         </button>
                     </mat-option>
 
                     <ng-container *ngFor="let classSection of classSectionList">
-                        <mat-option style="width: 100%;">
-                            <mat-checkbox [ngModel]="classSection.selected"
-                                            (ngModelChange)="unselectAllClasses(); classSection.selected=$event;  handleFilteredStudentSectionList()"
-                                            (click)="$event.stopPropagation();">
-                                {{classSection.class.name}}{{classSection.showDivision?', '+classSection.section.name:''}}
+                        <mat-option style="width: 100%">
+                            <mat-checkbox
+                                [ngModel]="classSection.selected"
+                                (ngModelChange)="unselectAllClasses(); classSection.selected = $event; handleFilteredStudentSectionList()"
+                                (click)="$event.stopPropagation()"
+                            >
+                                {{ classSection.class.name }}{{ classSection.showDivision ? ', ' + classSection.section.name : '' }}
                             </mat-checkbox>
                         </mat-option>
                     </ng-container>
 
                     <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Select All
+                        <button
+                            class="btn"
+                            style="padding: 4px 7px"
+                            (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
+                        >
+                            Select All
                         </button>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation();">Clear All
+                        <button
+                            class="btn"
+                            style="padding: 4px 7px"
+                            (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
+                        >
+                            Clear All
                         </button>
                     </mat-option>
-
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field style="margin-right: 15px;">
-                <mat-label>
-                    Select Layout
-                </mat-label>
+            <mat-form-field style="margin-right: 15px">
+                <mat-label> Select Layout </mat-label>
                 <mat-select [(ngModel)]="selectedLayout" (ngModelChange)="populateExtraFieldsFromLayout()">
                     <mat-option *ngFor="let layout of tcLayoutList" [value]="layout">
-                        {{layout.name}}
+                        {{ layout.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-select placeholder="DPI" [(ngModel)]="canvasAdapter.dpi">
-                    <mat-option *ngFor="let dpi of dpiList" [value]="dpi">{{dpi}}</mat-option>
+                    <mat-option *ngFor="let dpi of dpiList" [value]="dpi">{{ dpi }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <br/>
+            <br />
 
-            <div style="display: flex; flex-wrap: wrap;" class="flex-row-wrapper">
+            <div style="display: flex; flex-wrap: wrap" class="flex-row-wrapper">
                 <mat-form-field>
                     <mat-label>Issue Date</mat-label>
-                    <input matInput required type="date" [(ngModel)]="DATA.issueDate"/>
+                    <input matInput required type="date" [(ngModel)]="DATA.issueDate" />
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>Leaving Date</mat-label>
-                    <input matInput required type="date" [(ngModel)]="DATA.leavingDate"/>
+                    <input matInput required type="date" [(ngModel)]="DATA.leavingDate" />
                 </mat-form-field>
 
                 <mat-form-field>
@@ -76,69 +85,65 @@
 
                 <mat-form-field>
                     <mat-label>Last Class Passed</mat-label>
-                    <input matInput type="text" [(ngModel)]="DATA.lastClassPassed"/>
+                    <input matInput type="text" [(ngModel)]="DATA.lastClassPassed" />
                 </mat-form-field>
             </div>
 
             <div>
+                <button class="btn" style="padding: 4px 7px" (click)="selectAllStudents(); $event.stopPropagation()">Select All</button>
+                <button class="btn" style="padding: 4px 7px" (click)="clearAllStudents(); $event.stopPropagation()">Clear All</button>
 
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="selectAllStudents(); $event.stopPropagation();">Select All
-                </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="clearAllStudents(); $event.stopPropagation();">Clear All
-                </button>
-
-                <div style="float:right; margin-right: 12px;">
-                    Selected: <b>{{getSelectedStudentList().length}}</b>,
-                    Display: <b>{{filteredStudentSectionList.length}}</b>,
-                    Total: <b>{{studentSectionList.length}}</b>
+                <div style="float: right; margin-right: 12px">
+                    Selected: <b>{{ getSelectedStudentList().length }}</b
+                    >, Display: <b>{{ filteredStudentSectionList.length }}</b
+                    >, Total: <b>{{ studentSectionList.length }}</b>
                 </div>
             </div>
-            
 
-             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th></th>
-                    <th>S. No.</th>
-                    <th>Name</th>
-                    <th>Class & Section</th>
-                    <th>Father's Name</th>
-                </tr>
+            <table class="table table-hover">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th></th>
+                        <th>S. No.</th>
+                        <th>Name</th>
+                        <th>Class & Section</th>
+                        <th>Father's Name</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let studentSection of filteredStudentSectionList, let i = index;">
-                    <tr>
-                        <td>
-                            <mat-checkbox [(ngModel)]="studentSection.selected" [disabled]="studentSection.disabled"></mat-checkbox>
-                        </td>
-                        <td>{{i+1}}</td>
-                        <td>{{getStudent(studentSection.parentStudent).name}}</td>
-                        <td>{{getClass(studentSection.parentClass).name}}, {{getDivision(studentSection.parentDivision).name}}</td>
-                        <td>{{getStudent(studentSection.parentStudent).fathersName}}</td>
-                    </tr>
-                </ng-container>
+                    <ng-container *ngFor="let studentSection of filteredStudentSectionList; let i = index">
+                        <tr>
+                            <td>
+                                <mat-checkbox [(ngModel)]="studentSection.selected" [disabled]="studentSection.disabled"></mat-checkbox>
+                            </td>
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ getStudent(studentSection.parentStudent).name }}</td>
+                            <td>{{ getClass(studentSection.parentClass).name }}, {{ getDivision(studentSection.parentDivision).name }}</td>
+                            <td>{{ getStudent(studentSection.parentStudent).fathersName }}</td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
 
-            <button *ngIf="getSelectedStudentList().length>0 && selectedLayout"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="generateTC()">Generate</button>
-
+            <button
+                *ngIf="getSelectedStudentList().length > 0 && selectedLayout"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="generateTC()"
+            >
+                Generate
+            </button>
         </div>
     </ng-container>
-
 </div>
 
 <ng-template #spinner>
     <app-loading-spinner [user]="user"></app-loading-spinner>
-    <div style="text-align: center;" *ngIf="generatedTcs!=0">
-        <mat-progress-bar mode="determinate" [value]="generatedTcs*100/getSelectedStudentList().length"></mat-progress-bar>
-        {{generatedTcs}}/{{getSelectedStudentList().length}}<br/>
-        <ng-container *ngIf="estimatedTime">Estimated Time: {{estimatedTime.minutes}} minutes {{estimatedTime.seconds}} seconds</ng-container>
+    <div style="text-align: center" *ngIf="generatedTcs != 0">
+        <mat-progress-bar mode="determinate" [value]="(generatedTcs * 100) / getSelectedStudentList().length"></mat-progress-bar>
+        {{ generatedTcs }}/{{ getSelectedStudentList().length }}<br />
+        <ng-container *ngIf="estimatedTime"
+            >Estimated Time: {{ estimatedTime.minutes }} minutes {{ estimatedTime.seconds }} seconds</ng-container
+        >
         <ng-container *ngIf="!estimatedTime">Processing ...</ng-container>
     </div>
 </ng-template>

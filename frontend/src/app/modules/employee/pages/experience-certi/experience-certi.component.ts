@@ -1,17 +1,16 @@
-import {Component, Input} from '@angular/core';
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
+import { Component, Input } from '@angular/core';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_EXP_CERT } from '../../../../print/print-routes.constants';
-import {DataStorage} from "../../../../classes/data-storage";
-import {SchoolService} from "../../../../services/modules/school/school.service";
+import { DataStorage } from '../../../../classes/data-storage';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'app-experience-certi',
     templateUrl: './experience-certi.component.html',
     styleUrls: ['./experience-certi.component.css'],
-    providers: [ SchoolService ],
+    providers: [SchoolService],
 })
-
 export class ExperienceCertiComponent {
     user;
 
@@ -31,16 +30,12 @@ export class ExperienceCertiComponent {
     fatherNameMissing = false;
     currentPostMissing = false;
 
-
-    constructor (private employeeService: EmployeeOldService,
-                 private schoolService: SchoolService,
-                 private printService: PrintService) { }
+    constructor(private employeeService: EmployeeOldService, private schoolService: SchoolService, private printService: PrintService) {}
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
     }
 
     getEmployeeProfile(employee: any): void {
-
         this.employee = employee;
         this.selected = true;
         console.log(employee);
@@ -53,16 +48,18 @@ export class ExperienceCertiComponent {
         Promise.all([
             this.employeeService.getEmployeeProfile(data, this.user.jwt),
             this.schoolService.getObjectList(this.schoolService.board, {}),
-        ]).then(value => {
-            this.isLoading = false;
-            this.employeeFullProfile = value[0];
-            this.boardList = value[1];
-            this.validateAllParameters(this.employeeFullProfile);
-            this.populateRemark();
-        }, error => {
-            this.isLoading = false;
-        });
-
+        ]).then(
+            (value) => {
+                this.isLoading = false;
+                this.employeeFullProfile = value[0];
+                this.boardList = value[1];
+                this.validateAllParameters(this.employeeFullProfile);
+                this.populateRemark();
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     handleEmployeeCertiIssueDate(issueDate) {
@@ -80,7 +77,7 @@ export class ExperienceCertiComponent {
             remark: this.remark,
             boardList: this.boardList,
         };
-        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_EXP_CERT, {user:this.user, value})
+        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_EXP_CERT, { user: this.user, value });
     }
 
     isValidCertificate(): boolean {
@@ -88,7 +85,7 @@ export class ExperienceCertiComponent {
             alert('Certificate Number field should be filled');
             return false;
         }
-        if (this.certificateIssueDate == null ) {
+        if (this.certificateIssueDate == null) {
             alert('Certificate Issue Date field should be filled');
             return false;
         }
@@ -108,7 +105,7 @@ export class ExperienceCertiComponent {
             this.fatherNameMissing = true;
             this.numberOfMissingParameters++;
         }
-        if ( !employeeFullProfile.currentPost) {
+        if (!employeeFullProfile.currentPost) {
             this.currentPostMissing = true;
             this.numberOfMissingParameters++;
         }
@@ -116,14 +113,13 @@ export class ExperienceCertiComponent {
 
     populateRemark(): void {
         if (this.employeeFullProfile.dateOfLeaving) {
-            this.remark = (this.employeeFullProfile.gender=='Female'?'Her':'His')
-                +' general conduct was good during the work. We hope for '
-                + (this.employeeFullProfile.gender=='Female'?'her':'his')
-                + ' better future.';
+            this.remark =
+                (this.employeeFullProfile.gender == 'Female' ? 'Her' : 'His') +
+                ' general conduct was good during the work. We hope for ' +
+                (this.employeeFullProfile.gender == 'Female' ? 'her' : 'his') +
+                ' better future.';
         } else {
-            this.remark = (this.employeeFullProfile.gender=='Female'?'Her':'His')
-                +' general conduct is good during the work.';
+            this.remark = (this.employeeFullProfile.gender == 'Female' ? 'Her' : 'His') + ' general conduct is good during the work.';
         }
     }
-
 }

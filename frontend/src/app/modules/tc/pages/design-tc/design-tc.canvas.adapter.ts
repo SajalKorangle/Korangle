@@ -1,9 +1,10 @@
 import { DesignTCComponent } from './design-tc.component';
-import {CanvasAdapterHTMLMixin} from './../../class/canvas.adapter';
+import { CanvasAdapterHTMLMixin } from './../../class/canvas.adapter';
 
 import {
     CanvasAdapterInterface,
-    CanvasImage, CanvasText,
+    CanvasImage,
+    CanvasText,
     CanvasDate,
     CanvasTable,
     CanvasLine,
@@ -13,39 +14,36 @@ import {
     CanvasRoundedRectangle,
 } from './../../class/constants';
 
-import * as jsPDF from 'jspdf'
-
+import * as jsPDF from 'jspdf';
 
 export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements CanvasAdapterInterface {
+    vm: DesignTCComponent;
 
-    vm: DesignTCComponent;  
-    
     extraFields: {
-        isLeavingSchoolBecause: string,
-        issueDate: string,
-        leavingDate: string,
-        lastClassPassed: string,
+        isLeavingSchoolBecause: string;
+        issueDate: string;
+        leavingDate: string;
+        lastClassPassed: string;
     } = {
-            isLeavingSchoolBecause: 'N/A',
-            issueDate: null,
-            leavingDate: null,
-            lastClassPassed: 'N/A',
-        };
-    
-    
+        isLeavingSchoolBecause: 'N/A',
+        issueDate: null,
+        leavingDate: null,
+        lastClassPassed: 'N/A',
+    };
+
     constructor() {
         super();
         // console.log('canvas Adapter: ', this);
         Object.defineProperty(this, 'currentLayout', {
             get: function () {
-                return this.vm.currentLayout;   // // reference to vm.currentLayout and there is no setter function
-            }
+                return this.vm.currentLayout; // // reference to vm.currentLayout and there is no setter function
+            },
         });
 
         Object.defineProperty(this, 'DATA', {
             get: function () {
-                return { ...this.vm.DATA, ...this.extraFields };    // reference to vm.DATA and there is no setter function
-            }
+                return { ...this.vm.DATA, ...this.extraFields }; // reference to vm.DATA and there is no setter function
+            },
         });
     }
 
@@ -53,7 +51,7 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         this.vm = vm;
     }
 
-    getEmptyLayoutPage(): { [key: string]: any }{
+    getEmptyLayoutPage(): { [key: string]: any } {
         return {
             ...super.getEmptyLayoutPage(),
             extraFields: {
@@ -61,23 +59,24 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
                 issueDate: null,
                 leavingDate: null,
                 lastClassPassed: 'N/A',
-            }
-         }
+            },
+        };
     }
 
-    maximumCanvasSize():any{
-        return this.actualresolution.getHeightInPixel(this.dpi)*2;
+    maximumCanvasSize(): any {
+        return this.actualresolution.getHeightInPixel(this.dpi) * 2;
     }
 
-    minimumCanvasSize():any{
-        return this.actualresolution.getHeightInPixel(this.dpi)*(0.1);
+    minimumCanvasSize(): any {
+        return this.actualresolution.getHeightInPixel(this.dpi) * 0.1;
     }
 
     removeSchoolSpecificDataFromLayout(layoutContent: any[]): any[] {
         layoutContent = JSON.parse(JSON.stringify(layoutContent));
-        for (let i=0; i < layoutContent.length; i++) {
-            layoutContent[i].layers = layoutContent[i].layers.map(layer => {
-                switch (layer.LAYER_TYPE) {
+        for (let i = 0; i < layoutContent.length; i++) {
+            layoutContent[i].layers = layoutContent[i].layers.map((layer) => {
+                switch (
+                    layer.LAYER_TYPE
                     // case 'GRADE':
                     //     layer.parentExamination = null;
                     //     layer.subsubGradeId = null;
@@ -91,15 +90,18 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
                     //     layer.parentExamination = null;
                     //     layer.error = true;
                     //     break;
+                ) {
                 }
                 return layer;
-            })
+            });
         }
         return layoutContent;
     }
 
-    downloadPDF() { // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background
-        let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
+    downloadPDF() {
+        // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background
+        let actualCanavsWidth = this.canvasWidth,
+            actualCanavsHeight = this.canvasHeight;
         let fullWidth = this.actualresolution.getWidthInPixel(this.dpi);
         let fullHeight = this.actualresolution.getHeightInPixel(this.dpi);
 
@@ -108,22 +110,22 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         this.canvasSizing(fullHeight, fullWidth, true);
         setTimeout(() => {
             let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
-            let dataurl = this.canvas.toDataURL('image/jpeg', 1.0)
+            let dataurl = this.canvas.toDataURL('image/jpeg', 1.0);
             doc.addImage(dataurl, 'JPEG', 0, 0, this.canvasWidth, this.canvasHeight);
             doc.save(this.vm.currentLayout.name + '.pdf');
             this.metaDrawings = true;
             this.canvasSizing(actualCanavsHeight, actualCanavsWidth, true);
             this.vm.htmlAdapter.isSaving = false;
-        },1000);    // bad design of waiting for canvas loading
+        }, 1000); // bad design of waiting for canvas loading
     }
 
-    newImageLayer(initialParameters: object = {}): CanvasImage{
+    newImageLayer(initialParameters: object = {}): CanvasImage {
         let canvasImage = new CanvasImage(initialParameters, this);
         this.newLayerInitilization(canvasImage);
-        return canvasImage
+        return canvasImage;
     }
 
-    newTextLayer(initialParameters: object = {}): CanvasText{
+    newTextLayer(initialParameters: object = {}): CanvasText {
         let canvasText = new CanvasText(initialParameters, this);
         this.newLayerInitilization(canvasText);
         return canvasText;
@@ -135,7 +137,6 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         return canvasDate;
     }
 
-    
     newLineLayer(initialParameters: object = {}): CanvasLine {
         let canvasShape = new CanvasLine(initialParameters, this);
         this.newLayerInitilization(canvasShape);
@@ -166,11 +167,9 @@ export class DesignTCCanvasAdapter extends CanvasAdapterHTMLMixin implements Can
         return canvasShape;
     }
 
-    newTableLayer(initialParameters: object = {}): CanvasTable{
+    newTableLayer(initialParameters: object = {}): CanvasTable {
         let canavsTable = new CanvasTable(initialParameters, this);
         this.newLayerInitilization(canavsTable);
         return canavsTable;
     }
-
 }
-

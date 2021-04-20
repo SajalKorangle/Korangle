@@ -1,10 +1,13 @@
-
-
-<div class="card-content table-responsive" *ngIf="!isLoading">    
+<div class="card-content table-responsive" *ngIf="!isLoading">
     <div *ngIf="lockAccounts">
-        <span  style="color: red;">
-            <h4><b><i class="material-icons" style="vertical-align: -6px;">error_outline</i>
-                All Accounts has been locked for this session . No further changes can be done in accounts in this session. </b></h4></span>
+        <span style="color: red">
+            <h4>
+                <b
+                    ><i class="material-icons" style="vertical-align: -6px">error_outline</i> All Accounts has been locked for this session
+                    . No further changes can be done in accounts in this session.
+                </b>
+            </h4></span
+        >
     </div>
     <div *ngIf="!lockAccounts">
     <div *ngIf="displayWholeList == true;">
@@ -35,6 +38,9 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                </div>
+                <div class="row col-md-12">
+                    <div class="col-md-12" style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px"></div>
                 </div>
             </div>
             <div class="row col-md-12">
@@ -96,7 +102,13 @@
                 <div class="row col-md-12" >
                     <div class="col-md-12"  style="border-bottom: 1px solid lightgrey; margin-top: 15px; margin-bottom: 10px;"></div>
                 </div>
-
+            </ng-container>
+        </div>
+        <div *ngIf="!displayWholeList">
+            <div class="row col-md-12">
+                <i class="material-icons" style="vertical-align: -7px; cursor: pointer" (click)="displayWholeList = true"
+                    >keyboard_arrow_left</i
+                ><span>Back</span>
             </div>
             </ng-container>
         </ng-container>
@@ -135,8 +147,6 @@
                             ></group-hierarchy>
         </div>
     </div>
-    </div>
-    
 </div>
 
 <ng-container *ngIf="isLoading">

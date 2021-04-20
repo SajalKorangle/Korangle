@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
 import { TCLogbookRoutingModule } from './tc-logbook.routing';
-import { ComponentsModule } from "../../../../components/components.module";
-import { TCLogbookComponent } from "./tc-logbook.component";
-
+import { ComponentsModule } from '../../../../components/components.module';
+import { TCLogbookComponent } from './tc-logbook.component';
 
 @NgModule({
-    declarations: [
-        TCLogbookComponent
-    ],
+    declarations: [TCLogbookComponent],
 
-    imports: [
-        TCLogbookRoutingModule,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [TCLogbookRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [TCLogbookComponent]
+    bootstrap: [TCLogbookComponent],
 })
-export class TCLogbookModule { }
+export class TCLogbookModule {}

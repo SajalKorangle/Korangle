@@ -1,35 +1,38 @@
-<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden;">
-    <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">book</i>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">book</i>
     </div>
-    <div style="margin: 4px; padding: 4px; text-align: center;">
-
+    <div style="margin: 4px; padding: 4px; text-align: center">
         <mat-form-field appearence="fill">
-            <mat-select required
+            <mat-select
+                required
                 placeholder="Examination"
                 [(ngModel)]="layer.parentExamination"
-                (ngModelChange)="layer.subGradeId=null; layer.layerDataUpdate(); canvasRefresh(500);">
-                <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList;" [value]="examination.id">{{examination.name}}</mat-option>
+                (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500)"
+            >
+                <mat-option *ngFor="let examination of layer.ca.vm.DATA.data.examinationList" [value]="examination.id">{{
+                    examination.name
+                }}</mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field appearence="fill">
-            <mat-select required
-            placeholder="Grade"
-            [(ngModel)]="parentGrade" 
-            (ngModelChange)="layer.subGradeId=null; layer.layerDataUpdate(); canvasRefresh(500);">
-                <mat-option *ngFor="let grade of layer.ca.vm.DATA.data.gradeList;" [value]="grade.id">
-                    {{grade.name}}
+            <mat-select
+                required
+                placeholder="Grade"
+                [(ngModel)]="parentGrade"
+                (ngModelChange)="layer.subGradeId = null; layer.layerDataUpdate(); canvasRefresh()"
+            >
+                <mat-option *ngFor="let grade of layer.ca.vm.DATA.data.gradeList" [value]="grade.id">
+                    {{ grade.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field appearence="fill">
-            <mat-select placeholder="Sub Grade"
-            [(ngModel)]="layer.subGradeId" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh(500);">
-                <mat-option *ngFor="let subGrade of getFilteredSubGradeList()" [value]="subGrade.id">{{subGrade.name}}</mat-option>
+            <mat-select placeholder="Sub Grade" [(ngModel)]="layer.subGradeId" (ngModelChange)="layer.layerDataUpdate(); canvasRefresh()">
+                <mat-option *ngFor="let subGrade of getFilteredSubGradeList()" [value]="subGrade.id">{{ subGrade.name }}</mat-option>
             </mat-select>
-        </mat-form-field>        
-
+        </mat-form-field>
     </div>
 </mat-card>

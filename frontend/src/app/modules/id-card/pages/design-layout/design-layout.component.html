@@ -3,178 +3,178 @@
 <script src="dist/default_vfs.js"></script -->
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
-
         <!-- Choose to add/edit/delete layout/s -->
-        <mat-form-field style="margin-bottom: 10px;">
-            <mat-select placeholder="Choose to add/edit/delete layout/s"
-                        [ngModel]="currentLayout"
-                        (ngModelChange)="populateCurrentLayoutWithGivenValue($event);">
-                <mat-option [value]="ADD_LAYOUT_STRING">{{ADD_LAYOUT_STRING}}</mat-option>
-                <mat-option *ngFor="let layout of idCardLayoutList;" [value]="layout">{{layout.name}}</mat-option>
+        <mat-form-field style="margin-bottom: 10px">
+            <mat-select
+                placeholder="Choose to add/edit/delete layout/s"
+                [ngModel]="currentLayout"
+                (ngModelChange)="populateCurrentLayoutWithGivenValue($event)"
+            >
+                <mat-option [value]="ADD_LAYOUT_STRING">{{ ADD_LAYOUT_STRING }}</mat-option>
+                <mat-option *ngFor="let layout of idCardLayoutList" [value]="layout">{{ layout.name }}</mat-option>
             </mat-select>
         </mat-form-field>
 
         <ng-container *ngIf="currentLayout">
-
-            <div class="row" style="margin-bottom: 20px;">
-
+            <div class="row" style="margin-bottom: 20px">
                 <!-- Layout Name, Field Selection -->
                 <div class="col-md-6">
-
                     <mat-card>
-
                         <!-- Layout Name -->
                         <div class="row">
                             <div class="col-md-6">
-                                <span style="color:red" *ngIf="!doesCurrentLayoutHasUniqueName()" class="small">
+                                <span style="color: red" *ngIf="!doesCurrentLayoutHasUniqueName()" class="small">
                                     Layout name must be unique
                                 </span>
-                                <mat-form-field style="width: 100%;">
-                                    <mat-label>
-                                        Layout Name
-                                    </mat-label>
-                                    <input matInput [(ngModel)]="currentLayout.name">
+                                <mat-form-field style="width: 100%">
+                                    <mat-label> Layout Name </mat-label>
+                                    <input matInput [(ngModel)]="currentLayout.name" />
                                 </mat-form-field>
                             </div>
                             <div class="col-md-6" align="end">
-                                <button type="button"
-                                        class="btn"
-                                        (click)="resetCurrentLayout();updatePDF(1);"
-                                        style="cursor: pointer; padding: 4px 7px;">Reset All</button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    (click)="resetCurrentLayout(); updatePDF(1)"
+                                    style="cursor: pointer; padding: 4px 7px"
+                                >
+                                    Reset All
+                                </button>
                             </div>
                         </div>
 
-                        <div style="border: 1px solid black; width: 100%; margin-top:10px; margin-bottom: 10px;"></div>
+                        <div style="border: 1px solid black; width: 100%; margin-top: 10px; margin-bottom: 10px"></div>
 
                         <!-- Fields Selection -->
-                        <b>Fields:</b><br/>
+                        <b>Fields:</b><br />
                         <div>
-                            <mat-form-field *ngFor="let fieldKey of getFieldKeyList()"
-                                    style="margin-right: 10px">
+                            <mat-form-field *ngFor="let fieldKey of getFieldKeyList()" style="margin-right: 10px">
                                 <mat-label>
-                                    {{fields[fieldKey].displayFieldName}}
+                                    {{ fields[fieldKey].displayFieldName }}
                                 </mat-label>
                                 <mat-select [value]="null">
-                                    <mat-option *ngFor="let parameter of getFilteredParameterList(fields[fieldKey]); let i = index"
-                                                (click)="addToCurrentUserHandleList(parameter); updatePDF(1);"
-                                                [value]="parameter">
-                                        {{parameter.displayParameterNameFunc({data: data})}}
+                                    <mat-option
+                                        *ngFor="let parameter of getFilteredParameterList(fields[fieldKey]); let i = index"
+                                        (click)="addToCurrentUserHandleList(parameter); updatePDF(1)"
+                                        [value]="parameter"
+                                    >
+                                        {{ parameter.displayParameterNameFunc({ data: data }) }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
-
                     </mat-card>
-
                 </div>
 
                 <!-- Background Image -->
                 <div class="col-md-6">
-
                     <mat-card>
-                        <b>Background Image:</b><br/>
-                        <img [src]="currentLayout.background" style="width: 3.375in; height: 2.125in;"/><br/>
-                        <input type='file' (change)="readURL($event);" multiple="false" style="display: none" accept="image/*" #imageInput/>
-                        <button type="button"
-                                class="btn"
-                                (click)="imageInput.click()"
-                                style="cursor: pointer; padding: 4px 7px;">Upload New</button>
-                        <button type="button"
-                                class="btn"
-                                (click)="resetBackground();updatePDF(1);"
-                                style="cursor: pointer; padding: 4px 7px;">Choose Default</button><br/>
+                        <b>Background Image:</b><br />
+                        <img [src]="currentLayout.background" style="width: 3.375in; height: 2.125in" /><br />
+                        <input type="file" (change)="readURL($event)" multiple="false" style="display: none" accept="image/*" #imageInput />
+                        <button type="button" class="btn" (click)="imageInput.click()" style="cursor: pointer; padding: 4px 7px">
+                            Upload New
+                        </button>
+                        <button
+                            type="button"
+                            class="btn"
+                            (click)="resetBackground(); updatePDF(1)"
+                            style="cursor: pointer; padding: 4px 7px"
+                        >
+                            Choose Default</button
+                        ><br />
                     </mat-card>
-
                 </div>
-
             </div>
 
-            <div class="row" style="margin-bottom: 10px;" *ngIf="currentLayout.content.length">
-
+            <div class="row" style="margin-bottom: 10px" *ngIf="currentLayout.content.length">
                 <!-- Field, Parameter -->
                 <div class="col-md-6">
-
                     <mat-card>
-
                         <div>
-
                             <!-- Select Field -->
-                            <mat-form-field style="margin-right: 10px;">
-                                <mat-label>
-                                    Select Field
-                                </mat-label>
-                                <mat-select [(ngModel)]="currentField" (ngModelChange)="pickAndSetCurrentUserHandle();">
-                                    <mat-option *ngFor="let fieldKey of getSelectedFieldKeyListInCurrentLayout(); let i = index" [value]="fields[fieldKey]">
-                                        {{fields[fieldKey].displayFieldName}}
+                            <mat-form-field style="margin-right: 10px">
+                                <mat-label> Select Field </mat-label>
+                                <mat-select [(ngModel)]="currentField" (ngModelChange)="pickAndSetCurrentUserHandle()">
+                                    <mat-option
+                                        *ngFor="let fieldKey of getSelectedFieldKeyListInCurrentLayout(); let i = index"
+                                        [value]="fields[fieldKey]"
+                                    >
+                                        {{ fields[fieldKey].displayFieldName }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
 
                             <!-- Select User Handle -->
-                            <mat-form-field style="margin-right: 10px;">
-                                <mat-label>
-                                    Select Parameter
-                                </mat-label>
+                            <mat-form-field style="margin-right: 10px">
+                                <mat-label> Select Parameter </mat-label>
                                 <mat-select [(ngModel)]="currentUserHandle">
-                                    <mat-option *ngFor="let userHandle of getFilteredCurrentUserHandleListByGivenField(currentField); let i = index" [value]="userHandle">
-                                        {{getParameter(userHandle.key).displayParameterNameFunc({data: data, userHandle: userHandle})}}
+                                    <mat-option
+                                        *ngFor="let userHandle of getFilteredCurrentUserHandleListByGivenField(currentField); let i = index"
+                                        [value]="userHandle"
+                                    >
+                                        {{ getParameter(userHandle.key).displayParameterNameFunc({ data: data, userHandle: userHandle }) }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
 
                             <!-- Delete Parameter -->
                             <div style="float: right">
-                                <button type="button" *ngIf="currentUserHandle"
-                                        class="btn"
-                                        style="padding: 4px 7px;"
-                                        (click)="deleteFromCurrentUserHandleList(currentUserHandle);">
+                                <button
+                                    type="button"
+                                    *ngIf="currentUserHandle"
+                                    class="btn"
+                                    style="padding: 4px 7px"
+                                    (click)="deleteFromCurrentUserHandleList(currentUserHandle)"
+                                >
                                     Delete
                                 </button>
                             </div>
-
                         </div>
 
                         <div *ngIf="currentUserHandle">
-
                             <!-- Text & Date -->
-                            <div *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.TEXT
-                                        || getParameter(currentUserHandle.key).dataType===dataTypes.DATE">
-
+                            <div
+                                *ngIf="
+                                    getParameter(currentUserHandle.key).dataType === dataTypes.TEXT ||
+                                    getParameter(currentUserHandle.key).dataType === dataTypes.DATE
+                                "
+                            >
                                 <!-- Constant Value -->
-                                <div style="margin-bottom: 10px;" *ngIf="getParameter(currentUserHandle.key).field.fieldStructureKey==fields.CONSTANT.fieldStructureKey">
-                                    <mat-form-field style="width: 100%;">
-                                        <mat-label>
-                                            Value
-                                        </mat-label>
-                                        <input matInput
-                                               type="text"
-                                               [ngModel]="currentUserHandle.value" (ngModelChange)="currentUserHandle.value=$event;updatePDF();">
+                                <div
+                                    style="margin-bottom: 10px"
+                                    *ngIf="getParameter(currentUserHandle.key).field.fieldStructureKey == fields.CONSTANT.fieldStructureKey"
+                                >
+                                    <mat-form-field style="width: 100%">
+                                        <mat-label> Value </mat-label>
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [ngModel]="currentUserHandle.value"
+                                            (ngModelChange)="currentUserHandle.value = $event; updatePDF()"
+                                        />
                                     </mat-form-field>
                                 </div>
 
                                 <!-- Date Format -->
-                                <ng-container *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.DATE">
-
+                                <ng-container *ngIf="getParameter(currentUserHandle.key).dataType === dataTypes.DATE">
                                     <b>Set Date Format</b>
 
                                     <!-- Input Field -->
-                                    <div style="margin-bottom: 10px;">
-                                        <mat-form-field style="width: 100%;">
-                                            <mat-label>
-                                                Format
-                                            </mat-label>
-                                            <input matInput
-                                                   type="text"
-                                                   [ngModel]="currentUserHandle.format"
-                                                   (ngModelChange)="currentUserHandle.format=$event;updatePDF();">
+                                    <div style="margin-bottom: 10px">
+                                        <mat-form-field style="width: 100%">
+                                            <mat-label> Format </mat-label>
+                                            <input
+                                                matInput
+                                                type="text"
+                                                [ngModel]="currentUserHandle.format"
+                                                (ngModelChange)="currentUserHandle.format = $event; updatePDF()"
+                                            />
                                         </mat-form-field>
                                     </div>
 
                                     <!-- Explanation -->
-                                    <div style="margin-bottom: 15px;
-                                                width: 100%;
-                                                font-size: 10px;">
-
+                                    <div style="margin-bottom: 15px; width: 100%; font-size: 10px">
                                         <!-- Every format-->
                                         <div class="row no-gutters">
                                             <div class="col-md-4" style="text-align: center">
@@ -244,7 +244,7 @@
                                             </div>
                                         </div>
 
-                                        put separators like . / - etc. between &lt;dd&gt;/&lt;mm&gt;/&lt;yyyy&gt; as desired<br/>
+                                        put separators like . / - etc. between &lt;dd&gt;/&lt;mm&gt;/&lt;yyyy&gt; as desired<br />
                                         Example
                                         <div class="row no-gutters">
                                             <div class="col-xs-6">3/2/10 or 12/11/17 type &lt;d&gt;/&lt;m&gt;/&lt;yy&gt;</div>
@@ -256,31 +256,39 @@
                                         </div>
                                         <div class="row no-gutters">
                                             <div class="col-xs-6">03.02.2010 or 12.11.2017 type &lt;dd&gt;.&lt;mm&gt;.&lt;yyy&gt;</div>
-                                            <div class="col-xs-6">Three February Two Thousand Ten type &lt;dddd&gt; &lt;mmmm&gt; &lt;yyyy&gt;</div>
+                                            <div class="col-xs-6">
+                                                Three February Two Thousand Ten type &lt;dddd&gt; &lt;mmmm&gt; &lt;yyyy&gt;
+                                            </div>
                                         </div>
-
                                     </div>
-
                                 </ng-container>
 
                                 <!-- Font List -->
-                                <div style="margin-bottom: 5px; width: 100%; align: center;">
+                                <div style="margin-bottom: 5px; width: 100%; align: center">
                                     <b>Set Field Style</b>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <mat-form-field style="margin-right: 5px;">
+                                <div style="margin-bottom: 10px">
+                                    <mat-form-field style="margin-right: 5px">
                                         <mat-label>Select Font Family</mat-label>
-                                        <mat-select [(ngModel)]="currentUserHandle.fontFamily" (ngModelChange)="currentUserHandle.fontStyle=getFontStyleList($event)[0];updatePDF()">
-                                            <mat-option *ngFor="let fontFamily of fontFamilyList;" [value]="fontFamily.displayName">
-                                                <span [ngStyle]="{'font-family': fontFamily.displayName }">{{fontFamily.displayName}}</span>
+                                        <mat-select
+                                            [(ngModel)]="currentUserHandle.fontFamily"
+                                            (ngModelChange)="currentUserHandle.fontStyle = getFontStyleList($event)[0]; updatePDF()"
+                                        >
+                                            <mat-option *ngFor="let fontFamily of fontFamilyList" [value]="fontFamily.displayName">
+                                                <span [ngStyle]="{ 'font-family': fontFamily.displayName }">{{
+                                                    fontFamily.displayName
+                                                }}</span>
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field style="margin-right: 5px;" *ngIf="currentUserHandle.fontFamily">
+                                    <mat-form-field style="margin-right: 5px" *ngIf="currentUserHandle.fontFamily">
                                         <mat-label>Select Style</mat-label>
-                                        <mat-select [(ngModel)]="currentUserHandle.fontStyle" (ngModelChange)="updatePDF();">
-                                            <mat-option *ngFor="let fontStyle of getFontStyleList(currentUserHandle.fontFamily);" [value]="fontStyle">
-                                                {{fontStyle}}
+                                        <mat-select [(ngModel)]="currentUserHandle.fontStyle" (ngModelChange)="updatePDF()">
+                                            <mat-option
+                                                *ngFor="let fontStyle of getFontStyleList(currentUserHandle.fontFamily)"
+                                                [value]="fontStyle"
+                                            >
+                                                {{ fontStyle }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -289,51 +297,55 @@
                                 <!-- Bold, Italic, Underline -->
                                 <div style="margin-bottom: 10px">
                                     <mat-button-toggle
-                                            style="margin-right: 5px"
-                                            [checked]="currentUserHandle.underline"
-                                            (change)="currentUserHandle.underline = $event.source.checked;updatePDF(1);">
+                                        style="margin-right: 5px"
+                                        [checked]="currentUserHandle.underline"
+                                        (change)="currentUserHandle.underline = $event.source.checked; updatePDF(1)"
+                                    >
                                         <mat-icon>format_underline</mat-icon>
                                     </mat-button-toggle>
                                 </div>
 
                                 <!-- Text Color -->
                                 <div style="margin-bottom: 10px">
-                                    <span style="margin-right: 10px;">Color: </span>
-                                    <input [colorPicker]="currentUserHandle.textColor"
-                                           (colorPickerChange)="currentUserHandle.textColor = $event;updatePDF(800);"
-                                           [cpOutputFormat]="'hex'"
-                                           [style.background]="currentUserHandle.textColor"/>
+                                    <span style="margin-right: 10px">Color: </span>
+                                    <input
+                                        [colorPicker]="currentUserHandle.textColor"
+                                        (colorPickerChange)="currentUserHandle.textColor = $event; updatePDF(800)"
+                                        [cpOutputFormat]="'hex'"
+                                        [style.background]="currentUserHandle.textColor"
+                                    />
                                 </div>
 
                                 <!-- Font Size -->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <customized-number-input
-                                                [placeHolder]="'Font size (in mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.fontSize"
-                                                (outputValue)="currentUserHandle.fontSize=$event;updatePDF()">
+                                            [placeHolder]="'Font size (in mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.fontSize"
+                                            (outputValue)="currentUserHandle.fontSize = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                 </div>
 
                                 <!-- Field Position -->
-                                <div style="margin-bottom: 5px; width: 100%; align: center;">
+                                <div style="margin-bottom: 5px; width: 100%; align: center">
                                     <b>Set Field Position</b>
                                 </div>
 
                                 <!-- Alignment -->
-                                <div style="margin-bottom: 10px;">
-                                    <mat-form-field style="margin-right: 5px;">
+                                <div style="margin-bottom: 10px">
+                                    <mat-form-field style="margin-right: 5px">
                                         <mat-label>Vertical Alignment</mat-label>
                                         <mat-select [(ngModel)]="currentUserHandle.baseline" (ngModelChange)="updatePDF()">
                                             <mat-option value="top">Field Top</mat-option>
                                             <mat-option value="bottom">Field Bottom</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field style="margin-right: 5px;">
+                                    <mat-form-field style="margin-right: 5px">
                                         <mat-label>Horizontal Alignment</mat-label>
                                         <mat-select [(ngModel)]="currentUserHandle.align" (ngModelChange)="updatePDF()">
                                             <mat-option value="left">Field Left</mat-option>
@@ -344,161 +356,161 @@
                                 </div>
 
                                 <!-- Position -->
-                                <div class="row" style="margin-bottom: 10px;">
+                                <div class="row" style="margin-bottom: 10px">
                                     <div class="col-md-6">
                                         <customized-number-input
-                                                [placeHolder]="'Field ' + currentUserHandle.baseline + ' from Top of Card (in mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.y"
-                                                (outputValue)="currentUserHandle.y=$event;updatePDF()">
+                                            [placeHolder]="'Field ' + currentUserHandle.baseline + ' from Top of Card (in mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.y"
+                                            (outputValue)="currentUserHandle.y = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                     <div class="col-md-6">
                                         <customized-number-input
-                                                [placeHolder]="'Field ' + currentUserHandle.align + ' from Left of Card (in mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.x"
-                                                (outputValue)="currentUserHandle.x=$event;updatePDF()">
+                                            [placeHolder]="'Field ' + currentUserHandle.align + ' from Left of Card (in mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.x"
+                                            (outputValue)="currentUserHandle.x = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                 </div>
 
                                 <!-- Maximum Width -->
-                                <div class="row" style="margin-bottom: 10px;">
+                                <div class="row" style="margin-bottom: 10px">
                                     <div class="col-md-12">
                                         <customized-number-input
-                                                [placeHolder]="'Maximum Width (mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.maxWidth"
-                                                (outputValue)="currentUserHandle.maxWidth=$event;updatePDF()">
+                                            [placeHolder]="'Maximum Width (mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.maxWidth"
+                                            (outputValue)="currentUserHandle.maxWidth = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                 </div>
-
                             </div>
 
                             <!-- Image -->
-                            <div *ngIf="getParameter(currentUserHandle.key).dataType===dataTypes.IMAGE">
-
+                            <div *ngIf="getParameter(currentUserHandle.key).dataType === dataTypes.IMAGE">
                                 <!-- Position -->
-                                <div class="row" style="margin-bottom: 10px;">
+                                <div class="row" style="margin-bottom: 10px">
                                     <div class="col-md-6">
                                         <customized-number-input
-                                                [placeHolder]="'Top (in mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.y"
-                                                (outputValue)="currentUserHandle.y=$event;updatePDF()">
+                                            [placeHolder]="'Top (in mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.y"
+                                            (outputValue)="currentUserHandle.y = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                     <div class="col-md-6">
                                         <customized-number-input
-                                                [placeHolder]="'Left (in mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.x"
-                                                (outputValue)="currentUserHandle.x=$event;updatePDF()">
+                                            [placeHolder]="'Left (in mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.x"
+                                            (outputValue)="currentUserHandle.x = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                 </div>
 
                                 <!-- Height, Width -->
-                                <div class="row" style="margin-bottom: 10px;">
+                                <div class="row" style="margin-bottom: 10px">
                                     <div class="col-md-6">
                                         <customized-number-input
-                                                [placeHolder]="'Image Height (mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.height"
-                                                (outputValue)="currentUserHandle.height=$event;updatePDF()">
+                                            [placeHolder]="'Image Height (mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.height"
+                                            (outputValue)="currentUserHandle.height = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                     <div class="col-md-6">
                                         <customized-number-input
-                                                [placeHolder]="'Image Width (mm)'"
-                                                [minimum]="0"
-                                                [maximum]="100"
-                                                [maximumDecimal]="3"
-                                                [inputValue]="currentUserHandle.width"
-                                                (outputValue)="currentUserHandle.width=$event;updatePDF()">
+                                            [placeHolder]="'Image Width (mm)'"
+                                            [minimum]="0"
+                                            [maximum]="100"
+                                            [maximumDecimal]="3"
+                                            [inputValue]="currentUserHandle.width"
+                                            (outputValue)="currentUserHandle.width = $event; updatePDF()"
+                                        >
                                         </customized-number-input>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
                     </mat-card>
-
                 </div>
 
                 <!-- Preview -->
                 <!-- div class="col-md-6 main-container" -->
                 <div class="col-md-6">
-
                     <mat-card>
-
                         <!-- PDF View, True -->
-                        <mat-checkbox [(ngModel)]="printMultiple" (ngModelChange)="updatePDF();">A4 Size</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="printMultiple" (ngModelChange)="updatePDF()">A4 Size</mat-checkbox>
                         <!-- iframe id="iFrameDisplay"
                                 type='application/pdf'
                                 style="width:100%; height: 3.5in; overflow:scroll;">
                         </iframe -->
-                        <embed id="iFrameDisplay"
-                                type='application/pdf'
-                                style="width:100%; height: 3.5in; overflow:scroll;">
-
+                        <embed id="iFrameDisplay" type="application/pdf" style="width: 100%; height: 3.5in; overflow: scroll" />
                     </mat-card>
-
                 </div>
-
             </div>
 
             <!-- Button Create/Update/Delete -->
             <div>
-                <button type="button"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        style="padding: 12px 15px; margin-right: 17px;"
-                        *ngIf="currentLayout.name && doesCurrentLayoutHasUniqueName() && currentLayout.id == -1"
-                        (click)="serviceAdapter.createLayout();">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-right: 17px"
+                    *ngIf="currentLayout.name && doesCurrentLayoutHasUniqueName() && currentLayout.id == -1"
+                    (click)="serviceAdapter.createLayout()"
+                >
                     Save
                 </button>
-                <button type="button"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        style="padding: 12px 15px; margin-right: 17px;"
-                        *ngIf="currentLayout.name && doesCurrentLayoutHasUniqueName() && currentLayout.id != -1"
-                        (click)="serviceAdapter.updateLayout();">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-right: 17px"
+                    *ngIf="currentLayout.name && doesCurrentLayoutHasUniqueName() && currentLayout.id != -1"
+                    (click)="serviceAdapter.updateLayout()"
+                >
                     Update
                 </button>
-                <button type="button"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        style="padding: 12px 15px; margin-right: 17px;"
-                        *ngIf="currentLayout.id != -1"
-                        (click)="serviceAdapter.deleteLayout();">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-right: 17px"
+                    *ngIf="currentLayout.id != -1"
+                    (click)="serviceAdapter.deleteLayout()"
+                >
                     Delete
                 </button>
             </div>
-
         </ng-container>
 
-        <img style='display: none'
-             id='defaultBackground'
-             crossorigin="anonymous"
-             src='https://korangleplus.s3.amazonaws.com/assets/img/plain-id-card.jpg' />
-
+        <img
+            style="display: none"
+            id="defaultBackground"
+            crossorigin="anonymous"
+            src="https://korangleplus.s3.amazonaws.com/assets/img/plain-id-card.jpg"
+        />
     </ng-container>
 
     <ng-container *ngIf="isLoading" style="height: 100%; display: flex; justify-content: center">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

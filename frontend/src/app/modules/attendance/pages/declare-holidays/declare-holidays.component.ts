@@ -1,22 +1,20 @@
-import {Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
-import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
-import {DataStorage} from "../../../../classes/data-storage";
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import { DataStorage } from '../../../../classes/data-storage';
 import { DeclareHolidaysServiceAdapter } from './declare-holidays.service.adapter';
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 
 @Component({
-  selector: 'declare-holidays',
-  templateUrl: './declare-holidays.component.html',
-  styleUrls: ['./declare-holidays.component.css'],
-    providers: [ AttendanceOldService, StudentOldService, EmployeeOldService,AttendanceService ],
+    selector: 'declare-holidays',
+    templateUrl: './declare-holidays.component.html',
+    styleUrls: ['./declare-holidays.component.css'],
+    providers: [AttendanceOldService, StudentOldService, EmployeeOldService, AttendanceService],
 })
-
 export class DeclareHolidaysComponent implements OnInit {
-
     user;
 
     classSectionStudentList = [];
@@ -27,14 +25,16 @@ export class DeclareHolidaysComponent implements OnInit {
     startDate = null;
     endDate = null;
 
-    serviceAdapter: DeclareHolidaysServiceAdapter
+    serviceAdapter: DeclareHolidaysServiceAdapter;
 
     isLoading = false;
 
-    constructor (public attendanceService: AttendanceOldService,
-                 public attendanceService2: AttendanceService,
-                 public studentService: StudentOldService,
-                 public employeeService: EmployeeOldService) { }  
+    constructor(
+        public attendanceService: AttendanceOldService,
+        public attendanceService2: AttendanceService,
+        public studentService: StudentOldService,
+        public employeeService: EmployeeOldService
+    ) {}
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new DeclareHolidaysServiceAdapter();
@@ -44,34 +44,34 @@ export class DeclareHolidaysComponent implements OnInit {
     }
 
     initializeEmployeeList(employeeList: any): void {
-        this.employeeList = employeeList.filter(employee => {
-            return employee.dateOfLeaving===null;
+        this.employeeList = employeeList.filter((employee) => {
+            return employee.dateOfLeaving === null;
         });
-        this.employeeList.forEach(employee => {
+        this.employeeList.forEach((employee) => {
             employee.selected = false;
         });
     }
 
     initializeClassSectionStudentList(classSectionStudentList: any): void {
-        classSectionStudentList.forEach( classs => {
+        classSectionStudentList.forEach((classs) => {
             let tempClass = {
                 name: classs.name,
                 dbId: classs.dbId,
                 sectionList: [],
             };
-            classs.sectionList.forEach( section => {
+            classs.sectionList.forEach((section) => {
                 let tempSection = {
                     name: section.name,
                     dbId: section.dbId,
                     selected: false,
                     studentList: [],
                 };
-                section.studentList.forEach( student => {
+                section.studentList.forEach((student) => {
                     if (student.parentTransferCertificate === null) {
                         let tempStudent = {
                             name: student.name,
                             dbId: student.dbId,
-                            scholarNumber: student.scholarNumber
+                            scholarNumber: student.scholarNumber,
                         };
                         tempSection.studentList.push(tempStudent);
                     }
@@ -89,9 +89,9 @@ export class DeclareHolidaysComponent implements OnInit {
     // Server Handling - 1
     prepareEmployeeAttendanceStatusListData(): any {
         let employeeAttendanceStatusListData = [];
-        this.employeeList.forEach(employee => {
+        this.employeeList.forEach((employee) => {
             if (employee.selected) {
-                this.getDateList().forEach(date => {
+                this.getDateList().forEach((date) => {
                     let tempData = {
                         parentEmployee: employee.id,
                         dateOfAttendance: this.formatDate(date.toString(), ''),
@@ -106,11 +106,11 @@ export class DeclareHolidaysComponent implements OnInit {
 
     prepareStudentAttendanceStatusListData(): any {
         let studentAttendanceStatusListData = [];
-        this.classSectionStudentList.forEach(classs => {
-            classs.sectionList.forEach(section => {
+        this.classSectionStudentList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
                 if (section.selected) {
-                    section.studentList.forEach(student => {
-                        this.getDateList().forEach(date => {
+                    section.studentList.forEach((student) => {
+                        this.getDateList().forEach((date) => {
                             let tempData = {
                                 parentStudent: student.dbId,
                                 dateOfAttendance: this.formatDate(date.toString(), ''),
@@ -128,10 +128,10 @@ export class DeclareHolidaysComponent implements OnInit {
     // Server Handling - 2
     getStudentIdList(): any {
         let studentIdList = [];
-        this.classSectionStudentList.forEach(classs => {
-            classs.sectionList.forEach(section => {
+        this.classSectionStudentList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
                 if (section.selected) {
-                    section.studentList.forEach(student => {
+                    section.studentList.forEach((student) => {
                         studentIdList.push(student.dbId);
                     });
                 }
@@ -142,78 +142,77 @@ export class DeclareHolidaysComponent implements OnInit {
 
     getEmployeeIdList(): any {
         let employeeIdList = [];
-        this.employeeList.forEach(employee => {
-            if(employee.selected) {
+        this.employeeList.forEach((employee) => {
+            if (employee.selected) {
                 employeeIdList.push(employee.id);
             }
         });
         return employeeIdList;
     }
 
-
     // Called from Html files
     unselectAllEmployees(): void {
-        this.employeeList.forEach(employee => {
+        this.employeeList.forEach((employee) => {
             employee.selected = false;
         });
-    };
+    }
 
     selectAllEmployees(): void {
-        this.employeeList.forEach(employee => {
+        this.employeeList.forEach((employee) => {
             employee.selected = true;
         });
-    };
+    }
 
     getSelectedEmployees(): any {
         let all = true;
         let selectedEmployees = '';
-        this.employeeList.forEach(employee => {
-                if (employee.selected) {
-                    selectedEmployees += employee.name + ', ';
-                } else {
-                    all = false;
-                }
+        this.employeeList.forEach((employee) => {
+            if (employee.selected) {
+                selectedEmployees += employee.name + ', ';
+            } else {
+                all = false;
+            }
         });
-        return (all ?
-            'All Employees Selected' : (selectedEmployees.length > 0) ?
-                selectedEmployees.substr(0, selectedEmployees.length-2) : 'No Employee Selected');
+        return all
+            ? 'All Employees Selected'
+            : selectedEmployees.length > 0
+            ? selectedEmployees.substr(0, selectedEmployees.length - 2)
+            : 'No Employee Selected';
     }
 
     unselectAllClasses(): void {
-        this.classSectionStudentList.forEach(
-            classs => {
-                classs.sectionList.forEach(section => {
-                    section.selected = false;
-                });
-            }
-        );
-    };
+        this.classSectionStudentList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = false;
+            });
+        });
+    }
 
     selectAllClasses(): void {
-        this.classSectionStudentList.forEach(
-            classs => {
-                classs.sectionList.forEach(section => {
-                    section.selected = true;
-                });
-            }
-        );
-    };
+        this.classSectionStudentList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = true;
+            });
+        });
+    }
 
     getSelectedClasses(): any {
         let all = true;
         let selectedClasses = '';
-        this.classSectionStudentList.forEach(classs => {
-            classs.sectionList.forEach(section => {
+        this.classSectionStudentList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
                 if (section.selected) {
-                    selectedClasses += classs.name + (classs.sectionList.length > 1 ? ' (' + section.name + ')': '') + ', ';
+                    selectedClasses += classs.name + (classs.sectionList.length > 1 ? ' (' + section.name + ')' : '') + ', ';
                 } else {
                     all = false;
                 }
             });
         });
-        return (all ?
-            'All Classes Selected' : (selectedClasses.length > 0) ?
-                selectedClasses.substr(0, selectedClasses.length-2) : 'No Class Selected');
+        return all
+            ? 'All Classes Selected'
+            : selectedClasses.length > 0
+            ? selectedClasses.substr(0, selectedClasses.length - 2)
+            : 'No Class Selected';
     }
 
     onDateSelected(event: any): void {
@@ -230,7 +229,6 @@ export class DeclareHolidaysComponent implements OnInit {
     }
 
     formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -255,12 +253,11 @@ export class DeclareHolidaysComponent implements OnInit {
         let tempDate = new Date(this.startDate);
         let lastDate = new Date(this.endDate);
 
-        while(tempDate <= lastDate) {
+        while (tempDate <= lastDate) {
             dateList.push(new Date(tempDate));
             tempDate.setDate(tempDate.getDate() + 1);
         }
 
         return dateList;
     }
-
 }

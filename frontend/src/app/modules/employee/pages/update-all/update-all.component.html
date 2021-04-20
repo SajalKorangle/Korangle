@@ -1,84 +1,78 @@
 <div class="card-content table-responsive">
     <!-- Column Filter -->
-    <mat-form-field style="margin-right: 15px;">
+    <mat-form-field style="margin-right: 15px">
         <mat-select placeholder="Select Columns">
             <mat-option>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="showAllColumns(); $event.stopPropagation();">Select All
-                </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="hideAllColumns(); $event.stopPropagation();">Clear All
-                </button>
+                <button class="btn" style="padding: 4px 7px" (click)="showAllColumns(); $event.stopPropagation()">Select All</button>
+                <button class="btn" style="padding: 4px 7px" (click)="hideAllColumns(); $event.stopPropagation()">Clear All</button>
             </mat-option>
             <ng-container *ngFor="let column of COLUMNHANDLES">
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="column.show" (click)="$event.stopPropagation();">
-                        {{column.name}}
+                    <mat-checkbox [(ngModel)]="column.show" (click)="$event.stopPropagation()">
+                        {{ column.name }}
                     </mat-checkbox>
                 </mat-option>
             </ng-container>
             <mat-option>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="showAllColumns(); $event.stopPropagation();">Select All
-                </button>
-                <button class="btn"
-                        style="padding: 4px 7px"
-                        (click)="hideAllColumns(); $event.stopPropagation();">Clear All
-                </button>
+                <button class="btn" style="padding: 4px 7px" (click)="showAllColumns(); $event.stopPropagation()">Select All</button>
+                <button class="btn" style="padding: 4px 7px" (click)="hideAllColumns(); $event.stopPropagation()">Clear All</button>
             </mat-option>
         </mat-select>
     </mat-form-field>
 
-<!--    // Employee Table-->
+    <!--    // Employee Table-->
     <ng-container *ngIf="!isLoading">
         <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th *ngFor="let column of COLUMNHANDLES"
-                        [class.hidden]="!column.show">
-                        {{column.name}}
-                    </th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show">
+                            {{ column.name }}
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *cdkVirtualFor="let employee of employeeFullProfileList">
-                    <tr>
-                        <td *ngFor="let column of COLUMNHANDLES"
-                            [class.hidden]="!column.show"
-                            [attr.id]="column.key+employee.id">
-                            <ng-container *ngIf="column.inputType===null">
-                                {{employee[column.key]}}
-                            </ng-container>
-                            <ng-container *ngIf="column.inputType==='list'">
-                                <mat-form-field>
-                                    <mat-select [ngModel]="employee[column.key]"
-                                                [attr.id]="employee.id+column.key"
-                                                (ngModelChange)="serviceAdapter.updateEmloyeeField(column.key, employee, $event,column.inputType)">
-                                        <mat-option *ngFor='let item of column.list;' [value]="item">
-                                            {{item}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </ng-container>
-                            <ng-container *ngIf="column.inputType==='text' || column.inputType==='number' || column.inputType==='date'">
-                                <input [attr.type]="column.inputType"
-                                       [attr.id]="employee.id+column.key"
-                                       class="customInput"
-                                       (blur)="serviceAdapter.updateEmloyeeField(column.key,employee, $event.target.value,column.inputType)"
-                                       [ngModel]="employee[column.key]"/>
-                            </ng-container>
-                        </td>
-                    </tr>
-                </ng-container>
+                    <ng-container *cdkVirtualFor="let employee of employeeFullProfileList">
+                        <tr>
+                            <td *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show" [attr.id]="column.key + employee.id">
+                                <ng-container *ngIf="column.inputType === null">
+                                    {{ employee[column.key] }}
+                                </ng-container>
+                                <ng-container *ngIf="column.inputType === 'list'">
+                                    <mat-form-field>
+                                        <mat-select
+                                            [ngModel]="employee[column.key]"
+                                            [attr.id]="employee.id + column.key"
+                                            (ngModelChange)="
+                                                serviceAdapter.updateEmloyeeField(column.key, employee, $event, column.inputType)
+                                            "
+                                        >
+                                            <mat-option *ngFor="let item of column.list" [value]="item">
+                                                {{ item }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container
+                                    *ngIf="column.inputType === 'text' || column.inputType === 'number' || column.inputType === 'date'"
+                                >
+                                    <input
+                                        [attr.type]="column.inputType"
+                                        [attr.id]="employee.id + column.key"
+                                        class="customInput"
+                                        (blur)="
+                                            serviceAdapter.updateEmloyeeField(column.key, employee, $event.target.value, column.inputType)
+                                        "
+                                        [ngModel]="employee[column.key]"
+                                    />
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </cdk-virtual-scroll-viewport>
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">

@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
 export class AttendanceOldService extends CommonServiceRequirements {
-
     // Student Attendance
     recordStudentAttendance(data: any, token: any): Promise<any> {
         const url = '/attendance-old/student-attendances/batch';
@@ -14,16 +11,24 @@ export class AttendanceOldService extends CommonServiceRequirements {
     }
 
     getStudentAttendanceList(data: any, token: any): Promise<any> {
-        const url = '/attendance-old/student-attendances?startDate='
-            + data['startDate'] + '&endDate=' + data['endDate']
-            + '&studentIdList=' + data['studentIdList'];
+        const url =
+            '/attendance-old/student-attendances?startDate=' +
+            data['startDate'] +
+            '&endDate=' +
+            data['endDate'] +
+            '&studentIdList=' +
+            data['studentIdList'];
         return super.getData(token, url);
     }
 
     deleteStudentAttendance(data: any, token: any): Promise<any> {
-        const url = '/attendance-old/student-attendances?startDate='
-            + data['startDate'] + '&endDate=' + data['endDate']
-            + '&studentIdList=' + data['studentIdList'];
+        const url =
+            '/attendance-old/student-attendances?startDate=' +
+            data['startDate'] +
+            '&endDate=' +
+            data['endDate'] +
+            '&studentIdList=' +
+            data['studentIdList'];
         return super.deleteData(token, url);
     }
 
@@ -34,16 +39,24 @@ export class AttendanceOldService extends CommonServiceRequirements {
     }
 
     getEmployeeAttendanceList(data: any, token: any): Promise<any> {
-        const url = '/attendance-old/employee-attendances?startDate='
-            + data['startDate'] + '&endDate=' + data['endDate']
-            + '&employeeIdList=' + data['employeeIdList'];
+        const url =
+            '/attendance-old/employee-attendances?startDate=' +
+            data['startDate'] +
+            '&endDate=' +
+            data['endDate'] +
+            '&employeeIdList=' +
+            data['employeeIdList'];
         return super.getData(token, url);
     }
 
     deleteEmployeeAttendance(data: any, token: any): Promise<any> {
-        const url = '/attendance-old/employee-attendances?startDate='
-            + data['startDate'] + '&endDate=' + data['endDate']
-            + '&employeeIdList=' + data['employeeIdList'];
+        const url =
+            '/attendance-old/employee-attendances?startDate=' +
+            data['startDate'] +
+            '&endDate=' +
+            data['endDate'] +
+            '&employeeIdList=' +
+            data['employeeIdList'];
         return super.deleteData(token, url);
     }
 
@@ -59,16 +72,20 @@ export class AttendanceOldService extends CommonServiceRequirements {
     }
 
     getEmployeeAppliedLeaveList(data: any, token: any): Promise<any> {
-        const url = '/attendance-old/employee-applied-leaves?startDate='
-            + data['startDate'] + '&endDate=' + data['endDate']
-            + '&employeeIdList=' + data['employeeIdList'];
+        const url =
+            '/attendance-old/employee-applied-leaves?startDate=' +
+            data['startDate'] +
+            '&endDate=' +
+            data['endDate'] +
+            '&employeeIdList=' +
+            data['employeeIdList'];
         return super.getData(token, url);
     }
 
     // Attendance Permission
     getAttendancePermissionList(data: any, token: any): Promise<any> {
-        const url = '/attendance-old/attendance-permissions-old?parentEmployee='
-            + data['parentEmployee'] + '&sessionId=' + data['sessionId'];
+        const url =
+            '/attendance-old/attendance-permissions-old?parentEmployee=' + data['parentEmployee'] + '&sessionId=' + data['sessionId'];
         return super.getData(token, url);
     }
 
@@ -81,5 +98,4 @@ export class AttendanceOldService extends CommonServiceRequirements {
         const url = '/attendance-old/attendance-permissions-old/' + data['id'];
         return super.deleteData(token, url);
     }
-
 }

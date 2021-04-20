@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_I_CARD } from '../../../../print/print-routes.constants';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 export class ColumnFilter {
     showName = true;
@@ -25,9 +25,7 @@ export class ColumnFilter {
     styleUrls: ['./i-cards.component.css'],
     providers: [ColumnFilter],
 })
-
 export class ICardsComponent implements OnInit {
-
     user;
 
     // Gender options
@@ -43,26 +41,26 @@ export class ICardsComponent implements OnInit {
 
     timeout: any;
 
-    constructor(private employeeService: EmployeeOldService ,
-                public columnFilter: ColumnFilter,
-                private printService: PrintService) {
-    }
+    constructor(private employeeService: EmployeeOldService, public columnFilter: ColumnFilter, private printService: PrintService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
         const data = {
-           'parentSchool': this.user.activeSchool.dbId,
-       };
-       this.isLoading = true;
-       this.employeeService.getEmployeeProfileList(data , this.user.jwt).then(employeeList => {
-           this.isLoading = false;
-           this.employeeProfileList = employeeList.filter(employee => {
-               return employee.dateOfLeaving === null;
-           });
-       }, error => {
-           this.isLoading = false;
-       });
+            parentSchool: this.user.activeSchool.dbId,
+        };
+        this.isLoading = true;
+        this.employeeService.getEmployeeProfileList(data, this.user.jwt).then(
+            (employeeList) => {
+                this.isLoading = false;
+                this.employeeProfileList = employeeList.filter((employee) => {
+                    return employee.dateOfLeaving === null;
+                });
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     onPage(event) {
@@ -78,31 +76,31 @@ export class ICardsComponent implements OnInit {
 
     getSelectedEmployee(): number {
         let selectedEmployee = 0;
-        this.employeeProfileList.forEach(row => {
+        this.employeeProfileList.forEach((row) => {
             if (row.selected) {
                 selectedEmployee++;
             }
-        })
+        });
         return selectedEmployee;
     }
 
     selectAllStudents() {
-        this.employeeProfileList.forEach(row => {
+        this.employeeProfileList.forEach((row) => {
             row.selected = true;
         });
     }
 
     unSelectAllStudents() {
-        this.employeeProfileList.forEach(row => {
+        this.employeeProfileList.forEach((row) => {
             row.selected = false;
         });
     }
 
     printEmployeeICards(): void {
-        const employeeProfileList = this.employeeProfileList.filter(employee => {
-            return (employee.selected);
+        const employeeProfileList = this.employeeProfileList.filter((employee) => {
+            return employee.selected;
         });
         console.log(employeeProfileList);
-        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_I_CARD, {user: this.user, value: employeeProfileList});
-    };
+        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_I_CARD, { user: this.user, value: employeeProfileList });
+    }
 }

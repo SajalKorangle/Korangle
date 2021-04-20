@@ -1,17 +1,13 @@
-import {ViewEventComponent} from '@modules/event-gallery/pages/view-event/view-event.component';
+import { ViewEventComponent } from '@modules/event-gallery/pages/view-event/view-event.component';
 
 export class ViewEventServiceAdapter {
     vm: ViewEventComponent;
 
-
-    constructor() {
-    }
-
+    constructor() {}
 
     initializeAdapter(vm: ViewEventComponent): void {
         this.vm = vm;
     }
-
 
     initializeData(): void {
         this.vm.isLoading = true;
@@ -30,15 +26,14 @@ export class ViewEventServiceAdapter {
 
         if (this.vm.user.activeSchool.role === 'Parent') {
             let student_list = {
-                'parentStudent__in': this.vm.user.activeSchool.studentList.map(s => s.id).join(),
-            }
+                parentStudent__in: this.vm.user.activeSchool.studentList.map((s) => s.id).join(),
+            };
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_list),//0
-            ]).then(value => {
-                value[0].forEach(classs => {
+                this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_list), //0
+            ]).then((value) => {
+                value[0].forEach((classs) => {
                     this.vm.studentsClass.push(classs);
-                })
-
+                });
             });
         }
     }
@@ -47,67 +42,67 @@ export class ViewEventServiceAdapter {
         this.vm.isEventListLoading = true;
 
         let event_data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession':this.vm.user.activeSchool.currentSessionDbId,
-            'korangle__order': '-heldOn',
-            'korangle__count': this.vm.eventCount.toString() + ',' + (this.vm.eventCount + this.vm.loadingCount).toString()
-        }
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            korangle__order: '-heldOn',
+            korangle__count: this.vm.eventCount.toString() + ',' + (this.vm.eventCount + this.vm.loadingCount).toString(),
+        };
 
         Promise.all([
-            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data),//0
-        ]).then(value => {
-            value[0].forEach(event => {
+            this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data), //0
+        ]).then((value) => {
+            value[0].forEach((event) => {
                 this.vm.eventList.push(event);
-            })
+            });
             if (value[0].length < this.vm.loadingCount) {
                 this.vm.loadMoreEvents = false;
             }
             this.vm.eventCount += value[0].length;
 
             let image_data = {
-                'parentEvent__in': value[0].map(e => e.id).join(),
-                'korangle__order': '-id',
-            }
+                parentEvent__in: value[0].map((e) => e.id).join(),
+                korangle__order: '-id',
+            };
             let tag_data = {
-                'parentEvent__in': value[0].map(e => e.id).join(),
-            }
+                parentEvent__in: value[0].map((e) => e.id).join(),
+            };
             let image_tag_data = {
-                'parentEventImage__parentEvent__in': value[0].map(e => e.id).join(),
-            }
+                parentEventImage__parentEvent__in: value[0].map((e) => e.id).join(),
+            };
 
             let notify_data = {
-                'parentEvent__in': value[0].map(e => e.id).join(),
-            }
-
+                parentEvent__in: value[0].map((e) => e.id).join(),
+            };
 
             Promise.all([
-                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_tag, tag_data),//0
-                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image, image_data),//1
-                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image_tag, image_tag_data),//2
-                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_notify_class, notify_data),//3
-            ]).then(value2 => {
-
-                this.vm.eventList = this.vm.eventList.filter(event => {
+                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_tag, tag_data), //0
+                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image, image_data), //1
+                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_image_tag, image_tag_data), //2
+                this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event_notify_class, notify_data), //3
+            ]).then((value2) => {
+                this.vm.eventList = this.vm.eventList.filter((event) => {
                     let hasEmployeeVisibility = false;
                     let hasParentVisibility = false;
                     if (this.vm.user.activeSchool.role === 'Employee') {
                         hasEmployeeVisibility = event.notifyEmployees;
                     }
-                    value2[3].some(classs => {
-                        return hasParentVisibility = !!(classs.parentEvent === event.id && this.vm.studentsClass.some(studentClass => classs.parentClass === studentClass.parentClass));
+                    value2[3].some((classs) => {
+                        return (hasParentVisibility = !!(
+                            classs.parentEvent === event.id &&
+                            this.vm.studentsClass.some((studentClass) => classs.parentClass === studentClass.parentClass)
+                        ));
                     });
                     return hasEmployeeVisibility || hasParentVisibility;
                 });
 
-
-                value2[0].forEach(val => {
+                value2[0].forEach((val) => {
                     this.vm.tagList.push(val);
                 });
 
-                value2[1].forEach(image => {
+                value2[1].forEach((image) => {
                     image['selected'] = false;
                     image['tagList'] = [];
-                    value2[2].forEach(imageEvent => {
+                    value2[2].forEach((imageEvent) => {
                         if (imageEvent.parentEventImage == image.id) {
                             image['tagList'].push(imageEvent.parentEventTag);
                         }
@@ -115,7 +110,7 @@ export class ViewEventServiceAdapter {
                     this.vm.imageList.push(image);
                 });
 
-                value2[2].forEach(val => {
+                value2[2].forEach((val) => {
                     this.vm.imageTagList.push(val);
                 });
 

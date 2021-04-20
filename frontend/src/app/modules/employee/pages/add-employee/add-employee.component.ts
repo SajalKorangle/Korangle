@@ -1,20 +1,18 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
-import {DataStorage} from "../../../../classes/data-storage";
-import {TeamService} from '../../../../services/modules/team/team.service';
-import {EmployeeService} from '../../../../services/modules/employee/employee.service';
-import {BankService} from '../../../../services/bank.service';
+import { DataStorage } from '../../../../classes/data-storage';
+import { TeamService } from '../../../../services/modules/team/team.service';
+import { EmployeeService } from '../../../../services/modules/employee/employee.service';
+import { BankService } from '../../../../services/bank.service';
 
 @Component({
-  selector: 'add-employee',
-  templateUrl: './add-employee.component.html',
-  styleUrls: ['./add-employee.component.css'],
-  providers:[BankService,TeamService,EmployeeService,EmployeeOldService]
+    selector: 'add-employee',
+    templateUrl: './add-employee.component.html',
+    styleUrls: ['./add-employee.component.css'],
+    providers: [BankService, TeamService, EmployeeService, EmployeeOldService],
 })
-
 export class AddEmployeeComponent implements OnInit {
-
     user;
 
     newEmployee: any;
@@ -25,10 +23,12 @@ export class AddEmployeeComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (private employeeOldService: EmployeeOldService,
-                 private employeeService : EmployeeService,
-                 private bankService: BankService,
-                 private teamService:TeamService) { }
+    constructor(
+        private employeeOldService: EmployeeOldService,
+        private employeeService: EmployeeService,
+        private bankService: BankService,
+        private teamService: TeamService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -39,93 +39,93 @@ export class AddEmployeeComponent implements OnInit {
         let data = {
             parentSchool: this.user.activeSchool.dbId,
         };
-        this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt).then(employeeList => {
+        this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt).then((employeeList) => {
             this.employeeList = employeeList;
         });
 
         let module_data = {
-            'parentBoard__or': this.user.activeSchool.parentBoard,
-            'parentBoard': 'null__korangle',
+            parentBoard__or: this.user.activeSchool.parentBoard,
+            parentBoard: 'null__korangle',
         };
 
         let task_data = {
-            'parentBoard__or': this.user.activeSchool.parentBoard,
-            'parentBoard': 'null__korangle',
-            'parentModule__parentBoard__or': this.user.activeSchool.parentBoard,
-            'parentModule__parentBoard': 'null__korangle',
+            parentBoard__or: this.user.activeSchool.parentBoard,
+            parentBoard: 'null__korangle',
+            parentModule__parentBoard__or: this.user.activeSchool.parentBoard,
+            parentModule__parentBoard: 'null__korangle',
         };
 
         Promise.all([
             this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt),
             this.teamService.getObjectList(this.teamService.module, module_data),
             this.teamService.getObjectList(this.teamService.task, task_data),
-        ]).then(value => {
-            console.log(value[0]);
-            this.employeeList = value[0];
-            this.initializeModuleList(value[1],value[2]);
-            this.isLoading = false;
-
-        }, error => {
-            this.isLoading = false;
-        });
-
+        ]).then(
+            (value) => {
+                console.log(value[0]);
+                this.employeeList = value[0];
+                this.initializeModuleList(value[1], value[2]);
+                this.isLoading = false;
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
-    isSelected(task: any){
-        if(task.selected){
-            return task.id
+    isSelected(task: any) {
+        if (task.selected) {
+            return task.id;
         }
     }
 
-    grantAll(){
-        this.moduleList.forEach(module => {
-            module.taskList.forEach(task => {
+    grantAll() {
+        this.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
                 task.selected = true;
-            })
-        })
-    }
-
-    removeAll(){
-        this.moduleList.forEach(module => {
-            module.taskList.forEach(task => {
-                task.selected = false;
-            })
-        })
-    }
-
-    createPermission(employee: any, task){
-        let data = [];
-        this.moduleList.forEach(module=>{
-            module.taskList.forEach(task=>{
-                if(task.selected){
-                    data.push({
-                        'parentEmployee': employee.id,
-                        'parentTask': task.id,
-                    })
-                }
-            })
+            });
         });
-        this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
+    }
 
-        })
+    removeAll() {
+        this.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                task.selected = false;
+            });
+        });
+    }
+
+    createPermission(employee: any, task) {
+        let data = [];
+        this.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                if (task.selected) {
+                    data.push({
+                        parentEmployee: employee.id,
+                        parentTask: task.id,
+                    });
+                }
+            });
+        });
+        this.employeeService.createObjectList(this.employeeService.employee_permissions, data).then((value) => {});
     }
 
     initializeModuleList(moduleList: any, taskList: any): void {
         this.moduleList = moduleList;
-        this.moduleList.forEach(module => {
-            module.taskList = taskList.filter(task => {
-                task.selected = false;
-                return task.parentModule == module.id;
-            }).sort( (a,b) => {
-                return a.orderNumber - b.orderNumber;
-            });
+        this.moduleList.forEach((module) => {
+            module.taskList = taskList
+                .filter((task) => {
+                    task.selected = false;
+                    return task.parentModule == module.id;
+                })
+                .sort((a, b) => {
+                    return a.orderNumber - b.orderNumber;
+                });
         });
-        this.moduleList = this.moduleList.sort( (a,b) => {
+        this.moduleList = this.moduleList.sort((a, b) => {
             return a.orderNumber - b.orderNumber;
         });
         console.log(this.moduleList);
     }
-
 
     checkLength(value: any) {
         if (value && value.toString().length > 0) {
@@ -143,26 +143,34 @@ export class AddEmployeeComponent implements OnInit {
 
     policeNumberInput(event: any): boolean {
         let value = event.key;
-        if (value !== '0' && value !== '1' && value !== '2' && value !== '3' &&
-            value !== '4' && value !== '5' && value !== '6' && value !== '7' &&
-            value !== '8' && value !== '9') {
+        if (
+            value !== '0' &&
+            value !== '1' &&
+            value !== '2' &&
+            value !== '3' &&
+            value !== '4' &&
+            value !== '5' &&
+            value !== '6' &&
+            value !== '7' &&
+            value !== '8' &&
+            value !== '9'
+        ) {
             return false;
         }
         return true;
     }
 
-    getBankDetails(){
-        if(this.newEmployee.bankIfscCode.length < 11){
-            return ;
+    getBankDetails() {
+        if (this.newEmployee.bankIfscCode.length < 11) {
+            return;
         }
-        this.bankService.getDetailsFromIFSCCode(this.newEmployee.bankIfscCode.toString()).then(value=>{
-            this.newEmployee.bankName = value ;
+        this.bankService.getDetailsFromIFSCCode(this.newEmployee.bankIfscCode.toString()).then((value) => {
+            this.newEmployee.bankName = value;
         });
     }
 
     createNewEmployee(): void {
-
-        console.log("CREATE NEW EMPLOYEE CALLED");
+        console.log('CREATE NEW EMPLOYEE CALLED');
 
         if (this.newEmployee.name === undefined || this.newEmployee.name === '') {
             alert('Name should be populated');
@@ -170,7 +178,7 @@ export class AddEmployeeComponent implements OnInit {
         }
 
         if (this.newEmployee.fatherName === undefined || this.newEmployee.fatherName === '') {
-            alert('Father\'s Name should be populated');
+            alert("Father's Name should be populated");
             return;
         }
 
@@ -190,25 +198,24 @@ export class AddEmployeeComponent implements OnInit {
             this.newEmployee.mobileNumber = null;
             alert('Mobile number is required');
             return;
-        } else if (this.newEmployee.mobileNumber.toString().length != 10){
+        } else if (this.newEmployee.mobileNumber.toString().length != 10) {
             alert('Mobile number should be of 10 digits');
             return;
         } else {
             let selectedEmployee = null;
-            this.employeeList.forEach(employee => {
+            this.employeeList.forEach((employee) => {
                 if (employee.mobileNumber === this.newEmployee.mobileNumber) {
                     selectedEmployee = employee;
                 }
             });
             if (selectedEmployee) {
-                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                alert('Mobile Number already exists in ' + selectedEmployee.name + "'s profile");
                 return;
             }
         }
 
-        if (this.newEmployee.aadharNumber != null
-            && this.newEmployee.aadharNumber.toString().length != 12) {
-            alert("Aadhar No. should be 12 digits");
+        if (this.newEmployee.aadharNumber != null && this.newEmployee.aadharNumber.toString().length != 12) {
+            alert('Aadhar No. should be 12 digits');
             return;
         }
 
@@ -217,42 +224,43 @@ export class AddEmployeeComponent implements OnInit {
         this.isLoading = true;
 
         console.log(this.newEmployee);
-        this.employeeOldService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(response => {
+        this.employeeOldService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(
+            (response) => {
                 let post_data = {
                     parentEmployee: response.id,
                     parentSession: this.user.activeSchool.currentSessionDbId,
                     paidLeaveNumber: this.newEmployeeSessionDetail.paidLeaveNumber,
                 };
-                this.employeeOldService.createEmployeeSessionDetail(post_data, this.user.jwt).then(res => {
+                this.employeeOldService.createEmployeeSessionDetail(post_data, this.user.jwt).then((res) => {
                     console.log(response);
                     let data = [];
-                    this.moduleList.forEach(module=>{
-                        module.taskList.forEach(task=>{
-                            if(task.selected){
+                    this.moduleList.forEach((module) => {
+                        module.taskList.forEach((task) => {
+                            if (task.selected) {
                                 data.push({
-                                    'parentEmployee': response.id,
-                                    'parentTask': task.id,
-                                })
+                                    parentEmployee: response.id,
+                                    parentTask: task.id,
+                                });
                             }
-                        })
+                        });
                     });
-                    this.employeeService.createObjectList(this.employeeService.employee_permissions,data).then(value => {
-                        this.moduleList.forEach(module=>{
-                            module.taskList.forEach(task=>{
+                    this.employeeService.createObjectList(this.employeeService.employee_permissions, data).then((value) => {
+                        this.moduleList.forEach((module) => {
+                            module.taskList.forEach((task) => {
                                 task.selected = false;
-                            })
+                            });
                         });
                         this.isLoading = false;
                         alert('Employee Profile Created Successfully');
                         this.newEmployee = {};
                         this.newEmployeeSessionDetail = {};
-                    })
+                    });
                 });
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
                 alert('Server Error: Contact admin');
             }
         );
     }
-
 }

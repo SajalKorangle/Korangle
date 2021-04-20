@@ -1,11 +1,12 @@
 import { EditAccountDialogComponent } from './edit-account-dialog.component';
 
 export class EditAccountDialogHtmlRenderer {
-
     vm: EditAccountDialogComponent;
-    constructor() {}
+    constructor() { }
 
-    initialize(vm: EditAccountDialogComponent) { this.vm = vm; }
+    initialize(vm: EditAccountDialogComponent) {
+        this.vm = vm;
+    }
 
     isAccountNameAlreadyExists(): boolean {
         return this.vm.data.vm.backendData.accountsList.find(account => {
@@ -14,9 +15,10 @@ export class EditAccountDialogHtmlRenderer {
     }
 
     isAddButtonDisplayed(): boolean {
-        return this.vm.account.title.trim().length > 0
-         && (this.vm.account.parentHead != null || this.vm.account.parentGroup != null)
-         && !this.isAccountNameAlreadyExists();
+        return (
+            this.vm.account.title.trim().length > 0 &&
+            (this.vm.account.parentHead != null || this.vm.account.parentGroup != null) &&
+            !this.isAccountNameAlreadyExists()
+        );
     }
-
 }

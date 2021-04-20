@@ -1,16 +1,16 @@
-import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import {showPhoto} from '@classes/common.js';
-import {saveAs} from 'file-saver';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { showPhoto } from '@classes/common.js';
+import { saveAs } from 'file-saver';
 
-import {trigger, transition, query, style, animate, group} from '@angular/animations';
+import { trigger, transition, query, style, animate, group } from '@angular/animations';
 
 const left = [
     group([
-        query(':enter', [style({transform: 'translateX(-100%)'}), animate('.3s linear', style({transform: 'translateX(0%)'}))], {
+        query(':enter', [style({ transform: 'translateX(-100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
             optional: true,
         }),
-        query(':leave', [style({transform: 'translateX(0%)'}), animate('.3s linear', style({transform: 'translateX(100%)'}))], {
+        query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(100%)' }))], {
             optional: true,
         }),
     ]),
@@ -18,10 +18,10 @@ const left = [
 
 const right = [
     group([
-        query(':enter', [style({transform: 'translateX(100%)'}), animate('.3s linear', style({transform: 'translateX(0%)'}))], {
+        query(':enter', [style({ transform: 'translateX(100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
             optional: true,
         }),
-        query(':leave', [style({transform: 'translateX(0%)'}), animate('.3s linear', style({transform: 'translateX(-100%)'}))], {
+        query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(-100%)' }))], {
             optional: true,
         }),
     ]),
@@ -40,26 +40,18 @@ export interface ImagePreviewDialogData {
     isMobile: any;
 }
 
-
 @Component({
     selector: 'view-image-modal',
     templateUrl: 'view-image-modal.html',
     styleUrls: ['./view-image-modal.css'],
-    animations: [
-        trigger('animImageSlider', [
-            transition(':increment', right),
-            transition(':decrement', left),
-        ]),
-    ]
+    animations: [trigger('animImageSlider', [transition(':increment', right), transition(':decrement', left)])],
 })
-
 export class ViewImageModalComponent {
-
-
     constructor(
         public dialogRef: MatDialogRef<ViewImageModalComponent>,
         @Inject(MAT_DIALOG_DATA)
-        public data: ImagePreviewDialogData,) {
+        public data: ImagePreviewDialogData
+    ) {
         this.moveToIndex = this.data.index;
         this.counter = this.data.index;
     }
@@ -68,18 +60,18 @@ export class ViewImageModalComponent {
     counter: number = 0;
 
     imageStyle = {
-        'display': 'inline-block',
-        'margin': 'auto',
-        'width': '50%',
-        'opacity': '1',
-    }
+        display: 'inline-block',
+        margin: 'auto',
+        width: '50%',
+        opacity: '1',
+    };
 
     imageStyleMobile = {
-        'display': 'inline-block',
-        'margin': 'auto',
-        'width': '95vw',
+        display: 'inline-block',
+        margin: 'auto',
+        width: '95vw',
         'max-width': '100%',
-    }
+    };
     isImageDownloading: boolean;
 
     onNoClick(): void {
@@ -94,7 +86,6 @@ export class ViewImageModalComponent {
         this.imageStyle.width = '50%';
         this.imageStyleMobile.width = '100%';
     }
-
 
     onNext() {
         if (this.counter != this.data.imageList.length - 1) {
@@ -123,7 +114,7 @@ export class ViewImageModalComponent {
         if (str.imageUrl != undefined) {
             tempStr = str.imageUrl;
         }
-        showPhoto(tempStr)
+        showPhoto(tempStr);
     }
 
     changeImageSize(event: any) {
@@ -131,7 +122,7 @@ export class ViewImageModalComponent {
     }
 
     getCorrespondingTags() {
-        return this.data.extraList.filter(tags => this.data.imageList[this.counter].tagList.some(tag => tag == tags.id));
+        return this.data.extraList.filter((tags) => this.data.imageList[this.counter].tagList.some((tag) => tag == tags.id));
     }
 
     async downloadSelectedImages() {
@@ -154,13 +145,13 @@ export class ViewImageModalComponent {
             let receivedLength = 0;
             let chunks = [];
             while (true) {
-                const {done, value} = await reader.read();
+                const { done, value } = await reader.read();
                 if (done) {
                     break;
                 }
                 chunks.push(value);
                 receivedLength += value.length;
-                console.log(`Received ${receivedLength} of ${contentLength}`)
+                console.log(`Received ${receivedLength} of ${contentLength}`);
             }
             return new Blob(chunks);
         }

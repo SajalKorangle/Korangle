@@ -1,19 +1,64 @@
-<mat-card style="padding: 0; width: 100%; margin-top:6px; overflow: hidden;">
-    <div style="background-color: grey; text-align: center;">
-        <i class="material-icons" style="margin-top: 4px;">settings_overscan</i>
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">settings_overscan</i>
     </div>
-    <div style="margin: 4px; padding: 4px;">
+    <div style="margin: 4px; padding: 4px">
+        <mat-form-field>
+            <input
+                type="number"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.height)"
+                (ngModelChange)="layer.updateHeight($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Height(mm)"
+            />
+        </mat-form-field>
+        <button
+            class="btn material-icons"
+            style="padding: 4px; display: block; margin: auto"
+            [style.backgroundColor]="layer.maintainAspectRatio == true ? 'blue' : ''"
+            (click)="layer.maintainAspectRatio = !layer.maintainAspectRatio; layer.aspectRatio = layer.width / layer.height"
+        >
+            link
+        </button>
+        <mat-form-field style="margin-top: 16px">
+            <input
+                type="number"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.width)"
+                (ngModelChange)="layer.updateWidth($event / getPixelTommFactor()); canvasRefresh()"
+                placeholder="Choose Width(mm)"
+            />
+        </mat-form-field>
+
+        <mat-form-field style="margin-top: 16px">
+            <input
+                type="number"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.radius)"
+                (ngModelChange)="layer.radius = $event / getPixelTommFactor(); canvasRefresh()"
+                placeholder="Choose Radius(mm)"
+            />
+        </mat-form-field>
 
         <mat-form-field>
-            <input type="number" matInput [ngModel]="getImageHeight()"
-                (ngModelChange)="layer.updateHeight($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Height(mm)">
+            <input
+                type="number"
+                step="1"
+                matInput
+                [ngModel]="getMeasurementInMM(layer.borderStyle.lineWidth)"
+                (ngModelChange)="layer.borderStyle.lineWidth = $event / getPixelTommFactor(); canvasRefresh()"
+                placeholder="Line Width(mm)"
+            />
         </mat-form-field>
-        <button class="btn material-icons" style="padding: 4px; display: block; margin: auto;" [style.backgroundColor]="layer.maintainAspectRatio==true?'blue':''" (click)="layer.maintainAspectRatio=!layer.maintainAspectRatio; layer.aspectRatio=layer.width/layer.height; ">link</button>
-        <mat-form-field style="margin-top: 16px;">
-            <input type="number" matInput [ngModel]="getImageWidth()"
-                (ngModelChange)="layer.updateWidth($event/getPixelTommFactor()); canvasRefresh();" placeholder="Choose Width(mm)">
-        </mat-form-field>
-       
-    </div>
 
+        <mat-form-field>
+            <input
+                type="color"
+                matInput
+                [value]="layer.borderStyle.strokeStyle"
+                (input)="layer.borderStyle.strokeStyle = $event.target.value; canvasRefresh(0)"
+                placeholder="Stroke Color"
+            />
+        </mat-form-field>
+    </div>
 </mat-card>

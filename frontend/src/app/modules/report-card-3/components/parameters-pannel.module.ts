@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
-import { TextParametersPannelComponent} from './right-pannel/text-parameters-pannel/text-parameters-pannel.component'
-import { ComponentsModule } from './../../../components/components.module'
+import { TextParametersPannelComponent } from './right-pannel/text-parameters-pannel/text-parameters-pannel.component';
+import { ComponentsModule } from './../../../components/components.module';
 import { MatButtonToggleModule } from '@angular/material';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AttendanceParametersPannelComponent } from './right-pannel/attendance-parameters-pannel/attendance-parameters-pannel.component';
 import { PositionParameterPannelComponent } from './right-pannel/position-parameter-pannel/position-parameter-pannel.component';
 import { MarksParametersPannelComponent } from './right-pannel/marks-parameters-pannel/marks-parameters-pannel.component';
 import { FormulaParametersPannelComponent } from './right-pannel/formula-parameters-pannel/formula-parameters-pannel.component';
 import { PageResolutionDialogComponent } from './dialogs/page-resolution-dialog/page-resolution-dialog.component';
-import { ResultDialogComponent } from './dialogs/result-dialog/result-dialog.component'
+import { ResultDialogComponent } from './dialogs/result-dialog/result-dialog.component';
 import { ImageParametersPannelComponent } from './right-pannel/image-parameters-pannel/image-parameters-pannel.component';
 import { ShapeParametersPannelComponent } from './right-pannel/shape-parameter-pannel/shape-parameters-pannel.component';
 import { DateParametersPannelComponent } from './right-pannel/date-parameters-pannel/date-parameters-pannel.component';
@@ -28,61 +28,56 @@ import { GroupParametersPannelComponent } from './right-pannel/group-parameters-
 import { ExamMappingDialogComponent } from './dialogs/exam-mapping-dialog/exam-mapping-dialog.component';
 
 @NgModule({
-  declarations: [
-    TextParametersPannelComponent,
-    AttendanceParametersPannelComponent,
-    PositionParameterPannelComponent,
-    MarksParametersPannelComponent,
-    FormulaParametersPannelComponent,
-    PageResolutionDialogComponent,
-    ResultDialogComponent,
-    ImageParametersPannelComponent,
-    ShapeParametersPannelComponent,
-    DateParametersPannelComponent,
-    GradeRulesDialogComponent,
-    MarksDialogComponent,
-    CustomMenuComponent,
-    TableParameterPannelComponent,
-    GradeParametersPannelComponent,
-    RemarkParametersPannelComponent,
-    LayoutSharingDialogComponent,
-    InventoryDialogComponent,
-    LayerReplacementDialogComponent,
-    SettingsParametersPannelComponent,
-    SessionParameterPannelComponent,
-    GroupParametersPannelComponent,
-    ExamMappingDialogComponent,
-  ],
-  imports: [
-    ComponentsModule,
-    MatButtonToggleModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule
-  ],
-  exports: [
-    TextParametersPannelComponent,
-    AttendanceParametersPannelComponent,
-    PositionParameterPannelComponent,
-    MarksParametersPannelComponent,
-    FormulaParametersPannelComponent,
-    PageResolutionDialogComponent,
-    ImageParametersPannelComponent,
-    ResultDialogComponent,
-    ShapeParametersPannelComponent,
-    DateParametersPannelComponent,
-    GradeRulesDialogComponent,
-    MarksDialogComponent,
-    CustomMenuComponent,
-    TableParameterPannelComponent,
-    GradeParametersPannelComponent,
-    RemarkParametersPannelComponent,
-    LayoutSharingDialogComponent,
-    InventoryDialogComponent,
-    LayerReplacementDialogComponent,
-    SettingsParametersPannelComponent,
-    SessionParameterPannelComponent,
-    GroupParametersPannelComponent,
-    ExamMappingDialogComponent
-  ]
+    declarations: [
+        TextParametersPannelComponent,
+        AttendanceParametersPannelComponent,
+        PositionParameterPannelComponent,
+        MarksParametersPannelComponent,
+        FormulaParametersPannelComponent,
+        PageResolutionDialogComponent,
+        ResultDialogComponent,
+        ImageParametersPannelComponent,
+        ShapeParametersPannelComponent,
+        DateParametersPannelComponent,
+        GradeRulesDialogComponent,
+        MarksDialogComponent,
+        CustomMenuComponent,
+        TableParameterPannelComponent,
+        GradeParametersPannelComponent,
+        RemarkParametersPannelComponent,
+        LayoutSharingDialogComponent,
+        InventoryDialogComponent,
+        LayerReplacementDialogComponent,
+        SettingsParametersPannelComponent,
+        SessionParameterPannelComponent,
+        GroupParametersPannelComponent,
+        ExamMappingDialogComponent,
+    ],
+    imports: [ComponentsModule, MatButtonToggleModule, MatSlideToggleModule, MatProgressSpinnerModule],
+    exports: [
+        TextParametersPannelComponent,
+        AttendanceParametersPannelComponent,
+        PositionParameterPannelComponent,
+        MarksParametersPannelComponent,
+        FormulaParametersPannelComponent,
+        PageResolutionDialogComponent,
+        ImageParametersPannelComponent,
+        ResultDialogComponent,
+        ShapeParametersPannelComponent,
+        DateParametersPannelComponent,
+        GradeRulesDialogComponent,
+        MarksDialogComponent,
+        CustomMenuComponent,
+        TableParameterPannelComponent,
+        GradeParametersPannelComponent,
+        RemarkParametersPannelComponent,
+        LayoutSharingDialogComponent,
+        InventoryDialogComponent,
+        LayerReplacementDialogComponent,
+        SettingsParametersPannelComponent,
+        SessionParameterPannelComponent,
+        GroupParametersPannelComponent,
+        ExamMappingDialogComponent,
+    ],
 })
-export class ParametersPannelModule { }
+export class ParametersPannelModule {}

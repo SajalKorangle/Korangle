@@ -109,3 +109,4 @@ mobile/obj/
 mobile/.externalNativeBuild
 mobile/app/release/*
 
+*.prettierrc

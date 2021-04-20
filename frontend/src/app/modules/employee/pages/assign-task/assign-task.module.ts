@@ -1,23 +1,16 @@
 import { NgModule } from '@angular/core';
 
-import { AssignTaskComponent } from "./assign-task.component";
+import { AssignTaskComponent } from './assign-task.component';
 
-import {AssignTaskRoutingModule } from './assign-task.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-
+import { AssignTaskRoutingModule } from './assign-task.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 
 @NgModule({
-    declarations: [
-        AssignTaskComponent
-    ],
+    declarations: [AssignTaskComponent],
 
-    imports: [
-        AssignTaskRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [AssignTaskRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [AssignTaskComponent]
+    bootstrap: [AssignTaskComponent],
 })
-export class AssignTaskModule { }
+export class AssignTaskModule {}

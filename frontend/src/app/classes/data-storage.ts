@@ -1,6 +1,4 @@
-
 export class DataStorage {
-
     static dataStorage: DataStorage;
 
     user: any;
@@ -21,5 +19,4 @@ export class DataStorage {
     setUser(user: any): any {
         this.user = user;
     }
-
 }

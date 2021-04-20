@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class FeeService extends ServiceObject {
-
     protected module_url = '/fees';
 
     // objects urls
@@ -71,5 +69,4 @@ export class FeeService extends ServiceObject {
         this.object_url = object_url;
         return this.deleteObjectList(object_url, data);
     }
-
 }

@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-why-korangle',
-  templateUrl: './why-korangle.component.html',
-  styleUrls: ['./why-korangle.component.css']
+    selector: 'app-why-korangle',
+    templateUrl: './why-korangle.component.html',
+    styleUrls: ['./why-korangle.component.css'],
 })
 export class WhyKorangleComponent implements OnInit {
+    constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+    ngOnInit() {}
 }

@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {AddStudentRemarksComponent} from './add-student-remarks.component';
+import { AddStudentRemarksComponent } from './add-student-remarks.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: AddStudentRemarksComponent ,
-    }
+        component: AddStudentRemarksComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class AddStudentRemarksRouting { }
+export class AddStudentRemarksRouting {}

@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import { ViewAttendanceRoutingModule} from './view-attendance.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ViewAttendanceComponent} from "./view-attendance.component";
-
+import { ViewAttendanceRoutingModule } from './view-attendance.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ViewAttendanceComponent } from './view-attendance.component';
 
 @NgModule({
-    declarations: [
-        ViewAttendanceComponent
-    ],
+    declarations: [ViewAttendanceComponent],
 
-    imports: [
-        ViewAttendanceRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ViewAttendanceRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ViewAttendanceComponent]
+    bootstrap: [ViewAttendanceComponent],
 })
-export class ViewAttendanceModule { }
+export class ViewAttendanceModule {}

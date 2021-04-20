@@ -1,14 +1,14 @@
-import {BeforeAfterEach} from '../beforeAterEach';
-import {startBackendServer} from '../backend-server';
-import {getFixtureFiles} from '../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../open-page';
-import {browser} from 'protractor';
+import { BeforeAfterEach } from '../beforeAterEach';
+import { startBackendServer } from '../backend-server';
+import { getFixtureFiles } from '../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../open-page';
+import { browser } from 'protractor';
 
 describe('Website -> Refresh and Back button', () => {
 
     let page: any;
-    let url:any;
-    let nameBeforeRefresh:any;
+    let url: any;
+    let nameBeforeRefresh: any;
 
     beforeAll(async () => {
 
@@ -24,15 +24,15 @@ describe('Website -> Refresh and Back button', () => {
 
         // Opening Page
         await openModuleAndPage('Job Details', 'View Profile');
-        url=browser.getCurrentUrl();
+        url = browser.getCurrentUrl();
         nameBeforeRefresh = await page.$x('//input[1]');
         browser.waitForAngular();
         browser.navigate().refresh();
         expect(browser.getCurrentUrl()).toBe(url);
-        const nameAfterRefresh=await page.$x('//input[1]');
+        const nameAfterRefresh = await page.$x('//input[1]');
         expect(nameBeforeRefresh.value).toBe(nameAfterRefresh.value); // checking whether the component values are same
 
-        });
+    });
 
     it('Check back button click', async () => {
 
@@ -40,12 +40,12 @@ describe('Website -> Refresh and Back button', () => {
         browser.waitForAngular();
         browser.navigate().back();
         expect(browser.getCurrentUrl()).toBe(url);
-        const name=await page.$x('//input[1]');
+        const name = await page.$x('//input[1]');
         expect(nameBeforeRefresh.value).toBe(name.value); // checking whether the component values are correct
 
     });
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

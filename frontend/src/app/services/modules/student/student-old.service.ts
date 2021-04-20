@@ -1,13 +1,12 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Student } from '../../../classes/student';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
-import {deprecate} from 'util';
+import { deprecate } from 'util';
 
 @Injectable()
 export class StudentOldService extends CommonServiceRequirements {
-
     // Profile Image
     uploadProfileImage(file: any, data: any, token: any): Promise<any> {
         const url = '/student/' + data['id'] + '/profile-image';
@@ -37,9 +36,7 @@ export class StudentOldService extends CommonServiceRequirements {
 
     // Student Mini Profile
     getStudentMiniProfileList(data, token): Promise<any> {
-        return super.getData(token, '/student/school/'
-            + data['schoolDbId'] + '/student-mini-profiles?session_id='
-            + data['sessionDbId']);
+        return super.getData(token, '/student/school/' + data['schoolDbId'] + '/student-mini-profiles?session_id=' + data['sessionDbId']);
     }
 
     // Student Section
@@ -79,7 +76,6 @@ export class StudentOldService extends CommonServiceRequirements {
         return super.deleteData(token, '/student/transfer-certificates/' + Id);
     }
 
-
     // Variables
 
     /* Update Profile */
@@ -113,7 +109,7 @@ export class StudentOldService extends CommonServiceRequirements {
     }
 
     deleteStudentProfile(studentDbId: any, token: any): Promise<any> {
-        return super.postData({'studentDbId': studentDbId}, token, this.deleteStudentUrl);
+        return super.postData({ studentDbId: studentDbId }, token, this.deleteStudentUrl);
     }
 
     /* View All */
@@ -130,20 +126,27 @@ export class StudentOldService extends CommonServiceRequirements {
     /* Promote Student */
 
     getStudentListSessionClassWise(sessionDbId: number, classDbId: number, token: string): Promise<any> {
-        return super.postData({'sessionDbId': sessionDbId, 'classDbId': classDbId}, token, '');
+        return super.postData({ sessionDbId: sessionDbId, classDbId: classDbId }, token, '');
     }
 
-    promoteStudentList(studentList: any,
-                       fromSessionDbId: number, fromClassDbId: number,
-                       toSessionDbId: number, toClassDbId: number,
-                       token: string) {
-        return super.postData({
-                                        'studentList': studentList,
-                                        'fromSessionDbId': fromSessionDbId,
-                                        'fromClassDbId': fromClassDbId,
-                                        'toSessionDbId': toSessionDbId,
-                                        'toClassDbId': toClassDbId
-                                    }, token, '');
+    promoteStudentList(
+        studentList: any,
+        fromSessionDbId: number,
+        fromClassDbId: number,
+        toSessionDbId: number,
+        toClassDbId: number,
+        token: string
+    ) {
+        return super.postData(
+            {
+                studentList: studentList,
+                fromSessionDbId: fromSessionDbId,
+                fromClassDbId: fromClassDbId,
+                toSessionDbId: toSessionDbId,
+                toClassDbId: toClassDbId,
+            },
+            token,
+            ''
+        );
     }
-
 }

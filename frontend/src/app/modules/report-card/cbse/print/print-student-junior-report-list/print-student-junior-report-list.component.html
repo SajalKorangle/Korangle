@@ -1,224 +1,331 @@
 <ng-container *ngIf="studentList">
-
-    <ng-container *ngFor="let student of studentList; let isLast = last;">
-
-        <div class="container-fluid" [class.pageBreakAfter]="!isLast"
-             style="width: 100%; height: 100%;
-             border: 6px double #b87333;
-             position: relative;
-             overflow: hidden;
-             border-radius: 8px;
-             font-weight: 800 !important;">
-
+    <ng-container *ngFor="let student of studentList; let isLast = last">
+        <div
+            class="container-fluid"
+            [class.pageBreakAfter]="!isLast"
+            style="
+                width: 100%;
+                height: 100%;
+                border: 6px double #b87333;
+                position: relative;
+                overflow: hidden;
+                border-radius: 8px;
+                font-weight: 800 !important;
+            "
+        >
             <!-- Background Watermark -->
-            <img src="{{user.activeSchool.profileImage}}"
-                 style="border-radius: 2px; position: absolute;
-                 top: 340px; left: 178px;
-                 width: 350px; height: 350px;
-                 opacity: 0.15 !important;
-                 filter: grayscale(100%) !important;
-                 z-index: 10;"/>
+            <img
+                src="{{ user.activeSchool.profileImage }}"
+                style="
+                    border-radius: 2px;
+                    position: absolute;
+                    top: 340px;
+                    left: 178px;
+                    width: 350px;
+                    height: 350px;
+                    opacity: 0.15 !important;
+                    filter: grayscale(100%) !important;
+                    z-index: 10;
+                "
+            />
 
             <!-- Dise Code, Affiliation No. -->
-            <div class="row no-gutters" style="margin-bottom: 0px !important;">
-                <div class="col-xs-6 d-flex custom-padding">
-                    Dise code : {{user.activeSchool.diseCode}}
-                </div>
-                <div class="col-xs-6 d-flex custom-padding" align="end">
-                    Affiliation No. : {{user.activeSchool.affiliationNumber}}
-                </div>
+            <div class="row no-gutters" style="margin-bottom: 0px !important">
+                <div class="col-xs-6 d-flex custom-padding">Dise code : {{ user.activeSchool.diseCode }}</div>
+                <div class="col-xs-6 d-flex custom-padding" align="end">Affiliation No. : {{ user.activeSchool.affiliationNumber }}</div>
             </div>
 
             <!-- School Name -->
-            <div class="row no-gutters" style="margin-top: 15px;">
-                <div class="col-xs-2 " align="left" style="padding-top: 0px;">
-                    <img src="https://www.enewstime.in/wp-content/uploads/2018/03/PICNN616.jpg"
-                         style="border-radius: 2px;
-                                opacity: 0.8;
-                                width: 100%;"/>
+            <div class="row no-gutters" style="margin-top: 15px">
+                <div class="col-xs-2" align="left" style="padding-top: 0px">
+                    <img
+                        src="https://www.enewstime.in/wp-content/uploads/2018/03/PICNN616.jpg"
+                        style="border-radius: 2px; opacity: 0.8; width: 100%"
+                    />
                 </div>
-                <div class="col-xs-8 " align="center">
-                    <div style="font-size: 30px; font-weight: 800; color: red !important; line-height: normal !important;">
-                        {{user.activeSchool.printName}}
+                <div class="col-xs-8" align="center">
+                    <div style="font-size: 30px; font-weight: 800; color: red !important; line-height: normal !important">
+                        {{ user.activeSchool.printName }}
                     </div>
-                    <div style="font-size: 20px; margin-top: 6px;">
-                        {{user.activeSchool.address}}
+                    <div style="font-size: 20px; margin-top: 6px">
+                        {{ user.activeSchool.address }}
                     </div>
-                    <div style="font-size: 24px; margin-top: 6px;">{{getSessionName(user.activeSchool.currentSessionDbId)}}</div>
-                    <div style="font-size: 27px; margin-top: 6px;">Report Card</div>
+                    <div style="font-size: 24px; margin-top: 6px">{{ getSessionName(user.activeSchool.currentSessionDbId) }}</div>
+                    <div style="font-size: 27px; margin-top: 6px">Report Card</div>
                 </div>
-                <div class="col-xs-2 " align="right" style="padding-top: 0px;">
-                    <img src="{{user.activeSchool.profileImage}}"
-                         style="border-radius: 2px;
-                                opacity: 0.8;
-                                width: 100%;"/>
+                <div class="col-xs-2" align="right" style="padding-top: 0px">
+                    <img src="{{ user.activeSchool.profileImage }}" style="border-radius: 2px; opacity: 0.8; width: 100%" />
                 </div>
             </div>
 
-            <div class="row not-gutters" style="margin-top: 20px !important; line-height: normal !important;">
+            <div class="row not-gutters" style="margin-top: 20px !important; line-height: normal !important">
                 <div class="col-xs-10">
                     <div class="row">
                         <div class="col-xs-3 studentInfo">Roll No.<span style="float: right">:</span></div>
-                        <div class="col-xs-9">{{getStudentRollNo(student)}}</div>
+                        <div class="col-xs-9">{{ getStudentRollNo(student) }}</div>
                     </div>
-                    <div class="row" style="margin-top: 4px;">
+                    <div class="row" style="margin-top: 4px">
                         <div class="col-xs-3 studentInfo">Student's Name<span style="float: right">:</span></div>
-                        <div class="col-xs-9"><span style="font-size: 20px;">{{student.name}}</span></div>
+                        <div class="col-xs-9">
+                            <span style="font-size: 20px">{{ student.name }}</span>
+                        </div>
                     </div>
-                    <div class="row" style="margin-top: 4px;">
+                    <div class="row" style="margin-top: 4px">
                         <div class="col-xs-3 studentInfo">Father's Name<span style="float: right">:</span></div>
-                        <div class="col-xs-9">Mr. {{student.fathersName}}</div>
+                        <div class="col-xs-9">Mr. {{ student.fathersName }}</div>
                     </div>
-                    <div class="row" style="margin-top: 4px;">
+                    <div class="row" style="margin-top: 4px">
                         <div class="col-xs-3 studentInfo">Date of Birth<span style="float: right">:</span></div>
-                        <div class="col-xs-9">{{student.dateOfBirth | date: 'dd-MMM-yyyy'}}</div>
+                        <div class="col-xs-9">{{ student.dateOfBirth | date: 'dd-MMM-yyyy' }}</div>
                     </div>
-                    <div class="row" style="margin-top: 4px;">
-                        <div class="col-xs-3 studentInfo">Class<span *ngIf="showSection">/Section</span><span style="float: right">:</span></div>
-                        <div class="col-xs-9">{{selectedClassSection.class.name}}<span *ngIf="showSection">, {{selectedClassSection.section.name}}</span></div>
+                    <div class="row" style="margin-top: 4px">
+                        <div class="col-xs-3 studentInfo">
+                            Class<span *ngIf="showSection">/Section</span><span style="float: right">:</span>
+                        </div>
+                        <div class="col-xs-9">
+                            {{ selectedClassSection.class.name }}<span *ngIf="showSection">, {{ selectedClassSection.section.name }}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-2" align="right" style="vertical-align: bottom">
-                    <img src="{{student.profileImage}}"
-                         style="border: 1px solid black;
-                                border-radius: 10px;
-                                width: 100%;"/>
+                    <img src="{{ student.profileImage }}" style="border: 1px solid black; border-radius: 10px; width: 100%" />
                 </div>
             </div>
 
             <!-- Marksheet -->
-            <div class="row no-gutters" style="margin-top: 20px !important; margin-bottom: 0px;">
+            <div class="row no-gutters" style="margin-top: 20px !important; margin-bottom: 0px">
                 <div class="col-xs-12">
-                    <table class="table updownBorder" style="font-size: 8px !important;">
+                    <table class="table updownBorder" style="font-size: 8px !important">
                         <tbody>
-                        <tr style="font-size: 10px !important;">
-                            <td class="rightBorder downBorder" style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important;">Scholastic Areas</td>
-                            <td class="rightBorder downBorder" style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important;" colspan="6" align="center">Term-1 (100 marks)</td>
-                            <td class="downBorder" style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important;" colspan="6" align="center">Term-2 (100 marks)</td>
-                        </tr>
-                        <tr class="marksTableFontSize">
-                            <td class="leftBorder rightBorder downBorder">Sub Name</td>
-                            <td class="rightBorder downBorder">Per Test (10)</td>
-                            <td class="rightBorder downBorder">Note Book (5)</td>
-                            <td class="rightBorder downBorder">Sub Enrichment (5)</td>
-                            <td class="rightBorder downBorder">Half Yearly Exam (80)</td>
-                            <td class="rightBorder downBorder">Marks Obtained (100)</td>
-                            <td class="rightBorder downBorder">Gr</td>
-                            <td class="rightBorder downBorder">Per Test (10)</td>
-                            <td class="rightBorder downBorder">Note Book (5)</td>
-                            <td class="rightBorder downBorder">Sub Enrichment (5)</td>
-                            <td class="rightBorder downBorder">Yearly Exam (80)</td>
-                            <td class="rightBorder downBorder">Marks Obtained (100)</td>
-                            <td class="rightBorder downBorder">Gr</td>
-                        </tr>
-                        <ng-container *ngFor="let classSubject of classSubjectList;">
-                            <tr class="marksTableFontSize">
-                                <td class="leftBorder rightBorder" style="padding: 5px;">{{getSubjectName(classSubject.parentSubject)}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[0], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[0]) | numberAndString:'1.0-2'}}</td>
-                                <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[0])}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getPeriodicTestMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getNoteBookMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getSubEnrichmentMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getFinalTermMarks(student, classSubject, termList[1], showAbsentOnZero) | numberAndString:'1.0-2'}}</td>
-                                <td class="leftBorder rightBorder" style="padding: 5px;" align="center">{{getOverallMarks(student, classSubject,termList[1]) | numberAndString:'1.0-2'}}</td>
-                                <td class="rightBorder" style="padding: 5px;" align="center">{{getOverallGrade(student, classSubject, termList[1])}}</td>
+                            <tr style="font-size: 10px !important">
+                                <td
+                                    class="rightBorder downBorder"
+                                    style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important"
+                                >
+                                    Scholastic Areas
+                                </td>
+                                <td
+                                    class="rightBorder downBorder"
+                                    style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important"
+                                    colspan="6"
+                                    align="center"
+                                >
+                                    Term-1 (100 marks)
+                                </td>
+                                <td
+                                    class="downBorder"
+                                    style="padding-top: 2px; padding-bottom: 2px; font-weight: 800 !important"
+                                    colspan="6"
+                                    align="center"
+                                >
+                                    Term-2 (100 marks)
+                                </td>
                             </tr>
-                        </ng-container>
+                            <tr class="marksTableFontSize">
+                                <td class="leftBorder rightBorder downBorder">Sub Name</td>
+                                <td class="rightBorder downBorder">Per Test (10)</td>
+                                <td class="rightBorder downBorder">Note Book (5)</td>
+                                <td class="rightBorder downBorder">Sub Enrichment (5)</td>
+                                <td class="rightBorder downBorder">Half Yearly Exam (80)</td>
+                                <td class="rightBorder downBorder">Marks Obtained (100)</td>
+                                <td class="rightBorder downBorder">Gr</td>
+                                <td class="rightBorder downBorder">Per Test (10)</td>
+                                <td class="rightBorder downBorder">Note Book (5)</td>
+                                <td class="rightBorder downBorder">Sub Enrichment (5)</td>
+                                <td class="rightBorder downBorder">Yearly Exam (80)</td>
+                                <td class="rightBorder downBorder">Marks Obtained (100)</td>
+                                <td class="rightBorder downBorder">Gr</td>
+                            </tr>
+                            <ng-container *ngFor="let classSubject of classSubjectList">
+                                <tr class="marksTableFontSize">
+                                    <td class="leftBorder rightBorder" style="padding: 5px">
+                                        {{ getSubjectName(classSubject.parentSubject) }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getPeriodicTestMarks(student, classSubject, termList[0], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getNoteBookMarks(student, classSubject, termList[0], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getSubEnrichmentMarks(student, classSubject, termList[0], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getFinalTermMarks(student, classSubject, termList[0], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{ getOverallMarks(student, classSubject, termList[0]) | numberAndString: '1.0-2' }}
+                                    </td>
+                                    <td class="rightBorder" style="padding: 5px" align="center">
+                                        {{ getOverallGrade(student, classSubject, termList[0]) }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getPeriodicTestMarks(student, classSubject, termList[1], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getNoteBookMarks(student, classSubject, termList[1], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getSubEnrichmentMarks(student, classSubject, termList[1], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{
+                                            getFinalTermMarks(student, classSubject, termList[1], showAbsentOnZero)
+                                                | numberAndString: '1.0-2'
+                                        }}
+                                    </td>
+                                    <td class="leftBorder rightBorder" style="padding: 5px" align="center">
+                                        {{ getOverallMarks(student, classSubject, termList[1]) | numberAndString: '1.0-2' }}
+                                    </td>
+                                    <td class="rightBorder" style="padding: 5px" align="center">
+                                        {{ getOverallGrade(student, classSubject, termList[1]) }}
+                                    </td>
+                                </tr>
+                            </ng-container>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="row no-gutters" style="margin-top: 0px !important;">
+            <div class="row no-gutters" style="margin-top: 0px !important">
                 <div class="col-xs-12">
-                    <table class="table updownBorder" style="font-size: 8px !important;">
+                    <table class="table updownBorder" style="font-size: 8px !important">
                         <tbody>
-                        <tr style="font-size: 10px !important;">
-                            <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">Co-Scholastic Areas: Term-1 [on a 3-point (A-C) grading scale]</td>
-                            <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">Grade</td>
-                            <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800;">Co-Scholastic Areas: Term-2 [on a 3-point (A-C) grading scale]</td>
-                            <td class="leftBorder upBorder rightBorder" style="padding: 3px; font-weight: 800;">Grade</td>
-                        </tr>
-                        <tr class="marksTableFontSize">
-                            <td class="leftBorder upBorder" style="padding: 3px;">{{extraFieldList[0].name}}</td>
-                            <td class="leftBorder upBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[0], termList[0])}}</td>
-                            <td class="leftBorder upBorder" style="padding: 3px;">{{extraFieldList[0].name}}</td>
-                            <td class="leftBorder upBorder rightBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[0], termList[1])}}</td>
-                        </tr>
-                        <tr class="marksTableFontSize">
-                            <td class="leftBorder" style="padding: 3px;">{{extraFieldList[1].name}}</td>
-                            <td class="leftBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[1], termList[0])}}</td>
-                            <td class="leftBorder" style="padding: 3px;">{{extraFieldList[1].name}}</td>
-                            <td class="leftBorder rightBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[1], termList[1])}}</td>
-                        </tr>
-                        <tr class="marksTableFontSize">
-                            <td class="leftBorder downBorder" style="padding: 3px;">{{extraFieldList[2].name}}</td>
-                            <td class="leftBorder downBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[2], termList[0])}}</td>
-                            <td class="leftBorder downBorder" style="padding: 3px;">{{extraFieldList[2].name}}</td>
-                            <td class="leftBorder rightBorder downBorder" align="center" style="padding: 3px;">{{getStudentExtraFieldGrade(student, extraFieldList[2], termList[1])}}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding-top: 8px; padding-bottom: 0px;"></td>
-                            <td style="padding-top: 8px; padding-bottom: 0px;"></td>
-                            <td style="padding-top: 8px; padding-bottom: 0px;"></td>
-                            <td style="padding-top: 8px; padding-bottom: 0px;"></td>
-                        </tr>
-                        <tr class="marksTableFontSize">
-                            <td class="leftBorder upBorder downBorder" style="padding: 3px; font-size: 10px; font-weight: 800;">{{extraFieldList[3].name}}: Term-1 [on a 3-point (A-C) grading scale]</td>
-                            <td class="leftBorder upBorder downBorder" align="center" style="padding: 3px; font-size: 10px; font-weight: 800;">{{getStudentExtraFieldGrade(student, extraFieldList[3], termList[0])}}</td>
-                            <td class="leftBorder upBorder downBorder" style="padding: 3px; font-size: 10px; font-weight: 800;">{{extraFieldList[3].name}}: Term-1 [on a 3-point (A-C) grading scale]</td>
-                            <td class="leftBorder upBorder rightBorder downBorder" align="center" style="padding: 3px; font-size: 10px; font-weight: 800;">{{getStudentExtraFieldGrade(student, extraFieldList[3], termList[1])}}</td>
-                        </tr>
+                            <tr style="font-size: 10px !important">
+                                <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800">
+                                    Co-Scholastic Areas: Term-1 [on a 3-point (A-C) grading scale]
+                                </td>
+                                <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800">Grade</td>
+                                <td class="leftBorder upBorder" style="padding: 3px; font-weight: 800">
+                                    Co-Scholastic Areas: Term-2 [on a 3-point (A-C) grading scale]
+                                </td>
+                                <td class="leftBorder upBorder rightBorder" style="padding: 3px; font-weight: 800">Grade</td>
+                            </tr>
+                            <tr class="marksTableFontSize">
+                                <td class="leftBorder upBorder" style="padding: 3px">{{ extraFieldList[0].name }}</td>
+                                <td class="leftBorder upBorder" align="center" style="padding: 3px">
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[0], termList[0]) }}
+                                </td>
+                                <td class="leftBorder upBorder" style="padding: 3px">{{ extraFieldList[0].name }}</td>
+                                <td class="leftBorder upBorder rightBorder" align="center" style="padding: 3px">
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[0], termList[1]) }}
+                                </td>
+                            </tr>
+                            <tr class="marksTableFontSize">
+                                <td class="leftBorder" style="padding: 3px">{{ extraFieldList[1].name }}</td>
+                                <td class="leftBorder" align="center" style="padding: 3px">
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[1], termList[0]) }}
+                                </td>
+                                <td class="leftBorder" style="padding: 3px">{{ extraFieldList[1].name }}</td>
+                                <td class="leftBorder rightBorder" align="center" style="padding: 3px">
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[1], termList[1]) }}
+                                </td>
+                            </tr>
+                            <tr class="marksTableFontSize">
+                                <td class="leftBorder downBorder" style="padding: 3px">{{ extraFieldList[2].name }}</td>
+                                <td class="leftBorder downBorder" align="center" style="padding: 3px">
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[2], termList[0]) }}
+                                </td>
+                                <td class="leftBorder downBorder" style="padding: 3px">{{ extraFieldList[2].name }}</td>
+                                <td class="leftBorder rightBorder downBorder" align="center" style="padding: 3px">
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[2], termList[1]) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 8px; padding-bottom: 0px"></td>
+                                <td style="padding-top: 8px; padding-bottom: 0px"></td>
+                                <td style="padding-top: 8px; padding-bottom: 0px"></td>
+                                <td style="padding-top: 8px; padding-bottom: 0px"></td>
+                            </tr>
+                            <tr class="marksTableFontSize">
+                                <td class="leftBorder upBorder downBorder" style="padding: 3px; font-size: 10px; font-weight: 800">
+                                    {{ extraFieldList[3].name }}: Term-1 [on a 3-point (A-C) grading scale]
+                                </td>
+                                <td
+                                    class="leftBorder upBorder downBorder"
+                                    align="center"
+                                    style="padding: 3px; font-size: 10px; font-weight: 800"
+                                >
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[3], termList[0]) }}
+                                </td>
+                                <td class="leftBorder upBorder downBorder" style="padding: 3px; font-size: 10px; font-weight: 800">
+                                    {{ extraFieldList[3].name }}: Term-1 [on a 3-point (A-C) grading scale]
+                                </td>
+                                <td
+                                    class="leftBorder upBorder rightBorder downBorder"
+                                    align="center"
+                                    style="padding: 3px; font-size: 10px; font-weight: 800"
+                                >
+                                    {{ getStudentExtraFieldGrade(student, extraFieldList[3], termList[1]) }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="row no-gutters" style="margin-top: 0px !important;">
+            <div class="row no-gutters" style="margin-top: 0px !important">
                 <div class="col-xs-12">
-                    <table class="table" style="font-size: 8px !important;">
+                    <table class="table" style="font-size: 8px !important">
                         <tbody>
-                        <tr class="marksTableFontSize">
-                            <td style="padding: 2px;"><b>Attendance: Term-1</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center" *ngIf="getWorkingDays(student, 0)!= 0" >{{getPresentDays(student, 0)}}/{{getWorkingDays(student, 0)}}</td>
-                            <td class="leftBorder" style="padding: 2px;"><b>Attendance: Term-2</b> Total Present/Working Days</td>
-                            <td class="leftBorder" style="padding: 2px;" align="center" *ngIf=" getWorkingDays(student, 1)!= 0" >{{getPresentDays(student, 1)}}/{{getWorkingDays(student, 1)}}</td>
-                        </tr>
+                            <tr class="marksTableFontSize">
+                                <td style="padding: 2px"><b>Attendance: Term-1</b> Total Present/Working Days</td>
+                                <td class="leftBorder" style="padding: 2px" align="center" *ngIf="getWorkingDays(student, 0) != 0">
+                                    {{ getPresentDays(student, 0) }}/{{ getWorkingDays(student, 0) }}
+                                </td>
+                                <td class="leftBorder" style="padding: 2px"><b>Attendance: Term-2</b> Total Present/Working Days</td>
+                                <td class="leftBorder" style="padding: 2px" align="center" *ngIf="getWorkingDays(student, 1) != 0">
+                                    {{ getPresentDays(student, 1) }}/{{ getWorkingDays(student, 1) }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
             <!-- Promotion Info -->
-            <div class="row no-gutters" style="font-size: 12px !important;">
+            <div class="row no-gutters" style="font-size: 12px !important">
                 <div class="col-xs-3" align="left">
-                    Class Teacher's Remarks:<br/>
-                    <ng-container *ngIf="showPromotionStatement">{{getNextStep()}}</ng-container>
+                    Class Teacher's Remarks:<br />
+                    <ng-container *ngIf="showPromotionStatement">{{ getNextStep() }}</ng-container>
                 </div>
                 <div class="col-xs-9" align="left">
-                    <i>{{getStudentRemark(student)}}</i>
+                    <i>{{ getStudentRemark(student) }}</i>
                 </div>
             </div>
 
             <!-- Class Teacher's Sign. , Headmaster's Sign. -->
-            <div class="row no-gutters"
-                 style="position: absolute; bottom: 120px; width: 100%;">
-                <div class="col-xs-4 custom-padding" align="left">
-                    Place: {{user.activeSchool.villageCity}}
-                </div>
+            <div class="row no-gutters" style="position: absolute; bottom: 120px; width: 100%">
+                <div class="col-xs-4 custom-padding" align="left">Place: {{ user.activeSchool.villageCity }}</div>
             </div>
 
             <!-- Class Teacher Signature Image -->
-            <img src="{{classTeacherSignature.signatureImage}}"
-                 *ngIf="classTeacherSignature != null"
-                 style="position: absolute;
-                 bottom: 120px; left: 280px;
-                 width: 150px; height: 75px;
-                 z-index: 1;"/>
+            <img
+                src="{{ classTeacherSignature.signatureImage }}"
+                *ngIf="classTeacherSignature != null"
+                style="position: absolute; bottom: 120px; left: 280px; width: 150px; height: 75px; z-index: 1"
+            />
 
             <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
                  style="position: absolute;
@@ -227,12 +334,11 @@
                  z-index: 1;"/ -->
 
             <!-- Principal Signature Image -->
-            <img src="{{user.activeSchool.principalSignatureImage}}"
-                 *ngIf="user.activeSchool.principalSignatureImage != null && showPrincipalSignature"
-                 style="position: absolute;
-                 bottom: 120px; left: 525px;
-                 width: 150px; height: 75px;
-                 z-index: 1;"/>
+            <img
+                src="{{ user.activeSchool.principalSignatureImage }}"
+                *ngIf="user.activeSchool.principalSignatureImage != null && showPrincipalSignature"
+                style="position: absolute; bottom: 120px; left: 525px; width: 150px; height: 75px; z-index: 1"
+            />
 
             <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
                  style="position: absolute;
@@ -240,56 +346,45 @@
                  width: 150px; height: 75px;
                  z-index: 1;"/ -->
 
-            <div class="row no-gutters"
-                 style="position: absolute; bottom: 100px; width: 100%;">
-                <div class="col-xs-4 custom-padding" align="left">
-                    Date: {{getDate() | date: 'dd-MM-yyyy'}}
-                </div>
-                <div class="col-xs-4 custom-padding" align="center">
-                    Class Teacher's Signature
-                </div>
-                <div class="col-xs-4 custom-padding" style="padding-right: 40px" align="end">
-                    Principal's Signature
-                </div>
+            <div class="row no-gutters" style="position: absolute; bottom: 100px; width: 100%">
+                <div class="col-xs-4 custom-padding" align="left">Date: {{ getDate() | date: 'dd-MM-yyyy' }}</div>
+                <div class="col-xs-4 custom-padding" align="center">Class Teacher's Signature</div>
+                <div class="col-xs-4 custom-padding" style="padding-right: 40px" align="end">Principal's Signature</div>
             </div>
 
-            <div class="row no-gutters"
-                 style="position: absolute; bottom: 0px; width: 100%; border-top: 1px solid black;">
+            <div class="row no-gutters" style="position: absolute; bottom: 0px; width: 100%; border-top: 1px solid black">
                 <div class="col-xs-12 custom-padding" align="center">
-                    <span style="font-size: 8px !important; font-weight: 400 !important;">Grading scale for scholastic areas: Grades are awarded on a 8-point grading scale as follows -</span>
-                    <table class="table" style="font-size: 8px !important; margin-top: 2px;">
+                    <span style="font-size: 8px !important; font-weight: 400 !important"
+                        >Grading scale for scholastic areas: Grades are awarded on a 8-point grading scale as follows -</span
+                    >
+                    <table class="table" style="font-size: 8px !important; margin-top: 2px">
                         <tbody>
-                        <tr>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;">Marks Range</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">91-100</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">81-90</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">71-80</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">61-70</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">51-60</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">41-50</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">33-40</td>
-                            <td style="padding-top: 2px; padding-bottom: 2px;" align="center">32 & Below</td>
-                        </tr>
-                        <tr>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;">Grade</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">A1</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">A2</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">B1</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">B2</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">C1</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">C2</td>
-                            <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px;" align="center">D</td>
-                            <td style="padding-top: 2px; padding-bottom: 2px;" align="center">E (Failed)</td>
-                        </tr>
+                            <tr>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px">Marks Range</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">91-100</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">81-90</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">71-80</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">61-70</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">51-60</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">41-50</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">33-40</td>
+                                <td style="padding-top: 2px; padding-bottom: 2px" align="center">32 & Below</td>
+                            </tr>
+                            <tr>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px">Grade</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">A1</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">A2</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">B1</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">B2</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">C1</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">C2</td>
+                                <td class="rightBorder" style="padding-top: 2px; padding-bottom: 2px" align="center">D</td>
+                                <td style="padding-top: 2px; padding-bottom: 2px" align="center">E (Failed)</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </div>
-
     </ng-container>
-
 </ng-container>
-
-

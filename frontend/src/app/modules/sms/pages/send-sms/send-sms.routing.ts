@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {SendSmsComponent} from "./send-sms.component";
+import { SendSmsComponent } from './send-sms.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: SendSmsComponent ,
-    }
+        component: SendSmsComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class SendSmsRoutingModule { }
+export class SendSmsRoutingModule {}

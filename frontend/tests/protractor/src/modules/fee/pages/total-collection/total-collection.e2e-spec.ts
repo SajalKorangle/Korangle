@@ -58,12 +58,12 @@ describe('Fees 3.0 -> Total Collection', () => {
     });
 
     it('Total Collection: Fee receipt Type Toggle', async () => {
-        let nodes,node;
+        let nodes, node;
 
         nodes = await containsFirst('mat-select', 'Valid Receipts');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-         node = await containsFirst('mat-option[2]','');
+         node = await containsFirst('mat-option[2]', '');
         await node.click();
 
         // Checking the number of rows to be equals to 2 -> 1 CANCELLED Receipts, 1 header row
@@ -76,7 +76,7 @@ describe('Fees 3.0 -> Total Collection', () => {
 
         nodes = await containsFirst('mat-select', 'Cancelled Receipts');
         await nodes.click();
-        node = await containsFirst('mat-option[3]','');
+        node = await containsFirst('mat-option[3]', '');
         await node.click();
         await page.waitForXPath('//mat-select//following::mat-select[4]');
         // Checking the number of rows to be equals to 5 -> All 4 Receipts, 1 header row
@@ -87,10 +87,10 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(8);
 
         // again selecting only valid receipts
-        node = await  containsFirst('mat-select//following::mat-select[4]','');
+        node = await  containsFirst('mat-select//following::mat-select[4]', '');
         await node.click();
         //await page.waitForXPath('//mat-option');
-        node = await containsFirst('mat-option[1]','Valid Receipts');
+        node = await containsFirst('mat-option[1]', 'Valid Receipts');
         await node.click();
 
     });
@@ -103,11 +103,11 @@ describe('Fees 3.0 -> Total Collection', () => {
             await dialog.dismiss();
         });
 
-        node = await containsFirst('a','Cancel Receipt');
+        node = await containsFirst('a', 'Cancel Receipt');
         await node.click();
 
         //wait for modal to load
-        node = await containsFirst('mat-dialog-container//following::textarea[1]','');
+        node = await containsFirst('mat-dialog-container//following::textarea[1]', '');
         await node.type('Invalid Receipt');
         node = await containsFirst('button', 'Cancel Receipt');
         await node.click();
@@ -119,5 +119,5 @@ describe('Fees 3.0 -> Total Collection', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

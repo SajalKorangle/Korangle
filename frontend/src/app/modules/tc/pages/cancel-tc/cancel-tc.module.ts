@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
 import { CancleTCRoutingModule } from './cancel-tc.routing';
-import { ComponentsModule } from "../../../../components/components.module";
-import { CancelTCComponent } from "./cancel-tc.component";
-
+import { ComponentsModule } from '../../../../components/components.module';
+import { CancelTCComponent } from './cancel-tc.component';
 
 @NgModule({
-    declarations: [
-        CancelTCComponent
-    ],
+    declarations: [CancelTCComponent],
 
-    imports: [
-        CancleTCRoutingModule,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [CancleTCRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [CancelTCComponent]
+    bootstrap: [CancelTCComponent],
 })
-export class CancelTCModule { }
+export class CancelTCModule {}

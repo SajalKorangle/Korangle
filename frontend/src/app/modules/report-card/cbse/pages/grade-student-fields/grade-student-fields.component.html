@@ -1,131 +1,125 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isInitialLoading">
-
         <div class="row" *ngIf="classSectionList.length > 0 && attendancePermissionList.length > 0">
-
             <div class="col-md-3">
-
                 <mat-form-field>
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="selectedClassSection"
-                                [disabled]="isLoading"
-                                (ngModelChange)="handleClassSectionChange($event);showStudentList=false;">
-                        <mat-option *ngFor='let classSection of classSectionList;' [value]="classSection">
-                            {{classSection.class.name}}, {{classSection.section.name}}
+                    <mat-select
+                        placeholder="Select Class"
+                        [ngModel]="selectedClassSection"
+                        [disabled]="isLoading"
+                        (ngModelChange)="handleClassSectionChange($event); showStudentList = false"
+                    >
+                        <mat-option *ngFor="let classSection of classSectionList" [value]="classSection">
+                            {{ classSection.class.name }}, {{ classSection.section.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-
             </div>
 
             <div class="col-md-3" *ngIf="showTermList()">
-
                 <mat-form-field>
-                    <mat-select placeholder="Select Term"
-                                [ngModel]="selectedTerm"
-                                [disabled]="isLoading"
-                                (ngModelChange)="selectedTerm=$event;showStudentList=false;">
-                        <mat-option *ngFor='let term of termList.slice(0,2);' [value]="term">
-                            {{term.name}}
+                    <mat-select
+                        placeholder="Select Term"
+                        [ngModel]="selectedTerm"
+                        [disabled]="isLoading"
+                        (ngModelChange)="selectedTerm = $event; showStudentList = false"
+                    >
+                        <mat-option *ngFor="let term of termList.slice(0, 2)" [value]="term">
+                            {{ term.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-
             </div>
 
             <div class="col-md-3">
-
                 <mat-form-field>
-                    <mat-select placeholder="Select Field"
-                                [ngModel]="selectedExtraField"
-                                [disabled]="isLoading"
-                                (ngModelChange)="selectedExtraField=$event;showStudentList=false;">
-                        <mat-option *ngFor='let extraField of extraFieldList;' [value]="extraField">
-                            {{extraField.name}}
+                    <mat-select
+                        placeholder="Select Field"
+                        [ngModel]="selectedExtraField"
+                        [disabled]="isLoading"
+                        (ngModelChange)="selectedExtraField = $event; showStudentList = false"
+                    >
+                        <mat-option *ngFor="let extraField of extraFieldList" [value]="extraField">
+                            {{ extraField.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-
             </div>
 
             <div class="col-md-3">
-
-                <button type="submit"
-                        style="margin-left: 20px;"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getStudentFieldDetails()">GET</button>
-
+                <button
+                    type="submit"
+                    style="margin-left: 20px"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.getStudentFieldDetails()"
+                >
+                    GET
+                </button>
             </div>
-
         </div>
 
         <ng-container *ngIf="!isLoading && showStudentList">
-
             All Grade :
-            <button type="submit"
-                    style="padding: 3px 8px;"
-                    class="btn"
-                    (click)="declareAllGrade(gradeList[0])">
-                {{gradeList[0]}}
+            <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllGrade(gradeList[0])">
+                {{ gradeList[0] }}
             </button>
-            <button type="submit"
-                    style="padding: 3px 8px;"
-                    class="btn"
-                    (click)="declareAllGrade(gradeList[1])">
-                {{gradeList[1]}}
+            <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllGrade(gradeList[1])">
+                {{ gradeList[1] }}
             </button>
-            <button type="submit"
-                    style="padding: 3px 8px;"
-                    class="btn"
-                    (click)="declareAllGrade(gradeList[2])">
-                {{gradeList[2]}}
+            <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllGrade(gradeList[2])">
+                {{ gradeList[2] }}
             </button>
 
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
-                    <th class="text-center">Grade</th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student</th>
+                        <th>Roll No.</th>
+                        <th class="text-center">Grade</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i=index;">
-                    <tr>
-                        <td>{{i+1}}.</td>
-                        <td>
-                            {{getStudent(studentSection).name}}
-                        </td>
-                        <td>
-                            {{getStudent(studentSection).rollNumber}}
-                        </td>
-                        <td align="center">
-                            <button type="submit"
-                                    style="padding: 3px 8px;"
-                                    class="{{getButtonClass(studentSection)}}"
-                                    (click)="changeStudentGrade(studentSection)">
-                                {{getButtonString(studentSection)}}
-                            </button>
-                        </td>
-                    </tr>
-                </ng-container>
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i = index">
+                        <tr>
+                            <td>{{ i + 1 }}.</td>
+                            <td>
+                                {{ getStudent(studentSection).name }}
+                            </td>
+                            <td>
+                                {{ getStudent(studentSection).rollNumber }}
+                            </td>
+                            <td align="center">
+                                <button
+                                    type="submit"
+                                    style="padding: 3px 8px"
+                                    class="{{ getButtonClass(studentSection) }}"
+                                    (click)="changeStudentGrade(studentSection)"
+                                >
+                                    {{ getButtonString(studentSection) }}
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
 
             <ng-container>
                 <div class="row">
-                    <div class="col-md-2" *ngIf="getGradeNumber()>0">Not Submitted: {{getGradeNumber()}}</div>
-                    <div class="col-md-1">A: {{getGradeNumber(gradeList[0])}}</div>
-                    <div class="col-md-1">B: {{getGradeNumber(gradeList[1])}}</div>
-                    <div class="col-md-1">C: {{getGradeNumber(gradeList[2])}}</div>
+                    <div class="col-md-2" *ngIf="getGradeNumber() > 0">Not Submitted: {{ getGradeNumber() }}</div>
+                    <div class="col-md-1">A: {{ getGradeNumber(gradeList[0]) }}</div>
+                    <div class="col-md-1">B: {{ getGradeNumber(gradeList[1]) }}</div>
+                    <div class="col-md-1">C: {{ getGradeNumber(gradeList[2]) }}</div>
                 </div>
             </ng-container>
 
-            <button type="submit"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.updateStudentExtraFieldList()">Update</button>
+            <button
+                type="submit"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.updateStudentExtraFieldList()"
+            >
+                Update
+            </button>
 
             <!-- button type="submit"
                     class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
@@ -142,7 +136,6 @@
             </button>
 
             <br/>A: Absent, P: Present, H: Holiday, N: Not Recorded <br/ -->
-
         </ng-container>
 
         <!-- div class="row">
@@ -249,11 +242,9 @@
                     (click)="serviceAdapter.updateStudentFieldDetails()">Update</button>
 
         </ng-container -->
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

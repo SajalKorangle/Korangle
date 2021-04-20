@@ -1,9 +1,10 @@
 import { DesignReportCardComponent } from './design-report-card.component';
-import {CanvasAdapterHTMLMixin } from './../../class/canvas.adapter';
+import { CanvasAdapterHTMLMixin } from './../../class/canvas.adapter';
 
 import {
     CanvasAdapterInterface,
-    Layer, CanvasImage, CanvasText,
+    CanvasImage,
+    CanvasText,
     CanvasDate,
     Formula,
     Result,
@@ -13,30 +14,26 @@ import {
     CanvasSquare,
     CanvasCircle,
     CanvasRoundedRectangle,
-    CanvasGroup,
 } from './../../class/constants_3';
 
-import * as jsPDF from 'jspdf'
-
+import * as jsPDF from 'jspdf';
 
 export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implements CanvasAdapterInterface {
+    vm: DesignReportCardComponent;
 
-    vm: DesignReportCardComponent;    
-    
-    
     constructor() {
         super();
         // console.log('canvas Adapter: ', this);
         Object.defineProperty(this, 'currentLayout', {
             get: function () {
-                return this.vm.currentLayout;   // // reference to vm.currentLayout and there is no setter function
-            }
+                return this.vm.currentLayout; // // reference to vm.currentLayout and there is no setter function
+            },
         });
 
         Object.defineProperty(this, 'DATA', {
             get: function () {
-                return this.vm.DATA;    // reference to vm.DATA and there is no setter function
-            }
+                return this.vm.DATA; // reference to vm.DATA and there is no setter function
+            },
         });
     }
 
@@ -44,18 +41,18 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         this.vm = vm;
     }
 
-    maximumCanvasSize():any{
-        return this.actualresolution.getHeightInPixel(this.dpi)*2;
+    maximumCanvasSize(): any {
+        return this.actualresolution.getHeightInPixel(this.dpi) * 2;
     }
 
-    minimumCanvasSize():any{
-        return this.actualresolution.getHeightInPixel(this.dpi)*(0.1);
+    minimumCanvasSize(): any {
+        return this.actualresolution.getHeightInPixel(this.dpi) * 0.1;
     }
 
     removeSchoolSpecificDataFromLayout(layoutContent: any[]): any[] {
         layoutContent = JSON.parse(JSON.stringify(layoutContent));
-        for (let i=0; i < layoutContent.length; i++) {
-            layoutContent[i].layers = layoutContent[i].layers.map(layer => {
+        for (let i = 0; i < layoutContent.length; i++) {
+            layoutContent[i].layers = layoutContent[i].layers.map((layer) => {
                 switch (layer.LAYER_TYPE) {
                     case 'GRADE':
                         layer.parentExamination = null;
@@ -72,13 +69,15 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
                         break;
                 }
                 return layer;
-            })
+            });
         }
         return layoutContent;
     }
 
-    downloadPDF() { // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background
-        let actualCanavsWidth = this.canvasWidth, actualCanavsHeight = this.canvasHeight;
+    downloadPDF() {
+        // do not scale the canvas and block the user, use generate report card canvas adapter infrastructure to do this in background
+        let actualCanavsWidth = this.canvasWidth,
+            actualCanavsHeight = this.canvasHeight;
         let fullWidth = this.actualresolution.getWidthInPixel(this.dpi);
         let fullHeight = this.actualresolution.getHeightInPixel(this.dpi);
 
@@ -87,22 +86,22 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         this.canvasSizing(fullHeight, fullWidth, true);
         setTimeout(() => {
             let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
-            let dataurl = this.canvas.toDataURL('image/jpeg', 1.0)
+            let dataurl = this.canvas.toDataURL('image/jpeg', 1.0);
             doc.addImage(dataurl, 'JPEG', 0, 0, this.canvasWidth, this.canvasHeight);
             doc.save(this.vm.currentLayout.name + '.pdf');
             this.metaDrawings = true;
             this.canvasSizing(actualCanavsHeight, actualCanavsWidth, true);
             this.vm.htmlAdapter.isSaving = false;
-        },1000);    // bad design of waiting for canvas loading
+        }, 1000); // bad design of waiting for canvas loading
     }
 
-    newImageLayer(initialParameters: object = {}): CanvasImage{
+    newImageLayer(initialParameters: object = {}): CanvasImage {
         let canvasImage = new CanvasImage(initialParameters, this);
         this.newLayerInitilization(canvasImage);
-        return canvasImage
+        return canvasImage;
     }
 
-    newTextLayer(initialParameters: object = {}): CanvasText{
+    newTextLayer(initialParameters: object = {}): CanvasText {
         let canvasText = new CanvasText(initialParameters, this);
         this.newLayerInitilization(canvasText);
         return canvasText;
@@ -114,7 +113,6 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         return canvasDate;
     }
 
-    
     newLineLayer(initialParameters: object = {}): CanvasLine {
         let canvasShape = new CanvasLine(initialParameters, this);
         this.newLayerInitilization(canvasShape);
@@ -145,23 +143,21 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         return canvasShape;
     }
 
-    newFormulaLayer(initialParameters: object = {}):Formula{
+    newFormulaLayer(initialParameters: object = {}): Formula {
         let canavsFormula = new Formula(initialParameters, this);
         this.newLayerInitilization(canavsFormula);
         return canavsFormula;
     }
 
-    newReultLayer(initialParameters: object = {}): Result{
+    newReultLayer(initialParameters: object = {}): Result {
         let result = new Result(initialParameters, this);
         this.newLayerInitilization(result);
         return result;
     }
 
-    newTableLayer(initialParameters: object = {}): CanvasTable{
+    newTableLayer(initialParameters: object = {}): CanvasTable {
         let canavsTable = new CanvasTable(initialParameters, this);
         this.newLayerInitilization(canavsTable);
         return canavsTable;
     }
-
 }
-

@@ -8,7 +8,6 @@
         margin-top: 40px;
         margin-left: 40px;
     }
-
 }
 
 .main-content {
@@ -90,22 +89,40 @@ input {
     -webkit-animation: colorchange infinite 15s; /* Chrome and Safari */
 }
 
-@keyframes colorchange
-{
-    0%   {background: lightpink;}
-    25%  {background: lightyellow;}
-    50%  {background: lightblue;}
-    75%  {background: lightgreen;}
-    100% {background: lightpink;}
+@keyframes colorchange {
+    0% {
+        background: lightpink;
+    }
+    25% {
+        background: lightyellow;
+    }
+    50% {
+        background: lightblue;
+    }
+    75% {
+        background: lightgreen;
+    }
+    100% {
+        background: lightpink;
+    }
 }
 
-@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
-{
-    0%   {background: lightpink;}
-    25%  {background: lightyellow;}
-    50%  {background: lightblue;}
-    75%  {background: lightgreen;}
-    100% {background: lightpink;}
+@-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */ {
+    0% {
+        background: lightpink;
+    }
+    25% {
+        background: lightyellow;
+    }
+    50% {
+        background: lightblue;
+    }
+    75% {
+        background: lightgreen;
+    }
+    100% {
+        background: lightpink;
+    }
 }
 
 .highlightRow {

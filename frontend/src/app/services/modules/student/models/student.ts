@@ -1,6 +1,4 @@
-
 export class Student {
-
     id: number = null;
 
     profileImage: string = null;
@@ -43,5 +41,4 @@ export class Student {
     dateOfAdmission: any = null;
 
     parentTransferCertificate: number = null;
-
 }

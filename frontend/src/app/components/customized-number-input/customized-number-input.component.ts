@@ -1,14 +1,11 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'customized-number-input',
     templateUrl: './customized-number-input.component.html',
     styleUrls: ['./customized-number-input.component.css'],
 })
-
 export class CustomizedNumberInputComponent {
-
     @Input() placeHolder;
 
     @Input() width = 100;
@@ -90,5 +87,4 @@ export class CustomizedNumberInputComponent {
             this.outputValue.emit(value);
         }
     }
-
 }

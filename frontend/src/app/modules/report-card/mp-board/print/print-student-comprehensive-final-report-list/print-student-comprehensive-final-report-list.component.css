@@ -1,4 +1,3 @@
-
 td {
     border: 1px solid navy !important;
 }
@@ -21,11 +20,19 @@ path {
     fill: transparent;
 }
 
-table, tbody, th, tr, td {
+table,
+tbody,
+th,
+tr,
+td {
     background: transparent;
 }
 
-div, span, i, td, b {
+div,
+span,
+i,
+td,
+b {
     color: navy !important;
     text-decoration-color: navy !important;
 }
@@ -33,4 +40,3 @@ div, span, i, td, b {
 .pageBreakAfter {
     page-break-after: always;
 }
-

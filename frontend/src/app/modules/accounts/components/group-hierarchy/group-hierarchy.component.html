@@ -1,8 +1,8 @@
 <div style="margin-bottom: 15px; margin-top: 10px">
     <mat-card>
         <mat-card-title>
-            <span style="font-weight: 510;cursor:pointer" (click)="handleClick(group)">{{group.title}}</span>
-            <hr style="margin-top:4px; margin-bottom: 0px;border: 0.1px solid #E5E5E5;">
+            <span style="font-weight: 510; cursor: pointer" (click)="handleClick(group)">{{ group.title }}</span>
+            <hr style="margin-top: 4px; margin-bottom: 0px; border: 0.1px solid #e5e5e5" />
         </mat-card-title>
         <mat-card-content>
             <div *ngFor="let child of group.childs" style="display: inline-block; margin-right: 15px">
@@ -13,10 +13,7 @@
             </div>
             <div *ngFor="let child of group.childs">
                 <div *ngIf="child.type == 'GROUP'">
-                    <group-hierarchy [group]="child"
-                                    [vm]="vm"
-                                    [sourcePage]="sourcePage"
-                                    ></group-hierarchy>
+                    <group-hierarchy [group]="child" [vm]="vm" [sourcePage]="sourcePage"></group-hierarchy>
                 </div>
             </div>
         </mat-card-content>

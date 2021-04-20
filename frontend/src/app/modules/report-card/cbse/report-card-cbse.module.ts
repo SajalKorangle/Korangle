@@ -9,27 +9,17 @@ import { ReportCardCbseRoutingModule } from './report-card-cbse.routing';
 
 import { ExaminationOldService } from '../../../services/modules/examination/examination-old.service';
 import { ExaminationService } from '../../../services/modules/examination/examination.service';
-import { PrintStudentJuniorReportListComponent } from "./print/print-student-junior-report-list/print-student-junior-report-list.component";
+import { PrintStudentJuniorReportListComponent } from './print/print-student-junior-report-list/print-student-junior-report-list.component';
 
-import { ExcelService } from "../../../excel/excel-service";
-import {PrintStudentSeniorReportListComponent} from "./print/print-student-senior-report-list/print-student-senior-report-list.component";
+import { ExcelService } from '../../../excel/excel-service';
+import { PrintStudentSeniorReportListComponent } from './print/print-student-senior-report-list/print-student-senior-report-list.component';
 
 @NgModule({
-    declarations: [
+    declarations: [ReportCardCbseComponent, PrintStudentJuniorReportListComponent, PrintStudentSeniorReportListComponent],
 
-        ReportCardCbseComponent,
-        PrintStudentJuniorReportListComponent,
-        PrintStudentSeniorReportListComponent,
-
-    ],
-
-    imports: [
-        ComponentsModule,
-        ReportCardCbseRoutingModule,
-        NgxDatatableModule,
-    ],
+    imports: [ComponentsModule, ReportCardCbseRoutingModule, NgxDatatableModule],
     exports: [],
-    providers: [ExaminationOldService,ExaminationService, ExcelService],
+    providers: [ExaminationOldService, ExaminationService, ExcelService],
     bootstrap: [ReportCardCbseComponent],
 })
-export class ReportCardCbseModule { }
+export class ReportCardCbseModule {}

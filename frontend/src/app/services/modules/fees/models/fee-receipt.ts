@@ -1,6 +1,4 @@
-
 export class FeeReceipt {
-
     id: number = null;
     receiptNumber: number = null;
     generationDateTime: any = null;
@@ -13,5 +11,4 @@ export class FeeReceipt {
     modeOfPayment: string = null;
     parentTransaction: number;
     chequeNumber: number = null;
-
 }

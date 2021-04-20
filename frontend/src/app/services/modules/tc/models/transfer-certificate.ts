@@ -1,4 +1,4 @@
-export class TransferCertificateNew{
+export class TransferCertificateNew {
     id: number;
     parentStudent: number;
     parentStudentSection: number;

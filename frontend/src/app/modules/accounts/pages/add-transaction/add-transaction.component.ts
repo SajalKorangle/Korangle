@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
-import { AccountsService } from './../../../../services/modules/accounts/accounts.service'
-import { CommonFunctions } from './../../../../classes/common-functions'
-import {MatDialog} from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { DataStorage } from "../../../../classes/data-storage";
+import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
+import { CommonFunctions } from './../../../../classes/common-functions';
+import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { SchoolService } from './../../../../services/modules/school/school.service';
 
@@ -11,15 +11,11 @@ import { AddTransactionHtmlRenderer } from './add-transaction.html.renderer';
 import { AddTransactionBackendData } from './add-transaction.backend.data';
 
 @Component({
-    selector: 'add-transaction',
-    templateUrl: './add-transaction.component.html',
-    styleUrls: ['./add-transaction.component.css'],
-    providers: [
-        AccountsService,
-        SchoolService,
-    ]
+  selector: 'add-transaction',
+  templateUrl: './add-transaction.component.html',
+  styleUrls: ['./add-transaction.component.css'],
+  providers: [AccountsService, SchoolService],
 })
-
 export class AddTransactionComponent implements OnInit {
 
   user: any;
@@ -29,7 +25,7 @@ export class AddTransactionComponent implements OnInit {
   transactionList: any[];
 
   maximumPermittedAmount: any;
-  
+
   lockAccounts: any;
 
   serviceAdapter: AddTransactionServiceAdapter;
@@ -37,8 +33,8 @@ export class AddTransactionComponent implements OnInit {
   backendData: AddTransactionBackendData;
 
   isLoading: any;
-  
-  constructor( 
+
+  constructor(
     public accountsService: AccountsService,
     public dialog: MatDialog,
     public schoolService: SchoolService,
@@ -57,32 +53,32 @@ export class AddTransactionComponent implements OnInit {
 
     this.serviceAdapter = new AddTransactionServiceAdapter;
     this.serviceAdapter.initializeAdapter(this);
-    
+
     this.serviceAdapter.initializeData();
     console.log("this", this);
   }
 
-  initilizeDate(): void{
+  initilizeDate(): void {
     const today = new Date();
     const sessionStartDate = new Date(this.htmlRenderer.minimumDate);
     const sessionEndDate = new Date(this.htmlRenderer.maximumDate);
-    if(today >= sessionStartDate && today <= sessionEndDate)
+    if (today >= sessionStartDate && today <= sessionEndDate)
       this.selectedDate = CommonFunctions.formatDate(new Date(), '');
     else
       this.selectedDate = CommonFunctions.formatDate(sessionEndDate, '');
   }
-  
-  removeTransaction(index: any){
+
+  removeTransaction(index: any) {
     this.transactionList.splice(index, 1);
   }
 
-  removeDebitAccount(tIndex: any, aIndex: any){
+  removeDebitAccount(tIndex: any, aIndex: any) {
     this.transactionList[tIndex].debitAccountList.splice(aIndex, 1);
   }
-    
+
   removeCreditAccount(tIndex: any, aIndex: any) {
-      this.transactionList[tIndex].creditAccountList.splice(aIndex, 1);
-    }
+    this.transactionList[tIndex].creditAccountList.splice(aIndex, 1);
+  }
 
   handleAmountChange(transaction: any, newAmount: number) {
     if (transaction.creditAccountList.length == 1 && transaction.debitAccountList.length == 1) {
@@ -97,59 +93,59 @@ export class AddTransactionComponent implements OnInit {
     }
   }
 
-  isAmountUnEqual(transaction): boolean{
+  isAmountUnEqual(transaction): boolean {
     let totalCreditAmount = 0;
     transaction.creditAccountList.forEach(account => {
       totalCreditAmount += account.amount;
-    })
+    });
     let totalDebitAmount = 0;
     transaction.debitAccountList.forEach(account => {
       totalDebitAmount += account.amount;
-    })
-    if(totalCreditAmount == totalDebitAmount){
+    });
+    if (totalCreditAmount == totalDebitAmount) {
       return false;
     }
-    else{
+    else {
       return true;
     }
   }
 
   isApprovalRequired(transaction): boolean {
-    if(transaction.approval != null || this.maximumPermittedAmount == null){
+    if (transaction.approval != null || this.maximumPermittedAmount == null) {
       return false;
     }
     let totalCreditAmount = 0;
-    transaction.creditAccountList.forEach(account =>{
+    transaction.creditAccountList.forEach(account => {
       totalCreditAmount += account.amount;
     });
     let totalDebitAmount = 0;
-    transaction.debitAccountList.forEach(account =>{
+    transaction.debitAccountList.forEach(account => {
       totalDebitAmount += account.amount;
     });
-    
-    if(totalCreditAmount > this.maximumPermittedAmount || totalDebitAmount > this.maximumPermittedAmount){
+
+    if (totalCreditAmount > this.maximumPermittedAmount || totalDebitAmount > this.maximumPermittedAmount) {
       return true;
     } else {
       return false;
     }
   }
 
-  isAmountLessThanMinimum(transaction): boolean{
-    for(let i=0;i<transaction.debitAccountList.length; i++){
-      if(transaction.debitAccountList[i].amount < 0.01 && transaction.debitAccountList[i].parentAccount != null){
+  isAmountLessThanMinimum(transaction): boolean {
+    for (let i = 0; i < transaction.debitAccountList.length; i++) {
+      if (transaction.debitAccountList[i].amount < 0.01 && transaction.debitAccountList[i].parentAccount != null) {
         return true;
       }
     }
-    for(let i=0;i<transaction.creditAccountList.length; i++){
-      if(transaction.creditAccountList[i].amount < 0.01 && transaction.creditAccountList[i].parentAccount != null){
+    for (let i = 0; i < transaction.creditAccountList.length; i++) {
+      if (transaction.creditAccountList[i].amount < 0.01 && transaction.creditAccountList[i].parentAccount != null) {
         return true;
       }
     }
     return false;
   }
 
-  isAmountMoreThanApproval(transaction): boolean{
-    if(transaction.approval == null){
+  isAmountMoreThanApproval(transaction): boolean {
+    if (transaction.approval == null) {
       return false;
     }
 
@@ -159,7 +155,7 @@ export class AddTransactionComponent implements OnInit {
       if (!account.parentAccount) {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
-      const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount==account.parentAccount.id && el.transactionType == 'CREDIT');
+      const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id && el.parentAccount == account.parentAccount.id && el.transactionType == 'CREDIT');
       if (approvalAccountDeatils) {
         if (account.amount > approvalAccountDeatils.amount) {
           flag = true;
@@ -189,47 +185,47 @@ export class AddTransactionComponent implements OnInit {
 
   isAccountNotMentioned(transaction): boolean {
     let temp = false;
-    transaction.debitAccountList.forEach(account =>{
-      if(account.parentAccount == null){
+    transaction.debitAccountList.forEach(account => {
+      if (account.parentAccount == null) {
         temp = true;
       }
-    })
-    
-    transaction.creditAccountList.forEach(account =>{
-      if(account.parentAccount == null){
+    });
+
+    transaction.creditAccountList.forEach(account => {
+      if (account.parentAccount == null) {
         temp = true;
       }
-    })
+    });
     return temp;
   }
 
-  isAccountRepeated(transaction): boolean{
+  isAccountRepeated(transaction): boolean {
     let temp = false;
-    
-    for(let i=0;i<transaction.debitAccountList.length ;i++){
-      if(transaction.debitAccountList[i].parentAccount != null){
-        for(let j=i+1;j<transaction.debitAccountList.length; j++){
-          if(transaction.debitAccountList[j].parentAccount == transaction.debitAccountList[i].parentAccount){
+
+    for (let i = 0; i < transaction.debitAccountList.length; i++) {
+      if (transaction.debitAccountList[i].parentAccount != null) {
+        for (let j = i + 1; j < transaction.debitAccountList.length; j++) {
+          if (transaction.debitAccountList[j].parentAccount == transaction.debitAccountList[i].parentAccount) {
             temp = true;
           }
         }
-        for(let j=0;j<transaction.creditAccountList.length; j++){
-          if(transaction.creditAccountList[j].parentAccount == transaction.debitAccountList[i].parentAccount){
+        for (let j = 0; j < transaction.creditAccountList.length; j++) {
+          if (transaction.creditAccountList[j].parentAccount == transaction.debitAccountList[i].parentAccount) {
             temp = true;
           }
         }
       }
     }
 
-    for(let i=0;i<transaction.creditAccountList.length ;i++){
-      if(transaction.creditAccountList[i].parentAccount != null){
-        for(let j=i+1;j<transaction.creditAccountList.length; j++){
-          if(transaction.creditAccountList[j].parentAccount == transaction.creditAccountList[i].parentAccount){
+    for (let i = 0; i < transaction.creditAccountList.length; i++) {
+      if (transaction.creditAccountList[i].parentAccount != null) {
+        for (let j = i + 1; j < transaction.creditAccountList.length; j++) {
+          if (transaction.creditAccountList[j].parentAccount == transaction.creditAccountList[i].parentAccount) {
             temp = true;
           }
         }
-        for(let j=0;j<transaction.debitAccountList.length; j++){
-          if(transaction.debitAccountList[j].parentAccount == transaction.creditAccountList[i].parentAccount){
+        for (let j = 0; j < transaction.debitAccountList.length; j++) {
+          if (transaction.debitAccountList[j].parentAccount == transaction.creditAccountList[i].parentAccount) {
             temp = true;
           }
         }
@@ -241,36 +237,36 @@ export class AddTransactionComponent implements OnInit {
 
   readURL(event, transaction, str): void {
     if (event.target.files && event.target.files[0]) {
-        let image = event.target.files[0];
-        if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-            alert('File type should be either jpg, jpeg, or png');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = e => {
-            let tempImageData = {
-                orderNumber: null,
-                imageURL: reader.result,
-            }
-            if(str == 'bill'){
-              transaction.billImages.push(tempImageData);
-            }
-            else{
-              transaction.quotationImages.push(tempImageData);
-            }
+      let image = event.target.files[0];
+      if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+        alert('File type should be either jpg, jpeg, or png');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        let tempImageData = {
+          orderNumber: null,
+          imageURL: reader.result,
         };
-        reader.readAsDataURL(image);
+        if (str == 'bill') {
+          transaction.billImages.push(tempImageData);
+        }
+        else {
+          transaction.quotationImages.push(tempImageData);
+        }
+      };
+      reader.readAsDataURL(image);
     }
   }
 
   openImagePreviewDialog(images: any, index: any, editable): void {
     const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-        height: '100%',
-        width: '100%',
-        data: {'images': images, 'index': index, 'editable': editable, 'isMobile': false}
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      height: '100%',
+      width: '100%',
+      data: { 'images': images, 'index': index, 'editable': editable, 'isMobile': false }
     });
 
     dialogRef.afterClosed().subscribe(result => {

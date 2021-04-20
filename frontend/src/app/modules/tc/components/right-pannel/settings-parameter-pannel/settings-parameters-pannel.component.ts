@@ -1,20 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Layer} from '../../../class/constants';
+import { Layer } from '../../../class/constants';
 
 @Component({
-  selector: 'app-settings-parameters-pannel',
-  templateUrl: './settings-parameters-pannel.component.html',
-  styleUrls: ['./settings-parameters-pannel.component.css']
+    selector: 'app-settings-parameters-pannel',
+    templateUrl: './settings-parameters-pannel.component.html',
+    styleUrls: ['./settings-parameters-pannel.component.css'],
 })
 export class SettingsParametersPannelComponent implements OnInit {
+    @Input() layer: Layer;
+    @Input() canvasRefresh: any;
 
-  @Input() layer: Layer;
-  @Input() canvasRefresh: any;
+    constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-
+    ngOnInit() {}
 }

@@ -1,32 +1,57 @@
-<div class="card-content table-responsive " *ngIf="!isInitialLoading">
-    <div class="row col-md-12" >
-        <mat-form-field style="margin-right: 20px;">
-            <input type="date" matInput
+<div class="card-content table-responsive" *ngIf="!isInitialLoading">
+    <div class="row col-md-12">
+        <mat-form-field style="margin-right: 20px">
+            <input
+                type="date"
+                matInput
                 onkeydown="return false"
                 [min]="minimumDate"
                 [max]="maximumDate"
                 [ngModel]="startDate"
-                (ngModelChange)="startDate=$event;" placeholder="Start Date ">
+                (ngModelChange)="startDate = $event"
+                placeholder="Start Date "
+            />
         </mat-form-field>
-        
-        <mat-form-field style="margin-right: 20px;">
-            <input type="date" matInput
+
+        <mat-form-field style="margin-right: 20px">
+            <input
+                type="date"
+                matInput
                 onkeydown="return false"
                 [min]="startDate"
                 [max]="maximumDate"
                 [ngModel]="endDate"
-                (ngModelChange)="endDate=$event;" placeholder="End Date ">
+                (ngModelChange)="endDate = $event"
+                placeholder="End Date "
+            />
         </mat-form-field>
 
-        <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.loadTransactions(); "><i class="material-icons">search</i></button>
-        <ng-container *ngIf="!isLoading && transactionsList && transactionsList.length>0">
-            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('print')"><i class="material-icons">print</i></button>
-            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('download')"><i class="material-icons">download</i></button>
+        <button
+            class="custom-button"
+            style="background: rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px"
+            (click)="serviceAdapter.loadTransactions()"
+        >
+            <i class="material-icons">search</i>
+        </button>
+        <ng-container *ngIf="!isLoading && transactionsList && transactionsList.length > 0">
+            <button
+                class="custom-button"
+                style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px"
+                (click)="serviceAdapter.loadAllTransactions('print')"
+            >
+                <i class="material-icons">print</i>
+            </button>
+            <button
+                class="custom-button"
+                style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px"
+                (click)="serviceAdapter.loadAllTransactions('download')"
+            >
+                <i class="material-icons">download</i>
+            </button>
         </ng-container>
     </div>
 
-    <div *ngIf="transactionsList && !isLoading" style="width: 100%; display: flex; flex-wrap: wrap;">
-        
+    <div *ngIf="transactionsList && !isLoading" style="width: 100%; display: flex; flex-wrap: wrap">
         <mat-form-field>
             <mat-select placeholder="Select Columns">
                     <mat-option>
@@ -55,7 +80,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field >
+        <mat-form-field>
             <mat-select placeholder="Filter By A/C">
                     <mat-option>
                         <button class="btn"
@@ -111,7 +136,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field >
+        <mat-form-field>
             <mat-select placeholder="Filter By Head">
                         <mat-option>
                         <button class="btn"
@@ -172,8 +197,8 @@
     </div>
 
     <table class="table table-hover" *ngIf="transactionsList && !isLoading">
-        <thead style="color: rgba(255, 152, 0, 1);">
-            <tr> 
+        <thead style="color: rgba(255, 152, 0, 1)">
+            <tr>
                 <th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
                 <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
                 <th *ngIf="columnFilter.debitAccount.value" class="text-left"><span>Paid To</span></th>
@@ -187,51 +212,79 @@
         </thead>
         <tbody>
             <tr *ngFor="let transaction of getFilteredTransactionList()">
-                
-                <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
-                <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
-                <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top;" >
-                    <div *ngFor="let account of transaction.debitAccounts;" style="margin-bottom: 10px;">
-                        <span>{{account.account}}&nbsp;A/c</span><br>
-                        <span style="color: rgba(76, 175, 80, 1);">{{account.amount}}</span>
+                <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top">
+                    <span>{{ transaction.voucherNumber }}</span>
+                </td>
+                <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top">
+                    <span>{{ getDisplayDateFormat(transaction.transactionDate) }}</span>
+                </td>
+                <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top">
+                    <div *ngFor="let account of transaction.debitAccounts" style="margin-bottom: 10px">
+                        <span>{{ account.account }}&nbsp;A/c</span><br />
+                        <span style="color: rgba(76, 175, 80, 1)">{{ account.amount }}</span>
                     </div>
                 </td>
-                <td *ngIf="columnFilter.creditAccount.value" class="text-left" style="vertical-align: top;">
-                    <div *ngFor="let account of transaction.creditAccounts" style="margin-bottom: 10px;">
-                        <span>{{account.account}}&nbsp;A/c</span><br>
-                        <span style="color:rgba(86, 142, 174, 1)">{{account.amount}}</span>
+                <td *ngIf="columnFilter.creditAccount.value" class="text-left" style="vertical-align: top">
+                    <div *ngFor="let account of transaction.creditAccounts" style="margin-bottom: 10px">
+                        <span>{{ account.account }}&nbsp;A/c</span><br />
+                        <span style="color: rgba(86, 142, 174, 1)">{{ account.amount }}</span>
                     </div>
                 </td>
-                <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
-                <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
-                <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
+                <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top">
+                    <span>{{ transaction.remark }}</span>
+                </td>
+                <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top">
+                    <span>{{ transaction.approvalId }}</span>
+                </td>
+                <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top">
+                    <span>{{ transaction.parentEmployeeName }}</span>
+                </td>
                 <td *ngIf="columnFilter.quotation.value" class="text-center">
-                    <i *ngIf="transaction.quotationImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.quotationImages, 0, 0);">
+                    <i
+                        *ngIf="transaction.quotationImages.length > 0"
+                        class="material-icons"
+                        style="cursor: pointer"
+                        (click)="openImagePreviewDialog(transaction.quotationImages, 0, 0)"
+                    >
                         insert_photo
                     </i>
-                    <i *ngIf="transaction.quotationImages.length == 0">
-                        No Image
-                    </i>
+                    <i *ngIf="transaction.quotationImages.length == 0"> No Image </i>
                 </td>
-                <td *ngIf="columnFilter.bill.value" class="text-center">  
-                    <i *ngIf="transaction.billImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.billImages, 0, 0)">
+                <td *ngIf="columnFilter.bill.value" class="text-center">
+                    <i
+                        *ngIf="transaction.billImages.length > 0"
+                        class="material-icons"
+                        style="cursor: pointer"
+                        (click)="openImagePreviewDialog(transaction.billImages, 0, 0)"
+                    >
                         insert_photo
                     </i>
-                    <i *ngIf="transaction.billImages.length == 0">
-                        No Image
-                    </i>
+                    <i *ngIf="transaction.billImages.length == 0"> No Image </i>
+                </td>
+                <td
+                    *ngIf="canUserUpdate && transaction.approvalId == null && !isAccountLocked()"
+                    style="color: rgba(255, 152, 0, 1); cursor: pointer"
+                    class="text-center"
+                    (click)="openUpdateTransactionDialog(transaction)"
+                >
+                    <u>Update</u>
+                </td>
+                <td
+                    *ngIf="canUserUpdate && transaction.approvalId != null && !isAccountLocked()"
+                    style="color: rgba(255, 152, 0, 1); cursor: pointer"
+                    class="text-center"
+                    (click)="serviceAdapter.deleteTransaction(transaction)"
+                >
+                    <u>Delete</u>
                 </td>
                  <td *ngIf="canUserUpdate() && !isAccountLocked()" style="color: rgba(255, 152, 0, 1); cursor: pointer" class="text-center" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></td>
             </tr>
-            
         </tbody>
-
     </table>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-    
 </div>
 
 <ng-container *ngIf="isInitialLoading">

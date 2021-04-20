@@ -1,21 +1,15 @@
 import { NgModule } from '@angular/core';
 
-import {ApproveLeaveRoutingModule } from './approve-leave.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ApproveLeaveComponent} from "./approve-leave.component";
+import { ApproveLeaveRoutingModule } from './approve-leave.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ApproveLeaveComponent } from './approve-leave.component';
 
 @NgModule({
-    declarations: [
-        ApproveLeaveComponent
-    ],
+    declarations: [ApproveLeaveComponent],
 
-    imports: [
-        ApproveLeaveRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [ApproveLeaveRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [ApproveLeaveComponent]
+    bootstrap: [ApproveLeaveComponent],
 })
-export class ApproveLeaveModule { }
+export class ApproveLeaveModule {}
