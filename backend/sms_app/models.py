@@ -1,13 +1,23 @@
 from django.db import models
 
 from school_app.model.models import School
-from information_app.models import MessageType
+from information_app.models import MessageType, SentUpdateType
 
 
 # Create your models here.
-class SMS(models.Model):
+class SMSEvent(models.Model):
+    eventName = models.TextField(max_length=50, null=False, verbose_name='eventName')
+    defaultSMSContent = models.TextField(null=False, verbose_name='defaultSMSContent')
+    defaultNotificationContent = models.TextField(null=False, verbose_name='defaultNotificationContent')
 
+    class Meta:
+        db_table = 'sms_event'
+
+
+class SMS(models.Model):
     parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
+
+    parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.PROTECT, null=True)
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
@@ -95,11 +105,13 @@ class SMSPurchase(models.Model):
         db_table = 'sms_purchase'
 
 
-class SMSId(models.Model):
-
+class SenderId(models.Model):
+    
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-    smsId = models.CharField(max_length=10, null=False, verbose_name='smsId')
-    registrationNumber = models.TextField(null=True, verbose_name='registrationNumber')
+    entityName = models.TextField(null=False, verbose_name='entityName')
+    entityRegistrationId = models.TextField(null=False, verbose_name='entityName')
+    senderId = models.CharField(max_length=10, null=False, verbose_name='senderId')
+    senderRegistrationId = models.TextField(null=True, verbose_name='senderIdRegistrationNo')
 
     ACTIVATED = 'ACTIVATED'
     PENDING = 'PENDING'
@@ -108,7 +120,7 @@ class SMSId(models.Model):
         (PENDING, 'PENDING'),
     )
 
-    smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
+    senderIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
 
     class Meta:
         db_table = 'sms_id'
@@ -116,13 +128,25 @@ class SMSId(models.Model):
 
 class SMSTemplate(models.Model):
 
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSMSId')
+    parentSenderId = models.ForeignKey(SenderId, on_delete=models.CASCADE, default=0, verbose_name='parentSenderId')
     createdDate = models.DateField(null=False, auto_now_add=True, verbose_name='createdDate')
 
-    smsTemplateId = models.TextField(null=False, verbose_name='smsTemplateId')
-    smsTemplateName = models.TextField(null=False, verbose_name='smsTemplateName')
-    smsRawContent = models.TextField(null=False, verbose_name='smsRawContent')
-    smsMappedContent = models.TextField(null=True, verbose_name='smsMappedContent')
+    templateId = models.TextField(null=False, verbose_name='templateId')
+    templateName = models.TextField(null=False, verbose_name='templateName')
+    rawContent = models.TextField(null=False, verbose_name='rawContent')
+
+    SERVICE_IMPLICIT = 'SERVICE IMPLICIT'
+    SERVICE_EXPLICIT = 'SERVICE EXPLICIT'
+    PROMOTIONAL = 'PROMOTIONAL'
+    SMS_COMMUNICATION_TYPE = (
+        (SERVICE_IMPLICIT, 'SERVICE IMPLICIT'),
+        (SERVICE_EXPLICIT, 'SERVICE EXPLICIT'),
+        (PROMOTIONAL, 'PROMOTIONAL')
+    )
+
+    communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
+                                         verbose_name='communicationType')
+    mappedContent = models.TextField(null=True, verbose_name='mappedContent')
 
     APPROVED = 'APPROVED'
     PENDING = 'PENDING'
@@ -137,21 +161,21 @@ class SMSTemplate(models.Model):
         db_table = 'sms_template'
 
 
-class SMSEvent(models.Model):
-
-    eventName = models.TextField(max_length=50, null=False, verbose_name='eventName')
-    defaultSMSContent = models.TextField(null=False, verbose_name='defaultSMSContent')
-    defaultNotificationContent = models.TextField(null=False, verbose_name='defaultNotificationContent')
-
-    class Meta:
-        db_table = 'sms_event'
-
-
 class SMSEventSettings(models.Model):
-
     parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, null=False, verbose_name='parentSMSEvent')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
     parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0,
                                           verbose_name='parentSMSTemplate')
-    jsonEventConditions = models.TextField(null=True, verbose_name='jsonEventConditions')
+    parentSentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, null=True,
+                                             verbose_name='parentSentUpdateType')
+    notificationMappedContent = models.TextField(null=True, verbose_name='notificationMappedContent')
 
+    UPDATE_ALL = 'All Students'
+    UPDATE_ABSENT = 'Only Absent Students'
+    UPDATE_TO_CHOICES = [
+        (UPDATE_ALL, 'All Students'),
+        (UPDATE_ABSENT, 'Only Absent Students')
+    ]
+
+    receiverType = models.CharField(max_length=20, choices=UPDATE_TO_CHOICES, null=True,
+                                    verbose_name='receiverType')

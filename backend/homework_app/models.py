@@ -1,8 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from information_app.models import SentUpdateType
-from sms_app.models import SMSEvent, SMSTemplate
+
 from subject_app.models import ClassSubject
 from student_app.models import Student
 from school_app.model.models import School
