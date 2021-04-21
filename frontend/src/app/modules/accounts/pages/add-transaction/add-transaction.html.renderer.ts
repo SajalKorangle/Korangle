@@ -1,5 +1,5 @@
 import { AddTransactionComponent } from './add-transaction.component';
-import {isMobile} from 'app/classes/common.js';
+import { isMobile } from 'app/classes/common.js';
 
 export class AddTransactionHtmlRenderer {
 
@@ -11,7 +11,7 @@ export class AddTransactionHtmlRenderer {
     moreTransaction = 1;
 
     vm: AddTransactionComponent;
-    constructor() {}
+    constructor() { }
 
     initializeRenderer(vm: AddTransactionComponent): void {
         this.vm = vm;
@@ -85,17 +85,17 @@ export class AddTransactionHtmlRenderer {
 
             // Debit Account
             transaction.debitAccountList = this.vm.backendData.approvalAccountDetailsList.filter(approvalAccountDetails => {
-              return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'DEBIT';
+                return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'DEBIT';
             }).map(approvalAccountDetails => {
                 return {
                     parentAccount: approvalAccountDetails.parentAccount,
-                    parentAmount: approvalAccountDetails.amount,
+                    amount: approvalAccountDetails.amount,
                 };
             });
 
             // Credit Account
             transaction.creditAccountList = this.vm.backendData.approvalAccountDetailsList.filter(approvalAccountDetails => {
-              return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'CREDIT';
+                return approvalAccountDetails.parentApproval == approval.id && approvalAccountDetails.transactionType == 'CREDIT';
             }).map(approvalAccountDetails => {
                 return {
                     parentAccount: approvalAccountDetails.parentAccount,
@@ -105,11 +105,11 @@ export class AddTransactionHtmlRenderer {
 
             // Bill Images
             this.vm.backendData.approvalImagesList.filter(approvalImages => {
-              return approvalImages.parentApproval == approval.id && approvalImages.imageType == 'BILL';
+                return approvalImages.parentApproval == approval.id && approvalImages.imageType == 'BILL';
             }).forEach(approvalImages => {
                 this.vm.serviceAdapter.getBase64FromUrl(approvalImages.imageURL).then(data64URL => {
                     transaction.billImages.push({
-                        'imageUrl': data64URL,
+                        'imageURL': data64URL,
                     });
                 });
             });
@@ -120,7 +120,7 @@ export class AddTransactionHtmlRenderer {
             }).forEach(approvalImages => {
                 this.vm.serviceAdapter.getBase64FromUrl(approvalImages.imageURL).then(data64URL => {
                     transaction.quotationImages.push({
-                        'imageUrl': data64URL,
+                        'imageURL': data64URL,
                     });
                 });
             });

@@ -50,15 +50,15 @@ export class UseFortransactionDialogComponent implements OnInit {
     let flag = false;
 
     this.data.approval.creditAccounts.forEach(account => {
-      const approvalAccountDeatils = this.data.originalApproval.creditAccounts.find(el => el.parentAccount == account.parentAccount);
-      if (account.amount > approvalAccountDeatils.amount) {
+      const approvalAccountDeatils = this.data.originalApproval.creditAccounts.find(el => el.accountDbId == account.accountDbId);
+      if (!approvalAccountDeatils || account.amount > approvalAccountDeatils.amount) {
         flag = true;
       }
     });
 
     this.data.approval.debitAccounts.forEach(account => {
-      const approvalAccountDeatils = this.data.originalApproval.debitAccounts.find(el => el.parentAccount == account.parentAccount);
-      if (account.amount > approvalAccountDeatils.amount) {
+      const approvalAccountDeatils = this.data.originalApproval.debitAccounts.find(el => el.accountDbId == account.accountDbId);
+      if (!approvalAccountDeatils || account.amount > approvalAccountDeatils.amount) {
         flag = true;
       }
     });

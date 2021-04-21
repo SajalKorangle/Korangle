@@ -14,12 +14,12 @@ from datetime import datetime, date
 
 def upload_image_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'accounts_app/TransactionImages/imageURL/%s%s' % (instance.id, filename_ext.lower())
+    return 'accounts_app/TransactionImages/imageURL/%s%s' % (now().timestamp(), filename_ext.lower())
 
 
 def upload_image_to_1(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'accounts_app/ApprovalImages/imageURL/%s%s' % (instance.id, filename_ext.lower())
+    return 'accounts_app/ApprovalImages/imageURL/%s%s' % (now().timestamp(), filename_ext.lower())
 
 
 class Heads(models.Model):

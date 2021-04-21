@@ -153,14 +153,14 @@ export class AddTransactionComponent implements OnInit {
       return false;
     }
 
-    const parentApproval = this.backendData.approvalList.find(approval => approval.id == transaction.approval.id);
+    const parentApproval = transaction.approval;
     let flag = false;
     transaction.creditAccountList.forEach(account => {
       if (!account.parentAccount) {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
       const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id
-        && el.parentAccount == account.parentAccount.id
+        && el.parentAccount == account.parentAccount
         && el.transactionType == 'CREDIT');
       if (approvalAccountDeatils) {
         if (account.amount > approvalAccountDeatils.amount) {
@@ -177,7 +177,7 @@ export class AddTransactionComponent implements OnInit {
         return; // return of this callback function not isAmpuntMoreThanApproval function
       }
       const approvalAccountDeatils = this.backendData.approvalAccountDetailsList.find(el => el.parentApproval == parentApproval.id
-        && el.parentAccount == account.parentAccount.id
+        && el.parentAccount == account.parentAccount
         && el.transactionType == 'DEBIT');
       if (approvalAccountDeatils) {
         if (account.amount > approvalAccountDeatils.amount) {

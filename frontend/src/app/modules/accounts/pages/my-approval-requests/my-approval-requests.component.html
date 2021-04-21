@@ -36,11 +36,12 @@
                             </span>
                         </div>
                         <div class="row col-md-12" style="width: auto;">
-                                <customized-number-input [placeHolder]="'Amount'"
-                                                    [minimum]="0.01"
-                                                    [maximumDecimal]="2"
-                                                    [inputValue]="payFrom.amount"
-                                                    (outputValue)="payFrom.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
+                                <customized-number-input [placeHolder]="'Amount'" 
+                                        [disabled]="approval.payFrom.length==1 && approval.payTo.length>1"
+                                        [minimum]="0.01"
+                                        [maximumDecimal]="2"
+                                        [inputValue]="payFrom.amount"
+                                        (outputValue)="payFrom.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
                         </div>
                     </div>
                     <div class="row col-md-12" style="text-align: right;">
@@ -78,10 +79,11 @@
 
                         <div class="row col-md-12" style="width: auto;">
                             <customized-number-input [placeHolder]="'Amount'" *ngIf="!htmlRenderer.isApprovalSimple(approval)"
-                                                    [minimum]="0.01"
-                                                    [maximumDecimal]="2"
-                                                    [inputValue]="payTo.amount"
-                                                    (outputValue)="payTo.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
+                                    [disabled]="approval.payTo.length==1 && approval.payFrom.length>1"
+                                    [minimum]="0.01"
+                                    [maximumDecimal]="2"
+                                    [inputValue]="payTo.amount"
+                                    (outputValue)="payTo.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
                         </div>
                     </div>
                     <div class="row col-md-12" style="text-align: right;">
