@@ -9,8 +9,8 @@ import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { BusStopService } from '@services/modules/school/bus-stop.service';
-import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { SchoolService } from '@services/modules/school/school.service';
+import { TCService } from './../../../../services/modules/tc/tc.service';
 
 import { MatDialog } from '@angular/material';
 import { ImagePdfPreviewDialogComponent } from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
@@ -20,6 +20,10 @@ import * as FileSaver from 'file-saver';
 import { toInteger, filter } from 'lodash';
 import { CommonFunctions } from '@classes/common-functions';
 import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
+import { ComponentsModule } from 'app/components/components.module';
+
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import { ViewAllBackendData } from './view-all.backend.data';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -59,7 +63,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -137,6 +141,7 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     serviceAdapter: ViewAllServiceAdapter;
+    backendData: ViewAllBackendData;
 
     constructor(
         public studentOldService: StudentOldService,
@@ -146,6 +151,7 @@ export class ViewAllComponent implements OnInit {
         public schoolService: SchoolService,
         public printService: PrintService,
         public busStopService: BusStopService,
+        public tcService: TCService,
         public dialog: MatDialog
     ) { }
 
@@ -153,9 +159,14 @@ export class ViewAllComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.columnFilter = new ColumnFilter();
         this.documentFilter = new ColumnFilter();
+
+        this.backendData = new ViewAllBackendData();
+        this.backendData.initialize(this);
+
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
         this.totalDownloadSize = 0;
@@ -250,6 +261,7 @@ export class ViewAllComponent implements OnInit {
             studentFullProfile['show'] = false;
             studentFullProfile['selectProfile'] = false;
             studentFullProfile['selectDocument'] = false;
+            studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
         this.handleStudentDisplay();
     }
@@ -561,7 +573,8 @@ export class ViewAllComponent implements OnInit {
             }
 
             // Transfer Certiicate Check
-            if (!((this.noTC && !student.parentTransferCertificate) || (this.yesTC && student.parentTransferCertificate))) {
+            if (!((this.noTC && !student.parentTransferCertificate && !student.newTransferCertificate)
+                || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
                 student.show = false;
                 return;
             }
