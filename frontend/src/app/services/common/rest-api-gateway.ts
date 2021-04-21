@@ -34,17 +34,17 @@ export class RestApiGateway {
         return absolute_url.toString();
     }
 
-    public returnResponse(response: any, prompt: string = null): any {
+    public returnResponse(response: any, url: any = null, prompt: string = null): any {
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
-            this.reportError(ERROR_SOURCES[0], location.href, `failed api response: = ${JSON.stringify(response)}`, prompt);
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt, false, location.href);
             alert(jsonResponse.message);
             throw new Error();
         } else {
-            this.reportError(ERROR_SOURCES[0], location.href, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true);
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true, location.href);
             alert('Unexpected response from server');
             return null;
         }
@@ -57,10 +57,10 @@ export class RestApiGateway {
             .toPromise()
             .then(
                 (response) => {
-                    return this.returnResponse(response, 'from deleteData');
+                    return this.returnResponse(response, url, 'from deleteData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from deleteData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from deleteData', false, location.href);
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -75,10 +75,10 @@ export class RestApiGateway {
             .toPromise()
             .then(
                 (response) => {
-                    return this.returnResponse(response, 'from putData');
+                    return this.returnResponse(response, url, 'from putData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from putData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData', false, location.href, JSON.stringify(body));
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -93,10 +93,10 @@ export class RestApiGateway {
             .toPromise()
             .then(
                 (response) => {
-                    return this.returnResponse(response, 'from patchData');
+                    return this.returnResponse(response, url, 'from patchData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from patchData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData', false, location.href, JSON.stringify(body));
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -111,10 +111,10 @@ export class RestApiGateway {
             .toPromise()
             .then(
                 (response) => {
-                    return this.returnResponse(response, 'from postData');
+                    return this.returnResponse(response, url, 'from postData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from postData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData', false, location.href, JSON.stringify(body));
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -129,10 +129,10 @@ export class RestApiGateway {
             .toPromise()
             .then(
                 (response) => {
-                    return this.returnResponse(response, 'from getDataWithPost');
+                    return this.returnResponse(response, url, 'from getDataWithPost');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getDataWithPost');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getDataWithPost', false, location.href);
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -154,10 +154,10 @@ export class RestApiGateway {
             .toPromise()
             .then(
                 (response) => {
-                    return this.returnResponse(response, 'from getData');
+                    return this.returnResponse(response, url, 'from getData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData');
+                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData', false, location.href);
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
