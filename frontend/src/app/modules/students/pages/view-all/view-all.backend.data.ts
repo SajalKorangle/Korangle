@@ -2,7 +2,7 @@ import { ViewAllComponent } from './view-all.component';
 
 export class ViewAllBackendData {
 
-    tcList: [];
+    tcList: any;
 
     vm: ViewAllComponent;
 
