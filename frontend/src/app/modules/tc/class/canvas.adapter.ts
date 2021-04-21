@@ -160,7 +160,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 postCallback();
             }, duration);
         });
-    }
+    };
 
     fullCanavsRefresh(): Promise<any> {
         this.layers.forEach((layer: Layer) => {
@@ -325,7 +325,6 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
             },
             extraFields: {},
             backgroundColor: DEFAULT_BACKGROUND_COLOR,
-            gradeRuleSetList: [],
             layers: [],
         };
     }
