@@ -5,9 +5,9 @@
             <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
                 <div
                     style="text-align: center; max-width: 150px; cursor: pointer; margin: 4px"
-                    (click)="selectedLayout.type = 'myLayout'; selectedLayout.index = -1"
+                    (click)="selectedLayout = vm.ADD_LAYOUT_STRING"
                 >
-                    <!-- -1 index is representing new layout-->
+
                     <div
                         style="
                             background-color: lightgrey;
@@ -18,7 +18,7 @@
                             display: table-cell;
                             vertical-align: middle;
                         "
-                        [style.borderColor]="selectedLayout.type == 'myLayout' && selectedLayout.index == -1 ? 'blue' : 'lightgrey'"
+                        [style.borderColor]="selectedLayout == vm.ADD_LAYOUT_STRING ? 'blue' : 'lightgrey'"
                     >
                         <span class="material-icons" style="font-size: xx-large">add</span>
                     </div>
@@ -28,7 +28,7 @@
                 <ng-container *ngFor="let layout of vm.tcLayoutList; let i = index">
                     <div
                         style="text-align: center; max-width: 105px; cursor: pointer; margin: 4px"
-                        (click)="selectedLayout.type = 'myLayout'; selectedLayout.index = i"
+                        (click)="selectedLayout = layout"
                     >
                         <div
                             style="
@@ -42,7 +42,7 @@
                                 border: solid 3px;
                                 position: relative;
                             "
-                            [style.borderColor]="selectedLayout.type == 'myLayout' && selectedLayout.index == i ? 'blue' : 'lightgrey'"
+                            [style.borderColor]="selectedLayout == layout? 'blue' : 'lightgrey'"
                         >
                             <img
                                 [src]="layout.thumbnail"
@@ -74,12 +74,10 @@
             <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
                 <ng-container *ngFor="let layout of vm.publicLayoutList; let i = index">
                     <div
-                        style="text-align: center; max-width: 150px; cursor: pointer"
-                        (click)="selectedLayout.type = 'public'; selectedLayout.index = i"
-                    >
+                        style="text-align: center; max-width: 150px; cursor: pointer" (click)="selectedLayout = layout">
                         <div
                             style="height: 150px; width: 102px; margin: 4px 12px; border: solid 3px"
-                            [style.borderColor]="selectedLayout.type == 'public' && selectedLayout.index == i ? 'blue' : 'lightgrey'"
+                            [style.borderColor]="selectedLayout == layout? 'blue' : 'lightgrey'"
                         >
                             <img
                                 [src]="layout.thumbnail"
@@ -111,12 +109,10 @@
             <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
                 <ng-container *ngFor="let layout of vm.sharedLayoutList; let i = index">
                     <div
-                        style="text-align: center; max-width: 150px; cursor: pointer"
-                        (click)="selectedLayout.type = 'shared'; selectedLayout.index = i"
-                    >
+                        style="text-align: center; max-width: 150px; cursor: pointer" (click)="selectedLayout = layout">
                         <div
                             style="height: 150px; width: 102px; margin: 4px 12px; border: solid 3px"
-                            [style.borderColor]="selectedLayout.type == 'shared' && selectedLayout.index == i ? 'blue' : 'lightgrey'"
+                            [style.borderColor]="selectedLayout == layout? 'blue' : 'lightgrey'"
                         >
                             <img
                                 [src]="layout.thumbnail"
@@ -145,8 +141,10 @@
         </mat-tab>
     </mat-tab-group>
 </mat-dialog-content>
-<div mat-dialog-actions>
-    <button mat-button (click)="apply()" class="btn" style="background-color: blue; display: block; margin-left: auto" cdkFocusInitial>
-        Apply
+<div mat-dialog-actions style="color: white">
+    <span style="display: inline-block; margin-left: auto"></span>
+    <button mat-button *ngIf="isMyLayout()" (click)="copyAndApply()" class="btn" style="background-color: blue" cdkFocusInitial>
+        Duplicate
     </button>
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue" cdkFocusInitial>Apply</button>
 </div>

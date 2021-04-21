@@ -75,7 +75,7 @@ export class TCLogbookComponent implements OnInit {
             const ss = this.studentSectionList.find((ss) => ss.parentStudent == studentId);
             return {
                 ...ss,
-                tc: this.tcList.find((tc) => tc.parentStudent == ss.parentStudent),
+                tc,
                 parentStudentInstance: this.studentList.find((s) => s.id == ss.parentStudent),
             };
         });
