@@ -9,7 +9,6 @@ import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { BusStopService } from '@services/modules/school/bus-stop.service';
-import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { SchoolService } from '@services/modules/school/school.service';
 import { TCService } from './../../../../services/modules/tc/tc.service';
 
@@ -22,6 +21,9 @@ import { toInteger, filter } from 'lodash';
 import { CommonFunctions } from '@classes/common-functions';
 import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
 import { ComponentsModule } from 'app/components/components.module';
+
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import { ViewAllBackendData } from './view-all.backend.data';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -139,6 +141,7 @@ export class ViewAllComponent implements OnInit {
     isLoading = false;
 
     serviceAdapter: ViewAllServiceAdapter;
+    backendData: ViewAllBackendData;
 
     constructor(
         public studentOldService: StudentOldService,
@@ -156,9 +159,14 @@ export class ViewAllComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.columnFilter = new ColumnFilter();
         this.documentFilter = new ColumnFilter();
+
+        this.backendData = new ViewAllBackendData();
+        this.backendData.initialize(this);
+
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
         this.totalDownloadSize = 0;
@@ -246,18 +254,14 @@ export class ViewAllComponent implements OnInit {
         this.sectionList = sectionList;
     }*/
 
-    initializeStudentFullProfileList(studentFullProfileList: any, tcList: any): void {
-        console.log("tcList: ", tcList);
+    initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach((studentFullProfile) => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
             studentFullProfile['selectProfile'] = false;
             studentFullProfile['selectDocument'] = false;
-            studentFullProfile['newTransferCertificate'] = tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
-            if (studentFullProfile['newTransferCertificate']) {
-                console.log(studentFullProfile);
-            }
+            studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
         this.handleStudentDisplay();
     }

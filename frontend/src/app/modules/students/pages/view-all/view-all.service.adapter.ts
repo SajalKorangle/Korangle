@@ -58,7 +58,8 @@ export class ViewAllServiceAdapter {
                     });
                 });
                 this.vm.initializeClassSectionList(value[0]);
-                this.vm.initializeStudentFullProfileList(value[2], value[7]);
+                this.vm.backendData = value[7];
+                this.vm.initializeStudentFullProfileList(value[2]);
                 this.vm.studentParameterList = value[3].map((x) => ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
