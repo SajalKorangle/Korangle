@@ -59,7 +59,7 @@ export class AddTransactionComponent implements OnInit {
     this.serviceAdapter.initializeAdapter(this);
 
     this.serviceAdapter.initializeData();
-    console.log("this", this);
+    // console.log("this", this);
   }
 
   initilizeDate(): void {

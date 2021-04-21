@@ -1,6 +1,6 @@
-import { Component} from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
-import {MatDialog, } from '@angular/material';
+import { Component } from '@angular/core';
+import { DataStorage } from "../../../../classes/data-storage";
+import { MatDialog, } from '@angular/material';
 import { AddAccountDialogComponent } from './add-account-dialog/add-account-dialog.component';
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component';
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
@@ -22,7 +22,7 @@ import { customAccount, customGroupStructure } from './../../classes/constants';
     ]
 })
 
-export class ManageAccountsComponent{
+export class ManageAccountsComponent {
 
     user: any;
     serviceAdapter: ManageAccountsServiceAdapter;
@@ -73,7 +73,7 @@ export class ManageAccountsComponent{
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         this.displayWholeList = true;
-        console.log('this: ', this);
+        // console.log('this: ', this);
     }
 
     getHeadName(id: number) {

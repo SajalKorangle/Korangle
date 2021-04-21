@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from "../../../../classes/data-storage";
 import { SettingsServiceAdapter } from './settings.service.adapter';
 import { SettingsBackendData } from './settings.backend.data';
 import { SESSION_CONSTANT } from './../../../../services/modules/school/models/session';
@@ -19,11 +19,11 @@ import { CommonFunctions } from './../../../../classes/common-functions';
     ],
 })
 
-export class SettingsComponent{
+export class SettingsComponent {
 
     user: any;
 
-    selectedEmployeeAmount : any;
+    selectedEmployeeAmount: any;
     selectedEmployee: any;
     selectedEmployeeAccountPermission: any;
 
@@ -51,7 +51,7 @@ export class SettingsComponent{
         this.backendData = new SettingsBackendData();
 
         this.currentSession = SESSION_CONSTANT.find(session => session.id == this.user.activeSchool.currentSessionDbId);
-        console.log("this: ", this);
+        // console.log("this: ", this);
     }
 
     handleEmployeeSelection(employee: any): void {

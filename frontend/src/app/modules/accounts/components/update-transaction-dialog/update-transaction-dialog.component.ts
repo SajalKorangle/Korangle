@@ -35,7 +35,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
     this.maximumPermittedAmount = this.data.vm.maximumPermittedAmount;
     this.originalTransaction = this.data.originalTransaction;
     this.loadApproval();
-    console.log('this: ', this);
+    // console.log('this: ', this);
   }
 
   async loadApproval() {

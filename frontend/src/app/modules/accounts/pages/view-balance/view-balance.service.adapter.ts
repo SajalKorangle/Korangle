@@ -4,7 +4,7 @@ import { AccountSession } from '@services/modules/accounts/models/account-sessio
 export class ViewBalanceServiceAdapter {
 
     vm: ViewBalanceComponent;
-    constructor() {}
+    constructor() { }
     // Data
 
     initializeAdapter(vm: ViewBalanceComponent): void {
@@ -80,7 +80,7 @@ export class ViewBalanceServiceAdapter {
                 this.vm.groupsList.push(customAccount);
             }
         });
-        return ;
+        return;
     }
 
 
@@ -172,7 +172,7 @@ export class ViewBalanceServiceAdapter {
             return b.voucherNumber - a.voucherNumber;
         });
         let lastAccountBalance = this.vm.ledgerAccount.currentBalance;
-        for (let j = 0; j < transactionList.length ; j++) {
+        for (let j = 0; j < transactionList.length; j++) {
             let transaction = transactionList[j];
             let totalAmount = 0;
             let ledgerAccountAmount;
@@ -228,7 +228,7 @@ export class ViewBalanceServiceAdapter {
                     tempData.accounts.push(temp_data);
                 }
             }
-            console.log("type: ", ledgerAccountType);
+            // console.log("type: ", ledgerAccountType);
             tempData.balance = lastAccountBalance;
             if (ledgerAccountType == 'DEBIT') {
                 lastAccountBalance = lastAccountBalance - ledgerAccountAmount;
@@ -243,7 +243,7 @@ export class ViewBalanceServiceAdapter {
                     i--;
                 }
                 else {
-                    account.amount = (account.amount * ledgerAccountAmount ) / totalAmount;
+                    account.amount = (account.amount * ledgerAccountAmount) / totalAmount;
                 }
             }
 

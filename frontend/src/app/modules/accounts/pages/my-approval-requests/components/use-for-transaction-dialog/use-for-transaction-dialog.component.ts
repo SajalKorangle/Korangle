@@ -18,7 +18,7 @@ export class UseFortransactionDialogComponent implements OnInit {
     }) { }
 
   ngOnInit() {
-    console.log(this.data);
+    // console.log(this.data);
   }
 
   readURL(event, str): void {
