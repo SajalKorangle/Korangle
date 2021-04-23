@@ -18,7 +18,8 @@ window.onerror = (message, source, lineno, colno, error) => {
         location.pathname + location.search,
         JSON.stringify({ message, source, lineno, colno, error }),
         'from window.onerror',
-        true
+        true,
+        location.href
     );
     return false;
 };

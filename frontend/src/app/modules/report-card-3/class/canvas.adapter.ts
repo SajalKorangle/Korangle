@@ -173,7 +173,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 postCallback();
             }, duration);
         });
-    }
+    };
 
     fullCanavsRefresh(): Promise<any> {
         this.layers.forEach((layer: Layer) => {
@@ -289,7 +289,14 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             return this.fullCanavsRefresh();
         } catch (err) {
             console.error(err);
-            reportError(ERROR_SOURCES[1], location.pathname + location.search, err.toString(), 'error in loading saved layout page; data croupted');
+            reportError(
+                ERROR_SOURCES[1],
+                location.pathname + location.search,
+                err.toString(),
+                'error in loading saved layout page; data corrupted',
+                false,
+                location.href
+            );
             alert('data corrupted');
             this.clearCanvas();
         }
