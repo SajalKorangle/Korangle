@@ -6,6 +6,8 @@ import { reportError, ERROR_SOURCES } from './app/services/modules/errors/error-
 
 import { environment } from './environments/environment';
 
+// import { ZoomMtg } from '@zoomus/websdk';
+
 if (environment.production) {
     enableProdMode();
 }
@@ -23,3 +25,6 @@ window.onerror = (message, source, lineno, colno, error) => {
     );
     return false;
 };
+
+// For Local module default:
+// ZoomMtg.setZoomJSLib('node_modules/@zoomus/websdk/dist/lib', '/av');
