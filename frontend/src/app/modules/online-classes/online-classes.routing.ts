@@ -5,6 +5,16 @@ import { OnlineClassesComponent } from './online-classes.component';
 
 const routes: Routes = [
   {
+    path: 'settings',
+    loadChildren: 'app/modules/online-classes/pages/settings/settings.module#SettingsModule',
+    data: { moduleName: 'online_classes' },
+  },
+  {
+    path: 'classroom',
+    loadChildren: 'app/modules/online-classes/pages/classroom/classroom.module#ClassroomModule',
+    data: { moduleName: 'online_classes' },
+  },
+  {
     path: '',
     component: OnlineClassesComponent,
   },

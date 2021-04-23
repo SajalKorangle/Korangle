@@ -7,8 +7,6 @@ import { ClassroomHtmlRenderer } from './classroom.html.renderer';
 import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
-import { ZoomMtg } from '@zoomus/websdk';
-
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
@@ -45,8 +43,61 @@ export class ClassroomComponent implements OnInit {
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
 
-        ZoomMtg.preLoadWasm();
-        ZoomMtg.prepareJssdk();
-        ZoomMtg.init();
+        // ZoomMtg.preLoadWasm();
+        // ZoomMtg.prepareJssdk();
+        // ZoomMtg.init();
+        // console.log("zoom: ", ZoomMtg);
     }
+
+    ngAfterViewInit() {
+        this.makeZoomView();
+    }
+
+    makeZoomView() {
+        // let zoomRoot = document.getElementById('zmmtg-root');
+        // let zoomHelper = document.getElementById('aria-notify-area');
+
+        // document.body.removeChild(zoomRoot);
+        // document.body.removeChild(zoomHelper);
+
+        // let mainWrapper = document.getElementById('classroom-main');
+        // mainWrapper.appendChild(zoomRoot);
+        // mainWrapper.appendChild(zoomHelper);
+
+        // zoomRoot.style.position = 'relative';
+        // zoomRoot.style.height = '75vh';
+        // console.log('zoom: ', ZoomMtg);
+
+        // const meetConfig = {
+        //     apiKey: "feab_2y9TZyvvWEDgrWmUQ",
+        //     meetingNumber: 74640690840,
+        //     leaveUrl: 'http://localhost:4200/',
+        //     passWord: "YAjq80",
+        //     role: 0,
+        //     userEmail: "kumar.93@iitj.ac.in",
+        //     userName: "Aditya Kumar",
+        // };
+        // const response = 'ZmVhYl8yeTlUWnl2dldFRGdyV21VUS43NDY0MDY5MDg0MC4xNjE5MTU5MjQ2MTg4LjAubWtTT2pXMnJycEVpOXVVOW43b3E1N2ZHM3d4czBFQ1ZiQ3JCZ1V5UnpmQT0';
+
+        // ZoomMtg.init({
+        //     leaveUrl: meetConfig.leaveUrl,
+        //     isSupportAV: true,
+        //     success: function () {
+        //         console.log("metting init success");
+        //         ZoomMtg.join({
+        //             signature: response,
+        //             apiKey: meetConfig.apiKey,
+        //             meetingNumber: meetConfig.meetingNumber,
+        //             userName: meetConfig.userName,
+        //             passWord: meetConfig.passWord,
+        //             userEmail: 'kumar.93@iitj.ac.in',
+        //             success: () => { console.log('join success'); },
+        //             error: (err) => { console.log('error occured: ', err); },
+        //         });
+        //     }
+        // });
+    }
+
+
+
 }
