@@ -300,11 +300,33 @@ export class ViewBalanceComponent implements OnInit {
     const excel2DTabel = [];
     const headerRow = [];
 
-    Object.values(this.columnFilter).forEach(filterInstance => {
-      if (filterInstance.value) {
-        headerRow.push(filterInstance.displayName);
-      }
-    });
+    if (this.columnFilter.voucherNumber.value) {
+      headerRow.push(this.columnFilter.voucherNumber.displayName);
+    }
+    if (this.columnFilter.date.value) {
+      headerRow.push(this.columnFilter.date.displayName);
+    }
+    if (this.columnFilter.accounts.value) {
+      headerRow.push(this.columnFilter.accounts.displayName);
+    }
+    if (this.columnFilter.debitAmount.value) {
+      headerRow.push(this.columnFilter.debitAmount.displayName);
+    }
+    if (this.columnFilter.creditAmount.value) {
+      headerRow.push(this.columnFilter.creditAmount.displayName);
+    }
+    if (this.columnFilter.remark.value) {
+      headerRow.push(this.columnFilter.remark.displayName);
+    }
+    if (this.columnFilter.approvalId.value) {
+      headerRow.push(this.columnFilter.approvalId.displayName);
+    }
+    if (this.columnFilter.addedBy.value) {
+      headerRow.push(this.columnFilter.addedBy.displayName);
+    }
+    if (this.columnFilter.balance.value) {
+      headerRow.push(this.columnFilter.balance.displayName);
+    }
     excel2DTabel.push(headerRow);
 
     this.transactionsList.forEach(transaction => {
