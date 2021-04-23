@@ -1,10 +1,14 @@
 from django.db import models
+from django.db.models.signals import post_save, pre_save
 
 from school_app.model.models import School
 from information_app.models import MessageType, SentUpdateType
 
 
 # Create your models here.
+from sms_app.signals import sms_sender
+
+
 class SMSEvent(models.Model):
     eventName = models.TextField(max_length=50, null=False, verbose_name='eventName')
     defaultSMSContent = models.TextField(null=False, verbose_name='defaultSMSContent')
@@ -41,7 +45,8 @@ class SMS(models.Model):
     mobileNumberList = models.TextField(null=False, blank=True, default='', verbose_name='mobileNumberList')
 
     # Notification Mobile Number List
-    notificationMobileNumberList = models.TextField(null=False, blank=True, default='', verbose_name='notificationMobileNumberList')
+    notificationMobileNumberList = models.TextField(null=False, blank=True, default='',
+                                                    verbose_name='notificationMobileNumberList')
 
     # Request Id
     requestId = models.TextField(null=True, verbose_name='requestId')
@@ -56,8 +61,9 @@ class SMS(models.Model):
         db_table = 'sms'
 
 
-class MsgClubDeliveryReport(models.Model):
+pre_save.connect(sms_sender, sender=SMS)
 
+class MsgClubDeliveryReport(models.Model):
     # Request Id
     requestId = models.TextField(null=False, verbose_name='requestId')
 
@@ -85,7 +91,6 @@ class MsgClubDeliveryReport(models.Model):
 
 
 class SMSPurchase(models.Model):
-
     # SMS No.
     numberOfSMS = models.IntegerField(null=False, default=0, verbose_name='numberOfSMS')
 
@@ -99,19 +104,18 @@ class SMSPurchase(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     def __str__(self):
-        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price)
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(
+            self.numberOfSMS) + ' -- ' + str(self.price)
 
     class Meta:
         db_table = 'sms_purchase'
 
 
-class SenderId(models.Model):
-    
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
+class SMSId(models.Model):
     entityName = models.TextField(null=False, verbose_name='entityName')
-    entityRegistrationId = models.TextField(null=False, verbose_name='entityName')
-    senderId = models.CharField(max_length=10, null=False, verbose_name='senderId')
-    senderRegistrationId = models.TextField(null=True, verbose_name='senderIdRegistrationNo')
+    entityRegistrationId = models.TextField(null=False, verbose_name='entityRegistrationId')
+    smsId = models.CharField(max_length=10, null=False, verbose_name='smsId')
+    smsIdRegistrationNumber = models.TextField(null=True, verbose_name='SMSIdRegistrationNumber')
 
     ACTIVATED = 'ACTIVATED'
     PENDING = 'PENDING'
@@ -120,15 +124,22 @@ class SenderId(models.Model):
         (PENDING, 'PENDING'),
     )
 
-    senderIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
+    smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
 
     class Meta:
         db_table = 'sms_id'
 
 
-class SMSTemplate(models.Model):
+class SMSIdSchool(models.Model):
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSMSId')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
 
-    parentSenderId = models.ForeignKey(SenderId, on_delete=models.CASCADE, default=0, verbose_name='parentSenderId')
+    class Meta:
+        db_table = 'smsid_school'
+
+
+class SMSTemplate(models.Model):
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSenderId')
     createdDate = models.DateField(null=False, auto_now_add=True, verbose_name='createdDate')
 
     templateId = models.TextField(null=False, verbose_name='templateId')

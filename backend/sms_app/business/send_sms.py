@@ -183,5 +183,6 @@ def send_different_sms(data):
     response = conn.getresponse().read()
 
     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+    print(requestIdFromMsgClub)
 
     return {'status': 'success', 'requestId': requestIdFromMsgClub, 'message': 'SMS Sent successfully'}

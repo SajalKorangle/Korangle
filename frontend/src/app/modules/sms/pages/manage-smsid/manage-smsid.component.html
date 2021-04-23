@@ -1,0 +1,57 @@
+<div class="card-content">
+<mat-card>
+    <span>NEW SMS ID</span>
+     <div class="col-md-9">
+                <!-- Name, Print Name -->
+                <div class="row">
+                    <div class="col-md-4">
+                       <mat-form-field style="width: 100%">
+                             <mat-label>Entity Name</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                            />
+                       </mat-form-field>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%">
+                             <mat-label>Entity Registration ID</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                            />
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            <div class="row">
+                    <div class="col-md-4">
+                       <mat-form-field style="width: 100%">
+                             <mat-label>SMS ID</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                            />
+                       </mat-form-field>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%">
+                             <mat-label>SMS Registration ID</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                            />
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+     </div>
+</mat-card>
+
+
+</div>
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

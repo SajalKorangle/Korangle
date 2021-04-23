@@ -8,9 +8,8 @@ from rest_framework.views import APIView
 
 import json
 
-
 ############## SMS Old ##############
-from sms_app.models import SMS
+from sms_app.models import SMS, SMSEvent, SMSId, SMSTemplate, SMSEventSettings
 from .business.sms import get_sms_list
 
 
@@ -92,29 +91,21 @@ from .business.send_sms import send_sms, send_different_sms
 
 class SmsView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
-    @user_permission_3
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        return_data = { 'status': 'success' }
-        if data['mobileNumberList'] != '':
-            return_data = send_sms(data)
-            print(data)
-            if return_data['status'] == 'success':
-                data['requestId'] = return_data['requestId']
-                return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
-        else:
-            data['requestId'] = 1
-            return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
-        return return_data
+    # @user_permission_3
+    # def post(self, request, *args, **kwargs):
+    #     data = request.data
+    #         return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'],
+    #                                             activeStudentID=kwargs['activeStudentID'])
+    #     return return_data
 
 
 ## Mobile number list and count still needed
 
 class SmsDifferentView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
@@ -123,17 +114,51 @@ class SmsDifferentView(CommonView, APIView):
         # data = json.loads(request.body.decode('utf-8'))
         return_data = {'status': 'success'}
         if len(data["data"]) > 0:
-            return_data = send_different_sms(data)
+            return_data = {}
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
+                return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'],
+                                                    activeStudentID=kwargs['activeStudentID'])
         else:
-            return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
+            return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'],
+                                                activeStudentID=kwargs['activeStudentID'])
             print(return_data)
         return return_data
 
 
-
 class SmsListView(CommonListView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
+
+
+class SMSEventView(CommonView, APIView):
+    Model = SMSEvent
+
+
+class SMSEventListView(CommonListView, APIView):
+    Model = SMSEvent
+
+
+class SMSIdView(CommonView, APIView):
+    Model = SMSId
+
+
+class SMSIdListView(CommonListView, APIView):
+    Model = SMSId
+
+
+class SMSTemplateView(CommonView, APIView):
+    Model = SMSTemplate
+
+
+class SMSTemplateListView(CommonListView, APIView):
+    Model = SMSTemplate
+
+
+class SMSEventSettingsView(CommonView, APIView):
+    Model = SMSEventSettings
+
+
+class SMSEventSettingsListView(CommonListView, APIView):
+    Model = SMSEventSettings
+

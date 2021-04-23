@@ -27,6 +27,40 @@ urlpatterns += [
 ]
 
 
+
+########  SMS  Event Settings ###############
+from .views import SMSEventSettingsView, SMSEventSettingsListView
+
+urlpatterns += [
+	url(r'^sms-event-settings', SMSEventSettingsView.as_view()),
+	url(r'^sms-event-settings/batch', SMSEventSettingsListView.as_view()),
+]
+
+########  SMS  Event ###############
+from .views import SMSEventView, SMSEventListView
+
+urlpatterns += [
+	url(r'^sms-event', SMSEventView.as_view()),
+	url(r'^sms-event/batch', SMSEventListView.as_view()),
+]
+
+########  Sender  ID ###############
+from .views import SMSIdView, SMSIdListView
+
+urlpatterns += [
+	url(r'^smsid', SMSIdView.as_view()),
+	url(r'^smsid/batch', SMSIdListView.as_view()),
+]
+
+########  SMS Templates  ###############
+from .views import SMSTemplateView, SMSTemplateListView
+
+urlpatterns += [
+	url(r'^sms-template', SMSTemplateView.as_view()),
+	url(r'^sms-template/batch', SMSTemplateListView.as_view()),
+]
+
+
 ######## Send SMS ###############
 from .views import SendSMSView
 

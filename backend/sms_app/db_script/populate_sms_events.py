@@ -64,3 +64,5 @@ def populate_sms_events(apps, schema_editor):
                               defaultNotificationContent="Your ward's attendance has been corrected to "
                                                          "@attendanceStatus")
     new_sms_event.save()
+
+

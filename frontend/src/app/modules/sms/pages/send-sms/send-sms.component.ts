@@ -47,7 +47,7 @@ export class SendSmsComponent implements OnInit {
     gcmDeviceList = [];
     filteredUserList = [];
 
-    smsBalance = 0;
+    smsBalance = 10;
 
     showStudentList = false;
     showEmployeeList = false;
