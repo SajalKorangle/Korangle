@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'report_card_app.report_card_mp_board_app',
     'errors_app',
     'tc_app',
+    'online_classes_app',
 
     'corsheaders',
 

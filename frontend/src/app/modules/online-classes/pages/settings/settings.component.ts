@@ -7,11 +7,15 @@ import { SettingsHtmlRenderer } from './settings.html.renderer';
 import { SettingsUserInput } from './settings.user.input';
 import { SettingsBackendData } from './settings.backend.data';
 
+// Services
+import { ClassService } from '@services/modules/class/class.service';
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
+
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [ ],
+    providers: [ OnlineClassService, ClassService ],
 })
 
 export class SettingsComponent implements OnInit {
@@ -24,8 +28,12 @@ export class SettingsComponent implements OnInit {
     backendData: SettingsBackendData;
 
     isLoading: any;
+    isAddLoading: any;
 
-    constructor () { }
+    constructor (
+        public onlineClassService: OnlineClassService,
+        public classService: ClassService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -41,6 +49,7 @@ export class SettingsComponent implements OnInit {
 
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initialize(this);
+        this.serviceAdapter.initializeData();
 
     }
 }

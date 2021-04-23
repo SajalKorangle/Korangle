@@ -23,3 +23,17 @@ def generateSignature(data):
 #                 'meetingNumber': 888,
 #                 'role': 0}
 # 	print (generateSignature(data))
+
+
+from common.common_views_3 import CommonView, CommonListView, APIView
+
+from .models import ActiveClass
+
+
+class ActiveClassView(CommonView, APIView):
+    Model = ActiveClass
+
+
+class ActiveClassListView(CommonListView, APIView):
+    Model = ActiveClass
+
