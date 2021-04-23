@@ -30,7 +30,7 @@ export class DesignTCHtmlAdapter {
 
     activeLeftColumn: string = 'layers';
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -174,48 +174,26 @@ export class DesignTCHtmlAdapter {
     }
 
     openInventory(): void {
-        const data = { vm: this.vm, selectedLayout: {} };
+        const data = { vm: this.vm, selectedLayout: null };
         if (this.vm.currentLayout.id) {
-            data.selectedLayout = { type: 'myLayout', index: this.vm.tcLayoutList.findIndex((l) => l.id == this.vm.currentLayout.id) };
-        } else {
-            data.selectedLayout = { type: 'myLayout', index: -1 };
+            data.selectedLayout = this.vm.tcLayoutList.find(tc => tc.id == this.vm.currentLayout.id);
         }
+
         this.openedDialog = this.vm.dialog.open(InventoryDialogComponent, {
             data,
         });
         this.openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {
-                switch (selection.type) {
-                    case 'myLayout':
-                        if (selection.index == -1) {
-                            // -1 is representing add new layout
-                            this.vm.populateCurrentLayoutWithGivenValue(this.vm.ADD_LAYOUT_STRING);
-                        } else {
-                            this.vm.populateCurrentLayoutWithGivenValue(this.vm.tcLayoutList[selection.index]);
-                        }
-                        break;
-                    case 'public':
-                        let newLayout1: any = {
-                            parentSchool: this.vm.user.activeSchool.dbId,
-                            name: '',
-                            publiclyShared: false,
-                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(
-                                JSON.parse(this.vm.publicLayoutList[selection.index].content)
-                            ),
-                        };
-                        this.vm.populateCurrentLayoutWithGivenValue(newLayout1, true);
-                        break;
-                    case 'shared':
-                        let newLayout2: any = {
-                            parentSchool: this.vm.user.activeSchool.dbId,
-                            name: '',
-                            publiclyShared: false,
-                            content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(
-                                JSON.parse(this.vm.sharedLayoutList[selection.index].content)
-                            ),
-                        };
-                        this.vm.populateCurrentLayoutWithGivenValue(newLayout2, true);
-                        break;
+                if (selection.copy) {
+                    let newLayout: any = {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                        name: '',
+                        publiclyShared: false,
+                        content: this.vm.canvasAdapter.removeSchoolSpecificDataFromLayout(JSON.parse(selection.layout.content)),
+                    };
+                    this.vm.populateCurrentLayoutWithGivenValue(newLayout, true);
+                } else {
+                    this.vm.populateCurrentLayoutWithGivenValue(selection.layout);
                 }
             }
         });
