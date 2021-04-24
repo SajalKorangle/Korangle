@@ -22,10 +22,16 @@ import re
 @admin.register(Error)
 class ErrorAdmin(admin.ModelAdmin):
 
-    list_display = ('title', 'Page', 'Name', 'School', 'MobileNumber')
+    list_display = ('title', 'id', 'Github_Id', 'Page', 'Response', 'Status', 'Name', 'School', 'MobileNumber')
 
     def title(self, obj):
         return obj.prompt + ' - ' + (obj.dateTime.astimezone().strftime("%d/%m/%Y, %H:%M:%S"))
+
+    def id(self, obj):
+        return obj.pk
+
+    def Github_Id(self, obj):
+        return obj.githubId
 
     def Name(self, obj):
         if obj.user:
@@ -40,8 +46,18 @@ class ErrorAdmin(admin.ModelAdmin):
 
     def Page(self, obj):
         if obj.frontendUrl:
-            return obj.frontendUrl
+            return obj.frontendUrl[24:]
         return '-'
+
+    def Response(self, obj):
+        if obj.description:
+            string = re.findall('"status":.*?,', obj.description)
+            if string:
+                return string[0].split(':')[1][:-1]
+        return '-'
+
+    def Status(self, obj):
+        return obj.issueStatus
 
     def School(self, obj):
         if obj.frontendUrl:
@@ -68,11 +84,11 @@ class ErrorAdmin(admin.ModelAdmin):
                     return '-'
         return '-'
 
-    def get_readonly_fields(self, request, obj=None):
-        return [f.name for f in self.model._meta.fields]+['user_link']
+    #def get_readonly_fields(self, request, obj=None):
+    #    return [f.name for f in self.model._meta.fields]+['user_link']
 
-    def user_link(self, obj):
-        change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
-        return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
+    #def user_link(self, obj):
+    #    change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
+    #    return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
 
 
