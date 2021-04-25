@@ -2,12 +2,12 @@ import { environment } from '../../../../environments/environment';
 import { Constants } from '../../../classes/constants';
 import { DataStorage } from './../../../classes/data-storage';
 
-const ERROR_REPORTING_URL = '/errors/report-error';
+export const ERROR_REPORTING_URL = '/errors/report-error';
 
 export const ERROR_SOURCES = ['REST_API_SOURCE', 'JAVASCRIPT_SOURCE'];
 
 export function reportError(errorSource: string, url: string, description: string = '', prompt: string = '', fatal: boolean = false,
-                            frontendUrl: string = '', postDataBody: string = '') {
+    frontendUrl: string = '', postDataBody: string = '') {
     const body = { errorSource, url, description, prompt, fatal, frontendUrl, postDataBody };
 
     return fetch(environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL, {

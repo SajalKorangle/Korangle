@@ -21,14 +21,15 @@
                         <td>{{onlineClass.endTime}}</td>
                         <td>
                             <div style="display: inline-flex;">
-                                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of weekdays, let i = index;">
+                                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" 
+                                        *ngFor="let weekday of weekdays, let i = index;">
                                     <label style="margin: 0;">{{weekday[0]}}</label>
                                     <input type="checkbox" [disabled]="true" [ngModel]="onlineClass.configJSON.weekdays[weekday]">
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <button class="btn" style="background-color: green;">Enter Class</button>
+                            <button class="btn" style="background-color: green;" (click)="serviceAdapter.initilizeMettingData(onlineClass)">Enter Class</button>
                         </td>
                     </tr>
                 </tbody>
@@ -41,7 +42,7 @@
     </ng-container>
 
     <ng-template #zoomIframe>
-        <iframe [src]="'https://korangletesting.s3.amazonaws.com/zoom/index.html'+getSearchParametersString()" allow="camera *;microphone *" style="width: 100%; height: 60vh;"></iframe>
+        <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *" style="width: 100%; height: 75vh;"></iframe>
     </ng-template>
 
 </div>

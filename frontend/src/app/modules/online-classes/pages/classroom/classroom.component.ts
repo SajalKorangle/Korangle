@@ -10,6 +10,9 @@ import { ClassroomBackendData } from './classroom.backend.data';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
+import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
+import { environment } from 'environments/environment';
+import { Constants } from 'app/classes/constants';
 
 import { WEEKDAYS } from '@modules/online-classes/class/constants';
 
@@ -29,7 +32,7 @@ export class ClassroomComponent implements OnInit {
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
-    mettingParameters: any = {};
+    mettingParameters: any;
 
     weekdays = WEEKDAYS;
 
@@ -59,10 +62,29 @@ export class ClassroomComponent implements OnInit {
         console.log('this: ', this);
     }
 
-    getSearchParametersString() {
-        const searchParams = new URLSearchParams();
-        Object.entries(this.mettingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-        return searchParams.toString();
+    populateMettingParametersAndStart(onlineClass, signature, apiKey) {
+        this.mettingParameters = {
+            signature,
+            api_key: apiKey,
+            metting_number: onlineClass.mettingNumber,
+            password: onlineClass.password,
+            role: 1,
+            username: this.user.first_name + ' ' + this.user.last_name,
+            error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
+        };
+        this.htmlRenderer.mettingEntered = true;
+        setTimeout(() => {
+            let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
+            while (!zoomIFrame && this.htmlRenderer.mettingEntered) {
+                zoomIFrame = document.getElementById('zoomIFrame');
+            }
+            if (this.htmlRenderer.mettingEntered) {
+                const searchParams = new URLSearchParams();
+                Object.entries(this.mettingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
+                zoomIFrame.src = 'https://korangletesting.s3.amazonaws.com/zoom/index.html?' + searchParams.toString();
+
+            }
+        });
     }
 
 }

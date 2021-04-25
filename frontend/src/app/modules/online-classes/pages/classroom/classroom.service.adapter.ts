@@ -38,4 +38,17 @@ export class ClassroomServiceAdapter {
         this.vm.isLoading = false;
     }
 
+    async initilizeMettingData(onlineClass) {
+        this.vm.isLoading = true;
+        const signature_request = {
+            mettingNumber: onlineClass.mettingNumber,
+            role: 1,
+        };
+        const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_metting_signature, signature_request);
+
+        this.vm.populateMettingParametersAndStart(onlineClass, response.signature, response.apiKey);
+
+        this.vm.isLoading = false;
+    }
+
 }
