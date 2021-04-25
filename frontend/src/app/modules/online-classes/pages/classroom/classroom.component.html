@@ -42,6 +42,9 @@
     </ng-container>
 
     <ng-template #zoomIframe>
+        <button (click)="htmlRenderer.mettingEntered = false;" style="margin-bottom: 12px; display: flex; border-radius: 50%;background-color: black; color:white;">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
         <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *" style="width: 100%; height: 75vh;"></iframe>
     </ng-template>
 
