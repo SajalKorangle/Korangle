@@ -12,15 +12,6 @@ import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { WeekDay } from '@angular/common';
 
-const WEEKDAYS_LIST = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
-];
 
 @Component({
     selector: 'settings',
@@ -32,8 +23,6 @@ const WEEKDAYS_LIST = [
 export class SettingsComponent implements OnInit {
 
     user: any;
-
-    weekdaysList = WEEKDAYS_LIST;
 
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer: SettingsHtmlRenderer;

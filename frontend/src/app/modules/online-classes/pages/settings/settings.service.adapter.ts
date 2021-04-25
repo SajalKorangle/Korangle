@@ -1,3 +1,4 @@
+import { OnlineClassesComponent } from '@modules/online-classes/online-classes.component';
 import { SettingsComponent } from './settings.component';
 
 export class SettingsServiceAdapter {
@@ -22,12 +23,10 @@ export class SettingsServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, fetch_online_class_list), // 2
-            this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_auth_data, {}),    // 3
         ]);
         this.vm.backendData.classList = apiCallbackResult[0];
         this.vm.backendData.divisionList = apiCallbackResult[1];
-        this.vm.backendData.onlineClassList = apiCallbackResult[2];
-        this.vm.backendData.zoomAuthData = apiCallbackResult[3];
+        this.vm.backendData.onlineClassList = apiCallbackResult[2].map(onlineClass => { return { ...onlineClass, configJSON: JSON.parse(onlineClass.configJSON) }; });
 
         this.vm.isLoading = false;
 
@@ -37,19 +36,20 @@ export class SettingsServiceAdapter {
 
         this.vm.isAddLoading = true;
 
-        // let add_active_class = {
-        //     parentSchool: this.vm.user.activeSchool.dbId,
-        //     parentClass: this.vm.userInput.selectedClass.id,
-        //     parentDivision: this.vm.userInput.selectedSection.id,
-        //     startTime: this.vm.userInput.startTime,
-        //     endTime: this.vm.userInput.endTime,
-        // };
+        const new_online_class = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentClass: this.vm.userInput.selectedClass.id,
+            parentDivision: this.vm.userInput.selectedSection.id,
+            startTime: this.vm.userInput.startTime,
+            endTime: this.vm.userInput.endTime,
+            configJSON: JSON.stringify({ weekdays: this.vm.userInput.weekdays }),
+        };
 
-        // let apiCallbackResult =
-        //     await this.vm.onlineClassService.createObject(this.vm.onlineClassService.active_class,
-        //         add_active_class);
+        let apiCallbackResult =
+            await this.vm.onlineClassService.createObject(this.vm.onlineClassService.online_class,
+                new_online_class);
 
-        // this.vm.backendData.activeClassList.push(apiCallbackResult);
+        this.vm.backendData.onlineClassList.push(apiCallbackResult);
 
         this.vm.isAddLoading = false;
 

@@ -231,3 +231,9 @@ else:
     except ImportError:
         print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
         exit()
+
+
+#ZOOM
+ZOOM_API_KEY = 'feab_2y9TZyvvWEDgrWmUQ'
+ZOOM_SECRET_KEY = 'vjzfd38K6jKbHimYf9nUOwyjCR6CJqsmYRqK'
+ZOOM_EMAIL_ID = 'kumar.93@iitj.ac.in'

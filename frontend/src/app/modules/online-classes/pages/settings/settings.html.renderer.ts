@@ -25,4 +25,14 @@ export class SettingsHtmlRenderer {
             }) != undefined;
     }
 
+    getWeekdays(): Array<string> {
+        return Object.keys(this.vm.userInput.weekdays);
+    }
+
+    getClassDivisionName(classId, divisionId) {
+        const classInstance = this.vm.backendData.classList.find(c => c.id == classId);
+        const divisionInstance = this.vm.backendData.divisionList.find(d => d.id == divisionId);
+        return classInstance.name + ' - ' + divisionInstance.name;
+    }
+
 }

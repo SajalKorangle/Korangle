@@ -6,8 +6,6 @@ export class SettingsBackendData {
     divisionList: any;
     onlineClassList: any;
 
-    zoomAuthData: ZoomAuthData;
-
     vm: SettingsComponent;
 
     constructor() { }

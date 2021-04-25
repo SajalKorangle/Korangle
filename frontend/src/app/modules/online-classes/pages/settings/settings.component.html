@@ -49,9 +49,9 @@
             </mat-form-field>
 
             <div style="display: inline-flex;">
-                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of weekdaysList, let i = index;">
+                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of htmlRenderer.getWeekdays(), let i = index;">
                     <label style="margin: 0;">{{weekday[0]}}</label>
-                    <input type="checkbox" [(ngModel)]="userInput.weekDays[i]">
+                    <input type="checkbox" [(ngModel)]="userInput.weekdays[weekday]">
                 </div>
             </div>
         </div>
@@ -64,7 +64,40 @@
                 Add
         </button>
     </ng-container>
+    <mat-divider style="margin-top: 32px;"></mat-divider>
 
+    <h4 style="display: flex; flex-direction: row; align-items: center;"><mat-icon>history</mat-icon><span>&nbsp;Registered Classes</span></h4>
+    <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
+        <table class="table table-hover">
+            <thead style="color: rgba(255, 152, 0, 1)">
+                <tr>
+                    <th>Class & Section</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Working Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let onlineClass of backendData.onlineClassList">
+                    <td>{{htmlRenderer.getClassDivisionName(onlineClass.parentClass, onlineClass.parentDivision)}}</td>
+                    <td>{{onlineClass.startTime}}</td>
+                    <td>{{onlineClass.endTime}}</td>
+                    <td>
+                        <div style="display: inline-flex;">
+                            <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of htmlRenderer.getWeekdays(), let i = index;">
+                                <label style="margin: 0;">{{weekday[0]}}</label>
+                                <input type="checkbox" [disabled]="true" [ngModel]="onlineClass.configJSON.weekdays[weekday]">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </ng-container>
+    <ng-template #NoClassReg>
+        <span>No Online Registered Class</span>
+    </ng-template>
 </div>
 
 <ng-container *ngIf="isLoading || isAddLoading">

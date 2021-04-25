@@ -6,8 +6,15 @@ export class SettingsUserInput {
     selectedSection: any;
     startTime: any;
     endTime: any;
-    weekDays: Array<boolean> = Array.from({ length: 7 }, (_, index) => index < 6 ? true : false);
-
+    weekdays = {
+        'Sunday': false,
+        'Monday': true,
+        'Tuesday': true,
+        'Wednesday': true,
+        'Thursday': true,
+        'Friday': true,
+        'Saturday': true
+    };
 
     vm: SettingsComponent;
 
