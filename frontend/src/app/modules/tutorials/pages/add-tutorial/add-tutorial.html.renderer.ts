@@ -23,11 +23,11 @@ export class AddTutorialHtmlRenderer {
         return this.vm.userInput.newTutorial.link.match(this.vm.youtubeIdMatcher)[1];
     }
 
-    onReady(event:any) {
+    onReady(event: any) {
         console.log('here');
-        this.isIFrameLoading=false;
+        this.isIFrameLoading = false;
     }
-    
+
      getSubjectName(subject: any): any {
         let result = '';
         this.vm.subjectList.every((subj) => {
@@ -39,7 +39,7 @@ export class AddTutorialHtmlRenderer {
         });
         return result;
     }
-    
+
     showPreviewVideo(tutorial: any): void {
         this.vm.dialog.open(ModalVideoComponent, {
             height: '80vh',
@@ -49,7 +49,7 @@ export class AddTutorialHtmlRenderer {
             },
         });
     }
-    
+
     topicAlreadyPresent(tutorial): boolean {
         let ownIdx = -1;
         if (tutorial != undefined && tutorial.chapter != null && tutorial.topic != null) {
@@ -66,7 +66,7 @@ export class AddTutorialHtmlRenderer {
         const tutorial = this.vm.userInput.newTutorial;
 
         if (!tutorial.link || tutorial.link.trim() == '') {
-            this.isIFrameLoading=true;
+            this.isIFrameLoading = true;
             return false;
         }
 
@@ -75,13 +75,12 @@ export class AddTutorialHtmlRenderer {
                 tutorial.link = 'https://' + tutorial.link;
             }
             return tutorial.link.match(this.vm.youtubeIdMatcher) !== null;
-            
         } else {
-            this.isIFrameLoading=true;
+            this.isIFrameLoading = true;
             return false;
         }
     }
-    
+
     checkEnableAddButton(): boolean {
         const tutorial = this.vm.userInput.newTutorial;
 
@@ -91,7 +90,6 @@ export class AddTutorialHtmlRenderer {
             tutorial.topic.trim() == '' ||
             this.topicAlreadyPresent(tutorial) ||
             !this.youTubeLinkValid());
-        
     }
 
     subjectsExist() {

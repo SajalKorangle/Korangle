@@ -8,8 +8,8 @@ export class ViewTutorialsHtmlRenderer {
 
     isLoading = false;
     isIFrameLoading = true;
-    
-   
+
+
     constructor() {
     }
 
@@ -29,8 +29,8 @@ export class ViewTutorialsHtmlRenderer {
         });
         return result;
     }
-    
-    
+
+
 
     handleSubjectSelection(event: any) {
         this.vm.selectedSubject = event;
@@ -48,7 +48,7 @@ export class ViewTutorialsHtmlRenderer {
     }
 
     tutorialsExist() {
-        return this.vm.backendData.tutorialList.length>0;
+        return this.vm.backendData.tutorialList.length > 0;
     }
 
     getPublishedDate() {
@@ -58,9 +58,9 @@ export class ViewTutorialsHtmlRenderer {
     getVideoUrlId() {
         return this.vm.selectedTopic.link.match(this.vm.youtubeIdMatcher)[1];
     }
-    
+
     onReady(event: any) {
-        console.log('here')
-        this.isIFrameLoading=false;
+        console.log('here');
+        this.isIFrameLoading = false;
     }
 }

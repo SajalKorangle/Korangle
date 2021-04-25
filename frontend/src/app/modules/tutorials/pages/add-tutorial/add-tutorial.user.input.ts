@@ -9,7 +9,6 @@ export class AddTutorialUserInput {
     editedTutorial: any;
     selectedClass: any;
     selectedSubject = null;
-    
 
     constructor() {
     }

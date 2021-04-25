@@ -15,17 +15,17 @@ import {ViewTutorialsBackendData} from '@modules/parent/pages/view-tutorials/vie
     providers: [SubjectService, ClassService, StudentService, TutorialsService],
 })
 export class ViewTutorialsComponent implements OnInit {
-    
-   
+
+
     user: any;
-    
+
     serviceAdapter: ViewTutorialsServiceAdapter;
-    htmlRenderer:ViewTutorialsHtmlRenderer;
-    backendData:ViewTutorialsBackendData;
-    
-    
+    htmlRenderer: ViewTutorialsHtmlRenderer;
+    backendData: ViewTutorialsBackendData;
+
+
     filteredStudentSubject = [];
-    
+
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
     selectedTopic: any;
@@ -41,13 +41,13 @@ export class ViewTutorialsComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        
+
         this.htmlRenderer = new ViewTutorialsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
-        
+
         this.backendData = new ViewTutorialsBackendData();
         this.backendData.initializeAdapter(this);
-        
+
         this.serviceAdapter = new ViewTutorialsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -55,7 +55,7 @@ export class ViewTutorialsComponent implements OnInit {
         const tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(tag);
-        
+
     }
 
 }

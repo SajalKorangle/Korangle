@@ -39,14 +39,14 @@ export class AddTutorialComponent implements OnInit {
     serviceAdapter: AddTutorialServiceAdapter;
     htmlRenderer: AddTutorialHtmlRenderer;
     userInput: AddTutorialUserInput;
-    backendData:AddTutorialBackendData;
+    backendData: AddTutorialBackendData;
 
     subjectList: any;
     tutorialList = [];
     classSubjectList: any;
     currentClassStudentList: any;
     classSectionSubjectList: any;
-    
+
     editable = false;
     tutorialEditing = false;
 
@@ -84,7 +84,7 @@ export class AddTutorialComponent implements OnInit {
 
         this.userInput = new AddTutorialUserInput();
         this.userInput.initializeAdapter(this);
-        
+
         this.backendData = new AddTutorialBackendData();
         this.backendData.initializeAdapter(this);
 

@@ -4,7 +4,7 @@ import {ViewTutorialsComponent} from '@modules/parent/pages/view-tutorials/view-
 export class ViewTutorialsBackendData {
 
     vm: ViewTutorialsComponent;
-    
+
     // Data
     examinationList: any;
     studentSubjectList: any;

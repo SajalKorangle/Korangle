@@ -9,7 +9,7 @@ export class AddTutorialBackendData {
     classSubjectList: any;
     subjectList: any;
     fullStudentList: any;
-    
+
     constructor() {
     }
 
@@ -17,5 +17,5 @@ export class AddTutorialBackendData {
     initializeAdapter(vm: AddTutorialComponent): void {
         this.vm = vm;
     }
-    
+
 }
