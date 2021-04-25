@@ -1,8 +1,10 @@
-import {ClassroomComponent} from './classroom.component';
+import { ClassroomComponent } from './classroom.component';
 
 export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
+
+    mettingEntered: boolean = false;
 
     constructor() { }
 

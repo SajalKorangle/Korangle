@@ -7,11 +7,17 @@ import { ClassroomHtmlRenderer } from './classroom.html.renderer';
 import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
+import { SubjectService } from '@services/modules/subject/subject.service';
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
+import { ClassService } from '@services/modules/class/class.service';
+
+import { WEEKDAYS } from '@modules/online-classes/class/constants';
+
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
     styleUrls: ['./classroom.component.css'],
-    providers: [],
+    providers: [SubjectService, OnlineClassService, ClassService],
 })
 
 export class ClassroomComponent implements OnInit {
@@ -23,10 +29,17 @@ export class ClassroomComponent implements OnInit {
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
+    mettingParameters: any = {};
+
+    weekdays = WEEKDAYS;
+
     isLoading: any;
 
-    constructor() {
-    }
+    constructor(
+        public subjectService: SubjectService,
+        public onlineClassService: OnlineClassService,
+        public classService: ClassService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -42,62 +55,14 @@ export class ClassroomComponent implements OnInit {
 
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
-
-        // ZoomMtg.preLoadWasm();
-        // ZoomMtg.prepareJssdk();
-        // ZoomMtg.init();
-        // console.log("zoom: ", ZoomMtg);
+        this.serviceAdapter.initializeData();
+        console.log('this: ', this);
     }
 
-    ngAfterViewInit() {
-        this.makeZoomView();
+    getSearchParametersString() {
+        const searchParams = new URLSearchParams();
+        Object.entries(this.mettingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
+        return searchParams.toString();
     }
-
-    makeZoomView() {
-        // let zoomRoot = document.getElementById('zmmtg-root');
-        // let zoomHelper = document.getElementById('aria-notify-area');
-
-        // document.body.removeChild(zoomRoot);
-        // document.body.removeChild(zoomHelper);
-
-        // let mainWrapper = document.getElementById('classroom-main');
-        // mainWrapper.appendChild(zoomRoot);
-        // mainWrapper.appendChild(zoomHelper);
-
-        // zoomRoot.style.position = 'relative';
-        // zoomRoot.style.height = '75vh';
-        // console.log('zoom: ', ZoomMtg);
-
-        // const meetConfig = {
-        //     apiKey: "feab_2y9TZyvvWEDgrWmUQ",
-        //     meetingNumber: 74640690840,
-        //     leaveUrl: 'http://localhost:4200/',
-        //     passWord: "YAjq80",
-        //     role: 0,
-        //     userEmail: "kumar.93@iitj.ac.in",
-        //     userName: "Aditya Kumar",
-        // };
-        // const response = 'ZmVhYl8yeTlUWnl2dldFRGdyV21VUS43NDY0MDY5MDg0MC4xNjE5MTU5MjQ2MTg4LjAubWtTT2pXMnJycEVpOXVVOW43b3E1N2ZHM3d4czBFQ1ZiQ3JCZ1V5UnpmQT0';
-
-        // ZoomMtg.init({
-        //     leaveUrl: meetConfig.leaveUrl,
-        //     isSupportAV: true,
-        //     success: function () {
-        //         console.log("metting init success");
-        //         ZoomMtg.join({
-        //             signature: response,
-        //             apiKey: meetConfig.apiKey,
-        //             meetingNumber: meetConfig.meetingNumber,
-        //             userName: meetConfig.userName,
-        //             passWord: meetConfig.passWord,
-        //             userEmail: 'kumar.93@iitj.ac.in',
-        //             success: () => { console.log('join success'); },
-        //             error: (err) => { console.log('error occured: ', err); },
-        //         });
-        //     }
-        // });
-    }
-
-
 
 }

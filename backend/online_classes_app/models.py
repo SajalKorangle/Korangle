@@ -17,7 +17,7 @@ class OnlineClass(models.Model):
     startTime = models.TimeField(null=True, verbose_name='startTime')
     endTime = models.TimeField(null=True, verbose_name='endTime')
     mettingNumber = models.BigIntegerField(blank=True)
-    passCode = models.CharField(max_length=10, blank=True)
+    password = models.CharField(max_length=10, blank=True)
     configJSON = models.TextField()
 
     def __str__(self):
@@ -46,4 +46,4 @@ def createZoomMetting(sender, instance, **kwargs):
     response = requests.post(apiEndPoint, json=data, headers=headers)
     jsonResponse = response.json()
     instance.mettingNumber = jsonResponse['id']
-    instance.passCode = jsonResponse['password']
+    instance.password = jsonResponse['password']
