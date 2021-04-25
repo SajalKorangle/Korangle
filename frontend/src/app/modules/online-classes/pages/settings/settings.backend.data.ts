@@ -6,6 +6,8 @@ export class SettingsBackendData {
     divisionList: any;
     onlineClassList: any;
 
+    zoomAuthData: ZoomAuthData;
+
     vm: SettingsComponent;
 
     constructor() { }
@@ -14,4 +16,9 @@ export class SettingsBackendData {
         this.vm = vm;
     }
 
+}
+
+interface ZoomAuthData {
+    email: string,
+    jwt: string,
 }

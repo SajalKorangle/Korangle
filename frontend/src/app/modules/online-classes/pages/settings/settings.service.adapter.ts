@@ -21,11 +21,13 @@ export class SettingsServiceAdapter {
         let apiCallbackResult = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
-            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, fetch_online_class_list) // 2
+            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, fetch_online_class_list), // 2
+            this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_auth_data, {}),    // 3
         ]);
         this.vm.backendData.classList = apiCallbackResult[0];
         this.vm.backendData.divisionList = apiCallbackResult[1];
         this.vm.backendData.onlineClassList = apiCallbackResult[2];
+        this.vm.backendData.zoomAuthData = apiCallbackResult[3];
 
         this.vm.isLoading = false;
 

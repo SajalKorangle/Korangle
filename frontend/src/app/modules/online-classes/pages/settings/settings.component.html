@@ -1,56 +1,69 @@
 <div class="card-content" *ngIf="!isLoading">
+    <div>
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select
+                placeholder="Select Class"
+                [(ngModel)]="userInput.selectedClass"
+                [disabled]="isAddLoading">
+                <mat-option
+                    *ngFor="let classs of backendData.classList"
+                    [value]="classs">
+                    {{ classs.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-    <mat-form-field style="margin-right: 20px;">
-        <mat-select
-            placeholder="Select Class"
-            [(ngModel)]="userInput.selectedClass"
-            [disabled]="isAddLoading">
-            <mat-option
-                *ngFor="let classs of backendData.classList"
-                [value]="classs">
-                {{ classs.name }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <mat-form-field style="margin-right: 20px;">
-        <mat-select
-            placeholder="Select Section"
-            [(ngModel)]="userInput.selectedSection"
-            [disabled]="isAddLoading">
-            <mat-option
-                *ngFor="let division of backendData.divisionList"
-                [value]="division">
-                {{ division.name }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <input style="margin-right: 20px;"
-        [class.Error]="userInput.startTime > userInput.endTime"
-        placeholder="Start Time"
-        type="time"
-        [(ngModel)]="userInput.startTime"
-        [disabled]="isAddLoading"/>
-
-    <input style="margin-right: 20px;"
-        [class.Error]="userInput.startTime > userInput.endTime"
-        placeholder="End Time"
-        type="time"
-        [(ngModel)]="userInput.endTime"
-        [disabled]="isAddLoading"/>
-
-    <button
-        type="submit"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        (click)="serviceAdapter.createActiveClass()"
-        [disabled]="htmlRenderer.isAddButtonDisabled()">
-        Add
-    </button>
-
-    <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
-        <div class="col-md-12"></div>
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select
+                placeholder="Select Section"
+                [(ngModel)]="userInput.selectedSection"
+                [disabled]="isAddLoading">
+                <mat-option
+                    *ngFor="let division of backendData.divisionList"
+                    [value]="division">
+                    {{ division.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-divider></mat-divider>
     </div>
+
+    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection">
+        <div style="display: flex; flex-direction: row; align-items: center; margin-top: 12px;">
+            <mat-form-field style="margin-top: 12px; margin-right: 12px;">
+                <input style="margin-right: 20px;" matInput
+                    [class.Error]="userInput.startTime > userInput.endTime"
+                    placeholder="Start Time"
+                    type="time"
+                    [(ngModel)]="userInput.startTime"
+                    [disabled]="isAddLoading"/>
+            </mat-form-field>
+
+            <mat-form-field style="margin-top: 16px; margin-right: 12px;">
+                <input matInput style="margin-right: 20px;"
+                    [class.Error]="userInput.startTime > userInput.endTime"
+                    placeholder="End Time"
+                    type="time"
+                    [(ngModel)]="userInput.endTime"
+                    [disabled]="isAddLoading"/>
+            </mat-form-field>
+
+            <div style="display: inline-flex;">
+                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of weekdaysList, let i = index;">
+                    <label style="margin: 0;">{{weekday[0]}}</label>
+                    <input type="checkbox" [(ngModel)]="userInput.weekDays[i]">
+                </div>
+            </div>
+        </div>
+        <br/>
+        <button
+                type="submit"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.createActiveClass()"
+                [disabled]="htmlRenderer.isAddButtonDisabled()">
+                Add
+        </button>
+    </ng-container>
 
 </div>
 
