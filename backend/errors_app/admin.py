@@ -1,28 +1,79 @@
-from django.contrib import admin
-from .models import Error
-from django.contrib.auth.models import User
-from school_app.model.models import School
-from student_app.models import Student
-from employee_app.models import Employee
-
+from django.contrib import admin, messages
+from django.contrib.admin.helpers import ActionForm
+from django import forms
 from django.utils.safestring import mark_safe
 from django.core import urlresolvers
-from django.db.models import Q
 import re
+from django.utils.translation import gettext_lazy as _
 
-# class ErrorAdmin(admin.ModelAdmin):
+from .models import Error
+from school_app.model.models import School
 
-#   def get_readonly_fields(self, request, obj=None):
-#       return [f.name for f in self.model._meta.fields]+['user_link']
 
-#   def user_link(self, obj):
-#       change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
-#       return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
+class UpdateStatusActionForm(ActionForm):
+    githubId = forms.CharField(max_length=10, required=False)
+    issueStatus = forms.CharField(max_length=50, required=True)
+
+
+class PromptListFilter(admin.SimpleListFilter):
+    title = _('Response')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'prompt'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('get', _('get')),
+            ('post', _('post')),
+            ('put', _('put')),
+            ('patch', _('patch')),
+            ('delete', _('delete')),
+            ('window', _('window')),
+            ('layout', _('layout')),
+            ('other', _('other')),
+        )
+
+    def queryset(self, request, queryset):
+
+        if self.value() == 'other':
+            return queryset.exclude(prompt__contains='post').exclude(prompt__contains='get')\
+                .exclude(prompt__contains='put').exclude(prompt__contains='patch').exclude(prompt__contains='delete')\
+                .exclude(prompt__contains='window').exclude(prompt__contains='layout')
+        if self.value() == 'get' or self.value() == 'post' or self.value() == 'put' or self.value() == 'patch'\
+                or self.value() == 'delete' or self.value() == 'window' or self.value() == 'layout':
+            return queryset.filter(prompt__contains=self.value())
+
+
+class ResponseListFilter(admin.SimpleListFilter):
+
+    title = _('Response')
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'description'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('500', _('500')),
+            ('0', _('0')),
+            ('Other', _('Other')),
+        )
+
+    def queryset(self, request, queryset):
+
+        if self.value() == '500':
+            return queryset.filter(description__contains='"status":500,')
+        if self.value() == '0':
+            return queryset.filter(description__contains='"status":0,')
+        if self.value() == 'Other':
+            return queryset.exclude(description__contains='"status":500,').exclude(description__contains='"status":0,')
+
 
 @admin.register(Error)
 class ErrorAdmin(admin.ModelAdmin):
 
-    list_display = ('title', 'id', 'Github_Id', 'Page', 'Response', 'Status', 'Name', 'School', 'MobileNumber')
+    list_display = ('title', 'Page', 'Response', 'Name', 'School', 'MobileNumber', 'id', 'Status', 'Github_Id')
+    list_filter = ('issueStatus', ResponseListFilter, PromptListFilter)
+    search_fields = ("githubId",)
 
     def title(self, obj):
         return obj.prompt + ' - ' + (obj.dateTime.astimezone().strftime("%d/%m/%Y, %H:%M:%S"))
@@ -84,11 +135,22 @@ class ErrorAdmin(admin.ModelAdmin):
                     return '-'
         return '-'
 
-    #def get_readonly_fields(self, request, obj=None):
-    #    return [f.name for f in self.model._meta.fields]+['user_link']
+    action_form = UpdateStatusActionForm
 
-    #def user_link(self, obj):
-    #    change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
-    #    return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
+    def update_status(modeladmin, request, queryset):
+        githubId = request.POST['githubId']
+        issueStatus = request.POST['issueStatus']
+        queryset.update(githubId=githubId, issueStatus=issueStatus)
+        modeladmin.message_user(request, ("Successfully updated status for %d rows") % (queryset.count(),),
+                                messages.SUCCESS)
+
+    admin.site.add_action(update_status, 'Update Error Status')
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields]+['user_link']
+
+    def user_link(self, obj):
+        change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
+        return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
 
 

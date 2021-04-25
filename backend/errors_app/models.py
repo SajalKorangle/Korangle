@@ -10,6 +10,7 @@ ERROR_SOURCES = (
 
 ISSUE_STATUSES = (
     ('Pending', 'Pending'),
+    ('Started', 'Started'),
     ('Github', 'Github'),
     ('Resolved', 'Resolved'),
     ('Discarded', 'Discarded'),
