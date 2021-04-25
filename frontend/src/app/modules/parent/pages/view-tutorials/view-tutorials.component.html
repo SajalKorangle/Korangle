@@ -1,60 +1,58 @@
 <div class="card-content">
-    <ng-container *ngIf="!isLoading">
-        <div class="row">
-            <mat-form-field *ngIf="!noTutorials" style="margin: 20px">
-                <mat-select placeholder="Select Subject" [ngModel]="selectedSubject" (ngModelChange)="handleSubjectSelection($event)">
+    <ng-container *ngIf="!htmlRenderer.isLoading">
+        <div class="row" *ngIf="htmlRenderer.tutorialsExist()">
+            <mat-form-field style="margin: 20px">
+                <mat-select placeholder="Select Subject" [ngModel]="selectedSubject" (ngModelChange)="htmlRenderer.handleSubjectSelection($event)">
                     <mat-option *ngFor="let subject of filteredStudentSubject" [value]="subject">
-                        {{ getSubjectName(subject) }}
+                        {{ htmlRenderer.getSubjectName(subject) }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="!noTutorials" style="margin: 20px">
-                <mat-select placeholder="Select Chapter" [ngModel]="selectedChapter" (ngModelChange)="handleChapterSelection($event)">
+            <mat-form-field style="margin: 20px">
+                <mat-select placeholder="Select Chapter" [ngModel]="selectedChapter" (ngModelChange)="htmlRenderer.handleChapterSelection($event)">
                     <mat-option *ngFor="let chapter of selectedSubject.chapterList" [value]="chapter">
                         {{ chapter.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="!noTutorials" style="margin: 20px">
-                <mat-select placeholder="Select Topic" [ngModel]="selectedTopic" (ngModelChange)="handleTopicSelection($event)">
+            <mat-form-field style="margin: 20px">
+                <mat-select placeholder="Select Topic" [ngModel]="selectedTopic" (ngModelChange)="htmlRenderer.handleTopicSelection($event)">
                     <mat-option *ngFor="let topic of selectedChapter.topicList" [value]="topic">
                         {{ topic.topic }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
-            <span *ngIf="noTutorials" style="margin-left: 20px">[ No Tutorial Videos Present ]</span>
+            
+        </div>
+        
+        <div class="row" *ngIf="!htmlRenderer.tutorialsExist()">
+            <span style="margin-left: 20px">[ No Tutorial Videos Present ]</span>
         </div>
 
-        <ng-container *ngIf="isIFrameLoading">
+        <ng-container *ngIf="htmlRenderer.isIFrameLoading">
             <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 
-        <ng-container *ngIf="showTutorialVideo">
-            <div [class.d-none]="isIFrameLoading" style="height: 70%; width: 70%; margin-left: 10%; margin-bottom: 5%">
+            <div  [class.d-none]="htmlRenderer.isIFrameLoading"
+                 style="height: 70%; width: 70%; margin-left: 10%; margin-bottom: 5%">
                 <div class="embed-responsive embed-responsive-16by9">
-                    <iframe
-                        class="embed-responsive-item"
-                        id="player"
-                        (load)="listenEvent($event)"
-                        [src]="videoUrl | safe"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                    >
-                    </iframe>
+                    <youtube-player
+                        #player
+                        [videoId]="htmlRenderer.getVideoUrlId()"
+                        (ready)="htmlRenderer.onReady($event)"
+                    ></youtube-player>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
                 <span
-                    ><b>Published On : {{ publishDate }}</b></span
+                    ><b>Published On : {{ htmlRenderer.getPublishedDate() }}</b></span
                 >
             </div>
-        </ng-container>
+        
     </ng-container>
 </div>
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="htmlRenderer.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

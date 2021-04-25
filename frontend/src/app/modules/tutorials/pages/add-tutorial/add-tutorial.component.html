@@ -1,14 +1,16 @@
 <div class="card-content table-responsive">
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="!htmlRenderer.isLoading">
         <div class="row">
-            <div class="col-md-9">
-                <span *ngIf="noSubjects">[ There are no Subjects Assigned to you ]</span>
-                <mat-form-field *ngIf="!noSubjects">
+            <div class="col-md-9" *ngIf="!htmlRenderer.subjectsExist()">
+                <span>[ There are no Subjects Assigned to you ]</span>
+            </div>
+            <div class="col-md-9" *ngIf="htmlRenderer.subjectsExist()">
+                <mat-form-field>
                     <mat-select
                         placeholder="Select Class -"
-                        [(ngModel)]="selectedSection"
-                        [disabled]="isLoading"
-                        (selectionChange)="selectedSubject = null; previewBeforeAddTutorialUrl = ''"
+                        [(ngModel)]="userInput.selectedSection"
+                        [disabled]="htmlRenderer.isLoading"
+                        (selectionChange)="userInput.selectedSubject = null;"
                     >
                         <ng-container *ngFor="let classs of classSectionSubjectList">
                             <ng-container *ngFor="let section of classs.sectionList">
@@ -17,24 +19,23 @@
                         </ng-container>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field *ngIf="!noSubjects" style="margin-top: 23px; margin-left: 20px">
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
                     <mat-select
                         placeholder="Subject"
-                        [ngModel]="selectedSubject"
-                        [disabled]="isLoading"
-                        (ngModelChange)="selectedSubject = $event; showTutorialDetails = false; previewBeforeAddTutorialUrl = ''"
+                        [ngModel]="userInput.selectedSubject"
+                        [disabled]="htmlRenderer.isLoading"
+                        (ngModelChange)="userInput.selectedSubject = $event; htmlRenderer.showTutorialDetails = false;"
                     >
-                        <mat-option *ngFor="let subject of selectedSection.subjectList" [value]="subject">
-                            {{ getSubjectName(subject) }}
+                        <mat-option *ngFor="let subject of userInput.selectedSection.subjectList" [value]="subject">
+                            {{ htmlRenderer.getSubjectName(subject) }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <button
-                    *ngIf="!noSubjects"
                     type="submit"
                     style="margin-left: 20px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                    [disabled]="!selectedSubject"
+                    [disabled]="!userInput.selectedSubject"
                     (click)="serviceAdapter.getTutorialList()"
                 >
                     GET
@@ -42,41 +43,41 @@
             </div>
         </div>
 
-        <ng-container *ngIf="isTutorialDetailsLoading">
+        <ng-container *ngIf="htmlRenderer.isTutorialDetailsLoading">
             <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 
-        <ng-container *ngIf="showTutorialDetails && !isTutorialDetailsLoading">
+        <ng-container *ngIf="htmlRenderer.showTutorialDetails && !htmlRenderer.isTutorialDetailsLoading">
             <div class="row">
                 <div class="col-md-4" style="margin: 10px">
                     <div class="row">
                         <mat-form-field style="width: 100%">
                             <mat-label>Chapter*</mat-label>
-                            <input matInput type="text" cdkTextareaAutosize [(ngModel)]="newTutorial.chapter" />
+                            <input matInput type="text" cdkTextareaAutosize [(ngModel)]="userInput.newTutorial.chapter" />
                         </mat-form-field>
                     </div>
 
                     <div class="row">
                         <mat-form-field style="width: 100%">
                             <mat-label
-                                >Topic*<span *ngIf="topicAlreadyPresent(newTutorial)" style="color: red"
+                                >Topic*<span *ngIf="htmlRenderer.topicAlreadyPresent(userInput.newTutorial)" style="color: red"
                                     >(Topic Already Present in the List)</span
                                 >
                             </mat-label>
-                            <input matInput type="text" [(ngModel)]="newTutorial.topic" />
+                            <input matInput type="text" [(ngModel)]="userInput.newTutorial.topic" />
                         </mat-form-field>
                     </div>
                     <div class="row">
                         <mat-form-field style="width: 100%">
                             <mat-label>Order No(Only upto 1 Decimal)</mat-label>
-                            <input matInput type="number" value="0" min="1" step=".1" [(ngModel)]="newTutorial.orderNumber" />
+                            <input matInput type="number" value="0" min="1" step=".1" [(ngModel)]="userInput.newTutorial.orderNumber" />
                         </mat-form-field>
                     </div>
 
                     <div class="row">
                         <mat-form-field style="width: 100%">
                             <mat-label
-                                >Youtube Link*<span *ngIf="!youTubeLinkValid() && newTutorial.link != null" style="color: red"
+                                >Youtube Link*<span *ngIf="!htmlRenderer.youTubeLinkValid() && userInput.newTutorial.link != null" style="color: red"
                                     >(Invalid Link)</span
                                 >
                             </mat-label>
@@ -84,9 +85,9 @@
                                 matInput
                                 type="text"
                                 cdkTextareaAutosize
-                                [(ngModel)]="newTutorial.link"
+                                [(ngModel)]="userInput.newTutorial.link"
                                 style="overflow: hidden; min-height: 17px"
-                                (ngModelChange)="handleLinkChange(); youTubeLinkValid()"
+                                (ngModelChange)="htmlRenderer.youTubeLinkValid()"
                             >
                             </textarea>
                         </mat-form-field>
@@ -96,7 +97,7 @@
                         <button
                             type="submit"
                             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            [disabled]="!checkEnableAddButton()"
+                            [disabled]="!htmlRenderer.checkEnableAddButton()"
                             (click)="serviceAdapter.addNewTutorial()"
                         >
                             Add
@@ -104,23 +105,23 @@
                     </div>
                 </div>
 
-                <ng-container *ngIf="youTubeLinkValid()">
+                <ng-container *ngIf="htmlRenderer.youTubeLinkValid()">
+                    
                     <div class="col-md-6" style="margin-left: 20px">
-                        <ng-container *ngIf="isIFrameLoading">
+    
+                    <ng-container *ngIf="htmlRenderer.isIFrameLoading">
                             <app-loading-spinner [user]="user"></app-loading-spinner>
                         </ng-container>
-                        <iframe
+                    
+                        <youtube-player
+                            #player
+                            [class.d-none]="htmlRenderer.isIFrameLoading" 
                             height="250"
                             width="100%"
-                            id="player"
-                            [class.d-none]="isIFrameLoading"
-                            [src]="previewBeforeAddTutorialUrl | safe"
-                            (load)="listenEvent($event)"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        >
-                        </iframe>
+                            [videoId]="htmlRenderer.getVideoUrlId()"
+                            (ready)="htmlRenderer.onReady($event)"
+                        ></youtube-player>
+                        <div id="player"></div>
                     </div>
                 </ng-container>
             </div>
@@ -140,7 +141,7 @@
                         <th>Topic</th>
                         <th class="text-center">Youtube Link</th>
                         <th>Created Date</th>
-                        <ng-container *ngIf="tutorialUpdating">
+                        <ng-container *ngIf="htmlRenderer.tutorialUpdating">
                             <th></th>
                         </ng-container>
                         <th>-</th>
@@ -158,8 +159,8 @@
                                     type="number"
                                     step=".1"
                                     min="1"
-                                    [ngModel]="editedTutorial.orderNumber"
-                                    (ngModelChange)="editedTutorial.orderNumber = $event"
+                                    [ngModel]="userInput.editedTutorial.orderNumber"
+                                    (ngModelChange)="userInput.editedTutorial.orderNumber = $event"
                                 />
                             </mat-form-field>
                         </td>
@@ -170,8 +171,8 @@
                                 <input
                                     matInput
                                     type="text"
-                                    [ngModel]="editedTutorial.chapter"
-                                    (ngModelChange)="editedTutorial.chapter = $event"
+                                    [ngModel]="userInput.editedTutorial.chapter"
+                                    (ngModelChange)="userInput.editedTutorial.chapter = $event"
                                 />
                             </mat-form-field>
                         </td>
@@ -181,8 +182,8 @@
                                 <input
                                     matInput
                                     type="text"
-                                    [ngModel]="editedTutorial.topic"
-                                    (ngModelChange)="editedTutorial.topic = $event"
+                                    [ngModel]="userInput.editedTutorial.topic"
+                                    (ngModelChange)="userInput.editedTutorial.topic = $event"
                                 />
                             </mat-form-field>
                         </td>
@@ -196,8 +197,8 @@
                                     type="text"
                                     style="overflow: hidden; min-height: 17px"
                                     cdkTextareaAutosize
-                                    [ngModel]="editedTutorial.link"
-                                    (ngModelChange)="editedTutorial.link = $event"
+                                    [ngModel]="userInput.editedTutorial.link"
+                                    (ngModelChange)="userInput.editedTutorial.link = $event"
                                 >
                                 </textarea>
                             </mat-form-field>
@@ -205,7 +206,7 @@
                         <td>
                             <span>{{ tutorial.generationDateTime.split('T')[0] }}</span>
                         </td>
-                        <ng-container *ngIf="tutorialUpdating && tutorial.editable">
+                        <ng-container *ngIf="htmlRenderer.tutorialUpdating && tutorial.editable">
                             <td>
                                 <mat-spinner [diameter]="20"></mat-spinner>
                             </td>
@@ -215,7 +216,7 @@
                                 type="submit"
                                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                                 style="padding: 3px 8px"
-                                [disabled]="(tutorialEditing && !tutorial.editable == true) || tutorialUpdating"
+                                [disabled]="(tutorialEditing && !tutorial.editable == true) || htmlRenderer.tutorialUpdating"
                                 (click)="serviceAdapter.makeEditableOrSave(tutorial)"
                             >
                                 <span *ngIf="tutorial.editable">Save</span><span *ngIf="!tutorial.editable">Edit</span>
@@ -226,7 +227,7 @@
                                 type="submit"
                                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                                 style="padding: 3px 8px"
-                                [disabled]="(tutorialEditing && !tutorial.editable == true) || tutorialUpdating"
+                                [disabled]="(tutorialEditing && !tutorial.editable == true) || htmlRenderer.tutorialUpdating"
                                 (click)="serviceAdapter.removeOrCancel(tutorial)"
                             >
                                 <span *ngIf="tutorial.editable">Cancel</span><span *ngIf="!tutorial.editable">Remove</span>
@@ -238,8 +239,8 @@
                                 type="submit"
                                 class="btn"
                                 style="padding: 3px 8px"
-                                [disabled]="tutorialUpdating"
-                                (click)="showPreviewVideo(tutorial)"
+                                [disabled]="htmlRenderer.tutorialUpdating"
+                                (click)="htmlRenderer.showPreviewVideo(tutorial)"
                             >
                                 Preview
                             </button>
@@ -253,6 +254,6 @@
         </ng-container>
     </ng-container>
 </div>
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="htmlRenderer.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

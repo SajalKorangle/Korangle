@@ -5,16 +5,6 @@ export class ViewTutorialsServiceAdapter {
 
     constructor() {}
 
-    // Data
-    subjectList: any;
-    examinationList: any;
-    classSubjectList: any;
-    studentSubjectList: any;
-    classTestList: any;
-    studentTestList: any;
-    studentProfile: any;
-    filteredStudentSubject: any;
-    tutorialList: any;
 
     initializeAdapter(vm: ViewTutorialsComponent): void {
         this.vm = vm;
@@ -22,7 +12,7 @@ export class ViewTutorialsServiceAdapter {
 
     //initialize data
     async initializeData() {
-        this.vm.isLoading = true;
+        this.vm.htmlRenderer.isLoading = true;
 
         const request_student_subject_data = {
             parentStudent: this.vm.user.section.student.id,
@@ -46,19 +36,19 @@ export class ViewTutorialsServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data), //3
         ]);
 
-        this.vm.classSubjectList = value[0];
-        this.vm.subjectList = value[1];
-        this.vm.studentSubjectList = value[2];
-        this.studentProfile = value[3][0];
+        this.vm.backendData.classSubjectList = value[0];
+        this.vm.backendData.subjectList = value[1];
+        this.vm.backendData.studentSubjectList = value[2];
+        this.vm.backendData.studentProfile = value[3][0];
         await this.populateTutorialList();
-        this.vm.isLoading = false;
+        this.vm.htmlRenderer.isLoading = false;
     }
 
     getParentClassSubjectFor(subject: any): number {
-        const classSub = this.vm.classSubjectList.filter((classSubject) => {
+        const classSub = this.vm.backendData.classSubjectList.filter((classSubject) => {
             if (
-                classSubject.parentClass == this.studentProfile.parentClass &&
-                classSubject.parentDivision == this.studentProfile.parentDivision &&
+                classSubject.parentClass == this.vm.backendData.studentProfile.parentClass &&
+                classSubject.parentDivision == this.vm.backendData.studentProfile.parentDivision &&
                 classSubject.parentSubject == subject.parentSubject
             ) {
                 return classSubject;
@@ -68,28 +58,27 @@ export class ViewTutorialsServiceAdapter {
     }
 
     async populateTutorialList() {
-        this.filteredStudentSubject = [];
+        this.vm.filteredStudentSubject = [];
         this.vm.selectedSubject = {};
         this.vm.selectedChapter = {};
-        this.tutorialList = [];
-        this.vm.noTutorials = false;
+        this.vm.backendData.tutorialList = [];
 
         let request_tutorials_data = {
-            parentClassSubject__in: this.vm.studentSubjectList
+            parentClassSubject__in: this.vm.backendData.studentSubjectList
                 .map((a) => this.getParentClassSubjectFor(a))
                 .filter((a) => a != null)
                 .join(),
         };
         const value = await Promise.all([this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial, request_tutorials_data)]);
-        this.tutorialList = value[0];
+        this.vm.backendData.tutorialList = value[0];
         this.populateFilteredSubjectTutorialList();
     }
 
     populateFilteredSubjectTutorialList() {
-        if (this.tutorialList.length > 0) {
-            this.vm.studentSubjectList.forEach((subject) => {
+        if (this.vm.backendData.tutorialList.length > 0) {
+            this.vm.backendData.studentSubjectList.forEach((subject) => {
                 subject['chapterList'] = [];
-                this.tutorialList.forEach((tutorial) => {
+                this.vm.backendData.tutorialList.forEach((tutorial) => {
                     if (tutorial && tutorial.parentClassSubject === this.getParentClassSubjectFor(subject)) {
                         if (subject.chapterList.length < 0 || !subject.chapterList.some((chap) => chap.name === tutorial.chapter)) {
                             let tempChapter = {};
@@ -107,17 +96,12 @@ export class ViewTutorialsServiceAdapter {
                     }
                 });
                 if (subject.chapterList.length > 0) {
-                    this.filteredStudentSubject.push(subject);
+                    this.vm.filteredStudentSubject.push(subject);
                 }
             });
-            this.vm.filteredStudentSubject = this.filteredStudentSubject;
-            this.vm.selectedSubject = this.filteredStudentSubject[0];
+            this.vm.selectedSubject = this.vm.filteredStudentSubject[0];
             this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
             this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
-            this.vm.setTutorialVideo();
-            this.vm.noTutorials = false;
-        } else {
-            this.vm.noTutorials = true; // to show no tutorials present if none subject has a tutorial
         }
     }
 }

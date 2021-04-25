@@ -4,12 +4,7 @@ import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
 
-    classList: any;
-    sectionList: any;
-    classSubjectList: any;
-    subjectList: any;
     classSectionSubjectList: any;
-    fullStudentList: any;
     informationMessageType: any;
 
     constructor() {}
@@ -20,7 +15,7 @@ export class AddTutorialServiceAdapter {
     }
 
     initializeData(): void {
-        this.vm.isLoading = true;
+        this.vm.htmlRenderer.isLoading = true;
 
         let class_subject_list = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -55,31 +50,31 @@ export class AddTutorialServiceAdapter {
                         sendDeleteUpdate: false,
                     };
                 }
-                this.classList = value[0];
-                this.sectionList = value[1];
-                this.classSubjectList = value[2];
-                this.subjectList = value[3];
-                this.fullStudentList = value[4];
-                this.vm.subjectList = this.subjectList;
+                this.vm.backendData.classList = value[0];
+                this.vm.backendData.sectionList = value[1];
+                this.vm.backendData.classSubjectList = value[2];
+                this.vm.backendData.subjectList = value[3];
+                this.vm.backendData.fullStudentList = value[4];
+                this.vm.subjectList = this.vm.backendData.subjectList;
                 this.populateClassSectionSubjectList();
                 this.populateDefaults();
-                this.vm.isLoading = false;
+                this.vm.htmlRenderer.isLoading = false;
             },
             (error) => {
-                this.vm.isLoading = false;
+                this.vm.htmlRenderer.isLoading = false;
             }
         );
     }
 
     populateClassSectionSubjectList(): void {
         this.classSectionSubjectList = [];
-        this.classList.forEach((classs) => {
+        this.vm.backendData.classList.forEach((classs) => {
             let tempClass = {};
             Object.keys(classs).forEach((key) => {
                 tempClass[key] = classs[key];
             });
             tempClass['sectionList'] = [];
-            this.sectionList.forEach((section) => {
+            this.vm.backendData.sectionList.forEach((section) => {
                 let tempSection = {};
                 Object.keys(section).forEach((key) => {
                     tempSection[key] = section[key];
@@ -88,7 +83,7 @@ export class AddTutorialServiceAdapter {
                 tempSection['parentClass'] = classs.id;
                 tempSection['subjectList'] = [];
 
-                this.classSubjectList.forEach((classSubject) => {
+                this.vm.backendData.classSubjectList.forEach((classSubject) => {
                     if (
                         classSubject.parentClass === tempClass['id'] &&
                         classSubject.parentDivision === tempSection['id'] &&
@@ -117,24 +112,21 @@ export class AddTutorialServiceAdapter {
         this.vm.classSectionSubjectList = [];
         this.vm.classSectionSubjectList = this.classSectionSubjectList;
         if (this.vm.classSectionSubjectList.length > 0) {
-            this.vm.selectedClass = this.vm.classSectionSubjectList[0];
-            this.vm.selectedSection = this.vm.selectedClass.sectionList[0];
-            this.vm.selectedSubject = this.vm.selectedSection.subjectList[0];
-            this.vm.noSubjects = false;
-        } else {
-            this.vm.noSubjects = true;
+            this.vm.userInput.selectedClass = this.vm.classSectionSubjectList[0];
+            this.vm.userInput.selectedSection = this.vm.userInput.selectedClass.sectionList[0];
+            this.vm.userInput.selectedSubject = this.vm.userInput.selectedSection.subjectList[0];
         }
     }
 
     containsStudent(sectionTemp: any) {
-        return this.fullStudentList.some((student) => {
+        return this.vm.backendData.fullStudentList.some((student) => {
             return student.parentDivision === sectionTemp.id && student.parentClass === sectionTemp.parentClass;
         });
     }
 
     async getTutorialList() {
-        this.vm.showTutorialDetails = true;
-        this.vm.isTutorialDetailsLoading = true;
+        this.vm.htmlRenderer.showTutorialDetails = true;
+        this.vm.htmlRenderer.isTutorialDetailsLoading = true;
         let request_class_subject_tutorial_data = {
             parentClassSubject: this.vm.getParentClassSubject(),
         };
@@ -144,8 +136,8 @@ export class AddTutorialServiceAdapter {
 
         this.populateTutorialList(value[0]);
         await this.prepareStudentList();
-        this.vm.initializeNewTutorial();
-        this.vm.isTutorialDetailsLoading = false;
+        this.vm.userInput.initializeNewTutorial();
+        this.vm.htmlRenderer.isTutorialDetailsLoading = false;
     }
 
     populateTutorialList(tutorialList) {
@@ -157,33 +149,33 @@ export class AddTutorialServiceAdapter {
     }
 
     addNewTutorial(): void {
-        if (!this.vm.decimalRegex.test(this.vm.newTutorial.orderNumber) || this.vm.newTutorial.orderNumber <= 0) {
+        if (!this.vm.decimalRegex.test(this.vm.userInput.newTutorial.orderNumber) || this.vm.userInput.newTutorial.orderNumber <= 0) {
             if (this.vm.tutorialList.length == 0) {
-                this.vm.newTutorial.orderNumber = 1;
+                this.vm.userInput.newTutorial.orderNumber = 1;
             } else {
-                this.vm.newTutorial.orderNumber = (
+                this.vm.userInput.newTutorial.orderNumber = (
                     parseFloat(this.vm.tutorialList[this.vm.tutorialList.length - 1].orderNumber) + 0.1
                 ).toFixed(1);
             }
         }
-        this.vm.isLoading = true;
+        this.vm.htmlRenderer.isLoading = true;
         let data = {
-            id: this.vm.newTutorial.id,
-            parentClassSubject: this.vm.newTutorial.parentClassSubject,
-            chapter: this.vm.newTutorial.chapter,
-            topic: this.vm.newTutorial.topic,
-            link: this.vm.newTutorial.link,
-            orderNumber: this.vm.newTutorial.orderNumber,
+            id: this.vm.userInput.newTutorial.id,
+            parentClassSubject: this.vm.userInput.newTutorial.parentClassSubject,
+            chapter: this.vm.userInput.newTutorial.chapter,
+            topic: this.vm.userInput.newTutorial.topic,
+            link: this.vm.userInput.newTutorial.link,
+            orderNumber: this.vm.userInput.newTutorial.orderNumber,
         };
 
         Promise.all([this.vm.tutorialService.createObject(this.vm.tutorialService.tutorial, data)]).then(
             (value) => {
                 value[0]['editable'] = false;
-                this.populateStudentList(this.vm.newTutorial);
+                this.populateStudentList(this.vm.userInput.newTutorial);
                 this.vm.tutorialList.push(value[0]);
                 this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
-                this.vm.initializeNewTutorial();
-                this.vm.isLoading = false;
+                this.vm.userInput.initializeNewTutorial();
+                this.vm.htmlRenderer.isLoading = false;
                 if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendCreateUpdate == true) {
                     this.vm.updateService.sendSMSNotificationNew(
                         this.vm.currentClassStudentList,
@@ -196,27 +188,27 @@ export class AddTutorialServiceAdapter {
                 }
             },
             (error) => {
-                this.vm.isLoading = false;
+                this.vm.htmlRenderer.isLoading = false;
             }
         );
     }
 
     makeEditableOrSave(tutorial: any): void {
         if (tutorial.editable) {
-            if (!this.areInputsValid(this.vm.editedTutorial)) {
+            if (!this.areInputsValid(this.vm.userInput.editedTutorial)) {
                 return;
             }
 
-            this.vm.tutorialUpdating = true;
+            this.vm.htmlRenderer.tutorialUpdating = true;
             this.vm.tutorialEditing = false;
 
             let data = {
-                id: this.vm.editedTutorial.id,
-                parentClassSubject: this.vm.editedTutorial.parentClassSubject,
-                chapter: this.vm.editedTutorial.chapter,
-                topic: this.vm.editedTutorial.topic,
-                link: this.vm.editedTutorial.link,
-                orderNumber: this.vm.editedTutorial.orderNumber,
+                id: this.vm.userInput.editedTutorial.id,
+                parentClassSubject: this.vm.userInput.editedTutorial.parentClassSubject,
+                chapter: this.vm.userInput.editedTutorial.chapter,
+                topic: this.vm.userInput.editedTutorial.topic,
+                link: this.vm.userInput.editedTutorial.link,
+                orderNumber: this.vm.userInput.editedTutorial.orderNumber,
             };
 
             Promise.all([this.vm.tutorialService.updateObject(this.vm.tutorialService.tutorial, data)]).then(
@@ -226,7 +218,7 @@ export class AddTutorialServiceAdapter {
                         value[0]
                     );
                     this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber)); //getSortedFunction()
-                    this.vm.tutorialUpdating = false;
+                    this.vm.htmlRenderer.tutorialUpdating = false;
                     tutorial.editable = false;
                     this.populateStudentList(value[0]);
                     if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendEditUpdate == true) {
@@ -239,18 +231,18 @@ export class AddTutorialServiceAdapter {
                             this.vm.smsBalance
                         );
                     }
-                    this.vm.checkEnableAddButton();
+                    this.vm.htmlRenderer.checkEnableAddButton();
                 },
                 (error) => {
-                    this.vm.tutorialUpdating = false;
+                    this.vm.htmlRenderer.tutorialUpdating = false;
                     tutorial.editable = false;
                 }
             );
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         } else {
-            this.vm.editedTutorial = {};
+            this.vm.userInput.editedTutorial = {};
             Object.keys(tutorial).forEach((key) => {
-                this.vm.editedTutorial[key] = tutorial[key];
+                this.vm.userInput.editedTutorial[key] = tutorial[key];
             });
             this.vm.tutorialEditing = true;
             tutorial.editable = true;
@@ -294,22 +286,22 @@ export class AddTutorialServiceAdapter {
 
     removeOrCancel(tutorial: any): void {
         if (tutorial.editable) {
-            this.vm.showTutorialDetails = false;
-            this.vm.editedTutorial = {};
+            this.vm.htmlRenderer.showTutorialDetails = false;
+            this.vm.userInput.editedTutorial = {};
             tutorial.editable = false;
             this.vm.tutorialEditing = false;
-            this.vm.showTutorialDetails = true;
+            this.vm.htmlRenderer.showTutorialDetails = true;
         } else {
             if (confirm('Are you sure you want to delete this tutorial?')) {
-                this.vm.tutorialUpdating = true;
+                this.vm.htmlRenderer.tutorialUpdating = true;
                 Promise.all([this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial)]).then(
                     (value) => {
                         this.vm.tutorialList = this.vm.tutorialList.filter((item) => {
                             return item.id != tutorial.id;
                         });
-                        this.vm.checkEnableAddButton();
+                        this.vm.htmlRenderer.checkEnableAddButton();
                         this.populateStudentList(tutorial);
-                        this.vm.tutorialUpdating = false;
+                        this.vm.htmlRenderer.tutorialUpdating = false;
                         if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendDeleteUpdate == true) {
                             this.vm.updateService.sendSMSNotificationNew(
                                 this.vm.currentClassStudentList,
@@ -322,7 +314,7 @@ export class AddTutorialServiceAdapter {
                         }
                     },
                     (error) => {
-                        this.vm.tutorialUpdating = false;
+                        this.vm.htmlRenderer.tutorialUpdating = false;
                     }
                 );
             }
@@ -331,8 +323,8 @@ export class AddTutorialServiceAdapter {
 
     async prepareStudentList() {
         this.vm.currentClassStudentList = [];
-        let student_list = this.fullStudentList.filter((student) => {
-            if (student.parentClass == this.vm.selectedClass.id && student.parentDivision == this.vm.selectedSection.id) return true;
+        let student_list = this.vm.backendData.fullStudentList.filter((student) => {
+            if (student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id) return true;
             return false;
         });
         let studentIdList = [];
@@ -361,9 +353,9 @@ export class AddTutorialServiceAdapter {
                 student.tutorialTopic = tutorial.topic;
             }
             if (student.subject == undefined) {
-                student['subject'] = this.vm.getSubjectName(this.vm.selectedSubject);
+                student['subject'] = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
             } else {
-                student.subject = this.vm.getSubjectName(this.vm.selectedSubject);
+                student.subject = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
             }
         });
     }
