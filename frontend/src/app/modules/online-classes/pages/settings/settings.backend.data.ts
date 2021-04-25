@@ -1,10 +1,10 @@
-import {SettingsComponent} from './settings.component';
+import { SettingsComponent } from './settings.component';
 
 export class SettingsBackendData {
 
     classList: any;
     divisionList: any;
-    activeClassList: any;
+    onlineClassList: any;
 
     vm: SettingsComponent;
 

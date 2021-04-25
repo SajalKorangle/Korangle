@@ -27,13 +27,15 @@ def generateSignature(data):
 
 from common.common_views_3 import CommonView, CommonListView, APIView
 
-from .models import ActiveClass
+from .models import OnlineClass
 
 
-class ActiveClassView(CommonView, APIView):
-    Model = ActiveClass
+class OnlineClassView(CommonView, APIView):
+    Model = OnlineClass
+    RelationsToSchool = ['parentSchool__id']
 
 
-class ActiveClassListView(CommonListView, APIView):
-    Model = ActiveClass
+class OnlineClassListView(CommonListView, APIView):
+    Model = OnlineClass
+    RelationsToSchool = ['parentSchool__id']
 
