@@ -35,7 +35,7 @@ export class ClassroomComponent implements OnInit {
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
-    mettingParameters: any;
+    meetingParameters: any;
 
     weekdays = WEEKDAYS;
 
@@ -67,25 +67,25 @@ export class ClassroomComponent implements OnInit {
         console.log('this: ', this);
     }
 
-    populateMettingParametersAndStart(onlineClass, signature, apiKey) {
-        this.mettingParameters = {
+    populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
+        this.meetingParameters = {
             signature,
             api_key: apiKey,
-            metting_number: onlineClass.mettingNumber,
+            meeting_number: onlineClass.meetingNumber,
             password: onlineClass.password,
             role: 0,
             username: this.activeStudent.name,
             error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
         };
-        this.htmlRenderer.mettingEntered = true;
+        this.htmlRenderer.meetingEntered = true;
         setTimeout(() => {
             let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
-            while (!zoomIFrame && this.htmlRenderer.mettingEntered) {
+            while (!zoomIFrame && this.htmlRenderer.meetingEntered) {
                 zoomIFrame = document.getElementById('zoomIFrame');
             }
-            if (this.htmlRenderer.mettingEntered) {
+            if (this.htmlRenderer.meetingEntered) {
                 const searchParams = new URLSearchParams();
-                Object.entries(this.mettingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
+                Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 zoomIFrame.src = 'https://korangletesting.s3.amazonaws.com/zoom/index.html?' + searchParams.toString();
 
             }

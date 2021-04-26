@@ -1,9 +1,9 @@
 <div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
 
-    <ng-container *ngIf="!htmlRenderer.mettingEntered else zoomIframe">
+    <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
         <ng-container *ngIf="backendData.onlineClass else NoClassReg">
             <div style="display: flex; height: 85vh; width: 100%;">
-                <button class="btn" style="display: block; margin: auto; background-color: green;" (click)="serviceAdapter.initilizeMettingData(backendData.onlineClass)">Enter Class</button>
+                <button class="btn" style="display: block; margin: auto; background-color: green;" (click)="serviceAdapter.initilizeMeetingData(backendData.onlineClass)">Enter Class</button>
             </div>
         </ng-container>
         <ng-template #NoClassReg>
@@ -12,7 +12,7 @@
     </ng-container>
 
     <ng-template #zoomIframe>
-        <button (click)="htmlRenderer.mettingEntered = false;" style="margin-bottom: 12px; display: flex; border-radius: 50%;background-color: black; color:white;">
+        <button (click)="htmlRenderer.meetingEntered = false;" style="margin-bottom: 12px; display: flex; border-radius: 50%;background-color: black; color:white;">
             <mat-icon>arrow_back</mat-icon>
         </button>
         <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *" style="width: 100%; height: 75vh;"></iframe>

@@ -8,6 +8,6 @@ export class OnlineClassService extends ServiceObject {
 
     // objects urls
     public online_class = '/online-class';
-    public zoom_metting_signature = '/zoom-metting-signature';
+    public zoom_meeting_signature = '/zoom-meeting-signature';
 
 }

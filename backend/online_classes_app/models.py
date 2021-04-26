@@ -16,7 +16,7 @@ class OnlineClass(models.Model):
     parentDivision = models.ForeignKey(Division)
     startTime = models.TimeField(null=True, verbose_name='startTime')
     endTime = models.TimeField(null=True, verbose_name='endTime')
-    mettingNumber = models.BigIntegerField(blank=True)
+    meetingNumber = models.BigIntegerField(blank=True)
     password = models.CharField(max_length=10, blank=True)
     configJSON = models.TextField()
 
@@ -29,7 +29,7 @@ class OnlineClass(models.Model):
 
 
 @receiver(pre_save, sender=OnlineClass)
-def createZoomMetting(sender, instance, **kwargs):
+def createZoomMeeting(sender, instance, **kwargs):
     apiEndPoint = 'https://api.zoom.us/v2/users/'+settings.ZOOM_EMAIL_ID+'/meetings'
     jwt = 'Bearer ' + newJWT()
 
@@ -45,5 +45,5 @@ def createZoomMetting(sender, instance, **kwargs):
 
     response = requests.post(apiEndPoint, json=data, headers=headers)
     jsonResponse = response.json()
-    instance.mettingNumber = jsonResponse['id']
+    instance.meetingNumber = jsonResponse['id']
     instance.password = jsonResponse['password']

@@ -38,15 +38,15 @@ export class ClassroomServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    async initilizeMettingData(onlineClass) {
+    async initilizeMeetingData(onlineClass) {
         this.vm.isLoading = true;
         const signature_request = {
-            mettingNumber: onlineClass.mettingNumber,
+            meetingNumber: onlineClass.meetingNumber,
             role: 1,
         };
-        const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_metting_signature, signature_request);
+        const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_meeting_signature, signature_request);
 
-        this.vm.populateMettingParametersAndStart(onlineClass, response.signature, response.apiKey);
+        this.vm.populateMeetingParametersAndStart(onlineClass, response.signature, response.apiKey);
 
         this.vm.isLoading = false;
     }

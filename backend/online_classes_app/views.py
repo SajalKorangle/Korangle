@@ -4,13 +4,13 @@ from .bussiness.zoom import generateSignature
 from helloworld_project import settings
 
 
-class ZoomMettingSignature(CommonView, APIView):
+class ZoomMeetingSignature(CommonView, APIView):
     permittedMethods = ['get']
 
     @user_permission_3
     def get(self, request, *args, **kwargs):
-        mettingSignatureData = {'apiKey': settings.ZOOM_API_KEY, 'apiSecret': settings.ZOOM_SECRET_KEY, 'meetingNumber': request.GET['mettingNumber'], 'role': int(request.GET['role'])}
-        response = {'signature': generateSignature(mettingSignatureData), 'apiKey': settings.ZOOM_API_KEY}
+        meetingSignatureData = {'apiKey': settings.ZOOM_API_KEY, 'apiSecret': settings.ZOOM_SECRET_KEY, 'meetingNumber': request.GET['meetingNumber'], 'role': int(request.GET['role'])}
+        response = {'signature': generateSignature(meetingSignatureData), 'apiKey': settings.ZOOM_API_KEY}
         return response
 
 

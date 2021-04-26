@@ -4,7 +4,7 @@ export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
 
-    mettingEntered: boolean = false;
+    meetingEntered: boolean = false;
 
     constructor() { }
 
