@@ -6,6 +6,8 @@ export const APPROVAL_STATUS_CHOICES = {
 
 export class Approval {
     id: number;
+    parentSchool: number;
+    parentSession: number;
     parentEmployeeRequestedBy: number;
     parentEmployeeApprovedBy: number = null;
     approvalId: number = null;

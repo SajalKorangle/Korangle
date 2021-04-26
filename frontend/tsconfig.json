@@ -17,7 +17,7 @@
       "es2016",
       "dom"
     ],
-    "paths": {  // dummy, original in src/tsconfig.pp.json (for @path support in vsCode)
+    "paths": { 
       "@modules/*": ["app/modules/*"],
       "@basic-components/*": ["app/basic-components/*"],
       "@classes/*": ["app/classes/*"],
@@ -26,6 +26,6 @@
       "@urls/*": ["app/urls/*"],
       "moment": ["../node_modules/moment/min/moment.min.js"],
       "xlsx": ["../node_modules/xlsx/dist/xlsx.mini.min.js"]
-  }
+    }
   }
 }
