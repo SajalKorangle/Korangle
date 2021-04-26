@@ -305,6 +305,7 @@ export class SendSmsServiceAdapter {
             mobileNumberList: mobileNumberList,
             notificationMobileNumberList: notifMobileNumberList,
             parentSchool: this.vm.user.activeSchool.dbId,
+            smsId:1
         };
 
         let notification_data = this.vm.notificationMobileNumberList.map((mobileNumber) => {
@@ -341,6 +342,7 @@ export class SendSmsServiceAdapter {
         Promise.all(service_list).then(
             (value) => {
                 alert('Operation Successful');
+                console.log(value[0]);
 
                 if (
                     (this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) &&

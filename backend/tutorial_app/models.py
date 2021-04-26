@@ -1,9 +1,12 @@
 from django.db import models
 
 # Create your models here.
+from django.db.models.signals import post_save
+
 from subject_app.models import ClassSubject
 from school_app.model.models import School
 from information_app.models import SentUpdateType
+from tutorial_app import signals
 
 
 class Tutorial(models.Model):
@@ -18,3 +21,5 @@ class Tutorial(models.Model):
 
     class Meta:
         db_table = 'tutorial'
+
+post_save(signals.send_update,Tutorial)

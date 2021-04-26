@@ -6,7 +6,7 @@ from information_app.models import MessageType, SentUpdateType
 
 
 # Create your models here.
-from sms_app.signals import sms_sender
+from sms_app import signals
 
 
 class SMSEvent(models.Model):
@@ -16,6 +16,32 @@ class SMSEvent(models.Model):
 
     class Meta:
         db_table = 'sms_event'
+
+class SMSId(models.Model):
+    entityName = models.TextField(null=False, verbose_name='entityName')
+    entityRegistrationId = models.TextField(null=False, verbose_name='entityRegistrationId')
+    smsId = models.CharField(max_length=10, null=False, verbose_name='smsId')
+    smsIdRegistrationNumber = models.TextField(null=True, verbose_name='SMSIdRegistrationNumber')
+
+    ACTIVATED = 'ACTIVATED'
+    PENDING = 'PENDING'
+    STATUS = (
+        (ACTIVATED, 'ACTIVATED'),
+        (PENDING, 'PENDING'),
+    )
+
+    smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
+
+    class Meta:
+        db_table = 'sms_id'
+
+
+class SMSIdSchool(models.Model):
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSMSId')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
+
+    class Meta:
+        db_table = 'smsid_school'
 
 
 class SMS(models.Model):
@@ -54,6 +80,9 @@ class SMS(models.Model):
     # School
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
+    #SMSId
+    smsId = models.ForeignKey(SMSId, on_delete=models.PROTECT, default=0, verbose_name='smsId')
+
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
 
@@ -61,7 +90,6 @@ class SMS(models.Model):
         db_table = 'sms'
 
 
-pre_save.connect(sms_sender, sender=SMS)
 
 class MsgClubDeliveryReport(models.Model):
     # Request Id
@@ -109,33 +137,6 @@ class SMSPurchase(models.Model):
 
     class Meta:
         db_table = 'sms_purchase'
-
-
-class SMSId(models.Model):
-    entityName = models.TextField(null=False, verbose_name='entityName')
-    entityRegistrationId = models.TextField(null=False, verbose_name='entityRegistrationId')
-    smsId = models.CharField(max_length=10, null=False, verbose_name='smsId')
-    smsIdRegistrationNumber = models.TextField(null=True, verbose_name='SMSIdRegistrationNumber')
-
-    ACTIVATED = 'ACTIVATED'
-    PENDING = 'PENDING'
-    STATUS = (
-        (ACTIVATED, 'ACTIVATED'),
-        (PENDING, 'PENDING'),
-    )
-
-    smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
-
-    class Meta:
-        db_table = 'sms_id'
-
-
-class SMSIdSchool(models.Model):
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSMSId')
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-
-    class Meta:
-        db_table = 'smsid_school'
 
 
 class SMSTemplate(models.Model):
@@ -190,3 +191,6 @@ class SMSEventSettings(models.Model):
 
     receiverType = models.CharField(max_length=20, choices=UPDATE_TO_CHOICES, null=True,
                                     verbose_name='receiverType')
+
+
+post_save.connect(signals.sms_sender, SMS)

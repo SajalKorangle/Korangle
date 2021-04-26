@@ -9,15 +9,18 @@ from school_app.model.models import School
 
 import json
 
+from sms_app.models import SMSIdSchool, SMSId
+
 
 def send_sms(data):
 
-    sms_count_left = get_sms_count(data)
+    sms_count_left = get_sms_count(data['parentSchool_id'])
 
     if data['count'] > sms_count_left['count']:
-        return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
+        return 0
 
-    school_object = School.objects.get(id=data['parentSchool'])
+    print(data)
+    sms_id_object = SMSId.objects.get(id=data['smsId_id'])
 
     conn = http.client.HTTPConnection("msg.msgclub.net")
 
@@ -25,7 +28,7 @@ def send_sms(data):
         "smsContent": data['content'],
         "routeId": "1",
         "mobileNumbers": data['mobileNumberList'],
-        "senderId": school_object.smsId,
+        "senderId": sms_id_object.smsId,
         "smsContentType": data['contentType'],
     }
 
@@ -42,14 +45,16 @@ def send_sms(data):
 
     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 
-    return {'status': 'success', 'requestId': requestIdFromMsgClub, 'message': 'SMS Sent successfully'}
+    print(requestIdFromMsgClub)
+
+    return requestIdFromMsgClub
 
 
 def send_sms_old(data):
 
     # print(data['message'].encode('utf-8'))
 
-    sms_count_left = get_sms_count(data)
+    sms_count_left = get_sms_count(data['parentSchool_id'])
 
     if data['estimatedCount'] > sms_count_left['count']:
         return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
@@ -156,18 +161,20 @@ def send_different_sms(data):
     """
     Function sends different SMS
     """
-    sms_count_left = get_sms_count(data)
-    if data['count'] > sms_count_left['count']:
-        return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
+    # sms_count_left = get_sms_count(data)
+    # if data['count'] > sms_count_left['count']:
+    #     return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
 
-    school_object = School.objects.get(id=data['parentSchool'])
+    print(data)
+    sms_id_object = SMSId.objects.get(id=data['smsId_id'])
+
 
     conn = http.client.HTTPConnection("msg.msgclub.net")
 
     anotherPayload = {
         "routeId": "1",
-        "sentSmsNumList": data['data'],
-        "senderId": school_object.smsId,
+        "sentSmsNumList": data['mobileNumberList'],
+        "senderId": sms_id_object.smsId,
         "smsContentType": data['contentType'],
     }
 
@@ -183,6 +190,5 @@ def send_different_sms(data):
     response = conn.getresponse().read()
 
     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
-    print(requestIdFromMsgClub)
 
     return {'status': 'success', 'requestId': requestIdFromMsgClub, 'message': 'SMS Sent successfully'}
