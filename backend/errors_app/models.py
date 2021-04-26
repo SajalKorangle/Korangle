@@ -17,6 +17,8 @@ class Error(models.Model):
     prompt = models.CharField(max_length=250)
     fatal = models.BooleanField(default=False);
     dateTime = models.DateTimeField(verbose_name='Date Time', auto_now_add=True)
+    frontendUrl = models.TextField(null=True, blank=True)
+    postDataBody = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'error'

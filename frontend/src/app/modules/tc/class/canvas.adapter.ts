@@ -13,10 +13,10 @@ import { reportError, ERROR_SOURCES } from './../../../services/modules/errors/e
 export class CanvasAdapterBase implements CanvasAdapterInterface {
     vm: any;
 
-    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any };
+    currentLayout: { name: string; thumbnail?: any; publiclyShared: boolean; content: any; };
 
     DATA: any;
-    extraFields: { [key: string]: any } = {};
+    extraFields: { [key: string]: any; } = {};
 
     virtualCanvas: HTMLCanvasElement;
     virtualContext: CanvasRenderingContext2D;
@@ -150,7 +150,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
         return true;
     }
 
-    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => {}, postCallback: any = () => {}): Promise<any> => {
+    scheduleCanvasReDraw = (duration: number = 500, preCallback: any = () => { }, postCallback: any = () => { }): Promise<any> => {
         clearTimeout(this.virtualPendingReDrawId);
         return new Promise((resolve, reject) => {
             this.layersFullyDrawnPendingPromiseList.push({ resolve, reject });
@@ -246,18 +246,20 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
                 ERROR_SOURCES[1],
                 location.pathname + location.search,
                 err.toString(),
-                'error in loading saved layout page; data croupted'
+                'error in loading saved layout page; data corrupted',
+                false,
+                location.href
             );
-            alert('data corupted');
+            alert('data corrupted');
             this.clearCanvas();
         }
         return Promise.reject();
     }
 
-    getDataToSave(): { [object: string]: any } {
+    getDataToSave(): { [object: string]: any; } {
         // updating required
 
-        let dataToSave: { [key: string]: any } = {
+        let dataToSave: { [key: string]: any; } = {
             actualresolution: {
                 resolutionName: this.actualresolution.resolutionName,
                 orientation: this.actualresolution.orientation,
@@ -317,15 +319,14 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
 }
 
 export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
-    getEmptyLayoutPage(): { [key: string]: any } {
+    getEmptyLayoutPage(): { [key: string]: any; } {
         return {
             actualresolution: {
                 resolutionName: PAGE_RESOLUTIONS[1].resolutionName, // a4 page
                 orientation: 'p',
             },
-            extraFiedls: {},
+            extraFields: {},
             backgroundColor: DEFAULT_BACKGROUND_COLOR,
-            gradeRuleSetList: [],
             layers: [],
         };
     }
@@ -344,7 +345,7 @@ export class CanvasAdapterUtilityMixin extends CanvasAdapterBase {
         this.canvasSizing(newHeight, Infinity, true);
     }
 
-    replaceLayerWithNewLayerType(layer: Layer, initialParameters: { [key: string]: any } = {}): Promise<any> {
+    replaceLayerWithNewLayerType(layer: Layer, initialParameters: { [key: string]: any; } = {}): Promise<any> {
         let layerIndex = this.layers.findIndex((l) => l.id == layer.id);
         let layerData = JSON.parse(JSON.stringify(layer.getDataToSave()));
         initialParameters = { ...layerData, ...initialParameters };
@@ -400,7 +401,7 @@ export class CanvasAdapterHTMLMixin extends CanvasAdapterUtilityMixin {
 
     pendingReDrawId: any;
 
-    documentEventListners: { keydown: any; mouseup: any } = {
+    documentEventListners: { keydown: any; mouseup: any; } = {
         keydown: (event) => {
             if (!this.activeLayer || !(event.target instanceof HTMLBodyElement)) return;
             if (event.key == 'ArrowUp') {
