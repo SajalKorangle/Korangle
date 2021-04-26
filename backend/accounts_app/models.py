@@ -14,12 +14,12 @@ from datetime import datetime, date
 
 def upload_image_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'accounts_app/TransactionImages/imageURL/%s%s' % (instance.id, filename_ext.lower())
+    return 'accounts_app/TransactionImages/imageURL/%s%s' % (now().timestamp(), filename_ext.lower())
 
 
 def upload_image_to_1(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'accounts_app/ApprovalImages/imageURL/%s%s' % (instance.id, filename_ext.lower())
+    return 'accounts_app/ApprovalImages/imageURL/%s%s' % (now().timestamp(), filename_ext.lower())
 
 
 class Heads(models.Model):
@@ -68,6 +68,7 @@ class AccountSession(models.Model):
 
     class Meta:
         db_table = 'account_session'
+        unique_together = ('parentAccount', 'parentSession')
 
 @receiver(pre_save, sender=AccountSession)
 def accountSessionPreSave(sender, instance, **kwargs):
@@ -81,10 +82,10 @@ def accountSessionPreSave(sender, instance, **kwargs):
 class Transaction(models.Model):
     
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, null=False, default=0)
-    voucherNumber = models.IntegerField(null=True, blank=True)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    voucherNumber = models.IntegerField(blank=True)
     remark = models.TextField(null=True, blank=True)
-    transactionDate = models.DateField(null=True)   # why is transaction date null, should be autoAdd
+    transactionDate = models.DateField()
     approvalId = models.IntegerField(null=True, blank=True)
     
     class Meta:
@@ -99,11 +100,23 @@ def transactionPreSave(sender, instance, **kwargs):
                         .aggregate(Max('voucherNumber'))['voucherNumber__max']
         if last_voucher_number is not None:
             instance.voucherNumber = last_voucher_number + 1
+        
+@receiver(post_save, sender=Transaction)
+def transactionPostSave(sender, instance, **kwargs):
+    if (kwargs['created'] and instance.approvalId):
+        transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
+        approval = Approval.objects.get(approvalId=instance.approvalId,
+                parentEmployeeRequestedBy__parentSchool=instance.parentSchool,
+                requestedGenerationDateTime__gte=transactionSession.startDate,
+                requestedGenerationDateTime__lte=transactionSession.endDate)
+        approval.parentTransaction = instance
+        approval.transactionDate = instance.transactionDate
+        approval.save()
 
 class TransactionAccountDetails(models.Model):
     parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     parentAccount = models.ForeignKey(Accounts, on_delete=models.PROTECT)
-    amount = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     CREDIT_TYPE = 'CREDIT'
     DEBIT_TYPE = 'DEBIT'
@@ -120,7 +133,7 @@ class TransactionAccountDetails(models.Model):
 
 class TransactionImages(models.Model):
     parentTransaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    imageURL = models.ImageField(upload_to=upload_image_to, blank=True, null=True)
+    imageURL = models.ImageField(upload_to=upload_image_to)
     orderNumber = models.IntegerField(default=0)
 
     BILL_TYPE = 'BILL'
@@ -136,13 +149,14 @@ class TransactionImages(models.Model):
         db_table = 'transaction_images'
 
 
-class Approval(models.Model):
-    
+class Approval(models.Model):   # what if both the employee are deleted, parentSchool should be there, or deleting should be handled
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     parentEmployeeRequestedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovalList')
     parentEmployeeApprovedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='ApprovedList')
-    approvalId = models.IntegerField(null=True, blank=True) # approval id should also be generated at the backend
+    approvalId = models.IntegerField(blank=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.CASCADE)
-    requestedGenerationDateTime = models.DateField(null=True) # should be auto add? and not null
+    requestedGenerationDateTime = models.DateField() 
     approvedGenerationDateTime = models.DateField(null=True)
     remark = models.TextField(null=True, blank=True)
     autoAdd = models.BooleanField(default=False)
@@ -159,28 +173,28 @@ class Approval(models.Model):
         (DECLINED_STATUS, 'DECLINED'),
     )
 
-    requestStatus = models.TextField(null=True, choices=STATUS, default=PENDING_STATUS) # why request status will be null
+    requestStatus = models.TextField(choices=STATUS, default=PENDING_STATUS) # why request status will be null
 
     class Meta:
         db_table = 'approval'
+        unique_together = ('parentSchool', 'parentSession', 'approvalId')
 
-@receiver(post_save, sender=Transaction)
-def transactionPostSave(sender, instance, **kwargs):
-    if (kwargs['created'] and instance.approvalId):
-        transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
-        approval = Approval.objects.get(approvalId=instance.approvalId,
-                parentEmployeeRequestedBy__parentSchool=instance.parentSchool,
-                requestedGenerationDateTime__gte=transactionSession.startDate,
-                requestedGenerationDateTime__lte=transactionSession.endDate)
-        approval.parentTransaction = instance
-        approval.transactionDate = instance.transactionDate
-        approval.save()
+@receiver(pre_save, sender=Approval)
+def approvalPreSave(sender, instance, **kwargs):
+    if instance.id is None:
+        instance.approvalId = 1
+        last_approval_id = \
+                    Approval.objects.filter(parentSchool=instance.parentSchool, parentSession=instance.parentSession) \
+                        .aggregate(Max('approvalId'))['approvalId__max']
+        if last_approval_id is not None:
+            instance.approvalId = last_approval_id + 1
+
         
 class ApprovalAccountDetails(models.Model): # should be connected to AccountSession
     
     parentApproval = models.ForeignKey(Approval, on_delete=models.CASCADE)
     parentAccount = models.ForeignKey(Accounts, on_delete=models.CASCADE)
-    amount = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     CREDIT_TYPE = 'CREDIT'
     DEBIT_TYPE = 'DEBIT'
@@ -198,7 +212,7 @@ class ApprovalAccountDetails(models.Model): # should be connected to AccountSess
 class ApprovalImages(models.Model):
     
     parentApproval = models.ForeignKey(Approval, on_delete=models.CASCADE)
-    imageURL = models.ImageField('approval_image', upload_to = upload_image_to_1, blank = True, null=True) # whu null
+    imageURL = models.ImageField('approval_image', upload_to = upload_image_to_1,)
     
     BILL_TYPE = 'BILL'
     QUOTATION_TYPE = 'QUOTATION'
@@ -207,8 +221,8 @@ class ApprovalImages(models.Model):
         (QUOTATION_TYPE, 'QUOTATION'),  
     )
 
-    imageType = models.TextField(null=False, choices=DOCUMENT_TYPE)
-    orderNumber = models.IntegerField(null=False, default=0, verbose_name='orderNumber')
+    imageType = models.TextField(choices=DOCUMENT_TYPE)
+    orderNumber = models.IntegerField(default=0, verbose_name='orderNumber')
 
 
     class Meta:

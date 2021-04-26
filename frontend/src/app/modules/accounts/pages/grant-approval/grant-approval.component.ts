@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { DataStorage } from '../../../../classes/data-storage';
+import { DataStorage } from "../../../../classes/data-storage";
 import { GrantApprovalServiceAdapter } from './grant-approval.service.adapter';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -12,9 +12,16 @@ import { EmployeeService } from './../../../../services/modules/employee/employe
     selector: 'grant-approval',
     templateUrl: './grant-approval.component.html',
     styleUrls: ['./grant-approval.component.css'],
-    providers: [MatDialog, AccountsService, EmployeeService, SchoolService],
+    providers: [
+        MatDialog,
+        AccountsService,
+        EmployeeService,
+        SchoolService,
+    ]
 })
+
 export class GrantApprovalComponent implements OnInit {
+
     user: any;
     serviceAdapter: GrantApprovalServiceAdapter;
 
@@ -27,6 +34,7 @@ export class GrantApprovalComponent implements OnInit {
     loadMoreApprovals: any;
     isLoadingApproval: any;
 
+
     minimumDate: any;
     maximumDate: any;
 
@@ -38,7 +46,7 @@ export class GrantApprovalComponent implements OnInit {
         public dialog: MatDialog,
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
-        public schoolService: SchoolService
+        public schoolService: SchoolService,
     ) { }
 
     ngOnInit(): void {
@@ -46,20 +54,20 @@ export class GrantApprovalComponent implements OnInit {
         this.serviceAdapter = new GrantApprovalServiceAdapter();
         this.serviceAdapter.initialiseAdapter(this);
         this.serviceAdapter.initialiseData();
-        console.log('component: ', this);
     }
 
     getGrantButtonStyle(approval) {
         let style = {
-            background: null,
-            color: 'white',
-            cursor: 'pointer',
-            border: null,
+            'background': null,
+            'color': 'white',
+            'cursor': 'pointer',
+            'border': null,
         };
         if (approval.requestStatus == 'PENDING' || (approval.requestStatus == 'DECLINED' && approval.parentTransaction == null)) {
             style.background = 'rgba(76, 175, 80, 1)';
             style.border = '2px solid rgba(76, 175, 80, 1)';
-        } else if (approval.requestStatus == 'APPROVED' || approval.parentTransaction != null) {
+        }
+        else if (approval.requestStatus == 'APPROVED' || approval.parentTransaction != null) {
             style.background = 'rgba(196, 196, 196, 1)';
             style.cursor = 'not-allowed';
             style.border = '2px solid rgba(196, 196, 196, 1)';
@@ -70,15 +78,16 @@ export class GrantApprovalComponent implements OnInit {
 
     getDeclineButtonStyle(approval) {
         let style = {
-            background: null,
-            color: 'white',
-            cursor: 'pointer',
-            border: null,
+            'background': null,
+            'color': 'white',
+            'cursor': 'pointer',
+            'border': null,
         };
         if (approval.requestStatus == 'PENDING' || (approval.requestStatus == 'APPROVED' && approval.parentTransaction == null)) {
             style.background = 'rgb(244 67 52';
             style.border = '2px solid rgb(244 67 52)';
-        } else if (approval.requestStatus == 'DECLINED' || approval.parentTransaction != null) {
+        }
+        else if (approval.requestStatus == 'DECLINED' || approval.parentTransaction != null) {
             style.background = 'rgba(196, 196, 196, 1)';
             style.cursor = 'not-allowed';
             style.border = '2px solid rgba(196, 196, 196, 1)';
@@ -88,25 +97,17 @@ export class GrantApprovalComponent implements OnInit {
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
-        console.log(images);
         const dialogRef = this.dialog.open(ImagePreviewDialogComponent, {
             maxWidth: '100vw',
             maxHeight: '100vh',
             height: '100%',
             width: '100%',
-            data: { images: images, index: index, editable: editable, isMobile: false },
+            data: { 'images': images, 'index': index, 'editable': editable, 'isMobile': false }
         });
 
-        dialogRef.afterClosed().subscribe((result) => { });
+        dialogRef.afterClosed().subscribe(result => {
+        });
     }
-
-    /* @HostListener('window:scroll', ['$event']) onScrollEvent(event){
-         const mainPannel = document.getElementById('main-pannel');
-         if((mainPannel.clientHeight + mainPannel.scrollTop) > (0.7*mainPannel.scrollHeight)
-            && this.loadMoreApprovals == true && this.isLoadingApproval == false){
-             this.serviceAdapter.loadMoreApprovals();
-         }
-    }*/
 
     getDisplayDateFormat(str: any) {
         // return str;
@@ -120,4 +121,6 @@ export class GrantApprovalComponent implements OnInit {
 
         return [day, month, year].join('/');
     }
+
+
 }

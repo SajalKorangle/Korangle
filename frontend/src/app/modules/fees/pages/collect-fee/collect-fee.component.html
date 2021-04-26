@@ -415,36 +415,49 @@
                 </tbody>
             </table>
 
-            <div class="row">
-                <div class="col-sm-3">
-                    <mat-form-field style="margin-top: 22px">
-                        <mat-select
-                            placeholder="Select Payment Mode"
-                            [ngModel]="newModeOfPayment"
-                            [disabled]="!newFeeReceiptList.length > 0"
-                            (ngModelChange)="newModeOfPayment = $event; updateNewFeeReceiptPaymentMode()"
-                        >
-                            <mat-option *ngFor="let paymentMode of modeOfPaymentList" [value]="paymentMode">
-                                {{ paymentMode }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-3" *ngIf="newModeOfPayment == modeOfPaymentList[1]">
-                    <div class="form-group form-black label-floating">
-                        <label class="control-label">Cheque No.</label>
-                        <input
-                            type="number"
-                            class="form-control"
-                            [disabled]="!newFeeReceiptList.length > 0"
-                            [ngModel]="newChequeNumber"
-                            (ngModelChange)="newChequeNumber = $event; updateNewFeeReceiptChequeNumber()"
-                        />
-                        <span
-                            *ngIf="!newChequeNumber"
-                            style="position: absolute; font-size: 15px; right: 15px; top: 10px; color: red"
-                            class="fa fa-exclamation-circle"
-                        ></span>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <mat-form-field style="margin-top: 22px;">
+                            <mat-select placeholder="Select Payment Mode"
+                                        [ngModel]="newModeOfPayment"
+                                        [disabled]="!(newFeeReceiptList.length>0)"
+                                        (ngModelChange)="newModeOfPayment=$event;updateNewFeeReceiptPaymentMode(); handlePaymentAccountOnPaymentModeChange();">
+                                <mat-option *ngFor='let paymentMode of modeOfPaymentList;' [value]="paymentMode">
+                                    {{paymentMode}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf="feeSettings && feeSettings.accountingSettings">
+                        <mat-form-field style="margin-top: 22px;">
+                            <mat-select placeholder="Select Payment Account"
+                                        [(ngModel)]="studentFeePaymentAccount">
+                                <mat-option *ngFor='let paymentAccount of htmlRenderer.getFilteredPaymentAccounts();' [value]="paymentAccount.parentAccount">
+                                    {{paymentAccount.title}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3" *ngIf="newModeOfPayment==modeOfPaymentList[1]">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Cheque No.</label>
+                            <input type="number"
+                                   class="form-control"
+                                   [disabled]="!newFeeReceiptList.length>0"
+                                   [ngModel]="newChequeNumber"
+                                   (ngModelChange)="newChequeNumber=$event;updateNewFeeReceiptChequeNumber()"/>
+                           <span *ngIf="!newChequeNumber" style="position:absolute;font-size: 15px; right:15px;top:10px;color: red" class="fa fa-exclamation-circle "></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" >
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Remark</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [disabled]="!newFeeReceiptList.length>0"
+                                   [ngModel]="newRemark"
+                                   (ngModelChange)="newRemark=$event;updateNewFeeReceiptRemark()"/>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -459,7 +472,7 @@
                         />
                     </div>
                 </div>
-            </div>
+
 
             <div class="row">
                 <div class="col-sm-6">

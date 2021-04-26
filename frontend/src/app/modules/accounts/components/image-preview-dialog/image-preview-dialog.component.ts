@@ -1,61 +1,67 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import {Component, Inject} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 import { trigger, transition, query, style, animate, group } from '@angular/animations';
 const left = [
-    group([
-        query(':enter', [style({ transform: 'translateX(-100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
-            optional: true,
-        }),
-        query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(100%)' }))], {
-            optional: true,
-        }),
-    ]),
+  group([
+    query(':enter', [style({ transform: 'translateX(-100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
+        optional: true,
+      }),
+    query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(100%)' }))], {
+        optional: true,
+      }),
+  ]),
 ];
 
 const right = [
     group([
-        query(':enter', [style({ transform: 'translateX(100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
-            optional: true,
-        }),
-        query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(-100%)' }))], {
-            optional: true,
-        }),
+      query(':enter', [style({ transform: 'translateX(100%)' }), animate('.3s linear', style({ transform: 'translateX(0%)' }))], {
+        optional: true,
+      }),
+      query(':leave', [style({ transform: 'translateX(0%)' }), animate('.3s linear', style({ transform: 'translateX(-100%)' }))], {
+        optional: true,
+      }),
     ]),
-];
+  ];
 
 @Component({
     selector: 'image-preview-dialog',
     templateUrl: 'image-preview-dialog.html',
     styleUrls: ['./image-preview-dialog.css'],
-    animations: [trigger('animImageSlider', [transition(':increment', right), transition(':decrement', left)])],
+    animations: [
+        trigger('animImageSlider', [
+          transition(':increment', right),
+          transition(':decrement', left),
+        ]),
+    ]
 })
+
 export class ImagePreviewDialogComponent {
+
     constructor(
         public dialogRef: MatDialogRef<ImagePreviewDialogComponent>,
         @Inject(MAT_DIALOG_DATA)
         public data: {
-            [key: string]: any;
-        }
-    ) {
-        this.moveToIndex = this.data.index;
-        this.counter = this.data.index;
+            [key: string]: any,
+         })  {
+            this.moveToIndex = this.data.index;
+            this.counter = this.data.index;
     }
 
     moveToIndex: any;
     counter: number = 0;
 
     imageStyle = {
-        display: 'inline-block',
-        margin: 'auto',
-        width: '50%',
-        opacity: '1',
+        'display': 'inline-block',
+        'margin': 'auto',
+        'width': '50%',
+        'opacity': '1',
     };
 
     imageStyleMobile = {
-        display: 'inline-block',
-        margin: 'auto',
-        width: '95vw',
+        'display': 'inline-block',
+        'margin': 'auto',
+        'width': '95vw',
         'max-width': '100%',
     };
 
@@ -83,11 +89,13 @@ export class ImagePreviewDialogComponent {
         this.imageStyleMobile.width = '100%';
     }
 
+
     onNext() {
         if (this.counter != this.data.images.length - 1) {
             this.counter++;
-        } else {
-            return;
+        }
+        else {
+            return ;
         }
         this.moveToIndex = this.counter;
         this.imageStyle.width = '50%';
@@ -97,8 +105,9 @@ export class ImagePreviewDialogComponent {
     onPrevious() {
         if (this.counter > 0) {
             this.counter--;
-        } else {
-            return;
+        }
+        else {
+            return ;
         }
         this.moveToIndex = this.counter;
         this.imageStyle.width = '50%';
@@ -109,7 +118,8 @@ export class ImagePreviewDialogComponent {
         let tempStr: string;
         if (str.imageUrl != undefined) {
             tempStr = str.imageUrl;
-        } else {
+        }
+        else {
             tempStr = str.imageUrl;
         }
         // showPhoto(tempStr)
@@ -118,4 +128,5 @@ export class ImagePreviewDialogComponent {
     changeImageSize(event: any) {
         this.imageStyle.width = event.value.toString() + '%';
     }
+
 }

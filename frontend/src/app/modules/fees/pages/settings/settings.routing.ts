@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LockFeesComponent } from './lock-fees.component';
+import { SettingsComponent } from "./settings.component";
 
 const routes: Routes = [
     {
         path: '',
-        component: LockFeesComponent,
-    },
+        component: SettingsComponent,
+    }
 ];
 
 @NgModule({
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class LockFeesRoutingModule {}
+export class SettingsRoutingModule { }
