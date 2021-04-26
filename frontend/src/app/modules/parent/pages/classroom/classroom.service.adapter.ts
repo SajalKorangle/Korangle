@@ -19,7 +19,7 @@ export class ClassroomServiceAdapter {
         };
 
         const response = await Promise.all([
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 0 
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 0
             this.vm.studentService.getObject(this.vm.studentService.student_section, student_section_request),  // 1
         ]);
 
