@@ -7,6 +7,8 @@ export class ClassroomBackendData {
 
     onlineClass: AnyAaaaRecord;
 
+    studentSection: any;
+
     constructor() { }
 
     initialize(vm: ClassroomComponent): void {

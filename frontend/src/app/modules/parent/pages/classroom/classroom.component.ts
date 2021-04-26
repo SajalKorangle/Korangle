@@ -7,9 +7,10 @@ import { ClassroomHtmlRenderer } from './classroom.html.renderer';
 import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
-import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
+import { SchoolService } from '@services/modules/school/school.service';
+import { StudentService } from '@services/modules/student/student.service';
 import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
 import { environment } from 'environments/environment';
 import { Constants } from 'app/classes/constants';
@@ -20,7 +21,7 @@ import { WEEKDAYS } from '@modules/online-classes/class/constants';
     selector: 'classroom',
     templateUrl: './classroom.component.html',
     styleUrls: ['./classroom.component.css'],
-    providers: [SubjectService, OnlineClassService, ClassService],
+    providers: [SchoolService, OnlineClassService, ClassService, StudentService],
 })
 
 export class ClassroomComponent implements OnInit {
@@ -41,9 +42,10 @@ export class ClassroomComponent implements OnInit {
     isLoading: any;
 
     constructor(
-        public subjectService: SubjectService,
+        public schoolService: SchoolService,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
+        public studentService: StudentService,
     ) { }
 
     ngOnInit(): void {
@@ -71,8 +73,8 @@ export class ClassroomComponent implements OnInit {
             api_key: apiKey,
             metting_number: onlineClass.mettingNumber,
             password: onlineClass.password,
-            role: 1,
-            username: this.user.first_name + ' ' + this.user.last_name,
+            role: 0,
+            username: this.activeStudent.name,
             error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
         };
         this.htmlRenderer.mettingEntered = true;

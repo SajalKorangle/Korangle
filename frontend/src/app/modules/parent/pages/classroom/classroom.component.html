@@ -2,7 +2,9 @@
 
     <ng-container *ngIf="!htmlRenderer.mettingEntered else zoomIframe">
         <ng-container *ngIf="backendData.onlineClass else NoClassReg">
-            demo
+            <div style="display: flex; height: 85vh; width: 100%;">
+                <button class="btn" style="display: block; margin: auto; background-color: green;" (click)="serviceAdapter.initilizeMettingData(backendData.onlineClass)">Enter Class</button>
+            </div>
         </ng-container>
         <ng-template #NoClassReg>
             <span>No Online Registered Class</span>
