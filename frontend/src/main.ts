@@ -23,4 +23,3 @@ window.onerror = (message, source, lineno, colno, error) => {
     );
     return false;
 };
-
