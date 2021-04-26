@@ -41,6 +41,11 @@ const routes: Routes = [
         data: { moduleName: 'parent' },
     },
     {
+        path: 'classroom',
+        loadChildren: 'app/modules/parent/pages/classroom/classroom.module#ClassroomModule',
+        data: { moduleName: 'parent' },
+    },
+    {
         path: '',
         component: ParentComponent,
     },
@@ -50,4 +55,4 @@ const routes: Routes = [
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class ParentRoutingModule {}
+export class ParentRoutingModule { }
