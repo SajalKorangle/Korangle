@@ -10,6 +10,11 @@ from employee_app.models import Employee
 
 from django.contrib.auth.models import User
 
+from accounts_app.models import Transaction, AccountSession
+
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+
 # Create your models here.
 
 
@@ -261,10 +266,20 @@ class FeeReceipt(models.Model):
         ( 'Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
 
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
+
+@receiver(pre_save, sender=FeeReceipt)
+def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+    if instance.id and instance.cancelled:
+        originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
+        if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
+            originalFeeReceipt.parentTransaction.delete()
+    pass
+
 
 
 class SubFeeReceipt(models.Model):
@@ -407,11 +422,12 @@ class SubDiscount(models.Model):
         db_table = 'sub_discount_new'
 
 
-class LockFee(models.Model):
-
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, verbose_name='parentSession')
+class FeeSettings(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
+    sessionLocked = models.BooleanField(default=False)
+    accountingSettings = models.TextField(null=True) # json data
 
     class Meta:
-        db_table = 'lock_fee'
-
+        unique_together = ('parentSchool', 'parentSession')
+        

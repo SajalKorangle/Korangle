@@ -57,7 +57,7 @@ export class SetSchoolFeesComponent implements OnInit {
         public studentService: StudentOldService,
         public vehicleService: VehicleOldService,
         private cdRef: ChangeDetectorRef
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -66,6 +66,7 @@ export class SetSchoolFeesComponent implements OnInit {
         this.serviceAdapter = new SetSchoolFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        console.log("set-school_fees: ", this);
     }
 
     getSchoolFeeRuleTotalAmount(schoolFeeRule: SchoolFeeRule): number {

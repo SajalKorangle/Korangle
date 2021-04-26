@@ -9,16 +9,28 @@ import { AccountsComponentsModule } from './components/component.module';
 import { ImagePreviewDialogComponent } from './components/image-preview-dialog/image-preview-dialog.component';
 import { UpdateTransactionDialogComponent } from './components/update-transaction-dialog/update-transaction-dialog.component';
 import { PrintTransactionsListComponent } from './print/print-transactions/print-transactions.component';
-import { ExcelService } from '../../excel/excel-service';
+import {ExcelService} from "../../excel/excel-service";
 import { PrintLedgerComponent } from './print/print-ledger/print-ledger.component';
 
-@NgModule({
-    declarations: [AccountsComponent, PrintTransactionsListComponent, PrintLedgerComponent],
 
-    imports: [ComponentsModule, AccountsRoutingModule, AccountsComponentsModule],
+@NgModule({
+    declarations: [
+        AccountsComponent,
+        PrintTransactionsListComponent,
+        PrintLedgerComponent,
+    ],
+
+    imports: [
+        ComponentsModule,
+        AccountsRoutingModule,
+        AccountsComponentsModule,
+    ],
     exports: [],
     providers: [ExcelService],
     bootstrap: [AccountsComponent],
-    entryComponents: [ImagePreviewDialogComponent, UpdateTransactionDialogComponent],
+    entryComponents: [
+        ImagePreviewDialogComponent,
+        UpdateTransactionDialogComponent,
+    ]
 })
-export class AccountsModule {}
+export class AccountsModule { }

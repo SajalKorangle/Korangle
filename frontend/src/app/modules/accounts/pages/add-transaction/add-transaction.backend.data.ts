@@ -1,6 +1,7 @@
 import { AddTransactionComponent } from './add-transaction.component';
 
 export class AddTransactionBackendData {
+
     accountSessionList = [];
     accountList = [];
 
@@ -14,4 +15,5 @@ export class AddTransactionBackendData {
     initializeData(vm: AddTransactionComponent): void {
         this.vm = vm;
     }
+
 }
