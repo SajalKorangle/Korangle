@@ -17,6 +17,6 @@ export class SettingsBackendData {
 }
 
 interface ZoomAuthData {
-    email: string,
-    jwt: string,
+    email: string;
+    jwt: string;
 }

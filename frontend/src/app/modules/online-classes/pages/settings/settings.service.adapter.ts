@@ -26,7 +26,8 @@ export class SettingsServiceAdapter {
         ]);
         this.vm.backendData.classList = apiCallbackResult[0];
         this.vm.backendData.divisionList = apiCallbackResult[1];
-        this.vm.backendData.onlineClassList = apiCallbackResult[2].map(onlineClass => { return { ...onlineClass, configJSON: JSON.parse(onlineClass.configJSON) }; });
+        this.vm.backendData.onlineClassList
+            = apiCallbackResult[2].map(onlineClass => { return { ...onlineClass, configJSON: JSON.parse(onlineClass.configJSON) }; });
 
         this.vm.isLoading = false;
 
