@@ -234,6 +234,6 @@ else:
 
 
 #ZOOM
-ZOOM_API_KEY = 'feab_2y9TZyvvWEDgrWmUQ'
-ZOOM_SECRET_KEY = 'vjzfd38K6jKbHimYf9nUOwyjCR6CJqsmYRqK'
-ZOOM_EMAIL_ID = 'kumar.93@iitj.ac.in'
+ZOOM_API_KEY = 'GY5heSVqQIWo8YGY_Patrg'
+ZOOM_SECRET_KEY = 'trQY4s4DkL9GrB20JrInNY7A6ZmTJZ7G6fO0'
+ZOOM_EMAIL_ID = 'korangleplus@gmail.com'
