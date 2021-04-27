@@ -10,7 +10,7 @@ const routes: Routes = [
     data: { moduleName: 'online_classes' },
   },
   {
-    path: 'classroom',
+    path: 'join_class',
     loadChildren: 'app/modules/online-classes/pages/classroom/classroom.module#ClassroomModule',
     data: { moduleName: 'online_classes' },
   },

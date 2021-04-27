@@ -16,7 +16,7 @@ const meetConfig = {
 console.log('meetConf: ', meetConfig);
 
 ZoomMtg.init({
-    leaveUrl: 'http://localhost:4200/assets/zoom/feedback.html',
+    leaveUrl: searchParams.get('leaveUrl'),
     isSupportAV: true,
     success: function () {
         ZoomMtg.join({

@@ -140,8 +140,8 @@ export class School {
                     icon: 'assignment',
                 },
                 {
-                    title: 'Classroom',
-                    path: 'classroom',
+                    title: 'Join Class',
+                    path: 'join_class',
                     icon: 'video_camera_front',
                 },
             ];
