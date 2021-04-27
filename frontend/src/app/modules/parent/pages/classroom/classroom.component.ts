@@ -64,7 +64,7 @@ export class ClassroomComponent implements OnInit {
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
-        console.log('this: ', this);
+        // console.log('this: ', this);
     }
 
     populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
