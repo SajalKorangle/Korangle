@@ -1,10 +1,9 @@
-<div class="card-content" *ngIf="!isLoading">
+<div class="card-content" *ngIf="!isLoading else MainLoader">
     <div>
         <mat-form-field style="margin-right: 20px;">
             <mat-select
                 placeholder="Select Class"
-                [(ngModel)]="userInput.selectedClass"
-                [disabled]="isAddLoading">
+                [(ngModel)]="userInput.selectedClass">
                 <mat-option
                     *ngFor="let classs of backendData.classList"
                     [value]="classs">
@@ -16,8 +15,7 @@
         <mat-form-field style="margin-right: 20px;">
             <mat-select
                 placeholder="Select Section"
-                [(ngModel)]="userInput.selectedSection"
-                [disabled]="isAddLoading">
+                [(ngModel)]="userInput.selectedSection">
                 <mat-option
                     *ngFor="let division of backendData.divisionList"
                     [value]="division">
@@ -35,8 +33,7 @@
                     [class.Error]="userInput.startTime > userInput.endTime"
                     placeholder="Start Time"
                     type="time"
-                    [(ngModel)]="userInput.startTime"
-                    [disabled]="isAddLoading"/>
+                    [(ngModel)]="userInput.startTime"/>
             </mat-form-field>
 
             <mat-form-field style="margin-top: 16px; margin-right: 12px;">
@@ -44,8 +41,7 @@
                     [class.Error]="userInput.startTime > userInput.endTime"
                     placeholder="End Time"
                     type="time"
-                    [(ngModel)]="userInput.endTime"
-                    [disabled]="isAddLoading"/>
+                    [(ngModel)]="userInput.endTime"/>
             </mat-form-field>
 
             <div style="display: inline-flex;">
@@ -59,7 +55,7 @@
         <button
                 type="submit"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                (click)="serviceAdapter.createActiveClass()"
+                (click)="serviceAdapter.newOnlineClass()"
                 [disabled]="htmlRenderer.isAddButtonDisabled()">
                 Add
         </button>
@@ -75,6 +71,7 @@
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Working Days</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -90,6 +87,9 @@
                             </div>
                         </div>
                     </td>
+                    <td>
+                        <button class="btn" style="color: red; padding: 4px;" (click)="serviceAdapter.deleteOnlineClass(onlineClass)"><mat-icon>delete</mat-icon></button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -97,9 +97,9 @@
     </ng-container>
 </div>
 
-<ng-container *ngIf="isLoading || isAddLoading">
+<ng-template #MainLoader>
     <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container>
+</ng-template>
 
 <ng-template #NoClassReg>
     <span>No Online Registered Class</span>

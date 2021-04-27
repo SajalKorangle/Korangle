@@ -13,6 +13,19 @@ export class ClassroomServiceAdapter {
     async initializeData() {
         this.vm.isLoading = true;
 
+        const currentSession = (await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}))
+            .find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
+
+        const startDate = new Date(currentSession.startDate);
+        const endDate = new Date(currentSession.endDate);
+        const today = new Date();
+        if (!(today > startDate && today < endDate)) {
+            this.vm.isActiveSession = false;
+            this.vm.isLoading = false;
+            return;
+        }
+        this.vm.isActiveSession = true;
+
         const class_subject_request = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,

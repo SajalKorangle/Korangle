@@ -1,5 +1,6 @@
 <div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
 
+    <ng-container *ngIf="isActiveSession else NotActiveSession">
     <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
         <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
             <table class="table table-hover">
@@ -37,6 +38,7 @@
 
         </ng-container>
     </ng-container>
+    </ng-container>
 
 </div>
 
@@ -53,4 +55,8 @@
         <mat-icon>arrow_back</mat-icon>
     </button>
     <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *" style="width: 100%; height: 75vh;"></iframe>
+</ng-template>
+
+<ng-template #NotActiveSession>
+    <span style="color: red;">This session is closed</span>
 </ng-template>

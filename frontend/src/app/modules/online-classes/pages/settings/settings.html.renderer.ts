@@ -11,8 +11,7 @@ export class SettingsHtmlRenderer {
     }
 
     isAddButtonDisabled(): boolean {
-        return this.vm.isAddLoading
-            || !this.vm.userInput.selectedClass
+        return !this.vm.userInput.selectedClass
             || !this.vm.userInput.selectedSection
             || !this.vm.userInput.startTime
             || !this.vm.userInput.endTime

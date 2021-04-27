@@ -29,8 +29,7 @@ export class SettingsComponent implements OnInit {
     userInput: SettingsUserInput;
     backendData: SettingsBackendData;
 
-    isLoading: any;
-    isAddLoading: any;
+    isLoading: boolean;
 
     constructor(
         public onlineClassService: OnlineClassService,

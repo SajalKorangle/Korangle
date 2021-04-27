@@ -33,9 +33,9 @@ export class SettingsServiceAdapter {
 
     }
 
-    async createActiveClass() {
+    async newOnlineClass() {
 
-        this.vm.isAddLoading = true;
+        this.vm.isLoading = true;
 
         const new_online_class = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -52,8 +52,17 @@ export class SettingsServiceAdapter {
 
         this.vm.backendData.onlineClassList.push(apiCallbackResult);
 
-        this.vm.isAddLoading = false;
+        this.vm.isLoading = false;
 
+    }
+
+    async deleteOnlineClass(onlineClass) {
+        const online_class_delete_request = {
+            id: onlineClass.id
+        };
+        await this.vm.onlineClassService.deleteObject(this.vm.onlineClassService.online_class, online_class_delete_request);
+        const objectIndex = this.vm.backendData.onlineClassList.findIndex(oc => oc.id == onlineClass.id);
+        this.vm.backendData.onlineClassList.splice(objectIndex, 1);
     }
 
 }

@@ -10,6 +10,7 @@ import { ClassroomBackendData } from './classroom.backend.data';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
+import { SchoolService } from '@services/modules/school/school.service';
 import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
 import { environment } from 'environments/environment';
 import { Constants } from 'app/classes/constants';
@@ -20,7 +21,7 @@ import { WEEKDAYS } from '@modules/online-classes/class/constants';
     selector: 'classroom',
     templateUrl: './classroom.component.html',
     styleUrls: ['./classroom.component.css'],
-    providers: [SubjectService, OnlineClassService, ClassService],
+    providers: [SubjectService, OnlineClassService, ClassService, SchoolService],
 })
 
 export class ClassroomComponent implements OnInit {
@@ -36,12 +37,15 @@ export class ClassroomComponent implements OnInit {
 
     weekdays = WEEKDAYS;
 
+    isActiveSession: boolean;
+
     isLoading: any;
 
     constructor(
         public subjectService: SubjectService,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
+        public schoolService: SchoolService,
     ) { }
 
     ngOnInit(): void {

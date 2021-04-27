@@ -30,7 +30,7 @@ class OnlineClass(models.Model):
 
 @receiver(pre_save, sender=OnlineClass)
 def createZoomMeeting(sender, instance, **kwargs):
-    if(instance.id) # only for new objects
+    if(instance.id): # only for new objects
         return
     apiEndPoint = f'https://api.zoom.us/v2/users/{settings.ZOOM_EMAIL_ID}/meetings'
     jwt = 'Bearer ' + newJWT()
