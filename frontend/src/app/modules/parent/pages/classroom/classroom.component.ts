@@ -75,7 +75,7 @@ export class ClassroomComponent implements OnInit {
             password: onlineClass.password,
             role: 0,
             username: this.activeStudent.name,
-            leaveUrl: location.host + '/assets/zoom/feedback.html',
+            leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
             error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
         };
         this.htmlRenderer.meetingEntered = true;
