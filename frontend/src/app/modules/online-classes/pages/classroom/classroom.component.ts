@@ -85,7 +85,7 @@ export class ClassroomComponent implements OnInit {
             if (this.htmlRenderer.meetingEntered) {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                zoomIFrame.src = 'https://korangletesting.s3.amazonaws.com/zoom/index.html?' + searchParams.toString();
+                zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
 
             }
         });

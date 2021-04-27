@@ -50,7 +50,7 @@ export class SettingsServiceAdapter {
             await this.vm.onlineClassService.createObject(this.vm.onlineClassService.online_class,
                 new_online_class);
 
-        this.vm.backendData.onlineClassList.push(apiCallbackResult);
+        this.vm.backendData.onlineClassList.push({ ...apiCallbackResult, configJSON: JSON.parse(apiCallbackResult.configJSON) });
 
         this.vm.isLoading = false;
 
