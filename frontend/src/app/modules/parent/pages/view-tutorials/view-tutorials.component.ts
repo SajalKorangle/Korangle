@@ -6,7 +6,6 @@ import { ViewTutorialsServiceAdapter } from '@modules/parent/pages/view-tutorial
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { StudentService } from '@services/modules/student/student.service';
 import {ViewTutorialsHtmlRenderer} from '@modules/parent/pages/view-tutorials/view-tutorials.html.renderer';
-import {ViewTutorialsBackendData} from '@modules/parent/pages/view-tutorials/view-tutorials.backend.data';
 
 @Component({
     selector: 'app-view-tutorials',
@@ -15,22 +14,37 @@ import {ViewTutorialsBackendData} from '@modules/parent/pages/view-tutorials/vie
     providers: [SubjectService, ClassService, StudentService, TutorialsService],
 })
 export class ViewTutorialsComponent implements OnInit {
-
-
+    
     user: any;
 
     serviceAdapter: ViewTutorialsServiceAdapter;
     htmlRenderer: ViewTutorialsHtmlRenderer;
-    backendData: ViewTutorialsBackendData;
-
-
+    
     filteredStudentSubject = [];
 
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    
+    userInput = {
+        selectedTopic: {} as any,
+        selectedChapter: {} as any,
+        selectedSubject: {} as any
+    }
 
-    selectedTopic: any;
-    selectedChapter: any;
-    selectedSubject: any;
+    backendData = {
+        examinationList: [],
+        studentSubjectList: [],
+        classTestList: [],
+        studentTestList: [],
+        studentProfile: {} as any, 
+        tutorialList: [],
+        classSubjectList: [],
+        subjectList: []
+    }
+    
+    stateKeeper = {
+        isLoading: false,
+        isIFrameLoading: true,
+    }
 
     constructor(
         public subjectService: SubjectService,
@@ -44,9 +58,6 @@ export class ViewTutorialsComponent implements OnInit {
 
         this.htmlRenderer = new ViewTutorialsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
-
-        this.backendData = new ViewTutorialsBackendData();
-        this.backendData.initializeAdapter(this);
 
         this.serviceAdapter = new ViewTutorialsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

@@ -1,5 +1,5 @@
 <div class="card-content">
-    <ng-container *ngIf="!htmlRenderer.isLoading">
+    <ng-container *ngIf="!stateKeeper.isLoading">
         
         <div class="row" *ngIf="!htmlRenderer.tutorialsExist()">
             <span style="margin-left: 20px">[ No Tutorial Videos Present ]</span>
@@ -8,7 +8,7 @@
         <ng-container *ngIf="htmlRenderer.tutorialsExist()">
         <div class="row">
             <mat-form-field style="margin: 20px">
-                <mat-select placeholder="Select Subject" [ngModel]="selectedSubject" (ngModelChange)="htmlRenderer.handleSubjectSelection($event)">
+                <mat-select placeholder="Select Subject" [ngModel]="userInput.selectedSubject" (ngModelChange)="htmlRenderer.handleSubjectSelection($event)">
                     <mat-option *ngFor="let subject of filteredStudentSubject" [value]="subject">
                         {{ htmlRenderer.getSubjectName(subject) }}
                     </mat-option>
@@ -16,27 +16,27 @@
             </mat-form-field>
 
             <mat-form-field style="margin: 20px">
-                <mat-select placeholder="Select Chapter" [ngModel]="selectedChapter" (ngModelChange)="htmlRenderer.handleChapterSelection($event)">
-                    <mat-option *ngFor="let chapter of selectedSubject.chapterList" [value]="chapter">
+                <mat-select placeholder="Select Chapter" [ngModel]="userInput.selectedChapter" (ngModelChange)="htmlRenderer.handleChapterSelection($event)">
+                    <mat-option *ngFor="let chapter of userInput.selectedSubject.chapterList" [value]="chapter">
                         {{ chapter.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field style="margin: 20px">
-                <mat-select placeholder="Select Topic" [ngModel]="selectedTopic" (ngModelChange)="htmlRenderer.handleTopicSelection($event)">
-                    <mat-option *ngFor="let topic of selectedChapter.topicList" [value]="topic">
+                <mat-select placeholder="Select Topic" [ngModel]="userInput.selectedTopic" (ngModelChange)="htmlRenderer.handleTopicSelection($event)">
+                    <mat-option *ngFor="let topic of userInput.selectedChapter.topicList" [value]="topic">
                         {{ topic.topic }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
             
-        <ng-container *ngIf="htmlRenderer.isIFrameLoading">
+        <ng-container *ngIf="stateKeeper.isIFrameLoading">
             <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 
-            <div  [class.d-none]="htmlRenderer.isIFrameLoading"
+            <div  [class.d-none]="stateKeeper.isIFrameLoading"
                  style="height: 70%; width: 70%; margin-left: 10%; margin-bottom: 5%">
                 <div class="embed-responsive embed-responsive-16by9">
                     <youtube-player
@@ -54,6 +54,6 @@
         </ng-container>
     </ng-container>
 </div>
-<ng-container *ngIf="htmlRenderer.isLoading">
+<ng-container *ngIf="stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

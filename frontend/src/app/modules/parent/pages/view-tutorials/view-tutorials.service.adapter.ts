@@ -12,7 +12,7 @@ export class ViewTutorialsServiceAdapter {
 
     //initialize data
     async initializeData() {
-        this.vm.htmlRenderer.isLoading = true;
+        this.vm.stateKeeper.isLoading = true;
 
         const request_student_subject_data = {
             parentStudent: this.vm.user.section.student.id,
@@ -41,7 +41,7 @@ export class ViewTutorialsServiceAdapter {
         this.vm.backendData.studentSubjectList = value[2];
         this.vm.backendData.studentProfile = value[3][0];
         await this.populateTutorialList();
-        this.vm.htmlRenderer.isLoading = false;
+        this.vm.stateKeeper.isLoading = false;
     }
 
     getParentClassSubjectFor(subject: any): number {
@@ -59,8 +59,8 @@ export class ViewTutorialsServiceAdapter {
 
     async populateTutorialList() {
         this.vm.filteredStudentSubject = [];
-        this.vm.selectedSubject = {};
-        this.vm.selectedChapter = {};
+        this.vm.userInput.selectedSubject = {};
+        this.vm.userInput.selectedChapter = {};
         this.vm.backendData.tutorialList = [];
 
         let request_tutorials_data = {
@@ -99,9 +99,9 @@ export class ViewTutorialsServiceAdapter {
                     this.vm.filteredStudentSubject.push(subject);
                 }
             });
-            this.vm.selectedSubject = this.vm.filteredStudentSubject[0];
-            this.vm.selectedChapter = this.vm.selectedSubject.chapterList[0];
-            this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
+            this.vm.userInput.selectedSubject = this.vm.filteredStudentSubject[0];
+            this.vm.userInput.selectedChapter = this.vm.userInput.selectedSubject.chapterList[0];
+            this.vm.userInput.selectedTopic = this.vm.userInput.selectedChapter.topicList[0];
         }
     }
 }

@@ -6,10 +6,6 @@ export class ViewTutorialsHtmlRenderer {
 
     vm: ViewTutorialsComponent;
 
-    isLoading = false;
-    isIFrameLoading = true;
-
-
     constructor() {
     }
 
@@ -30,21 +26,19 @@ export class ViewTutorialsHtmlRenderer {
         return result;
     }
 
-
-
     handleSubjectSelection(event: any) {
-        this.vm.selectedSubject = event;
-        this.vm.selectedChapter =  this.vm.selectedSubject.chapterList[0];
-        this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
+        this.vm.userInput.selectedSubject = event;
+        this.vm.userInput.selectedChapter =  this.vm.userInput.selectedSubject.chapterList[0];
+        this.vm.userInput.selectedTopic = this.vm.userInput.selectedChapter.topicList[0];
     }
 
     handleChapterSelection(event: any) {
-        this.vm.selectedChapter = event;
-        this.vm.selectedTopic = this.vm.selectedChapter.topicList[0];
+        this.vm.userInput.selectedChapter = event;
+        this.vm.userInput.selectedTopic = this.vm.userInput.selectedChapter.topicList[0];
     }
 
     handleTopicSelection(event: any) {
-        this.vm.selectedTopic = event;
+        this.vm.userInput.selectedTopic = event;
     }
 
     tutorialsExist() {
@@ -52,15 +46,14 @@ export class ViewTutorialsHtmlRenderer {
     }
 
     getPublishedDate() {
-        return moment(this.vm.selectedTopic.generationDateTime).format('Do - MMMM - YYYY');
+        return moment(this.vm.userInput.selectedTopic.generationDateTime).format('Do - MMMM - YYYY');
     }
 
     getVideoUrlId() {
-        return this.vm.selectedTopic.link.match(this.vm.youtubeIdMatcher)[1];
+        return this.vm.userInput.selectedTopic.link.match(this.vm.youtubeIdMatcher)[1];
     }
 
     onReady(event: any) {
-        console.log('here');
-        this.isIFrameLoading = false;
+        this.vm.stateKeeper.isIFrameLoading = false;
     }
 }

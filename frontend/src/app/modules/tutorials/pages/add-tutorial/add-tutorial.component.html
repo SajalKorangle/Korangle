@@ -1,5 +1,5 @@
 <div class="card-content table-responsive">
-    <ng-container *ngIf="!htmlRenderer.isLoading">
+    <ng-container *ngIf="!stateKeeper.isLoading">
         <div class="row">
             <div class="col-md-9" *ngIf="!htmlRenderer.subjectsExist()">
                 <span>[ There are no Subjects Assigned to you ]</span>
@@ -9,7 +9,7 @@
                     <mat-select
                         placeholder="Select Class -"
                         [(ngModel)]="userInput.selectedSection"
-                        [disabled]="htmlRenderer.isLoading"
+                        [disabled]="stateKeeper.isLoading"
                         (selectionChange)="userInput.selectedSubject = null;"
                     >
                         <ng-container *ngFor="let classs of classSectionSubjectList">
@@ -23,8 +23,8 @@
                     <mat-select
                         placeholder="Subject"
                         [ngModel]="userInput.selectedSubject"
-                        [disabled]="htmlRenderer.isLoading"
-                        (ngModelChange)="userInput.selectedSubject = $event; htmlRenderer.showTutorialDetails = false;"
+                        [disabled]="stateKeeper.isLoading"
+                        (ngModelChange)="userInput.selectedSubject = $event; stateKeeper.subjectChangedButNotGet = true;"
                     >
                         <mat-option *ngFor="let subject of userInput.selectedSection.subjectList" [value]="subject">
                             {{ htmlRenderer.getSubjectName(subject) }}
@@ -43,11 +43,11 @@
             </div>
         </div>
 
-        <ng-container *ngIf="htmlRenderer.isTutorialDetailsLoading">
+        <ng-container *ngIf="stateKeeper.isTutorialDetailsLoading">
             <app-loading-spinner [user]="user"></app-loading-spinner>
         </ng-container>
 
-        <ng-container *ngIf="htmlRenderer.showTutorialDetails && !htmlRenderer.isTutorialDetailsLoading">
+        <ng-container *ngIf="!stateKeeper.subjectChangedButNotGet && !stateKeeper.isTutorialDetailsLoading">
             <div class="row">
                 <div class="col-md-4" style="margin: 10px">
                     <div class="row">
@@ -109,13 +109,13 @@
                     
                     <div class="col-md-6" style="margin-left: 20px">
     
-                    <ng-container *ngIf="htmlRenderer.isIFrameLoading">
+                    <ng-container *ngIf="stateKeeper.isIFrameLoading">
                             <app-loading-spinner [user]="user"></app-loading-spinner>
                         </ng-container>
                     
                         <youtube-player
                             #player
-                            [class.d-none]="htmlRenderer.isIFrameLoading" 
+                            [class.d-none]="stateKeeper.isIFrameLoading" 
                             height="250"
                             width="100%"
                             [videoId]="htmlRenderer.getVideoUrlId()"
@@ -141,7 +141,7 @@
                         <th>Topic</th>
                         <th class="text-center">Youtube Link</th>
                         <th>Created Date</th>
-                        <ng-container *ngIf="htmlRenderer.tutorialUpdating">
+                        <ng-container *ngIf="stateKeeper.tutorialUpdating">
                             <th></th>
                         </ng-container>
                         <th>-</th>
@@ -152,8 +152,8 @@
                 <tbody>
                     <tr *ngFor="let tutorial of tutorialList">
                         <td>
-                            <span *ngIf="!tutorial.editable || !tutorialEditing">{{ tutorial.orderNumber }}</span>
-                            <mat-form-field *ngIf="tutorial.editable && tutorialEditing">
+                            <span *ngIf="!tutorial.editable || !stateKeeper.tutorialEditing">{{ tutorial.orderNumber }}</span>
+                            <mat-form-field *ngIf="tutorial.editable && stateKeeper.tutorialEditing">
                                 <input
                                     matInput
                                     type="number"
@@ -166,8 +166,8 @@
                         </td>
 
                         <td>
-                            <span *ngIf="!tutorial.editable || !tutorialEditing">{{ tutorial.chapter }}</span>
-                            <mat-form-field *ngIf="tutorial.editable && tutorialEditing">
+                            <span *ngIf="!tutorial.editable || !stateKeeper.tutorialEditing">{{ tutorial.chapter }}</span>
+                            <mat-form-field *ngIf="tutorial.editable && stateKeeper.tutorialEditing">
                                 <input
                                     matInput
                                     type="text"
@@ -177,8 +177,8 @@
                             </mat-form-field>
                         </td>
                         <td>
-                            <span *ngIf="!tutorial.editable || !tutorialEditing">{{ tutorial.topic }}</span>
-                            <mat-form-field *ngIf="tutorial.editable && tutorialEditing">
+                            <span *ngIf="!tutorial.editable || !stateKeeper.tutorialEditing">{{ tutorial.topic }}</span>
+                            <mat-form-field *ngIf="tutorial.editable && stateKeeper.tutorialEditing">
                                 <input
                                     matInput
                                     type="text"
@@ -189,9 +189,9 @@
                         </td>
                         <td>
                             <a href="{{ tutorial.link }}" target="_blank"
-                                ><span *ngIf="!tutorial.editable || !tutorialEditing">{{ tutorial.link }}</span></a
+                                ><span *ngIf="!tutorial.editable || !stateKeeper.tutorialEditing">{{ tutorial.link }}</span></a
                             >
-                            <mat-form-field *ngIf="tutorial.editable && tutorialEditing">
+                            <mat-form-field *ngIf="tutorial.editable && stateKeeper.tutorialEditing">
                                 <textarea
                                     matInput
                                     type="text"
@@ -206,7 +206,7 @@
                         <td>
                             <span>{{ tutorial.generationDateTime.split('T')[0] }}</span>
                         </td>
-                        <ng-container *ngIf="htmlRenderer.tutorialUpdating && tutorial.editable">
+                        <ng-container *ngIf="stateKeeper.tutorialUpdating && tutorial.editable">
                             <td>
                                 <mat-spinner [diameter]="20"></mat-spinner>
                             </td>
@@ -216,7 +216,7 @@
                                 type="submit"
                                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                                 style="padding: 3px 8px"
-                                [disabled]="(tutorialEditing && !tutorial.editable == true) || htmlRenderer.tutorialUpdating"
+                                [disabled]="(stateKeeper.tutorialEditing && !tutorial.editable == true) || stateKeeper.tutorialUpdating"
                                 (click)="serviceAdapter.makeEditableOrSave(tutorial)"
                             >
                                 <span *ngIf="tutorial.editable">Save</span><span *ngIf="!tutorial.editable">Edit</span>
@@ -227,7 +227,7 @@
                                 type="submit"
                                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                                 style="padding: 3px 8px"
-                                [disabled]="(tutorialEditing && !tutorial.editable == true) || htmlRenderer.tutorialUpdating"
+                                [disabled]="(stateKeeper.tutorialEditing && !tutorial.editable == true) || stateKeeper.tutorialUpdating"
                                 (click)="serviceAdapter.removeOrCancel(tutorial)"
                             >
                                 <span *ngIf="tutorial.editable">Cancel</span><span *ngIf="!tutorial.editable">Remove</span>
@@ -239,7 +239,7 @@
                                 type="submit"
                                 class="btn"
                                 style="padding: 3px 8px"
-                                [disabled]="htmlRenderer.tutorialUpdating"
+                                [disabled]="stateKeeper.tutorialUpdating"
                                 (click)="htmlRenderer.showPreviewVideo(tutorial)"
                             >
                                 Preview
@@ -254,6 +254,6 @@
         </ng-container>
     </ng-container>
 </div>
-<ng-container *ngIf="htmlRenderer.isLoading">
+<ng-container *ngIf="stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

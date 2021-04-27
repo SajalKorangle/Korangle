@@ -5,12 +5,6 @@ export class AddTutorialHtmlRenderer {
 
     vm: AddTutorialComponent;
 
-    isLoading = false;
-    tutorialUpdating = false;
-    isTutorialDetailsLoading = false;
-    isIFrameLoading = true;
-    showTutorialDetails = false;
-
     constructor() {
     }
 
@@ -24,13 +18,12 @@ export class AddTutorialHtmlRenderer {
     }
 
     onReady(event: any) {
-        console.log('here');
-        this.isIFrameLoading = false;
+        this.vm.stateKeeper.isIFrameLoading = false;
     }
 
      getSubjectName(subject: any): any {
         let result = '';
-        this.vm.subjectList.every((subj) => {
+        this.vm.backendData.subjectList.every((subj) => {
             if (subj.id === subject.parentSubject) {
                 result = subj.name;
                 return false;
@@ -66,7 +59,7 @@ export class AddTutorialHtmlRenderer {
         const tutorial = this.vm.userInput.newTutorial;
 
         if (!tutorial.link || tutorial.link.trim() == '') {
-            this.isIFrameLoading = true;
+            this.vm.stateKeeper.isIFrameLoading = true;
             return false;
         }
 
@@ -76,7 +69,7 @@ export class AddTutorialHtmlRenderer {
             }
             return tutorial.link.match(this.vm.youtubeIdMatcher) !== null;
         } else {
-            this.isIFrameLoading = true;
+            this.vm.stateKeeper.isIFrameLoading = true;
             return false;
         }
     }
@@ -95,4 +88,6 @@ export class AddTutorialHtmlRenderer {
     subjectsExist() {
         return  this.vm.classSectionSubjectList.length > 0;
     }
+
+
 }
