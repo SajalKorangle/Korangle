@@ -40,8 +40,8 @@ export class AddTutorialComponent implements OnInit {
     tutorialList = [];
     classSubjectList = [];
     currentClassStudentList = [];
-    classSectionSubjectList =[];
-    
+    classSectionSubjectList = [];
+
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -54,22 +54,22 @@ export class AddTutorialComponent implements OnInit {
     informationMessageType = INFORMATION_TYPE_LIST.indexOf('Tutorial') + 1;
 
     updateService: any;
-    
+
     backendData = {
         classList: [],
         sectionList: [],
         classSubjectList: [],
         subjectList: [],
         fullStudentList: []
-    }
-    
+    };
+
     userInput = {
         newTutorial: {} as any,
-        selectedSection:{} as any,
+        selectedSection: {} as any,
         editedTutorial: {} as any,
         selectedClass: {} as any,
         selectedSubject: {} as any,
-    }
+    };
 
     stateKeeper = {
         isLoading: false,
@@ -79,7 +79,7 @@ export class AddTutorialComponent implements OnInit {
         subjectChangedButNotGet: true,
         editable: false,
         tutorialEditing: false,
-    }
+    };
 
     constructor(
         public subjectService: SubjectService,
@@ -100,7 +100,7 @@ export class AddTutorialComponent implements OnInit {
 
         this.htmlRenderer = new AddTutorialHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
-        
+
         this.serviceAdapter = new AddTutorialServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

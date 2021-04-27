@@ -2,7 +2,7 @@ import { AddTutorialComponent } from './add-tutorial.component';
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
-    
+
     constructor() {}
 
     initializeAdapter(vm: AddTutorialComponent): void {
@@ -193,7 +193,7 @@ export class AddTutorialServiceAdapter {
             };
 
             const value = await Promise.all([this.vm.tutorialService.updateObject(this.vm.tutorialService.tutorial, data)]);
-            
+
             Object.assign(
                 this.vm.tutorialList.find((t) => t.id === tutorial.id),
                 value[0]
@@ -202,7 +202,7 @@ export class AddTutorialServiceAdapter {
             this.vm.stateKeeper.tutorialUpdating = false;
             tutorial.editable = false;
             this.populateStudentList(value[0]);
-           
+
             if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendEditUpdate == true) {
                 this.vm.updateService.sendSMSNotificationNew(
                     this.vm.currentClassStudentList,
@@ -215,7 +215,7 @@ export class AddTutorialServiceAdapter {
             }
             this.vm.htmlRenderer.checkEnableAddButton();
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
-       
+
         } else {
             this.vm.userInput.editedTutorial = {};
             Object.keys(tutorial).forEach((key) => {
@@ -270,7 +270,7 @@ export class AddTutorialServiceAdapter {
             if (confirm('Are you sure you want to delete this tutorial?')) {
                 this.vm.stateKeeper.tutorialUpdating = true;
                 const value = await Promise.all([this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial)]);
-                
+
                 this.vm.tutorialList = this.vm.tutorialList.filter((item) => {
                     return item.id != tutorial.id;
                 });

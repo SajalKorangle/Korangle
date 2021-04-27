@@ -14,37 +14,37 @@ import {ViewTutorialsHtmlRenderer} from '@modules/parent/pages/view-tutorials/vi
     providers: [SubjectService, ClassService, StudentService, TutorialsService],
 })
 export class ViewTutorialsComponent implements OnInit {
-    
+
     user: any;
 
     serviceAdapter: ViewTutorialsServiceAdapter;
     htmlRenderer: ViewTutorialsHtmlRenderer;
-    
+
     filteredStudentSubject = [];
 
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    
+
     userInput = {
         selectedTopic: {} as any,
         selectedChapter: {} as any,
         selectedSubject: {} as any
-    }
+    };
 
     backendData = {
         examinationList: [],
         studentSubjectList: [],
         classTestList: [],
         studentTestList: [],
-        studentProfile: {} as any, 
+        studentProfile: {} as any,
         tutorialList: [],
         classSubjectList: [],
         subjectList: []
-    }
-    
+    };
+
     stateKeeper = {
         isLoading: false,
         isIFrameLoading: true,
-    }
+    };
 
     constructor(
         public subjectService: SubjectService,
