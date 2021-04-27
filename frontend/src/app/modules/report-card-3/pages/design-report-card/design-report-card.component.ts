@@ -39,7 +39,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
     user: any;
     canvas: any;
 
-    currentLayout: { id?: any; parentSchool: string; name: string; thumbnail?: string; publiclyShared: boolean; content: any };
+    currentLayout: { id?: any; parentSchool: string; name: string; thumbnail?: string; publiclyShared: boolean; content: any; };
 
     ADD_LAYOUT_STRING = '<Add New Layout>';
 
@@ -52,13 +52,13 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
         publiclyShared: boolean;
         content: any;
     }[] = [];
-    layoutSharingData: { [key: number]: any } = {};
-    publicLayoutList: { id?: any; parentSchool: string; name: string; thumbnail?: string; publiclyShared: boolean; content: any }[] = [];
-    sharedLayoutList: { id?: any; parentSchool: string; name: string; thumbnail?: string; publiclyShared: boolean; content: any }[] = [];
+    layoutSharingData: { [key: number]: any; } = {};
+    publicLayoutList: { id?: any; parentSchool: string; name: string; thumbnail?: string; publiclyShared: boolean; content: any; }[] = [];
+    sharedLayoutList: { id?: any; parentSchool: string; name: string; thumbnail?: string; publiclyShared: boolean; content: any; }[] = [];
 
     fontFamilyList = FONT_FAMILY_LIST;
 
-    unuploadedFiles: { string: string }[] = []; // Local urls of files to be uploaded, format [{file_uri : file_name},...]
+    unuploadedFiles: { string: string; }[] = []; // Local urls of files to be uploaded, format [{file_uri : file_name},...]
 
     serviceAdapter: DesignReportCardServiceAdapter;
     htmlAdapter: DesignReportCardHtmlAdapter = new DesignReportCardHtmlAdapter();
@@ -88,29 +88,29 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
             classSectionSignatureList: any[];
         };
     } = {
-        studentId: null,
-        currentSession: null,
-        data: {
-            school: null,
-            studentList: [],
-            studentSectionList: [],
-            studentParameterList: [],
-            studentParameterValueList: [],
-            classList: [],
-            divisionList: [],
-            examinationList: [],
-            testList: [],
-            studentTestList: [],
-            subjectList: [],
-            attendanceList: [],
-            sessionList: [],
-            gradeList: [],
-            subGradeList: [],
-            studentSubGradeList: [],
-            studentExaminationRemarksList: [],
-            classSectionSignatureList: [],
-        },
-    };
+            studentId: null,
+            currentSession: null,
+            data: {
+                school: null,
+                studentList: [],
+                studentSectionList: [],
+                studentParameterList: [],
+                studentParameterValueList: [],
+                classList: [],
+                divisionList: [],
+                examinationList: [],
+                testList: [],
+                studentTestList: [],
+                subjectList: [],
+                attendanceList: [],
+                sessionList: [],
+                gradeList: [],
+                subGradeList: [],
+                studentSubGradeList: [],
+                studentExaminationRemarksList: [],
+                classSectionSignatureList: [],
+            },
+        };
 
     selectedStudent: any;
 
@@ -124,7 +124,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
         public attendanceService: AttendanceService,
         public gradeService: GradeService,
         public dialog: MatDialog
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -187,18 +187,18 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
                 newStyle.appendChild(
                     document.createTextNode(
                         '@font-face {' +
-                            'font-family: ' +
-                            fontFamily.displayName +
-                            ';' +
-                            'src: url("' +
-                            'https://korangleplus.s3.amazonaws.com/' +
-                            this.encodeURIComponent(
-                                'assets/fonts/' + fontFamily.displayName + '/' + fontFamily.displayName + '-' + style + '.ttf'
-                            ) +
-                            '");' +
-                            fontStyle +
-                            fontWeight +
-                            '}'
+                        'font-family: ' +
+                        fontFamily.displayName +
+                        ';' +
+                        'src: url("' +
+                        'https://korangleplus.s3.amazonaws.com/' +
+                        this.encodeURIComponent(
+                            'assets/fonts/' + fontFamily.displayName + '/' + fontFamily.displayName + '-' + style + '.ttf'
+                        ) +
+                        '");' +
+                        fontStyle +
+                        fontWeight +
+                        '}'
                     )
                 );
                 document.head.appendChild(newStyle);

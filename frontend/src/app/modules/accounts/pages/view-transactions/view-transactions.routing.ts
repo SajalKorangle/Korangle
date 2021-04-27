@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ViewTransactionsComponent } from './view-transactions.component';
@@ -7,12 +7,17 @@ import { ViewTransactionsComponent } from './view-transactions.component';
 const routes: Routes = [
     {
         path: '',
-        component: ViewTransactionsComponent,
-    },
+        component: ViewTransactionsComponent ,
+    }
 ];
 
 @NgModule({
-    imports: [CommonModule, RouterModule.forChild(routes)],
-    exports: [RouterModule],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes)
+    ],
+    exports: [
+        RouterModule,
+    ],
 })
-export class ViewTransactionsRoutingModule {}
+export class ViewTransactionsRoutingModule { }

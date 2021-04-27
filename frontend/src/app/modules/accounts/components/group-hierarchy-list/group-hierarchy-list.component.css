@@ -22,6 +22,11 @@ div.mat-expansion-panel-body {
     border-radius: inherit;
 }
 
-/* .mat-expansion-panel-body {
-    padding: 0 24px 16px;
-} */
+.left-line {
+    border-left: 2px solid grey;
+}
+
+.hoverable-div:hover {
+    border-radius: 3px;
+    background-color: lightgrey;
+}

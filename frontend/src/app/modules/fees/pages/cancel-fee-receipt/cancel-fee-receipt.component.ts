@@ -10,11 +10,13 @@ import { CancelFeeReceiptModalComponent } from '@modules/fees/components/cancel-
 import { MatDialog } from '@angular/material/dialog';
 import { isMobile } from '../../../../classes/common.js';
 
+import { AccountsService } from '@services/modules/accounts/accounts.service';
+
 @Component({
     selector: 'cancel-fee-receipt',
     templateUrl: './cancel-fee-receipt.component.html',
     styleUrls: ['./cancel-fee-receipt.component.css'],
-    providers: [FeeService, ClassService, StudentService, EmployeeService],
+    providers: [FeeService, ClassService, StudentService, EmployeeService, AccountsService],
 })
 export class CancelFeeReceiptComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
@@ -49,14 +51,13 @@ export class CancelFeeReceiptComponent implements OnInit {
     isReceiptListLoading = false;
     loadMoreReceipts = false;
 
-    constructor(
-        public feeService: FeeService,
+    constructor(public feeService: FeeService,
         public classService: ClassService,
         public studentService: StudentService,
         public employeeService: EmployeeService,
+        public accountsService: AccountsService,
         private cdRef: ChangeDetectorRef,
-        private dialog: MatDialog
-    ) {}
+        private dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
