@@ -40,7 +40,6 @@
                  style="height: 70%; width: 70%; margin-left: 10%; margin-bottom: 5%">
                 <div class="embed-responsive embed-responsive-16by9">
                     <youtube-player
-                        #player
                         [videoId]="htmlRenderer.getVideoUrlId()"
                         (ready)="htmlRenderer.onReady($event)"
                     ></youtube-player>
