@@ -6,7 +6,7 @@ from class_app.models import Class, Division
 
 import requests
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, pre_delete
 from helloworld_project import settings
 from .bussiness.zoom import newJWT
 
@@ -30,7 +30,9 @@ class OnlineClass(models.Model):
 
 @receiver(pre_save, sender=OnlineClass)
 def createZoomMeeting(sender, instance, **kwargs):
-    apiEndPoint = 'https://api.zoom.us/v2/users/'+settings.ZOOM_EMAIL_ID+'/meetings'
+    if(instance.id) # only for new objects
+        return
+    apiEndPoint = f'https://api.zoom.us/v2/users/{settings.ZOOM_EMAIL_ID}/meetings'
     jwt = 'Bearer ' + newJWT()
 
     headers = {
@@ -47,3 +49,16 @@ def createZoomMeeting(sender, instance, **kwargs):
     jsonResponse = response.json()
     instance.meetingNumber = jsonResponse['id']
     instance.password = jsonResponse['password']
+
+@receiver(pre_delete, sender=OnlineClass)
+def deleteZoomMetting(sender, instance, **kwargs):
+    apiEndPoint = f'https://api.zoom.us/v2/meetings/{instance.meetingNumber}'
+    jwt = 'Bearer ' + newJWT()
+
+    headers = {
+        "Authorization": jwt,
+    }
+
+    response = requests.delete(apiEndPoint, headers=headers)
+    assert response.status_code == 204
+
