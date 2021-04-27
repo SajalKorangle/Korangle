@@ -16,7 +16,7 @@ const meetConfig = {
 console.log('meetConf: ', meetConfig);
 
 ZoomMtg.init({
-    leaveUrl: 'https://korangle.com',
+    leaveUrl: 'http://localhost:4200/assets/zoom/feedback.html',
     isSupportAV: true,
     success: function () {
         ZoomMtg.join({

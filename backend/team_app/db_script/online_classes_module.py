@@ -10,7 +10,7 @@ def add_online_classes_module_and_tasks(apps, schema_editor):
                                             parentBoard=None)
 
     task_list = [
-        ('classroom', 'Classroom'),
+        ('join_class', 'Join Class'),
         ('settings', 'Settings'),
     ]
 
