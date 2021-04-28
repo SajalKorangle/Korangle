@@ -9,6 +9,7 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-transactions.component.css'],
 })
 export class PrintTransactionsListComponent implements OnInit, AfterViewChecked {
+
     @Input() user;
 
     transactionsList: any;
@@ -18,7 +19,7 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
 
     viewChecked = true;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -28,7 +29,6 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
         this.endDate = value['endDate'];
         this.columnFilter = value['columnFilter'];
         this.viewChecked = false;
-        console.log(this.transactionsList);
     }
 
     ngAfterViewChecked(): void {
@@ -39,7 +39,7 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
         }
     }
 
-    getDisplayDateFormat(str: any) {
+    getDisplayDateFormat(str : any) {
         // return str;
         let d = new Date(str);
         let month = '' + (d.getMonth() + 1);
@@ -50,5 +50,6 @@ export class PrintTransactionsListComponent implements OnInit, AfterViewChecked 
         if (day.length < 2) day = '0' + day;
 
         return [day, month, year].join('/');
-    }
+      }
+
 }

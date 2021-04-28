@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { DataStorage } from '../../classes/data-storage';
+import {DataStorage} from '../../classes/data-storage';
 
 @Component({
     template: '<router-outlet></router-outlet>',
 })
+
 export class AccountsComponent implements OnInit {
+
     user: any;
 
-    constructor() {}
+    constructor() { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
     }
+
 }

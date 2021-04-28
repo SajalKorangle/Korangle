@@ -17,7 +17,7 @@ export class FeeService extends ServiceObject {
     public discounts = '/discounts';
     public sub_discounts = '/sub-discounts';
     public fee_features = '/fee-features';
-    public lock_fees = '/lock-fees';
+    public fee_settings = '/fee-settings';
 
     // Fee Type
     get(object_url: any, data: any): Promise<any> {
