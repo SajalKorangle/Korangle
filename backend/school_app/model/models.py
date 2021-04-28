@@ -86,6 +86,8 @@ class School(models.Model):
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
     affiliationNumber = models.TextField(null=True, blank=True)
 
+    smsBalance = models.IntegerField(null=False, default=0)
+
     opacity = models.DecimalField(max_digits=3, decimal_places=2,null=False, verbose_name='opacity', default=0.1)
 
     parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentBoard')

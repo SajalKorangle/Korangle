@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 import json
 
 ############## SMS Old ##############
-from sms_app.models import SMS, SMSEvent, SMSId, SMSTemplate, SMSEventSettings
+from sms_app.models import SMS, SMSEvent, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
 
 
@@ -37,15 +37,13 @@ class SMSCountView(APIView):
 
 
 ############## Send SMS Old ##############
-from .business.send_sms import send_sms_old
 
-
-class SendSMSView(APIView):
-
-    @user_permission
-    def post(request):
-        data = json.loads(request.body.decode('utf-8'))
-        return send_sms_old(data)
+# class SendSMSView(APIView):
+# 
+#     @user_permission
+#     def post(request):
+#         data = json.loads(request.body.decode('utf-8'))
+#         return send_sms_old(data)
 
 
 ############## Msg Club Delivery Report ##############
@@ -83,56 +81,17 @@ class SMSPurchaseView(APIView):
 
 
 ############## SMS ##############
-from .business.send_sms import send_sms, send_different_sms
+from .business.send_sms import send_sms
 
 
 class SmsView(CommonView, APIView):
     Model = SMS
     RelationsToSchool= ['parentSchool__id']
 
-    # @user_permission_3
-    # def post(self, request, *args, **kwargs):
-    #     data = request.data
-    #     return_data = { 'status': 'success' }
-    #     if data['mobileNumberList'] != '':
-    #         return_data = send_sms(data)
-    #         print(data)
-    #         if return_data['status'] == 'success':
-    #             data['requestId'] = return_data['requestId']
-    #             return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
-    #     else:
-    #         data['requestId'] = 1
-    #         return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
-    #     return return_data
-
-
-## Mobile number list and count still needed
-
-class SmsDifferentView(CommonView, APIView):
-    Model = SMS
-    RelationsToSchool = ['parentSchool__id']
-
-    # @user_permission_3
-    # def post(self, request, *args, **kwargs):
-    #     # print(request.body)
-    #     data = json.loads(request.body)
-    #     # data = json.loads(request.body.decode('utf-8'))
-    #     return_data = {'status': 'success'}
-    #     if len(data["data"]) > 0:
-    #         return_data = send_different_sms(data)
-    #         if return_data["status"] == 'success':
-    #             data['requestId'] = return_data['requestId']
-    #             return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
-    #     else:
-    #         return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
-    #         print(return_data)
-    #     return return_data
-
-
 
 class SmsListView(CommonListView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
 
 class SMSEventView(CommonView, APIView):
@@ -161,8 +120,19 @@ class SMSTemplateListView(CommonListView, APIView):
 
 class SMSEventSettingsView(CommonView, APIView):
     Model = SMSEventSettings
+    RelationsToSchool = ['parentSchool__id']
 
 
 class SMSEventSettingsListView(CommonListView, APIView):
     Model = SMSEventSettings
+    RelationsToSchool = ['parentSchool__id']
 
+
+class SMSIdSchoolView(CommonListView, APIView):
+    Model = SMSIdSchool
+    RelationsToSchool = ['parentSchool__id']
+
+
+class SMSIdSchoolListView(CommonView, APIView):
+    Model = SMSIdSchool
+    RelationsToSchool = ['parentSchool__id']

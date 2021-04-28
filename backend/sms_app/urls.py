@@ -44,6 +44,15 @@ urlpatterns += [
 	url(r'^sms-event/batch', SMSEventListView.as_view()),
 ]
 
+
+from .views import SMSIdSchoolView, SMSIdSchoolListView
+
+urlpatterns += [
+	url(r'^smsidschool', SMSIdSchoolView.as_view()),
+	url(r'^smsidschool/batch', SMSIdSchoolListView.as_view()),
+]
+
+
 ########  Sender  ID ###############
 from .views import SMSIdView, SMSIdListView
 
@@ -62,11 +71,11 @@ urlpatterns += [
 
 
 ######## Send SMS ###############
-from .views import SendSMSView
-
-urlpatterns += [
-	url(r'^send-sms', SendSMSView.as_view()),
-]
+# from .views import SendSMSView
+# 
+# urlpatterns += [
+# 	url(r'^send-sms', SendSMSView.as_view()),
+# ]
 
 ######## Msg Club Delivery Report ###############
 from .views import MsgClubDeliveryReportView
@@ -85,8 +94,8 @@ urlpatterns += [
 ]
 
 ######### Send Different SMS ############
-from .views import SmsDifferentView
+from .views import SmsView
 
 urlpatterns += [
-	url(r'^send-diff-sms', SmsDifferentView.as_view()),
+	url(r'^send-diff-sms', SmsView.as_view()),
 ]

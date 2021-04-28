@@ -55,6 +55,9 @@ class SMS(models.Model):
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
+    # content for each Mobile Number
+    mobileNumberContentJson = models.TextField(null=False, default='', verbose_name='contentMobileNumberJson')
+
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')
 
@@ -194,3 +197,4 @@ class SMSEventSettings(models.Model):
 
 
 post_save.connect(signals.sms_sender, SMS)
+post_save.connect(signals.add_sms_balance, SMSPurchase)
