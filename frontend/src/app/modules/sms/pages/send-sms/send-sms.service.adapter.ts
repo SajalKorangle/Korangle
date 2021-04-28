@@ -91,7 +91,7 @@ export class SendSmsServiceAdapter {
                 this.vm.studentSectionList = value[2];
                 this.populateStudentList(value[3]);
                 this.populateEmployeeList(value[4]);
-                this.vm.smsBalance = value[5].count;
+                this.vm.smsBalance = 10;
                 this.vm.studentParameterList = value[6].map((x) => ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map((x) => ({ name: x, show: false })),
@@ -295,9 +295,17 @@ export class SendSmsServiceAdapter {
         this.vm.notificationMobileNumberList.forEach((mobileNumber, index) => {
             notifMobileNumberList += mobileNumber.toString() + (index != this.vm.notificationMobileNumberList.length - 1 ? ',' : '');
         });
+        
+       const sms_converted_data = this.vm.smsMobileNumberList.map((item) => {
+            return {
+                mobileNumber: item.toString(),
+                isAdvanceSms: this.vm.message.toString(),
+            };
+        });
 
         let sms_data = {
             contentType: this.vm.hasUnicode() ? 'unicode' : 'english',
+            mobileNumberContentJson:JSON.stringify(sms_converted_data),
             content: this.vm.message,
             parentMessageType: 1,
             count: this.vm.getSMSCount() * this.vm.smsMobileNumberList.length,
@@ -305,6 +313,7 @@ export class SendSmsServiceAdapter {
             mobileNumberList: mobileNumberList,
             notificationMobileNumberList: notifMobileNumberList,
             parentSchool: this.vm.user.activeSchool.dbId,
+            smsId:1
         };
 
         let notification_data = this.vm.notificationMobileNumberList.map((mobileNumber) => {
@@ -341,6 +350,7 @@ export class SendSmsServiceAdapter {
         Promise.all(service_list).then(
             (value) => {
                 alert('Operation Successful');
+                console.log(value[0]);
 
                 if (
                     (this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) &&

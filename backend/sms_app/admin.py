@@ -2,39 +2,39 @@ from django.contrib import admin
 
 # Register your models here.
 
-from sms_app.models import SMSPurchase, SMS, MsgClubDeliveryReport, SenderId, SMSTemplate
+from sms_app.models import SMSPurchase, SMS, MsgClubDeliveryReport, SMSId, SMSTemplate
 
 admin.site.register(SMSPurchase)
 admin.site.register(SMS)
 admin.site.register(MsgClubDeliveryReport)
 
-@admin.register(SenderId)
+@admin.register(SMSId)
 class SmsIdAdmin(admin.ModelAdmin):
-    search_fields = ('parentSchool__printName', 'parentSchool__id')
-    list_display = ('School_Name', 'SMS_ID', 'Status')
-    list_filter = ('senderIdStatus',)
+    search_fields = ('entityName', 'smsId')
+    list_display = ('Entity_Name', 'SMS_ID', 'Status')
+    list_filter = ('smsIdStatus',)
 
-    def School_Name(self,obj):
-        return str(obj.parentSchool.id) + ' - ' + obj.parentSchool.printName
+    def Entity_Name(self, obj):
+        return str(obj.entityName)
 
     def SMS_ID(self, obj):
-        return str(obj.senderId)
+        return str(obj.smsId)
 
     def Status(self, obj):
-        return str(obj.senderIdStatus)
+        return str(obj.smsIdStatus)
 
 
 @admin.register(SMSTemplate)
 class SmsIdAdmin(admin.ModelAdmin):
-    search_fields = ('parentSenderId__parentSchool__printName', 'parentSchool__id', 'parentSenderId')
-    list_display = ('School_Name', 'SMS_ID', 'Template_Name', 'Template_Status')
+    search_fields = ('parentSMSId__entityName', 'parentSMSId__smsId')
+    list_display = ('Entity_Name', 'SMS_ID', 'Template_Name', 'Template_Status')
     list_filter = ('registrationStatus',)
 
-    def School_Name(self,obj):
-        return str(obj.parentSenderId.parentSchool.id) + ' - ' + obj.parentSenderId.parentSchool.printName
+    def Entity_Name(self, obj):
+        return str(obj.parentSMSId.entityName)
 
     def SMS_ID(self, obj):
-        return str(obj.parentSenderId.senderId)
+        return str(obj.parentSMSId.smsId)
 
     def Template_Name(self, obj):
         return str(obj.templateName)
