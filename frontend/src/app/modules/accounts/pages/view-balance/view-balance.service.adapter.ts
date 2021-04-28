@@ -2,8 +2,9 @@ import { ViewBalanceComponent } from './view-balance.component';
 import { Account } from '@services/modules/accounts/models/account';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 export class ViewBalanceServiceAdapter {
+
     vm: ViewBalanceComponent;
-    constructor() {}
+    constructor() { }
     // Data
 
     initializeAdapter(vm: ViewBalanceComponent): void {
@@ -20,34 +21,36 @@ export class ViewBalanceServiceAdapter {
         };
         this.vm.isLoading = true;
         let employee_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
         };
         let lock_accounts_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         const request_account_session_data = {
-            parentAccount__parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            'parentAccount__parentSchool': this.vm.user.activeSchool.dbId,
+            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
 
         const value = await Promise.all([
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data), // 0
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),  // 0
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 1
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data), // 2
-            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data), // 3
+            this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),   // 3
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data), // 4
         ]);
         this.initialiseLockAccountData(value[3]);
 
         this.vm.employeeList = value[2];
-        const currentSesion = value[1].find((session) => session.id == this.vm.user.activeSchool.currentSessionDbId);
-        this.vm.minimumDate = currentSesion.startDate; // change for current session
+        const currentSesion = value[1].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
+        this.vm.minimumDate = currentSesion.startDate;  // change for current session
         this.vm.maximumDate = currentSesion.endDate;
 
         this.accountsList = value[0];
-        this.accountsSessionList = value[4];
+        this.accountsSessionList = value[4].map(acc => {
+            return { ...acc, currentBalance: parseFloat(acc.currentBalance) };
+        });
         this.initialiseAccountGroupList();
         this.initialiseDisplayData();
         this.vm.isLoading = false;
@@ -58,63 +61,76 @@ export class ViewBalanceServiceAdapter {
             this.vm.lockAccounts = null;
         } else if (value.length == 1) {
             this.vm.lockAccounts = value[0];
-        } else {
-            alert('Unexpected errors. Please contact admin');
+        }
+        else {
+            alert("Unexpected errors. Please contact admin");
         }
     }
 
     initialiseAccountGroupList() {
         this.vm.accountsList = [];
         this.vm.groupsList = [];
-        this.accountsSessionList.forEach((accountSession) => {
-            let acc = this.accountsList.find((accounts) => accounts.id == accountSession.parentAccount);
+        this.accountsSessionList.forEach(accountSession => {
+            let acc = this.accountsList.find(accounts => accounts.id == accountSession.parentAccount);
             const customAccount = { ...accountSession, type: acc.accountType, title: acc.title };
             if (acc.accountType == 'ACCOUNT') {
                 this.vm.accountsList.push(customAccount);
-            } else {
+            }
+            else {
                 this.vm.groupsList.push(customAccount);
             }
         });
         return;
     }
 
+
     initialiseDisplayData() {
-        const nonIndividualAccount = JSON.parse(
-            JSON.stringify(this.vm.accountsList.filter((accountSession) => accountSession.parentGroup))
-        );
-        const individualAccountList = JSON.parse(
-            JSON.stringify(this.vm.accountsList.filter((accountSession) => !accountSession.parentGroup))
-        );
-        const groupStructureList = JSON.parse(JSON.stringify(this.vm.groupsList)).map((group) => {
+        const nonIndividualAccount = JSON.parse(JSON.stringify(this.vm.accountsList.filter(accountSession => accountSession.parentGroup)));
+        const individualAccountList = JSON.parse(JSON.stringify(this.vm.accountsList.filter(accountSession => !accountSession.parentGroup)));
+        const groupStructureList = JSON.parse(JSON.stringify(this.vm.groupsList)).map(group => {
             return { ...group, childs: [] }; // structure of group
         });
 
-        nonIndividualAccount.forEach((accountSession) => {
-            // pushing all accounts with parentGroup in child of its group
-            groupStructureList.find((g) => g.parentAccount == accountSession.parentGroup).childs.push(accountSession);
+        nonIndividualAccount.forEach(accountSession => {    // pushing all accounts with parentGroup in child of its group
+            groupStructureList.find(g => g.parentAccount == accountSession.parentGroup).childs.push(accountSession);
         });
 
         for (let i = 0; i < groupStructureList.length; i++) {
             if (groupStructureList[i].parentGroup) {
-                groupStructureList
-                    .find((group) => group.parentAccount == groupStructureList[i].parentGroup)
-                    .childs.push(groupStructureList[i]);
+                groupStructureList.find(group => group.parentAccount == groupStructureList[i].parentGroup).childs.push(groupStructureList[i]);
             }
         }
-        const rootGroupStructureList = groupStructureList.filter((group) => !group.parentGroup);
+        const rootGroupStructureList = groupStructureList.filter(group => !group.parentGroup);
+        rootGroupStructureList.forEach(g => {
+            this.populateGroupBalance(g);
+        });
         this.populateHeadWiseDisplayList(rootGroupStructureList, individualAccountList);
     }
 
+    populateGroupBalance(customGroup): number {
+        if (customGroup.type == 'ACCOUNT') {
+            return customGroup.currentBalance;
+        }
+        if (customGroup.type == 'GROUP' && customGroup.childs.length == 0) {
+            customGroup.currentBalance = 0;
+            return 0;
+        }
+        customGroup.currentBalance = customGroup.childs.reduce((acc, nextEl) => acc + this.populateGroupBalance(nextEl), 0);
+        return customGroup.currentBalance;
+    }
+
     populateHeadWiseDisplayList(groupsList, individualAccountList) {
-        Object.keys(this.vm.hierarchyStructure).forEach((key) => (this.vm.hierarchyStructure[key] = [])); // empty array for all heads
-        groupsList.forEach((group) => {
-            let head = this.vm.headsList.find((head) => head.id == group.parentHead).title;
+        Object.keys(this.vm.hierarchyStructure).forEach(key => this.vm.hierarchyStructure[key] = []);   // empty array for all heads
+        groupsList.forEach(group => {
+            let head = this.vm.headsList.find(head => head.id == group.parentHead).title;
             this.vm.hierarchyStructure[head].push(group);
+
         });
-        individualAccountList.forEach((accountSession) => {
-            let head = this.vm.headsList.find((head) => head.id == accountSession.parentHead).title;
+        individualAccountList.forEach(accountSession => {
+            let head = this.vm.headsList.find(head => head.id == accountSession.parentHead).title;
             this.vm.hierarchyStructure[head].push(accountSession);
         });
+
     }
 
     loadTransactions() {
@@ -125,11 +141,11 @@ export class ViewBalanceServiceAdapter {
             parentTransaction__transactionDate__gte: this.vm.minimumDate,
             fields__korangle: 'parentTransaction',
         };
-        console.log(data);
-        Promise.all([this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, data)]).then((val) => {
-            console.log(val);
+        Promise.all([
+            this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, data),
+        ]).then(val => {
             let transction_id_list = [];
-            val[0].forEach((element) => {
+            val[0].forEach(element => {
                 transction_id_list.push(element.parentTransaction);
             });
             let transaction_data = {
@@ -142,14 +158,20 @@ export class ViewBalanceServiceAdapter {
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, transaction_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_details_data),
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
-            ]).then((data) => {
-                this.initialiseTransactionData(data[0], data[1], data[2]);
+            ]).then(data => {
+                this.initialiseTransactionData(data[0], data[1].map(el => {
+                    return { ...el, amount: parseFloat(el.amount) };
+                }), data[2]);
                 this.vm.isLedgerLoading = false;
             });
         });
     }
 
     initialiseTransactionData(transactionList, transactionAccounts, transactionImages) {
+        transactionList.sort((a, b) => {
+            return b.voucherNumber - a.voucherNumber;
+        });
+        let lastAccountBalance = this.vm.ledgerAccount.currentBalance;
         for (let j = 0; j < transactionList.length; j++) {
             let transaction = transactionList[j];
             let totalAmount = 0;
@@ -169,14 +191,15 @@ export class ViewBalanceServiceAdapter {
                 transactionDate: transaction.transactionDate,
                 parentEmployeeName: null,
                 parentEmployee: transaction.parentEmployee,
+                balance: -1,
             };
 
-            tempData.parentEmployeeName = this.vm.employeeList.find((employee) => employee.id == transaction.parentEmployee).name;
+            tempData.parentEmployeeName = this.vm.employeeList.find(employee => employee.id == transaction.parentEmployee).name;
 
             for (let i = 0; i < transactionAccounts.length; i++) {
                 let account = transactionAccounts[i];
                 if (account.parentTransaction == transaction.id) {
-                    let tempAccount = this.vm.accountsList.find((acccount) => acccount.parentAccount == account.parentAccount);
+                    let tempAccount = this.vm.accountsList.find(acc => acc.parentAccount == account.parentAccount);
                     if (tempAccount.parentAccount == this.vm.ledgerAccount.parentAccount) {
                         ledgerAccountAmount = account.amount;
                         ledgerAccountType = account.transactionType;
@@ -193,7 +216,8 @@ export class ViewBalanceServiceAdapter {
                     if (account.transactionType == 'DEBIT') {
                         tempData.debitAccounts.push(temp);
                         totalAmount += account.amount;
-                    } else {
+                    }
+                    else {
                         tempData.creditAccounts.push(temp);
                     }
                     let temp_data = {
@@ -204,14 +228,21 @@ export class ViewBalanceServiceAdapter {
                     tempData.accounts.push(temp_data);
                 }
             }
+            // console.log("type: ", ledgerAccountType);
+            tempData.balance = lastAccountBalance;
+            if (ledgerAccountType == 'DEBIT') {
+                lastAccountBalance = lastAccountBalance - ledgerAccountAmount;
+            } else {
+                lastAccountBalance = lastAccountBalance + ledgerAccountAmount;
+            }
 
             for (let i = 0; i < tempData.accounts.length; i++) {
                 let account = tempData.accounts[i];
                 if (ledgerAccountType == account.type) {
-                    console.log(account.type);
                     tempData.accounts.splice(i, 1);
                     i--;
-                } else {
+                }
+                else {
                     account.amount = (account.amount * ledgerAccountAmount) / totalAmount;
                 }
             }
@@ -221,25 +252,20 @@ export class ViewBalanceServiceAdapter {
                 if (image.parentTransaction == transaction.id) {
                     if (image.imageType == 'BILL') {
                         tempData.billImages.push(image);
-                    } else {
+                    }
+                    else {
                         tempData.quotationImages.push(image);
                     }
                     transactionImages.splice(i, 1);
                     i--;
                 }
+
             }
-            tempData.billImages.sort((a, b) => {
-                return a.orderNumber - b.orderNumber;
-            });
-            tempData.quotationImages.sort((a, b) => {
-                return a.orderNumber - b.orderNumber;
-            });
+            tempData.billImages.sort((a, b) => { return (a.orderNumber - b.orderNumber); });
+            tempData.quotationImages.sort((a, b) => { return (a.orderNumber - b.orderNumber); });
+
             this.vm.transactionsList.push(tempData);
         }
-        this.vm.transactionsList.sort((a, b) => {
-            return Date.parse(a.transactionDate) - Date.parse(b.transactionDate);
-        });
-
-        console.log(this.vm.transactionsList);
     }
+
 }

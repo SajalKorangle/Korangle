@@ -1,161 +1,88 @@
 <div class="card-content table-responsive" *ngIf="!isLoading">
-    <div *ngIf="nextSession == undefined">You can transfer accounts once next session is created</div>
+    <div *ngIf="nextSession == undefined">
+        You can transfer accounts once next session is created
+    </div>
     <div *ngIf="nextSession != undefined">
-        <mat-slide-toggle [(ngModel)]="splitView" style="margin-top: 20px; margin-bottom: 30px"><b>Split View</b></mat-slide-toggle>
-        <button
-            *ngIf="splitView"
-            class="custom-button"
-            style="
-                margin-top: 20px;
-                margin-right: 22px;
-                float: right;
-                background: rgba(255, 152, 0, 1);
-                color: white;
-                border: rgba(255, 152, 0, 1);
-            "
-            (click)="serviceAdapter.transferAccounts()"
-        >
-            <span>Transfer</span>
-        </button>
-
+        <mat-slide-toggle [(ngModel)]="splitView"  style="margin-top:20px;margin-bottom:30px;" ><b>Split View</b></mat-slide-toggle>
+        <button *ngIf="splitView && !isMobile()" class="custom-button" style="margin-top: 20px;margin-right:22px;float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
+        
         <div *ngIf="!splitView">
             <div class="row col-md-12">
-                <button
-                    class="nav-item"
-                    style="
-                        box-shadow: 0px 2px 20px 2px grey;
-                        margin-right: 10px;
-                        color: rgba(255, 152, 0, 1);
-                        border: 2px solid rgba(255, 152, 0, 1);
-                    "
-                    *ngIf="selectedSession == currentSession"
-                >
-                    <span>From : {{ currentSession.name }}</span>
-                </button>
-                <button
-                    class="nav-item"
-                    style="box-shadow: 0px 2px 20px 2px grey; margin-right: 10px"
-                    (click)="selectedSession = currentSession"
-                    *ngIf="selectedSession != currentSession"
-                >
-                    <span>From : {{ currentSession.name }}</span>
-                </button>
-                <button
-                    class="nav-item"
-                    style="
-                        box-shadow: 0px 2px 20px 2px grey;
-                        margin-right: 10px;
-                        color: rgba(255, 152, 0, 1);
-                        border: 2px solid rgba(255, 152, 0, 1);
-                    "
-                    *ngIf="selectedSession == nextSession"
-                >
-                    <span>To : {{ nextSession.name }}</span>
-                </button>
-                <button
-                    class="nav-item"
-                    style="box-shadow: 0px 2px 20px 2px grey; margin-right: 20px"
-                    (click)="selectedSession = nextSession"
-                    *ngIf="selectedSession != nextSession"
-                >
-                    <span>To : {{ nextSession.name }}</span>
-                </button>
+                <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 10px;  color:rgba(255, 152, 0, 1); border:2px solid rgba(255, 152, 0, 1);" *ngIf="selectedSession == currentSession"><span>From : {{currentSession.name}}</span></button>
+                <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 10px;" (click)="selectedSession = currentSession" *ngIf="selectedSession != currentSession"><span>From : {{currentSession.name}}</span></button>
+                <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 10px;  color: rgba(255, 152, 0, 1); border:2px solid rgba(255, 152, 0, 1)" *ngIf="selectedSession == nextSession"><span>To : {{nextSession.name}}</span></button>
+                <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 20px;" (click)="selectedSession = nextSession" *ngIf="selectedSession != nextSession"><span>To : {{nextSession.name}}</span></button>
                 <!-- <mat-checkbox style="font-size: 13px;">Split View</mat-checkbox> -->
-                <button
-                    class="custom-button"
-                    style="float: right; background: rgba(255, 152, 0, 1); color: white; border: rgba(255, 152, 0, 1)"
-                    (click)="serviceAdapter.transferAccounts()"
-                >
-                    <span>Transfer</span>
-                </button>
+                <button class="custom-button" style="float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
             </div>
         </div>
 
         <div class="row">
-            <div [ngClass]="splitView ? 'col-sm-5' : selectedSession == currentSession ? 'col-sm-12' : 'invisible'">
+            <div [ngClass]="splitView?'col-sm-5':selectedSession == currentSession?'col-sm-12':'invisible'">
                 <div *ngIf="splitView">
-                    <h4>
-                        <b>From : {{ currentSession.name }}</b>
-                    </h4>
+                    <h4><b>From : {{currentSession.name}}</b></h4>
                 </div>
-                <div *ngIf="splitView" style="margin-bottom: 20px">
-                    <button class="custom-button" style="margin-right: 10px" (click)="selectAllAccounts()">Select All</button>
-                    <button class="custom-button" style="margin-right: 10px" (click)="deSelectAllAccounts()">Clear All</button>
+                <div  *ngIf="splitView" style="margin-bottom: 20px;">
+                    <button class="custom-button" style="margin-right: 10px;" (click)="selectAllAccounts()">Select All</button>
+                    <button class="custom-button" style="margin-right: 10px;" (click)="deSelectAllAccounts()">Clear All</button>
                 </div>
                 <mat-card>
-                    <p><b>Groups:</b>Selected:{{ countSelectedGroups() }},Total:{{ countTotalGroups() }}</p>
-                    <p><b>Accounts:</b>Selected:{{ countSelectedAccounts() }},Total:{{ countTotalAccounts() }}</p>
+                    <p><b>Groups:</b>Selected:{{countSelectedGroups()}},Total:{{countTotalGroups()}}</p>
+                    <p><b>Accounts:</b>Selected:{{countSelectedAccounts()}},Total:{{countTotalAccounts()}}</p>
                     <div *ngIf="!splitView">
-                        <div>
-                            <button class="custom-button" style="margin-right: 10px" (click)="selectAllAccounts()">Select All</button>
-                            <button class="custom-button" style="margin-right: 10px" (click)="deSelectAllAccounts()">Clear All</button>
+                        <div >
+                            <button class="custom-button" style="margin-right: 10px;" (click)="selectAllAccounts()">Select All</button>
+                            <button class="custom-button" style="margin-right: 10px;" (click)="deSelectAllAccounts()">Clear All</button>
                             <!-- <span>Closing Balance</span> -->
                         </div>
                     </div>
-                    <ng-container *ngFor="let head of headsList">
-                        <mat-expansion-panel class="mat-elevation-z0">
-                            <mat-expansion-panel-header style="padding-left: 20px; padding-right: 2px">
-                                <div style="width: 100%">
-                                    <span>{{ head.title }}</span>
-                                    <mat-checkbox
-                                        style="float: right; margin-top: 2px; margin-right: 10px"
-                                        [checked]="isAnyOneAccountSelected(head)"
-                                        (change)="changeAllAccountsStatusFromHead(head.id, $event.checked)"
-                                        (click)="$event.stopPropagation()"
-                                    ></mat-checkbox>
-                                </div>
-                            </mat-expansion-panel-header>
-                            <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionHierarchyStructure[head.title]">
-                                <div *ngIf="element.type == 'ACCOUNT'" style="margin: 5px 10px 5px 24px">
-                                    {{ element.title }}&nbsp;A/c
-                                    <mat-checkbox
-                                        [disabled]="isElementDisabled(element)"
-                                        [checked]="isElementSelected(element)"
-                                        (change)="changeElementStatus(element, $event.checked); selectParentGroups(element, $event.checked)"
-                                        style="float: right; margin-top: 2px; margin-right: 10px"
-                                    ></mat-checkbox>
-                                    <span class="account-font" style="float: right; margin-right: 15px"
-                                        >Cr: {{ element.currentBalance }}</span
-                                    >
-                                </div>
-                                <div *ngIf="element.type == 'GROUP'">
-                                    <group-hierarchy-list [group]="element" [vm]="this" [displayCheckBox]="true"></group-hierarchy-list>
-                                </div>
+                    <ng-container *ngFor="let head of headsList;">
+                    <mat-expansion-panel class="mat-elevation-z0" >
+                        <mat-expansion-panel-header style="padding-left:20px; padding-right: 2px">
+                            <div style="width: 100%;">
+                                <span>{{head.title}}</span>
+                                <mat-checkbox style="float:right; margin-top:2px; margin-right: 10px" [checked]="isAnyOneAccountSelected(head)" (change)="changeAllAccountsStatusFromHead(head.id, $event.checked )" (click)="$event.stopPropagation()"></mat-checkbox>
                             </div>
-                        </mat-expansion-panel>
+                        </mat-expansion-panel-header>
+                        <div class="mat-expansion-panel-body" *ngFor="let element of currentSessionHierarchyStructure[head.title]" >
+                            <group-hierarchy-list
+                                        [element]="element"
+                                        [vm]="this"
+                                        [displayCheckBox]="true"
+                                        [balanceName]="'currentBalance'"
+                                        (customClick)="toggleElementStatus($event)"
+                                        ></group-hierarchy-list>
+                        </div>
+                    </mat-expansion-panel>
                     </ng-container>
+
                 </mat-card>
             </div>
-            <div [ngClass]="splitView ? 'split col-sm-5' : selectedSession == nextSession ? 'col-sm-12' : 'invisible'">
-                <div *ngIf="splitView" style="padding-bottom: 12px">
-                    <h4>
-                        <b>From : {{ nextSession.name }}</b>
-                    </h4>
-                    <br /><br />
+            <div [ngClass]="splitView?'split col-sm-5':selectedSession == nextSession?'col-sm-12':'invisible'">
+                <div *ngIf="splitView" style="padding-bottom: 12px;">
+                    <h4><b>From : {{nextSession.name}}</b></h4>
+                    <br><br>
                 </div>
-                <mat-card>
-                    <ng-container *ngFor="let head of headsList">
-                        <mat-expansion-panel class="mat-elevation-z0">
-                            <mat-expansion-panel-header>
-                                <div style="width: 100%">
-                                    <span>{{ head.title }}</span>
-                                </div>
-                            </mat-expansion-panel-header>
-                            <div class="mat-expansion-panel-body" *ngFor="let element of nextSessionHierarchyStructure[head.title]">
-                                <div *ngIf="element.type == 'ACCOUNT'" style="margin: 5px 0px 5px 22px">
-                                    {{ element.title }}&nbsp;A/c
-                                    <span class="account-font" style="float: right; margin-right: 15px"
-                                        >Cr: {{ element.currentBalance }}</span
-                                    >
-                                </div>
-                                <div *ngIf="element.type == 'GROUP'">
-                                    <group-hierarchy-list [group]="element" [vm]="this" [displayCheckBox]="false"></group-hierarchy-list>
-                                </div>
+                <mat-card>       
+                    <ng-container *ngFor="let head of headsList">    
+                    <mat-expansion-panel class="mat-elevation-z0" >
+                        <mat-expansion-panel-header>
+                            <div style="width: 100%;">
+                                <span>{{head.title}}</span>
                             </div>
-                        </mat-expansion-panel>
+                        </mat-expansion-panel-header>
+                        <div class="mat-expansion-panel-body" *ngFor="let element of nextSessionHierarchyStructure[head.title]" >
+                            <group-hierarchy-list
+                                        [element]="element"
+                                        [vm]="this"
+                                        [displayCheckBox]="false"
+                                        [balanceName]="'currentBalance'"
+                                        ></group-hierarchy-list>
+                        </div>
+                    </mat-expansion-panel>
                     </ng-container>
                 </mat-card>
-            </div>
+            </div> 
         </div>
     </div>
 </div>
@@ -163,3 +90,5 @@
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+
+

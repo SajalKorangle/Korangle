@@ -4,7 +4,7 @@ import { CommonFunctions } from '@classes/common-functions';
 export class ViewAllServiceAdapter {
     vm: ViewAllComponent;
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: ViewAllComponent): void {
         this.vm = vm;
@@ -33,14 +33,22 @@ export class ViewAllServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
+        const tc_data = {
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            status__in: ['Generated', 'Issued'],
+            fields__korangle: ['parentStudent'],
+        };
+
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
+            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data), // 3
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data), // 4
+            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
+            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
         ]).then(
             (value) => {
                 value[0].forEach((classs) => {
@@ -50,6 +58,7 @@ export class ViewAllServiceAdapter {
                     });
                 });
                 this.vm.initializeClassSectionList(value[0]);
+                this.vm.backendData.tcList = value[7];
                 this.vm.initializeStudentFullProfileList(value[2]);
                 this.vm.studentParameterList = value[3].map((x) => ({
                     ...x,

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DataStorage } from '../../../../classes/data-storage';
-import { MatDialog } from '@angular/material';
+import { DataStorage } from "../../../../classes/data-storage";
+import { MatDialog, } from '@angular/material';
 import { AddAccountDialogComponent } from './add-account-dialog/add-account-dialog.component';
 import { EditAccountDialogComponent } from './edit-account-dialog/edit-account-dialog.component';
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
@@ -16,9 +16,14 @@ import { customAccount, customGroupStructure } from './../../classes/constants';
     selector: 'manage-accounts',
     templateUrl: './manage-accounts.component.html',
     styleUrls: ['./manage-accounts.component.css'],
-    providers: [AccountsService, SchoolService],
+    providers: [
+        AccountsService,
+        SchoolService,
+    ]
 })
+
 export class ManageAccountsComponent {
+
     user: any;
     serviceAdapter: ManageAccountsServiceAdapter;
     backendData: ManageAccountsBackendData;
@@ -28,17 +33,19 @@ export class ManageAccountsComponent {
     headsList = HEADS_LIST;
     isLoading: any;
 
+
     hierarchyStructure: {
-        Expenses: Array<customGroupStructure>;
-        Income: Array<customGroupStructure>;
-        Assets: Array<customGroupStructure>;
-        Liabilities: Array<customGroupStructure>;
+        Expenses: Array<customGroupStructure>,
+        Income: Array<customGroupStructure>,
+        Assets: Array<customGroupStructure>,
+        Liabilities: Array<customGroupStructure>,
+
     } = {
-        Expenses: [],
-        Income: [],
-        Assets: [],
-        Liabilities: [],
-    };
+            Expenses: [],
+            Income: [],
+            Assets: [],
+            Liabilities: [],
+        };
 
     displayWholeList: boolean;
 
@@ -50,7 +57,13 @@ export class ManageAccountsComponent {
 
     searchList: Array<customAccount> = [];
 
-    constructor(public dialog: MatDialog, public accountsService: AccountsService, public schoolService: SchoolService) {}
+    listView: boolean = true;
+
+    constructor(
+        public dialog: MatDialog,
+        public accountsService: AccountsService,
+        public schoolService: SchoolService,
+    ) { }
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -60,6 +73,19 @@ export class ManageAccountsComponent {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         this.displayWholeList = true;
+        // console.log('this: ', this);
+    }
+
+    getHeadName(id: number) {
+        return this.headsList.find(h => h.id == id).title;
+    }
+
+    getGroupName(id: number) {
+        const group = this.groupsList.find(g => g.id == id);
+        if (group)
+            return group.title;
+        else
+            return null;
     }
 
     openAddAccountDialog() {
@@ -67,7 +93,7 @@ export class ManageAccountsComponent {
             width: '300px',
             data: {
                 vm: this,
-            },
+            }
         });
 
         dialogRef.afterClosed();
@@ -78,7 +104,7 @@ export class ManageAccountsComponent {
             width: '300px',
             data: {
                 vm: this,
-            },
+            }
         });
 
         dialogRef.afterClosed();
@@ -91,17 +117,18 @@ export class ManageAccountsComponent {
                 data: {
                     vm: this,
                     account: JSON.parse(JSON.stringify(element)),
-                },
+                }
             });
 
             dialogRef.afterClosed();
-        } else {
+        }
+        else {
             const dialogRef = this.dialog.open(EditGroupDialogComponent, {
                 width: '300px',
                 data: {
                     vm: this,
                     group: JSON.parse(JSON.stringify(element)),
-                },
+                }
             });
 
             dialogRef.afterClosed();
@@ -112,14 +139,15 @@ export class ManageAccountsComponent {
         let str = event.target.value.trim();
         if (str.length == 0) {
             this.searchList = [];
-        } else {
+        }
+        else {
             this.searchList = this.getAccountListFromString(str);
         }
     }
 
     getAccountListFromString(str: any) {
         let temp = [];
-        this.accountsList.forEach((account) => {
+        this.accountsList.forEach(account => {
             if (account.title.toLowerCase().includes(str.toLowerCase())) {
                 temp.push(account);
             }
@@ -128,8 +156,8 @@ export class ManageAccountsComponent {
     }
 
     displayWholeGroup(group: any) {
-        console.log(group);
         this.displayWholeList = false;
         this.specificGroup = group;
     }
+
 }

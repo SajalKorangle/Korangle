@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v5.1/'
+api_version = 'v5.3/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

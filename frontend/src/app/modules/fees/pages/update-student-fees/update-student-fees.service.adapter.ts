@@ -5,7 +5,7 @@ import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-f
 export class UpdateStudentFeesServiceAdapter {
     vm: UpdateStudentFeesComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -43,9 +43,9 @@ export class UpdateStudentFeesServiceAdapter {
             parentSchool: schoolId,
         };
 
-        let lock_fees_list = {
-            parentSchool: schoolId,
-            parentSession: sessionId,
+        let fee_settings_request = {
+            'parentSchool': schoolId,
+            'parentSession': sessionId,
         };
 
         Promise.all([
@@ -54,28 +54,25 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
-            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-        ]).then(
-            (value) => {
-                this.vm.feeTypeList = value[0];
-                this.vm.schoolFeeRuleList = value[1];
-                this.vm.classFilterFeeList = value[2];
-                this.vm.busStopFilterFeeList = value[3];
-                this.vm.busStopList = value[4];
-                if (value[5].length == 1) {
-                    this.vm.lockFees = value[5];
-                }
-                this.vm.classList = value[6];
-                this.vm.sectionList = value[7];
+        ]).then(value => {
 
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+            this.vm.feeTypeList = value[0];
+            this.vm.schoolFeeRuleList = value[1];
+            this.vm.classFilterFeeList = value[2];
+            this.vm.busStopFilterFeeList = value[3];
+            this.vm.busStopList = value[4];
+            if (value[5].length == 1) { this.vm.lockFees = value[5].sessionLocked; }
+            this.vm.classList = value[6];
+            this.vm.sectionList = value[7];
+
+            this.vm.isLoading = false;
+        }, error => {
+            this.vm.isLoading = false;
+        });
+
     }
 
     // Get Student Fee Profile
