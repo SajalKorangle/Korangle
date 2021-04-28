@@ -165,10 +165,9 @@ def send_sms(data):
     school_object = School.objects.get(id=data['parentSchool_id'])
     print(school_object.smsBalance)
     print(data)
-    
 
-    # if data['count'] > school_object.smsBalance:
-    #     return 0
+    if data['count'] > school_object.smsBalance:
+        return 0
 
     sms_id_object = SMSId.objects.get(id=data['smsId_id'])
     print(sms_id_object.smsId)
@@ -176,15 +175,10 @@ def send_sms(data):
     conn = http.client.HTTPConnection("msg.msgclub.net")
 
     anotherPayload = {
-        # "routeId": "1",
-        # "sentSmsNumList": data['mobileNumberContentJson'],
-        # "senderId": sms_id_object.smsId,
-        # "smsContentType": data['contentType'],
-                "smsContent": data['content'],
-                "routeId": "1",
-                "mobileNumbers": data['mobileNumberList'],
-                "senderId": sms_id_object.smsId,
-                "smsContentType": data['contentType'],
+        "routeId": "1",
+        "sentSmsNumList": data['mobileNumberContentJson'],
+        "senderId": sms_id_object.smsId,
+        "smsContentType": data['contentType'],
     }
 
     payloadJson = json.dumps(anotherPayload)
@@ -202,5 +196,6 @@ def send_sms(data):
     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 
     school_object.smsBalance = school_object.smsBalance - data['count']
+    school_object.save()
 
     return requestIdFromMsgClub

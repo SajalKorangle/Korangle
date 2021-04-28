@@ -7,8 +7,7 @@ def sms_sender(sender, created, instance, **kwargs):
         requestId = send_sms(instance.__dict__)
         if requestId == 0:
             print('fail')
-            instance.count = 0
-            instance.save()
+            instance.delete()
         else:
             print('success')
             instance.requestId = requestId
@@ -17,6 +16,7 @@ def sms_sender(sender, created, instance, **kwargs):
 
 
 def add_sms_balance(sender, created, instance, **kwargs):
+   if created:
     school_object = School.objects.get(id=instance['parentSchool'])
     school_object.smsBalance = school_object.smsBalance + instance['numberOfSMS']
     school_object.save()
