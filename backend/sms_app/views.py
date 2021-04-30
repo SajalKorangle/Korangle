@@ -81,12 +81,9 @@ class SMSPurchaseView(APIView):
 
 
 ############## SMS ##############
-from .business.send_sms import send_sms
-
-
 class SmsView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool= ['parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
 
 class SmsListView(CommonListView, APIView):
@@ -104,11 +101,13 @@ class SMSEventListView(CommonListView, APIView):
 
 class SMSIdView(CommonView, APIView):
     Model = SMSId
+    RelationsToSchool = ['entityName']
 
 
 class SMSIdListView(CommonListView, APIView):
+    
     Model = SMSId
-
+    RelationsToSchool = ['entityName']
 
 class SMSTemplateView(CommonView, APIView):
     Model = SMSTemplate
@@ -128,11 +127,11 @@ class SMSEventSettingsListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id']
 
 
-class SMSIdSchoolView(CommonListView, APIView):
+class SMSIdSchoolView(CommonView, APIView):
     Model = SMSIdSchool
     RelationsToSchool = ['parentSchool__id']
 
 
-class SMSIdSchoolListView(CommonView, APIView):
+class SMSIdSchoolListView(CommonListView, APIView):
     Model = SMSIdSchool
     RelationsToSchool = ['parentSchool__id']

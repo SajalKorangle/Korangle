@@ -1,13 +1,12 @@
 from django.db import models
 from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
 
 from school_app.model.models import School
 from information_app.models import MessageType, SentUpdateType
 
 
-# Create your models here.
-from sms_app import signals
-
+# Create your models here
 
 class SMSEvent(models.Model):
     eventName = models.TextField(max_length=50, null=False, verbose_name='eventName')
@@ -45,12 +44,14 @@ class SMSIdSchool(models.Model):
 
 
 class SMS(models.Model):
-    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1, null=True)
 
     parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.PROTECT, null=True)
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
+
+    sentStatus = models.BooleanField(null=False, default=True, verbose_name='sentStatus')
 
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
@@ -92,6 +93,16 @@ class SMS(models.Model):
     class Meta:
         db_table = 'sms'
 
+
+@receiver(post_save, sender=SMS)
+def sms_sender(sender, created, instance, **kwargs):
+    if created:
+        from sms_app.business.send_sms import send_sms
+        response = send_sms(instance.__dict__)
+        if response['status'] == 'EXCEPTION':
+            instance.sentStatus = False
+        instance.requestId = response['requestId']
+        instance.save()
 
 
 class MsgClubDeliveryReport(models.Model):
@@ -190,11 +201,8 @@ class SMSEventSettings(models.Model):
     UPDATE_TO_CHOICES = [
         (UPDATE_ALL, 'All Students'),
         (UPDATE_ABSENT, 'Only Absent Students')
-    ]
+    ]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 
     receiverType = models.CharField(max_length=20, choices=UPDATE_TO_CHOICES, null=True,
                                     verbose_name='receiverType')
 
-
-post_save.connect(signals.sms_sender, SMS)
-post_save.connect(signals.add_sms_balance, SMSPurchase)

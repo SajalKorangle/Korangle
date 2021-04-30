@@ -5,8 +5,27 @@ from django.contrib import admin
 from sms_app.models import SMSPurchase, SMS, MsgClubDeliveryReport, SMSId, SMSTemplate
 
 admin.site.register(SMSPurchase)
-admin.site.register(SMS)
 admin.site.register(MsgClubDeliveryReport)
+
+
+@admin.register(SMS)
+class SMSAdmin(admin.ModelAdmin):
+    search_fields = ('parentSchool__id', 'requestId')
+    list_display = ('Sent_By', 'Content', 'requestId', 'Sent_Status')
+    list_filter = ('sentStatus',)
+
+    def Sent_By(self, obj):
+        return str(obj.parentSchool.id)
+
+    def Content(self, obj):
+        return str(obj.content)
+
+    def requestId(self, obj):
+        return str(obj.requestId)
+
+    def Sent_Status(self, obj):
+        return str(obj.sentStatus)
+
 
 @admin.register(SMSId)
 class SmsIdAdmin(admin.ModelAdmin):
@@ -25,7 +44,7 @@ class SmsIdAdmin(admin.ModelAdmin):
 
 
 @admin.register(SMSTemplate)
-class SmsIdAdmin(admin.ModelAdmin):
+class SmsTemplateAdmin(admin.ModelAdmin):
     search_fields = ('parentSMSId__entityName', 'parentSMSId__smsId')
     list_display = ('Entity_Name', 'SMS_ID', 'Template_Name', 'Template_Status')
     list_filter = ('registrationStatus',)

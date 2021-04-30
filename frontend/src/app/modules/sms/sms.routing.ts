@@ -20,6 +20,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/sms/pages/view-purchases/view-purchases.module#ViewPurchasesModule',
         data: { moduleName: 'sms' },
     },
+    {
+        path: 'manage_sms_id',
+        loadChildren: 'app/modules/sms/pages/manage-sms-id/manage-sms-id.module#ManageSmsIdModule',
+        data: { moduleName: 'sms' },
+    },
 
     {
         path: '',
