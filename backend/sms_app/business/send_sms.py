@@ -9,18 +9,15 @@ from school_app.model.models import School
 
 import json
 
-from sms_app.models import SMSIdSchool, SMSId
-
 
 # def send_sms(data):
 # 
-#     sms_count_left = get_sms_count(data['parentSchool_id'])
+#     sms_count_left = get_sms_count(data)
 # 
 #     if data['count'] > sms_count_left['count']:
-#         return 0
+#         return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
 # 
-#     print(data)
-#     sms_id_object = SMSId.objects.get(id=data['smsId_id'])
+#     school_object = School.objects.get(id=data['parentSchool'])
 # 
 #     conn = http.client.HTTPConnection("msg.msgclub.net")
 # 
@@ -28,7 +25,7 @@ from sms_app.models import SMSIdSchool, SMSId
 #         "smsContent": data['content'],
 #         "routeId": "1",
 #         "mobileNumbers": data['mobileNumberList'],
-#         "senderId": sms_id_object.smsId,
+#         "senderId": school_object.smsId,
 #         "smsContentType": data['contentType'],
 #     }
 # 
@@ -45,16 +42,14 @@ from sms_app.models import SMSIdSchool, SMSId
 # 
 #     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 # 
-#     print(requestIdFromMsgClub)
-# 
-#     return requestIdFromMsgClub
+#     return {'status': 'success', 'requestId': requestIdFromMsgClub, 'message': 'SMS Sent successfully'}
 # 
 # 
 # def send_sms_old(data):
 # 
 #     # print(data['message'].encode('utf-8'))
 # 
-#     sms_count_left = get_sms_count(data['parentSchool_id'])
+#     sms_count_left = get_sms_count(data)
 # 
 #     if data['estimatedCount'] > sms_count_left['count']:
 #         return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
@@ -156,46 +151,94 @@ from sms_app.models import SMSIdSchool, SMSId
 #     # f = open('sms_file', 'a+')
 #     # f.write("'{0}'\n'{1}'\n'{2}'\n".format(response.text, data['estimatedCount'], data['message'].encode('utf-8')))
 #     # f.close()
+# 
+# def send_different_sms(data):
+#     """
+#     Function sends different SMS
+#     """
+#     sms_count_left = get_sms_count(data)
+#     if data['count'] > sms_count_left['count']:
+#         return {'status': 'failure', 'count': sms_count_left['count'], 'message': 'Not enough sms left'}
+# 
+#     # if data['count'] > sms_count['count']:
+#     #     return 0
+# 
+#     sms_id_object = SMSId.objects.get(id=data['smsId_id'])
+#     print(sms_id_object.smsId)
+# 
+#     conn = http.client.HTTPConnection("msg.msgclub.net")
+# 
+#     mobileNumberContentList = json.loads(data['mobileNumberContentJson'])
+# 
+#     print(data['mobileNumberContentJson'])
+# 
+#     anotherPayload = {
+#         "routeId": "1",
+#         "sentSmsNumList": mobileNumberContentList,
+#         "senderId": sms_id_object.smsId,
+#         "smsContentType": data['contentType'],
+#     }
+# 
+#     print(anotherPayload)
+# 
+#     payloadJson = json.dumps(anotherPayload)
+# 
+#     headers = {
+#         'Content-Type': "application/json",
+#         'Cache-Control': "no-cache"
+#     }
+# 
+#     conn.request("POST", "/rest/services/sendSMS/sendCustomGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3", payloadJson, headers)
+# 
+#     response = conn.getresponse().read()
+#     print(response)
+# 
+#     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+# 
+#     return requestIdFromMsgClub
+from sms_app.models import SMSId
 
-def send_sms(data):
-    """
-    Function sends SMS
-    """
 
-    school_object = School.objects.get(id=data['parentSchool_id'])
-    print(school_object.smsBalance)
-    print(data)
+def send_sms(instance_dict):
 
-    if data['count'] > school_object.smsBalance:
-        return 0
+    try:
+        school_object = School.objects.get(id=instance_dict['parentSchool_id'])
 
-    sms_id_object = SMSId.objects.get(id=data['smsId_id'])
-    print(sms_id_object.smsId)
+        sms_count = get_sms_count(school_object.id)
 
-    conn = http.client.HTTPConnection("msg.msgclub.net")
+        if instance_dict['count'] > sms_count['count']:
+            return {'status': 'INSUFFICIENT BALANCE', 'requestId': 0}
 
-    anotherPayload = {
-        "routeId": "1",
-        "sentSmsNumList": data['mobileNumberContentJson'],
-        "senderId": sms_id_object.smsId,
-        "smsContentType": data['contentType'],
-    }
+        sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
+        print(sms_id_object.smsId)
 
-    payloadJson = json.dumps(anotherPayload)
+        conn = http.client.HTTPConnection("msg.msgclub.net")
 
-    headers = {
-        'Content-Type': "application/json",
-        'Cache-Control': "no-cache"
-    }
+        sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
 
-    conn.request("POST", "/rest/services/sendSMS/sendCustomGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3", payloadJson, headers)
+        anotherPayload = {
+            "routeId": "1",
+            "sentSmsNumList": sent_sms_num_list,
+            "senderId": sms_id_object.smsId,
+            "smsContentType": instance_dict['contentType'],
+        }
 
-    response = conn.getresponse().read()
-    print(response)
+        payloadJson = json.dumps(anotherPayload)
 
-    requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+        headers = {
+            'Content-Type': "application/json",
+            'Cache-Control': "no-cache"
+        }
 
-    school_object.smsBalance = school_object.smsBalance - data['count']
-    school_object.save()
+        conn.request("POST", "/rest/services/sendSMS/sendCustomGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3",
+                     payloadJson, headers)
 
-    return requestIdFromMsgClub
+        response = conn.getresponse().read()
+
+        requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+
+        return {'status': 'SUCCESS', 'requestId': requestIdFromMsgClub}
+
+    except:
+        print('caught exception')
+        return {'status': 'EXCEPTION', 'requestId': 0}

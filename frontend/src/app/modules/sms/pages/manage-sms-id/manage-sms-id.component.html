@@ -1,0 +1,103 @@
+<div class="card-content">
+    <ng-container *ngIf="!stateKeeper.isLoading">
+        <mat-card>
+    <mat-card-title style="font-size:18px">NEW SMS ID</mat-card-title>
+
+                <div class="row">
+                    <div class="col-md-4">
+                       <mat-form-field style="width: 100%">
+                             <mat-label>Entity Name</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                                [(ngModel)]="userInput.newSMSId.entityName"
+                            />
+                       </mat-form-field>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%">
+                             <mat-label>Entity Registration ID</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                                [(ngModel)]="userInput.newSMSId.entityRegistrationId"
+                            />
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            <div class="row">
+                    <div class="col-md-4">
+                       <mat-form-field style="width: 100%">
+                             <mat-label>SMS ID</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                                [(ngModel)]="userInput.newSMSId.smsId"
+                            />
+                       </mat-form-field>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <mat-form-field style="width: 100%">
+                             <mat-label>SMS Registration Number</mat-label>
+                            <input
+                                type="text"
+                                matInput
+                                [(ngModel)]="userInput.newSMSId.smsIdRegistrationNumber"
+                            />
+                        </mat-form-field>
+                    </div>
+                
+                </div>
+    
+        <div class="row">
+            <div class="col-md-4">
+                <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="serviceAdapter.addNewSMSId()"
+                >ADD
+                </button>
+            </div>
+        </div>
+</mat-card>
+    
+    <mat-form-field style="margin-top:20px;margin-bottom:5px;margin-left:5px">
+            <mat-select placeholder="Filter By Status" [ngModel]="userInput.selectedSMSStatus">
+                <mat-option *ngFor="let status of statusChoiceList" [value]="status">
+                    {{status}}
+                </mat-option>
+            </mat-select>
+    </mat-form-field>
+    
+     <table class="table table-hover">
+        <thead style="color: rgba(255, 152, 0, 1);">
+            <tr> 
+                <th><span>S.NO</span></th>
+                <th class="text-left"><span>Entity Name</span></th>
+                <th class="text-left"><span>SMS ID</span></th>
+                <th class="text-left"><span>Status</span></th>
+                <th class="text-left"><span>Registration Number</span></th>
+                <th class="text-left"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let SMSId of htmlRenderer.getFilteredSMSIdList();let i = index">
+                <td>{{i+1}}</td>
+                <td>{{SMSId.entityName}}</td>
+                <td>{{SMSId.smsId}}</td>
+                <td>{{SMSId.status}}</td>
+                <td>{{SMSId.smsIdRegistrationNumber}}</td>
+                <td><button class="custom-button" style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px" (click)="serviceAdapter.deleteSMSId(SMSId)"><i class="material-icons">delete</i></button>
+</td>
+            </tr>
+        </tbody>
+     </table>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="stateKeeper.isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

@@ -7,7 +7,7 @@ export class SmsService extends ServiceObject {
     protected module_url = '/sms';
 
     // objects urls
-    public sms = '/sms';
+    public sms = '/send-sms';
     public diff_sms = '/send-diff-sms';
     public sms_id='/sms-id';
     public sms_template='/sms-template';

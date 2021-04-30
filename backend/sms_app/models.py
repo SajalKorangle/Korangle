@@ -44,12 +44,14 @@ class SMSIdSchool(models.Model):
 
 
 class SMS(models.Model):
-    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1, null=True)
 
     parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.PROTECT, null=True)
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
+
+    sentStatus = models.BooleanField(null=False, default=True, verbose_name='sentStatus')
 
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
@@ -96,15 +98,11 @@ class SMS(models.Model):
 def sms_sender(sender, created, instance, **kwargs):
     if created:
         from sms_app.business.send_sms import send_sms
-        requestId = send_sms(instance.__dict__)
-        if requestId == 0:
-            print('fail')
-            instance.delete()
-        else:
-            print('success')
-            instance.requestId = requestId
-            instance.save()
-            print(instance.requestId)
+        response = send_sms(instance.__dict__)
+        if response['status'] == 'EXCEPTION':
+            instance.sentStatus = False
+        instance.requestId = response['requestId']
+        instance.save()
 
 
 class MsgClubDeliveryReport(models.Model):

@@ -32,24 +32,24 @@ urlpatterns += [
 from .views import SMSEventSettingsView, SMSEventSettingsListView
 
 urlpatterns += [
-	url(r'^sms-event-settings', SMSEventSettingsView.as_view()),
 	url(r'^sms-event-settings/batch', SMSEventSettingsListView.as_view()),
+	url(r'^sms-event-settings', SMSEventSettingsView.as_view()),
 ]
 
 ########  SMS  Event ###############
 from .views import SMSEventView, SMSEventListView
 
 urlpatterns += [
-	url(r'^sms-event', SMSEventView.as_view()),
 	url(r'^sms-event/batch', SMSEventListView.as_view()),
+	url(r'^sms-event', SMSEventView.as_view()),
 ]
 
 
 from .views import SMSIdSchoolView, SMSIdSchoolListView
 
 urlpatterns += [
-	url(r'^smsidschool', SMSIdSchoolView.as_view()),
-	url(r'^smsidschool/batch', SMSIdSchoolListView.as_view()),
+	url(r'^sms-id-school/batch', SMSIdSchoolListView.as_view()),
+	url(r'^sms-id-school', SMSIdSchoolView.as_view()),
 ]
 
 
@@ -57,25 +57,18 @@ urlpatterns += [
 from .views import SMSIdView, SMSIdListView
 
 urlpatterns += [
-	url(r'^smsid', SMSIdView.as_view()),
-	url(r'^smsid/batch', SMSIdListView.as_view()),
+	url(r'^sms-id/batch', SMSIdListView.as_view()),
+	url(r'^sms-id', SMSIdView.as_view()),
 ]
 
 ########  SMS Templates  ###############
 from .views import SMSTemplateView, SMSTemplateListView
 
 urlpatterns += [
-	url(r'^sms-template', SMSTemplateView.as_view()),
 	url(r'^sms-template/batch', SMSTemplateListView.as_view()),
+	url(r'^sms-template', SMSTemplateView.as_view()),
 ]
 
-
-######## Send SMS ###############
-# from .views import SendSMSView
-# 
-# urlpatterns += [
-# 	url(r'^send-sms', SendSMSView.as_view()),
-# ]
 
 ######## Msg Club Delivery Report ###############
 from .views import MsgClubDeliveryReportView
@@ -89,13 +82,7 @@ urlpatterns += [
 from .views import SmsView, SmsListView
 
 urlpatterns += [
-	url(r'^sms/batch', SmsListView.as_view()),
-	url(r'^sms', SmsView.as_view()),
+	url(r'^send-sms/batch', SmsListView.as_view()),
+	url(r'^send-sms', SmsView.as_view()),
 ]
 
-######### Send Different SMS ############
-from .views import SmsView
-
-urlpatterns += [
-	url(r'^send-diff-sms', SmsView.as_view()),
-]

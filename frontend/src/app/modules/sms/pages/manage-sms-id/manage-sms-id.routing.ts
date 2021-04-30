@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ManageSmsidComponent } from './manage-smsid.component';
+import { ManageSmsIdComponent } from './manage-sms-id.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: ManageSmsidComponent ,
+        component: ManageSmsIdComponent ,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class ManageSmsidRouting { }
+export class ManageSmsIdRouting { }
