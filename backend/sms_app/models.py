@@ -1,5 +1,6 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 
 from school_app.model.models import School
@@ -43,6 +44,21 @@ class SMSIdSchool(models.Model):
         db_table = 'smsid_school'
 
 
+@receiver(post_delete, sender=SMSIdSchool)
+def sms_id_delete_check(sender, instance, **kwargs):
+    instance_dict = instance.__dict__
+    try:
+        sms_id = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
+        sms_id_school_sibling_list_length = SMSIdSchool.objects.filter(parentSMSId=sms_id).count()
+        print(sms_id_school_sibling_list_length)
+        if sms_id_school_sibling_list_length == 0:
+            print('Parent SMS ID Deleted')
+            sms_id.delete()
+    except SMSIdSchool.DoesNotExist:
+        print('SMS ID not deleted because another school is using it')
+
+
+
 class SMS(models.Model):
     parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1, null=True)
 
@@ -52,6 +68,8 @@ class SMS(models.Model):
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
 
     sentStatus = models.BooleanField(null=False, default=True, verbose_name='sentStatus')
+
+    remark = models.TextField(null=False, default='SUCCESS', verbose_name='remark')
 
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
@@ -96,12 +114,17 @@ class SMS(models.Model):
 
 @receiver(post_save, sender=SMS)
 def sms_sender(sender, created, instance, **kwargs):
+    # try catch here
     if created:
         from sms_app.business.send_sms import send_sms
-        response = send_sms(instance.__dict__)
-        if response['status'] == 'EXCEPTION':
+        try:
+            response = send_sms(instance.__dict__)
+        except:
+            response = {'remark': 'EXCEPTION OCCURRED', 'requestId': 0}
             instance.sentStatus = False
+
         instance.requestId = response['requestId']
+        instance.remark = response['remark']
         instance.save()
 
 

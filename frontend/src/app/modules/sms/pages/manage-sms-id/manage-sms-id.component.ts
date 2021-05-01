@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { DataStorage } from "@classes/data-storage";
+import {DataStorage} from '@classes/data-storage';
 
-import { ManageSmsIdServiceAdapter } from './manage-sms-id.service.adapter';
-import { ManageSmsIdHtmlRenderer } from './manage-sms-id.html.renderer';
+import {ManageSmsIdServiceAdapter} from './manage-sms-id.service.adapter';
+import {ManageSmsIdHtmlRenderer} from './manage-sms-id.html.renderer';
 import {SmsService} from '@services/modules/sms/sms.service';
 
 @Component({
     selector: 'page-name',
     templateUrl: './manage-sms-id.component.html',
     styleUrls: ['./manage-sms-id.component.css'],
-    providers: [ SmsService ],
+    providers: [SmsService],
 })
 
 export class ManageSmsIdComponent implements OnInit {
@@ -19,9 +19,9 @@ export class ManageSmsIdComponent implements OnInit {
 
     serviceAdapter: ManageSmsIdServiceAdapter;
     htmlRenderer: ManageSmsIdHtmlRenderer;
-    
-    statusChoiceList=['ACTIVATED','PENDING','ALL']
-    
+
+    statusChoiceList = ['ACTIVATED', 'PENDING', 'ALL']
+
     userInput = {
         newSMSId: {} as any,
         selectedSMSStatus: 'ALL',
@@ -32,12 +32,13 @@ export class ManageSmsIdComponent implements OnInit {
         SMSIdSchoolList: []
     }
 
-    stateKeeper= {
-        isLoading: false,
+    stateKeeper = {
+        isPageLoading: false,
         isSMSIdTableLoading: false
     }
 
-    constructor (public smsService : SmsService) { }
+    constructor(public smsService: SmsService) {
+    }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

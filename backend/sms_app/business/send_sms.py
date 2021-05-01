@@ -201,13 +201,12 @@ from sms_app.models import SMSId
 
 def send_sms(instance_dict):
 
-    try:
         school_object = School.objects.get(id=instance_dict['parentSchool_id'])
 
         sms_count = get_sms_count(school_object.id)
 
         if instance_dict['count'] > sms_count['count']:
-            return {'status': 'INSUFFICIENT BALANCE', 'requestId': 0}
+            return {'remark': 'INSUFFICIENT BALANCE', 'requestId': 0}
 
         sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
         print(sms_id_object.smsId)
@@ -237,8 +236,4 @@ def send_sms(instance_dict):
 
         requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 
-        return {'status': 'SUCCESS', 'requestId': requestIdFromMsgClub}
-
-    except:
-        print('caught exception')
-        return {'status': 'EXCEPTION', 'requestId': 0}
+        return {'remark': 'SUCCESS', 'requestId': requestIdFromMsgClub}
