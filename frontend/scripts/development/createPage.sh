@@ -38,7 +38,7 @@ componentName="${componentName/ /}"
 ## Creating Files
 mkdir -p src/app/modules/$moduleName/pages/$pageName
 
-file_suffix_array=('module.ts' 'routing.ts' 'component.ts' 'component.html' 'component.css' 'service.adapter.ts' 'html.renderer.ts' 'backend.data.ts' 'user.input.ts') 
+file_suffix_array=('module.ts' 'routing.ts' 'component.ts' 'component.html' 'component.css' 'service.adapter.ts' 'html.renderer.ts')
 
 for file_suffix in "${file_suffix_array[@]}";
 do
