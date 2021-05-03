@@ -18,13 +18,12 @@ export class PageNameComponent implements OnInit {
 
     serviceAdapter: PageNameServiceAdapter;
     htmlRenderer: PageNameHtmlRenderer;
-    
+
     userInput = {};
     backendData = {};
-    stateKeeper = {
-        isLoading: false
-    }
+    stateKeeper = { isLoading: false };
     
+
     constructor () { }
 
     ngOnInit(): void {
