@@ -1,4 +1,5 @@
 import {ManageSmsIdComponent} from './manage-sms-id.component';
+import {toR3Reference} from '@angular/compiler-cli/src/ngtsc/annotations/src/util';
 
 export class ManageSmsIdHtmlRenderer {
 
@@ -33,7 +34,7 @@ export class ManageSmsIdHtmlRenderer {
         if(!this.vm.userInput.newSMSId.entityRegistrationId || this.vm.userInput.newSMSId.entityRegistrationId.trim()==''){
             return true;
         }
-        if(!this.vm.userInput.newSMSId.smsId || this.vm.userInput.newSMSId.smsId.trim()==''){
+        if(!this.vm.userInput.newSMSId.smsId || this.vm.userInput.newSMSId.smsId.trim()=='' || this.vm.userInput.newSMSId.smsId.length != 6){
             return true;
         }
         if(!this.vm.userInput.newSMSId.smsIdRegistrationNumber || this.vm.userInput.newSMSId.smsIdRegistrationNumber.trim()==''){
@@ -43,9 +44,18 @@ export class ManageSmsIdHtmlRenderer {
     }
 
     smsIdAlreadyExist() {
-        return !this.checkNullAndEmptySpace() && !!this.vm.backendData.SMSIdList.find((smsId) => {
-            return smsId.entityName == this.vm.userInput.newSMSId.entityName && smsId.entityRegistrationId == this.vm.userInput.newSMSId.entityRegistrationId && smsId.smsId == this.vm.userInput.newSMSId.smsId && smsId.smsIdRegistrationNumber == this.vm.userInput.newSMSId.smsIdRegistrationNumber
+        return this.vm.userInput.newSMSId.smsId && !!this.vm.backendData.SMSIdList.find((smsId) => {
+           return smsId.smsId == this.vm.userInput.newSMSId.smsId;
         });
     }
-    
+
+
+    invalidSMSIdDetails() {
+        if(this.vm.backendData.existingSMSIdDetails && !this.smsIdAlreadyExist()){
+            if(this.vm.userInput.newSMSId.entityRegistrationId && this.vm.userInput.newSMSId.entityRegistrationId != this.vm.backendData.existingSMSIdDetails.entityRegistrationId){
+                return true;
+            }
+        }
+        return false;   
+    }
 }

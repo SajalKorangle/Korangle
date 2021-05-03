@@ -29,7 +29,8 @@ export class ManageSmsIdComponent implements OnInit {
 
     backendData = {
         SMSIdList: [],
-        SMSIdSchoolList: []
+        SMSIdSchoolList: [],
+        existingSMSIdDetails: null as any,
     }
 
     stateKeeper = {

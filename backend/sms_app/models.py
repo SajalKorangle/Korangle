@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
@@ -17,6 +16,7 @@ class SMSEvent(models.Model):
     class Meta:
         db_table = 'sms_event'
 
+
 class SMSId(models.Model):
     entityName = models.TextField(null=False, verbose_name='entityName')
     entityRegistrationId = models.TextField(null=False, verbose_name='entityRegistrationId')
@@ -34,6 +34,7 @@ class SMSId(models.Model):
 
     class Meta:
         db_table = 'sms_id'
+        unique_together = ('smsId', 'entityRegistrationId')
 
 
 class SMSIdSchool(models.Model):
@@ -56,7 +57,6 @@ def sms_id_delete_check(sender, instance, **kwargs):
             sms_id.delete()
     except SMSIdSchool.DoesNotExist:
         print('SMS ID not deleted because another school is using it')
-
 
 
 class SMS(models.Model):
@@ -103,7 +103,7 @@ class SMS(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     #SMSId
-    smsId = models.ForeignKey(SMSId, on_delete=models.PROTECT, default=0, verbose_name='smsId')
+    smsId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
@@ -114,7 +114,7 @@ class SMS(models.Model):
 
 @receiver(post_save, sender=SMS)
 def sms_sender(sender, created, instance, **kwargs):
-    # try catch here
+
     if created:
         from sms_app.business.send_sms import send_sms
         try:

@@ -11,7 +11,6 @@ import json
 ############## SMS Old ##############
 from sms_app.models import SMS, SMSEvent, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
-from .business.sms_id import SMSIdModelSerializer
 
 
 class SMSOldListView(APIView):
@@ -102,22 +101,6 @@ class SMSEventListView(CommonListView, APIView):
 
 class SMSIdView(CommonView, APIView):
     Model = SMSId
-
-    @user_permission_3
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        try:
-            sms_id = SMSId.objects.get(entityName=data['entityName'],
-                                       entityRegistrationId=data['entityRegistrationId'],
-                                       smsId=data['smsId'],
-                                       smsIdRegistrationNumber=data['smsIdRegistrationNumber'])
-            print('Redundant SMS ID found')
-            return_data = SMSIdModelSerializer(sms_id).data
-        except SMSId.DoesNotExist:
-            print('No Redundant SMS ID found')
-            return_data = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'],
-                                                activeStudentID=kwargs['activeStudentID'])
-        return return_data
 
 
 class SMSIdListView(CommonListView, APIView):
