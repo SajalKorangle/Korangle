@@ -1,8 +1,8 @@
-<div class="card-content">
-    <ng-container *ngIf="!stateKeeper.isLoading">
+<div class="card-content table-responsive" *ngIf="!stateKeeper.isPageLoading">
         <mat-card>
-    <mat-card-title style="font-size:18px">NEW SMS ID</mat-card-title>
-
+            <mat-card-title style="font-size:18px">
+                NEW SMS ID
+            </mat-card-title>
                 <div class="row">
                     <div class="col-md-4">
                        <mat-form-field style="width: 100%">
@@ -35,6 +35,7 @@
                                 type="text"
                                 matInput
                                 [(ngModel)]="userInput.newSMSId.smsId"
+                                (ngModelChange)="serviceAdapter.getExistingSMSIdData()"
                             />
                        </mat-form-field>
                     </div>
@@ -56,16 +57,25 @@
             <div class="col-md-4">
                 <button
                         type="button"
+                        style="border-radius: 10px"
                         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                         (click)="serviceAdapter.addNewSMSId()"
+                        [disabled]="htmlRenderer.checkNullAndEmptySpace() || htmlRenderer.smsIdAlreadyExist() || htmlRenderer.invalidSMSIdDetails()"
                 >ADD
                 </button>
             </div>
+            <div class="col-md-4">
+                <div class="row" *ngIf="htmlRenderer.smsIdAlreadyExist()"><span style="color: red;font-weight: 400">SMS ID Already Exist in your List</span></div>
+                <div class="row" *ngIf="htmlRenderer.invalidSMSIdDetails()"><span style="color: red;font-weight: 400">Invalid Entity Registration Id for the Provided SMS ID</span></div>
+            </div>
+            
         </div>
 </mat-card>
-    
+        
+        
+    <ng-container *ngIf="backendData.SMSIdList.length>0 && !stateKeeper.isSMSIdTableLoading">
     <mat-form-field style="margin-top:20px;margin-bottom:5px;margin-left:5px">
-            <mat-select placeholder="Filter By Status" [ngModel]="userInput.selectedSMSStatus">
+            <mat-select placeholder="Filter By Status" [(ngModel)]="userInput.selectedSMSStatus">
                 <mat-option *ngFor="let status of statusChoiceList" [value]="status">
                     {{status}}
                 </mat-option>
@@ -83,21 +93,29 @@
                 <th class="text-left"> </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="!stateKeeper.isSMSIdTableLoading">
             <tr *ngFor="let SMSId of htmlRenderer.getFilteredSMSIdList();let i = index">
                 <td>{{i+1}}</td>
                 <td>{{SMSId.entityName}}</td>
-                <td>{{SMSId.smsId}}</td>
-                <td>{{SMSId.status}}</td>
+                <td style="font-weight: 400">{{SMSId.smsId}}</td>
+                <td [style.color]="SMSId.smsIdStatus == 'ACTIVATED'?'#4CAF50':'#C4C4C4'" style="font-weight: 500">{{SMSId.smsIdStatus}}</td>
                 <td>{{SMSId.smsIdRegistrationNumber}}</td>
-                <td><button class="custom-button" style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px" (click)="serviceAdapter.deleteSMSId(SMSId)"><i class="material-icons">delete</i></button>
-</td>
+                <td><button class="custom-button" style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px" (click)="serviceAdapter.deleteSMSId(SMSId)"><i class="material-icons">delete</i></button></td>
             </tr>
         </tbody>
+
      </table>
     </ng-container>
+        
+        <div class="row" *ngIf="stateKeeper.isSMSIdTableLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </div>
+        
+        <div *ngIf="backendData.SMSIdList.length==0" style="margin-top: 20px;margin-left: 5px">
+            [ There are no Existing SMS ID's ] 
+        </div>
 </div>
 
-<ng-container *ngIf="stateKeeper.isLoading">
+<ng-container *ngIf="stateKeeper.isPageLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

@@ -101,13 +101,11 @@ class SMSEventListView(CommonListView, APIView):
 
 class SMSIdView(CommonView, APIView):
     Model = SMSId
-    RelationsToSchool = ['entityName']
 
 
 class SMSIdListView(CommonListView, APIView):
-    
     Model = SMSId
-    RelationsToSchool = ['entityName']
+
 
 class SMSTemplateView(CommonView, APIView):
     Model = SMSTemplate

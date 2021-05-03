@@ -91,7 +91,7 @@ export class SendSmsServiceAdapter {
                 this.vm.studentSectionList = value[2];
                 this.populateStudentList(value[3]);
                 this.populateEmployeeList(value[4]);
-                this.vm.smsBalance = 10;
+                this.vm.smsBalance = value[5].count;
                 this.vm.studentParameterList = value[6].map((x) => ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map((x) => ({ name: x, show: false })),
