@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
         // progressBarView.setVisibility(ProgressBar.VISIBLE);
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
-       if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             String url = "http://";
             try {
                 JSONObject jsonObject = new JSONObject(resJSON2String("korangle/debug_ip.json"));
@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
-       } else { volleyFace.checkingUpdates(); }
+        } else { volleyFace.checkingUpdates(); }
     }
 
     private String resJSON2String(String filename_res){
@@ -330,7 +330,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -419,7 +418,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-
 
         return;
     }
