@@ -2,9 +2,7 @@ package com.korangle.www.korangle;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -18,7 +16,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -213,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     // back press button click handler
     @Override
     public void onBackPressed() {
@@ -225,11 +223,6 @@ public class MainActivity extends AppCompatActivity {
         }
         pressedTime = System.currentTimeMillis();
     }
-
-
-
-
-
 
     // Checks that the update is not stalled during 'onResume()'.
     // However, you should execute this check at all app entry points.
@@ -290,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
         // progressBarView.setVisibility(ProgressBar.VISIBLE);
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
-        if (BuildConfig.DEBUG) {
+       if (BuildConfig.DEBUG) {
             String url = "http://";
             try {
                 JSONObject jsonObject = new JSONObject(resJSON2String("korangle/debug_ip.json"));
@@ -302,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
-        } else { volleyFace.checkingUpdates(); }
+       } else { volleyFace.checkingUpdates(); }
     }
 
     private String resJSON2String(String filename_res){
@@ -329,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void checkPermissionInitially() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (this.checkSelfPermission(Manifest.permission.CAMERA)
@@ -338,7 +330,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     @Override
@@ -428,7 +419,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-
 
 
         return;
