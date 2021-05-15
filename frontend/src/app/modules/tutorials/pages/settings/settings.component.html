@@ -1,22 +1,23 @@
-<div class="card-content table-responsive" *ngIf="!isLoading">
+<div class="card-content table-responsive" *ngIf="!stateKeeper.isLoading">
 
     <div class="row">
         <b style="font-size:15px;margin-left:13px">EVENTS</b>
     </div>
 
-    <mat-expansion-panel [expanded]="false" style="margin-top: 15px; margin-bottom: 5px">
+    <mat-expansion-panel *ngFor="let smsEvent of userInput.populatedSMSEventSettingsList" [expanded]="false"
+                         style="margin-top: 15px; margin-bottom: 5px">
 
         <mat-expansion-panel-header>
             <mat-panel-title style="font-size:18px">
-                Tutorial Creation
+                {{smsEvent.eventName}}
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-            <mat-select placeholder="Send via" id="sentUpdateType" [ngModel]="sentUpdateType"
-                        (ngModelChange)="sentUpdateType = $event">
-                <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                    {{ sentType }}
+            <mat-select placeholder="Send via" id="sentUpdateType" [ngModel]="htmlRenderer.getUpdateType(smsEvent)"
+                        (ngModelChange)="htmlRenderer.setUpdateType(smsEvent,$event)">
+                <mat-option *ngFor="let sentType of backendData.sentUpdateList" [value]="sentType">
+                    {{ sentType.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -32,49 +33,18 @@
             </div>
 
             <div class="row">
-                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables</span>
+                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables - [ 'StudentName', 'TutorialName', 'Date' ,'SchoolName', 'Class', 'ClassSec', 'Subject']</span>
                 <br>
-                <mat-form-field [style.width]="isMobile()?'90%':'40%'" style="margin-left: 13px" appearance="none">
-                        <textarea
-                            #textareaRef
-                            matInput
-                            type="text"
+                 <mat-form-field style="width: 90%;margin-left: 13px" appearance="none">
+                  <textarea cols="42"
+                            rows="6"
+                            placeholder="Enter '@' and start typing..."
+                            [ngModel]="htmlRenderer.getNotificationContent(smsEvent)"
+                            (ngModelChange)="htmlRenderer.setNotificationContent(smsEvent,$event)"
                             cdkTextareaAutosize
-                            [(ngModel)]="text"
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                        ></textarea>
-                    <flx-mentions [textInputElement]="textareaRef"
-                                      [menuTemplate]="menuTemplate"
-                                      [triggerCharacter]="'@'"
-                                      [getChoiceLabel]="getChoiceLabel"
-                                      [searchRegexp]="'^([-&.\\w]+ *){0,3}$'"
-                                      (search)="loadChoices($event)"
-                                      (selectedChoicesChange)="onSelectedChoicesChange($event)"
-                                      [tagCssClass]="'highlight-mention'"
-                                      (menuShow)="onMenuShow()"
-                                      (menuHide)="onMenuHide()"></flx-mentions>
-
-                        <ng-template #menuTemplate
-                                     let-selectChoice="selectChoice">
-<!--                            <ul flxLoader-->
-<!--                                [flxLoaderVisible]="loading"-->
-<!--                                class="flx-selectable-list"-->
-<!--                                [class.loader-only]="!choices.length && loading">-->
-                            <ul class="menu-dropdown" style="max-height: 100px;overflow: auto;margin-top: 10px">
-                                <li *ngFor="let user of choices"
-                                    (click)="selectChoice(user)">
-                                    <span title="{{user.name}}">{{user.name}}</span>
-                                </li>
-                            </ul>
-                            
-                            
-                                
-<!--                            </ul>-->
-                        </ng-template>
-                </mat-form-field>
-                
-                                        
-                
+                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; margin-bottom:80px;padding: 12px 12px 20px;overflow: hidden"
+                  ></textarea>
+                 </mat-form-field>
             </div>
         </mat-expansion-panel>
 
@@ -87,10 +57,10 @@
             <div class="row">
                 <div class="col-md-4">
                     <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                        <mat-select placeholder="Select SMS ID" id="sentUpdateType2" [ngModel]="sentUpdateType"
-                                    (ngModelChange)="sentUpdateType = $event">
-                            <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                                {{ sentType }}
+                        <mat-select placeholder="Select SMS ID" id="selectSmsId" [ngModel]="htmlRenderer.getSelectedSMSId(smsEvent)"
+                                    (ngModelChange)="htmlRenderer.setSMSIdSelection(smsEvent, $event)">
+                            <mat-option *ngFor="let smsId of populatedSMSIdList" [value]="smsId">
+                                {{ smsId.smsId }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -98,10 +68,12 @@
             </div>
 
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-5" *ngIf="smsEvent.smsId.smsId != 'Default'">
                     <div class="row">
                         <b style="font-size: 15px;margin-left: 13px;float:left">Template Content<span
-                                style="font-size: 10px;color:green;margin-left: 13px">( APPROVED )</span></b>
+                                style="font-size: 10px;color:green;margin-left: 13px"
+                                *ngIf="smsEvent.customEventTemplate.smsIdStatus">( {{smsEvent.customEventTemplate.smsIdStatus}}
+                            )</span></b>
                     </div>
                     <div class="row">
                         <span style="font-size: 10px;color:orange;margin-left: 13px">(Make sure your template is registered in DLT)</span>
@@ -112,6 +84,8 @@
                             matInput
                             type="text"
                             cdkTextareaAutosize
+                            [ngModel]="smsEvent.customEventTemplate.rawContent"
+                            (ngModelChange)="htmlRenderer.rawContentChanged(smsEvent,$event)"
                             style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
                     ></textarea><br>
 
@@ -119,42 +93,46 @@
                     </div>
 
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5" [style.marginLeft.px]="smsEvent.smsId.smsId == 'Default'?13:0">
                     <div class="row">
                         <b style="font-size: 15px;float:left">Template Used As</b>
                     </div>
-                    <div class="row">
-                        <span style="font-size: 10px;color:rebeccapurple;">Select the variables by clicking on @</span>
+                    <div class="row" *ngIf="smsEvent.smsId.smsId != 'Default'">
+                        <span style="font-size: 10px;color:rebeccapurple;">Change @variables with [ 'StudentName', 'TutorialName', 'Date' ,'SchoolName', 'Class', 'ClassSec', 'Subject']</span>
                     </div>
                     <div class="row">
                         <mat-form-field style="width: 100%;" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
+                    <textarea matInput
+                              type="text"
+                              [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
+                              cdkTextareaAutosize
+                              readonly
+                              style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
                     ></textarea>
                         </mat-form-field>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="smsEvent.smsId.smsId != 'Default'">
                 <div class="col-md-4">
                     <mat-form-field style="width: 100%;">
-                        <input type="text" matInput placeholder="Template ID">
+                        <input type="text" matInput [(ngModel)]="smsEvent.customEventTemplate.templateId"
+                               placeholder="Template ID">
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <mat-form-field style="width: 100%;">
-                        <input type="text" matInput placeholder="Template Name">
+                        <input type="text" matInput [(ngModel)]="smsEvent.customEventTemplate.templateName"
+                               placeholder="Template Name">
                     </mat-form-field>
                 </div>
                 <div class="col-md-4">
                     <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                        <mat-select placeholder="Communication Type" id="sentUp2dateType2" [ngModel]="sentUpdateType"
-                                    (ngModelChange)="sentUpdateType = $event">
-                            <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                                {{ sentType }}
+                        <mat-select placeholder="Communication Type" id="sentUp2dateType2"
+                                    [ngModel]="smsEvent.customEventTemplate.communicationType"
+                                    (ngModelChange)="smsEvent.customEventTemplate.communicationType = $event">
+                            <mat-option *ngFor="let comType of communicationTypeList" [value]="comType">
+                                {{ comType }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -167,288 +145,17 @@
                 type="submit"
                 style="border-radius: 10px"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                [disabled]="htmlRenderer.isUpdateDisabled(smsEvent)"
+                (click)="serviceAdapter.updateSettings(smsEvent)"
         >
             Update
         </button>
 
     </mat-expansion-panel>
-
-    <mat-expansion-panel [expanded]="false" style="margin-top: 15px; margin-bottom: 5px">
-
-        <mat-expansion-panel-header>
-            <mat-panel-title style="font-size:18px">
-                Tutorial Updation
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-            <mat-select placeholder="Send via" id="seantUpdateType" [ngModel]="sentUpdateType"
-                        (ngModelChange)="sentUpdateType = $event">
-                <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                    {{ sentType }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-expansion-panel [expanded]="false" style="margin-top: 5px; margin-bottom: 5px">
-            <mat-expansion-panel-header>
-                <mat-panel-title style="font-size:16px">
-                    Notification Format
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-                <b style="font-size: 15px;margin-left: 13px;">Enter Template Content</b>
-            </div>
-
-            <div class="row">
-                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables</span>
-                <br>
-                <mat-form-field [style.width]="isMobile()?'90%':'40%'" style="margin-left: 13px" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                    ></textarea>
-                </mat-form-field>
-            </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel [expanded]="false" style="margin-top: 10px; margin-bottom: 5px">
-            <mat-expansion-panel-header>
-                <mat-panel-title style="font-size:16px">
-                    SMS Format
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-                <div class="col-md-4">
-                    <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                        <mat-select placeholder="Select SMS ID" id="saentUpdateType2" [ngModel]="sentUpdateType"
-                                    (ngModelChange)="sentUpdateType = $event">
-                            <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                                {{ sentType }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="row">
-                        <b style="font-size: 15px;margin-left: 13px;float:left">Template Content<span
-                                style="font-size: 10px;color:green;margin-left: 13px">( APPROVED )</span></b>
-                    </div>
-                    <div class="row">
-                        <span style="font-size: 10px;color:orange;margin-left: 13px">(Make sure your template is registered in DLT)</span>
-                    </div>
-                    <div class="row">
-                        <mat-form-field style="width: 90%;margin-left: 13px" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                    ></textarea><br>
-
-                        </mat-form-field>
-                    </div>
-
-                </div>
-                <div class="col-md-5">
-                    <b style="font-size: 15px;margin-top:5px;float:left">Template Used As</b>
-                    <mat-form-field style="width: 100%;margin-left: 13px;margin-top:18px" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                    ></textarea>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <mat-form-field style="width: 100%;">
-                        <input type="text" matInput placeholder="Template ID">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field style="width: 100%;">
-                        <input type="text" matInput placeholder="Template Name">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                        <mat-select placeholder="Communication Type" id="senstUp2dateType2" [ngModel]="sentUpdateType"
-                                    (ngModelChange)="sentUpdateType = $event">
-                            <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                                {{ sentType }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-        </mat-expansion-panel>
-
-
-        <button
-                type="submit"
-                style="border-radius: 10px"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        >
-            Update
-        </button>
-
-    </mat-expansion-panel>
-
-    <mat-expansion-panel [expanded]="false" style="margin-top: 15px; margin-bottom: 5px">
-
-        <mat-expansion-panel-header>
-            <mat-panel-title style="font-size:18px">
-                Tutorial Deletion
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-            <mat-select placeholder="Send via" id="sentUpdaasteType" [ngModel]="sentUpdateType"
-                        (ngModelChange)="sentUpdateType = $event">
-                <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                    {{ sentType }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-expansion-panel [expanded]="false" style="margin-top: 5px; margin-bottom: 5px">
-            <mat-expansion-panel-header>
-                <mat-panel-title style="font-size:16px">
-                    Notification Format
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-                <b style="font-size: 15px;margin-left: 13px;">Enter Template Content</b>
-            </div>
-
-            <div class="row">
-                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables</span>
-                <br>
-                <mat-form-field [style.width]="isMobile()?'90%':'40%'" style="margin-left: 13px" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                    ></textarea>
-                </mat-form-field>
-            </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel [expanded]="false" style="margin-top: 10px; margin-bottom: 5px">
-            <mat-expansion-panel-header>
-                <mat-panel-title style="font-size:16px">
-                    SMS Format
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-                <div class="col-md-4">
-                    <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                        <mat-select placeholder="Select SMS ID" id="sentUpdatsaeType2" [ngModel]="sentUpdateType"
-                                    (ngModelChange)="sentUpdateType = $event">
-                            <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                                {{ sentType }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="row">
-                        <b style="font-size: 15px;margin-left: 13px;float:left">Template Content<span
-                                style="font-size: 10px;color:green;margin-left: 13px">( APPROVED )</span></b>
-                    </div>
-                    <div class="row">
-                        <span style="font-size: 10px;color:orange;margin-left: 13px">(Make sure your template is registered in DLT)</span>
-                    </div>
-                    <div class="row">
-                        <mat-form-field style="width: 90%;margin-left: 13px" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                    ></textarea><br>
-
-                        </mat-form-field>
-                    </div>
-
-                </div>
-                <div class="col-md-5">
-                    <b style="font-size: 15px;margin-top:5px;float:left">Template Used As</b>
-                    <mat-form-field style="width: 100%;margin-left: 13px;margin-top:18px" appearance="none">
-                    <textarea
-                            matInput
-                            type="text"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
-                    ></textarea>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <mat-form-field style="width: 100%;">
-                        <input type="text" matInput placeholder="Template ID">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field style="width: 100%;">
-                        <input type="text" matInput placeholder="Template Name">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-4">
-                    <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                        <mat-select placeholder="Communication Type" id="sentUp2sdateType2" [ngModel]="sentUpdateType"
-                                    (ngModelChange)="sentUpdateType = $event">
-                            <mat-option *ngFor="let sentType of sentUpdateList" [value]="sentType">
-                                {{ sentType }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-        </mat-expansion-panel>
-
-
-        <button
-                type="submit"
-                style="border-radius: 10px"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        >
-            Update
-        </button>
-
-    </mat-expansion-panel>
-
-
-    <!--    <br />-->
-
-    <!--    <span style="margin-right: 10px">Send Update For: &nbsp;</span>-->
-    <!--    <mat-checkbox style="margin-right: 5px" [disabled]="sentUpdateType == 'NULL'" [(ngModel)]="sendCreateUpdate"-->
-    <!--        >Tutorial Creation &nbsp;</mat-checkbox-->
-    <!--    >-->
-    <!--    <mat-checkbox style="margin-right: 5px" [disabled]="sentUpdateType == 'NULL'" [(ngModel)]="sendEditUpdate"-->
-    <!--        >Tutorial Updation &nbsp;</mat-checkbox-->
-    <!--    >-->
-    <!--    <mat-checkbox style="margin-right: 5px" [disabled]="sentUpdateType == 'NULL'" [(ngModel)]="sendDeleteUpdate"-->
-    <!--        >Tutorial Deletion &nbsp;</mat-checkbox-->
-    <!--    >-->
-    <!--    <br />-->
 
 
 </div>
 
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

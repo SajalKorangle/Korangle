@@ -14,7 +14,7 @@ from sms_app.db_script.populate_sms_templates import populate_sms_templates
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('information_app', '0004_auto_20210130_1500'),
+        ('information_app', '0005_auto_20210510_1537'),
         ('sms_app', '0005_sms_parentmessagetype'),
         ('homework_app', '0001_initial'),
         ('tutorial_app', '0002_tutorialsettings'),
