@@ -42,16 +42,295 @@
     font-weight: 400;
 }
 
-/*mat-form-field {
-	margin-top: 15px;
-	width: 100%;
+
+
+
+.menu-dropdown {
+  padding-left: 2px;  
+  position: absolute;
+  background: #ebebeb;
+  max-height: 100px;
+  overflow: auto;
+	z-index: 1100120 !important;
 }
-mat-form-field input,
-mat-form-field mat-select {
-	padding-top: 5px;
-	padding-bottom: 4px;
+
+.menu-dropdown:after {
+  content: "";
+  display: block;
+  height: 0;
+  border-top: 5px solid #ebebeb;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 101;
+  transition: 0.5s border-top;
 }
-mat-form-field input[type='date'] {
-	padding-top: 2px;
-	padding-bottom: 1px;
-}*/
+
+.menu-dropdown > * {
+  overflow: hidden;
+  height: 30px;
+  padding: 5px 10px;
+  background: rgba(0,0,0,0);
+  white-space: nowrap;
+  transition: 
+    0.5s height cubic-bezier(.73,.32,.34,1.5),
+    0.5s padding cubic-bezier(.73,.32,.34,1.5),
+    0.5s margin cubic-bezier(.73,.32,.34,1.5),
+    0.5s 0.2s color,
+    0.2s background-color;
+}
+
+.menu-dropdown> *:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+.menu:not(:hover) > .menu-dropdown > * {
+  visibility: hidden;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+  color: rgba(25,25,25,0);
+  transition: 
+    0.5s 0.1s height,
+    0.5s 0.1s padding,
+    0.5s 0.1s margin,
+    0.3s color,
+    0.6s visibility;
+  z-index: 99;
+}
+
+
+
+/*::ng-deep .tribute-container {*/
+/*    top: 50px !important;*/
+/*  background: #ebebeb !important;*/
+/*}*/
+
+/*!*mat-form-field {*/
+/*	margin-top: 15px;*/
+/*	width: 100%;*/
+/*}*/
+/*mat-form-field input,*/
+/*mat-form-field mat-select {*/
+/*	padding-top: 5px;*/
+/*	padding-bottom: 4px;*/
+/*}*/
+/*mat-form-field input[type='date'] {*/
+/*	padding-top: 2px;*/
+/*	padding-bottom: 1px;*/
+/*}*!*/
+
+/*#wrapper {*/
+/*	width: 600px;*/
+/*	margin: 15px auto;*/
+/*	position: relative;*/
+/*}*/
+
+/*#input-box {*/
+/*	padding: 10px;*/
+/*	border: 1px solid black;*/
+/*	border-radius: 4px;*/
+/*}*/
+/*.mention {*/
+/*	display: inline-block;*/
+/*	position: relative;*/
+/*}*/
+/*.mention:not(.ignore) {*/
+/*	padding: 2px 8px 2px 4px;*/
+/*	border-radius: 50px;*/
+/*	background-color: #d8dbe3;*/
+/*	color: #616775;*/
+/*}*/
+/*.mention:not(.ignore).focused {*/
+/*	background-color: #ffe196;*/
+/*}*/
+/*.mention.ignore {*/
+/*	!*border: 1px solid black;*!*/
+/*}*/
+/*.mention.ignore.focused {*/
+/*	background-color: #ffe196;*/
+/*}*/
+
+/*.hidden {*/
+/*	display: none;*/
+/*}*/
+/*#mention-select-choices {*/
+/*	position: absolute;*/
+/*	margin-top: 25px;*/
+/*	margin-left: -10px;*/
+/*	background: #eee;*/
+/*	border: 1px solid #ccc;*/
+/*	border-radius: 5px;*/
+/*	user-select: none;*/
+/*	min-width: 200px;*/
+/*	max-height: 200px;*/
+/*	overflow-y: auto;*/
+/*	padding: 5px 0;*/
+/*	box-shadow: 0 7px 15px 0 rgba(0,0,0,.3);*/
+/*}*/
+/*#mention-select-choices ul {*/
+/*	margin: 0;*/
+/*	padding: 0;*/
+/*	list-style: none;*/
+/*}*/
+/*#mention-select-choices li {*/
+/*	cursor: pointer;*/
+/*	padding: 10px;*/
+/*}*/
+/*#mention-select-choices li.hover {*/
+/*	background: rgb(195, 215, 255);*/
+/*}*/
+/*.atwho-view {*/
+/*    position:absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    display: none;*/
+/*    margin-top: 18px;*/
+/*    background: white;*/
+/*    color: black;*/
+/*    border: 1px solid #DDD;*/
+/*    border-radius: 3px;*/
+/*    box-shadow: 0 0 5px rgba(0,0,0,0.1);*/
+/*    min-width: 120px;*/
+/*    z-index: 11110 !important;*/
+/*}*/
+
+/*.atwho-view .atwho-header {*/
+/*    padding: 5px;*/
+/*    margin: 5px;*/
+/*    cursor: pointer;*/
+/*    border-bottom: solid 1px #eaeff1;*/
+/*    color: #6f8092;*/
+/*    font-size: 11px;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.atwho-view .atwho-header .small {*/
+/*    color: #6f8092;*/
+/*    float: right;*/
+/*    padding-top: 2px;*/
+/*    margin-right: -5px;*/
+/*    font-size: 12px;*/
+/*    font-weight: normal;*/
+/*}*/
+
+/*.atwho-view .atwho-header:hover {*/
+/*    cursor: default;*/
+/*}*/
+
+/*.atwho-view .cur {*/
+/*    background: #3366FF;*/
+/*    color: white;*/
+/*}*/
+/*.atwho-view .cur small {*/
+/*    color: white;*/
+/*}*/
+/*.atwho-view strong {*/
+/*    color: #3366FF;*/
+/*}*/
+/*.atwho-view .cur strong {*/
+/*    color: white;*/
+/*    font:bold;*/
+/*}*/
+/*.atwho-view ul {*/
+/*    !* width: 100px; *!*/
+/*    list-style:none;*/
+/*    padding:0;*/
+/*    margin:auto;*/
+/*    max-height: 200px;*/
+/*    overflow-y: auto;*/
+/*}*/
+/*.atwho-view ul li {*/
+/*    display: block;*/
+/*    padding: 5px 10px;*/
+/*    border-bottom: 1px solid #DDD;*/
+/*    cursor: pointer;*/
+/*    !* border-top: 1px solid #C8C8C8; *!*/
+/*}*/
+/*.atwho-view small {*/
+/*    font-size: smaller;*/
+/*    color: #777;*/
+/*    font-weight: normal;*/
+/*}*/
+
+/*#inputcity{*/
+/*  width: 300px;*/
+/*  height: 100px;*/
+/*  background-color: white;*/
+/*}*/
+
+/*.atwho-inserted{*/
+/*  color:orange;*/
+
+/*}*/
+
+
+::ng-deep .flx-text-highlight-tag{
+    background-color: #c4c4c4 !important;
+    color: gray !important;
+    cursor: pointer !important;
+}
+
+
+
+#wrapper {
+	width: 600px;
+	margin: 15px auto;
+	position: relative;
+}
+
+#input-box {
+	padding: 10px;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+.mention {
+	display: inline-block;
+	position: relative;
+}
+.mention:not(.ignore) {
+	padding: 2px 8px 2px 4px;
+	border-radius: 50px;
+	background-color: #d8dbe3;
+	color: #616775;
+}
+.mention:not(.ignore).focused {
+	background-color: #ffe196;
+}
+.mention.ignore {
+	/*border: 1px solid black;*/
+}
+.mention.ignore.focused {
+	background-color: #ffe196;
+}
+
+.hidden {
+	display: none;
+}
+#mention-select-choices {
+	position: absolute;
+	margin-top: 25px;
+	margin-left: -10px;
+	background: #eee;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	user-select: none;
+	min-width: 200px;
+	max-height: 200px;
+	overflow-y: auto;
+	padding: 5px 0;
+	box-shadow: 0 7px 15px 0 rgba(0,0,0,.3);
+}
+#mention-select-choices ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+#mention-select-choices li {
+	cursor: pointer;
+	padding: 10px;
+}
+#mention-select-choices li.hover {
+	background: rgb(195, 215, 255);
+}

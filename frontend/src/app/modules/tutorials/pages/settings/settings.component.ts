@@ -1,30 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {SettingsServiceAdapter} from './settings.service.adapter';
+import {TutorialsService} from '../../../../services/modules/tutorials/tutorials.service';
+import {DataStorage} from '../../../../classes/data-storage';
+import {SmsService} from '@services/modules/sms/sms.service';
+import {SettingsHtmlRenderer} from '@modules/tutorials/pages/settings/settings.html.renderer';
 
-import { SettingsServiceAdapter } from './settings.service.adapter';
-import { TutorialsService } from '../../../../services/modules/tutorials/tutorials.service';
-import { DataStorage } from '../../../../classes/data-storage';
+declare const $: any;
+
 
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [TutorialsService],
+    providers: [TutorialsService, SmsService],
 })
 export class SettingsComponent implements OnInit {
     serviceAdapter: SettingsServiceAdapter;
+    htmlRenderer: SettingsHtmlRenderer;
+
     user: any;
-    isLoading: any;
 
-    sentUpdateList = ['NULL', 'SMS', 'NOTIFICATION', 'NOTIF./SMS'];
+    communicationTypeList = ['IMPLICIT', 'EXPLICIT', 'TRANSACTIONAL'];
+    populatedSMSEventSettingsList = [];
+    populatedSMSIdList = [];
 
-    sentUpdateType: any;
-    sendCreateUpdate: any;
-    sendEditUpdate: any;
-    sendDeleteUpdate: any;
+    backendData = {
+        smsEventSettingsList: [],
+        customEventTemplateList: [],
+        sentUpdateList: [{id: 1, name: 'NULL'}, {id: 2, name: 'SMS'}, {id: 3, name: 'NOTIFICATION'}, {id: 4, name: 'NOTIF./SMS'}],
+        smsIdList: [],
+        smsEventList: [],
+    };
 
-    previousSettings: any;
+    userInput = {
+        populatedSMSEventSettingsList: [],
+    };
 
-    constructor(public tutorialService: TutorialsService) {}
+    stateKeeper = {
+        isLoading: false,
+    };
+
+
+    constructor(public smsService: SmsService) {
+    }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -32,29 +50,9 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new SettingsHtmlRenderer();
+        this.htmlRenderer.initializeAdapter(this);
     }
 
-    getSentUpdateTypeIndex(sentType: any) {
-        if (sentType == 'NULL') {
-            return 0;
-        }
-        if (sentType == 'SMS') {
-            return 1;
-        }
-        if (sentType == 'NOTIFICATION') {
-            return 2;
-        }
-        if (sentType == 'NOTIF./SMS') {
-            return 3;
-        }
-    }
-
-    isSettingsChanged(): boolean {
-        return !(
-            this.previousSettings.sentUpdateType == this.getSentUpdateTypeIndex(this.sentUpdateType) + 1 &&
-            this.previousSettings.sendCreateUpdate == this.sendCreateUpdate &&
-            this.previousSettings.sendEditUpdate == this.sendEditUpdate &&
-            this.previousSettings.sendDeleteUpdate == this.sendDeleteUpdate
-        );
-    }
 }
