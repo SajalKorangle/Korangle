@@ -1,6 +1,9 @@
-import {AddAccountComponent} from './add-account.component';
+import { AddAccountComponent } from './add-account.component';
 
 export class AddAccountUserInput {
+
+    newUsername: string = '';
+    newPassword: string = '';
 
     vm: AddAccountComponent;
 

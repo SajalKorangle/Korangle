@@ -1,5 +1,16 @@
 <div class="card-content">
-    Under Construction !!!
+    <h4>Add Account</h4>
+
+    <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [(ngModel)]="userInput.username">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="text" [(ngModel)]="userInput.password">
+    </mat-form-field>
+
 </div>
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
