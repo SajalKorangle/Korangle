@@ -115,6 +115,18 @@ export class UpdateAllServiceAdapter {
                 }
             } else if (key == 'religion') {
                 data['newReligionField'] = newValue;
+            }
+            else if (key == 'dateOfAdmission') {
+                if (newValue == '') {
+                    newValue = null;
+                }
+                data[key] = newValue;
+            }
+            else if (key == 'dateOfBirth') {
+                if (newValue == '') {
+                    newValue = null;
+                }
+                data[key] = newValue;
             } else {
                 data[key] = newValue;
             }
