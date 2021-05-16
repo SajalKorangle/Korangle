@@ -15,7 +15,7 @@ class ZoomMeetingSignature(CommonView, APIView):
 
 
 
-from .models import OnlineClass
+from .models import OnlineClass, AccountInfo
 
 class OnlineClassView(CommonView, APIView):
     Model = OnlineClass
@@ -26,3 +26,12 @@ class OnlineClassListView(CommonListView, APIView):
     Model = OnlineClass
     RelationsToSchool = ['parentSchool__id']
 
+
+class AccountInfoView(CommonView, APIView):
+    Model = AccountInfo
+    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
+
+
+class AccountInfoListView(CommonListView, APIView):
+    Model = AccountInfo
+    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']

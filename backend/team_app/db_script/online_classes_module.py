@@ -11,7 +11,9 @@ def add_online_classes_module_and_tasks(apps, schema_editor):
 
     task_list = [
         ('join_class', 'Join Class'),
-        ('settings', 'Settings'),
+        ('settings', 'Schedule Class'),
+        ('add_account', 'Add Account'),
+        ('student_permission', 'Student Permission'),
     ]
 
     for index, task in enumerate(task_list):

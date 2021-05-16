@@ -1,8 +1,11 @@
 from django.db import models
+from django.db.models.base import Model
 
 # Create your models here.
 from school_app.model.models import School
 from class_app.models import Class, Division
+from subject_app.models import ClassSubject
+from employee_app.models import Employee
 
 import requests
 from django.dispatch import receiver
@@ -10,10 +13,16 @@ from django.db.models.signals import pre_save, pre_delete
 from helloworld_project import settings
 from .bussiness.zoom import newJWT
 
+class AccountInfo(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    username = models.CharField(max_length=150)
+    password = models.CharField(max_length=150)
+
+
 class OnlineClass(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
-    parentClass = models.ForeignKey(Class)
-    parentDivision = models.ForeignKey(Division)
+    parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
     startTime = models.TimeField(null=True, verbose_name='startTime')
     endTime = models.TimeField(null=True, verbose_name='endTime')
     meetingNumber = models.BigIntegerField(blank=True)
@@ -25,40 +34,40 @@ class OnlineClass(models.Model):
 
     class Meta:
         db_table = 'ActiveClasses'
-        unique_together=('parentSchool', 'parentClass', 'parentDivision')
+        unique_together=('parentSchool', 'parentClassSubject')
 
 
-@receiver(pre_save, sender=OnlineClass)
-def createZoomMeeting(sender, instance, **kwargs):
-    if(instance.id): # only for new objects
-        return
-    apiEndPoint = f'https://api.zoom.us/v2/users/{settings.ZOOM_EMAIL_ID}/meetings'
-    jwt = 'Bearer ' + newJWT()
+# @receiver(pre_save, sender=OnlineClass)
+# def createZoomMeeting(sender, instance, **kwargs):
+#     if(instance.id): # only for new objects
+#         return
+#     apiEndPoint = f'https://api.zoom.us/v2/users/{settings.ZOOM_EMAIL_ID}/meetings'
+#     jwt = 'Bearer ' + newJWT()
 
-    headers = {
-        "Authorization": jwt,
-        "Content-Type": "application/json",
-    }
+#     headers = {
+#         "Authorization": jwt,
+#         "Content-Type": "application/json",
+#     }
 
-    data = {
-        "topic": instance.parentClass.name + '-' + instance.parentDivision.name,
-        "type": 3,
-    }
+#     data = {
+#         "topic": instance.parentClass.name + '-' + instance.parentDivision.name,
+#         "type": 3,
+#     }
 
-    response = requests.post(apiEndPoint, json=data, headers=headers)
-    jsonResponse = response.json()
-    instance.meetingNumber = jsonResponse['id']
-    instance.password = jsonResponse['password']
+#     response = requests.post(apiEndPoint, json=data, headers=headers)
+#     jsonResponse = response.json()
+#     instance.meetingNumber = jsonResponse['id']
+#     instance.password = jsonResponse['password']
 
-@receiver(pre_delete, sender=OnlineClass)
-def deleteZoomMetting(sender, instance, **kwargs):
-    apiEndPoint = f'https://api.zoom.us/v2/meetings/{instance.meetingNumber}'
-    jwt = 'Bearer ' + newJWT()
+# @receiver(pre_delete, sender=OnlineClass)
+# def deleteZoomMetting(sender, instance, **kwargs):
+#     apiEndPoint = f'https://api.zoom.us/v2/meetings/{instance.meetingNumber}'
+#     jwt = 'Bearer ' + newJWT()
 
-    headers = {
-        "Authorization": jwt,
-    }
+#     headers = {
+#         "Authorization": jwt,
+#     }
 
-    response = requests.delete(apiEndPoint, headers=headers)
-    assert response.status_code == 204
+#     response = requests.delete(apiEndPoint, headers=headers)
+#     assert response.status_code == 204
 

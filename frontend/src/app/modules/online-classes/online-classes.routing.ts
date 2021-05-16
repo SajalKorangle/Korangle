@@ -15,6 +15,16 @@ const routes: Routes = [
     data: { moduleName: 'online_classes' },
   },
   {
+    path: 'add_account',
+    loadChildren: 'app/modules/online-classes/pages/add-account/add-account.module#AddAccountModule',
+    data: { moduleName: 'online_classes' },
+  },
+  {
+    path: 'student_permission',
+    loadChildren: 'app/modules/online-classes/pages/student-permission/student-permission.module#StudentPermissionModule',
+    data: { moduleName: 'online_classes' },
+  },
+  {
     path: '',
     component: OnlineClassesComponent,
   },
