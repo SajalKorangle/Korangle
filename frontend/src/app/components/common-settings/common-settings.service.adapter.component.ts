@@ -36,19 +36,21 @@ export class CommonSettingsServiceAdapterComponent {
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
         this.vm.backendData.smsEventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, smsEventSettingsData);
-
-        if (!this.vm.backendData.smsEventSettingsList) {
-            let smsEventSettingsCreatingData = [];
-            this.vm.orderedEventNames.forEach(eventName => {
-                let temp = {
-                    'parentSMSEvent': this.vm.backendData.smsEventList.find(event => event.eventName == eventName.name),
-                    'parentSchool': this.vm.user.activeSchool.dbId,
-                    'parentSentUpdateType': 1 //NULL
-                };
-                smsEventSettingsCreatingData.push(temp);
+        console.log(this.vm.backendData.smsEventSettingsList);
+        if (this.vm.backendData.smsEventSettingsList.length < this.vm.orderedEventNames.length) {
+            this.vm.backendData.smsEventList.forEach(smsEvent => {
+                let setting = this.vm.backendData.smsEventSettingsList.find(set => set.parentSMSEvent == smsEvent.id);
+                if (!setting) {
+                    let tempSettings = {
+                        'parentSMSEvent': smsEvent.id,
+                        'parentSchool': this.vm.user.activeSchool.dbId,
+                        'parentSentUpdateType': 1, //NULL
+                        'parentSMSTemplate': null,
+                        'receiverType': null,
+                    };
+                    this.vm.backendData.smsEventSettingsList.push(tempSettings);
+                }
             });
-            this.vm.backendData.smsEventSettingsList = await this.vm.smsService.createObjectList(this.vm.smsService.sms_event_settings, smsEventSettingsData);
-            console.log(this.vm.backendData.smsEventSettingsList);
         }
 
         let smsTemplateData = {
@@ -81,17 +83,29 @@ export class CommonSettingsServiceAdapterComponent {
     async updateSettings(smsEvent: any) {
         this.vm.handleOnLoading(true);
         let parentTemplateId = null;
-        if (smsEvent.selectedSMSId.smsId != 'Default' && !smsEvent.customEventTemplate.id) {
-            const value1 = await this.vm.smsService.createObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
-            smsEvent.customEventTemplate = JSON.parse(JSON.stringify(value1));
-            this.vm.backendData.customEventTemplateList.push(value1);
-            parentTemplateId = value1.id;
+        if (smsEvent.selectedSMSId.smsId != 'Default') {
+            let templateValue;
+            if (!smsEvent.customEventTemplate.id) {
+                templateValue = await this.vm.smsService.createObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
+                parentTemplateId = templateValue.id;
+            } else {
+                templateValue = await this.vm.smsService.updateObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
+            }
+            smsEvent.customEventTemplate = JSON.parse(JSON.stringify(templateValue));
+            this.vm.backendData.customEventTemplateList.push(templateValue);
         }
         smsEvent.eventSettings.parentSMSTemplate = parentTemplateId;
-        const value = await this.vm.smsService.updateObject(this.vm.smsService.sms_event_settings, smsEvent.eventSettings);
+
+        let value;
+        if (smsEvent.eventSettings.id) { // checking whether it already has a dbId or creating a new setting
+            value = await this.vm.smsService.updateObject(this.vm.smsService.sms_event_settings, smsEvent.eventSettings);
+        } else {
+            value = await this.vm.smsService.createObject(this.vm.smsService.sms_event_settings, smsEvent.eventSettings);
+        }
         smsEvent.eventSettings = JSON.parse(JSON.stringify(value));
+
         Object.assign(
-            this.vm.populatedSMSEventSettingsList.find((t) => t.eventSettings.id === value.id),
+            this.vm.populatedSMSEventSettingsList.find((t) => t.id === smsEvent.id),
             JSON.parse(JSON.stringify(smsEvent))
         );
         this.vm.handleOnLoading(false);

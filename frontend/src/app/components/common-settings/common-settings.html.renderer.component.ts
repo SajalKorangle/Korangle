@@ -92,12 +92,5 @@ export class CommonSettingsHtmlRendererComponent {
         }
     }
 
-    getSendUpdateTo(smsEvent: any) {
-        
-    }
-
-    setSendUpdateTo(smsEvent: any, $event: any) {
-        
-    }
 }
 

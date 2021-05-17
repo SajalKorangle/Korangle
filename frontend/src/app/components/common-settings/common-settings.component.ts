@@ -18,7 +18,7 @@ export class CommonSettingsComponent implements OnInit {
 
     @Input() sendUpdateTo = false; // whether to specify sendUpdate
 
-    @Input() sendUpdateToList = []; // for dropdown
+    @Input() sendUpdateToList = []; // for SendUpdate dropdown
 
     @Output() isLoading = new EventEmitter<any>();
 
@@ -59,7 +59,7 @@ export class CommonSettingsComponent implements OnInit {
 
     ngOnInit() {
         this.orderedEventNames.forEach(event => {
-            event['expansionPanelState'] = {  // for saving expansion panel closed or open state
+            event['expansionPanelState'] = {  // for saving expansion panel closed or open state  after load
                 eventPanel: false,
                 notificationPanel: false,
                 smsPanel: false,
