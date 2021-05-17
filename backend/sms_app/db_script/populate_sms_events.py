@@ -12,14 +12,14 @@ def populate_sms_events(apps, schema_editor):
                                                          "Chapter @tutorialChapter; Topic @tutorialTopic")
     new_sms_event.save()
     new_sms_event = sms_event(eventName='Tutorial Updation',
-                              defaultSMSContent="The following tutorial has been deleted -\n Topic @tutorialTopic; "
+                              defaultSMSContent="The following tutorial has been edited -\n Topic @tutorialTopic; "
                                                 "Subject @subject; Chapter @tutorialChapter",
                               defaultNotificationContent="The following tutorial has been deleted -\n Topic "
                                                          "@tutorialTopic; Subject @subject; Chapter "
                                                          "@tutorialChapter")
     new_sms_event.save()
     new_sms_event = sms_event(eventName='Tutorial Deletion',
-                              defaultSMSContent="The following tutorial has been edited -\n Topic @tutorialTopic; "
+                              defaultSMSContent="The following tutorial has been deleted -\n Topic @tutorialTopic; "
                                                 "Subject @subject; Chapter @tutorialChapter",
                               defaultNotificationContent="The following tutorial has been edited -\n Topic "
                                                          "@tutorialTopic; Subject @subject; Chapter "

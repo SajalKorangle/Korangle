@@ -186,11 +186,11 @@ class SMSTemplate(models.Model):
 
     SERVICE_IMPLICIT = 'SERVICE IMPLICIT'
     SERVICE_EXPLICIT = 'SERVICE EXPLICIT'
-    PROMOTIONAL = 'PROMOTIONAL'
+    TRANSACTIONAL = 'TRANSACTIONAL'
     SMS_COMMUNICATION_TYPE = (
         (SERVICE_IMPLICIT, 'SERVICE IMPLICIT'),
         (SERVICE_EXPLICIT, 'SERVICE EXPLICIT'),
-        (PROMOTIONAL, 'PROMOTIONAL')
+        (TRANSACTIONAL, 'TRANSACTIONAL')
     )
 
     communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
@@ -213,7 +213,7 @@ class SMSTemplate(models.Model):
 class SMSEventSettings(models.Model):
     parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, null=False, verbose_name='parentSMSEvent')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0,
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, null=True,
                                           verbose_name='parentSMSTemplate')
     parentSentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, null=True,
                                              verbose_name='parentSentUpdateType')

@@ -1,46 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-// import { User } from 'app/classes/user';
-import { SchoolService } from '../../../../services/modules/school/school.service';
-import { UserService } from '../../../../services/modules/user/user.service';
-import { DataStorage } from '../../../../classes/data-storage';
-import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
-import { SettingsServiceAdapter } from './settings.service.adapter';
-import { Settings } from '../../../../services/modules/attendance/models/settings';
-import { RECEIVER_LIST } from '@modules/attendance/classes/constants';
+import {Component, OnInit} from '@angular/core';
+import {DataStorage} from '@classes/data-storage';
+import {RECEIVER_LIST} from '@modules/attendance/classes/constants';
+import {SettingsServiceAdapter} from '@modules/attendance/pages/settings/settings.service.adapter';
+import {SettingsHtmlRenderer} from '@modules/attendance/pages/settings/settings.html.renderer';
 
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
-    providers: [SchoolService, UserService, AttendanceService],
+    providers: [],
 })
 export class SettingsComponent {
     user: any;
-    sentUpdateList = ['NULL', 'SMS', 'NOTIFICATION', 'NOTIF./SMS'];
+
+    serviceAdapter: SettingsServiceAdapter;
+    htmlRenderer: SettingsHtmlRenderer;
 
     receiverList = RECEIVER_LIST;
 
-    isLoading = false;
+    stateKeeper = {
+        isLoading: false,
+    };
 
-    selectedSettings: Settings;
-    currentSettings: Settings;
+    attendanceEvents = [{
+        name: 'Attendance Creation'
+    }, {
+        name: 'Attendance Updation'
+    }];
 
-    serviceAdapter: SettingsServiceAdapter;
-
-    constructor(public schoolService: SchoolService, public userService: UserService, public attendanceService: AttendanceService) {}
+    constructor() {
+    }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.currentSettings = new Settings();
-        this.selectedSettings = new Settings();
+
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
-    }
 
-    isSettingsChanged(): boolean {
-        return !(
-            this.currentSettings.sentUpdateType == this.selectedSettings.sentUpdateType &&
-            this.currentSettings.receiverType == this.selectedSettings.receiverType
-        );
+        this.htmlRenderer = new SettingsHtmlRenderer();
+        this.htmlRenderer.initializeAdapter(this);
     }
 }

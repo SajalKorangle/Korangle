@@ -1,6 +1,7 @@
-import {SettingsComponent} from './settings.component';
+import {SettingsComponent} from '@modules/homework/pages/settings/settings.component';
 
-export class SettingsServiceAdapter {
+export class SettingsHtmlRenderer {
+
     vm: SettingsComponent;
 
     constructor() {
@@ -9,5 +10,5 @@ export class SettingsServiceAdapter {
     initializeAdapter(vm: SettingsComponent): void {
         this.vm = vm;
     }
-    
 }
+

@@ -71,10 +71,11 @@ export class ManageSmsIdServiceAdapter {
 
     async getExistingSMSIdData() {
         this.vm.backendData.existingSMSIdDetails = null;
-        if (this.vm.userInput.newSMSId.smsId && this.vm.userInput.newSMSId.smsId.trim() != '' && this.vm.userInput.newSMSId.smsId.length == 6 && !this.vm.htmlRenderer.smsIdAlreadyExist()) {
+        if (this.vm.userInput.newSMSId.smsId && this.vm.userInput.newSMSId.smsId.trim() != '' &&
+            this.vm.userInput.newSMSId.smsId.length == 6 && !this.vm.htmlRenderer.smsIdAlreadyExist()) {
             let sms_id_data = {
                 'smsId': this.vm.userInput.newSMSId.smsId
-            }
+            };
             const value = await this.vm.smsService.getObject(this.vm.smsService.sms_id, sms_id_data);
             this.vm.backendData.existingSMSIdDetails = {};
             this.vm.backendData.existingSMSIdDetails = value;
