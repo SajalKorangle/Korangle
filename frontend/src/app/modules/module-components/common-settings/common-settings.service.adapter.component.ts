@@ -1,4 +1,4 @@
-import {CommonSettingsComponent} from '@components/common-settings/common-settings.component';
+import {CommonSettingsComponent} from '@modules/module-components/common-settings/common-settings.component';
 
 export class CommonSettingsServiceAdapterComponent {
     vm: CommonSettingsComponent;
