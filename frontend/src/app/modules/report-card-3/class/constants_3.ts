@@ -465,6 +465,7 @@ export const HORIZONTAL_ALIGNMENT_LIST = [
 ];
 
 export const MARKS_NOT_AVAILABLE_CORROSPONDING_INT = -1;
+export const MARKS_AVAILABLE_BUT_ABSENT_CORROSPONDING_INT = -2;
 export var DEFAULT_MAXIMUM_MARKS = 100;
 export const DEFAULT_PASSING_MARKS = 40;
 
@@ -2089,12 +2090,17 @@ export class MarksLayer extends CanvasText implements Layer {
         }
         if (this.parentExamination && this.parentSubject) {
             let gradeValue: string = null;
-            this.marks = this.source.getValueFunc(
+      const marksTemp = this.source.getValueFunc(
                 this.ca.DATA,
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
-                this.marksType) * (this.outOf / this.source.getValueFunc(
+        this.marksType
+      );
+      this.marks =
+        marksTemp *
+        (this.outOf /
+          this.source.getValueFunc(
                     this.ca.DATA,
                     this.parentExamination,
                     this.parentSubject,
@@ -2111,11 +2117,23 @@ export class MarksLayer extends CanvasText implements Layer {
             }
             else {
                 if (this.inWords) {
-                    this.text = this.marks >= 0 ?
-                        getMarksInWords(Math.round(this.marks * Math.pow(10, this.decimalPlaces)) / Math.pow(10, this.decimalPlaces), this.decimalPlaces)
+          this.text =
+            this.marks >= 0
+              ? getMarksInWords(
+                  Math.round(this.marks * Math.pow(10, this.decimalPlaces)) /
+                    Math.pow(10, this.decimalPlaces),
+                  this.decimalPlaces
+                )
+              : marksTemp == -2
+              ? "Absent"
                         : this.alternateText;
                 } else {
-                    this.text = this.marks >= 0 ? this.marks.toFixed(this.decimalPlaces) : this.alternateText;
+          this.text =
+            this.marks >= 0
+              ? this.marks.toFixed(this.decimalPlaces)
+              : marksTemp == -2
+              ? "A"
+              : this.alternateText;
                 }
             }
             this.error = false;
@@ -2651,15 +2669,31 @@ class ExaminationParameterStructure {
         return 'N/A';
     }
 
-    static getMarks(dataObject: any, parentExamination: any, parentSubject: any, testType: string): number {
-        const student_test_object = dataObject.data.studentTestList.find(studentTest => {
-            return studentTest.parentExamination === parentExamination
-                && studentTest.parentSubject === parentSubject
-                && studentTest.testType === testType
-                && studentTest.parentStudent === dataObject.studentId;
-        });
-        if (student_test_object !== undefined && !isNaN(student_test_object.marksObtained)) {
+  static getMarks(
+    dataObject: any,
+    parentExamination: any,
+    parentSubject: any,
+    testType: string
+  ): number {
+    const student_test_object = dataObject.data.studentTestList.find(
+      (studentTest) => {
+        return (
+          studentTest.parentExamination === parentExamination &&
+          studentTest.parentSubject === parentSubject &&
+          studentTest.testType === testType &&
+          studentTest.parentStudent === dataObject.studentId
+        );
+      }
+    );
+    if (
+      student_test_object !== undefined &&
+      !isNaN(student_test_object.marksObtained)
+    ) {
+      if (student_test_object.absent) {
+        return MARKS_AVAILABLE_BUT_ABSENT_CORROSPONDING_INT;
+      } else {
             return student_test_object.marksObtained;
+      }
         } else {
             return MARKS_NOT_AVAILABLE_CORROSPONDING_INT;
         }

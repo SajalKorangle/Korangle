@@ -91,10 +91,13 @@
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <th *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails">
-                            <span *ngIf="test.testType === null">Max. Marks {{ test.maximumMarks }}</span>
-                            <span *ngIf="test.testType !== null">{{ test.testType }} Out of {{ test.maximumMarks }}</span>
-                        </th>
+                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails">
+                            <th>
+                                <span *ngIf="test.testType === null">Max. Marks {{ test.maximumMarks }}</span>
+                                <span *ngIf="test.testType !== null">{{ test.testType }} Out of {{ test.maximumMarks }}</span>
+                            </th>
+                            <th style="padding-left=4px;padding-right=4px;">Absent</th>
+                        </ng-container>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,31 +112,17 @@
                         <td>{{ i + 1 }}.</td>
                         <td>{{ student.name }}</td>
                         <td>{{ student.rollNumber }}</td>
-                        <td *ngFor="let test of student.testDetails">
-                            <input
-                                type="number"
-                                [(ngModel)]="test.newMarksObtained"
-                                (ngModelChange)="activateUpdate()"
-                                placeholder="Type marks here"
-                            />
-                        </td>
+                        <ng-container *ngFor="let test of student.testDetails">
+                            <td>
+                                <input type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
+                            </td>
+                            <td style="padding-left=4px;padding-right=4px;">
+                                <mat-checkbox style="margin-left: 14px" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
+                            </td>
+                        </ng-container>
                     </tr>
                 </tbody>
             </table>
-
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
-                <div class="col-md-12"></div>
-            </div>
-
-            <button
-                type="submit"
-                style="margin-left: 20px"
-                [disabled]="!isUpdated"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                (click)="serviceAdapter.updateStudentTestDetails()"
-            >
-                Update
-            </button>
         </ng-container>
     </ng-container>
 
