@@ -1,4 +1,5 @@
 declare const $: any;
+import { SESSION_CONSTANT, Session } from '@services/modules/school/models/session';
 
 export class CommonFunctions {
     static instance: CommonFunctions;
@@ -13,6 +14,15 @@ export class CommonFunctions {
     static scrollToTop(): void {
         const mainPannel = document.getElementById('main-pannel');
         mainPannel.scrollTop = 0;
+    }
+
+    static getActiveSession(): Session {
+        const today = new Date();
+        return SESSION_CONSTANT.find(session => {
+            const startDate = new Date(session.startDate);
+            const endDate = new Date(session.endDate);
+            return startDate < today && today < endDate;
+        })
     }
 
     copyObject(object: any): any {

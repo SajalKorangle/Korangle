@@ -9,6 +9,7 @@ import { StudentPermissionBackendData } from './student-permission.backend.data'
 
 import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
+import { OnlineClassService } from '@services/modules/online-class/online-class.service'
 
 @Component({
     selector: 'student-permission',
@@ -16,8 +17,9 @@ import { ClassService } from '@services/modules/class/class.service';
     styleUrls: ['./student-permission.component.css'],
     providers: [
         StudentService,
-        ClassService
-     ],
+        ClassService,
+        OnlineClassService
+    ],
 })
 
 export class StudentPermissionComponent implements OnInit {
@@ -29,11 +31,14 @@ export class StudentPermissionComponent implements OnInit {
     userInput: StudentPermissionUserInput;
     backendData: StudentPermissionBackendData;
 
-    isLoading: any;
+    isActiveSession: boolean;
 
-    constructor (
+    isLoading: boolean;
+
+    constructor(
         public studentService: StudentService,
         public classService: ClassService,
+        public onlineClassService: OnlineClassService
     ) { }
 
     ngOnInit(): void {
@@ -53,7 +58,7 @@ export class StudentPermissionComponent implements OnInit {
         this.serviceAdapter.initilizeData();
     }
 
-    initilizeHTMLRenderedData():void {
+    initilizeHTMLRenderedData(): void {
         // Populate Class Division of HTML Rendered
         this.htmlRenderer.classDivisionList = [];
         this.backendData.classList.forEach((classs) => {
@@ -88,8 +93,12 @@ export class StudentPermissionComponent implements OnInit {
         });
 
         // Add student in Studet Section in HTML Rendered
-        this.htmlRenderer.studentSectionList = this.backendData.studentSectionList.map(ss=>{
-            return {...ss, parentStudent: this.backendData.studentList.find(s=>s.id==ss.parentStudent) };
+        this.htmlRenderer.studentSectionList = this.backendData.studentSectionList.map(ss => {
+            return {
+                ...ss, parentStudent: this.backendData.studentList.find(s => s.id == ss.parentStudent),
+                selected: !this.backendData.restrictedStudentList.find(rs => rs.parentStudent == ss.parentStudent)
+            };
         });
+        console.log('ss: ', this.htmlRenderer.studentSectionList);
     }
 }
