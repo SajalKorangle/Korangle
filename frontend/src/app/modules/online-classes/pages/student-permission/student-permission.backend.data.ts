@@ -16,4 +16,12 @@ export class StudentPermissionBackendData {
         this.vm = vm;
     }
 
+    getClass(id:number) {
+        return this.classList.find(c=> c.id==id);
+    }
+
+    getDivision(id: number){
+        return this.divisionList.find(d=> d.id==id);   
+    }
+
 }

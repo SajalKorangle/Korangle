@@ -31,6 +31,8 @@ export class StudentPermissionServiceAdapter {
         this.vm.backendData.studentList = await this.vm.studentService.getObjectList(
             this.vm.studentService.student, request_student_data
         );
+
+        this.vm.initilizeHTMLRenderedData();
         this.vm.isLoading = false;
     }
 

@@ -9,7 +9,6 @@ import { StudentPermissionBackendData } from './student-permission.backend.data'
 
 import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
-import { Classs } from '@services/modules/class/models/classs';
 
 @Component({
     selector: 'student-permission',
@@ -52,5 +51,45 @@ export class StudentPermissionComponent implements OnInit {
         this.serviceAdapter = new StudentPermissionServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initilizeData();
+    }
+
+    initilizeHTMLRenderedData():void {
+        // Populate Class Division of HTML Rendered
+        this.htmlRenderer.classDivisionList = [];
+        this.backendData.classList.forEach((classs) => {
+            this.backendData.divisionList.forEach((division) => {
+                if (
+                    this.backendData.studentSectionList.find((studentSection) => {
+                        return studentSection.parentClass == classs.id && studentSection.parentDivision == division.id;
+                    }) != undefined
+                ) {
+                    this.htmlRenderer.classDivisionList.push({
+                        class: classs,
+                        section: division,
+                        selected: false,
+                    });
+                }
+            });
+        });
+
+        const divisionPerClassCount = {}; // count of divisions in each class
+        this.htmlRenderer.classDivisionList.forEach((cd) => {
+            if (divisionPerClassCount[cd.class.id]) divisionPerClassCount[cd.class.id] += 1;
+            else divisionPerClassCount[cd.class.id] = 1;
+        });
+
+        this.htmlRenderer.classDivisionList = this.htmlRenderer.classDivisionList.map((cd) => {
+            // showDivision based of division count per class
+            if (divisionPerClassCount[cd.class.id] == 1) {
+                return { ...cd, showDivision: false };
+            } else {
+                return { ...cd, showDivision: true };
+            }
+        });
+
+        // Add student in Studet Section in HTML Rendered
+        this.htmlRenderer.studentSectionList = this.backendData.studentSectionList.map(ss=>{
+            return {...ss, parentStudent: this.backendData.studentList.find(s=>s.id==ss.parentStudent) };
+        });
     }
 }

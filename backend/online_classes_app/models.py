@@ -6,6 +6,7 @@ from school_app.model.models import School
 from class_app.models import Class, Division
 from subject_app.models import ClassSubject
 from employee_app.models import Employee
+from student_app.models import Student
 
 import requests
 from django.dispatch import receiver
@@ -18,6 +19,10 @@ class AccountInfo(models.Model):
     parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT)
     username = models.CharField(max_length=150)
     password = models.CharField(max_length=150)
+
+    class Meta:
+        db_table = 'AccountInfo'
+        unique_together=('parentSchool', 'username')
 
 
 class OnlineClass(models.Model):
@@ -35,6 +40,9 @@ class OnlineClass(models.Model):
     class Meta:
         db_table = 'ActiveClasses'
         unique_together=('parentSchool', 'parentClassSubject')
+
+class RestrictedStudent(models.Model):
+    parentStudent = models.ForeignKey(Student, unique=True, on_delete=models.CASCADE)
 
 
 # @receiver(pre_save, sender=OnlineClass)
