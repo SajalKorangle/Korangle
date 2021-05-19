@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { ClassService } from '@services/modules/class/class.service';
-import { AddTutorialServiceAdapter } from '@modules/tutorials/pages/add-tutorial/add-tutorial.service.adapter';
-import { DataStorage } from '@classes/data-storage';
-import { StudentService } from '@services/modules/student/student.service';
-import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
-import { MatDialog } from '@angular/material/dialog';
-import { SubjectService } from '@services/modules/subject/subject.service';
-import { UpdateService } from '../../../../update/update-service';
+import {Component, OnInit} from '@angular/core';
+import {ClassService} from '@services/modules/class/class.service';
+import {AddTutorialServiceAdapter} from '@modules/tutorials/pages/add-tutorial/add-tutorial.service.adapter';
+import {DataStorage} from '@classes/data-storage';
+import {StudentService} from '@services/modules/student/student.service';
+import {TutorialsService} from '@services/modules/tutorials/tutorials.service';
+import {MatDialog} from '@angular/material/dialog';
+import {SubjectService} from '@services/modules/subject/subject.service';
+import {UpdateService} from '../../../../update/update-service';
 
-import { NotificationService } from '../../../../services/modules/notification/notification.service';
-import { SmsService } from 'app/services/modules/sms/sms.service';
-import { UserService } from 'app/services/modules/user/user.service';
-import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
-import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
+import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {SmsService} from 'app/services/modules/sms/sms.service';
+import {UserService} from 'app/services/modules/user/user.service';
+import {SmsOldService} from 'app/services/modules/sms/sms-old.service';
+import {AddTutorialHtmlRenderer} from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
 import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
 
 @Component({
@@ -60,7 +60,11 @@ export class AddTutorialComponent implements OnInit {
         sectionList: [],
         classSubjectList: [],
         subjectList: [],
-        fullStudentList: []
+        fullStudentList: [],
+        eventList: [],
+        eventSettingsList: [],
+        customTemplateList: []
+
     };
 
     userInput = {
@@ -91,7 +95,8 @@ export class AddTutorialComponent implements OnInit {
         public smsService: SmsService,
         public userService: UserService,
         public smsOldService: SmsOldService
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();

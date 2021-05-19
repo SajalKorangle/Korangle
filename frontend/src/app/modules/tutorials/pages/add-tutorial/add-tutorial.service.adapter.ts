@@ -1,9 +1,13 @@
-import { AddTutorialComponent } from './add-tutorial.component';
+import {AddTutorialComponent} from './add-tutorial.component';
+import moment = require('moment');
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
 
-    constructor() {}
+    tutorialEvents = ['Tutorial Creation', 'Tutorial Updation', 'Tutorial Deletion'];
+
+    constructor() {
+    }
 
     initializeAdapter(vm: AddTutorialComponent): void {
         this.vm = vm;
@@ -22,28 +26,28 @@ export class AddTutorialServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        let fetch_event_settings_list = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentEvent__in: this.tutorialEvents
+        };
+
         const value = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //2
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //3
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data), //4
-            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {
-                parentSchool: this.vm.user.activeSchool.dbId,
-            }), //5
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {eventName__in: this.tutorialEvents}), //5
             this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
         ]);
 
+        this.vm.backendData.eventList = value[5];
+
         this.vm.smsBalance = value[6];
-        if (value[5].length > 0) {
-            this.vm.settings = value[5][0];
-        } else {
-            this.vm.settings = {
-                sentUpdateType: 1,
-                sendCreateUpdate: false,
-                sendEditUpdate: false,
-                sendDeleteUpdate: false,
-            };
+        if (this.vm.backendData.eventList.length > 0) {
+            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event, fetch_event_settings_list);
+            this.vm.backendData.customTemplateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template,
+                {id__in: this.vm.backendData.eventSettingsList.map(el => el.parentSMSTemplate)});
         }
         this.vm.backendData.classList = value[0];
         this.vm.backendData.sectionList = value[1];
@@ -162,12 +166,19 @@ export class AddTutorialServiceAdapter {
         this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         this.vm.initializeNewTutorial();
         this.vm.stateKeeper.isLoading = false;
-        if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendCreateUpdate == true) {
-            this.vm.updateService.sendSMSNotificationNew(
+        let creationSettings = this.vm.backendData.eventSettingsList.find(sett => sett.parentSMSEvent == this.vm.backendData.eventList.find
+        (event => event.eventName == 'Tutorial Creation'));
+        let customSMSContent = this.vm.backendData.customTemplateList.find(cus => cus.id == creationSettings.parentSMSTemplate);
+        let rawSMSContent = customSMSContent ? customSMSContent.rawContent :
+            this.vm.backendData.eventList.find(evnt => evnt.id == creationSettings.parentSMSEvent).defaultSMSContent;
+        let rawNotificationContent = creationSettings.notificationMappedContent ? creationSettings.notificationMappedContent :
+            this.vm.backendData.eventList.find(evnt => evnt.id == creationSettings.parentSMSEvent).defaultNotificationContent;
+        if (creationSettings && creationSettings.parentSentUpdateType != 1) {
+            this.vm.updateService.sendSMSNotificationNew2(
                 this.vm.currentClassStudentList,
-                this.vm.createMessage,
-                this.vm.informationMessageType,
-                this.vm.settings.sentUpdateType,
+                rawSMSContent,
+                rawNotificationContent,
+                creationSettings,
                 this.vm.user.activeSchool.dbId,
                 this.vm.smsBalance
             );
@@ -261,7 +272,7 @@ export class AddTutorialServiceAdapter {
         return true;
     }
 
-   async removeOrCancel(tutorial: any) {
+    async removeOrCancel(tutorial: any) {
         if (tutorial.editable) {
             this.vm.userInput.editedTutorial = {};
             tutorial.editable = false;
@@ -294,7 +305,9 @@ export class AddTutorialServiceAdapter {
     async prepareStudentList() {
         this.vm.currentClassStudentList = [];
         let student_list = this.vm.backendData.fullStudentList.filter((student) => {
-            if (student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id) return true;
+            if (student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id) {
+                return true;
+            }
             return false;
         });
         let studentIdList = [];
@@ -321,6 +334,21 @@ export class AddTutorialServiceAdapter {
                 student['tutorialTopic'] = tutorial.topic;
             } else {
                 student.tutorialTopic = tutorial.topic;
+            }
+            if (student.date == undefined) {
+                student['date'] = moment().format('DD/MM/YYYY');
+            } else {
+                student.date = moment().format('DD/MM/YYYY');
+            }
+            if (student.studentName == undefined) {
+                student['studentName'] = student.name;
+            } else {
+                student.studentName = student.name;
+            }
+            if (student.schoolName == undefined) {
+                student['schoolName'] = this.vm.user.activeSchool.printName;
+            } else {
+                student.schoolName = this.vm.user.activeSchool.printName;
             }
             if (student.subject == undefined) {
                 student['subject'] = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
