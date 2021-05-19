@@ -13,9 +13,9 @@ def upload_avatar_to(instance, filename):
 
 class Employee(models.Model):
 
-    #ProfileImage
-    profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
-
+    # ProfileImage
+    profileImage = models.ImageField(
+        "Avatar", upload_to=upload_avatar_to, blank=True)
 
     # Name
     name = models.CharField(max_length=100)
@@ -59,7 +59,7 @@ class Employee(models.Model):
     # Joining Date
     dateOfJoining = models.DateField(null=True)
 
-    #Bank IFSC Code
+    # Bank IFSC Code
     bankIfscCode = models.TextField(null=True, blank=True)
 
     # Bank Name
@@ -87,7 +87,8 @@ class Employee(models.Model):
     dateOfLeaving = models.DateField(null=True)
 
     # School Id
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
+    parentSchool = models.ForeignKey(
+        School, on_delete=models.PROTECT, default=0)
 
     class Meta:
         db_table = 'employee'
@@ -96,9 +97,12 @@ class Employee(models.Model):
 
 class EmployeeSessionDetail(models.Model):
 
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='parentSession', default=0)
-    paidLeaveNumber = models.IntegerField(null=True, verbose_name='paidLeaveNumber')
+    parentEmployee = models.ForeignKey(
+        Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
+    parentSession = models.ForeignKey(
+        Session, on_delete=models.PROTECT, null=False, verbose_name='parentSession', default=0)
+    paidLeaveNumber = models.IntegerField(
+        null=True, verbose_name='paidLeaveNumber')
 
     class Meta:
         db_table = 'employee_session_detail'
@@ -107,8 +111,11 @@ class EmployeeSessionDetail(models.Model):
 
 class EmployeePermission(models.Model):
 
-    parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
+    parentTask = models.ForeignKey(
+        Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
+    parentEmployee = models.ForeignKey(
+        Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
+    configJSON = models.TextField(default="{}")
 
     def __str__(self):
         return self.parentEmployee.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)
@@ -116,4 +123,3 @@ class EmployeePermission(models.Model):
     class Meta:
         db_table = 'employee_permission'
         unique_together = ('parentTask', 'parentEmployee')
-
