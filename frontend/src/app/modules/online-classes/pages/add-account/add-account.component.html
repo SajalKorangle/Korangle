@@ -3,13 +3,14 @@
 
     <mat-form-field>
         <mat-label>Username</mat-label>
-        <input matInput type="text" [(ngModel)]="userInput.username">
+        <input matInput type="text" [(ngModel)]="userInput.newUsername">
     </mat-form-field>
 
     <mat-form-field>
         <mat-label>Password</mat-label>
-        <input matInput type="text" [(ngModel)]="userInput.password">
+        <input matInput type="text" [(ngModel)]="userInput.newPassword">
     </mat-form-field>
+
 
 </div>
 <ng-container *ngIf="isLoading">
