@@ -155,10 +155,8 @@ class StudentTest(models.Model):
 
 @receiver(post_delete, sender=TestSecond)
 def delete_test_second_student_test(sender, instance, **kwargs):
-    for student_section in StudentSection.objects.filter(parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
-        for student_test in StudentTest.objects.filter(parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent):
-            if(student_test.parentStudent.parentSchool == instance.parentExamination.parentSchool):
-                student_test.delete()
+    for student_section in StudentSection.objects.filter(parentStudent__parentSchool=instance.parentExamination.parentSchool,parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
+        StudentTest.objects.filter(testType=instance.testType,parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent).delete()
 
 
 class StudentExtraSubField(models.Model):
