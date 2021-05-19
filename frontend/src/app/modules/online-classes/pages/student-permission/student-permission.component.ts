@@ -7,11 +7,18 @@ import { StudentPermissionHtmlRenderer } from './student-permission.html.rendere
 import { StudentPermissionUserInput } from './student-permission.user.input';
 import { StudentPermissionBackendData } from './student-permission.backend.data';
 
+import { StudentService } from '@services/modules/student/student.service';
+import { ClassService } from '@services/modules/class/class.service';
+import { Classs } from '@services/modules/class/models/classs';
+
 @Component({
     selector: 'student-permission',
     templateUrl: './student-permission.component.html',
     styleUrls: ['./student-permission.component.css'],
-    providers: [ ],
+    providers: [
+        StudentService,
+        ClassService
+     ],
 })
 
 export class StudentPermissionComponent implements OnInit {
@@ -25,7 +32,10 @@ export class StudentPermissionComponent implements OnInit {
 
     isLoading: any;
 
-    constructor () { }
+    constructor (
+        public studentService: StudentService,
+        public classService: ClassService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -41,6 +51,6 @@ export class StudentPermissionComponent implements OnInit {
 
         this.serviceAdapter = new StudentPermissionServiceAdapter();
         this.serviceAdapter.initialize(this);
-
+        this.serviceAdapter.initilizeData();
     }
 }

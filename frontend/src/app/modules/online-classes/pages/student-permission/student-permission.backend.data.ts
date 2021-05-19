@@ -4,6 +4,12 @@ export class StudentPermissionBackendData {
 
     vm: StudentPermissionComponent;
 
+    classList: Array<any>;
+    divisionList: Array<any>;
+
+    studentList: Array<any>;
+    studentSectionList: Array<any>;
+
     constructor() { }
 
     initialize(vm: StudentPermissionComponent): void {

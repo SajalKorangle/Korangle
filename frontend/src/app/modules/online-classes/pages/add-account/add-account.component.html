@@ -1,18 +1,47 @@
 <div class="card-content">
-    <h4>Add Account</h4>
+    <mat-card>
+        <h4>Add Account</h4>
+        <div style="margin-left: 12px; width: fit-content;">
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input matInput type="text" [(ngModel)]="userInput.newUsername">
+            </mat-form-field>
 
-    <mat-form-field>
-        <mat-label>Username</mat-label>
-        <input matInput type="text" [(ngModel)]="userInput.newUsername">
-    </mat-form-field>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput type="text" [(ngModel)]="userInput.newPassword">
+            </mat-form-field>
 
-    <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input matInput type="text" [(ngModel)]="userInput.newPassword">
-    </mat-form-field>
+            <button mat-button (click)="serviceAdapter.addNewAccountInfo()"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}">
+                ADD
+            </button>
+        </div>
+    </mat-card>
+    
+    <hr/>
+    <h3 style="margin-top: 16px;" class="icon-text-wrapper"><mat-icon>history</mat-icon><span> History</span></h3>
 
+    <table *ngIf="backendData.accountInfoList.length > 0 else EmptyAccountInfo" class="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let accountInfo of backendData.accountInfoList">
+                <td>{{accountInfo.username}}</td>
+                <td>{{accountInfo.password}}</td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+
+<ng-template #EmptyAccountInfo>
+    <span>No past records</span>
+</ng-template>

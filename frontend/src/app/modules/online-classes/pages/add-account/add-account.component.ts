@@ -7,11 +7,14 @@ import { AddAccountHtmlRenderer } from './add-account.html.renderer';
 import { AddAccountUserInput } from './add-account.user.input';
 import { AddAccountBackendData } from './add-account.backend.data';
 
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
+
+
 @Component({
     selector: 'add-account',
     templateUrl: './add-account.component.html',
     styleUrls: ['./add-account.component.css'],
-    providers: [ ],
+    providers: [ OnlineClassService ],
 })
 
 export class AddAccountComponent implements OnInit {
@@ -25,7 +28,7 @@ export class AddAccountComponent implements OnInit {
 
     isLoading: any;
 
-    constructor () { }
+    constructor (public onlineClassService: OnlineClassService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -41,6 +44,14 @@ export class AddAccountComponent implements OnInit {
 
         this.serviceAdapter = new AddAccountServiceAdapter();
         this.serviceAdapter.initialize(this);
+        this.serviceAdapter.initializeData();
+    }
 
+    newAccountInfoSanatyCheck(): boolean{
+        if(this.userInput.newUsername == '' || this.userInput.newPassword == ''){
+            alert("Username or Password cannot be empty");
+            return false;
+        }
+        return true;
     }
 }

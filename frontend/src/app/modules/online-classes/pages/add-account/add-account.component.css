@@ -1,0 +1,9 @@
+.icon-text-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+mat-form-field{
+    margin: 12px;
+}
