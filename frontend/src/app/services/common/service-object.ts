@@ -18,7 +18,16 @@ export class ServiceObject extends RestApiGateway {
         let searchParams = new URLSearchParams();
         Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
         url = url + searchParams.toString();
-        return super.getData(url, data);
+        return super.getData(url, data).then(responseDate => {
+            if (responseDate) {
+                Object.keys(responseDate).forEach(key => {
+                    if (key.endsWith("JSON")) {
+                        responseDate[key] = JSON.parse(responseDate[key]);
+                    }
+                })
+            }
+            return responseDate;
+        });
     }
 
     getObjectList(object_url: any, data: any): Promise<any> {
@@ -29,7 +38,20 @@ export class ServiceObject extends RestApiGateway {
         Object.keys(data).forEach(key => {
             url += '&' + key + '=' + data[key];
         });
-        return super.getData(url, data);
+        return super.getData(url, data).then(responseDate => {
+            if (responseDate.length > 0) {
+                const jsonKeys = [];
+                Object.keys(responseDate[0]).forEach(key => {
+                    if (key.endsWith("JSON")) {
+                        jsonKeys.push(key);
+                    }
+                });
+                responseDate.forEeach(data => {
+                    jsonKeys.forEach(key => data[key] = JSON.parse(data[key]));
+                })
+            }
+            return responseDate;
+        });
     }
 
     createObject(object_url: any, data: any): Promise<any> {
