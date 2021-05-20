@@ -1,0 +1,29 @@
+<h2 mat-dialog-title style="display: flex; flex-direction: row; align-items: center;">
+    <span>In Page Permission:</span>
+    <mat-icon style="margin-left: 24px; margin-right: 8px;">{{data.module.icon}}</mat-icon>
+    <span>{{data.module.title}}</span>
+    <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
+</h2>
+<mat-dialog-content style="height: 62vh; width: 75vw">
+    <ng-container *ngFor="let permissionKey of getPermissionKeys()">
+        <mat-form-field>
+            <mat-label>{{taskPermissionStructure.permissionStructureMappedByKey[permissionKey].displayName}}</mat-label>
+            <ng-container
+                *ngIf="taskPermissionStructure.permissionStructureMappedByKey[permissionKey].inputType=='number'">
+                <input type="number">
+            </ng-container>
+            <ng-container
+                *ngIf="taskPermissionStructure.permissionStructureMappedByKey[permissionKey].inputType=='select'">
+                <mat-select>
+                    <mat-option
+                        *ngFor="let option of taskPermissionStructure.permissionStructureMappedByKey[permissionKey].allowedValues"
+                        [value]="option[0]">{{option[1]}}</mat-option>
+                </mat-select>
+            </ng-container>
+        </mat-form-field>
+    </ng-container>
+</mat-dialog-content>
+<div mat-dialog-actions style="color: white">
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue; margin-left: auto;"
+        cdkFocusInitial>Apply</button>
+</div>

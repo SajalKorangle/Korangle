@@ -1,4 +1,9 @@
-import { SettingStructure, Structure } from '@classes/task-settings';
+import { TaskPermissionStructure, PermissionStructure } from '@classes/task-settings';
 
-const pageSettings = new SettingStructure("tc", "cancel_tc");
-pageSettings.structure['userPermission'] = new Structure("User Permission", "string");
+const pageSettings = new TaskPermissionStructure("tc", "cancel_tc");
+
+
+pageSettings.permissionStructureMappedByKey['userPermission'] = new PermissionStructure(
+    "User Permission",
+    "select",
+    [["admin", "Admin"], ["teacher", "Teacher"]]);

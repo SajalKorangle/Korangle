@@ -52,7 +52,9 @@
 
                 <ng-container *ngFor="let module of moduleList">
                     <hr />
-                    <h4>{{ module.title }}</h4>
+                    <h4 style="display: flex; flex-direction: row; align-items: center;">
+                        <mat-icon style="margin-right: 8px;">{{module.icon}}</mat-icon>{{ module.title }}
+                    </h4>
                     <div style="display: flex; flex-wrap: wrap;">
                         <ng-container *ngFor="let task of module.taskList">
                             <!-- <mat-checkbox
@@ -65,16 +67,22 @@
                             </mat-checkbox>
                             <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom"></div>
                             <br /> -->
-                            <mat-card style="margin: 8px; cursor: pointer; overflow: hidden; position: relative;"
+                            <mat-card
+                                style="margin: 8px; cursor: pointer; overflow: hidden; position: relative; display: flex; flex-direction: row; align-items: center;"
                                 (click)="updatePermission(selectedEmployee, task)"
                                 [style.backgroundColor]="hasPermission(selectedEmployee, task)?'#4caf50':isDisabled(module, task, selectedEmployee)?'lightgrey':'white'"
                                 [style.color]="hasPermission(selectedEmployee, task)?'white':'black'"
                                 [style.opacity]="isDisabled(module, task, selectedEmployee)?'0.6':'1'"
-                                [style.pointerEvents]="isDisabled(module, task, selectedEmployee)?'none':'auto'">
+                                [style.pointerEvents]="isDisabled(module, task, selectedEmployee)?'none':'auto'"
+                                [style.paddingRight]="hasInPageTaskPermission(module, task)?'4px':''">
                                 <span>{{task.title}}</span>
-                                <div
+                                <mat-icon style="margin-left: 8px;" *ngIf="hasInPageTaskPermission(module, task)"
+                                    (click)="openInPagePermissionDialog(module, task); $event.stopPropagation()"
+                                    matTooltip="In-Page Permission">
+                                    more_vert</mat-icon>
+                                <div *ngIf="isPermissionLoading(selectedEmployee, task)"
                                     style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; display: flex; background-color: inherit;">
-                                    <mat-spinner diameter="25" style="margin: auto;"></mat-spinner>
+                                    <div style="margin: auto" class="loader-custom"></div>
                                 </div>
                             </mat-card>
                         </ng-container>

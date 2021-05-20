@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { FormControl } from '@angular/forms';
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
@@ -6,12 +7,14 @@ import { EmployeeService } from '../../../../services/modules/employee/employee.
 import { DataStorage } from '../../../../classes/data-storage';
 import { AssignTaskServiceAdapter } from './assign-task.service.adapter';
 import { TeamService } from '../../../../services/modules/team/team.service';
+import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
+import { TASK_PERMISSION_LIST } from '@classes/task-settings';
 
 @Component({
     selector: 'assign-task',
     templateUrl: './assign-task.component.html',
     styleUrls: ['./assign-task.component.css'],
-    providers: [EmployeeOldService, TeamService, EmployeeService],
+    providers: [MatDialog, EmployeeOldService, TeamService, EmployeeService],
 })
 export class AssignTaskComponent implements OnInit {
     user;
@@ -27,7 +30,11 @@ export class AssignTaskComponent implements OnInit {
     serviceAdapter: AssignTaskServiceAdapter;
     isLoading = false;
 
-    constructor(public employeeOldService: EmployeeOldService, public employeeService: EmployeeService, public teamService: TeamService) {}
+    constructor(
+        public dialog: MatDialog,
+        public employeeOldService: EmployeeOldService,
+        public employeeService: EmployeeService,
+        public teamService: TeamService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -140,5 +147,20 @@ export class AssignTaskComponent implements OnInit {
 
     isPermissionLoading(employee: any, task: any): boolean {
         return employee.permissionLoading && task.permissionLoading;
+    }
+
+    openInPagePermissionDialog(module, task) {
+        this.dialog.open(InPagePermissionDialogComponent, {
+            data: {
+                module,
+                task,
+            }
+        });
+    }
+
+    hasInPageTaskPermission(module, task): boolean {
+        if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path))
+            return true;
+        return false;
     }
 }
