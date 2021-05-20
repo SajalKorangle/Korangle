@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SmsService} from '@services/modules/sms/sms.service';
-import {CommonSettingsServiceAdapterComponent} from '@components/common-settings/common-settings.service.adapter.component';
-import {CommonSettingsHtmlRendererComponent} from '@components/common-settings/common-settings.html.renderer.component';
+import {CommonSettingsServiceAdapterComponent} from '@modules/module-components/common-settings/common-settings.service.adapter.component';
+import {CommonSettingsHtmlRendererComponent} from '@modules/module-components/common-settings/common-settings.html.renderer.component';
 
 @Component({
     selector: 'common-settings',
