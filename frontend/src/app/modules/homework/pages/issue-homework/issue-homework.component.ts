@@ -67,12 +67,7 @@ export class IssueHomeworkComponent implements OnInit {
     editableHomework: any;
 
     noPermission: any;
-    settings: any;
     smsBalance: any;
-
-    homeworkCreatedMessage = "New Homework is added in <subject>,\n Title - '<homeworkName>' \n Last date to submit - <deadLine> ";
-    homeworkUpdateMessage = "Please note, there are changes in the Homework '<homeworkName>' of <subject>";
-    homeworkDeleteMessage = "Please note, the homework '<homeworkName>' of subject <subject> has been removed";
 
     // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
@@ -94,7 +89,6 @@ export class IssueHomeworkComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        // this.updateService = new UpdateService(this.userService, this.notificationService, this.smsService);
 
         this.isInitialLoading = true;
         this.isLoading = false;

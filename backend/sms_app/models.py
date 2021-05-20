@@ -1,3 +1,5 @@
+import traceback
+
 from django.db import models
 from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
@@ -102,7 +104,7 @@ class SMS(models.Model):
     # School
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
-    #SMSId
+    # SMSId
     smsId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')
 
     def __str__(self):
@@ -114,13 +116,18 @@ class SMS(models.Model):
 
 @receiver(post_save, sender=SMS)
 def sms_sender(sender, created, instance, **kwargs):
-
+    response = {'remark': 'ONLY NOTIFICATION', 'requestId': 0}
     if created:
         from sms_app.business.send_sms import send_sms
         try:
-            response = send_sms(instance.__dict__)
-        except:
+            if instance.count > 0:
+                response = send_sms(instance.__dict__)
+        except Exception as e:
+            traceback.print_exc()
             response = {'remark': 'EXCEPTION OCCURRED', 'requestId': 0}
+            instance.sentStatus = False
+
+        if response['requestId'] == 0:
             instance.sentStatus = False
 
         instance.requestId = response['requestId']
@@ -217,15 +224,14 @@ class SMSEventSettings(models.Model):
                                           verbose_name='parentSMSTemplate')
     parentSentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, null=True,
                                              verbose_name='parentSentUpdateType')
-    notificationMappedContent = models.TextField(null=True, verbose_name='notificationMappedContent')
+    customNotificationContent = models.TextField(null=True, verbose_name='customNotificationContent')
 
     UPDATE_ALL = 'All Students'
     UPDATE_ABSENT = 'Only Absent Students'
     UPDATE_TO_CHOICES = [
         (UPDATE_ALL, 'All Students'),
         (UPDATE_ABSENT, 'Only Absent Students')
-    ]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+    ]
 
     receiverType = models.CharField(max_length=20, choices=UPDATE_TO_CHOICES, null=True,
                                     verbose_name='receiverType')
-

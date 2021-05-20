@@ -8,6 +8,7 @@
             [orderedEventNames]="attendanceEvents"
             [sendUpdateTo]="true"
             [sendUpdateToList]="receiverList"
+            [extraVariables]="attendanceVariables"
             (isLoading)="stateKeeper.isLoading=$event">
     </common-settings>
 

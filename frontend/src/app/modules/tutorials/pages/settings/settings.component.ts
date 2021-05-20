@@ -19,6 +19,7 @@ export class SettingsComponent implements OnInit {
         isLoading: false,
     };
 
+    variablesAvailable = ['tutorialChapter', 'tutorialTopic', 'subject'];
     tutorialEvents = [{
         name: 'Tutorial Creation'
     }, {
@@ -40,6 +41,5 @@ export class SettingsComponent implements OnInit {
         this.htmlRenderer = new SettingsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
     }
-
 
 }

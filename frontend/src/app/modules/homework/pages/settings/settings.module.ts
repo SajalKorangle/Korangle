@@ -8,7 +8,7 @@ import {ModuleComponentsModule} from '@modules/module-components/module-componen
 @NgModule({
     declarations: [SettingsComponent],
 
-    imports: [SettingsRoutingModule, ComponentsModule,ModuleComponentsModule],
+    imports: [SettingsRoutingModule, ComponentsModule, ModuleComponentsModule],
     exports: [],
     providers: [],
     bootstrap: [SettingsComponent],

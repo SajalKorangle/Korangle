@@ -43,7 +43,6 @@ import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 import { LocalDatePipe } from './../pipes/local-date-format.pipe';
 import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
-import {CommonSettingsComponent} from '@components/../modules/module-components/common-settings/common-settings.component';
 
 @NgModule({
     declarations: [

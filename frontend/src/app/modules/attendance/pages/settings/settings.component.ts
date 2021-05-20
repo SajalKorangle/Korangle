@@ -20,6 +20,8 @@ export class SettingsComponent {
     stateKeeper = {
         isLoading: false,
     };
+    
+    attendanceVariables = ['attendanceStatus', 'attendanceDate'];
 
     attendanceEvents = [{
         name: 'Attendance Creation'

@@ -15,6 +15,7 @@ import { RecordAttendanceServiceAdapter } from './record-attendance.service.adap
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
+import {UpdateService} from '../../../../update/update-service';
 
 @Component({
     selector: 'record-attendance',
@@ -50,9 +51,6 @@ export class RecordAttendanceComponent implements OnInit {
     mobileNumberList = [];
     STUDENT_LIMITER = 200;
 
-    studentUpdateMessage = 'Your ward, <name> is marked <attendanceStatus> on <dateOfAttendance>';
-    studentAlternateMessage = "Your ward's attendance has been corrected to <attendanceStatus>";
-
     sentTypeList = ['NULL', 'SMS', 'NOTIFICATION', 'NOTIF./SMS'];
 
     studentList: any;
@@ -64,11 +62,20 @@ export class RecordAttendanceComponent implements OnInit {
 
     selectedReceiver: any;
 
+    createdStudentList = [];
+    updatedStudentList = [];
+
+    backendData = {
+        eventList: [],
+        eventSettingsList: [],
+    };
+
     notif_usernames = [];
 
     serviceAdapter: RecordAttendanceServiceAdapter;
 
     currentAttendanceList = [];
+    updateService: any;
 
     constructor(
         private excelService: ExcelService,
@@ -93,6 +100,8 @@ export class RecordAttendanceComponent implements OnInit {
         this.isInitialLoading = true;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
     }
 
     classSectionInPermissionList(classDbId: number, sectionDbId: number, attendancePermissionList: any): boolean {

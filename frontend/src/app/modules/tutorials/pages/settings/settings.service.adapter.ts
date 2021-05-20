@@ -1,11 +1,9 @@
-import {SettingsComponent} from './settings.component';
+import { SettingsComponent } from './settings.component';
 
 export class SettingsServiceAdapter {
     vm: SettingsComponent;
 
-
-    constructor() {
-    }
+    constructor() {}
 
     initializeAdapter(vm: SettingsComponent): void {
         this.vm = vm;

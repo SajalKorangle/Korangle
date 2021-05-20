@@ -39,15 +39,15 @@ export class CommonSettingsHtmlRendererComponent {
     }
 
     getNotificationContent(smsEvent: any) {
-        if (smsEvent.eventSettings.notificationMappedContent &&
-            smsEvent.eventSettings.notificationMappedContent.trim() == smsEvent.defaultNotificationContent) {
-            smsEvent.eventSettings.notificationMappedContent = null;
+        if (smsEvent.eventSettings.customNotificationContent &&
+            smsEvent.eventSettings.customNotificationContent.trim() == smsEvent.defaultNotificationContent) {
+            smsEvent.eventSettings.customNotificationContent = null;
         }
-        return smsEvent.eventSettings.notificationMappedContent ? smsEvent.eventSettings.notificationMappedContent : smsEvent.defaultNotificationContent;
+        return smsEvent.eventSettings.customNotificationContent ? smsEvent.eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
     }
 
     setNotificationContent(smsEvent: any, $event: any) {
-        smsEvent.eventSettings.notificationMappedContent = $event;
+        smsEvent.eventSettings.customNotificationContent = $event;
     }
 
     setSMSIdSelection(smsEvent: any, $event: any) {
