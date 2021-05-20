@@ -4,6 +4,7 @@ type AllowedValueInterface = Array<[any, string]>;   // [any: value, string: dis
 interface Options { // additional configuration for inputType, like multi selection for select 
     required?: boolean; // default false
     multi?: boolean;    // default false
+    orderNumbe?: number;
 }
 
 export class Structure {
@@ -22,16 +23,17 @@ export class Structure {
 };
 
 export class SettingStructure {
-    moduleName: string;
-    taskName: string;
+    modulePath: string;
+    taskPath: string;
     structure: { [key: string]: Structure; };
 
-    constructor(moduleName: string, taskName: string) {
-        this.moduleName = moduleName;
-        this.taskName = taskName;
+    constructor(modulePath: string, taskPath: string) {
+        this.modulePath = modulePath;
+        this.taskPath = taskPath;
         TASK_SETTINGS_LIST.push(this);
     }
 };
 
 export const TASK_SETTINGS_LIST: Array<SettingStructure> = [];   // All instance of SettingsStructure will be registered here
 
+console.log(TASK_SETTINGS_LIST);
