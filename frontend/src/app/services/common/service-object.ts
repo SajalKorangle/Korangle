@@ -18,15 +18,15 @@ export class ServiceObject extends RestApiGateway {
         let searchParams = new URLSearchParams();
         Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
         url = url + searchParams.toString();
-        return super.getData(url, data).then(responseDate => {
-            if (responseDate) {
-                Object.keys(responseDate).forEach(key => {
+        return super.getData(url, data).then(responseData => {
+            if (responseData) {
+                Object.keys(responseData).forEach(key => {
                     if (key.endsWith("JSON")) {
-                        responseDate[key] = JSON.parse(responseDate[key]);
+                        responseData[key] = JSON.parse(responseData[key]);
                     }
-                })
+                });
             }
-            return responseDate;
+            return responseData;
         });
     }
 
@@ -38,19 +38,20 @@ export class ServiceObject extends RestApiGateway {
         Object.keys(data).forEach(key => {
             url += '&' + key + '=' + data[key];
         });
-        return super.getData(url, data).then(responseDate => {
-            if (responseDate.length > 0) {
+        return super.getData(url, data).then(responseData => {
+            if (responseData && responseData.length > 0) {
                 const jsonKeys = [];
-                Object.keys(responseDate[0]).forEach(key => {
+                Object.keys(responseData[0]).forEach(key => {
                     if (key.endsWith("JSON")) {
                         jsonKeys.push(key);
                     }
                 });
-                responseDate.forEeach(data => {
+                responseData.forEach(data => {
                     jsonKeys.forEach(key => data[key] = JSON.parse(data[key]));
-                })
+                });
             }
-            return responseDate;
+            console.log("response data: ", responseData);
+            return responseData;
         });
     }
 
