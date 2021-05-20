@@ -96,7 +96,7 @@
                                 <span *ngIf="test.testType === null">Max. Marks {{ test.maximumMarks }}</span>
                                 <span *ngIf="test.testType !== null">{{ test.testType }} Out of {{ test.maximumMarks }}</span>
                             </th>
-                            <th style="padding-left=4px;padding-right=4px;">Absent</th>
+                            <th style="padding-left:4px;padding-right:4px;">Absent</th>
                         </ng-container>
                     </tr>
                 </thead>
@@ -116,7 +116,7 @@
                             <td>
                                 <input type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
                             </td>
-                            <td style="padding-left=4px;padding-right=4px;">
+                            <td style="padding-left:4px;padding-right:4px;">
                                 <mat-checkbox style="margin-left: 14px" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
                             </td>
                         </ng-container>

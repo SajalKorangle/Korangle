@@ -549,7 +549,7 @@ export class CreateTestServiceAdapter {
         if (deleteTest.length) {
             let delete_data = {
                 'id__in': deleteTest
-            }
+            };
             promises.push(this.vm.examinationService.deleteObjectList(this.vm.examinationService.test_second, delete_data));
         }
         return promises;

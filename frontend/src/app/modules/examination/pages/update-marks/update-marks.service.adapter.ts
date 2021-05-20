@@ -460,12 +460,12 @@ export class UpdateMarksServiceAdapter {
                 studentTest.id = value[0].id;
                 this.vm.isUpdated = false;
                 if (event) {
-                    this.vm.renderer.removeClass(event.target, 'updatingField')
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
                 }
             },
             (error) => {
                 if (event) {
-                    this.vm.renderer.removeClass(event.target, 'updatingField')
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
                 }
             }
         );
@@ -483,12 +483,12 @@ export class UpdateMarksServiceAdapter {
             (value) => {
                 this.vm.isUpdated = false;
                 if (event) {
-                    this.vm.renderer.removeClass(event.target, 'updatingField')
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
                 }
             },
             (error) => {
                 if (event) {
-                    this.vm.renderer.removeClass(event.target, 'updatingField')
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
                 }
             }
         );

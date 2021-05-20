@@ -93,7 +93,7 @@ export class UpdateMarksComponent implements OnInit {
             studentTest.marksObtained = Math.round(studentTest.marksObtained * 1000) / 1000;
         }
         if (event != undefined) {
-            this.renderer.addClass(event.target, 'updatingField')
+            this.renderer.addClass(event.target, 'updatingField');
         }
         if (studentTest.id == null) {
             this.serviceAdapter.createStudentTestDetails(studentTest, event);
