@@ -4,8 +4,6 @@ import moment = require('moment');
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
 
-    tutorialEvents = ['Tutorial Creation', 'Tutorial Updation', 'Tutorial Deletion'];
-
     constructor() {
     }
 
@@ -26,29 +24,17 @@ export class AddTutorialServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let fetch_event_settings_list = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            parentEvent__in: this.tutorialEvents
-        };
-
         const value = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //2
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //3
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data), //4
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {eventName__in: this.tutorialEvents}), //5
-            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
+            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //5
         ]);
 
-        this.vm.backendData.eventList = value[5];
+        this.vm.smsBalance = value[5];
 
-        this.vm.smsBalance = value[6];
-        if (this.vm.backendData.eventList.length > 0) {
-            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event, fetch_event_settings_list);
-            this.vm.backendData.customTemplateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template,
-                {id__in: this.vm.backendData.eventSettingsList.map(el => el.parentSMSTemplate)});
-        }
         this.vm.backendData.classList = value[0];
         this.vm.backendData.sectionList = value[1];
         this.vm.backendData.classSubjectList = value[2];
@@ -166,23 +152,13 @@ export class AddTutorialServiceAdapter {
         this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         this.vm.initializeNewTutorial();
         this.vm.stateKeeper.isLoading = false;
-        let creationSettings = this.vm.backendData.eventSettingsList.find(sett => sett.parentSMSEvent == this.vm.backendData.eventList.find
-        (event => event.eventName == 'Tutorial Creation'));
-        let customSMSContent = this.vm.backendData.customTemplateList.find(cus => cus.id == creationSettings.parentSMSTemplate);
-        let rawSMSContent = customSMSContent ? customSMSContent.rawContent :
-            this.vm.backendData.eventList.find(evnt => evnt.id == creationSettings.parentSMSEvent).defaultSMSContent;
-        let rawNotificationContent = creationSettings.notificationMappedContent ? creationSettings.notificationMappedContent :
-            this.vm.backendData.eventList.find(evnt => evnt.id == creationSettings.parentSMSEvent).defaultNotificationContent;
-        if (creationSettings && creationSettings.parentSentUpdateType != 1) {
-            this.vm.updateService.sendSMSNotificationNew2(
-                this.vm.currentClassStudentList,
-                rawSMSContent,
-                rawNotificationContent,
-                creationSettings,
-                this.vm.user.activeSchool.dbId,
-                this.vm.smsBalance
-            );
-        }
+
+        this.vm.updateService.sendEventNotification(
+            this.vm.currentClassStudentList,
+            'Tutorial Creation',
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
     }
 
     async makeEditableOrSave(tutorial: any) {
@@ -213,17 +189,12 @@ export class AddTutorialServiceAdapter {
             this.vm.stateKeeper.tutorialUpdating = false;
             tutorial.editable = false;
             this.populateStudentList(value[0]);
-
-            if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendEditUpdate == true) {
-                this.vm.updateService.sendSMSNotificationNew(
-                    this.vm.currentClassStudentList,
-                    this.vm.editMessage,
-                    this.vm.informationMessageType,
-                    this.vm.settings.sentUpdateType,
-                    this.vm.user.activeSchool.dbId,
-                    this.vm.smsBalance
-                );
-            }
+            this.vm.updateService.sendEventNotification(
+                this.vm.currentClassStudentList,
+                'Tutorial Updation',
+                this.vm.user.activeSchool.dbId,
+                this.vm.smsBalance
+            );
             this.vm.htmlRenderer.checkEnableAddButton();
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
 
@@ -281,23 +252,19 @@ export class AddTutorialServiceAdapter {
             if (confirm('Are you sure you want to delete this tutorial?')) {
                 this.vm.stateKeeper.tutorialUpdating = true;
                 const value = await Promise.all([this.vm.tutorialService.deleteObject(this.vm.tutorialService.tutorial, tutorial)]);
-
                 this.vm.tutorialList = this.vm.tutorialList.filter((item) => {
                     return item.id != tutorial.id;
                 });
                 this.vm.htmlRenderer.checkEnableAddButton();
                 this.populateStudentList(tutorial);
                 this.vm.stateKeeper.tutorialUpdating = false;
-                if (this.vm.settings.sentUpdateType != 1 && this.vm.settings.sendDeleteUpdate == true) {
-                    this.vm.updateService.sendSMSNotificationNew(
-                        this.vm.currentClassStudentList,
-                        this.vm.deleteMessage,
-                        this.vm.informationMessageType,
-                        this.vm.settings.sentUpdateType,
-                        this.vm.user.activeSchool.dbId,
-                        this.vm.smsBalance
-                    );
-                }
+
+                this.vm.updateService.sendEventNotification(
+                    this.vm.currentClassStudentList,
+                    'Tutorial Deletion',
+                    this.vm.user.activeSchool.dbId,
+                    this.vm.smsBalance
+                );
             }
         }
     }
@@ -305,10 +272,7 @@ export class AddTutorialServiceAdapter {
     async prepareStudentList() {
         this.vm.currentClassStudentList = [];
         let student_list = this.vm.backendData.fullStudentList.filter((student) => {
-            if (student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id) {
-                return true;
-            }
-            return false;
+            return student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id;
         });
         let studentIdList = [];
         student_list.forEach((student) => {
@@ -318,43 +282,26 @@ export class AddTutorialServiceAdapter {
             id__in: studentIdList,
             fields__korangle: 'id,name,mobileNumber',
         };
-        const value = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
-        this.vm.currentClassStudentList = value;
+        const value = await Promise.all([
+            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, {parentStudent__in: studentIdList})]); //1
+        this.vm.currentClassStudentList = value[0];
+        this.vm.backendData.currentClassStudentSectionList = value[1];
         this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
     }
 
     populateStudentList(tutorial): any {
         this.vm.currentClassStudentList.forEach((student) => {
-            if (student.tutorialChapter == undefined) {
-                student['tutorialChapter'] = tutorial.chapter;
-            } else {
-                student.tutorialChapter = tutorial.chapter;
-            }
-            if (student.tutorialTopic == undefined) {
-                student['tutorialTopic'] = tutorial.topic;
-            } else {
-                student.tutorialTopic = tutorial.topic;
-            }
-            if (student.date == undefined) {
-                student['date'] = moment().format('DD/MM/YYYY');
-            } else {
-                student.date = moment().format('DD/MM/YYYY');
-            }
-            if (student.studentName == undefined) {
-                student['studentName'] = student.name;
-            } else {
-                student.studentName = student.name;
-            }
-            if (student.schoolName == undefined) {
-                student['schoolName'] = this.vm.user.activeSchool.printName;
-            } else {
-                student.schoolName = this.vm.user.activeSchool.printName;
-            }
-            if (student.subject == undefined) {
-                student['subject'] = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
-            } else {
-                student.subject = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
-            }
+            let studentSection = this.vm.backendData.currentClassStudentSectionList.find(stuSec => stuSec.parentStudent == student.id);
+
+            student.tutorialChapter = tutorial.chapter;
+            student.tutorialTopic = tutorial.topic;
+            student.date = moment(new Date()).format('DD/MM/YYYY');
+            student.studentName = student.name;
+            student.schoolName = this.vm.user.activeSchool.printName;
+            student.subject = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
+            student.class = this.vm.backendData.classList.find(classs => classs.id == studentSection.parentClass).name + ', '
+                + this.vm.backendData.sectionList.find(sec => sec.id == studentSection.parentDivision).name;
         });
     }
 }

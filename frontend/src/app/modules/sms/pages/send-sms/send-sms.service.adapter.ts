@@ -295,7 +295,7 @@ export class SendSmsServiceAdapter {
         this.vm.notificationMobileNumberList.forEach((mobileNumber, index) => {
             notifMobileNumberList += mobileNumber.toString() + (index != this.vm.notificationMobileNumberList.length - 1 ? ',' : '');
         });
-        
+
        const sms_converted_data = this.vm.smsMobileNumberList.map((item) => {
             return {
                 mobileNumber: item.toString(),
@@ -305,7 +305,7 @@ export class SendSmsServiceAdapter {
 
         let sms_data = {
             contentType: this.vm.hasUnicode() ? 'unicode' : 'english',
-            mobileNumberContentJson:JSON.stringify(sms_converted_data),
+            mobileNumberContentJson: JSON.stringify(sms_converted_data),
             content: this.vm.message,
             parentMessageType: 1,
             count: this.vm.getSMSCount() * this.vm.smsMobileNumberList.length,
@@ -313,7 +313,7 @@ export class SendSmsServiceAdapter {
             mobileNumberList: mobileNumberList,
             notificationMobileNumberList: notifMobileNumberList,
             parentSchool: this.vm.user.activeSchool.dbId,
-            smsId:1
+            smsId: 1
         };
 
         let notification_data = this.vm.notificationMobileNumberList.map((mobileNumber) => {

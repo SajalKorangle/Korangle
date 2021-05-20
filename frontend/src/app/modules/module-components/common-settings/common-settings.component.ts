@@ -20,11 +20,14 @@ export class CommonSettingsComponent implements OnInit {
 
     @Input() sendUpdateToList = []; // for SendUpdate dropdown
 
+    @Input() extraVariables = []; // extra variables available for user
+
     @Output() isLoading = new EventEmitter<any>();
 
     serviceAdapter: CommonSettingsServiceAdapterComponent;
     htmlRenderer: CommonSettingsHtmlRendererComponent;
 
+    commonVariables = ['studentName', 'date', 'schoolName', 'class'];
     communicationTypeList = ['SERVICE IMPLICIT', 'SERVICE EXPLICIT', 'TRANSACTIONAL'];
     populatedSMSEventSettingsList = [];
     populatedSMSIdList = [];

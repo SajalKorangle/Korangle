@@ -9,5 +9,4 @@ export class SettingsServiceAdapter {
     initializeAdapter(vm: SettingsComponent): void {
         this.vm = vm;
     }
-    
 }

@@ -49,10 +49,10 @@
             </div>
 
             <div class="row">
-                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables - [ 'StudentName', 'TutorialName', 'Date' ,'SchoolName', 'Class', 'ClassSec', 'Subject']</span>
+                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables - {{commonVariables.concat(extraVariables)}}</span>
                 <br>
                 <mat-form-field [style.width]="htmlRenderer.isMobile()?'90%':'40%'"
-                                style="margin-left: 13px;margin-bottom: 22px;" appearance="none">
+                                style="margin-left: 13px;" appearance="none">
                   <textarea matInput
                             placeholder="Enter '@' and start typing..."
                             [ngModel]="htmlRenderer.getNotificationContent(smsEvent)"
@@ -121,7 +121,7 @@
                             Content</b>
                     </div>
                     <div class="row" *ngIf="smsEvent.selectedSMSId.smsId != 'Default'">
-                        <span style="font-size: 10px;color:rebeccapurple;">Change @variables with [ 'StudentName', 'TutorialName', 'Date' ,'SchoolName', 'Class', 'Subject']</span>
+                        <span style="font-size: 10px;color:rebeccapurple;">Change @variables with {{commonVariables.concat(extraVariables)}}</span>
                     </div>
                     <div class="row">
                         <mat-form-field style="width: 100%;" appearance="none">
@@ -129,6 +129,7 @@
                               type="text"
                               [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
                               cdkTextareaAutosize
+                              [readonly]="smsEvent.selectedSMSId.smsId == 'Default'"
                               style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
                     ></textarea>
                         </mat-form-field>

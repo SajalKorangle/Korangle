@@ -1,19 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {ClassService} from '@services/modules/class/class.service';
-import {AddTutorialServiceAdapter} from '@modules/tutorials/pages/add-tutorial/add-tutorial.service.adapter';
-import {DataStorage} from '@classes/data-storage';
-import {StudentService} from '@services/modules/student/student.service';
-import {TutorialsService} from '@services/modules/tutorials/tutorials.service';
-import {MatDialog} from '@angular/material/dialog';
-import {SubjectService} from '@services/modules/subject/subject.service';
-import {UpdateService} from '../../../../update/update-service';
+import { Component, OnInit } from '@angular/core';
+import { ClassService } from '@services/modules/class/class.service';
+import { AddTutorialServiceAdapter } from '@modules/tutorials/pages/add-tutorial/add-tutorial.service.adapter';
+import { DataStorage } from '@classes/data-storage';
+import { StudentService } from '@services/modules/student/student.service';
+import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SubjectService } from '@services/modules/subject/subject.service';
+import { UpdateService } from '../../../../update/update-service';
 
-import {NotificationService} from '../../../../services/modules/notification/notification.service';
-import {SmsService} from 'app/services/modules/sms/sms.service';
-import {UserService} from 'app/services/modules/user/user.service';
-import {SmsOldService} from 'app/services/modules/sms/sms-old.service';
-import {AddTutorialHtmlRenderer} from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
-import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { SmsService } from 'app/services/modules/sms/sms.service';
+import { UserService } from 'app/services/modules/user/user.service';
+import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
+import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -46,12 +45,7 @@ export class AddTutorialComponent implements OnInit {
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-    createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
-    deleteMessage = 'The following tutorial has been deleted -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
-    editMessage = 'The following tutorial has been edited -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
-    settings: any;
     smsBalance: any;
-    informationMessageType = INFORMATION_TYPE_LIST.indexOf('Tutorial') + 1;
 
     updateService: any;
 
@@ -61,10 +55,7 @@ export class AddTutorialComponent implements OnInit {
         classSubjectList: [],
         subjectList: [],
         fullStudentList: [],
-        eventList: [],
-        eventSettingsList: [],
-        customTemplateList: []
-
+        currentClassStudentSectionList: [],
     };
 
     userInput = {

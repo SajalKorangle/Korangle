@@ -19,6 +19,8 @@ export class SettingsComponent {
         isLoading: false,
     };
 
+    homeworkVariables = ['homeworkName', 'deadLine'];
+
     homeWorkEvents = [{
         name: 'Homework Creation'
     }, {
@@ -44,5 +46,4 @@ export class SettingsComponent {
         this.htmlRenderer = new SettingsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
     }
-
 }

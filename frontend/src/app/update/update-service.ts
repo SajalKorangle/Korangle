@@ -191,22 +191,66 @@ export class UpdateService {
         });
     }
 
-    sendSMSNotificationNew2: any = (
+    async sendEventNotification(
+        studentDetailsList,
+        eventName,
+        schoolId,
+        smsBalance,
+    ) {
+        const smsEvent = await this.smsService.getObject(this.smsService.sms_event, {eventName: eventName});
+        if (!smsEvent)
+            return; // if there is not event return
+
+        let fetch_event_settings_list = {
+            parentSMSEvent: smsEvent.id,
+            parentSchool: schoolId,
+        };
+
+        const eventSettings = await this.smsService.getObject(this.smsService.sms_event_settings, fetch_event_settings_list);
+        if (!eventSettings || eventSettings.parentSentUpdateType == 1)
+            return; // if there is not event settings or sentUpdateType is null then return
+
+        let customSMSTemplate , smsId = 1 , smsRawContent = smsEvent.defaultSMSContent, notificationRawContent;
+
+        if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
+           customSMSTemplate = await this.smsService.getObject(this.smsService.sms_template,
+                {id: eventSettings.parentSMSTemplate});
+           smsRawContent = customSMSTemplate.rawContent;
+           smsId = customSMSTemplate.parentSMSId;
+        }
+
+        notificationRawContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
+
+        await this.smsNotificationSender(
+                studentDetailsList,
+                smsEvent,
+                eventSettings.parentSentUpdateType,
+                smsRawContent,
+                notificationRawContent,
+                smsId,
+                schoolId,
+                smsBalance
+            );
+    }
+
+    async smsNotificationSender(
         studentDetailsList: any,
+        smsEvent: any,
+        sentUpdateType: any,
         smsRawContent: any,
         notificationRawContent: any,
-        eventSettings: any,
+        smsId: any,
         schoolId: any,
         smsBalance: any
-    ) => {
+    ) {
         let service_list = [];
         let notification_list = [];
         let sms_list = [];
 
-        if (eventSettings.parentSentUpdateType == 2) {
+        if (sentUpdateType == 2) {
             sms_list = studentDetailsList;
             notification_list = [];
-        } else if (eventSettings.parentSentUpdateType == 3) {
+        } else if (sentUpdateType == 3) {
             sms_list = [];
             notification_list = studentDetailsList.filter((obj) => {
                 return obj.notification;
@@ -227,7 +271,10 @@ export class UpdateService {
 
         notification_list.forEach((item, index) => {
             notif_mobile_string += item.mobileNumber + ', ';
-            notificationMappedData.push({mobileNumber: item.mobileNumber, content: this.getMessageFromTemplate(notificationRawContent, item)});
+            notificationMappedData.push({
+                mobileNumber: item.mobileNumber,
+                content: this.getMessageFromTemplate(notificationRawContent, item)
+            });
         });
 
         sms_list.forEach((item, index) => {
@@ -240,21 +287,22 @@ export class UpdateService {
 
         let sms_data = {
             contentType: this.hasUnicode(smsRawContent) ? 'unicode' : 'english',
-            parentSMSEvent: eventSettings.parentSMSEvent,
+            parentSMSEvent: smsEvent.id,
             content: smsRawContent,
             parentMessageType: null,
-            mobileNumberContentJSON: smsMappedData,
-            count: this.getEstimatedSMSCount(eventSettings.parentSentUpdateType, studentDetailsList, smsRawContent),
+            mobileNumberContentJson: JSON.stringify(smsMappedData),
+            count: this.getEstimatedSMSCount(sentUpdateType, studentDetailsList, smsRawContent),
             notificationCount: notificationMappedData.length,
             notificationMobileNumberList: notif_mobile_string,
             mobileNumberList: sms_mobile_string,
             parentSchool: schoolId,
+            smsId: smsId,
         };
 
         const notification_data = notification_list.map((item) => {
             return {
                 parentMessageType: null,
-                parentSMSEvent: eventSettings.parentSMSEvent,
+                parentSMSEvent: smsEvent.id,
                 content: notificationMappedData.find(items => items.mobileNumber == item.mobileNumber).content,
                 parentUser: this.notif_usernames.find((user) => {
                     return user.username == item.mobileNumber.toString();
@@ -269,15 +317,14 @@ export class UpdateService {
             service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
         }
 
-        Promise.all(service_list).then((value) => {
-            if ((eventSettings.parentSentUpdateType == 2 || eventSettings.parentSentUpdateType == 4) && sms_list.length > 0) {
-                if (value[0].status === 'success') {
-                    smsBalance -= value[0].data.count;
-                } else if (value[0].status === 'failure') {
-                    smsBalance = value[0].count;
-                }
+        const value = await Promise.all(service_list);
+        if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
+            if (value[0].status === 'success') {
+                smsBalance -= value[0].data.count;
+            } else if (value[0].status === 'failure') {
+                smsBalance = value[0].count;
             }
-        });
+        }
     }
 
     checkMobileNumber(mobileNumber: number): boolean {
@@ -290,7 +337,7 @@ export class UpdateService {
     getMessageFromTemplate = (message, obj) => {
         let ret = message;
         for (let key in obj) {
-            ret = ret.replace('<' + key + '>', obj[key]);
+            ret = ret.replace('@' + key, obj[key]);
         }
         return ret;
     }
@@ -306,9 +353,7 @@ export class UpdateService {
 
     getEstimatedSMSCount = (sentUpdateType: any, student_list: any, message: any) => {
         let count = 0;
-        if (sentUpdateType == 3) {
-            return 0;
-        }
+        if (sentUpdateType == 3) return 0;
         student_list
             .filter((item) => item.mobileNumber)
             .forEach((item, i) => {
@@ -322,9 +367,7 @@ export class UpdateService {
 
     getEstimatedNotificationCount = (sentUpdateType: any, student_list: any) => {
         let count = 0;
-        if (sentUpdateType == 2) {
-            return 0;
-        }
+        if (sentUpdateType == 2) return 0;
 
         count = student_list.filter((item) => {
             return item.mobileNumber && item.notification;

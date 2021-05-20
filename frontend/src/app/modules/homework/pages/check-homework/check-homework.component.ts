@@ -34,9 +34,6 @@ export class CheckHomeworkComponent implements OnInit {
     notif_usernames = [];
     smsBalance = 0;
 
-    checkUpdateMessage = 'Your Homework <homeworkName> of Subject <subject> has been checked';
-    resubmissionUpdateMessage = 'Your Homework <homeworkName> of Subject <subject> has been asked for resubmission';
-
     classSectionHomeworkList: any;
     selectedClassSection: any;
     selectedSubject: any;
@@ -44,9 +41,6 @@ export class CheckHomeworkComponent implements OnInit {
     currentHomework: any;
     studentList: any;
 
-    sendUpdateType: any;
-    sendCheckUpdate: any;
-    sendResubmissionUpdate: any;
 
     studentHomeworkList: any;
 
@@ -184,56 +178,6 @@ export class CheckHomeworkComponent implements OnInit {
                 break;
         }
         return str;
-    }
-
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for (let key in obj) {
-            ret = ret.replace('<' + key + '>', obj[key]);
-        }
-        return ret;
-    }
-
-    hasUnicode(message): boolean {
-        for (let i = 0; i < message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getEstimatedSMSCount = (message: any) => {
-        let count = 0;
-        if (this.sendUpdateType == 'NOTIFICATION') return 0;
-        this.studentList
-            .filter((item) => item.mobileNumber)
-            .forEach((item, i) => {
-                if (this.sendUpdateType == 'SMS' || item.notification == false) {
-                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
-                }
-            });
-
-        return count;
-    }
-
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)) {
-            return Math.ceil(message.length / 70);
-        } else {
-            return Math.ceil(message.length / 160);
-        }
-    }
-
-    getEstimatedNotificationCount = () => {
-        let count = 0;
-        if (this.sendUpdateType == 'SMS') return 0;
-
-        count = this.studentList.filter((item) => {
-            return item.mobileNumber && item.notification;
-        }).length;
-
-        return count;
     }
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {

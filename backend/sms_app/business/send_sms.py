@@ -208,10 +208,15 @@ def send_sms(instance_dict):
         if instance_dict['count'] > sms_count['count']:
             return {'remark': 'INSUFFICIENT BALANCE', 'requestId': 0}
 
+        print(instance_dict['smsId_id'])
+
+        print('before smsID object')
         sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
-        print(sms_id_object.smsId)
+        print('after smsID object')
 
         conn = http.client.HTTPConnection("msg.msgclub.net")
+
+        print(instance_dict['mobileNumberContentJson'])
 
         sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
 
