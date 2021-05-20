@@ -10,7 +10,7 @@ export class Structure {
     displayName: string;
     inputType: InputTypeInterface;
     allowedValues?: AllowedValueInterface;   // [any: value, string: displayName]
-    options?: Options // additional configuration for inputType, like multi selection for select 
+    options?: Options; // additional configuration for inputType, like multi selection for select 
 
     constructor(displayName: string, inputType: InputTypeInterface, allowedValues: AllowedValueInterface = null, options: Options = {}) {
         this.displayName = displayName;
@@ -24,14 +24,14 @@ export class Structure {
 export class SettingStructure {
     moduleName: string;
     taskName: string;
-    structure: { [key: string]: Structure };
+    structure: { [key: string]: Structure; };
 
     constructor(moduleName: string, taskName: string) {
         this.moduleName = moduleName;
         this.taskName = taskName;
+        TASK_SETTINGS_LIST.push(this);
     }
 };
 
-export const TASK_SETTINGS_LIST = [
+export const TASK_SETTINGS_LIST: Array<SettingStructure> = [];   // All instance of SettingsStructure will be registered here
 
-]
