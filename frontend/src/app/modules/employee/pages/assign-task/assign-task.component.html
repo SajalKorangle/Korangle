@@ -50,14 +50,14 @@
                     (click)="removeAllPermissions(selectedEmployee); $event.stopPropagation()">
                     Remove All</button><br />
 
-                <ng-container *ngFor="let module of moduleList">
+                <!-- <ng-container *ngFor="let module of moduleList">
                     <hr />
                     <h4 style="display: flex; flex-direction: row; align-items: center;">
                         <mat-icon style="margin-right: 8px;">{{module.icon}}</mat-icon>{{ module.title }}
                     </h4>
                     <div style="display: flex; flex-wrap: wrap;">
                         <ng-container *ngFor="let task of module.taskList">
-                            <!-- <mat-checkbox
+                            <mat-checkbox
                                 [ngModel]="hasPermission(selectedEmployee, task)"
                                 (ngModelChange)="updatePermission(selectedEmployee, task)"
                                 [disabled]="isDisabled(module, task, selectedEmployee)"
@@ -66,28 +66,38 @@
                                 <br />
                             </mat-checkbox>
                             <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom"></div>
-                            <br /> -->
-                            <mat-card
-                                style="margin: 8px; cursor: pointer; overflow: hidden; position: relative; display: flex; flex-direction: row; align-items: center;"
-                                (click)="updatePermission(selectedEmployee, task)"
-                                [style.backgroundColor]="hasPermission(selectedEmployee, task)?'#4caf50':isDisabled(module, task, selectedEmployee)?'lightgrey':'white'"
-                                [style.color]="hasPermission(selectedEmployee, task)?'white':'black'"
-                                [style.opacity]="isDisabled(module, task, selectedEmployee)?'0.6':'1'"
-                                [style.pointerEvents]="isDisabled(module, task, selectedEmployee)?'none':'auto'"
-                                [style.paddingRight]="hasInPageTaskPermission(module, task)?'4px':''">
-                                <span>{{task.title}}</span>
-                                <mat-icon style="margin-left: 8px;" *ngIf="hasInPageTaskPermission(module, task)"
-                                    (click)="openInPagePermissionDialog(module, task); $event.stopPropagation()"
-                                    matTooltip="In-Page Permission">
-                                    more_vert</mat-icon>
-                                <div *ngIf="isPermissionLoading(selectedEmployee, task)"
-                                    style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; display: flex; background-color: inherit;">
-                                    <div style="margin: auto" class="loader-custom"></div>
-                                </div>
-                            </mat-card>
+                            <br />
+                            
                         </ng-container>
                     </div>
-                </ng-container>
+                </ng-container> -->
+
+                <div class="row">
+                    <ng-container *ngFor="let module of moduleList">
+                        <div class="col-xs-12" style="margin-left: 8px">
+                            <div class="row" style="margin-bottom: 5px">
+                                <span style="font-size: large; font-weight: 800">{{ module.title }}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 8px">
+                                <ng-container *ngFor="let task of module.taskList">
+                                    <div class="col-md-3">
+                                        <mat-checkbox [ngModel]="hasPermission(selectedEmployee, task)"
+                                            (ngModelChange)="updatePermission(selectedEmployee, task)"
+                                            [disabled]="isDisabled(module, task, selectedEmployee)">
+                                            {{ task.title }}
+                                        </mat-checkbox>
+                                        <span *ngIf="hasInPageTaskPermission(module, task)"
+                                            (click)="openInPagePermissionDialog(module, task)"
+                                            style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
+                                        <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom">
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <br />
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
             </ng-container>
         </div>
         <div class="row" *ngIf="selectedAssignTaskOption == assignTaskOptions[1]">

@@ -5,23 +5,37 @@
     <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
 </h2>
 <mat-dialog-content style="height: 62vh; width: 75vw">
-    <ng-container *ngFor="let permissionKey of getPermissionKeys()">
-        <mat-form-field>
-            <mat-label>{{taskPermissionStructure.permissionStructureMappedByKey[permissionKey].displayName}}</mat-label>
-            <ng-container
-                *ngIf="taskPermissionStructure.permissionStructureMappedByKey[permissionKey].inputType=='number'">
-                <input type="number">
+    <ng-container *ngFor="let groupName of groupList">
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <hr style="width: 20px; margin-right: 4px; background-color: black;" />
+            <h4 *ngIf="groupName">{{groupName}}</h4>
+            <hr style="margin-left: 8px; flex-grow: 1; background-color: black;" />
+        </div>
+        <ng-container *ngFor="let permissionKey of getGroupPermissionKeys(groupName)">
+            <ng-container [ngSwitch]="inPagePermissionMappedByKey[permissionKey].inputType">
+
+                <mat-form-field *ngSwitchCase="'number'" style="margin: 12px 0;">
+                    <mat-label>{{inPagePermissionMappedByKey[permissionKey].displayName}}
+                    </mat-label>
+                    <input matInput type="number" [(ngModel)]="employeePermissionConfigJson[permissionKey]" />
+                </mat-form-field>
+
+                <mat-form-field *ngSwitchCase="'select'" style="margin: 0 12px;">
+                    <mat-label>{{inPagePermissionMappedByKey[permissionKey].displayName}}
+                    </mat-label>
+                    <mat-select [(ngModel)]="employeePermissionConfigJson[permissionKey]">
+                        <mat-option *ngFor="let option of inPagePermissionMappedByKey[permissionKey].allowedValues"
+                            [value]="option[0]">
+                            {{option[1]}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
             </ng-container>
-            <ng-container
-                *ngIf="taskPermissionStructure.permissionStructureMappedByKey[permissionKey].inputType=='select'">
-                <mat-select>
-                    <mat-option
-                        *ngFor="let option of taskPermissionStructure.permissionStructureMappedByKey[permissionKey].allowedValues"
-                        [value]="option[0]">{{option[1]}}</mat-option>
-                </mat-select>
-            </ng-container>
-        </mat-form-field>
+        </ng-container>
+        <hr style="background-color: black;" />
     </ng-container>
+
 </mat-dialog-content>
 <div mat-dialog-actions style="color: white">
     <button mat-button (click)="apply()" class="btn" style="background-color: blue; margin-left: auto;"

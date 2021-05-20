@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TaskPermissionStructure, TASK_PERMISSION_LIST } from '@classes/task-settings';
+import { InPagePermission, TASK_PERMISSION_LIST } from '@classes/task-settings';
 
 
 @Component({
@@ -10,31 +10,38 @@ import { TaskPermissionStructure, TASK_PERMISSION_LIST } from '@classes/task-set
 })
 export class InPagePermissionDialogComponent implements OnInit {
 
-    taskPermissionStructure: TaskPermissionStructure;
+    inPagePermissionMappedByKey: { [key: string]: InPagePermission; };
+
+    groupList: Array<string>;
+    employeePermissionConfigJson: { [key: string]: any; } = {};
 
     constructor(public dialogRef: MatDialogRef<InPagePermissionDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }) {
         // this.vm = data.vm;
         // this.selectedLayout = data.selectedLayout;
-        this.taskPermissionStructure = TASK_PERMISSION_LIST.find(taskPermissionStructure => taskPermissionStructure.modulePath == this.data.module.path && taskPermissionStructure.taskPath == this.data.task.path);
-        console.log('this.taskPermissionS', this.taskPermissionStructure);
-        console.log("All task Perm: ", TASK_PERMISSION_LIST);
+        this.inPagePermissionMappedByKey = TASK_PERMISSION_LIST.find(
+            taskPermissionStructure => taskPermissionStructure.modulePath == this.data.module.path && taskPermissionStructure.taskPath == this.data.task.path)
+            .inPagePermissionMappedByKey;
+        const groupSet: Set<string> = new Set();
+        Object.values(this.inPagePermissionMappedByKey).forEach(inPagePermission => {
+            if (inPagePermission.options.groupName) {
+                groupSet.add(inPagePermission.options.groupName);
+            }
+        });
+        this.groupList = Array.from(groupSet);
+        if (Object.values(this.inPagePermissionMappedByKey).find(inPagePermission => inPagePermission.options.groupName == undefined))
+            this.groupList.push(undefined);
+        console.log("dialog: ", this);
     }
 
     ngOnInit() { }
 
-    getPermissionKeys(): Array<string> {
-        return Object.keys(this.taskPermissionStructure.permissionStructureMappedByKey);
+    getGroupPermissionKeys(groupName): Array<string> {
+        return Object.keys(this.inPagePermissionMappedByKey)
+            .filter(permissionKey => this.inPagePermissionMappedByKey[permissionKey].options.groupName == groupName);
     }
 
     apply(): void {
-        // if (this.isMyLayout() || this.selectedLayout == this.vm.ADD_LAYOUT_STRING) {
-        //     this.dialogRef.close({ layout: this.selectedLayout, copy: false });
-        // } else {
-        //     this.copyAndApply();
-        // }
+        this.dialogRef.close({ employeePermissionConfigJson: this.employeePermissionConfigJson });
     }
 
-    // copyAndApply(): void {
-    //     this.dialogRef.close({ layout: this.selectedLayout, copy: true });
-    // }
 }

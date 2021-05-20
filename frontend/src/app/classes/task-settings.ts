@@ -1,15 +1,21 @@
 type InputTypeInterface = "number" | "select";
 type AllowedValueInterface = Array<[any, string]>;   // [any: value, string: displayName]
 
-export class PermissionStructure {
+interface Options {
+    groupName?: string;
+}
+
+export class InPagePermission {
     displayName: string;
     inputType: InputTypeInterface;
     allowedValues?: AllowedValueInterface;   // [any: value, string: displayName]
+    options: Options;
 
-    constructor(displayName: string, inputType: InputTypeInterface, allowedValues: AllowedValueInterface = null) {
+    constructor(displayName: string, inputType: InputTypeInterface, allowedValues: AllowedValueInterface = null, options: Options = {}) {
         this.displayName = displayName;
         this.inputType = inputType;
         this.allowedValues = allowedValues;
+        this.options = options;
     }
 
 };
@@ -17,7 +23,7 @@ export class PermissionStructure {
 export class TaskPermissionStructure {
     modulePath: string;
     taskPath: string;
-    permissionStructureMappedByKey: { [key: string]: PermissionStructure; } = {};
+    inPagePermissionMappedByKey: { [key: string]: InPagePermission; } = {};
 
     constructor(modulePath: string, taskPath: string) {
         this.modulePath = modulePath;
