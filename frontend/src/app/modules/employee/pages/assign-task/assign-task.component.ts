@@ -98,7 +98,7 @@ export class AssignTaskComponent implements OnInit {
                 this.updatePermissionLoading(employee, task, true);
                 if (existingPermission) {
                     this.serviceAdapter.updatePermission(
-                        { ...existingPermission, configJSON: JSON.stringify(data.employeePermissionConfigJson) },
+                        { ...existingPermission, configJSON: data.employeePermissionConfigJson },
                         employee, task);
                 }
                 else {

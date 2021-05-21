@@ -18,7 +18,7 @@ export class InPagePermission {
         this.options = options;
     }
 
-};
+}
 
 export class TaskPermissionStructure {
     modulePath: string;
@@ -30,6 +30,6 @@ export class TaskPermissionStructure {
         this.taskPath = taskPath;
         TASK_PERMISSION_LIST.push(this);
     }
-};
+}
 
 export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All instance of SettingsStructure will be registered here
