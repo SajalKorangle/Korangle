@@ -81,7 +81,7 @@ export class AssignTaskServiceAdapter {
         const newEmployeePermission = {
             parentEmployee: employee.id,
             parentTask: task.id,
-            configJSON: JSON.parse(configJSON),
+            configJSON: JSON.stringify(configJSON),
         };
 
         const respone = await this.vm.employeeService.createObject(this.vm.employeeService.employee_permissions, newEmployeePermission);
@@ -97,12 +97,13 @@ export class AssignTaskServiceAdapter {
     }
 
     async deletePermission(employee: any, task: any) {
-        const perm_id = this.vm.hasPermission(employee, task);
+        const employeePermission = this.vm.hasPermission(employee, task);
         const data = {
-            id: perm_id,
+            id: employeePermission.id,
         };
         await this.vm.employeeService.deleteObject(this.vm.employeeService.employee_permissions, data);
         this.vm.updatePermissionLoading(employee, task, false);
+        this.vm.currentPermissionList = this.vm.currentPermissionList.filter(employeePermission => employeePermission.id != data.id);
     }
 
     async assignAllTasks(employee) {

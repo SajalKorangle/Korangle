@@ -2,20 +2,18 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { FormControl } from '@angular/forms';
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { AssignTaskServiceAdapter } from './assign-task.service.adapter';
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
 import { TASK_PERMISSION_LIST } from '@classes/task-settings';
-import { Jsonp } from '@angular/http';
 
 @Component({
     selector: 'assign-task',
     templateUrl: './assign-task.component.html',
     styleUrls: ['./assign-task.component.css'],
-    providers: [MatDialog, EmployeeOldService, TeamService, EmployeeService],
+    providers: [MatDialog, TeamService, EmployeeService],
 })
 export class AssignTaskComponent implements OnInit {
     user;
@@ -33,7 +31,6 @@ export class AssignTaskComponent implements OnInit {
 
     constructor(
         public dialog: MatDialog,
-        public employeeOldService: EmployeeOldService,
         public employeeService: EmployeeService,
         public teamService: TeamService) { }
 

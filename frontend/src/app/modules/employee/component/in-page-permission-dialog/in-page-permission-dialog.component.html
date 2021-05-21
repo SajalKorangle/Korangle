@@ -13,7 +13,8 @@
             <hr style="margin-left: 8px; flex-grow: 1; background-color: black;" />
         </div>
         <ng-container *ngFor="let permissionKey of getGroupPermissionKeys(groupName)">
-            <div [ngSwitch]="inPagePermissionMappedByKey[permissionKey].inputType" style="margin-bottom: 12px;">
+            <ng-container [ngSwitch]="inPagePermissionMappedByKey[permissionKey].inputType"
+                style="margin-bottom: 12px;">
 
                 <mat-form-field *ngSwitchCase="'number'" style="margin: 12px 0;">
                     <mat-label>{{inPagePermissionMappedByKey[permissionKey].displayName}}
@@ -32,7 +33,7 @@
                     </mat-select>
                 </mat-form-field>
 
-            </div>
+            </ng-container>
         </ng-container>
     </ng-container>
     <hr style="background-color: black;" />

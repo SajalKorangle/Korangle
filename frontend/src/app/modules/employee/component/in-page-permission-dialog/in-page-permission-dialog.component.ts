@@ -16,8 +16,6 @@ export class InPagePermissionDialogComponent implements OnInit {
     employeePermissionConfigJson: { [key: string]: any; } = {};
 
     constructor(public dialogRef: MatDialogRef<InPagePermissionDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }) {
-        // this.vm = data.vm;
-        // this.selectedLayout = data.selectedLayout;
         this.inPagePermissionMappedByKey = TASK_PERMISSION_LIST.find(
             taskPermissionStructure => taskPermissionStructure.modulePath == this.data.module.path && taskPermissionStructure.taskPath == this.data.task.path)
             .inPagePermissionMappedByKey;
@@ -28,9 +26,10 @@ export class InPagePermissionDialogComponent implements OnInit {
             }
         });
         this.groupList = Array.from(groupSet);
+        this.groupList.sort((a, b) => a.localeCompare(b));
         if (Object.values(this.inPagePermissionMappedByKey).find(inPagePermission => inPagePermission.options.groupName == undefined))
             this.groupList.push(undefined);
-        console.log("dialog: ", this);
+        this.employeePermissionConfigJson = data.existingPermission.configJSON;
     }
 
     ngOnInit() { }
