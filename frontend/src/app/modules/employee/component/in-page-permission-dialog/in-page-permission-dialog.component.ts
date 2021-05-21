@@ -29,7 +29,8 @@ export class InPagePermissionDialogComponent implements OnInit {
         this.groupList.sort((a, b) => a.localeCompare(b));
         if (Object.values(this.inPagePermissionMappedByKey).find(inPagePermission => inPagePermission.options.groupName == undefined))
             this.groupList.push(undefined);
-        this.employeePermissionConfigJson = data.existingPermission.configJSON;
+        if (data.existingPermission && data.existingPermission.configJSON)
+            this.employeePermissionConfigJson = data.existingPermission.configJSON;
     }
 
     ngOnInit() { }

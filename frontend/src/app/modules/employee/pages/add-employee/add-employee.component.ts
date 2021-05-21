@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { DataStorage } from '../../../../classes/data-storage';
@@ -6,11 +7,14 @@ import { TeamService } from '../../../../services/modules/team/team.service';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { BankService } from '../../../../services/bank.service';
 
+import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
+import { TASK_PERMISSION_LIST } from '@classes/task-settings';
+
 @Component({
     selector: 'add-employee',
     templateUrl: './add-employee.component.html',
     styleUrls: ['./add-employee.component.css'],
-    providers: [BankService, TeamService, EmployeeService, EmployeeOldService],
+    providers: [MatDialog, BankService, TeamService, EmployeeService, EmployeeOldService],
 })
 export class AddEmployeeComponent implements OnInit {
     user;
@@ -24,11 +28,12 @@ export class AddEmployeeComponent implements OnInit {
     isLoading = false;
 
     constructor(
+        public dialog: MatDialog,
         private employeeOldService: EmployeeOldService,
         private employeeService: EmployeeService,
         private bankService: BankService,
         private teamService: TeamService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -90,23 +95,9 @@ export class AddEmployeeComponent implements OnInit {
         this.moduleList.forEach((module) => {
             module.taskList.forEach((task) => {
                 task.selected = false;
+                task.configJSON = null;
             });
         });
-    }
-
-    createPermission(employee: any, task) {
-        let data = [];
-        this.moduleList.forEach((module) => {
-            module.taskList.forEach((task) => {
-                if (task.selected) {
-                    data.push({
-                        parentEmployee: employee.id,
-                        parentTask: task.id,
-                    });
-                }
-            });
-        });
-        this.employeeService.createObjectList(this.employeeService.employee_permissions, data).then((value) => {});
     }
 
     initializeModuleList(moduleList: any, taskList: any): void {
@@ -241,6 +232,9 @@ export class AddEmployeeComponent implements OnInit {
                                     parentEmployee: response.id,
                                     parentTask: task.id,
                                 });
+                                if (task.configJSON) {
+                                    data[data.length - 1].configJSON = JSON.stringify(task.configJSON);
+                                }
                             }
                         });
                     });
@@ -262,5 +256,26 @@ export class AddEmployeeComponent implements OnInit {
                 alert('Server Error: Contact admin');
             }
         );
+    }
+
+    hasInPageTaskPermission(module, task): boolean {
+        if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path))
+            return true;
+        return false;
+    }
+
+    openInPagePermissionDialog(module, task, employee) {
+        const openedDialog = this.dialog.open(InPagePermissionDialogComponent, {
+            data: {
+                module, task, employee: { name: "New Employee" },
+            }
+        });
+
+        openedDialog.afterClosed().subscribe((data: any) => {
+            if (data && data.employeePermissionConfigJson) {
+                task.configJSON = data.employeePermissionConfigJson;
+                task.selected = true;
+            }
+        });
     }
 }
