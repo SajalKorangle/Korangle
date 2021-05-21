@@ -45,9 +45,9 @@
             <ng-container *ngIf="selectedEmployee && !isLoading">
                 <span style="font-weight: 800; font-size: 20px">{{ selectedEmployee.name }}</span><br />
                 <button class="btn" style="padding: 4px 7px"
-                    (click)="assignAllTasks(selectedEmployee); $event.stopPropagation()">
+                    (click)="serviceAdapter.assignAllTasks(selectedEmployee); $event.stopPropagation()">
                     Grant All</button><button class="btn" style="padding: 4px 7px"
-                    (click)="removeAllPermissions(selectedEmployee); $event.stopPropagation()">
+                    (click)="serviceAdapter.removeAllPermissions(selectedEmployee); $event.stopPropagation()">
                     Remove All</button><br />
 
                 <!-- <ng-container *ngFor="let module of moduleList">
@@ -87,7 +87,7 @@
                                             {{ task.title }}
                                         </mat-checkbox>
                                         <span *ngIf="hasInPageTaskPermission(module, task)"
-                                            (click)="openInPagePermissionDialog(module, task)"
+                                            (click)="openInPagePermissionDialog(module, task, selectedEmployee)"
                                             style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
                                         <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom">
                                         </div>
@@ -112,6 +112,9 @@
                         {{ employee.name }}
                         <br />
                     </mat-checkbox>
+                    <span *ngIf="hasInPageTaskPermission(getModuleById(selectedTask.parentModule), selectedTask)"
+                        (click)="openInPagePermissionDialog(getModuleById(selectedTask.parentModule), selectedTask, employee)"
+                        style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
                     <div *ngIf="isPermissionLoading(employee, selectedTask)" class="loader-custom"></div>
                     <br />
                 </ng-container>

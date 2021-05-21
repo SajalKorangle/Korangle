@@ -9,6 +9,7 @@ import { AssignTaskServiceAdapter } from './assign-task.service.adapter';
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
 import { TASK_PERMISSION_LIST } from '@classes/task-settings';
+import { Jsonp } from '@angular/http';
 
 @Component({
     selector: 'assign-task',
@@ -44,65 +45,25 @@ export class AssignTaskComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
+    getModuleById(id: number) {
+        return this.moduleList.find(m => m.id == id);
+    }
+
     hasPermission(employee: any, task: any) {
-        const obj = this.currentPermissionList.find((value) => {
+        return this.currentPermissionList.find((value) => {
             return value.parentEmployee === employee.id && value.parentTask === task.id;
         });
-        if (obj === undefined) {
-            return false;
-        } else {
-            return obj.id;
-        }
     }
 
     updatePermission(employee: any, task: any): void {
         this.updatePermissionLoading(employee, task, true);
         if (this.hasPermission(employee, task)) {
-            this.deletePermission(employee, task);
+            this.serviceAdapter.deletePermission(employee, task);
         } else {
-            this.addPermission(employee, task);
+            this.serviceAdapter.addPermission(employee, task);
         }
     }
 
-    deletePermission(employee: any, task: any): void {
-        const perm_id = this.hasPermission(employee, task);
-        const data = {
-            id: perm_id,
-        };
-        this.employeeOldService.deleteEmployeePermission(data, this.user.jwt).then(
-            (response) => {
-                this.currentPermissionList = this.currentPermissionList.filter((value) => value.id !== perm_id);
-                this.updatePermissionLoading(employee, task, false);
-            },
-            (error) => {
-                alert('Not able to remove employee permission');
-                this.updatePermissionLoading(employee, task, false);
-            }
-        );
-    }
-
-    addPermission(employee: any, task: any): void {
-        const data = {
-            parentEmployee: employee.id,
-            parentTask: task.id,
-        };
-        this.employeeOldService.addEmployeePermission(data, this.user.jwt).then(
-            (response) => {
-                if (response.status === 'success') {
-                    this.currentPermissionList.push({
-                        id: response.id,
-                        parentEmployee: employee.id,
-                        parentTask: task.id,
-                    });
-                }
-                this.updatePermissionLoading(employee, task, false);
-            },
-            (error) => {
-                alert('Not able to add employee permission');
-                this.updatePermissionLoading(employee, task, false);
-            }
-        );
-    }
 
     isDisabled(module: any, task: any, employee: any): boolean {
         return (
@@ -118,28 +79,6 @@ export class AssignTaskComponent implements OnInit {
         this.selectedTask = null;
     }
 
-    assignAllTasks(employee: any): void {
-        this.moduleList.forEach((module) => {
-            module.taskList.forEach((task) => {
-                if (!this.hasPermission(employee, task)) {
-                    this.updatePermissionLoading(employee, task, true);
-                    this.addPermission(employee, task);
-                }
-            });
-        });
-    }
-
-    removeAllPermissions(employee: any): void {
-        this.moduleList.forEach((module) => {
-            module.taskList.forEach((task) => {
-                if (this.hasPermission(employee, task) && !this.isDisabled(module, task, employee)) {
-                    this.updatePermissionLoading(employee, task, true);
-                    this.deletePermission(employee, task);
-                }
-            });
-        });
-    }
-
     updatePermissionLoading(employee: any, task: any, permission: boolean): void {
         employee.permissionLoading = permission;
         task.permissionLoading = permission;
@@ -149,11 +88,25 @@ export class AssignTaskComponent implements OnInit {
         return employee.permissionLoading && task.permissionLoading;
     }
 
-    openInPagePermissionDialog(module, task) {
-        this.dialog.open(InPagePermissionDialogComponent, {
+    openInPagePermissionDialog(module, task, employee) {
+        const existingPermission = this.hasPermission(employee, task);
+        const openedDialog = this.dialog.open(InPagePermissionDialogComponent, {
             data: {
-                module,
-                task,
+                module, task, employee, existingPermission
+            }
+        });
+
+        openedDialog.afterClosed().subscribe((data: any) => {
+            if (data && data.employeePermissionConfigJson) {
+                this.updatePermissionLoading(employee, task, true);
+                if (existingPermission) {
+                    this.serviceAdapter.updatePermission(
+                        { ...existingPermission, configJSON: JSON.stringify(data.employeePermissionConfigJson) },
+                        employee, task);
+                }
+                else {
+                    this.serviceAdapter.addPermission(employee, task, data.employeePermissionConfigJson);
+                }
             }
         });
     }

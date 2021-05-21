@@ -5,6 +5,7 @@
     <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
 </h2>
 <mat-dialog-content style="height: 62vh; width: 75vw">
+    <h3>Employee: {{data.employee.name}}</h3>
     <ng-container *ngFor="let groupName of groupList">
         <div style="display: flex; flex-direction: row; align-items: center;" *ngIf="groupName else HR">
             <hr style="width: 20px; margin-right: 4px; background-color: black;" />
@@ -12,7 +13,7 @@
             <hr style="margin-left: 8px; flex-grow: 1; background-color: black;" />
         </div>
         <ng-container *ngFor="let permissionKey of getGroupPermissionKeys(groupName)">
-            <ng-container [ngSwitch]="inPagePermissionMappedByKey[permissionKey].inputType">
+            <div [ngSwitch]="inPagePermissionMappedByKey[permissionKey].inputType" style="margin-bottom: 12px;">
 
                 <mat-form-field *ngSwitchCase="'number'" style="margin: 12px 0;">
                     <mat-label>{{inPagePermissionMappedByKey[permissionKey].displayName}}
@@ -31,10 +32,10 @@
                     </mat-select>
                 </mat-form-field>
 
-            </ng-container>
+            </div>
         </ng-container>
-        <hr style="background-color: black;" />
     </ng-container>
+    <hr style="background-color: black;" />
 
 </mat-dialog-content>
 <div mat-dialog-actions style="color: white">
