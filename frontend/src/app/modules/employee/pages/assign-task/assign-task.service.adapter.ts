@@ -81,7 +81,7 @@ export class AssignTaskServiceAdapter {
         const newEmployeePermission = {
             parentEmployee: employee.id,
             parentTask: task.id,
-            configJSON: JSON.stringify(configJSON),
+            configJSON,
         };
 
         const respone = await this.vm.employeeService.createObject(this.vm.employeeService.employee_permissions, newEmployeePermission);

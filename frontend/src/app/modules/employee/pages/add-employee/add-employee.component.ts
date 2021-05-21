@@ -233,7 +233,7 @@ export class AddEmployeeComponent implements OnInit {
                                     parentTask: task.id,
                                 });
                                 if (task.configJSON) {
-                                    data[data.length - 1].configJSON = JSON.stringify(task.configJSON);
+                                    data[data.length - 1].configJSON = task.configJSON;
                                 }
                             }
                         });
