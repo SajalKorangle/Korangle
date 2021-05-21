@@ -33,7 +33,3 @@ export class TaskPermissionStructure {
 };
 
 export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All instance of SettingsStructure will be registered here
-
-console.log("TASK_PERMISSION_LIST: ", TASK_PERMISSION_LIST);
-
-import '@modules/tc/pages/cancel-tc/task-settings.model.ts';
