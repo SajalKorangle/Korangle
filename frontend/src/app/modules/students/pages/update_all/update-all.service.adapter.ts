@@ -70,8 +70,7 @@ export class UpdateAllServiceAdapter {
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.mobileNumber;
                     return;
                 } else {
-                    if(newValue.toString().length==0)
-                    {
+                    if(newValue.toString().length==0){
                         newValue=null;
                     }
                     data['mobileNumber'] = newValue;
@@ -85,8 +84,7 @@ export class UpdateAllServiceAdapter {
                         student.secondMobileNumber;
                     return;
                 } else {
-                    if(newValue.toString().length==0)
-                    {
+                    if(newValue.toString().length==0){
                         newValue=null;
                     }
                     data['secondMobileNumber'] = newValue;
@@ -99,8 +97,7 @@ export class UpdateAllServiceAdapter {
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.familySSMID;
                     return;
                 } else {
-                    if(newValue.toString().length==0)
-                    {
+                    if(newValue.toString().length==0){
                         newValue=null;
                     }
                     data['familySSMID'] = newValue;
@@ -113,8 +110,7 @@ export class UpdateAllServiceAdapter {
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.childSSMID;
                     return;
                 } else {
-                    if(newValue.toString().length==0)
-                    {
+                    if(newValue.toString().length==0){
                         newValue=null;
                     }
                     data['childSSMID'] = newValue;
@@ -127,8 +123,7 @@ export class UpdateAllServiceAdapter {
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.aadharNum;
                     return;
                 } else {
-                    if(newValue.toString().length==0)
-                    {
+                    if(newValue.toString().length==0){
                         newValue=null;
                     }
                     data['aadharNum'] = newValue;
