@@ -12,6 +12,7 @@ import { StudentService } from '../../../../services/modules/student/student.ser
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import xlsx = require('xlsx');
+import { ViewMarksHtmlRenderer } from './view-marks.html.renderer';
 
 @Component({
     selector: 'view-class-marks',
@@ -43,6 +44,7 @@ export class ViewMarksComponent implements OnInit {
     testTypeList = TEST_TYPE_LIST;
 
     serviceAdapter: ViewMarksServiceAdapter;
+    htmlRenderer: ViewMarksHtmlRenderer;
 
     isInitialLoading = false;
 
@@ -63,6 +65,8 @@ export class ViewMarksComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
+        this.htmlRenderer = new ViewMarksHtmlRenderer();
+        this.htmlRenderer.initialize(this);
         this.serviceAdapter = new ViewMarksServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -77,7 +81,6 @@ export class ViewMarksComponent implements OnInit {
 
     showSubjectTestListSwitch(index) {
         this.showSubjectTestList[index] = !this.showSubjectTestList[index];
-        console.log(this.showSubjectTestList);
     }
 
     getFilteredTestList(): any {
