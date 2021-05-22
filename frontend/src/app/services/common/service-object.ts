@@ -18,7 +18,16 @@ export class ServiceObject extends RestApiGateway {
         let searchParams = new URLSearchParams();
         Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
         url = url + searchParams.toString();
-        return super.getData(url, data);
+        return super.getData(url, data).then(responseData => {
+            if (responseData) { // json parse if key ends with JSON
+                Object.keys(responseData).forEach(key => {
+                    if (key.endsWith("JSON")) {
+                        responseData[key] = JSON.parse(responseData[key]);
+                    }
+                });
+            }
+            return responseData;
+        });
     }
 
     getObjectList(object_url: any, data: any): Promise<any> {
@@ -29,19 +38,48 @@ export class ServiceObject extends RestApiGateway {
         Object.keys(data).forEach(key => {
             url += '&' + key + '=' + data[key];
         });
-        return super.getData(url, data);
+        return super.getData(url, data).then(responseData => {
+            if (responseData && responseData.length > 0) { // json parse if key ends with JSON
+                const jsonKeys = [];
+                Object.keys(responseData[0]).forEach(key => {
+                    if (key.endsWith("JSON")) {
+                        jsonKeys.push(key);
+                    }
+                });
+                responseData.forEach(instance => {
+                    jsonKeys.forEach(key => instance[key] = JSON.parse(instance[key]));
+                });
+            }
+            return responseData;
+        });
     }
 
     createObject(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
         }
+        Object.keys(data).forEach(key => {  // json parse if key ends with JSON
+            if (key.endsWith("JSON")) {
+                data[key] = JSON.stringify(data[key]);
+            }
+        });
         return super.postData(data, this.module_url + object_url);
     }
 
     createObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
+        }
+        if (data.length > 0) { // json parse if key ends with JSON
+            const jsonKeys = [];
+            Object.keys(data[0]).forEach(key => {
+                if (key.endsWith("JSON")) {
+                    jsonKeys.push(key);
+                }
+            });
+            data.forEach(instance => {
+                jsonKeys.forEach(key => instance[key] = JSON.stringify(instance[key]));
+            });
         }
         return super.postData(data, this.module_url + object_url + '/batch');
     }
@@ -50,12 +88,28 @@ export class ServiceObject extends RestApiGateway {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
         }
+        Object.keys(data).forEach(key => {  // json parse if key ends with JSON
+            if (key.endsWith("JSON")) {
+                data[key] = JSON.stringify(data[key]);
+            }
+        });
         return super.putData(data, this.module_url + object_url);
     }
 
     updateObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
+        }
+        if (data.length > 0) { // json parse if key ends with JSON
+            const jsonKeys = [];
+            Object.keys(data[0]).forEach(key => {
+                if (key.endsWith("JSON")) {
+                    jsonKeys.push(key);
+                }
+            });
+            data.forEach(instance => {
+                jsonKeys.forEach(key => instance[key] = JSON.stringify(instance[key]));
+            });
         }
         return super.putData(data, this.module_url + object_url + '/batch');
     }
@@ -64,12 +118,28 @@ export class ServiceObject extends RestApiGateway {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
         }
+        Object.keys(data).forEach(key => {  // json parse if key ends with JSON
+            if (key.endsWith("JSON")) {
+                data[key] = JSON.stringify(data[key]);
+            }
+        });
         return super.patchData(data, this.module_url + object_url);
     }
 
     partiallyUpdateObjectList(object_url: any, data: any): Promise<any> {
         if (object_url in this.constant_list) {
             return Promise.resolve(null);
+        }
+        if (data.length > 0) { // json parse if key ends with JSON
+            const jsonKeys = [];
+            Object.keys(data[0]).forEach(key => {
+                if (key.endsWith("JSON")) {
+                    jsonKeys.push(key);
+                }
+            });
+            data.forEach(instance => {
+                jsonKeys.forEach(key => instance[key] = JSON.stringify(instance[key]));
+            });
         }
         return super.patchData(data, this.module_url + object_url + '/batch');
     }

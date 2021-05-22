@@ -39,4 +39,4 @@ import { ExcelService } from '../../excel/excel-service';
     providers: [EmployeeOldService, ExcelService],
     bootstrap: [EmployeeComponent],
 })
-export class EmployeeModule {}
+export class EmployeeModule { }
