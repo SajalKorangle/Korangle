@@ -51,11 +51,23 @@
                             <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.password">
                         </mat-form-field>
 
-                        <mat-form-field *ngIf="hasAdminPermission()">
+                        <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput1.focus()">
                             <mat-label>Account Onner</mat-label>
                             <mat-select [(ngModel)]="userInput.selectedAccountInfo.parentEmployee">
+
+                                <mat-option style="pointer-events: none;">
+                                    <!--Search bar-->
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-icon matPrefix>search</mat-icon>
+                                        <input style="pointer-events: auto;" #searchInput1
+                                            (click)="$event.stopPropagation();" matInput>
+                                    </mat-form-field>
+                                </mat-option>
+
                                 <ng-container *ngFor="let employee of backendData.employeeList">
-                                    <mat-option [value]="employee.id">{{employee.name}}</mat-option>
+                                    <mat-option
+                                        *ngIf="employee.name.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                                        [value]="employee.id">{{employee.name}}</mat-option>
                                 </ng-container>
                             </mat-select>
                         </mat-form-field><br />

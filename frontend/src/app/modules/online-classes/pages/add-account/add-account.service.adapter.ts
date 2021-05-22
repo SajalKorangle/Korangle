@@ -38,6 +38,7 @@ export class AddAccountServiceAdapter {
 
         if (this.vm.hasAdminPermission()) {
             const employee_request = {
+                parentSchool: this.vm.user.activeSchool.dbId,
                 fields__korangle: ['id', 'name'],
             };
             serviceList.push(
