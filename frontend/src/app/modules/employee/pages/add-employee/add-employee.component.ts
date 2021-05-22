@@ -33,7 +33,7 @@ export class AddEmployeeComponent implements OnInit {
         private employeeService: EmployeeService,
         private bankService: BankService,
         private teamService: TeamService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

@@ -3,7 +3,7 @@ import { AssignTaskComponent } from './assign-task.component';
 export class AssignTaskServiceAdapter {
     vm: AssignTaskComponent;
 
-    constructor() { }
+    constructor() {}
 
     // Data
 
