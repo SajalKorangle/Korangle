@@ -60,7 +60,8 @@
                                     <mat-form-field style="width: 100%;">
                                         <mat-icon matPrefix>search</mat-icon>
                                         <input style="pointer-events: auto;" #searchInput1
-                                            (click)="$event.stopPropagation();" matInput>
+                                            (keydown)="$event.stopPropagation()" (click)="$event.stopPropagation();"
+                                            matInput>
                                     </mat-form-field>
                                 </mat-option>
 
