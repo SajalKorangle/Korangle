@@ -11,10 +11,14 @@ import { LocalComponentsModule } from '@modules/employee/component/local-compone
 @NgModule({
     declarations: [AddEmployeeComponent],
 
-    imports: [AddEmployeeRoutingModule, ComponentsModule, LocalComponentsModule],
+    imports: [
+                AddEmployeeRoutingModule,
+                ComponentsModule,
+                LocalComponentsModule
+    ],
     entryComponents: [InPagePermissionDialogComponent],
     exports: [],
     providers: [],
     bootstrap: [AddEmployeeComponent],
 })
-export class AddEmployeeModule { }
+export class AddEmployeeModule {}

@@ -133,4 +133,4 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatSlideToggleModule,
     ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}
