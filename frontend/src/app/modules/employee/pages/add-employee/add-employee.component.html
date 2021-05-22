@@ -19,19 +19,13 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-label
-                        >Mobile Number
-                        <span *ngIf="checkLength(newEmployee.mobileNumber)" [class.fieldRight]="checkRight(newEmployee.mobileNumber, 10)">
-                            - {{ newEmployee.mobileNumber.toString().length }}</span
-                        >
+                    <mat-label>Mobile Number
+                        <span *ngIf="checkLength(newEmployee.mobileNumber)"
+                            [class.fieldRight]="checkRight(newEmployee.mobileNumber, 10)">
+                            - {{ newEmployee.mobileNumber.toString().length }}</span>
                     </mat-label>
-                    <input
-                        matInput
-                        type="number"
-                        (keypress)="policeNumberInput($event)"
-                        [ngModel]="newEmployee.mobileNumber"
-                        (ngModelChange)="newEmployee.mobileNumber = $event"
-                    />
+                    <input matInput type="number" (keypress)="policeNumberInput($event)"
+                        [ngModel]="newEmployee.mobileNumber" (ngModelChange)="newEmployee.mobileNumber = $event" />
                 </mat-form-field>
             </div>
         </div>
@@ -55,24 +49,19 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-label
-                        >Aadhar Number
-                        <span *ngIf="checkLength(newEmployee.aadharNumber)" [class.fieldRight]="checkRight(newEmployee.aadharNumber, 12)">
-                            - {{ newEmployee.aadharNumber.toString().length }}</span
-                        >
+                    <mat-label>Aadhar Number
+                        <span *ngIf="checkLength(newEmployee.aadharNumber)"
+                            [class.fieldRight]="checkRight(newEmployee.aadharNumber, 12)">
+                            - {{ newEmployee.aadharNumber.toString().length }}</span>
                     </mat-label>
-                    <input
-                        matInput
-                        type="number"
-                        (keypress)="policeNumberInput($event)"
-                        [ngModel]="newEmployee.aadharNumber"
-                        (ngModelChange)="newEmployee.aadharNumber = $event"
-                    />
+                    <input matInput type="number" (keypress)="policeNumberInput($event)"
+                        [ngModel]="newEmployee.aadharNumber" (ngModelChange)="newEmployee.aadharNumber = $event" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="text" placeholder="Passport Number" [(ngModel)]="newEmployee.passportNumber" />
+                    <input matInput type="text" placeholder="Passport Number"
+                        [(ngModel)]="newEmployee.passportNumber" />
                 </mat-form-field>
             </div>
         </div>
@@ -81,7 +70,8 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="text" placeholder="Employee Number" [(ngModel)]="newEmployee.employeeNumber" />
+                    <input matInput type="text" placeholder="Employee Number"
+                        [(ngModel)]="newEmployee.employeeNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -106,12 +96,8 @@
             <div class="col-md-3">
                 <mat-form-field>
                     <mat-label>Bank Ifsc Code</mat-label>
-                    <input
-                        matInput
-                        type="text"
-                        (ngModelChange)="newEmployee.bankIfscCode = $event; getBankDetails()"
-                        [ngModel]="newEmployee.bankIfscCode"
-                    />
+                    <input matInput type="text" (ngModelChange)="newEmployee.bankIfscCode = $event; getBankDetails()"
+                        [ngModel]="newEmployee.bankIfscCode" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -121,12 +107,14 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="text" placeholder="Bank Account Number" [(ngModel)]="newEmployee.bankAccountNumber" />
+                    <input matInput type="text" placeholder="Bank Account Number"
+                        [(ngModel)]="newEmployee.bankAccountNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="text" placeholder="EPF Account No." [(ngModel)]="newEmployee.epfAccountNumber" />
+                    <input matInput type="text" placeholder="EPF Account No."
+                        [(ngModel)]="newEmployee.epfAccountNumber" />
                 </mat-form-field>
             </div>
         </div>
@@ -140,26 +128,15 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input
-                        matInput
-                        type="number"
-                        (keypress)="policeNumberInput($event)"
-                        placeholder="Monthly Salary"
-                        [ngModel]="newEmployee.monthlySalary"
-                        (ngModelChange)="newEmployee.monthlySalary = $event"
-                    />
+                    <input matInput type="number" (keypress)="policeNumberInput($event)" placeholder="Monthly Salary"
+                        [ngModel]="newEmployee.monthlySalary" (ngModelChange)="newEmployee.monthlySalary = $event" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input
-                        matInput
-                        type="number"
-                        (keypress)="policeNumberInput($event)"
-                        placeholder="Paid Leave"
+                    <input matInput type="number" (keypress)="policeNumberInput($event)" placeholder="Paid Leave"
                         [ngModel]="newEmployeeSessionDetail.paidLeaveNumber"
-                        (ngModelChange)="newEmployeeSessionDetail.paidLeaveNumber = $event"
-                    />
+                        (ngModelChange)="newEmployeeSessionDetail.paidLeaveNumber = $event" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
@@ -201,7 +178,8 @@
                 <!--                <mat-divider style="margin-left: -10px;margin-right:-10px;margin-bottom: 8px"></mat-divider>-->
                 <div style="margin-bottom: 3px">
                     <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
-                    <button class="btn" (click)="removeAll()" style="padding: 6px 9px; margin-left: 8px; margin-right: 9px">
+                    <button class="btn" (click)="removeAll()"
+                        style="padding: 6px 9px; margin-left: 8px; margin-right: 9px">
                         Remove All
                     </button>
                 </div>
@@ -213,7 +191,8 @@
                 </mat-expansion-panel-header>
                 <mat-action-row>
                     <button class="btn" style="padding: 6px 9px" (click)="grantAll()">Grant All</button>
-                    <button class="btn" (click)="removeAll()" style="padding: 6px 9px; margin-left: 8px; margin-right: 9px">
+                    <button class="btn" (click)="removeAll()"
+                        style="padding: 6px 9px; margin-left: 8px; margin-right: 9px">
                         Remove All
                     </button>
                 </mat-action-row>
@@ -226,9 +205,13 @@
                             <div class="row" style="margin-bottom: 8px">
                                 <ng-container *ngFor="let task of module.taskList">
                                     <div class="col-md-3">
-                                        <mat-checkbox [(ngModel)]="task.selected">
+                                        <mat-checkbox [(ngModel)]="task.selected"
+                                            (ngModelChange)="task.selected==false?task.configJSON=null:null">
                                             {{ task.title }}
                                         </mat-checkbox>
+                                        <span *ngIf="hasInPageTaskPermission(module, task)"
+                                            (click)="openInPagePermissionDialog(module, task)"
+                                            style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
                                     </div>
                                 </ng-container>
                                 <br />

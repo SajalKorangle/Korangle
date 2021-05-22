@@ -4,7 +4,6 @@ import { AddTutorialServiceAdapter } from '@modules/tutorials/pages/add-tutorial
 import { DataStorage } from '@classes/data-storage';
 import { StudentService } from '@services/modules/student/student.service';
 import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
-import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { UpdateService } from '../../../../update/update-service';
@@ -13,6 +12,8 @@ import { NotificationService } from '../../../../services/modules/notification/n
 import { SmsService } from 'app/services/modules/sms/sms.service';
 import { UserService } from 'app/services/modules/user/user.service';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
+import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
+import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -30,49 +31,62 @@ import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
     ],
 })
 export class AddTutorialComponent implements OnInit {
-    serviceAdapter: AddTutorialServiceAdapter;
+
     user: any;
-    selectedClass: any;
-    selectedSubject = null;
-    subjectList: any;
+
+    serviceAdapter: AddTutorialServiceAdapter;
+    htmlRenderer: AddTutorialHtmlRenderer;
+
     tutorialList = [];
-    showTutorialDetails = false;
-    isLoading = false;
-    classSubjectList: any;
-    newTutorial: any;
-    editable = false;
-    tutorialEditing = false;
-    previewBeforeAddTutorialUrl: string;
-    classSectionSubjectList: any;
-    selectedSection: any;
-    tutorialUpdating = false;
-    isTutorialDetailsLoading = false;
-    editedTutorial: any;
+    classSubjectList = [];
+    currentClassStudentList = [];
+    classSectionSubjectList = [];
+
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-
-    isIFrameLoading = true;
-    loadCount = 0;
-    limit = 2;
 
     createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
     deleteMessage = 'The following tutorial has been deleted -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
     editMessage = 'The following tutorial has been edited -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
     settings: any;
     smsBalance: any;
-
-    currentClassStudentList: any;
-    noSubjects: boolean;
+    informationMessageType = INFORMATION_TYPE_LIST.indexOf('Tutorial') + 1;
 
     updateService: any;
+
+    backendData = {
+        classList: [],
+        sectionList: [],
+        classSubjectList: [],
+        subjectList: [],
+        fullStudentList: []
+    };
+
+    userInput = {
+        newTutorial: {} as any,
+        selectedSection: {} as any,
+        editedTutorial: {} as any,
+        selectedClass: {} as any,
+        selectedSubject: {} as any,
+    };
+
+    stateKeeper = {
+        isLoading: false,
+        tutorialUpdating: false,
+        isTutorialDetailsLoading: false,
+        isIFrameLoading: true,
+        subjectChangedButNotGet: true,
+        editable: false,
+        tutorialEditing: false,
+    };
 
     constructor(
         public subjectService: SubjectService,
         public classService: ClassService,
         public studentService: StudentService,
         public tutorialService: TutorialsService,
-        private dialog: MatDialog,
+        public dialog: MatDialog,
         public notificationService: NotificationService,
         public smsService: SmsService,
         public userService: UserService,
@@ -84,41 +98,25 @@ export class AddTutorialComponent implements OnInit {
 
         this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
 
+        this.htmlRenderer = new AddTutorialHtmlRenderer();
+        this.htmlRenderer.initializeAdapter(this);
+
         this.serviceAdapter = new AddTutorialServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.body.appendChild(tag);
     }
 
-    getSubjectName(subject: any): any {
-        let result = '';
-        this.subjectList.every((subj) => {
-            if (subj.id === subject.parentSubject) {
-                result = subj.name;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
-    initializeNewTutorial(): void {
-        this.newTutorial = {
-            id: null,
-            parentClassSubject: this.getParentClassSubject(),
-            chapter: null,
-            topic: null,
-            link: null,
-            editable: false,
-            orderNumber: 0,
-        };
-    }
 
     getParentClassSubject(): number {
-        const classSub = this.serviceAdapter.classSubjectList.filter((classSubject) => {
+        const classSub = this.backendData.classSubjectList.filter((classSubject) => {
             if (
-                classSubject.parentClass == this.selectedSection.parentClass &&
-                classSubject.parentDivision == this.selectedSection.id &&
-                classSubject.parentSubject == this.selectedSubject.parentSubject
+                classSubject.parentClass == this.userInput.selectedSection.parentClass &&
+                classSubject.parentDivision == this.userInput.selectedSection.id &&
+                classSubject.parentSubject == this.userInput.selectedSubject.parentSubject
             ) {
                 return classSubject;
             }
@@ -126,84 +124,14 @@ export class AddTutorialComponent implements OnInit {
         return classSub[0].id;
     }
 
-    showPreviewVideo(tutorial: any): void {
-        this.dialog.open(ModalVideoComponent, {
-            height: '80vh',
-            width: '80vw',
-            data: {
-                videoUrl: 'https://youtube.com/embed/' + tutorial.link.match(this.youtubeIdMatcher)[1],
-            },
-        });
+    initializeNewTutorial(): void {
+        this.userInput.newTutorial = {
+            id: null,
+            chapter: null,
+            topic: null,
+            link: null,
+            orderNumber: 0,
+        };
     }
 
-    topicAlreadyPresent(tutorial): boolean {
-        let ownIdx = -1;
-        if (tutorial != undefined && tutorial.chapter != null && tutorial.topic != null) {
-            ownIdx = this.tutorialList.findIndex((tempTutorial) => tutorial.id === tempTutorial.id);
-            for (let i = 0; i < this.tutorialList.length; i++) {
-                let temp = this.tutorialList[i];
-                if (temp.chapter === tutorial.chapter && temp.topic === tutorial.topic.trim() && i != ownIdx) return true;
-            }
-        }
-
-        return false;
-    }
-
-    youTubeLinkValid(): boolean {
-        const tutorial = this.newTutorial;
-
-        if (!tutorial.link || tutorial.link.trim() == '') {
-            return false;
-        }
-
-        if (this.youtubeRegex.test(tutorial.link.trim())) {
-            if (tutorial.link.startsWith('www.')) {
-                tutorial.link = 'https://' + tutorial.link;
-            }
-            if (tutorial.link.match(this.youtubeIdMatcher) === null) {
-                return false;
-            }
-            this.previewBeforeAddTutorialUrl = 'https://youtube.com/embed/' + tutorial.link.match(this.youtubeIdMatcher)[1];
-            return true;
-        } else return false;
-    }
-    checkEnableAddButton(): boolean {
-        const tutorial = this.newTutorial;
-
-        if (
-            !tutorial.chapter ||
-            tutorial.chapter.trim() == '' ||
-            !tutorial.topic ||
-            tutorial.topic.trim() == '' ||
-            this.topicAlreadyPresent(tutorial) ||
-            !this.youTubeLinkValid()
-        )
-            return false;
-
-        return true;
-    }
-
-    listenEvent(event: any) {
-        this.loadCount++;
-        if (this.loadCount == this.limit) {
-            this.isIFrameLoading = false;
-            this.loadCount = 0;
-        }
-    }
-
-    handleLinkChange() {
-        let videoId = this.newTutorial.link.match(this.youtubeIdMatcher);
-        if (videoId && this.previewBeforeAddTutorialUrl && videoId.includes(this.previewBeforeAddTutorialUrl.split('/')[4])) {
-            this.isIFrameLoading = false;
-            this.loadCount = 0;
-        } else {
-            this.isIFrameLoading = true;
-            let iframe = document.getElementById('player');
-            if (iframe) {
-                this.limit = 1;
-            } else {
-                this.limit = 2;
-            }
-        }
-    }
 }

@@ -14,6 +14,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
 import { MatDialogModule } from '@angular/material';
 import { SafePipe } from '../pipes/safe.pipe';
+import {YouTubePlayerModule} from '@angular/youtube-player';
 
 @NgModule({
     declarations: [NavbarComponent, SidebarComponent, LoadingSpinnerComponent, ModalVideoComponent, SafePipe],
@@ -28,6 +29,7 @@ import { SafePipe } from '../pipes/safe.pipe';
         MatDialogModule,
         MatButtonModule,
         MatIconModule,
+        YouTubePlayerModule
     ],
     exports: [
         NavbarComponent,
