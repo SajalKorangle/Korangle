@@ -1,4 +1,4 @@
-<div class="card-content">
+<div class="card-content" *ngIf="!isLoading else Loader">
     <mat-card>
         <h4>Add Account</h4>
         <div style="margin-left: 12px; width: fit-content;">
@@ -18,11 +18,14 @@
             </button>
         </div>
     </mat-card>
-    
-    <hr/>
-    <h3 style="margin-top: 16px;" class="icon-text-wrapper"><mat-icon>history</mat-icon><span> History</span></h3>
 
-    <table *ngIf="backendData.accountInfoList.length > 0 else EmptyAccountInfo" class="table table-hover table-responsive">
+    <hr />
+    <h3 style="margin-top: 16px;" class="icon-text-wrapper">
+        <mat-icon>history</mat-icon><span> History</span>
+    </h3>
+
+    <table *ngIf="backendData.accountInfoList.length > 0 else EmptyAccountInfo"
+        class="table table-hover table-responsive">
         <thead>
             <tr>
                 <th>Username</th>
@@ -30,17 +33,46 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let accountInfo of backendData.accountInfoList">
-                <td>{{accountInfo.username}}</td>
-                <td>{{accountInfo.password}}</td>
-            </tr>
+            <ng-container *ngFor="let accountInfo of backendData.accountInfoList">
+                <tr style="cursor: pointer;"
+                    (click)="userInput.selectedAccountInfo=htmlRenderer.copyObject(accountInfo)">
+                    <td>{{accountInfo.username}}</td>
+                    <td>{{accountInfo.password}}</td>
+                </tr>
+                <tr *ngIf="userInput.selectedAccountInfo && userInput.selectedAccountInfo.id == accountInfo.id">
+                    <td colspan="2" class="in-animate">
+                        <mat-form-field>
+                            <mat-label>Username</mat-label>
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.username">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>Password</mat-label>
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.password">
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="hasAdminPermission()">
+                            <mat-label>Account Onner</mat-label>
+                            <mat-select [(ngModel)]="userInput.selectedAccountInfo.parentEmployee">
+                                <ng-container *ngFor="let employee of backendData.employeeList">
+                                    <mat-option [value]="employee.id">{{employee.name}}</mat-option>
+                                </ng-container>
+                            </mat-select>
+                        </mat-form-field><br />
+
+                        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.updateAccountInfo(userInput.selectedAccountInfo)"
+                            style="float: right;">Update</button>
+                    </td>
+                </tr>
+            </ng-container>
         </tbody>
     </table>
 
 </div>
-<ng-container *ngIf="isLoading">
+<ng-template #Loader>
     <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container>
+</ng-template>
 
 <ng-template #EmptyAccountInfo>
     <span>No past records</span>

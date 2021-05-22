@@ -1,5 +1,6 @@
 type InputTypeInterface = "number" | "select";
 type AllowedValueInterface = Array<[any, string]>;   // [any: value, string: displayName]
+export type valueType = number | string;
 
 interface Options {
     groupName?: string;
@@ -33,3 +34,5 @@ export class TaskPermissionStructure {
 }
 
 export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All instance of SettingsStructure will be registered here
+
+import '@modules/online-classes/pages/add-account/add-account.permissions';

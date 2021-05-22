@@ -22,7 +22,12 @@ export class CommonFunctions {
             const startDate = new Date(session.startDate);
             const endDate = new Date(session.endDate);
             return startDate < today && today < endDate;
-        })
+        });
+    }
+
+    static getModuleTaskPaths() {
+        let routePathList = location.pathname.split('/').slice(1);
+        return { modulePath: routePathList[0], taskPath: routePathList[1] };
     }
 
     copyObject(object: any): any {

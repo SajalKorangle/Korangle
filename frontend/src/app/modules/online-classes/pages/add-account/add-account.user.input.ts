@@ -5,6 +5,8 @@ export class AddAccountUserInput {
     newUsername: string = '';
     newPassword: string = '';
 
+    selectedAccountInfo: any = null;
+
     vm: AddAccountComponent;
 
     constructor() { }
