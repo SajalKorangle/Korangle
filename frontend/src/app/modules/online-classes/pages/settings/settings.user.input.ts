@@ -6,14 +6,20 @@ export class SettingsUserInput {
     selectedClass: any;
     selectedSection: any;
 
-    newTimeSpan: { startTime: string, endTime: string; } = { startTime: DEFAULT_START_TIME_STRING, endTime: DEFAULT_END_TIME_STRING };
+    newTimeSpan: { startTime: string, endTime: string; };
 
     vm: SettingsComponent;
 
-    constructor() { }
+    constructor() {
+        this.resetNewTimeSpanData();
+    }
 
     initialize(vm: SettingsComponent): void {
         this.vm = vm;
+    }
+
+    resetNewTimeSpanData() {
+        this.newTimeSpan = { startTime: DEFAULT_START_TIME_STRING, endTime: DEFAULT_END_TIME_STRING };
     }
 
 }

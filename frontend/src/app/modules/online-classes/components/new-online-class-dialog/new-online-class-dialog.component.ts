@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SettingsComponent } from '@modules/online-classes/pages/settings/settings.component';
+import { TimeSpan } from '@modules/online-classes/class/constants';
 
 @Component({
   selector: 'app-new-online-class-dialog',
@@ -8,36 +10,33 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class NewOnlineClassDialogComponent implements OnInit {
 
-  selectedClassSubject: number;
-  meetingId: string = '';
-  passCode: string = '';
+  parentAccountInfo: number;
+  parentClassSubject: number;
+  meetingNumber: string = '';
+  password: string = '';
+
+  filteredClassSubject: Array<any>;
 
   constructor(public dialogRef: MatDialogRef<NewOnlineClassDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
-    vm: any,
+    vm: SettingsComponent,
     weekday: string,
-    timestamp: any,
-    classSubjectList: Array<any>,
-    onlineClassList: Array<any>,
+    timespan: TimeSpan,
   }
-  ) { }
+  ) {
+    this.filteredClassSubject = data.vm.backendData.classSubjectList.filter(classSubject => {
+      if (classSubject.parentClass == data.vm.userInput.selectedClass.id
+        && classSubject.parentDivision == data.vm.userInput.selectedSection.id)
+        return true;
+      return false;
+    });
+  }
 
   ngOnInit() {
     console.log('this dialog: ', this);
   }
 
-  handleSubjectSelection(classSubjectId) {
-    const onlineClass = this.data.onlineClassList.find(onlineClass => onlineClass.parentClassSubject == classSubjectId);
-    if (onlineClass && onlineClass.meetingNumber) {
-      this.meetingId = onlineClass.meetingNumber;
-      this.passCode = onlineClass.password;
-    } else {
-      this.meetingId = '';
-      this.passCode = '';
-    }
-  }
-
   apply(): void {
-    this.dialogRef.close({ parentClassSubject: this.selectedClassSubject, meetingId: this.meetingId, passCode: this.passCode });
+    this.dialogRef.close({ parentClassSubject: this.parentClassSubject, parentAccountInfo: this.parentAccountInfo, meetingNumber: this.meetingNumber, password: this.password });
   }
 
 }

@@ -81,3 +81,10 @@ export function TimeSpanComparator(timespan1: TimeSpan, timespan2: TimeSpan) {
 
 export const DEFAULT_START_TIME_STRING = '08:00';
 export const DEFAULT_END_TIME_STRING = '08:40';
+
+
+import { OnlineClass } from '@services/modules/online-class/models/online-class';
+export interface ParsedOnlineClass extends OnlineClass {
+    startTimeJSON: Time;
+    endTimeJSON: Time;
+};

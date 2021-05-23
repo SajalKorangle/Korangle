@@ -1,5 +1,5 @@
 import { SettingsComponent } from './settings.component';
-import { getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
+import { ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
 
 import { NewOnlineClassDialogComponent } from '@modules/online-classes/components/new-online-class-dialog/new-online-class-dialog.component';
 
@@ -12,7 +12,7 @@ export class SettingsHtmlRenderer {
     newTimeSpanForm: boolean = false;
     editTimeSpanFormIndex: number = -1;
 
-    filteredOnlineClassList: Array<{ [key: string]: any; }> = [];
+    filteredOnlineClassList: Array<ParsedOnlineClass> = [];
 
     constructor() { }
 
@@ -31,39 +31,39 @@ export class SettingsHtmlRenderer {
             }
             return false;
         });
-        this.editTimeSpanFormIndex = -1;
+
+        this.editTimeSpanFormIndex = -1;    // reset display for new time table
         this.newTimeSpanForm = false;
-        this.vm.userInput.timeSpanList = [];
-        this.filteredOnlineClassList.forEach(onlineCass => {
-            Object.values(onlineCass.configJSON.timeTable).forEach(meetConfigDay => {
-                let result: boolean = false;
-                this.vm.userInput.timeSpanList.every(timeSpan => {
-                    if (TimeComparator(meetConfigDay.startTime, timeSpan.endTime) == -1
-                        && TimeComparator(timeSpan.startTime, meetConfigDay.endTime) == -1) {
-                        result = true;
-                        return false;
-                    }
-                    return true;
-                });
-                if (!result) {
-                    this.vm.userInput.timeSpanList.push(new TimeSpan(
-                        {
-                            startTime: new Time({ ...meetConfigDay.startTime }),
-                            endTime: new Time({ ...meetConfigDay.endTime })
-                        }));
+
+        this.timeSpanList = [];
+        this.filteredOnlineClassList.forEach(onlineClass => {
+            let result: boolean = false;
+            this.timeSpanList.every(timeSpan => {
+                if (TimeComparator(onlineClass.startTimeJSON, timeSpan.endTime) == -1
+                    && TimeComparator(timeSpan.startTime, onlineClass.endTimeJSON) == -1) {
+                    result = true;
+                    return false;
                 }
+                return true;
             });
+            if (!result) {
+                this.timeSpanList.push(new TimeSpan(
+                    {
+                        startTime: new Time({ ...onlineClass.startTimeJSON }),
+                        endTime: new Time({ ...onlineClass.endTimeJSON })
+                    }));
+            }
         });
-        if (this.vm.userInput.timeSpanList.length == 0) {
-            this.vm.userInput.timeSpanList = getDefaultTimeSpanList();
+        if (this.timeSpanList.length == 0) {
+            this.timeSpanList = getDefaultTimeSpanList();
         }
-        this.vm.userInput.timeSpanList.sort(TimeSpanComparator);
+        this.timeSpanList.sort(TimeSpanComparator);
     }
 
-    getOnlineClassByWeekDayAndTime(weekday, meetConfigDay) {
+    getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {
         return this.filteredOnlineClassList.find(onlineClass => {
-            if (onlineClass.configJSON.timeTable[weekday]
-                && TimeSpanComparator(meetConfigDay, onlineClass.configJSON.timeTable[weekday]) == 0)
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return true;
             return false;
         });
@@ -76,14 +76,13 @@ export class SettingsHtmlRenderer {
         return { classSubject, subject, employee };
     }
 
-    openNewOnlineClassDalog(weekdayKey, timestamp) {
+    openNewOnlineClassDalog(weekdayKey, timespan) { // check here
+        let onlineClass: ParsedOnlineClass = this.getOnlineClassByWeekDayAndTime(weekdayKey, timespan);
         const data = {
             vm: this.vm,
             weekday: this.vm.weekdays[weekdayKey],
-            timestamp,
-            classSubjectList: this.vm.backendData.classSubjectList.filter(classSubject => classSubject.parentClass == this.vm.userInput.selectedClass.id
-                && classSubject.parentDivision == this.vm.userInput.selectedSection.id),
-            onlineClassList: this.filteredOnlineClassList,
+            timespan,
+            onlineClass
         };
         const onlineClassDialog = this.vm.dialog.open(NewOnlineClassDialogComponent, {
             data
@@ -91,17 +90,20 @@ export class SettingsHtmlRenderer {
 
         onlineClassDialog.afterClosed().subscribe((data: any) => {
             if (data && data.parentClassSubject) {
-                let onlineClass = this.filteredOnlineClassList.find(oc => oc.parentClassSubject == data.parentClassSubject);
                 if (!onlineClass) {
                     onlineClass = {
                         parentSchool: this.vm.user.activeSchool.dbId,
                         parentClassSubject: data.parentClassSubject,
-                        configJSON: { timeTable: {} }
+                        parentAccountInfo: null,
+                        day: this.vm.weekdays[weekdayKey],
+                        startTimeJSON: new Time({ ...timespan.startTime }),
+                        endTimeJSON: new Time({ ...timespan.endTime }),
+                        meetingNumber: null,
+                        password: null,
                     };
                 }
-                onlineClass.meetingNumber = data.meetingId;
-                onlineClass.password = data.passCode;
-                onlineClass.configJSON.timeTable[weekdayKey] = timestamp;
+                onlineClass.meetingNumber = data.meetingNumber;
+                onlineClass.password = data.password;
                 this.filteredOnlineClassList.push(onlineClass);
             }
         });
@@ -115,8 +117,8 @@ export class SettingsHtmlRenderer {
 
     setupEditTimeSpan() {
         this.vm.userInput.newTimeSpan = {
-            startTime: this.vm.userInput.timeSpanList[this.editTimeSpanFormIndex].startTime.getString(),
-            endTime: this.vm.userInput.timeSpanList[this.editTimeSpanFormIndex].endTime.getString()
+            startTime: this.timeSpanList[this.editTimeSpanFormIndex].startTime.getString(),
+            endTime: this.timeSpanList[this.editTimeSpanFormIndex].endTime.getString()
         };
     }
 
@@ -150,7 +152,7 @@ export class SettingsHtmlRenderer {
     }
 
     nonEditingTimeSpanList(): Array<TimeSpan> {
-        return this.vm.userInput.timeSpanList.filter((timeSpan, timeSpanIndex) => timeSpanIndex != this.editTimeSpanFormIndex);
+        return this.timeSpanList.filter((timeSpan, timeSpanIndex) => timeSpanIndex != this.editTimeSpanFormIndex);
     }
 
     newTimeSpanError = (): boolean => {
@@ -164,5 +166,33 @@ export class SettingsHtmlRenderer {
             return true;
         return false;
     };
+
+    addNewTimeSpan() {
+        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
+        const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
+        this.timeSpanList.push(new TimeSpan({ startTime, endTime }));
+        this.timeSpanList.sort(TimeSpanComparator);
+        this.vm.userInput.resetNewTimeSpanData();
+    }
+
+    editTimeSpan() {
+        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
+        const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
+        this.timeSpanList[this.vm.htmlRenderer.editTimeSpanFormIndex].startTime = startTime;
+        this.timeSpanList[this.vm.htmlRenderer.editTimeSpanFormIndex].endTime = endTime;
+        this.timeSpanList.sort(TimeSpanComparator);
+        this.vm.userInput.resetNewTimeSpanData();
+        this.vm.htmlRenderer.editTimeSpanFormIndex = -1;    //close editing form
+    }
+
+    deleteTimeSpan() {
+        this.timeSpanList.splice(this.vm.htmlRenderer.editTimeSpanFormIndex, 1);
+        // delete all atached meetings here
+        this.vm.htmlRenderer.editTimeSpanFormIndex = -1;
+    }
 
 }

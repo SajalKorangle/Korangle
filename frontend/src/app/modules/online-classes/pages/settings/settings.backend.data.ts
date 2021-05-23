@@ -2,9 +2,9 @@ import { SettingsComponent } from './settings.component';
 import { Classs } from '@services/modules/class/models/classs';
 import { Division } from '@services/modules/class/models/division';
 import { AccountInfo } from '@services/modules/online-class/models/account-info';
-import { OnlineClass } from '@services/modules/online-class/models/online-class';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { Subject } from '@services/modules/subject/models/subject';
+import { ParsedOnlineClass } from '@modules/online-classes/class/constants';
 
 export class SettingsBackendData {
 
@@ -12,7 +12,7 @@ export class SettingsBackendData {
     divisionList: Array<Division>;
 
     accountInfoList: Array<AccountInfo>;
-    onlineClassList: Array<OnlineClass>;
+    onlineClassList: Array<ParsedOnlineClass>;
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
 
