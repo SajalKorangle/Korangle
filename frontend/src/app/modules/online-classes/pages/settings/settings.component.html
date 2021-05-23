@@ -1,7 +1,8 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
     <div>
         <mat-form-field style="margin-right: 20px;">
-            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass">
+            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
+                (ngModelChange)="htmlRenderer.initilizeTimeTable()">
                 <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
                     {{ classs.name }}
                 </mat-option>
@@ -9,7 +10,8 @@
         </mat-form-field>
 
         <mat-form-field style="margin-right: 20px;">
-            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection">
+            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
+                (ngModelChange)="htmlRenderer.initilizeTimeTable()">
                 <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
                     {{ division.name }}
                 </mat-option>
@@ -17,6 +19,8 @@
         </mat-form-field>
         <mat-divider></mat-divider>
     </div>
+
+    <h4>{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id, userInput.selectedSection.id)}}</h4>
 
     <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection || true">
 
@@ -43,8 +47,13 @@
                                         style="font-size: small;">edit</mat-icon>
                                 </ng-container>
                             </td>
-                            <ng-container *ngFor="let weekday of weekdays">
-                                <td></td>
+                            <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                <td>
+                                    <ng-container
+                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass">
+                                        {{htmlRenderer.getDisplayData(onlineClass).subject.name}}
+                                    </ng-container>
+                                </td>
                             </ng-container>
                         </tr>
                     </ng-container>
@@ -109,4 +118,12 @@
     </button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
         (click)="userInput.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
+</ng-template>
+
+<ng-template #NoClass>
+    <div>
+        <button mat-stroked-button>
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
 </ng-template>

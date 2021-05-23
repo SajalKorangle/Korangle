@@ -1,12 +1,12 @@
 import { SettingsComponent } from './settings.component';
-import { DEFAULT_TIME_SPAN_LIST, TimeSpan, Time, DEFAULT_START_TIME_STRING, DEFAULT_END_TIME_STRING, TimeSpanComparator } from '@modules/online-classes/class/constants';
+import { getDefaultTimeSpanList, MeetingDayConfig, Time, DEFAULT_START_TIME_STRING, DEFAULT_END_TIME_STRING, TimeSpanComparator } from '@modules/online-classes/class/constants';
 
 export class SettingsUserInput {
 
     selectedClass: any;
     selectedSection: any;
 
-    timeSpanList: Array<TimeSpan> = JSON.parse(JSON.stringify(DEFAULT_TIME_SPAN_LIST));
+    timeSpanList: Array<MeetingDayConfig> = getDefaultTimeSpanList();
 
     // timeTabel: Array<any>;
 
@@ -25,7 +25,7 @@ export class SettingsUserInput {
         const endTimeArray = this.newTimeSpan.endTime.split(':').map(t => parseInt(t));
         const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
-        this.timeSpanList.push({ startTime, endTime });
+        this.timeSpanList.push(new MeetingDayConfig({ startTime, endTime }));
         this.timeSpanList.sort(TimeSpanComparator);
         this.newTimeSpan = { startTime: DEFAULT_START_TIME_STRING, endTime: DEFAULT_END_TIME_STRING }; // revert to default
     }

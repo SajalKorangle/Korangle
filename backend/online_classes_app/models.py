@@ -14,6 +14,7 @@ from django.db.models.signals import pre_save, pre_delete
 from helloworld_project import settings
 from .bussiness.zoom import newJWT
 
+
 class AccountInfo(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT)
@@ -22,16 +23,14 @@ class AccountInfo(models.Model):
 
     class Meta:
         db_table = 'AccountInfo'
-        unique_together=('parentSchool', 'username')
+        unique_together = ('parentSchool', 'username')
 
 
 class OnlineClass(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
-    startTime = models.TimeField(null=True, verbose_name='startTime')
-    endTime = models.TimeField(null=True, verbose_name='endTime')
-    meetingNumber = models.BigIntegerField(blank=True)
-    password = models.CharField(max_length=10, blank=True)
+    meetingNumber = models.BigIntegerField(blank=True, null=True)
+    password = models.CharField(max_length=10, blank=True, null=True)
     configJSON = models.TextField()
 
     def __str__(self):
@@ -39,7 +38,8 @@ class OnlineClass(models.Model):
 
     class Meta:
         db_table = 'ActiveClasses'
-        unique_together=('parentSchool', 'parentClassSubject')
+        unique_together = ('parentSchool', 'parentClassSubject')
+
 
 class RestrictedStudent(models.Model):
     parentStudent = models.ForeignKey(Student, unique=True, on_delete=models.CASCADE)
@@ -78,4 +78,3 @@ class RestrictedStudent(models.Model):
 
 #     response = requests.delete(apiEndPoint, headers=headers)
 #     assert response.status_code == 204
-

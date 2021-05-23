@@ -37,7 +37,7 @@ export class ClassroomComponent implements OnInit {
 
     meetingParameters: any;
 
-    weekdays = WEEKDAYS;
+    weekdays = Object.values(WEEKDAYS);
 
     isLoading: any;
 

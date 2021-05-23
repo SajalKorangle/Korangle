@@ -10,14 +10,21 @@ import { SettingsBackendData } from './settings.backend.data';
 // Services
 import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
-import { WEEKDAYS } from '@modules/online-classes/class/constants';
+import { EmployeeService } from '@services/modules/employee/employee.service';
+import { SubjectService } from '@services/modules/subject/subject.service';
+import { WEEKDAYS, MeetingDayConfig, Time } from '@modules/online-classes/class/constants';
 
 
 @Component({
     selector: 'settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [OnlineClassService, ClassService],
+    providers: [
+        OnlineClassService,
+        ClassService,
+        EmployeeService,
+        SubjectService
+    ],
 })
 
 export class SettingsComponent implements OnInit {
@@ -36,6 +43,8 @@ export class SettingsComponent implements OnInit {
     constructor(
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
+        public employeeService: EmployeeService,
+        public subjectService: SubjectService,
     ) { }
 
     ngOnInit(): void {
@@ -54,6 +63,20 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
         console.log("this: ", this);
+    }
+
+    parseMeetingConfiguration() {
+        this.backendData.onlineClassList = this.backendData.onlineClassList.map(onlineClass => {
+            Object.values(onlineClass.configJSON.timeTable).forEach((weekdayConfig: any) => {
+                Object.setPrototypeOf(weekdayConfig.startTime, Time.prototype);
+                Object.setPrototypeOf(weekdayConfig.endTime, Time.prototype);
+                Object.setPrototypeOf(weekdayConfig, MeetingDayConfig.prototype);
+            });
+        });
+    }
+
+    getObjetKeys(obj: { [key: string]: any; }): Array<string> {
+        return Object.keys(obj);
     }
 
     logMessage(msg) {

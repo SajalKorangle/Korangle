@@ -1,12 +1,13 @@
-export const WEEKDAYS: Array<string> = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
-];
+export const WEEKDAYS = {
+    'sunday': 'Sunday',
+    'monday': 'Monday',
+    'tuesday': 'Tuesday',
+    'wednesday': 'Wednesday',
+    'thursday': 'Thursday',
+    'friday': 'Friday',
+    'saturday': 'Saturday'
+};
+
 
 export class Time {
     hour: number;
@@ -23,33 +24,35 @@ export class Time {
     }
 }
 
-export class TimeSpan {
+export class MeetingDayConfig {
     startTime: Time;
     endTime: Time;
 
-    constructor(attributes: Partial<TimeSpan> = {}) {
+    constructor(attributes: Partial<MeetingDayConfig> = {}) {
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
     }
 }
 
-export const DEFAULT_TIME_SPAN_LIST = [
-    new TimeSpan({
-        startTime: new Time({ hour: 8, minute: 0, ampm: 'am' }),
-        endTime: new Time({ hour: 8, minute: 40, ampm: 'am' })
-    }),
-    new TimeSpan({
-        startTime: new Time({ hour: 9, minute: 0, ampm: 'am' }),
-        endTime: new Time({ hour: 9, minute: 40, ampm: 'am' })
-    }),
-    new TimeSpan({
-        startTime: new Time({ hour: 10, minute: 0, ampm: 'am' }),
-        endTime: new Time({ hour: 10, minute: 40, ampm: 'am' })
-    }),
-    new TimeSpan({
-        startTime: new Time({ hour: 11, minute: 0, ampm: 'am' }),
-        endTime: new Time({ hour: 11, minute: 40, ampm: 'am' })
-    }),
-];
+export function getDefaultTimeSpanList() {
+    return [
+        new MeetingDayConfig({
+            startTime: new Time({ hour: 8, minute: 0, ampm: 'am' }),
+            endTime: new Time({ hour: 8, minute: 40, ampm: 'am' })
+        }),
+        new MeetingDayConfig({
+            startTime: new Time({ hour: 9, minute: 0, ampm: 'am' }),
+            endTime: new Time({ hour: 9, minute: 40, ampm: 'am' })
+        }),
+        new MeetingDayConfig({
+            startTime: new Time({ hour: 10, minute: 0, ampm: 'am' }),
+            endTime: new Time({ hour: 10, minute: 40, ampm: 'am' })
+        }),
+        new MeetingDayConfig({
+            startTime: new Time({ hour: 11, minute: 0, ampm: 'am' }),
+            endTime: new Time({ hour: 11, minute: 40, ampm: 'am' })
+        }),
+    ];
+}
 
 export function TimeComparator(time1: Time, time2: Time) {
     // with respect to 00:00
@@ -65,7 +68,7 @@ export function TimeComparator(time1: Time, time2: Time) {
 }
 
 
-export function TimeSpanComparator(timespan1: TimeSpan, timespan2: TimeSpan) {
+export function TimeSpanComparator(timespan1: MeetingDayConfig, timespan2: MeetingDayConfig) {
     const startTime1 = timespan1.startTime;
     const startTime2 = timespan2.startTime;
     return TimeComparator(startTime1, startTime2);
@@ -73,3 +76,17 @@ export function TimeSpanComparator(timespan1: TimeSpan, timespan2: TimeSpan) {
 
 export const DEFAULT_START_TIME_STRING = '08:00';
 export const DEFAULT_END_TIME_STRING = '08:40';
+
+export interface TimeTable {
+    'sunday': MeetingDayConfig;
+    'monday': MeetingDayConfig;
+    'tuesday': MeetingDayConfig;
+    'wednesday': MeetingDayConfig;
+    'thursday': MeetingDayConfig;
+    'friday': MeetingDayConfig;
+    'saturday': MeetingDayConfig;
+}
+
+export class MeetingConfiguration {
+    timeTable: Partial<TimeTable> = {};
+}

@@ -14,19 +14,38 @@ export class SettingsServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let fetch_online_class_list = {
+        const online_class_list_request = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessiondbId
         };
 
-        let apiCallbackResult = await Promise.all([
+        const class_subject_list_request = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessiondbId
+        };
+
+        const employee_list_request = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            fields__korangle: ['id', 'name'],
+        };
+
+        [
+            this.vm.backendData.classList,
+            this.vm.backendData.divisionList,
+            this.vm.backendData.onlineClassList,
+            this.vm.backendData.classSubjectList,
+            this.vm.backendData.subjectList,
+            this.vm.backendData.employeeList,
+        ] = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
-            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, fetch_online_class_list), // 2
+            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_list_request), // 2
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list_request), // 3
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //4
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list_request), //5
         ]);
-        this.vm.backendData.classList = apiCallbackResult[0];
-        this.vm.backendData.divisionList = apiCallbackResult[1];
-        this.vm.backendData.onlineClassList = apiCallbackResult[2];
 
+        this.vm.parseMeetingConfiguration();
         this.vm.isLoading = false;
 
     }

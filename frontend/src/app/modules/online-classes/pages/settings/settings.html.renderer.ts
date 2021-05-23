@@ -1,5 +1,5 @@
 import { SettingsComponent } from './settings.component';
-import { TimeComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
+import { getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, MeetingDayConfig, MeetingConfiguration } from '@modules/online-classes/class/constants';
 
 export class SettingsHtmlRenderer {
 
@@ -8,10 +8,68 @@ export class SettingsHtmlRenderer {
     newTimeSpanForm: boolean = false;
     editTimeSpanFormIndex: number = -1;
 
+    filteredOnlineClassList: Array<{ [key: string]: any, configJSON: MeetingConfiguration; }> = [];
+
     constructor() { }
 
     initialize(vm: SettingsComponent): void {
         this.vm = vm;
+    }
+
+    initilizeTimeTable() {
+        if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
+            return;
+        this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
+            const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
+                && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+                return true;
+            }
+            return false;
+        });
+        this.editTimeSpanFormIndex = -1;
+        this.newTimeSpanForm = false;
+        this.vm.userInput.timeSpanList = [];
+        this.filteredOnlineClassList.forEach(onlineCass => {
+            Object.values(onlineCass.configJSON.timeTable).forEach(meetConfigDay => {
+                let result: boolean = false;
+                this.vm.userInput.timeSpanList.every(timeSpan => {
+                    if (TimeComparator(meetConfigDay.startTime, timeSpan.endTime) == -1
+                        && TimeComparator(timeSpan.startTime, meetConfigDay.endTime) == -1) {
+                        result = true;
+                        return false;
+                    }
+                    return true;
+                });
+                if (!result) {
+                    this.vm.userInput.timeSpanList.push(new MeetingDayConfig(
+                        {
+                            startTime: new Time({ ...meetConfigDay.startTime }),
+                            endTime: new Time({ ...meetConfigDay.endTime })
+                        }));
+                }
+            });
+        });
+        if (this.vm.userInput.timeSpanList.length == 0) {
+            this.vm.userInput.timeSpanList = getDefaultTimeSpanList();
+        }
+        this.vm.userInput.timeSpanList.sort(TimeSpanComparator);
+    }
+
+    getOnlineClassByWeekDayAndTime(weekday, meetConfigDay) {
+        this.filteredOnlineClassList.find(onlineClass => {
+            if (onlineClass.configJSON.timeTable[weekday]
+                && TimeSpanComparator(meetConfigDay, onlineClass.configJSON.timeTable[weekday]) == 0)
+                return true;
+            return false;
+        });
+    }
+
+    getDisplayData(onlineClass) {
+        const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+        const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
+        const employee = this.vm.backendData.getEmployeeById(classSubject.parentEmployee);
+        return { classSubject, subject, employee };
     }
 
     getClassDivisionName(classId, divisionId) {
@@ -56,7 +114,7 @@ export class SettingsHtmlRenderer {
         return result;
     }
 
-    nonEditingTimeSpanList(): Array<TimeSpan> {
+    nonEditingTimeSpanList(): Array<MeetingDayConfig> {
         return this.vm.userInput.timeSpanList.filter((timeSpan, timeSpanIndex) => timeSpanIndex != this.editTimeSpanFormIndex);
     }
 
