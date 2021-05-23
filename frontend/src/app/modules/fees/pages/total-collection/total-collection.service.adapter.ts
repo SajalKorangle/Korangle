@@ -23,13 +23,19 @@ export class TotalCollectionServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
+        let employee_permission_data = {
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentTask: 65
+        }
+        
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list), // 1
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}), // 4
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 5
+            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, employee_permission_data), // 6
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];
@@ -38,6 +44,14 @@ export class TotalCollectionServiceAdapter {
                 this.vm.sectionList = value[3];
                 this.vm.boardList = value[4];
                 this.vm.sessionList = value[5];
+                if (value[6].configJSON['numberOfDays'] != null) {
+                    let numberOfDays = value[6].configJSON['numberOfDays'];
+                    if (!isNaN(numberOfDays) && numberOfDays>=1) {
+                        const currentDate = new Date();
+                        this.vm.minDate = new Date(currentDate);
+                        this.vm.minDate.setDate(currentDate.getDate() - Math.floor(numberOfDays))
+                    }
+                }
 
                 this.vm.isInitialLoading = false;
             },

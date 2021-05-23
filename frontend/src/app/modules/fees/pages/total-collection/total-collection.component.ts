@@ -27,6 +27,7 @@ export class TotalCollectionComponent implements OnInit {
 
     startDate: any;
     endDate: any;
+    minDate: any;
 
     feeTypeList = [];
     employeeList = [];
