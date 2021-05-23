@@ -29,9 +29,23 @@ class AccountInfo(models.Model):
 class OnlineClass(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
+    parentAccountInfo = models.ForeignKey(AccountInfo, null=True, blank=True, on_delete=models.SET_NULL)
+
+    WEEKDAYS_CHOICES = (
+        ('Sunday', 'Sunday'),
+        ('Monday', 'Monday'),
+        ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'),
+        ('Friday', 'Friday'),
+        ('Saturday', 'Saturday')
+    )
+
+    day = models.CharField(max_length=20, choices=WEEKDAYS_CHOICES)
     meetingNumber = models.BigIntegerField(blank=True, null=True)
     password = models.CharField(max_length=10, blank=True, null=True)
-    configJSON = models.TextField()
+    startTimeJSON = models.CharField(max_length=100)
+    endTimeJSON = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name

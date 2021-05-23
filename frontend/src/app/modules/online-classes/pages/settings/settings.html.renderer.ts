@@ -1,14 +1,18 @@
 import { SettingsComponent } from './settings.component';
-import { getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, MeetingDayConfig, MeetingConfiguration } from '@modules/online-classes/class/constants';
+import { getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
+
+import { NewOnlineClassDialogComponent } from '@modules/online-classes/components/new-online-class-dialog/new-online-class-dialog.component';
 
 export class SettingsHtmlRenderer {
 
     vm: SettingsComponent;
 
+    timeSpanList: Array<TimeSpan> = getDefaultTimeSpanList();
+
     newTimeSpanForm: boolean = false;
     editTimeSpanFormIndex: number = -1;
 
-    filteredOnlineClassList: Array<{ [key: string]: any, configJSON: MeetingConfiguration; }> = [];
+    filteredOnlineClassList: Array<{ [key: string]: any; }> = [];
 
     constructor() { }
 
@@ -42,7 +46,7 @@ export class SettingsHtmlRenderer {
                     return true;
                 });
                 if (!result) {
-                    this.vm.userInput.timeSpanList.push(new MeetingDayConfig(
+                    this.vm.userInput.timeSpanList.push(new TimeSpan(
                         {
                             startTime: new Time({ ...meetConfigDay.startTime }),
                             endTime: new Time({ ...meetConfigDay.endTime })
@@ -57,7 +61,7 @@ export class SettingsHtmlRenderer {
     }
 
     getOnlineClassByWeekDayAndTime(weekday, meetConfigDay) {
-        this.filteredOnlineClassList.find(onlineClass => {
+        return this.filteredOnlineClassList.find(onlineClass => {
             if (onlineClass.configJSON.timeTable[weekday]
                 && TimeSpanComparator(meetConfigDay, onlineClass.configJSON.timeTable[weekday]) == 0)
                 return true;
@@ -70,6 +74,37 @@ export class SettingsHtmlRenderer {
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
         const employee = this.vm.backendData.getEmployeeById(classSubject.parentEmployee);
         return { classSubject, subject, employee };
+    }
+
+    openNewOnlineClassDalog(weekdayKey, timestamp) {
+        const data = {
+            vm: this.vm,
+            weekday: this.vm.weekdays[weekdayKey],
+            timestamp,
+            classSubjectList: this.vm.backendData.classSubjectList.filter(classSubject => classSubject.parentClass == this.vm.userInput.selectedClass.id
+                && classSubject.parentDivision == this.vm.userInput.selectedSection.id),
+            onlineClassList: this.filteredOnlineClassList,
+        };
+        const onlineClassDialog = this.vm.dialog.open(NewOnlineClassDialogComponent, {
+            data
+        });
+
+        onlineClassDialog.afterClosed().subscribe((data: any) => {
+            if (data && data.parentClassSubject) {
+                let onlineClass = this.filteredOnlineClassList.find(oc => oc.parentClassSubject == data.parentClassSubject);
+                if (!onlineClass) {
+                    onlineClass = {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                        parentClassSubject: data.parentClassSubject,
+                        configJSON: { timeTable: {} }
+                    };
+                }
+                onlineClass.meetingNumber = data.meetingId;
+                onlineClass.password = data.passCode;
+                onlineClass.configJSON.timeTable[weekdayKey] = timestamp;
+                this.filteredOnlineClassList.push(onlineClass);
+            }
+        });
     }
 
     getClassDivisionName(classId, divisionId) {
@@ -114,7 +149,7 @@ export class SettingsHtmlRenderer {
         return result;
     }
 
-    nonEditingTimeSpanList(): Array<MeetingDayConfig> {
+    nonEditingTimeSpanList(): Array<TimeSpan> {
         return this.vm.userInput.timeSpanList.filter((timeSpan, timeSpanIndex) => timeSpanIndex != this.editTimeSpanFormIndex);
     }
 

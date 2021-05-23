@@ -36,6 +36,7 @@ export class SettingsServiceAdapter {
             this.vm.backendData.classSubjectList,
             this.vm.backendData.subjectList,
             this.vm.backendData.employeeList,
+            this.vm.backendData.accountInfoList,
         ] = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
@@ -43,6 +44,7 @@ export class SettingsServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list_request), // 3
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //4
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list_request), //5
+            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}), // 6
         ]);
 
         this.vm.parseMeetingConfiguration();

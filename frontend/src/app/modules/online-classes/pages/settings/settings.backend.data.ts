@@ -1,15 +1,22 @@
 import { SettingsComponent } from './settings.component';
+import { Classs } from '@services/modules/class/models/classs';
+import { Division } from '@services/modules/class/models/division';
+import { AccountInfo } from '@services/modules/online-class/models/account-info';
+import { OnlineClass } from '@services/modules/online-class/models/online-class';
+import { ClassSubject } from '@services/modules/subject/models/class-subject';
+import { Subject } from '@services/modules/subject/models/subject';
 
 export class SettingsBackendData {
 
-    classList: any;
-    divisionList: any;
+    classList: Array<Classs>;
+    divisionList: Array<Division>;
 
-    onlineClassList: any;
-    classSubjectList: any;
-    subjectList: any;
+    accountInfoList: Array<AccountInfo>;
+    onlineClassList: Array<OnlineClass>;
+    classSubjectList: Array<ClassSubject>;
+    subjectList: Array<Subject>;
 
-    employeeList: any;
+    employeeList: Array<any>;
 
     vm: SettingsComponent;
 

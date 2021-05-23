@@ -20,16 +20,16 @@
         <mat-divider></mat-divider>
     </div>
 
-    <h4>{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id, userInput.selectedSection.id)}}</h4>
+    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection">
 
-    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection || true">
+        <h4>{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id, userInput.selectedSection.id)}}</h4>
 
         <div style="overflow: auto;">
             <table class="mat-elevation-z8 table table-hover">
                 <thead>
                     <tr>
                         <th></th>
-                        <th *ngFor="let weekday of weekdays">{{weekday}}</th>
+                        <th *ngFor="let weekdayKey of getObjetKeys(weekdays)">{{weekdays[weekdayKey]}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,6 +53,14 @@
                                         *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass">
                                         {{htmlRenderer.getDisplayData(onlineClass).subject.name}}
                                     </ng-container>
+                                    <ng-template #NoClass>
+                                        <div>
+                                            <button mat-stroked-button
+                                                (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)">
+                                                <mat-icon>add</mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-template>
                                 </td>
                             </ng-container>
                         </tr>
@@ -64,15 +72,16 @@
                                 <mat-icon>add</mat-icon>
                             </button>
                         </td>
-                        <ng-container *ngFor="let weekday of weekdays">
+                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
                             <td></td>
                         </ng-container>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <mat-divider style="margin-top: 32px;"></mat-divider>
+        <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;">Update</button>
     </ng-container>
-    <mat-divider style="margin-top: 32px;"></mat-divider>
 
 </div>
 
@@ -113,17 +122,9 @@
         <mat-error *ngIf="htmlRenderer.timeSpanOverlapping()">Time Span Overlapping </mat-error>
     </mat-form-field>
 
-    <button mat-stroked-button style="margin-top: 6px; margin-right: 6px;">
+    <button mat-stroked-button style="margin-top: 6px; margin-right: 6px;" (click)="userInput.deleteTimeSpan()">
         <mat-icon>delete</mat-icon>
     </button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
         (click)="userInput.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
-</ng-template>
-
-<ng-template #NoClass>
-    <div>
-        <button mat-stroked-button>
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
 </ng-template>

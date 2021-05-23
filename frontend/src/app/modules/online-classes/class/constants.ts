@@ -20,34 +20,39 @@ export class Time {
 
     getString(): string {
         const hours24 = this.ampm == 'am' ? this.hour : 12 + this.hour;
-        return hours24.toString().padStart(2, '0') + ':' + this.minute.toString;
+        return hours24.toString().padStart(2, '0') + ':' + this.minute.toString().padStart(2, '0');
+    }
+
+    getDisplayString(): string {
+        const hours = this.hour == 0 ? 12 : this.hour;
+        return hours.toString().padStart(2, '0') + ':' + this.minute.toString().padStart(2, '0');
     }
 }
 
-export class MeetingDayConfig {
+export class TimeSpan {
     startTime: Time;
     endTime: Time;
 
-    constructor(attributes: Partial<MeetingDayConfig> = {}) {
+    constructor(attributes: Partial<TimeSpan> = {}) {
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
     }
 }
 
 export function getDefaultTimeSpanList() {
     return [
-        new MeetingDayConfig({
+        new TimeSpan({
             startTime: new Time({ hour: 8, minute: 0, ampm: 'am' }),
             endTime: new Time({ hour: 8, minute: 40, ampm: 'am' })
         }),
-        new MeetingDayConfig({
+        new TimeSpan({
             startTime: new Time({ hour: 9, minute: 0, ampm: 'am' }),
             endTime: new Time({ hour: 9, minute: 40, ampm: 'am' })
         }),
-        new MeetingDayConfig({
+        new TimeSpan({
             startTime: new Time({ hour: 10, minute: 0, ampm: 'am' }),
             endTime: new Time({ hour: 10, minute: 40, ampm: 'am' })
         }),
-        new MeetingDayConfig({
+        new TimeSpan({
             startTime: new Time({ hour: 11, minute: 0, ampm: 'am' }),
             endTime: new Time({ hour: 11, minute: 40, ampm: 'am' })
         }),
@@ -68,7 +73,7 @@ export function TimeComparator(time1: Time, time2: Time) {
 }
 
 
-export function TimeSpanComparator(timespan1: MeetingDayConfig, timespan2: MeetingDayConfig) {
+export function TimeSpanComparator(timespan1: TimeSpan, timespan2: TimeSpan) {
     const startTime1 = timespan1.startTime;
     const startTime2 = timespan2.startTime;
     return TimeComparator(startTime1, startTime2);
@@ -76,17 +81,3 @@ export function TimeSpanComparator(timespan1: MeetingDayConfig, timespan2: Meeti
 
 export const DEFAULT_START_TIME_STRING = '08:00';
 export const DEFAULT_END_TIME_STRING = '08:40';
-
-export interface TimeTable {
-    'sunday': MeetingDayConfig;
-    'monday': MeetingDayConfig;
-    'tuesday': MeetingDayConfig;
-    'wednesday': MeetingDayConfig;
-    'thursday': MeetingDayConfig;
-    'friday': MeetingDayConfig;
-    'saturday': MeetingDayConfig;
-}
-
-export class MeetingConfiguration {
-    timeTable: Partial<TimeTable> = {};
-}

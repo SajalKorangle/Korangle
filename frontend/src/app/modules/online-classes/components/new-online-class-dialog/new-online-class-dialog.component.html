@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Add Online Class</h2>
+<mat-dialog-content style="height: 62vh; width: 50vw; min-height: 300px; min-width: 480px;">
+
+    <h4>{{data.weekday}}: {{data.timestamp.startTime.getString()}} - {{data.timestamp.endTime.getString()}}</h4>
+
+    <mat-form-field>
+        <mat-label>Subject</mat-label>
+        <mat-select [(ngModel)]="selectedClassSubject" (ngModelChange)="handleSubjectSelection($event)">
+            <ng-container *ngFor="let classSubject of data.classSubjectList">
+                <mat-option [value]="classSubject.id">
+                    {{data.vm.backendData.getSubjectById(classSubject.parentSubject).name}}
+                </mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field>
+        <mat-label>Meeting ID</mat-label>
+        <input matInput type="text">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Pass Code</mat-label>
+        <input matInput type="text">
+    </mat-form-field>
+    <br />
+    <span style="color: #9B870C;">Warning! One Meeting Id and Passcode will be set for one subject</span>
+
+</mat-dialog-content>
+<div mat-dialog-actions style="color: white">
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue; margin-left: auto;"
+        cdkFocusInitial>Apply</button>
+</div>

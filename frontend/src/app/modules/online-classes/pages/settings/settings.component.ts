@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -12,7 +13,7 @@ import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { WEEKDAYS, MeetingDayConfig, Time } from '@modules/online-classes/class/constants';
+import { WEEKDAYS, TimeSpan, Time } from '@modules/online-classes/class/constants';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { WEEKDAYS, MeetingDayConfig, Time } from '@modules/online-classes/class/
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
     providers: [
+        MatDialog,
         OnlineClassService,
         ClassService,
         EmployeeService,
@@ -41,6 +43,7 @@ export class SettingsComponent implements OnInit {
     isLoading: boolean;
 
     constructor(
+        public dialog: MatDialog,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public employeeService: EmployeeService,
@@ -66,12 +69,9 @@ export class SettingsComponent implements OnInit {
     }
 
     parseMeetingConfiguration() {
-        this.backendData.onlineClassList = this.backendData.onlineClassList.map(onlineClass => {
-            Object.values(onlineClass.configJSON.timeTable).forEach((weekdayConfig: any) => {
-                Object.setPrototypeOf(weekdayConfig.startTime, Time.prototype);
-                Object.setPrototypeOf(weekdayConfig.endTime, Time.prototype);
-                Object.setPrototypeOf(weekdayConfig, MeetingDayConfig.prototype);
-            });
+        this.backendData.onlineClassList.forEach(onlineClass => {
+            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
+            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
         });
     }
 
