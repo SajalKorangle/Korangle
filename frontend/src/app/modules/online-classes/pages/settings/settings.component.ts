@@ -10,7 +10,7 @@ import { SettingsBackendData } from './settings.backend.data';
 // Services
 import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
-import { WeekDay } from '@angular/common';
+import { WEEKDAYS } from '@modules/online-classes/class/constants';
 
 
 @Component({
@@ -23,6 +23,8 @@ import { WeekDay } from '@angular/common';
 export class SettingsComponent implements OnInit {
 
     user: any;
+
+    weekdays = WEEKDAYS;
 
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer: SettingsHtmlRenderer;
@@ -51,7 +53,10 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
+        console.log("this: ", this);
+    }
 
-        // console.log("this: ", this);
+    logMessage(msg) {
+        console.log('msg: ', msg);
     }
 }

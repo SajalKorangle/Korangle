@@ -1,24 +1,16 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
     <div>
         <mat-form-field style="margin-right: 20px;">
-            <mat-select
-                placeholder="Select Class"
-                [(ngModel)]="userInput.selectedClass">
-                <mat-option
-                    *ngFor="let classs of backendData.classList"
-                    [value]="classs">
+            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass">
+                <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
                     {{ classs.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
         <mat-form-field style="margin-right: 20px;">
-            <mat-select
-                placeholder="Select Section"
-                [(ngModel)]="userInput.selectedSection">
-                <mat-option
-                    *ngFor="let division of backendData.divisionList"
-                    [value]="division">
+            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection">
+                <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
                     {{ division.name }}
                 </mat-option>
             </mat-select>
@@ -26,81 +18,95 @@
         <mat-divider></mat-divider>
     </div>
 
-    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection">
-        <div style="display: flex; flex-direction: row; align-items: center; margin-top: 12px;">
-            <mat-form-field style="margin-top: 12px; margin-right: 12px;">
-                <input style="margin-right: 20px;" matInput
-                    [class.Error]="userInput.startTime > userInput.endTime"
-                    placeholder="Start Time"
-                    type="time"
-                    [(ngModel)]="userInput.startTime"/>
-            </mat-form-field>
+    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection || true">
 
-            <mat-form-field style="margin-top: 16px; margin-right: 12px;">
-                <input matInput style="margin-right: 20px;"
-                    [class.Error]="userInput.startTime > userInput.endTime"
-                    placeholder="End Time"
-                    type="time"
-                    [(ngModel)]="userInput.endTime"/>
-            </mat-form-field>
-
-            <div style="display: inline-flex;">
-                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of htmlRenderer.getWeekdays(), let i = index;">
-                    <label style="margin: 0;">{{weekday[0]}}</label>
-                    <input type="checkbox" [(ngModel)]="userInput.weekdays[weekday]">
-                </div>
-            </div>
+        <div style="overflow: auto;">
+            <table class="mat-elevation-z8 table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th *ngFor="let weekday of weekdays">{{weekday}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let timespan of userInput.timeSpanList, let timeSpanIndex = index;">
+                        <tr>
+                            <td style="width: 200px">
+                                <ng-container
+                                    *ngIf="htmlRenderer.editTimeSpanFormIndex!=timeSpanIndex else EditTimeSpanForm">
+                                    {{timespan.startTime.hour}}:{{timespan.startTime.minute.toString().padEnd(2, '0')}}
+                                    {{timespan.startTime.ampm}}
+                                    - {{timespan.endTime.hour}}:{{timespan.endTime.minute.toString().padEnd(2, '0')}}
+                                    {{timespan.endTime.ampm}}
+                                    <mat-icon class="td-hover-show"
+                                        (click)="htmlRenderer.editTimeSpanFormIndex=timeSpanIndex; htmlRenderer.setupEditTimeSpan()"
+                                        style="font-size: small;">edit</mat-icon>
+                                </ng-container>
+                            </td>
+                            <ng-container *ngFor="let weekday of weekdays">
+                                <td></td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
+                    <tr>
+                        <td style="width: 200px">
+                            <button mat-fab (click)="htmlRenderer.newTimeSpanForm = true;"
+                                *ngIf="!htmlRenderer.newTimeSpanForm else NewTimeSpanForm">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </td>
+                        <ng-container *ngFor="let weekday of weekdays">
+                            <td></td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <br/>
-        <button
-                type="submit"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                (click)="serviceAdapter.newOnlineClass()"
-                [disabled]="htmlRenderer.isAddButtonDisabled()">
-                Add
-        </button>
     </ng-container>
     <mat-divider style="margin-top: 32px;"></mat-divider>
 
-    <h4 style="display: flex; flex-direction: row; align-items: center;"><mat-icon>history</mat-icon><span>&nbsp;Registered Classes</span></h4>
-    <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
-        <table class="table table-hover">
-            <thead style="color: rgba(255, 152, 0, 1)">
-                <tr>
-                    <th>Class & Section</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Working Days</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let onlineClass of backendData.onlineClassList">
-                    <td>{{htmlRenderer.getClassDivisionName(onlineClass.parentClass, onlineClass.parentDivision)}}</td>
-                    <td>{{onlineClass.startTime}}</td>
-                    <td>{{onlineClass.endTime}}</td>
-                    <td>
-                        <div style="display: inline-flex;">
-                            <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" *ngFor="let weekday of htmlRenderer.getWeekdays(), let i = index;">
-                                <label style="margin: 0;">{{weekday[0]}}</label>
-                                <input type="checkbox" [disabled]="true" [ngModel]="onlineClass.configJSON.weekdays[weekday]">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <button mat-stroked-button style="color: red;" (click)="serviceAdapter.deleteOnlineClass(onlineClass)"><mat-icon>delete</mat-icon></button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-    </ng-container>
 </div>
 
 <ng-template #MainLoader>
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-template>
 
-<ng-template #NoClassReg>
-    <span>No Online Registered Class</span>
+<ng-template #NewTimeSpanForm>
+    <mat-form-field>
+        <mat-label>Start Time</mat-label>
+        <input matInput type="time" [errorStateMatcher]="{isErrorState: htmlRenderer.newTimeSpanError}"
+            [(ngModel)]="userInput.newTimeSpan.startTime">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>End Time</mat-label>
+        <input matInput [errorStateMatcher]="{isErrorState: htmlRenderer.newTimeSpanError}" type="time"
+            [(ngModel)]="userInput.newTimeSpan.endTime">
+        <mat-error *ngIf="htmlRenderer.endTimeBeforeStartTime()">End time before start time</mat-error>
+        <mat-error *ngIf="htmlRenderer.timeSpanOverlapping()">Time Span Overlapping </mat-error>
+    </mat-form-field>
+    <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
+        (click)="userInput.addNewTimeSpan(); htmlRenderer.newTimeSpanForm = false;">Add</button>
+</ng-template>
+
+
+<ng-template #EditTimeSpanForm>
+    <mat-form-field>
+        <mat-label>Start Time</mat-label>
+        <input matInput type="time" [errorStateMatcher]="{isErrorState: htmlRenderer.editTimeSpanError}"
+            [(ngModel)]="userInput.newTimeSpan.startTime">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>End Time</mat-label>
+        <input matInput [errorStateMatcher]="{isErrorState: htmlRenderer.editTimeSpanError}" type="time"
+            [(ngModel)]="userInput.newTimeSpan.endTime">
+        <mat-error *ngIf="htmlRenderer.endTimeBeforeStartTime()">End time before start time</mat-error>
+        <mat-error *ngIf="htmlRenderer.timeSpanOverlapping()">Time Span Overlapping </mat-error>
+    </mat-form-field>
+
+    <button mat-stroked-button style="margin-top: 6px; margin-right: 6px;">
+        <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
+        (click)="userInput.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
 </ng-template>

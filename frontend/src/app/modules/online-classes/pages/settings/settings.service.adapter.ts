@@ -1,4 +1,3 @@
-import { OnlineClassesComponent } from '@modules/online-classes/online-classes.component';
 import { SettingsComponent } from './settings.component';
 
 export class SettingsServiceAdapter {
@@ -26,43 +25,10 @@ export class SettingsServiceAdapter {
         ]);
         this.vm.backendData.classList = apiCallbackResult[0];
         this.vm.backendData.divisionList = apiCallbackResult[1];
-        this.vm.backendData.onlineClassList
-            = apiCallbackResult[2].map(onlineClass => { return { ...onlineClass, configJSON: JSON.parse(onlineClass.configJSON) }; });
+        this.vm.backendData.onlineClassList = apiCallbackResult[2];
 
         this.vm.isLoading = false;
 
-    }
-
-    async newOnlineClass() {
-
-        this.vm.isLoading = true;
-
-        const new_online_class = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            parentClass: this.vm.userInput.selectedClass.id,
-            parentDivision: this.vm.userInput.selectedSection.id,
-            startTime: this.vm.userInput.startTime,
-            endTime: this.vm.userInput.endTime,
-            configJSON: JSON.stringify({ weekdays: this.vm.userInput.weekdays }),
-        };
-
-        let apiCallbackResult =
-            await this.vm.onlineClassService.createObject(this.vm.onlineClassService.online_class,
-                new_online_class);
-
-        this.vm.backendData.onlineClassList.push({ ...apiCallbackResult, configJSON: JSON.parse(apiCallbackResult.configJSON) });
-
-        this.vm.isLoading = false;
-
-    }
-
-    async deleteOnlineClass(onlineClass) {
-        const online_class_delete_request = {
-            id: onlineClass.id
-        };
-        await this.vm.onlineClassService.deleteObject(this.vm.onlineClassService.online_class, online_class_delete_request);
-        const objectIndex = this.vm.backendData.onlineClassList.findIndex(oc => oc.id == onlineClass.id);
-        this.vm.backendData.onlineClassList.splice(objectIndex, 1);
     }
 
 }

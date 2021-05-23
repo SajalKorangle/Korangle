@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { SettingsComponent } from "./settings.component";
 import { SettingsRouting } from "./settings.routing";
-import {ComponentsModule} from "@components/components.module";
+import { ComponentsModule } from "@components/components.module";
 
 @NgModule({
     declarations: [
@@ -14,6 +14,6 @@ import {ComponentsModule} from "@components/components.module";
     ],
     exports: [],
     providers: [],
-    bootstrap: [ SettingsComponent ]
+    bootstrap: [SettingsComponent]
 })
 export class SettingsModule { }
