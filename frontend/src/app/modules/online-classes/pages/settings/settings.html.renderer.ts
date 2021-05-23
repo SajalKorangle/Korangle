@@ -1,5 +1,5 @@
 import { SettingsComponent } from './settings.component';
-import { ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
+import { ColorPaletteHandle, ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
 
 import { NewOnlineClassDialogComponent } from '@modules/online-classes/components/new-online-class-dialog/new-online-class-dialog.component';
 
@@ -14,6 +14,8 @@ export class SettingsHtmlRenderer {
 
     filteredOnlineClassList: Array<ParsedOnlineClass> = [];
 
+    colorPaletteHandle = ColorPaletteHandle;
+
     constructor() { }
 
     initialize(vm: SettingsComponent): void {
@@ -23,6 +25,7 @@ export class SettingsHtmlRenderer {
     initilizeTimeTable() {
         if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
             return;
+        ColorPaletteHandle.reset();
         this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
             if (classSubject.parentClass == this.vm.userInput.selectedClass.id
@@ -193,6 +196,11 @@ export class SettingsHtmlRenderer {
         this.timeSpanList.splice(this.vm.htmlRenderer.editTimeSpanFormIndex, 1);
         // delete all atached meetings here
         this.vm.htmlRenderer.editTimeSpanFormIndex = -1;
+    }
+
+    deleteOnlineClass(onlineClass) {
+        const onlineClassIndex = this.filteredOnlineClassList.findIndex(oc => oc == onlineClass);
+        this.filteredOnlineClassList.splice(onlineClassIndex, 1);
     }
 
 }

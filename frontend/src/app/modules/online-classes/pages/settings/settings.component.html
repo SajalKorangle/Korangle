@@ -46,20 +46,31 @@
                                 </ng-container>
                             </td>
                             <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
-                                <td>
-                                    <ng-container
-                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass">
-                                        {{htmlRenderer.getDisplayData(onlineClass).subject.name}}
-                                    </ng-container>
-                                    <ng-template #NoClass>
+                                <ng-container
+                                    *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                    <td style="position: relative;"
+                                        [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
+                                        [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
+                                        <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span>
+                                        <span *ngIf="onlineClass.meetingNumber else GlowDisabled"
+                                            style="position: absolute; bottom: 8px; right: 8px;"
+                                            class="glow-active"></span>
+                                        <mat-icon class="td-hover-show"
+                                            (click)="htmlRenderer.deleteOnlineClass(onlineClass)"
+                                            style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
+                                        </mat-icon>
+                                    </td>
+                                </ng-container>
+                                <ng-template #NoClass>
+                                    <td>
                                         <div>
                                             <button mat-stroked-button
                                                 (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)">
                                                 <mat-icon>add</mat-icon>
                                             </button>
                                         </div>
-                                    </ng-template>
-                                </td>
+                                    </td>
+                                </ng-template>
                             </ng-container>
                         </tr>
                     </ng-container>
@@ -125,4 +136,8 @@
     </button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
         (click)="htmlRenderer.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
+</ng-template>
+
+<ng-template #GlowDisabled>
+    <span style="position: absolute; bottom: 8px; right: 8px;" class="glow-disabled"></span>
 </ng-template>

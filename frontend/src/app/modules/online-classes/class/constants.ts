@@ -88,3 +88,51 @@ export interface ParsedOnlineClass extends OnlineClass {
     startTimeJSON: Time;
     endTimeJSON: Time;
 };
+
+export const ColorPalette = [
+    ['red', 'white'],
+    ['pink', 'white'],
+    ['darkgrey', 'white'],
+    ['purple', 'white'],
+    ['rgb(113, 122, 189)', 'white'],
+    ['indigo', 'white'],
+    ['blue', 'white'],
+    ['lightblue', 'white'],
+    ['cyan', 'white'],
+    ['teal', 'white'],
+    ['green', 'white'],
+    ['lightgreen', 'black'],
+    ['lime', 'black'],
+    ['yellow', 'black'],
+    ['rgb(225, 196, 0)', 'black'],
+    ['orange', 'black'],
+    ['rgb(255, 66, 0)', 'white'],
+    ['brown', 'white'],
+    ['gery', 'black'],
+    ['rgb(89, 125, 140)', 'white']
+];
+export class ColorPaletteHandle {
+    static maxIndex = 0;
+    static colorMappedBySubjectName: { [key: string]: number; } = {};
+
+    static getColorForSubject(subjectName: string) {
+        if (!this.colorMappedBySubjectName[subjectName]) {
+            this.colorMappedBySubjectName[subjectName] = this.maxIndex;
+            this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
+        }
+        return ColorPalette[this.colorMappedBySubjectName[subjectName]][1];
+    }
+
+    static getBackgroundColorForSubject(subjectName: string) {
+        if (!this.colorMappedBySubjectName[subjectName]) {
+            this.colorMappedBySubjectName[subjectName] = this.maxIndex;
+            this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
+        }
+        return ColorPalette[this.colorMappedBySubjectName[subjectName]][0];
+    }
+
+    static reset() {
+        this.maxIndex = 0;
+        this.colorMappedBySubjectName = {};
+    }
+}
