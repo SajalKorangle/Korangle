@@ -83,11 +83,22 @@ export class SettingsServiceAdapter {
         }).map(onlineClass => {
             return { id: onlineClass.id };
         });
+        console.log('toUpdate: ', toUpdateList);
+        console.log('toDeete: ', toDeleteList);
+        console.log("toCreate: ", toCreateList);
+
+        const serviceList = [];
+
+        if (toDeleteList.length > 0) {
+            serviceList.push(this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.online_class, toDeleteList));
+        } else {
+            serviceList.push(Promise.resolve([]));
+        }
+
         this.vm.isLoading = true;
-        const [deleteResponse, updateResponse, createResponse] = await Promise.all([
-            this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.online_class, toDeleteList),
-            this.vm.onlineClassService.updateObjectList(this.vm.onlineClassService.online_class, toUpdateList),
-            this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.online_class, toCreateList),
+        const [deleteResponse, updateResponse, createResponse] = await Promise.all([...serviceList,
+        this.vm.onlineClassService.updateObjectList(this.vm.onlineClassService.online_class, toUpdateList),
+        this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.online_class, toCreateList),
         ]);
 
         onlineClassBackendDataIndexArray.forEach(index => delete this.vm.backendData.onlineClassList[index]);
