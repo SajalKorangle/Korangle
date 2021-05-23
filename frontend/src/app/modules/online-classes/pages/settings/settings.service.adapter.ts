@@ -1,3 +1,4 @@
+import { create } from 'lodash';
 import { SettingsComponent } from './settings.component';
 
 export class SettingsServiceAdapter {
@@ -16,12 +17,12 @@ export class SettingsServiceAdapter {
 
         const online_class_list_request = {
             parentSchool: this.vm.user.activeSchool.dbId,
-            parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessiondbId
+            parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
 
         const class_subject_list_request = {
             parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessiondbId
+            parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
 
         const employee_list_request = {
@@ -47,9 +48,55 @@ export class SettingsServiceAdapter {
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}), // 6
         ]);
 
-        this.vm.parseMeetingConfiguration();
+        this.vm.parseBacknedData();
         this.vm.isLoading = false;
 
+    }
+
+    async updateOnlineClassList() {
+        const onlineClassBackendDataIndexArray = [];
+        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {    // filter online classes for selected class and section
+            const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
+                && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+                onlineClassBackendDataIndexArray.push(index);
+                return true;
+            }
+            return false;
+        });
+        const updatedFilteredOnlineClassList = this.vm.htmlRenderer.filteredOnlineClassList;
+
+        const toCreateList = [];
+        const toUpdateList = [];
+
+        updatedFilteredOnlineClassList.forEach(onlineClass => {
+            if (!onlineClass.id) {
+                toCreateList.push(onlineClass);
+            }
+            else {
+                toUpdateList.push(onlineClass);
+            }
+        });
+
+        const toDeleteList = originalFilteredOnlineClassList.filter(onlineClass1 => {
+            return !toUpdateList.find(onlineClass2 => onlineClass2.id == onlineClass1.id);
+        }).map(onlineClass => {
+            return { id: onlineClass.id };
+        });
+        this.vm.isLoading = true;
+        const [deleteResponse, updateResponse, createResponse] = await Promise.all([
+            this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.online_class, toDeleteList),
+            this.vm.onlineClassService.updateObjectList(this.vm.onlineClassService.online_class, toUpdateList),
+            this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.online_class, toCreateList),
+        ]);
+
+        onlineClassBackendDataIndexArray.forEach(index => delete this.vm.backendData.onlineClassList[index]);
+        this.vm.backendData.onlineClassList = this.vm.backendData.onlineClassList.filter(Boolean);
+        this.vm.backendData.onlineClassList.push(...updateResponse);
+        this.vm.backendData.onlineClassList.push(...createResponse);
+        this.vm.parseBacknedData();
+        this.vm.htmlRenderer.initilizeTimeTable();
+        this.vm.isLoading = false;
     }
 
 }

@@ -105,8 +105,9 @@ export class SettingsHtmlRenderer {
                         password: null,
                     };
                 }
-                onlineClass.meetingNumber = data.meetingNumber;
-                onlineClass.password = data.password;
+                onlineClass.parentAccountInfo = data.parentAccountInfo ? data.parentAccountInfo : null;
+                onlineClass.meetingNumber = data.meetingNumber ? data.meetingNumber : null;
+                onlineClass.password = data.password ? data.password : null;
                 this.filteredOnlineClassList.push(onlineClass);
             }
         });

@@ -89,7 +89,8 @@
             </table>
         </div>
         <mat-divider style="margin-top: 32px;"></mat-divider>
-        <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;">Update</button>
+        <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
+            (click)="serviceAdapter.updateOnlineClassList();">Update</button>
     </ng-container>
 
 </div>

@@ -68,7 +68,7 @@ export class SettingsComponent implements OnInit {
         console.log("this: ", this);
     }
 
-    parseMeetingConfiguration() {
+    parseBacknedData() {
         this.backendData.onlineClassList.forEach(onlineClass => {
             Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
