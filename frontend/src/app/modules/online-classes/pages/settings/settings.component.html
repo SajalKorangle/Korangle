@@ -35,7 +35,7 @@
                 <tbody>
                     <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
                         <tr>
-                            <td style="width: 200px">
+                            <td style="width: 160px">
                                 <ng-container
                                     *ngIf="htmlRenderer.editTimeSpanFormIndex!=timeSpanIndex else EditTimeSpanForm">
                                     {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
@@ -112,6 +112,8 @@
         <mat-error *ngIf="htmlRenderer.endTimeBeforeStartTime()">End time before start time</mat-error>
         <mat-error *ngIf="htmlRenderer.timeSpanOverlapping()">Time Span Overlapping </mat-error>
     </mat-form-field>
+    <button mat-stroked-button style="margin-top: 6px;"
+        (click)="userInput.resetNewTimeSpanData(); htmlRenderer.newTimeSpanForm = false;">Cancel</button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
         (click)="htmlRenderer.addNewTimeSpan(); htmlRenderer.newTimeSpanForm = false;">Add</button>
 </ng-template>
