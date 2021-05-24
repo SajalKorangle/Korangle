@@ -30,3 +30,11 @@ td:hover .td-hover-show{
     box-shadow: inset 0px 0px 6px 1px rgba(0,255,182,0.15),
                     0px 0px 4px rgba(0,255,182,0.1);
 }
+
+th{
+    text-align: center;
+}
+
+td{
+    text-align: center;
+}

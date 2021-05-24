@@ -2,7 +2,6 @@ export type WEEKDAYS_CHOICES = 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | '
 
 export class OnlineClass {
     id?: number;
-    parentSchool: number;
     parentClassSubject: number;
     parentAccountInfo: number | null;
     day: WEEKDAYS_CHOICES;
