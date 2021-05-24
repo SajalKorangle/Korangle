@@ -27,6 +27,13 @@ export class Time {
         const hours = this.hour == 0 ? 12 : this.hour;
         return hours.toString().padStart(2, '0') + ':' + this.minute.toString().padStart(2, '0');
     }
+
+    diffInMinutes(time2: Time) {
+        // with respect to 00:00
+        const time1InMinutes = this.ampm == 'am' ? this.hour * 60 + this.minute : 12 * 60 + this.hour * 60 + this.minute;
+        const time2InMinutes = time2.ampm == 'am' ? time2.hour * 60 + time2.minute : 12 * 60 + time2.hour * 60 + time2.minute;
+        return time2InMinutes - time1InMinutes;
+    }
 }
 
 export class TimeSpan {
@@ -60,13 +67,11 @@ export function getDefaultTimeSpanList() {
 }
 
 export function TimeComparator(time1: Time, time2: Time) {
-    // with respect to 00:00
-    const time1InMinutes = time1.ampm == 'am' ? time1.hour * 60 + time1.minute : 12 * 60 + time1.hour * 60 + time1.minute;
-    const time2InMinutes = time2.ampm == 'am' ? time2.hour * 60 + time2.minute : 12 * 60 + time2.hour * 60 + time2.minute;
-    if (time1InMinutes < time2InMinutes) {
+    const timeDiff = time2.diffInMinutes(time1);
+    if (timeDiff < 0) {
         return -1;
     }
-    else if (time1InMinutes > time2InMinutes) {
+    else if (timeDiff > 0) {
         return 1;
     }
     return 0;
@@ -136,3 +141,5 @@ export class ColorPaletteHandle {
         this.colorMappedBySubjectName = {};
     }
 }
+
+export const ZOOM_BASE_URL = 'https://zoom.us/j';

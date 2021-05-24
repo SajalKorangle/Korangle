@@ -1,1 +1,8 @@
+.activeClass{
+    box-shadow: 0 0 6px grey;
+}
 
+.disabledClass{
+    opacity: 0.4;
+    filter: blur(0.5px);
+}

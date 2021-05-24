@@ -1,43 +1,52 @@
 <div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
 
+    <h3>{{htmlRenderer.getTime()}}</h3>
     <ng-container *ngIf="isActiveSession else NotActiveSession">
-    <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
-        <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
-            <table class="table table-hover">
-                <thead style="color: rgba(255, 152, 0, 1)">
-                    <tr>
-                        <th>Class</th>
-                        <th>Section</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Working Days</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let onlineClass of backendData.onlineClassList">
-                        <td>{{backendData.getClassById(onlineClass.parentClass).name}}</td>
-                        <td>{{backendData.getDivisionById(onlineClass.parentDivision).name}}</td>
-                        <td>{{onlineClass.startTime}}</td>
-                        <td>{{onlineClass.endTime}}</td>
-                        <td>
-                            <div style="display: inline-flex;">
-                                <div style="display: inline-block; display: flex; flex-direction: column; margin-right: 2px;" 
-                                        *ngFor="let weekday of weekdays, let i = index;">
-                                    <label style="margin: 0;">{{weekday[0]}}</label>
-                                    <input type="checkbox" [disabled]="true" [ngModel]="onlineClass.configJSON.weekdays[weekday]">
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn" style="background-color: green;" (click)="serviceAdapter.initilizeMeetingData(onlineClass)">Enter Class</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
+
+            <div style="overflow: auto;">
+                <table class="mat-elevation-z8 table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                            <tr>
+                                <td style="width: 160px;">
+                                    {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
+                                    {{timespan.endTime.ampm}}
+                                </td>
+                                <ng-container *ngIf="htmlRenderer.getOnlineClassByTime(timespan) as onlineClass;">
+                                    <td style="position: relative;"
+                                        [class]="htmlRenderer.isActive(onlineClass)?'activeClass':'disabledClass'"
+                                        [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
+                                        [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
+                                        <h4>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</h4>
+
+                                        <ng-container *ngIf="htmlRenderer.isActive(onlineClass)">
+                                            <br /><span>Meeting ID:
+                                                {{onlineClass.meetingNumber?onlineClass.meetingNumber:'-'}}</span>
+                                            <br /><span>Username:
+                                                {{htmlRenderer.getDisplayData(onlineClass).accountInfo?htmlRenderer.getDisplayData(onlineClass).accountInfo.username:'-'}}</span>
+                                            <br /><span>Password:
+                                                {{htmlRenderer.getDisplayData(onlineClass).accountInfo?htmlRenderer.getDisplayData(onlineClass).accountInfo.password:'-'}}</span>
+                                            <button class="btn" [disabled]="!onlineClass.meetingNumber"
+                                                (click)="redirectToMeeting(onlineClass)"
+                                                style="background-color: green; color:white; float: right; margin-top: 24px;">Enter
+                                                Class</button>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
 
         </ng-container>
-    </ng-container>
     </ng-container>
 
 </div>
@@ -47,14 +56,7 @@
 </ng-template>
 
 <ng-template #NoClassReg>
-    <span>No Online Registered Class</span>
-</ng-template>
-
-<ng-template #zoomIframe>
-    <button (click)="htmlRenderer.meetingEntered = false;" style="margin-bottom: 12px; display: flex; border-radius: 50%;background-color: black; color:white;">
-        <mat-icon>arrow_back</mat-icon>
-    </button>
-    <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *" style="width: 100%; height: 75vh;"></iframe>
+    <span>No Registered Class For Today</span>
 </ng-template>
 
 <ng-template #NotActiveSession>

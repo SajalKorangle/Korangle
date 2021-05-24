@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -11,11 +11,8 @@ import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SchoolService } from '@services/modules/school/school.service';
-import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
-import { environment } from 'environments/environment';
-import { Constants } from 'app/classes/constants';
 
-import { WEEKDAYS } from '@modules/online-classes/class/constants';
+import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 
 @Component({
     selector: 'classroom',
@@ -24,18 +21,19 @@ import { WEEKDAYS } from '@modules/online-classes/class/constants';
     providers: [SubjectService, OnlineClassService, ClassService, SchoolService],
 })
 
-export class ClassroomComponent implements OnInit {
+export class ClassroomComponent implements OnInit, OnDestroy {
 
     user: any;
+
+    today: string = Object.values(WEEKDAYS)[new Date().getDay()];
+    currentTime: Date = new Date();
+
+    timeHandleInterval;
 
     serviceAdapter: ClassroomServiceAdapter;
     htmlRenderer: ClassroomHtmlRenderer;
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
-
-    meetingParameters: any;
-
-    weekdays = Object.values(WEEKDAYS);
 
     isActiveSession: boolean;
 
@@ -63,33 +61,25 @@ export class ClassroomComponent implements OnInit {
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
-        // console.log('this: ', this);
+
+        this.timeHandleInterval = setInterval(() => this.currentTime = new Date(), 30000);
+
+        console.log('this: ', this);
     }
 
-    populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
-        this.meetingParameters = {
-            signature,
-            api_key: apiKey,
-            meeting_number: onlineClass.meetingNumber,
-            password: onlineClass.password,
-            role: 1,
-            username: this.user.first_name + ' ' + this.user.last_name,
-            leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
-            error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
-        };
-        this.htmlRenderer.meetingEntered = true;
-        setTimeout(() => {
-            let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
-            while (!zoomIFrame && this.htmlRenderer.meetingEntered) {
-                zoomIFrame = document.getElementById('zoomIFrame');
-            }
-            if (this.htmlRenderer.meetingEntered) {
-                const searchParams = new URLSearchParams();
-                Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+    ngOnDestroy(): void {
+        clearInterval(this.timeHandleInterval);
+    }
 
-            }
+    parseBacknedData() {
+        this.backendData.onlineClassList.forEach(onlineClass => {
+            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
+            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
         });
+    }
+
+    redirectToMeeting(onlineClass: ParsedOnlineClass): void {
+        window.open(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber, '_blank');
     }
 
 }

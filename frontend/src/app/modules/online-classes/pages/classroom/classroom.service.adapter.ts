@@ -29,38 +29,32 @@ export class ClassroomServiceAdapter {
         const class_subject_request = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            fields__korangle: ['parentClass', 'parentDivision']
         };
 
-        const response = await Promise.all([
+        [
+            this.vm.backendData.classSubjectList,
+            this.vm.backendData.classList,
+            this.vm.backendData.divisionList,
+            this.vm.backendData.subjectList,
+            this.vm.backendData.accountInfoList,
+        ] = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request),
-            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, {}),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
         ]);
 
-        this.vm.backendData.classDivisionPermissions = response[0];
-        this.vm.backendData.classList = response[2];
-        this.vm.backendData.divisionList = response[3];
-
-        this.vm.backendData.onlineClassList = response[1].filter(onlineClass => {
-            return this.vm.backendData.classDivisionPermissions.find(classDivision => classDivision.parentClass == onlineClass.parentClass
-                && classDivision.parentDivision == onlineClass.parentDivision) != undefined;
-        }).map(onlineClass => { return { ...onlineClass, configJSON: JSON.parse(onlineClass.configJSON) }; });
-
-        this.vm.isLoading = false;
-    }
-
-    async initilizeMeetingData(onlineClass) {
-        this.vm.isLoading = true;
-        const signature_request = {
-            meetingNumber: onlineClass.meetingNumber,
-            role: 1,
+        const online_class_request = {
+            parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentClassSubject__in: this.vm.backendData.classSubjectList.map(classSubject => classSubject.id),
+            day: this.vm.today,
         };
-        const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_meeting_signature, signature_request);
 
-        this.vm.populateMeetingParametersAndStart(onlineClass, response.signature, response.apiKey);
+        this.vm.backendData.onlineClassList = await this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request);
 
+        this.vm.parseBacknedData();
+        this.vm.htmlRenderer.initilizeTimeTable();
         this.vm.isLoading = false;
     }
 
