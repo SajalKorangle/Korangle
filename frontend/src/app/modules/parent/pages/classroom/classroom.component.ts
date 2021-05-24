@@ -30,6 +30,8 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     activeStudent: any;
 
+    weekdays = WEEKDAYS;
+
     today: string = Object.values(WEEKDAYS)[new Date().getDay()];
     currentTime: Date = new Date();
 
@@ -73,6 +75,10 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         clearInterval(this.timeHandleInterval);
+    }
+
+    getObjetKeys(obj: { [key: string]: any; }): Array<string> {
+        return Object.keys(obj);
     }
 
     parseBacknedData() {

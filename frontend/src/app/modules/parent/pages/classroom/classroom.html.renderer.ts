@@ -52,9 +52,10 @@ export class ClassroomHtmlRenderer {
         return this.vm.currentTime.toDateString() + ' ' + customTime.getDisplayString();
     }
 
-    getOnlineClassByTime(timespan) {
+    getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
-            if (TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return true;
             return false;
         });
@@ -80,6 +81,10 @@ export class ClassroomHtmlRenderer {
             return true;
         }
         return false;
+    }
+
+    getActiveClass() {
+        return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
     }
 
 }
