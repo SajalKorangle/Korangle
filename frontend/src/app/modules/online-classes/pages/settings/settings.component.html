@@ -17,7 +17,6 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-divider></mat-divider>
     </div>
 
     <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection">
@@ -39,7 +38,6 @@
                                 <ng-container
                                     *ngIf="htmlRenderer.editTimeSpanFormIndex!=timeSpanIndex else EditTimeSpanForm">
                                     {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
-                                    {{timespan.endTime.ampm}}
                                     <mat-icon class="td-hover-show"
                                         (click)="htmlRenderer.editTimeSpanFormIndex=timeSpanIndex; htmlRenderer.setupEditTimeSpan()"
                                         style="font-size: small;">edit</mat-icon>

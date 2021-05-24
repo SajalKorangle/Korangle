@@ -25,7 +25,7 @@ export class Time {
 
     getDisplayString(): string {
         const hours = this.hour == 0 ? 12 : this.hour;
-        return hours.toString().padStart(2, '0') + ':' + this.minute.toString().padStart(2, '0');
+        return hours.toString().padStart(2, '0') + ':' + this.minute.toString().padStart(2, '0') + ' ' + this.ampm;
     }
 
     diffInMinutes(time2: Time) {

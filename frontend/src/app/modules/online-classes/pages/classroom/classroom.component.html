@@ -5,46 +5,67 @@
         <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
 
             <div style="overflow: auto;">
-                <table class="table table-hover">
+                <table class="mat-elevation-z8 table table-hover">
                     <thead>
                         <tr>
-                            <th>Time</th>
-                            <th>Class</th>
+                            <th></th>
+                            <th *ngFor="let weekdayKey of getObjetKeys(weekdays)"
+                                [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
+                                {{weekdays[weekdayKey]}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
                             <tr>
-                                <td style="width: 160px;">
+                                <td style="width: 160px">
                                     {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
-                                    {{timespan.endTime.ampm}}
                                 </td>
-                                <ng-container *ngIf="htmlRenderer.getOnlineClassByTime(timespan) as onlineClass;">
-                                    <td style="position: relative;"
-                                        [class]="htmlRenderer.isActive(onlineClass)?'activeClass':'disabledClass'"
-                                        [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
-                                        [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
-                                        <h4>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</h4>
-
-                                        <ng-container *ngIf="htmlRenderer.isActive(onlineClass)">
-                                            <br /><span>Meeting ID:
-                                                {{onlineClass.meetingNumber?onlineClass.meetingNumber:'-'}}</span>
-                                            <br /><span>Username:
-                                                {{backendData.accountInfo?backendData.accountInfo.username:'-'}}</span>
-                                            <br /><span>Password:
-                                                {{backendData.accountInfo?backendData.accountInfo.password:'-'}}</span>
-                                            <button class="btn" *ngIf="onlineClass.meetingNumber"
-                                                (click)="redirectToMeeting(onlineClass)"
-                                                style="background-color: green; color:white; float: right; margin-top: 24px;">Enter
-                                                Class</button>
-                                        </ng-container>
-                                    </td>
+                                <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                    <ng-container
+                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                        <td style="position: relative; min-width: 100px;"
+                                            [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
+                                            [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
+                                            <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
+                                            <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
+                                                {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span>
+                                            <span *ngIf="onlineClass.meetingNumber"
+                                                style="position: absolute; bottom: 8px; right: 8px;"
+                                                class="glow-active"></span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-template #NoClass>
+                                        <td></td>
+                                    </ng-template>
                                 </ng-container>
                             </tr>
                         </ng-container>
                     </tbody>
                 </table>
             </div>
+            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                <div class="mat-elevation-z8"
+                    style="min-height: 100px; margin-top: 24px; padding: 8px; display: flex; flex-direction: row; align-items: center;"
+                    [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(activeClass).subject.name)"
+                    [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(activeClass).subject.name)">
+
+                    <span>
+                        {{activeClass.startTimeJSON.getDisplayString()}} -
+                        {{activeClass.endTimeJSON.getDisplayString()}}
+                    </span>
+
+                    <div style="margin-left: 24px;">
+                        <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span>
+                        <span> ({{htmlRenderer.getDisplayData(activeClass).classInstane.name}} -
+                            {{htmlRenderer.getDisplayData(activeClass).division.name}})</span><br />
+
+                        <span>Username: {{backendData.accountInfo.username || '-'}}</span><br />
+                        <span>Password: {{backendData.accountInfo.password || '-'}}</span><br />
+                    </div>
+                    <button *ngIf="activeClass.meetingNumber" class="btn" (click)="redirectToMeeting(activeClass)"
+                        style="background-color: green; margin-left: auto; margin-right: 12px;">Enter Class</button>
+                </div>
+            </ng-container>
 
         </ng-container>
     </ng-container>

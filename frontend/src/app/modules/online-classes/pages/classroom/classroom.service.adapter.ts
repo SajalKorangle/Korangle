@@ -42,13 +42,12 @@ export class ClassroomServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, account_info_request),
+            this.vm.onlineClassService.getObject(this.vm.onlineClassService.account_info, account_info_request),
         ]);
 
         const online_class_request = {
             parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentClassSubject__in: this.vm.backendData.classSubjectList.map(classSubject => classSubject.id),
-            day: this.vm.today,
         };
 
         this.vm.backendData.onlineClassList = await this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request);

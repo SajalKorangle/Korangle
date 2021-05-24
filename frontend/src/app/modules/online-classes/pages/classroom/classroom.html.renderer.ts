@@ -49,9 +49,10 @@ export class ClassroomHtmlRenderer {
         return this.vm.currentTime.toDateString() + ' ' + customTime.getDisplayString();
     }
 
-    getOnlineClassByTime(timespan) {
+    getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
-            if (TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return true;
             return false;
         });
@@ -60,7 +61,9 @@ export class ClassroomHtmlRenderer {
     getDisplayData(onlineClass: ParsedOnlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
-        return { classSubject, subject };
+        const classInstane = this.vm.backendData.getClassById(classSubject.parentClass);
+        const division = this.vm.backendData.getDivisionById(classSubject.parentDivision);
+        return { classSubject, subject, classInstane, division };
     }
 
     isActive(onlineClass: ParsedOnlineClass): boolean {
@@ -77,6 +80,10 @@ export class ClassroomHtmlRenderer {
             return true;
         }
         return false;
+    }
+
+    getActiveClass() {
+        return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
     }
 
 }
