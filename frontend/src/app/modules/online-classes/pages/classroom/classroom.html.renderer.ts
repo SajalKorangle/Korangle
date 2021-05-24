@@ -60,8 +60,7 @@ export class ClassroomHtmlRenderer {
     getDisplayData(onlineClass: ParsedOnlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
-        const accountInfo = this.vm.backendData.getAccountInfoById(onlineClass.parentAccountInfo);
-        return { classSubject, subject, accountInfo };
+        return { classSubject, subject };
     }
 
     isActive(onlineClass: ParsedOnlineClass): boolean {

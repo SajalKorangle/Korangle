@@ -30,9 +30,9 @@
                                             <br /><span>Meeting ID:
                                                 {{onlineClass.meetingNumber?onlineClass.meetingNumber:'-'}}</span>
                                             <br /><span>Username:
-                                                {{htmlRenderer.getDisplayData(onlineClass).accountInfo?htmlRenderer.getDisplayData(onlineClass).accountInfo.username:'-'}}</span>
+                                                {{backendData.accountInfo?backendData.accountInfo.username:'-'}}</span>
                                             <br /><span>Password:
-                                                {{htmlRenderer.getDisplayData(onlineClass).accountInfo?htmlRenderer.getDisplayData(onlineClass).accountInfo.password:'-'}}</span>
+                                                {{backendData.accountInfo?backendData.accountInfo.password:'-'}}</span>
                                             <button class="btn" *ngIf="onlineClass.meetingNumber"
                                                 (click)="redirectToMeeting(onlineClass)"
                                                 style="background-color: green; color:white; float: right; margin-top: 24px;">Enter

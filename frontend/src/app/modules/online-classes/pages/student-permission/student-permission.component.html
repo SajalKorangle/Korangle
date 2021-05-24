@@ -35,8 +35,14 @@
             </mat-select>
         </mat-form-field>
 
-        <div style="text-align: right;">
-            <span>Total: {{htmlRenderer.getFilteredStudentSectionList().length}} /
+        <div>
+            <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllStudent()">
+                Select All
+            </button>
+            <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.blockAllStudent()">
+                Clear All
+            </button>
+            <span style="float: right;">Total: {{htmlRenderer.getFilteredStudentSectionList().length}} /
                 {{htmlRenderer.studentSectionList.length}}</span>
         </div>
 
@@ -45,9 +51,12 @@
                 <tr>
                     <th></th>
                     <th>S. No.</th>
+                    <th>Roll Number</th>
+                    <th>Scholor Number</th>
                     <th>Name</th>
                     <th>Class & Section</th>
                     <th>Father's Name</th>
+                    <th>Mobile Number</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,10 +67,13 @@
                             <mat-checkbox [(ngModel)]="studentSection.selected"></mat-checkbox>
                         </td>
                         <td>{{ i + 1 }}</td>
+                        <td>{{studentSection.rollNumber}}</td>
+                        <td>{{studentSection.parentStudent.scholarNumber}}</td>
                         <td>{{ studentSection.parentStudent.name }}</td>
                         <td>{{ backendData.getClass(studentSection.parentClass).name }}, {{
                             backendData.getDivision(studentSection.parentDivision).name }}</td>
                         <td>{{ studentSection.parentStudent.fathersName }}</td>
+                        <td>{{ studentSection.parentStudent.mobileNumber }}</td>
                     </tr>
                 </ng-container>
             </tbody>

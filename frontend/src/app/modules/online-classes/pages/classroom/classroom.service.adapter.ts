@@ -1,4 +1,5 @@
 import { ClassroomComponent } from './classroom.component';
+import { CommonFunctions } from '@classes/common-functions';
 
 export class ClassroomServiceAdapter {
 
@@ -13,13 +14,7 @@ export class ClassroomServiceAdapter {
     async initializeData() {
         this.vm.isLoading = true;
 
-        const currentSession = (await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}))
-            .find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
-
-        const startDate = new Date(currentSession.startDate);
-        const endDate = new Date(currentSession.endDate);
-        const today = new Date();
-        if (!(today > startDate && today < endDate)) {
+        if (this.vm.user.activeSchool.currentSessionDbId != CommonFunctions.getActiveSession().id) {
             this.vm.isActiveSession = false;
             this.vm.isLoading = false;
             return;
@@ -31,18 +26,23 @@ export class ClassroomServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        const account_info_request = {
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+
         [
             this.vm.backendData.classSubjectList,
             this.vm.backendData.classList,
             this.vm.backendData.divisionList,
             this.vm.backendData.subjectList,
-            this.vm.backendData.accountInfoList,
+            this.vm.backendData.accountInfo,
         ] = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
-            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
+            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, account_info_request),
         ]);
 
         const online_class_request = {

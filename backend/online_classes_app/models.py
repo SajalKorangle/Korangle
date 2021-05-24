@@ -8,18 +8,13 @@ from student_app.models import Student
 
 
 class AccountInfo(models.Model):
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    parentEmployee = models.ForeignKey(Employee, unique=True, on_delete=models.CASCADE)
     username = models.CharField(max_length=150)
     password = models.CharField(max_length=150)
-
-    class Meta:
-        db_table = 'AccountInfo'
-        unique_together = ('parentEmployee', 'username')
 
 
 class OnlineClass(models.Model):
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
-    parentAccountInfo = models.ForeignKey(AccountInfo, null=True, blank=True, on_delete=models.SET_NULL)
 
     WEEKDAYS_CHOICES = (
         ('Sunday', 'Sunday'),

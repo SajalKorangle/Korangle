@@ -4,6 +4,7 @@ export class AddAccountUserInput {
 
     newUsername: string = '';
     newPassword: string = '';
+    parentEmployeeForAccountInfo: number;
 
     selectedAccountInfo: any = null;
 
@@ -13,6 +14,7 @@ export class AddAccountUserInput {
 
     initialize(vm: AddAccountComponent): void {
         this.vm = vm;
+        this.parentEmployeeForAccountInfo = this.vm.user.activeSchool.employeeId;
     }
 
 }

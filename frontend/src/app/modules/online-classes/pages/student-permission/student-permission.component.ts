@@ -9,7 +9,7 @@ import { StudentPermissionBackendData } from './student-permission.backend.data'
 
 import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
-import { OnlineClassService } from '@services/modules/online-class/online-class.service'
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 
 @Component({
     selector: 'student-permission',
@@ -99,6 +99,5 @@ export class StudentPermissionComponent implements OnInit {
                 selected: !this.backendData.restrictedStudentList.find(rs => rs.parentStudent == ss.parentStudent)
             };
         });
-        console.log('ss: ', this.htmlRenderer.studentSectionList);
     }
 }

@@ -1,5 +1,5 @@
 <div class="card-content" *ngIf="!isLoading else Loader">
-    <mat-card>
+    <mat-card *ngIf="hasAdminPermission() || backendData.accountInfoList.length == 0">
         <h4>Add Account</h4>
         <div style="margin-left: 12px; width: fit-content;">
             <mat-form-field>
@@ -11,6 +11,26 @@
                 <mat-label>Password</mat-label>
                 <input matInput type="text" [(ngModel)]="userInput.newPassword">
             </mat-form-field>
+
+            <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput1.focus()">
+                <mat-label>Account Onner</mat-label>
+                <mat-select [(ngModel)]="userInput.parentEmployeeForAccountInfo">
+
+                    <mat-option style="pointer-events: none;">
+                        <!--Search bar-->
+                        <mat-form-field style="width: 100%;">
+                            <mat-icon matPrefix>search</mat-icon>
+                            <input style="pointer-events: auto;" #searchInput1 (keydown)="$event.stopPropagation()"
+                                (click)="$event.stopPropagation();" matInput>
+                        </mat-form-field>
+                    </mat-option>
+
+                    <ng-container *ngFor="let employee of backendData.employeeList">
+                        <mat-option *ngIf="employee.name.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                            [value]="employee.id">{{employee.name}}</mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field><br />
 
             <button mat-button (click)="serviceAdapter.addNewAccountInfo()"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}">
@@ -51,7 +71,7 @@
                             <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.password">
                         </mat-form-field>
 
-                        <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput1.focus()">
+                        <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput2.focus()">
                             <mat-label>Account Onner</mat-label>
                             <mat-select [(ngModel)]="userInput.selectedAccountInfo.parentEmployee">
 
@@ -59,7 +79,7 @@
                                     <!--Search bar-->
                                     <mat-form-field style="width: 100%;">
                                         <mat-icon matPrefix>search</mat-icon>
-                                        <input style="pointer-events: auto;" #searchInput1
+                                        <input style="pointer-events: auto;" #searchInput2
                                             (keydown)="$event.stopPropagation()" (click)="$event.stopPropagation();"
                                             matInput>
                                     </mat-form-field>
@@ -67,7 +87,7 @@
 
                                 <ng-container *ngFor="let employee of backendData.employeeList">
                                     <mat-option
-                                        *ngIf="employee.name.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                                        *ngIf="employee.name.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
                                         [value]="employee.id">{{employee.name}}</mat-option>
                                 </ng-container>
                             </mat-select>

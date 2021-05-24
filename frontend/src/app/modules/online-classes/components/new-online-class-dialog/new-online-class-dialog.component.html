@@ -16,18 +16,6 @@
     </mat-form-field>
 
     <mat-form-field>
-        <mat-label>Meeting Account</mat-label>
-        <mat-select [(ngModel)]="parentAccountInfo">
-            <ng-container *ngFor="let accountInfo of data.vm.backendData.accountInfoList">
-                <mat-option [value]="accountInfo.id">
-                    #{{accountInfo.username}} : {{data.vm.backendData.getEmployeeById(accountInfo.parentEmployee).name}}
-                </mat-option>
-            </ng-container>
-        </mat-select>
-    </mat-form-field>
-
-
-    <mat-form-field>
         <mat-label>Meeting ID</mat-label>
         <input matInput type="text" [(ngModel)]="meetingNumber">
     </mat-form-field>

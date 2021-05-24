@@ -95,9 +95,7 @@ export class SettingsHtmlRenderer {
             if (data && data.parentClassSubject) {
                 if (!onlineClass) {
                     onlineClass = {
-                        parentSchool: this.vm.user.activeSchool.dbId,
                         parentClassSubject: data.parentClassSubject,
-                        parentAccountInfo: null,
                         day: this.vm.weekdays[weekdayKey],
                         startTimeJSON: new Time({ ...timespan.startTime }),
                         endTimeJSON: new Time({ ...timespan.endTime }),
@@ -105,7 +103,6 @@ export class SettingsHtmlRenderer {
                         password: null,
                     };
                 }
-                onlineClass.parentAccountInfo = data.parentAccountInfo ? data.parentAccountInfo : null;
                 onlineClass.meetingNumber = data.meetingNumber ? data.meetingNumber : null;
                 onlineClass.password = data.password ? data.password : null;
                 this.filteredOnlineClassList.push(onlineClass);

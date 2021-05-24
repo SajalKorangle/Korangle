@@ -25,7 +25,6 @@ export class AddAccountServiceAdapter {
         this.vm.backendData.inPagePermissionMappedByKey = (await this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         const account_info_list_request = {
-            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         if (!this.vm.hasAdminPermission()) {
@@ -57,20 +56,18 @@ export class AddAccountServiceAdapter {
         if (!this.vm.newAccountInfoSanatyCheck())
             return;
         const newAccountInfo = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentEmployee: this.vm.userInput.parentEmployeeForAccountInfo,
             username: this.vm.userInput.newUsername,
             password: this.vm.userInput.newPassword,
         };
 
         const account_info_request = {
-            parentSchool: this.vm.user.activeSchool.dbId,
+            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
             username: this.vm.userInput.newUsername,
         };
 
         this.vm.isLoading = true;
         const preExistingAccountInfo = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.account_info, account_info_request);
-        console.log(preExistingAccountInfo);
         if (preExistingAccountInfo) { // account with this username aready exists
             alert("Account with the provided username already exists");
             this.vm.isLoading = false;
@@ -80,6 +77,7 @@ export class AddAccountServiceAdapter {
         this.vm.backendData.accountInfoList.push(createdAccountInfo);
         this.vm.userInput.newUsername = '';
         this.vm.userInput.newPassword = '';
+        this.vm.userInput.parentEmployeeForAccountInfo = this.vm.user.activeSchool.employeeId;
         this.vm.isLoading = false;
     }
 

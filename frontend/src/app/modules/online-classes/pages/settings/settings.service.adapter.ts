@@ -16,7 +16,7 @@ export class SettingsServiceAdapter {
         this.vm.isLoading = true;
 
         const online_class_list_request = {
-            parentSchool: this.vm.user.activeSchool.dbId,
+            parentClassSubject__parentSchool: this.vm.user.activeSchool.dbId,
             parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
 

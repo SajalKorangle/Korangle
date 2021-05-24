@@ -13,7 +13,7 @@ import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { WEEKDAYS, TimeSpan, Time } from '@modules/online-classes/class/constants';
+import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
 
 
 @Component({

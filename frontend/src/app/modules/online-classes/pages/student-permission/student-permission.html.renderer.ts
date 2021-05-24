@@ -22,6 +22,14 @@ export class StudentPermissionHtmlRenderer {
         this.classDivisionList.forEach(cd => cd.selected = false);
     }
 
+    selectAllStudent(): void {
+        this.getFilteredStudentSectionList().forEach(ss => ss.selected = true);
+    }
+
+    blockAllStudent(): void {
+        this.getFilteredStudentSectionList().forEach(ss => ss.selected = false);
+    }
+
     getFilteredStudentSectionList(): Array<any> {
         return this.studentSectionList.filter(ss => {
             return this.classDivisionList.find(cd => cd.selected && cd.class.id == ss.parentClass && cd.section.id == ss.parentDivision);
@@ -30,7 +38,7 @@ export class StudentPermissionHtmlRenderer {
 
     deletecAnyChange(): boolean {
         const allRestrictedStudentList = this.vm.htmlRenderer.studentSectionList.filter(ss => !ss.selected).map(ss => {
-            return { parentStudent: ss.parentStudent.id }
+            return { parentStudent: ss.parentStudent.id };
         });
         if (allRestrictedStudentList.length != this.vm.backendData.restrictedStudentList.length) {
             return true;

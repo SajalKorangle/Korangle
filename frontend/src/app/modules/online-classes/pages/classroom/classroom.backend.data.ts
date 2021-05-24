@@ -9,7 +9,7 @@ export class ClassroomBackendData {
     vm: ClassroomComponent;
 
     onlineClassList: Array<ParsedOnlineClass>;
-    accountInfoList: Array<AccountInfo>;
+    accountInfo: AccountInfo;
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
 

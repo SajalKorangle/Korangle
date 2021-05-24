@@ -37,7 +37,7 @@ export class StudentPermissionServiceAdapter {
 
         const request_student_data = {
             id__in: this.vm.backendData.studentSectionList.map(ss => ss.parentStudent),
-            fields__korangle: ['id', 'name', 'fathersName']
+            fields__korangle: ['id', 'name', 'fathersName', 'scholarNumber', 'mobileNumber']
         };
 
         this.vm.backendData.studentList = await this.vm.studentService.getObjectList(
@@ -51,7 +51,7 @@ export class StudentPermissionServiceAdapter {
     async updateStudentRestriction() {
         this.vm.isLoading = true;
         const allRestrictedStudentList = this.vm.htmlRenderer.studentSectionList.filter(ss => !ss.selected).map(ss => {
-            return { parentStudent: ss.parentStudent.id }
+            return { parentStudent: ss.parentStudent.id };
         });
 
         const toDeleteRestrictionList = this.vm.backendData.restrictedStudentList.filter(restrictedStudent => {
@@ -62,7 +62,7 @@ export class StudentPermissionServiceAdapter {
         const toCreateRestrictionList = allRestrictedStudentList.filter(studentRestriction => {
             return !this.vm.backendData.restrictedStudentList.find(rs => rs.parentStudent == studentRestriction.parentStudent);
         });
-        console.log("all: ", allRestrictedStudentList)
+        console.log("all: ", allRestrictedStudentList);
         console.log("create:", toCreateRestrictionList);
 
         const serviceList = [this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.restricted_students, toCreateRestrictionList)];

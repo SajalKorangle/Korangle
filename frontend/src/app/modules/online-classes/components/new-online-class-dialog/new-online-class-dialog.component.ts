@@ -10,7 +10,6 @@ import { TimeSpan } from '@modules/online-classes/class/constants';
 })
 export class NewOnlineClassDialogComponent implements OnInit {
 
-  parentAccountInfo: number;
   parentClassSubject: number;
   meetingNumber: string = '';
   password: string = '';
@@ -36,7 +35,7 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
 
   apply(): void {
-    this.dialogRef.close({ parentClassSubject: this.parentClassSubject, parentAccountInfo: this.parentAccountInfo, meetingNumber: this.meetingNumber, password: this.password });
+    this.dialogRef.close({ parentClassSubject: this.parentClassSubject, meetingNumber: this.meetingNumber, password: this.password });
   }
 
 }
