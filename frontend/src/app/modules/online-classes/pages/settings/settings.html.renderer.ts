@@ -159,13 +159,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
@@ -184,7 +184,8 @@ export class SettingsHtmlRenderer {
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
 
         this.filteredOnlineClassList.forEach(onlineClass => {
-            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex], new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0) {
+            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex],
+                new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0) {
                 onlineClass.startTimeJSON = new Time({ ...startTime });
                 onlineClass.endTimeJSON = new Time({ ...endTime });
             }
@@ -199,7 +200,8 @@ export class SettingsHtmlRenderer {
 
     deleteTimeSpan() {
         this.filteredOnlineClassList = this.filteredOnlineClassList.filter(onlineClass => {
-            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex], new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
+            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex],
+                new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return false;
             return true;
         });

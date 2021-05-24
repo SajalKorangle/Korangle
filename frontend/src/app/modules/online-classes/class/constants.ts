@@ -92,7 +92,7 @@ import { OnlineClass } from '@services/modules/online-class/models/online-class'
 export interface ParsedOnlineClass extends OnlineClass {
     startTimeJSON: Time;
     endTimeJSON: Time;
-};
+}
 
 export const ColorPalette = [
     ['red', 'white'],

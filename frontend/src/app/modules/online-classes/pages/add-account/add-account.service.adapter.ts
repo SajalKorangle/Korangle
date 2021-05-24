@@ -22,7 +22,8 @@ export class AddAccountServiceAdapter {
             parentEmployee: this.vm.user.activeSchool.employeeId,
         };
 
-        this.vm.backendData.inPagePermissionMappedByKey = (await this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+        this.vm.backendData.inPagePermissionMappedByKey = (await
+            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         const account_info_list_request = {
         };

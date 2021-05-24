@@ -55,7 +55,8 @@ export class SettingsServiceAdapter {
 
     async updateOnlineClassList() {
         const onlineClassBackendDataIndexArray = [];
-        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {    // filter online classes for selected class and section
+        // filter online classes for selected class and section
+        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
             if (classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
