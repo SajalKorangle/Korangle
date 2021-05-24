@@ -65,7 +65,7 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
-        console.log("this: ", this);
+        // console.log("this: ", this);
     }
 
     parseBacknedData() {
@@ -79,7 +79,4 @@ export class SettingsComponent implements OnInit {
         return Object.keys(obj);
     }
 
-    logMessage(msg) {
-        console.log('msg: ', msg);
-    }
 }

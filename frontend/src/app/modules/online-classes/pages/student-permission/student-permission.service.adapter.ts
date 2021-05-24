@@ -62,8 +62,8 @@ export class StudentPermissionServiceAdapter {
         const toCreateRestrictionList = allRestrictedStudentList.filter(studentRestriction => {
             return !this.vm.backendData.restrictedStudentList.find(rs => rs.parentStudent == studentRestriction.parentStudent);
         });
-        console.log("all: ", allRestrictedStudentList);
-        console.log("create:", toCreateRestrictionList);
+        // console.log("all: ", allRestrictedStudentList);
+        // console.log("create:", toCreateRestrictionList);
 
         const serviceList = [this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.restricted_students, toCreateRestrictionList)];
         if (toDeleteRestrictionList.length != 0) {

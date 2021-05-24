@@ -70,7 +70,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
-        console.log('this: ', this);
+        // console.log('this: ', this);
     }
 
     ngOnDestroy(): void {

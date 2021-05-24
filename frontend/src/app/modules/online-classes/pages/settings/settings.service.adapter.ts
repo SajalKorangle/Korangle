@@ -81,9 +81,9 @@ export class SettingsServiceAdapter {
         const toDeleteList = originalFilteredOnlineClassList.filter(onlineClass1 => {
             return !toUpdateList.find(onlineClass2 => onlineClass2.id == onlineClass1.id);
         }).map(onlineClass => onlineClass.id);
-        console.log('toUpdate: ', toUpdateList);
-        console.log('toDeete: ', toDeleteList);
-        console.log("toCreate: ", toCreateList);
+        // console.log('toUpdate: ', toUpdateList);
+        // console.log('toDeete: ', toDeleteList);
+        // console.log("toCreate: ", toCreateList);
 
         const serviceList = [];
 

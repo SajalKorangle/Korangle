@@ -66,7 +66,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
         this.timeHandleInterval = setInterval(() => this.currentTime = new Date(), 30000);
 
-        console.log('this: ', this);
+        // console.log('this: ', this);
     }
 
     ngOnDestroy(): void {

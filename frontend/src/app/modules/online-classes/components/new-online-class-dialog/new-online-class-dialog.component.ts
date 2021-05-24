@@ -37,7 +37,7 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('this dialog: ', this);
+    // console.log('this dialog: ', this);
   }
 
   getAccountInfoForSelectedSubject() {

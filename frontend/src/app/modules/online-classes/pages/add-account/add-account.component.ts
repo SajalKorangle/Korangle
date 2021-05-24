@@ -49,7 +49,7 @@ export class AddAccountComponent implements OnInit {
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
 
-        console.log('this', this);
+        // console.log('this', this);
     }
 
     newAccountInfoSanatyCheck(): boolean {
