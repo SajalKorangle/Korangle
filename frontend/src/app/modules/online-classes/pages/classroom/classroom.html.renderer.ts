@@ -43,7 +43,7 @@ export class ClassroomHtmlRenderer {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
-            minute: Math.max(currentTime.getMinutes(), 0),    // offset of 2 minutes
+            minute: currentTime.getMinutes(),
             ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
         });
         return this.vm.currentTime.toDateString() + ' ' + customTime.getDisplayString();
@@ -68,7 +68,7 @@ export class ClassroomHtmlRenderer {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
-            minute: Math.max(currentTime.getMinutes(), 0),    // offset of 2 minutes
+            minute: currentTime.getMinutes(),
             ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
         });
 

@@ -1,11 +1,15 @@
-import { AnyAaaaRecord } from 'dns';
 import { ClassroomComponent } from './classroom.component';
+import { ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { ClassSubject } from '@services/modules/subject/models/class-subject';
+import { Subject } from '@services/modules/subject/models/subject';
 
 export class ClassroomBackendData {
 
     vm: ClassroomComponent;
 
-    onlineClass: AnyAaaaRecord;
+    onlineClassList: Array<ParsedOnlineClass>;
+    classSubjectList: Array<ClassSubject>;
+    subjectList: Array<Subject>;
 
     studentSection: any;
 
@@ -13,6 +17,14 @@ export class ClassroomBackendData {
 
     initialize(vm: ClassroomComponent): void {
         this.vm = vm;
+    }
+
+    getClassSubjectById(id: number) {
+        return this.classSubjectList.find(classSubject => classSubject.id == id);
+    }
+
+    getSubjectById(id: number) {
+        return this.subjectList.find(subject => subject.id == id);
     }
 
 }

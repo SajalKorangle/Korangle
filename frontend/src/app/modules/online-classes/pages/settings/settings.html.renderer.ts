@@ -186,6 +186,14 @@ export class SettingsHtmlRenderer {
         const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
         const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
+
+        this.filteredOnlineClassList.forEach(onlineClass => {
+            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex], new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0) {
+                onlineClass.startTimeJSON = new Time({ ...startTime });
+                onlineClass.endTimeJSON = new Time({ ...endTime });
+            }
+        });
+
         this.timeSpanList[this.vm.htmlRenderer.editTimeSpanFormIndex].startTime = startTime;
         this.timeSpanList[this.vm.htmlRenderer.editTimeSpanFormIndex].endTime = endTime;
         this.timeSpanList.sort(TimeSpanComparator);
@@ -194,9 +202,13 @@ export class SettingsHtmlRenderer {
     }
 
     deleteTimeSpan() {
-        this.timeSpanList.splice(this.vm.htmlRenderer.editTimeSpanFormIndex, 1);
-        // delete all atached meetings here
-        this.vm.htmlRenderer.editTimeSpanFormIndex = -1;
+        this.filteredOnlineClassList = this.filteredOnlineClassList.filter(onlineClass => {
+            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex], new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
+                return false;
+            return true;
+        });
+        this.timeSpanList.splice(this.editTimeSpanFormIndex, 1);
+        this.editTimeSpanFormIndex = -1;
     }
 
     deleteOnlineClass(onlineClass) {

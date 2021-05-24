@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -8,27 +8,32 @@ import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
-import { ClassService } from '@services/modules/class/class.service';
-import { SchoolService } from '@services/modules/school/school.service';
 import { StudentService } from '@services/modules/student/student.service';
+import { SubjectService } from '@services/modules/subject/subject.service';
+
 import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
 import { environment } from 'environments/environment';
 import { Constants } from 'app/classes/constants';
 
-import { WEEKDAYS } from '@modules/online-classes/class/constants';
+import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
 
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
     styleUrls: ['./classroom.component.css'],
-    providers: [SchoolService, OnlineClassService, ClassService, StudentService],
+    providers: [OnlineClassService, StudentService, SubjectService],
 })
 
-export class ClassroomComponent implements OnInit {
+export class ClassroomComponent implements OnInit, OnDestroy {
 
     user: any;
 
     activeStudent: any;
+
+    today: string = Object.values(WEEKDAYS)[new Date().getDay()];
+    currentTime: Date = new Date();
+
+    timeHandleInterval;
 
     serviceAdapter: ClassroomServiceAdapter;
     htmlRenderer: ClassroomHtmlRenderer;
@@ -37,15 +42,13 @@ export class ClassroomComponent implements OnInit {
 
     meetingParameters: any;
 
-    weekdays = Object.values(WEEKDAYS);
-
+    isActiveSession: boolean = false;
     isLoading: any;
 
     constructor(
-        public schoolService: SchoolService,
         public onlineClassService: OnlineClassService,
-        public classService: ClassService,
         public studentService: StudentService,
+        public subjectService: SubjectService,
     ) { }
 
     ngOnInit(): void {
@@ -64,7 +67,18 @@ export class ClassroomComponent implements OnInit {
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
-        // console.log('this: ', this);
+        console.log('this: ', this);
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.timeHandleInterval);
+    }
+
+    parseBacknedData() {
+        this.backendData.onlineClassList.forEach(onlineClass => {
+            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
+            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
+        });
     }
 
     populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
@@ -88,7 +102,6 @@ export class ClassroomComponent implements OnInit {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
-
             }
         });
     }
