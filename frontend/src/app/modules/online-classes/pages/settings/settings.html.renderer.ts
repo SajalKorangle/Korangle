@@ -102,10 +102,9 @@ export class SettingsHtmlRenderer {
                         meetingNumber: null,
                         password: null,
                     };
+                    this.filteredOnlineClassList.push(onlineClass);
                 }
-                onlineClass.meetingNumber = data.meetingNumber ? data.meetingNumber : null;
-                onlineClass.password = data.password ? data.password : null;
-                this.filteredOnlineClassList.push(onlineClass);
+                Object.assign(onlineClass, data);
             }
         });
     }

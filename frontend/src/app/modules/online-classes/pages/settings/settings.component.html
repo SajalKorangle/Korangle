@@ -46,15 +46,16 @@
                             <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
-                                    <td style="position: relative;"
+                                    <td style="position: relative; cursor: pointer;"
+                                        (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
                                         <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span>
                                         <span *ngIf="onlineClass.meetingNumber"
                                             style="position: absolute; bottom: 8px; right: 8px;"
                                             class="glow-active"></span>
-                                        <mat-icon class="td-hover-show"
-                                            (click)="htmlRenderer.deleteOnlineClass(onlineClass)"
+                                        <mat-icon class="td-hover-show hover-red"
+                                            (click)="htmlRenderer.deleteOnlineClass(onlineClass); $event.stopPropagation()"
                                             style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
                                         </mat-icon>
                                     </td>
