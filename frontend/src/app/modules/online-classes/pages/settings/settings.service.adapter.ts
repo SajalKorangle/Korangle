@@ -80,9 +80,7 @@ export class SettingsServiceAdapter {
 
         const toDeleteList = originalFilteredOnlineClassList.filter(onlineClass1 => {
             return !toUpdateList.find(onlineClass2 => onlineClass2.id == onlineClass1.id);
-        }).map(onlineClass => {
-            return { id: onlineClass.id };
-        });
+        }).map(onlineClass => onlineClass.id);
         console.log('toUpdate: ', toUpdateList);
         console.log('toDeete: ', toDeleteList);
         console.log("toCreate: ", toCreateList);
@@ -90,7 +88,10 @@ export class SettingsServiceAdapter {
         const serviceList = [];
 
         if (toDeleteList.length > 0) {
-            serviceList.push(this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.online_class, toDeleteList));
+            const delete_request = {
+                id__in: toDeleteList,
+            };
+            serviceList.push(this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.online_class, delete_request));
         } else {
             serviceList.push(Promise.resolve([]));
         }
