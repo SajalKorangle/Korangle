@@ -42,6 +42,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     meetingParameters: any;
 
+    restrictedStudent = null;
     isActiveSession: boolean = false;
     isLoading: any;
 
