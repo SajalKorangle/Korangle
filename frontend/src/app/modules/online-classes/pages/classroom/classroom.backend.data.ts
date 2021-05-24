@@ -38,8 +38,4 @@ export class ClassroomBackendData {
         return this.subjectList.find(subject => subject.id == id);
     }
 
-    getAccountInfoById(id: number) {
-        return this.accountInfoList.find(accountInfo => accountInfo.id == id);
-    }
-
 }
