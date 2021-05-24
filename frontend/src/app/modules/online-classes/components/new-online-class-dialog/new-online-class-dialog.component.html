@@ -24,6 +24,12 @@
         <mat-label>Pass Code</mat-label>
         <input matInput type="text" [(ngModel)]="password">
     </mat-form-field>
+    <br />
+    <div *ngIf="getAccountInfoForSelectedSubject() as accountInfo" style="margin: 24px;">
+
+        <span>Username: {{accountInfo.username}}</span><br />
+        <span>Password: {{accountInfo.password}}</span>
+    </div>
 
 
 </mat-dialog-content>

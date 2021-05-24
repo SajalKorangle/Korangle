@@ -34,6 +34,13 @@ export class NewOnlineClassDialogComponent implements OnInit {
     console.log('this dialog: ', this);
   }
 
+  getAccountInfoForSelectedSubject() {
+    if (!this.parentClassSubject)
+      return;
+    const classSubject = this.filteredClassSubject.find(cs => cs.id == this.parentClassSubject);
+    return this.data.vm.backendData.accountInfoList.find(accountInfo => accountInfo.parentEmployee == classSubject.parentEmployee);
+  }
+
   apply(): void {
     this.dialogRef.close({ parentClassSubject: this.parentClassSubject, meetingNumber: this.meetingNumber, password: this.password });
   }
