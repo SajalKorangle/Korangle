@@ -95,16 +95,16 @@ export interface ParsedOnlineClass extends OnlineClass {
 }
 
 export const ColorPalette = [
-    ['red', 'white'],
     ['pink', 'white'],
     ['darkgrey', 'white'],
     ['purple', 'white'],
     ['rgb(113, 122, 189)', 'white'],
     ['indigo', 'white'],
     ['blue', 'white'],
-    ['lightblue', 'white'],
-    ['cyan', 'white'],
+    ['lightblue', 'black'],
+    ['cyan', 'black'],
     ['teal', 'white'],
+    ['red', 'white'],
     ['green', 'white'],
     ['lightgreen', 'black'],
     ['lime', 'black'],
@@ -121,7 +121,7 @@ export class ColorPaletteHandle {
     static colorMappedBySubjectName: { [key: string]: number; } = {};
 
     static getColorForSubject(subjectName: string) {
-        if (!this.colorMappedBySubjectName[subjectName]) {
+        if (this.colorMappedBySubjectName[subjectName] == undefined) {
             this.colorMappedBySubjectName[subjectName] = this.maxIndex;
             this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
         }
@@ -129,7 +129,7 @@ export class ColorPaletteHandle {
     }
 
     static getBackgroundColorForSubject(subjectName: string) {
-        if (!this.colorMappedBySubjectName[subjectName]) {
+        if (this.colorMappedBySubjectName[subjectName] == undefined) {
             this.colorMappedBySubjectName[subjectName] = this.maxIndex;
             this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
         }
