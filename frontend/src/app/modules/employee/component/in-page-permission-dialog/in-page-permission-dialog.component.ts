@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { InPagePermission, TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
-
+import { CommonFunctions } from '@classes/common-functions';
 
 @Component({
     selector: 'app-in-page-permission-dialog',
@@ -14,6 +14,8 @@ export class InPagePermissionDialogComponent implements OnInit {
 
     groupList: Array<string>;
     employeePermissionConfigJson: { [key: string]: any; } = {};
+
+    isMobile = CommonFunctions.getInstance().isMobileMenu;
 
     constructor(public dialogRef: MatDialogRef<InPagePermissionDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }) {
         this.inPagePermissionMappedByKey = TASK_PERMISSION_LIST.find(

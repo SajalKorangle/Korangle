@@ -20,8 +20,8 @@
                     </div>
 
                     <div style="margin-left: 32px;">
-                        <span>Username: {{backendData.accountInfo.username || '-'}}</span><br />
-                        <span>Password: {{backendData.accountInfo.password || '-'}}</span><br />
+                        <span>Username: {{backendData.accountInfo?.username || 'N/A'}}</span><br />
+                        <span>Password: {{backendData.accountInfo?.password || 'N/A'}}</span><br />
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
