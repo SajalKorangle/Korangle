@@ -1,10 +1,34 @@
 <div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
     <ng-container *ngIf="!restrictedStudent else RestrictedStudent">
         <ng-container *ngIf="isActiveSession else NotActiveSession">
-            <h3>{{htmlRenderer.getTime()}}</h3>
 
             <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
                 <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
+                    <h3>{{htmlRenderer.getTime()}}</h3>
+
+                    <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                        <h4>Onging Class:</h4>
+                        <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
+
+                            <div style="margin-left: 12px;">
+                                <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span><br />
+                                <span>
+                                    {{activeClass.startTimeJSON.getDisplayString()}} -
+                                    {{activeClass.endTimeJSON.getDisplayString()}}
+                                </span>
+                            </div>
+
+                            <div style="margin-left: 32px;">
+                                <span>Meeting Id: {{activeClass.meetingNumber || '-'}}</span><br />
+                                <span>Pass Code: {{activeClass.password || '-'}}</span><br />
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 24px;">
+                            <button *ngIf="activeClass.meetingNumber"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="serviceAdapter.initilizeMeetingData(activeClass)">EnterClass</button>
+                        </div>
+                    </ng-container>
 
                     <div style="overflow: auto;">
                         <table class="mat-elevation-z8 table table-hover">
@@ -20,7 +44,8 @@
                                 <ng-container
                                     *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
                                     <tr>
-                                        <td style="width: 160px">
+                                        <td style="width: 160px"
+                                            [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
                                             {{timespan.startTime.getDisplayString()}} -
                                             {{timespan.endTime.getDisplayString()}}
                                         </td>
@@ -45,30 +70,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
-                        <div class="mat-elevation-z8"
-                            style="min-height: 100px; margin-top: 24px; padding: 8px; display: flex; flex-direction: row; align-items: center;"
-                            [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(activeClass).subject.name)"
-                            [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(activeClass).subject.name)">
-
-                            <span>
-                                {{activeClass.startTimeJSON.getDisplayString()}} -
-                                {{activeClass.endTimeJSON.getDisplayString()}}
-                            </span>
-
-                            <div style="margin-left: 24px;">
-                                <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span><br />
-
-                                <span>Meeting Id: {{activeClass.meetingNumber || '-'}}</span><br />
-                                <span>Pass Code: {{activeClass.password || '-'}}</span><br />
-                            </div>
-                            <button *ngIf="activeClass.meetingNumber" class="btn"
-                                (click)="serviceAdapter.initilizeMeetingData(activeClass)"
-                                style="background-color: green; margin-left: auto; margin-right: 12px;">Enter
-                                Class</button>
-                        </div>
-                    </ng-container>
 
                 </ng-container>
             </ng-container>

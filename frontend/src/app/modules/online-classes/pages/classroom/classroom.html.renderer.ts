@@ -66,6 +66,20 @@ export class ClassroomHtmlRenderer {
         return { classSubject, subject, classInstane, division };
     }
 
+    isActiveTimeSpan(timespan: TimeSpan): boolean {
+        const currentTime = this.vm.currentTime;
+        const customTime = new Time({
+            hour: currentTime.getHours() % 12,
+            minute: currentTime.getMinutes(),
+            ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
+        });
+        if (TimeComparator(timespan.startTime, customTime) == -1
+            && TimeComparator(customTime, timespan.endTime) == -1) {
+            return true;
+        }
+        return false;
+    }
+
     isActive(onlineClass: ParsedOnlineClass): boolean {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({

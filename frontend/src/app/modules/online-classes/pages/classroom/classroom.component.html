@@ -43,7 +43,8 @@
                     <tbody>
                         <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
                             <tr>
-                                <td style="width: 160px">
+                                <td style="width: 160px"
+                                    [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
                                     {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
                                 </td>
                                 <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">

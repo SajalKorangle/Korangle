@@ -49,7 +49,7 @@ export class ClassroomHtmlRenderer {
             minute: currentTime.getMinutes(),
             ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
         });
-        return this.vm.currentTime.toDateString() + ' ' + customTime.getDisplayString();
+        return customTime.getDisplayString();
     }
 
     getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {
@@ -65,6 +65,20 @@ export class ClassroomHtmlRenderer {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
         return { classSubject, subject };
+    }
+
+    isActiveTimeSpan(timespan: TimeSpan): boolean {
+        const currentTime = this.vm.currentTime;
+        const customTime = new Time({
+            hour: currentTime.getHours() % 12,
+            minute: currentTime.getMinutes(),
+            ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
+        });
+        if (TimeComparator(timespan.startTime, customTime) == -1
+            && TimeComparator(customTime, timespan.endTime) == -1) {
+            return true;
+        }
+        return false;
     }
 
     isActive(onlineClass: ParsedOnlineClass): boolean {
