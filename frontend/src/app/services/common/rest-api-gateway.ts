@@ -19,11 +19,7 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
-<<<<<<< HEAD
     getAbsoluteURL(url: string): string {
-=======
-    getAbsoluteURL(url: string, params?: { [key: string]: string; }): string {
->>>>>>> 50dfcba10b6f41daa64056deb96410710d437a76
         let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
         let user = DataStorage.getInstance().getUser();
         if (user.activeSchool) {
@@ -128,8 +124,17 @@ export class RestApiGateway {
 
     public getDataWithPost(url: any, data?: any) {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+        const absoluteURL = new URL(this.getAbsoluteURL(url));
+        absoluteURL.searchParams.append('metod', 'GET');
+        let postData: FormData | { [key: string]: any; };
+        if (data && !(data instanceof FormData)) {
+            postData = new FormData();
+            Object.entries(data).forEach(([key, value]) => postData.append(key, value));
+        } else {
+            postData = data;
+        }
         return this.http
-            .post(this.getAbsoluteURL(url)+"&method=GET", data, { headers: headers })
+            .post(absoluteURL.toString(), postData, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -148,7 +153,6 @@ export class RestApiGateway {
         // check here
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = this.getAbsoluteURL(url);
-        console.log(absoluteURL);
         if (absoluteURL.length > MAX_URL_LENGTH || true) {
             console.log('going with get data with post');
             return this.getDataWithPost(url, params);
