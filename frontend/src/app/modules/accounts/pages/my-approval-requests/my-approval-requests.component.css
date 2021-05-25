@@ -25,7 +25,7 @@ span {
 .custom-button:hover {
     background: #ff9800;
     color: white;
-    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    box-shadow: 0 0 11px rgba(33, 33, 33, .2);
 }
 
 @keyframes spin {

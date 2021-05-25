@@ -110,3 +110,5 @@ mobile/.externalNativeBuild
 mobile/app/release/*
 
 *.prettierrc
+
+.env

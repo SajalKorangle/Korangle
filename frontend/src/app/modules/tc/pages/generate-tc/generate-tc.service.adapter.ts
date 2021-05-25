@@ -3,10 +3,12 @@ import { StudentCustomParameterStructure } from './../../class/constants';
 import { TC_SCHOOL_FEE_RULE_NAME, DEFAULT_TC_SETTINGS } from './../../class/constants_tc';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
 
+const MAX_LENGTH_OF_GET_REQUEST = 900;
+
 export class GenerateTCServiceAdapter {
     vm: GenerateTCComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -26,7 +28,7 @@ export class GenerateTCServiceAdapter {
 
         const request_next_session_student_section_data = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId + 1,
-            fields__korangle: ['parentSchool'],
+            fields__korangle: ['parentStudent'],
         };
 
         const request_tc_settings = {
@@ -57,20 +59,35 @@ export class GenerateTCServiceAdapter {
             this.vm.DATA.data.divisionList = data[4];
             this.vm.DATA.data.sessionList = data[5];
 
-            const request_student_data = {
-                id__in: this.vm.studentSectionList.map((item) => item.parentStudent).join(','),
-                fields__korangle: ['id', 'name', 'fathersName'],
-            };
+            const studentIdList = this.vm.studentSectionList.map(item => item.parentStudent);
+            const studentIdChunkList = [];
+            for (let i = 0; i < studentIdList.length;) {    // dividing big id list to smaller chunks until request is satasfiable
+                const chunk = [];
+                while (chunk.join(',').length < MAX_LENGTH_OF_GET_REQUEST && i < studentIdList.length) {
+                    chunk.push(studentIdList[i]);
+                    i++;
+                }
+                studentIdChunkList.push(chunk);
+            }
 
-            const request_tc_data = {
-                parentStudent__in: this.vm.studentSectionList.map((item) => item.parentStudent).join(','),
-                status__in: ['Generated', 'Issued'],
-            };
+            const studentCombinedRequest = Promise.all(
+                studentIdChunkList.map(studentIdChunk => this.vm.studentService.getObjectList(this.vm.studentService.student, { id__in: studentIdChunk }))
+            ).then(studentChunks => studentChunks.reduce((accumulator, nextChunk) => [...accumulator, ...nextChunk], []));
 
-            const tc_student_fee_data = {
-                parentStudent__in: this.vm.studentSectionList.map((item) => item.parentStudent).join(','),
-                parentSchoolFeeRule__name: TC_SCHOOL_FEE_RULE_NAME,
-            };
+            const tcCombinedRequest = Promise.all(
+                studentIdChunkList.map(studentIdChunk => this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, {
+                    parentStudent__in: studentIdChunk,
+                    status__in: ['Generated', 'Issued']
+                }))
+            ).then(tcChunks => tcChunks.reduce((accumulator, nextChunk) => [...accumulator, ...nextChunk], []));
+
+            const studentTcFeeCombined = Promise.all(
+                studentIdChunkList.map(studentIdChunk => this.vm.feeService.getObjectList(this.vm.feeService.student_fees, {
+                    parentStudent__in: studentIdChunk,
+                    parentSchoolFeeRule__name: TC_SCHOOL_FEE_RULE_NAME
+                }))
+            ).then(feeChunks => feeChunks.reduce((accumulator, nextChunk) => [...accumulator, ...nextChunk], []));
+
 
             const serviceList = [];
             if (data[6]) {
@@ -95,24 +112,21 @@ export class GenerateTCServiceAdapter {
                     name: TC_SCHOOL_FEE_RULE_NAME,
                     parentFeeType: this.vm.tcSettings.parentFeeType,
                 };
-                const tc_fee_rule_request = this.vm.feeService
-                    .getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule)
-                    .then(async (tcSchoolFeeRule) => {
-                        if (!tcSchoolFeeRule) {
-                            // is school Fee Rule is not present
+                const tc_fee_rule_request = this.vm.feeService.getObject(this.vm.feeService.school_fee_rules, request_tc_school_fee_rule)
+                    .then(async tcSchoolFeeRule => {
+                        if (!tcSchoolFeeRule) {    // is school Fee Rule is not present
                             const newSchoolFeeRule = {
                                 name: TC_SCHOOL_FEE_RULE_NAME,
                                 parentFeeType: this.vm.tcSettings.parentFeeType,
                                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
                                 isAnnually: true,
-                                aprilAmount: this.vm.tcSettings.tcFee,
+                                aprilAmount: this.vm.tcSettings.tcFee
                             };
-                            await this.vm.feeService
-                                .createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule)
-                                .then(async (savedSchoolFeeRule) => {
-                                    this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
-                                });
-                        } else {
+                            await this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(savedSchoolFeeRule => {
+                                this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
+                            });
+                        }
+                        else {
                             this.vm.tcSchoolFeeRule = tcSchoolFeeRule;
                         }
                     });
@@ -120,11 +134,11 @@ export class GenerateTCServiceAdapter {
             }
 
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-                this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, request_tc_data), // 1
-                this.vm.feeService.getObjectList(this.vm.feeService.student_fees, tc_student_fee_data), // 2
-                ...serviceList,
-            ]).then((value) => {
+                studentCombinedRequest, // 0
+                tcCombinedRequest,   // 1
+                studentTcFeeCombined, // 2
+                ...serviceList
+            ]).then(value => {
                 this.vm.studentList = value[0];
                 this.vm.tcStudentFeeList = value[2];
                 this.vm.populateClassSectionList(this.vm.classList, this.vm.divisionList);
@@ -218,10 +232,11 @@ export class GenerateTCServiceAdapter {
                 parentFeeType: this.vm.tcSettings.parentFeeType,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
                 isAnnually: true,
-                aprilAmount: this.vm.tcSettings.tcFee,
+                aprilAmount: this.vm.tcSettings.tcFee
             };
 
-            serviceList.push(this.vm.feeService.createObject(this.vm.feeService.student_fees, student_tc_fee));
+            serviceList.push(this.vm.feeService.createObject(this.vm.feeService.student_fees, student_tc_fee)
+                .then(tcStudentFee => this.vm.tcStudentFeeList.push(tcStudentFee)));
         }
 
         return Promise.all(serviceList).then((res) => res[0]);

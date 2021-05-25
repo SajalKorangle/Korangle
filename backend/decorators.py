@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from rest_framework.response import Response
 from permissions import employeeHasSchoolPermission, parentHasStudentPermission
 from student_app.models import Student
 
@@ -91,9 +92,9 @@ def user_permission_3(function):
                 del request.GET['activeSchoolID']
                 request.GET._mutable = False
                 data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=None))}
-                return JsonResponse(data)
+                return Response(data)
             else:
-                return JsonResponse({'response': get_error_response('Permission Issue')})
+                return Response({'response': get_error_response('Permission Issue')})
 
         elif ('activeStudentID' in request.GET.keys()):  # User is requesting as parent
             activeStudentID = list(map(int, request.GET['activeStudentID'].split(','))) # activeStudentID can be a single id or a list of id's seperated by ','
@@ -106,14 +107,14 @@ def user_permission_3(function):
                 request.GET._mutable = False
                 activeSchoolID = Student.objects.get(id=activeStudentID[0]).parentSchool.id
                 data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=activeStudentID))}
-                return JsonResponse(data)
+                return Response(data)
             else:
-                return JsonResponse({'response': get_error_response('Permission Issue')})
+                return Response({'response': get_error_response('Permission Issue')})
 
         else:
             data = {'response': get_success_response(
                 function(*args, **kwargs, activeSchoolID=None, activeStudentID=None))}
-            return JsonResponse(data)
+            return Response(data)
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
     return wrap

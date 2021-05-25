@@ -13,13 +13,17 @@ const MAX_URL_LENGTH = 8000;
 export class RestApiGateway {
     reportError = reportError;
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getToken(): any {
         return DataStorage.getInstance().getUser().jwt;
     }
 
+<<<<<<< HEAD
     getAbsoluteURL(url: string): string {
+=======
+    getAbsoluteURL(url: string, params?: { [key: string]: string; }): string {
+>>>>>>> 50dfcba10b6f41daa64056deb96410710d437a76
         let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
         let user = DataStorage.getInstance().getUser();
         if (user.activeSchool) {
@@ -40,11 +44,11 @@ export class RestApiGateway {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
-            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt);
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt, false, location.href);
             alert(jsonResponse.message);
             throw new Error();
         } else {
-            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true);
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true, location.href);
             alert('Unexpected response from server');
             return null;
         }
@@ -60,7 +64,7 @@ export class RestApiGateway {
                     return this.returnResponse(response, url, 'from deleteData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from deleteData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from deleteData', false, location.href);
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -78,7 +82,7 @@ export class RestApiGateway {
                     return this.returnResponse(response, url, 'from putData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from putData', false, location.href, JSON.stringify(body));
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -96,7 +100,7 @@ export class RestApiGateway {
                     return this.returnResponse(response, url, 'from patchData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from patchData', false, location.href, JSON.stringify(body));
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -114,7 +118,7 @@ export class RestApiGateway {
                     return this.returnResponse(response, url, 'from postData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData', false, location.href, JSON.stringify(body));
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -132,7 +136,7 @@ export class RestApiGateway {
                     return this.returnResponse(response, url, 'from getDataWithPost');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getDataWithPost');
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getDataWithPost', false, location.href);
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }
@@ -157,7 +161,7 @@ export class RestApiGateway {
                     return this.returnResponse(response, url, 'from getData');
                 },
                 (error) => {
-                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from getData');
+                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData', false, location.href);
                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
                     return null;
                 }

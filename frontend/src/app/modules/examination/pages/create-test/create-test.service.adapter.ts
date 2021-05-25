@@ -496,6 +496,9 @@ export class CreateTestServiceAdapter {
     //Update Test List New
     updateTestNew(): any {
         this.vm.isLoading = true;
+        let createTest = [];
+        let updateTest = [];
+        let deleteTest = [];
         let promises = [];
         //Update the test list if any value changed in any of the test from test list
         this.vm.newTestList.forEach((test) => {
@@ -518,22 +521,37 @@ export class CreateTestServiceAdapter {
                         if (test.deleted) {
                             //nothing has to be done!!
                         } else {
-                            promises.push(this.vm.examinationService.createObject(this.vm.examinationService.test_second, data));
+                            createTest.push(data);
                         }
                     }
 
                     //if deleted
                     else if (test.deleted) {
-                        promises.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, data));
+                        deleteTest.push(data.id);
                     }
 
                     //if updated
                     else if (test.newMaximumMarks != test.maximumMarks || test.newTestType != test.testType) {
-                        promises.push(this.vm.examinationService.updateObject(this.vm.examinationService.test_second, data));
+                        updateTest.push(data);
                     }
                 });
             });
         });
+        console.log(createTest);
+        console.log(updateTest);
+        console.log(deleteTest);
+        if (createTest.length) {
+            promises.push(this.vm.examinationService.createObjectList(this.vm.examinationService.test_second, createTest));
+        }
+        if (updateTest.length) {
+            promises.push(this.vm.examinationService.updateObjectList(this.vm.examinationService.test_second, updateTest));
+        }
+        if (deleteTest.length) {
+            let delete_data = {
+                'id__in': deleteTest
+            };
+            promises.push(this.vm.examinationService.deleteObjectList(this.vm.examinationService.test_second, delete_data));
+        }
         return promises;
     }
 
