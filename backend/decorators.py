@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from permissions import employeeHasSchoolPermission, parentHasStudentPermission
 from student_app.models import Student
 
+
 def get_error_response(message):
     error_response = {}
     error_response['status'] = 'fail'
@@ -76,13 +77,14 @@ def user_permission_3(function):
     def wrap(*args, **kwargs):
         request = args[1]
         if ('method' in request.GET and request.GET['method'] == 'GET'):
-           request.GET._mutable = True
-           for key in request.data:
-               request.GET[key] = request.data[key]
-           del request.GET['method']
-           request.GET._mutable = False
-           return args[0].get(request)
-            
+            print(request.data)
+            request.GET._mutable = True
+            for key in request.data:
+                request.GET[key] = request.data[key]
+            del request.GET['method']
+            request.GET._mutable = False
+            return args[0].get(request)
+
         # no need to check authentication because the RestAPIView class by default check for authentication
 
         if ('activeSchoolID' in request.GET.keys()):    # User is requesting as employee
@@ -97,7 +99,7 @@ def user_permission_3(function):
                 return Response({'response': get_error_response('Permission Issue')})
 
         elif ('activeStudentID' in request.GET.keys()):  # User is requesting as parent
-            activeStudentID = list(map(int, request.GET['activeStudentID'].split(','))) # activeStudentID can be a single id or a list of id's seperated by ','
+            activeStudentID = list(map(int, request.GET['activeStudentID'].split(',')))  # activeStudentID can be a single id or a list of id's seperated by ','
             hasPermission = True
             for studentID in activeStudentID:
                 hasPermission = hasPermission and parentHasStudentPermission(request.user, studentID)
@@ -118,5 +120,3 @@ def user_permission_3(function):
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
     return wrap
-
-

@@ -125,7 +125,7 @@ export class RestApiGateway {
     public getDataWithPost(url: any, data?: any) {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = new URL(this.getAbsoluteURL(url));
-        absoluteURL.searchParams.append('metod', 'GET');
+        absoluteURL.searchParams.append('method', 'GET');
         let postData: FormData | { [key: string]: any; };
         if (data && !(data instanceof FormData)) {
             postData = new FormData();
