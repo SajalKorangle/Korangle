@@ -1,9 +1,35 @@
 <div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
 
     <h3>{{htmlRenderer.getTime()}}</h3>
+    <mat-divider style="margin-bottom: 8px;"></mat-divider>
     <ng-container *ngIf="isActiveSession else NotActiveSession">
         <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
 
+            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                <h4>Onging Class:</h4>
+                <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
+
+                    <div style="margin-left: 12px;">
+                        <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span>
+                        <span>({{htmlRenderer.getDisplayData(activeClass).classInstane.name}} &
+                            {{htmlRenderer.getDisplayData(activeClass).division.name}})</span><br />
+                        <span>
+                            {{activeClass.startTimeJSON.getDisplayString()}} -
+                            {{activeClass.endTimeJSON.getDisplayString()}}
+                        </span>
+                    </div>
+
+                    <div style="margin-left: 32px;">
+                        <span>Username: {{backendData.accountInfo.username || '-'}}</span><br />
+                        <span>Password: {{backendData.accountInfo.password || '-'}}</span><br />
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
+                    <button *ngIf="activeClass.meetingNumber" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="redirectToMeeting(activeClass)">Enter
+                        Class</button>
+                </div>
+            </ng-container>
             <div style="overflow: auto;">
                 <table class="mat-elevation-z8 table table-hover">
                     <thead>
@@ -43,29 +69,6 @@
                     </tbody>
                 </table>
             </div>
-            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
-                <div class="mat-elevation-z8"
-                    style="min-height: 100px; margin-top: 24px; padding: 8px; display: flex; flex-direction: row; align-items: center;"
-                    [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(activeClass).subject.name)"
-                    [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(activeClass).subject.name)">
-
-                    <span>
-                        {{activeClass.startTimeJSON.getDisplayString()}} -
-                        {{activeClass.endTimeJSON.getDisplayString()}}
-                    </span>
-
-                    <div style="margin-left: 24px;">
-                        <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span>
-                        <span> ({{htmlRenderer.getDisplayData(activeClass).classInstane.name}} -
-                            {{htmlRenderer.getDisplayData(activeClass).division.name}})</span><br />
-
-                        <span>Username: {{backendData.accountInfo.username || '-'}}</span><br />
-                        <span>Password: {{backendData.accountInfo.password || '-'}}</span><br />
-                    </div>
-                    <button *ngIf="activeClass.meetingNumber" class="btn" (click)="redirectToMeeting(activeClass)"
-                        style="background-color: green; margin-left: auto; margin-right: 12px;">Enter Class</button>
-                </div>
-            </ng-container>
 
         </ng-container>
     </ng-container>

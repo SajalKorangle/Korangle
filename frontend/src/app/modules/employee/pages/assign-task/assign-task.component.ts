@@ -7,7 +7,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { AssignTaskServiceAdapter } from './assign-task.service.adapter';
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
-import { TASK_PERMISSION_LIST } from '@classes/task-settings';
+import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
 
 @Component({
     selector: 'assign-task',

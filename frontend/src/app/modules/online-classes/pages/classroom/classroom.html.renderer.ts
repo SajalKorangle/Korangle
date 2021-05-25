@@ -46,7 +46,7 @@ export class ClassroomHtmlRenderer {
             minute: currentTime.getMinutes(),
             ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
         });
-        return this.vm.currentTime.toDateString() + ' ' + customTime.getDisplayString();
+        return customTime.getDisplayString();
     }
 
     getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {

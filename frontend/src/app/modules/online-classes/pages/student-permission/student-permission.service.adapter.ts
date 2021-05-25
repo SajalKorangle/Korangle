@@ -1,5 +1,5 @@
 import { StudentPermissionComponent } from './student-permission.component';
-import { CommonFunctions } from '@classes/common-functions';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class StudentPermissionServiceAdapter {
 
@@ -70,7 +70,7 @@ export class StudentPermissionServiceAdapter {
             serviceList.push(this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.restricted_students, deleteRequest));
         }
 
-        const [createdResponse, ] = await Promise.all(serviceList);
+        const [createdResponse,] = await Promise.all(serviceList);
 
         this.vm.backendData.restrictedStudentList = this.vm.backendData.restrictedStudentList.filter(restrictedStudent => {
             return allRestrictedStudentList.find(rs => rs.parentStudent == restrictedStudent.parentStudent);

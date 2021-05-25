@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { InPagePermission, TASK_PERMISSION_LIST } from '@classes/task-settings';
+import { InPagePermission, TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
 
 
 @Component({

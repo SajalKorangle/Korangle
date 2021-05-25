@@ -1,5 +1,5 @@
 import { AddAccountComponent } from './add-account.component';
-import { CommonFunctions } from '@classes/common-functions';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 
 export class AddAccountServiceAdapter {

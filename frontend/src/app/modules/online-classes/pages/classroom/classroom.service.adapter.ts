@@ -1,5 +1,5 @@
 import { ClassroomComponent } from './classroom.component';
-import { CommonFunctions } from '@classes/common-functions';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class ClassroomServiceAdapter {
 

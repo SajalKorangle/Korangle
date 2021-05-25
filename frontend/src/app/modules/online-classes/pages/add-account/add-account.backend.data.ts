@@ -1,5 +1,5 @@
 import { AddAccountComponent } from './add-account.component';
-import { valueType } from '@classes/task-settings';
+import { valueType } from '@modules/common/in-page-permission';
 
 export class AddAccountBackendData {
 

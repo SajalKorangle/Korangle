@@ -16,20 +16,6 @@ export class CommonFunctions {
         mainPannel.scrollTop = 0;
     }
 
-    static getActiveSession(): Session {
-        const today = new Date();
-        return SESSION_CONSTANT.find(session => {
-            const startDate = new Date(session.startDate);
-            const endDate = new Date(session.endDate);
-            return startDate < today && today < endDate;
-        });
-    }
-
-    static getModuleTaskPaths() {
-        let routePathList = location.pathname.split('/').slice(1);
-        return { modulePath: routePathList[0], taskPath: routePathList[1] };
-    }
-
     copyObject(object: any): any {
         let tempObject = {};
         Object.keys(object).forEach((key) => {
