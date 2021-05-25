@@ -71,6 +71,9 @@ input {
     background: yellow;
 }
 
+.red {
+    background: rgb(247, 84, 84);
+}
 /*.example-form {
     min-width: 150px;
     max-width: 500px;
