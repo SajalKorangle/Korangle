@@ -248,9 +248,7 @@ export class SettingsHtmlRenderer {
     swapOnlineClass(event, onlineClass2: ParsedOnlineClass) {
         const onlineClass1 = this.filteredOnlineClassList[event.dataTransfer.getData('onlineClassIndex')];
         if (event.shiftKey) {
-            onlineClass2.day = onlineClass1.day;
-            onlineClass2.startTimeJSON = new Time({ ...onlineClass1.startTimeJSON });
-            onlineClass2.endTimeJSON = new Time({ ...onlineClass1.endTimeJSON });
+            onlineClass2.parentClassSubject = onlineClass1.parentClassSubject;
             return;
         }
         [onlineClass1.day, onlineClass2.day] = [onlineClass2.day, onlineClass1.day];
