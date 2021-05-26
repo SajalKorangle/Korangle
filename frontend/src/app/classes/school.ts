@@ -139,6 +139,11 @@ export class School {
                     path: 'view_homework',
                     icon: 'assignment',
                 },
+                {
+                    title: 'Join Class',
+                    path: 'join_class',
+                    icon: 'video_camera_front',
+                },
             ];
         });
 

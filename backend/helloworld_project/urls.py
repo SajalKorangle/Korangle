@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-api_version = 'v5.4/'
+api_version = 'v5.5/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'^'+api_version+'errors/', include('errors_app.urls')),
     url(r'^'+api_version+'accounts/', include('accounts_app.urls')),
     url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),
+    url(r'^'+api_version+'online-class/', include('online_classes_app.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
