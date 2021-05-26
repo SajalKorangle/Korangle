@@ -14,14 +14,27 @@ import { SchoolService } from '../../../../services/modules/school/school.servic
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
 import { isMobile } from '../../../../classes/common.js';
+import { MatTableDataSource } from '@angular/material/table';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
     providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService],
+    animations: [
+        trigger('detailExpand', [
+          state('collapsed', style({height: '0px', minHeight: '0'})),
+          state('expanded', style({height: '*'})),
+          transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+      ],
 })
 export class ViewDefaultersComponent implements OnInit {
+
+    dataStudentsList = new MatTableDataSource();
+    
+    displayedStudentsColumnsList: string[] = ['name', 'fathersName', 'mobileNumber'];
     installmentList = INSTALLMENT_LIST;
 
     NULL_CONSTANT = null;
@@ -96,7 +109,7 @@ export class ViewDefaultersComponent implements OnInit {
         public smsOldService: SmsOldService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -108,7 +121,11 @@ export class ViewDefaultersComponent implements OnInit {
         const monthNumber = new Date().getMonth();
         this.installmentNumber = monthNumber > 2 ? monthNumber - 3 : monthNumber + 9;
     }
-
+    getData():any{
+        this.dataStudentsList = new MatTableDataSource();
+        this.dataStudentsList.data=this.getFilteredStudentList();
+        return this.dataStudentsList ;
+    }
     detectChanges(): void {
         this.cdRef.detectChanges();
     }
