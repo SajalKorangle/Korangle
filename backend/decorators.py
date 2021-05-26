@@ -77,7 +77,6 @@ def user_permission_3(function):
     def wrap(*args, **kwargs):
         request = args[1]
         if ('method' in request.GET and request.GET['method'] == 'GET'):
-            print(request.data)
             request.GET._mutable = True
             for key in request.data:
                 request.GET[key] = request.data[key]
