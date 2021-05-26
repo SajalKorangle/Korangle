@@ -23,22 +23,37 @@ export class SettingsHtmlRenderer {
     }
 
     initilizeTimeTable() {
-        if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
-            return;
-        ColorPaletteHandle.reset();
-        this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
-            const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
-                && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
-                return true;
-            }
-            return false;
-        });
+        if (this.vm.view == 'class') {
+            if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
+                return;
+            ColorPaletteHandle.reset();
+            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
+                const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                if (classSubject.parentClass == this.vm.userInput.selectedClass.id
+                    && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            if (!this.vm.userInput.selectedEmployee)
+                return;
+            ColorPaletteHandle.reset();
+            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
+                const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                if (classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
+                    return true;
+                }
+                return false;
+            });
+        }
 
         this.editTimeSpanFormIndex = -1;    // reset display for new time table
         this.newTimeSpanForm = false;
 
-        this.timeSpanList = [];
+        if (JSON.stringify(this.timeSpanList) == JSON.stringify(getDefaultTimeSpanList())) {
+            this.timeSpanList = []; // if default then empty
+        }
         this.filteredOnlineClassList.forEach(onlineClass => {
             let result: boolean = false;
             this.timeSpanList.every(timeSpan => {
@@ -159,13 +174,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));

@@ -1,27 +1,43 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
     <div>
-        <mat-form-field style="margin-right: 20px;">
-            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
-                (ngModelChange)="htmlRenderer.initilizeTimeTable()">
-                <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
-                    {{ classs.name }}
-                </mat-option>
+        <ng-container *ngIf="view=='class' else EmployeeFilter">
+            <mat-form-field style="margin-right: 20px;">
+                <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
+                    (ngModelChange)="htmlRenderer.initilizeTimeTable()">
+                    <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
+                        {{ classs.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="margin-right: 20px;">
+                <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
+                    (ngModelChange)="htmlRenderer.initilizeTimeTable()">
+                    <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
+                        {{ division.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+
+        <mat-form-field style="float: right">
+            <mat-label>
+                View
+            </mat-label>
+            <mat-select [(ngModel)]="view"
+                (ngModelChange)="htmlRenderer.filteredOnlineClassList.splice(0, htmlRenderer.filteredOnlineClassList.length); htmlRenderer.initilizeTimeTable(); userInput.resetInput();">
+                <mat-option value="class">Class & Section</mat-option>
+                <mat-option value="employee">Employee</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field style="margin-right: 20px;">
-            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
-                (ngModelChange)="htmlRenderer.initilizeTimeTable()">
-                <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
-                    {{ division.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
     </div>
 
-    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection">
 
-        <h4>{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id, userInput.selectedSection.id)}}</h4>
+    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection || userInput.selectedEmployee">
+
+        <h4>{{userInput.selectedEmployee?.name || htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
+            userInput.selectedSection.id)}}</h4>
 
         <div style="overflow: auto;">
             <table class="mat-elevation-z8 table table-hover">
@@ -143,4 +159,15 @@
     </button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
         (click)="htmlRenderer.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
+</ng-template>
+
+<ng-template #EmployeeFilter>
+    <mat-form-field>
+        <mat-label>Select Employee</mat-label>
+        <mat-select [(ngModel)]="userInput.selectedEmployee" (ngModelChange)="htmlRenderer.initilizeTimeTable();">
+            <ng-container *ngFor="let employee of backendData.employeeList">
+                <mat-option [value]="employee">{{employee.name}}</mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
 </ng-template>

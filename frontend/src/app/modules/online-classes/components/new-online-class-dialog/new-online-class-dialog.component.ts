@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SettingsComponent } from '@modules/online-classes/pages/settings/settings.component';
 import { TimeSpan, ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { ClassSubject } from '@services/modules/subject/models/class-subject';
 
 @Component({
   selector: 'app-new-online-class-dialog',
@@ -14,7 +15,7 @@ export class NewOnlineClassDialogComponent implements OnInit {
   meetingNumber: number;
   password: string = '';
 
-  filteredClassSubject: Array<any>;
+  filteredClassSubject: Array<ClassSubject>;
 
   constructor(public dialogRef: MatDialogRef<NewOnlineClassDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     vm: SettingsComponent,
@@ -24,8 +25,10 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
   ) {
     this.filteredClassSubject = data.vm.backendData.classSubjectList.filter(classSubject => {
-      if (classSubject.parentClass == data.vm.userInput.selectedClass.id
+      if (data.vm.view == 'class' && classSubject.parentClass == data.vm.userInput.selectedClass.id
         && classSubject.parentDivision == data.vm.userInput.selectedSection.id)
+        return true;
+      else if (data.vm.view == 'employee' && classSubject.parentEmployee == data.vm.userInput.selectedEmployee.id)
         return true;
       return false;
     });

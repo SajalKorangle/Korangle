@@ -26,6 +26,14 @@ export class SettingsBackendData {
         this.vm = vm;
     }
 
+    getClassById(classId: number) {
+        return this.classList.find(c => c.id == classId);
+    }
+
+    getDivisionById(divisionId: number) {
+        return this.divisionList.find(d => d.id == divisionId);
+    }
+
     getClassSubjectById(id: number) {
         return this.classSubjectList.find(classSubject => classSubject.id == id);
     }

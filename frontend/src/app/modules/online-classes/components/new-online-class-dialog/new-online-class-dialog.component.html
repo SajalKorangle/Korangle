@@ -4,12 +4,15 @@
     <h4>{{data.weekday}}: {{data.timespan.startTime.getDisplayString()}} -
         {{data.timespan.endTime.getDisplayString()}}</h4>
 
-    <mat-form-field>
+    <mat-form-field style="width: max(240, 90%);">
         <mat-label>Subject</mat-label>
         <mat-select [(ngModel)]="parentClassSubject">
             <ng-container *ngFor="let classSubject of filteredClassSubject">
                 <mat-option [value]="classSubject.id">
                     {{data.vm.backendData.getSubjectById(classSubject.parentSubject).name}}
+                    <ng-container *ngIf="data.vm.view=='employee'">:
+                        {{data.vm.backendData.getClassById(classSubject.parentClass).name}} -
+                        {{data.vm.backendData.getDivisionById(classSubject.parentDivision).name}}</ng-container>
                 </mat-option>
             </ng-container>
         </mat-select>

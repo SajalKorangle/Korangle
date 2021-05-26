@@ -40,6 +40,8 @@ export class SettingsComponent implements OnInit {
     userInput: SettingsUserInput;
     backendData: SettingsBackendData;
 
+    view: 'class' | 'employee' = 'class';
+
     isLoading: boolean;
 
     constructor(
