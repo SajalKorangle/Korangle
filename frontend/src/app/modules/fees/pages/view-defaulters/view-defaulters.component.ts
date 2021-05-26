@@ -34,7 +34,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     dataStudentsList = new MatTableDataSource();
     
-    displayedStudentsColumnsList: string[] = ['name', 'fathersName', 'mobileNumber'];
+    displayedStudentsColumnsList: string[] = ['name', 'fathersName', 'mobileNumber','feesDueTillMonth','feesDueOverall','totalFeesThisSession','feesPaidThisSession','discountThisSession'];
     installmentList = INSTALLMENT_LIST;
 
     NULL_CONSTANT = null;

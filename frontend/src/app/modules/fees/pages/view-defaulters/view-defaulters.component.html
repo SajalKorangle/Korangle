@@ -558,6 +558,29 @@
                     <th mat-header-cell *matHeaderCellDef> mobileNumber </th>
                     <td mat-cell *matCellDef="let element"> {{element.mobileNumber}} </td>
                 </ng-container>
+                <ng-container matColumnDef="feesDueTillMonth">
+                    <th mat-header-cell *matHeaderCellDef> feesDueTillMonth </th>
+                    <td mat-cell *matCellDef="let element"> {{element.feesDueTillMonth}} </td>
+                </ng-container>
+                <ng-container matColumnDef="feesDueOverall">
+                    <th mat-header-cell *matHeaderCellDef> feesDueOverall </th>
+                    <td mat-cell *matCellDef="let element"> {{element.feesDueOverall}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalFeesThisSession">
+                    <th mat-header-cell *matHeaderCellDef> totalFeesThisSession </th>
+                    <td mat-cell *matCellDef="let element"> {{element.totalFeesThisSession}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="feesPaidThisSession">
+                    <th mat-header-cell *matHeaderCellDef> feesPaidThisSession </th>
+                    <td mat-cell *matCellDef="let element"> {{element.feesPaidThisSession}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="discountThisSession">
+                    <th mat-header-cell *matHeaderCellDef> discountThisSession </th>
+                    <td mat-cell *matCellDef="let element"> {{element.discountThisSession}} </td>
+                </ng-container>
 
                 <ng-container matColumnDef="expandedDetail">
                     <td mat-cell *matCellDef="let element" [attr.colspan]="displayedStudentsColumnsList.length">
