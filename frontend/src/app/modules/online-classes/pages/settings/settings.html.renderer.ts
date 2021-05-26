@@ -229,4 +229,33 @@ export class SettingsHtmlRenderer {
         this.filteredOnlineClassList.splice(onlineClassIndex, 1);
     }
 
+    getOnlineClassIndex(onlineClass): number {
+        return this.filteredOnlineClassList.findIndex(oc => oc == onlineClass);
+    }
+
+    moveOnlineClass(event, weekdayKey: string, timespan: TimeSpan) {
+        const onlineClassIndex = parseInt(event.dataTransfer.getData('onlineClassIndex'));
+        let onlineClass = this.filteredOnlineClassList[onlineClassIndex];
+        if (event.shiftKey) {
+            onlineClass = { ...onlineClass };
+            this.filteredOnlineClassList.push(onlineClass);
+        }
+        onlineClass.day = this.vm.weekdays[weekdayKey];
+        onlineClass.startTimeJSON = new Time({ ...timespan.startTime });
+        onlineClass.endTimeJSON = new Time({ ...timespan.endTime });
+    }
+
+    swapOnlineClass(event, onlineClass2: ParsedOnlineClass) {
+        const onlineClass1 = this.filteredOnlineClassList[event.dataTransfer.getData('onlineClassIndex')];
+        if (event.shiftKey) {
+            onlineClass2.day = onlineClass1.day;
+            onlineClass2.startTimeJSON = new Time({ ...onlineClass1.startTimeJSON });
+            onlineClass2.endTimeJSON = new Time({ ...onlineClass1.endTimeJSON });
+            return;
+        }
+        [onlineClass1.day, onlineClass2.day] = [onlineClass2.day, onlineClass1.day];
+        [onlineClass1.startTimeJSON, onlineClass2.startTimeJSON] = [onlineClass2.startTimeJSON, onlineClass1.startTimeJSON];
+        [onlineClass1.endTimeJSON, onlineClass2.endTimeJSON] = [onlineClass2.endTimeJSON, onlineClass1.endTimeJSON];
+    }
+
 }

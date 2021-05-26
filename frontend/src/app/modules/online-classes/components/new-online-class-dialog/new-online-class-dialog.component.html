@@ -4,7 +4,7 @@
     <h4>{{data.weekday}}: {{data.timespan.startTime.getDisplayString()}} -
         {{data.timespan.endTime.getDisplayString()}}</h4>
 
-    <mat-form-field style="width: max(240, 90%);">
+    <mat-form-field style="width: max(240px, 90%);">
         <mat-label>Subject</mat-label>
         <mat-select [(ngModel)]="parentClassSubject">
             <ng-container *ngFor="let classSubject of filteredClassSubject">

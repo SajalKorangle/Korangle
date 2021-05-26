@@ -62,7 +62,10 @@
                             <ng-container *ngFor="let weekday of getObjetKeys(weekdays), let i = index;">
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
-                                    <td style="position: relative; cursor: pointer;"
+                                    <td style="position: relative; cursor: pointer;" draggable="true"
+                                        (dragover)="$event.preventDefault();"
+                                        (dragstart)="$event.dataTransfer.setData('onlineClassIndex', htmlRenderer.getOnlineClassIndex(onlineClass));"
+                                        (drop)="htmlRenderer.swapOnlineClass($event, onlineClass);"
                                         (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
@@ -82,7 +85,8 @@
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>
-                                    <td>
+                                    <td (drop)="htmlRenderer.moveOnlineClass($event, weekday, timespan);"
+                                        (dragover)="$event.preventDefault();">
                                         <div>
                                             <button mat-stroked-button
                                                 (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)">
