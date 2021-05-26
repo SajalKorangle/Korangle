@@ -237,7 +237,7 @@ export class SettingsHtmlRenderer {
         const onlineClassIndex = parseInt(event.dataTransfer.getData('onlineClassIndex'));
         let onlineClass = this.filteredOnlineClassList[onlineClassIndex];
         if (event.shiftKey) {
-            onlineClass = { ...onlineClass };
+            onlineClass = { ...onlineClass, id: null };
             this.filteredOnlineClassList.push(onlineClass);
         }
         onlineClass.day = this.vm.weekdays[weekdayKey];
