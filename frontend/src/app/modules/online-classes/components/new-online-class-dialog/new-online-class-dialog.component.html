@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Add Online Class</h2>
+<mat-dialog-content style="height: 62vh; width: 50vw; min-height: 300px; min-width: 480px;">
+
+    <h4>{{data.weekday}}: {{data.timespan.startTime.getDisplayString()}} -
+        {{data.timespan.endTime.getDisplayString()}}</h4>
+
+    <mat-form-field>
+        <mat-label>Subject</mat-label>
+        <mat-select [(ngModel)]="parentClassSubject">
+            <ng-container *ngFor="let classSubject of filteredClassSubject">
+                <mat-option [value]="classSubject.id">
+                    {{data.vm.backendData.getSubjectById(classSubject.parentSubject).name}}
+                </mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Meeting ID</mat-label>
+        <input matInput type="number" [(ngModel)]="meetingNumber">
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Pass Code</mat-label>
+        <input matInput type="text" [(ngModel)]="password">
+    </mat-form-field>
+    <br />
+    <div *ngIf="getAccountInfoForSelectedSubject() as accountInfo" style="margin: 24px;">
+
+        <span>Username: {{accountInfo.username}}</span><br />
+        <span>Password: {{accountInfo.password}}</span>
+    </div>
+
+
+</mat-dialog-content>
+<div mat-dialog-actions style="color: white">
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue; margin-left: auto;"
+        cdkFocusInitial>Apply</button>
+</div>
