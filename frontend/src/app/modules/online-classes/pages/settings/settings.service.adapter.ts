@@ -58,8 +58,12 @@ export class SettingsServiceAdapter {
         // filter online classes for selected class and section
         const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
+            if (this.vm.view == 'class' && classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+                onlineClassBackendDataIndexArray.push(index);
+                return true;
+            }
+            else if (this.vm.view == 'employee' && classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
                 onlineClassBackendDataIndexArray.push(index);
                 return true;
             }
@@ -82,9 +86,6 @@ export class SettingsServiceAdapter {
         const toDeleteList = originalFilteredOnlineClassList.filter(onlineClass1 => {
             return !toUpdateList.find(onlineClass2 => onlineClass2.id == onlineClass1.id);
         }).map(onlineClass => onlineClass.id);
-        // console.log('toUpdate: ', toUpdateList);
-        // console.log('toDeete: ', toDeleteList);
-        // console.log("toCreate: ", toCreateList);
 
         const serviceList = [];
 
