@@ -2,7 +2,7 @@
 import json
 
 from common.common_views_3 import CommonView, CommonListView, APIView
-from decorators import user_permission_3
+from decorators import get_with_post
 from push_notifications.models import GCMDevice
 from .models import Notification
 
@@ -30,9 +30,9 @@ class NotificationView(CommonView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
 
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        response = super().post(request, activeSchoolID, activeStudentID)
+    @get_with_post
+    def post(self, request):
+        response = super().post(request)
         send_notification([].append(request.data))
         return response
 
@@ -41,9 +41,8 @@ class NotificationListView(CommonListView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
 
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        response = super().post(request, activeSchoolID, activeStudentID)
+    @get_with_post
+    def post(self, request):
+        response = super().post(request)
         send_notification(request.data)
         return response
-

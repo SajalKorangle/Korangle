@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 
-from decorators import user_permission_3
+from decorators import user_permission_3, get_with_post
 
 import json
 
@@ -13,8 +13,10 @@ from common.common_serializer_interface_3 import get_object, get_list, create_ob
 from functools import reduce
 from django.http import HttpResponseForbidden
 
+
 def notPermittedFunction(*args, **kwargs):
     return HttpResponseForbidden()
+
 
 def get_model_serializer(Model, fields__korangle, validator):
 
@@ -31,7 +33,7 @@ def get_model_serializer(Model, fields__korangle, validator):
 
         def is_valid(self, raise_exception=False, *args, **kwargs):
             original_response = super().is_valid(raise_exception=raise_exception)
-            return original_response and validator(self.validated_data, *args, **kwargs) 
+            return original_response and validator(self.validated_data, *args, **kwargs)
 
         class Meta:
             model = Model
@@ -56,9 +58,9 @@ class CommonBaseView():
             setattr(self, method, notPermittedFunction)
 
     def validator(self, validated_data, activeSchoolID, activeStudentID):
-        
+
         # Checking for Parent
-        if(activeStudentID):    #activeStudentID can be a list of studentId's
+        if(activeStudentID):  # activeStudentID can be a list of studentId's
             for relation in self.RelationsToStudent:
                 splitted_relation = relation.split('__')
                 related_object = validated_data.get(splitted_relation[0], None)
@@ -75,7 +77,7 @@ class CommonBaseView():
                     return False
 
         return True
-    
+
     def permittedQuerySet(self, activeSchoolID, activeStudentID):
         query_filters = {}
 
@@ -85,19 +87,20 @@ class CommonBaseView():
 
         if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only, activeStudentID can be a list of studentId's
             query_filters[self.RelationsToStudent[0]+'__in'] = activeStudentID     # takes the first relation to student only(should be the closest)
-        elif (len(self.RelationsToSchool)>0):
+        elif (len(self.RelationsToSchool) > 0):
             query_filters[self.RelationsToSchool[0]] = activeSchoolID    # takes the first relation to school only(should be the the closest)
 
         return self.Model.objects.filter(**query_filters)
 
 
 class CommonView(CommonBaseView):
-    
+
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 
+    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         return create_object(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
@@ -127,6 +130,7 @@ class CommonListView(CommonBaseView):
             self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'], validator=self.validator)
         return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
+    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         return create_list(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
@@ -145,5 +149,3 @@ class CommonListView(CommonBaseView):
     def delete(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return delete_list(request.GET, filtered_query_set)
-
-
