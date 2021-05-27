@@ -3,7 +3,7 @@ import { MyCollectionComponent } from './my-collection.component';
 export class MyCollectionServiceAdapter {
     vm: MyCollectionComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Constants } from '../../classes/constants';
 import { environment } from '../../../environments/environment';
 
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { DataStorage } from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 
@@ -123,16 +123,20 @@ export class RestApiGateway {
     }
 
     public getDataWithPost(url: any, data?: any) {
-        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
-        const absoluteURL = new URL(this.getAbsoluteURL(url));
-        absoluteURL.searchParams.append('method', 'GET');
-        let postData: FormData | { [key: string]: any; };
-        if (data && !(data instanceof FormData)) {
-            postData = new FormData();
-            Object.entries(data).forEach(([key, value]) => postData.append(key, value));
-        } else {
-            postData = data;
+        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken(), 'Content-Type': 'application/x-www-form-urlencoded', });
+        const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
+        if (data) {
+            Object.keys(data).forEach(key => absoluteURL.searchParams.delete(key));
         }
+        let postData = new HttpParams({ fromObject: data });
+        absoluteURL.searchParams.append('method', 'GET');
+        console.log('postData: ', postData);
+        // if (data && !(data instanceof FormData)) {
+        //     postData = new FormData();
+        //     Object.entries(data).forEach(([key, value]) => postData.append(key, value));
+        // } else {
+        //     postData = data;
+        // }
         return this.http
             .post(absoluteURL.toString(), postData, { headers: headers })
             .toPromise()
