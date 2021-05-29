@@ -1,10 +1,9 @@
 from django.db import models
 
 # Create your models here.
-from school_app.model.models import School
 from subject_app.models import ClassSubject
 from employee_app.models import Employee
-from student_app.models import Student
+from student_app.models import Student, StudentSection
 
 
 class AccountInfo(models.Model):
@@ -38,3 +37,9 @@ class OnlineClass(models.Model):
 
 class RestrictedStudent(models.Model):
     parentStudent = models.ForeignKey(Student, unique=True, on_delete=models.CASCADE)
+
+
+class StudentAttendence(models.Model):
+    parentStudentSection = models.ForeignKey(StudentSection)
+    dateTime = models.DateTimeField()
+    duration = models.IntegerField()    # in seconds
