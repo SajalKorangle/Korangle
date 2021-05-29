@@ -11,6 +11,10 @@ class APIStats:
     def __call__(self, request):
         startTime = time.time()
         activeSchoolId = request.GET.get('activeSchoolID', None)
+        queryString = request.GET
+        if('method' in request.GET and request.GET['method'] == 'GET'):
+            queryString = request.POST
+        queryString = json.dumps(queryString)
 
         response = self.get_response(request)
 
@@ -20,7 +24,7 @@ class APIStats:
                 parentSchool=School.objects.get(id=activeSchoolId) if activeSchoolId else None,
                 path=request.path,
                 method=request.method,
-                queryString=json.dumps(request.GET),
+                queryString=queryString,
                 responseSize=len(response.content),
                 responseTime=endTime-startTime
             )

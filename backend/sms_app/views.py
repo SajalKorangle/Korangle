@@ -5,7 +5,7 @@ from .business.send_sms import send_sms_old
 from .business.sms_count import get_sms_count
 from common.common_views_3 import CommonView, CommonListView
 from common.common_serializer_interface_3 import create_object
-from decorators import user_permission, user_permission_3, get_with_post
+from decorators import user_permission, user_permission_3
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
@@ -94,7 +94,6 @@ class SmsView(CommonView, APIView):
     Model = SMS
     RelationsToSchool = ['parentSchool__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -118,7 +117,6 @@ class SmsDifferentView(CommonView, APIView):
     Model = SMS
     RelationsToSchool = ['parentSchool__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, *args, **kwargs):
         # print(request.body)

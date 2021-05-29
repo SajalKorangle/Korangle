@@ -4,7 +4,7 @@ from .business.fee_receipt import create_fee_receipt_list, create_fee_receipt_ob
 import json
 
 from common.common_views_3 import CommonView, CommonListView, APIView
-from decorators import user_permission_3, get_with_post
+from decorators import user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
@@ -89,7 +89,6 @@ class FeeReceiptView(CommonView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         data = request.data
@@ -101,7 +100,6 @@ class FeeReceiptListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         data = request.data
@@ -131,7 +129,6 @@ class DiscountView(CommonView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         data = request.data
@@ -143,7 +140,6 @@ class DiscountListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         data = request.data

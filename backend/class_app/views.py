@@ -1,5 +1,5 @@
 from common.common_views_3 import CommonView, CommonListView, APIView
-from decorators import user_permission_3, get_with_post
+from decorators import user_permission_3
 from class_app.models import ClassTeacherSignature
 
 
@@ -11,7 +11,6 @@ class ClassTeacherSignatureView(CommonView, APIView):
     Model = ClassTeacherSignature
     RelationsToSchool = ['parentSchool__id']
 
-    @get_with_post
     @user_permission_3
     def post(self, request, *args, **kwargs):   # Remove this after fixing the frontend request data format; Future iteration
         return create_class_teacher_signature_object(request, self.Model, self.ModelSerializer)

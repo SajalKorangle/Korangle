@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 
-from decorators import user_permission_3, get_with_post
+from decorators import user_permission_3
 
 import json
 
@@ -100,7 +100,6 @@ class CommonView(CommonBaseView):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return get_object(request.GET, filtered_query_set, self.ModelSerializer)
 
-    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         return create_object(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
@@ -130,7 +129,6 @@ class CommonListView(CommonBaseView):
             self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'], validator=self.validator)
         return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
-    @get_with_post
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
         return create_list(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)

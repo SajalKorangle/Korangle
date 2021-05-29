@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 
-from decorators import user_permission_new, get_with_post
+from decorators import user_permission_new
 
 import json
 
@@ -46,7 +46,6 @@ class CommonView():
     def get(self, request):
         return get_object(request.GET, self.Model, self.ModelSerializer)
 
-    @get_with_post
     @user_permission_new
     def post(self, request):
         return create_object(request.data, self.Model, self.ModelSerializer)
@@ -78,7 +77,6 @@ class CommonListView():
             self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'])
         return get_list(request.GET, self.Model, self.ModelSerializer)
 
-    @get_with_post
     @user_permission_new
     def post(self, request):
         return create_list(request.data, self.Model, self.ModelSerializer)
