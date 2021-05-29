@@ -31,7 +31,7 @@ export class ViewSentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public smsService: SmsOldService, public informationService: InformationService, private cdRef: ChangeDetectorRef) {}
+    constructor(public smsService: SmsOldService, public informationService: InformationService, private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -61,8 +61,8 @@ export class ViewSentComponent implements OnInit {
 
     getSMSList(): void {
         const data = {
-            startDateTime: this.startDate.toString() + ' 00:00:00%2B05:30',
-            endDateTime: this.endDate.toString() + ' 23:59:59%2B05:30',
+            startDateTime: this.startDate.toString() + ' 00:00:00+05:30',
+            endDateTime: this.endDate.toString() + ' 23:59:59+05:30',
             parentSchool: this.user.activeSchool.dbId,
         };
         this.isLoading = true;

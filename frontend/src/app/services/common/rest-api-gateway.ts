@@ -123,20 +123,18 @@ export class RestApiGateway {
     }
 
     public getDataWithPost(url: any, data?: any) {
-        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken(), 'Content-Type': 'application/x-www-form-urlencoded', });
+        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken(), });
         const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
         if (data) {
             Object.keys(data).forEach(key => absoluteURL.searchParams.delete(key));
         }
-        let postData = new HttpParams({ fromObject: data });
-        absoluteURL.searchParams.append('method', 'GET');
-        console.log('postData: ', postData);
-        // if (data && !(data instanceof FormData)) {
-        //     postData = new FormData();
-        //     Object.entries(data).forEach(([key, value]) => postData.append(key, value));
-        // } else {
-        //     postData = data;
-        // }
+        let postData;
+        if (data && !(data instanceof FormData)) {
+            postData = new FormData();
+            Object.entries(data).forEach(([key, value]) => postData.append(key, value));
+        } else {
+            postData = data;
+        }
         return this.http
             .post(absoluteURL.toString(), postData, { headers: headers })
             .toPromise()
