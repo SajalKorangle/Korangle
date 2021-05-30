@@ -63,17 +63,20 @@ export class UpdateAllServiceAdapter {
             if (key == 'category') {
                 data['newCategoryField'] = newValue;
             } else if (key == 'mobileNumber') {
-                if (newValue.toString().length !== 10) {
+                if (newValue.toString().length !== 10 && newValue.toString().length !== 0) {
                     if (student.mobileNumber != null) {
                         alert('Mobile number should be 10 digits!');
                     }
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.mobileNumber;
                     return;
                 } else {
+                    if (newValue.toString().length == 0) {
+                        newValue = null;
+                    }
                     data['mobileNumber'] = newValue;
                 }
             } else if (key == 'secondMobileNumber') {
-                if (newValue.toString().length !== 10) {
+                if (newValue.toString().length !== 10 && newValue.toString().length !== 0) {
                     if (student.secondMobileNumber != null) {
                         alert('Alternate Mobile number should be 10 digits!');
                     }
@@ -81,40 +84,64 @@ export class UpdateAllServiceAdapter {
                         student.secondMobileNumber;
                     return;
                 } else {
+                    if (newValue.toString().length == 0) {
+                        newValue = null;
+                    }
                     data['secondMobileNumber'] = newValue;
                 }
             } else if (key == 'familySSMID') {
-                if (newValue.toString().length !== 8) {
+                if (newValue.toString().length !== 8 && newValue.toString().length !== 0) {
                     if (student.familySSMID != null) {
                         alert('familySSMID should be 8 digits!');
                     }
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.familySSMID;
                     return;
                 } else {
+                    if (newValue.toString().length == 0) {
+                        newValue = null;
+                    }
                     data['familySSMID'] = newValue;
                 }
             } else if (key == 'childSSMID') {
-                if (newValue.toString().length !== 9) {
+                if (newValue.toString().length !== 9 && newValue.toString().length !== 0) {
                     if (student.childSSMID != null) {
                         alert('childSSMID should be 9 digits!');
                     }
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.childSSMID;
                     return;
                 } else {
+                    if (newValue.toString().length == 0) {
+                        newValue = null;
+                    }
                     data['childSSMID'] = newValue;
                 }
             } else if (key == 'aadharNum') {
-                if (newValue.toString().length !== 12) {
+                if (newValue.toString().length !== 12 && newValue.toString().length !== 0) {
                     if (student.aadharNum != null) {
                         alert('Aadhar number should be 12 digits!');
                     }
                     (<HTMLInputElement>document.getElementById(student.dbId.toString() + key.toString())).value = student.aadharNum;
                     return;
                 } else {
+                    if (newValue.toString().length == 0) {
+                        newValue = null;
+                    }
                     data['aadharNum'] = newValue;
                 }
             } else if (key == 'religion') {
                 data['newReligionField'] = newValue;
+            }
+            else if (key == 'dateOfAdmission') {
+                if (newValue == '') {
+                    newValue = null;
+                }
+                data[key] = newValue;
+            }
+            else if (key == 'dateOfBirth') {
+                if (newValue == '') {
+                    newValue = null;
+                }
+                data[key] = newValue;
             } else {
                 data[key] = newValue;
             }
