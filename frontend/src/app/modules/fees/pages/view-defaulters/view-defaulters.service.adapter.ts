@@ -6,12 +6,33 @@ export class ViewDefaultersServiceAdapter {
     constructor() {}
 
     // Data
+  
 
     initializeAdapter(vm: ViewDefaultersComponent): void {
         this.vm = vm;
     }
 
     initializeData(): void {
+        
+        Promise.all
+        ([  this.vm.feeService.getList(this.vm.feeService.student_fees, {}),
+            this.vm.feeService.getList(this.vm.feeService.fee_type,{}),
+            this.vm.feeService.getList(this.vm.feeService.school_fee_rules,{}),
+            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts,{}),
+            this.vm.feeService.getList(this.vm.feeService.sub_discounts,{}),
+            this.vm.feeService.getList(this.vm.feeService.fee_receipts,{}),
+            this.vm.feeService.getList(this.vm.feeService.discounts,{}),
+
+        ])
+        .then((val)=>{
+            this.vm.myStudentFeeList=val[0];
+            this.vm.myFeeTypeList=val[1];
+            this.vm.mySchoolFeeRuleList=val[2];
+            this.vm.mySubFeeReceiptList=val[3];
+            this.vm.mySubDiscountList=val[4];
+            this.vm.myFeeReceiptList=val[5];
+            this.vm.myDiscountList=val[6];
+        });
         this.vm.isLoading = true;
 
         const student_section_list = {

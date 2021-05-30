@@ -645,11 +645,18 @@
                                 <div class="example-element-name"> {{element.name}} </div>
                                 <div class="example-element-weight"> {{element.weight}} </div>  -->
                                 <!-- </div> -->
-                                <div class="example-element-description"
+                                <!-- <div class="example-element-description"
                                     *ngFor="let dueBySession of element.feesDueBySession; let i=index;">
-                                    <b>{{dueBySession.parentSession}}</b><br />{{dueBySession.due}}
-
-                                </div>
+                                    <b>{{dueBySession.parentSession}}</b><br />
+                                    {{getSessionFeesDue(element.id,dueBySession.parentSession)}} <br>
+                                    {{getSessionTotalFees(element.id,dueBySession.parentSession)}} <br>
+                                    {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}} <br>
+                                    {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}} <br>
+                                </div> -->
+                                <!-- <div class="example-element-description" *ngFor="let studentFee of getStudentFeeByStudentId(element.id)">
+                                    {{studentFee|json}}
+                                    </div> -->
+                                
                             </div>
                         </td>
                     </ng-container>
@@ -680,3 +687,4 @@
     </ng-container>
 
 </div>
+ 
