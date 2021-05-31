@@ -27,7 +27,7 @@ def user_permission(function):
                 request.GET[key] = request.data[key]
             del request.GET['method']
             request.GET._mutable = False
-            return args[0].get(request)
+            return self.get(request)
 
         if request.user.is_authenticated:
             data = {'response': get_success_response(function(request, *args, **kwargs))}
@@ -121,20 +121,3 @@ def user_permission_3(function):
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
     return wrap
-
-
-# def get_with_post(function):
-#     def wrap(*args, **kwargs):
-#         request = args[1]
-#         if ('method' in request.GET and request.GET['method'] == 'GET'):
-#             request.GET._mutable = True
-#             for key in request.data:
-#                 request.GET[key] = request.data[key]
-#             del request.GET['method']
-#             request.GET._mutable = False
-#             return args[0].get(request)
-#         return function(*args, **kwargs)
-
-#     wrap.__doc__ = function.__doc__
-#     wrap.__name__ = function.__name__
-#     return wrap
