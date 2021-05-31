@@ -25,6 +25,12 @@ const routes: Routes = [
         loadChildren: 'app/modules/sms/pages/manage-sms-id/manage-sms-id.module#ManageSmsIdModule',
         data: { moduleName: 'sms' },
     },
+    {
+        path: 'sms_event_settings',
+        loadChildren: 'app/modules/sms/pages/sms-event-settings/sms-event-settings.module#SmsEventSettingsModule',
+        data: { moduleName: 'sms' },
+    },
+
 
     {
         path: '',

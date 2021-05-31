@@ -1,8 +1,8 @@
 <ng-container *ngIf="!stateKeeper.isLoading">
 
     <mat-expansion-panel *ngFor="let smsEvent of userInput.populatedSMSEventSettingsList"
-                         [expanded]="htmlRenderer.getExpandedState('eventPanel',smsEvent)"
-                         (expandedChange)="htmlRenderer.setExpandedState('eventPanel',smsEvent,$event)"
+                         [expanded]="htmlRenderer.getExpandedState(panelsList[0],smsEvent)"
+                         (expandedChange)="htmlRenderer.setExpandedState(panelsList[0],smsEvent,$event)"
                          style="margin-top: 15px; margin-bottom: 5px">
 
         <mat-expansion-panel-header>
@@ -10,7 +10,6 @@
                 {{smsEvent.eventName}}
             </mat-panel-title>
         </mat-expansion-panel-header>
-
 
         <div class="row">
             <div class="col-md-4">
@@ -36,8 +35,8 @@
             </div>
         </div>
 
-        <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState('notificationPanel',smsEvent)"
-                             (expandedChange)="htmlRenderer.setExpandedState('notificationPanel',smsEvent,$event)"
+        <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState(panelsList[1],smsEvent)"
+                             (expandedChange)="htmlRenderer.setExpandedState(panelsList[1],smsEvent,$event)"
                              style="margin-top: 5px; margin-bottom: 5px">
             <mat-expansion-panel-header>
                 <mat-panel-title style="font-size:16px">
@@ -64,8 +63,8 @@
             </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState('smsPanel',smsEvent)"
-                             (expandedChange)="htmlRenderer.setExpandedState('smsPanel',smsEvent,$event)"
+        <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState(panelsList[2],smsEvent)"
+                             (expandedChange)="htmlRenderer.setExpandedState(panelsList[2],smsEvent,$event)"
                              style="margin-top: 10px; margin-bottom: 5px">
             <mat-expansion-panel-header>
                 <mat-panel-title style="font-size:16px">
@@ -86,7 +85,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-5" *ngIf="smsEvent.selectedSMSId.smsId != 'Default'">
+                <div class="col-md-5" *ngIf="!isDefaultSelected(smsEvent)">
                     <div class="row">
                         <b style="font-size: 15px;margin-left: 13px;float:left">Template Content<span
                                 style="font-size: 10px;margin-left: 13px"
@@ -113,14 +112,14 @@
                     </div>
 
                 </div>
-                <div class="col-md-5" [style.marginLeft.px]="smsEvent.selectedSMSId.smsId == 'Default'?13:0">
+                <div class="col-md-5" [style.marginLeft.px]="isDefaultSelected(smsEvent)?13:0">
                     <div class="row">
-                        <b *ngIf="smsEvent.selectedSMSId.smsId != 'Default'" style="font-size: 15px;float:left">Template
+                        <b *ngIf="!isDefaultSelected(smsEvent)" style="font-size: 15px;float:left">Template
                             Used As</b>
-                        <b *ngIf="smsEvent.selectedSMSId.smsId == 'Default'" style="font-size: 15px;float:left">Default
+                        <b *ngIf="isDefaultSelected(smsEvent)" style="font-size: 15px;float:left">Default
                             Content</b>
                     </div>
-                    <div class="row" *ngIf="smsEvent.selectedSMSId.smsId != 'Default'">
+                    <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
                         <span style="font-size: 10px;color:rebeccapurple;">Change @variables with {{commonVariables.concat(extraVariables)}}</span>
                     </div>
                     <div class="row">
@@ -128,15 +127,16 @@
                     <textarea matInput
                               type="text"
                               [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
+                              (ngModelChange)="htmlRenderer.setMappedContent(smsEvent,$event)"
                               cdkTextareaAutosize
-                              [readonly]="smsEvent.selectedSMSId.smsId == 'Default'"
+                              [readonly]="isDefaultSelected(smsEvent)"
                               style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
                     ></textarea>
                         </mat-form-field>
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="smsEvent.selectedSMSId.smsId != 'Default'">
+            <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
                 <div class="col-md-4">
                     <mat-form-field style="width: 100%;">
                         <input type="text" matInput [(ngModel)]="smsEvent.customEventTemplate.templateId"
@@ -163,7 +163,6 @@
             </div>
         </mat-expansion-panel>
 
-
         <button
                 type="submit"
                 style="border-radius: 10px"
@@ -172,6 +171,9 @@
                 (click)="serviceAdapter.updateSettings(smsEvent)">
             {{smsEvent.eventSettings.id ? 'Update' : 'Create'}}
         </button>
+        <span *ngIf="htmlRenderer.isTemplateModified(smsEvent)" style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                    You can Modify only the <b>@</b> variables in the SMS Template. (Max <b>20</b> Characters)
+                <br/></span>
 
     </mat-expansion-panel>
 </ng-container>

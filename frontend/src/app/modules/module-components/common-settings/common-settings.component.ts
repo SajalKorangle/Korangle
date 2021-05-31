@@ -29,8 +29,12 @@ export class CommonSettingsComponent implements OnInit {
 
     commonVariables = ['studentName', 'date', 'schoolName', 'class'];
     communicationTypeList = ['SERVICE IMPLICIT', 'SERVICE EXPLICIT', 'TRANSACTIONAL'];
+    panelsList = ['eventPanel', 'notificationPanel', 'smsPanel'];
+
     populatedSMSEventSettingsList = [];
     populatedSMSIdList = [];
+
+    variableRegex = /\B@([\w+\\#%*(){}.,$!=\-/[\]]?)+/g;
 
     backendData = {
         smsEventSettingsList: [],
@@ -80,5 +84,9 @@ export class CommonSettingsComponent implements OnInit {
     handleOnLoading(value: boolean): void {
         this.stateKeeper.isLoading = value;
         this.isLoading.emit(value);
+    }
+
+    isDefaultSelected(smsEvent: any): boolean {
+        return smsEvent.selectedSMSId.id == this.populatedSMSIdList.find(smsId => smsId.smsId == 'Default').id;
     }
 }

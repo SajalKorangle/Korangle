@@ -83,7 +83,7 @@ export class CommonSettingsServiceAdapterComponent {
     async updateSettings(smsEvent: any) {
         this.vm.handleOnLoading(true);
         let parentTemplateId = null;
-        if (smsEvent.selectedSMSId.smsId != 'Default') {
+        if (!this.vm.isDefaultSelected(smsEvent)) {
             let templateValue;
             if (!smsEvent.customEventTemplate.id) {
                 templateValue = await this.vm.smsService.createObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);

@@ -20,23 +20,23 @@ export class ManageSmsIdComponent implements OnInit {
     serviceAdapter: ManageSmsIdServiceAdapter;
     htmlRenderer: ManageSmsIdHtmlRenderer;
 
-    statusChoiceList = ['ACTIVATED', 'PENDING', 'ALL']
+    statusChoiceList = ['ACTIVATED', 'PENDING', 'ALL'];
 
     userInput = {
         newSMSId: {} as any,
         selectedSMSStatus: 'ALL',
-    }
+    };
 
     backendData = {
         SMSIdList: [],
         SMSIdSchoolList: [],
         existingSMSIdDetails: null as any,
-    }
+    };
 
     stateKeeper = {
         isPageLoading: false,
         isSMSIdTableLoading: false
-    }
+    };
 
     constructor(public smsService: SmsService) {
     }

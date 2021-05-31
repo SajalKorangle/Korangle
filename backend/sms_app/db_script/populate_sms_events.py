@@ -4,26 +4,15 @@ def populate_sms_events(apps, schema_editor):
     new_sms_event.save()
     new_sms_event = sms_event(eventName='Notify Defaulters', defaultSMSContent='', defaultNotificationContent='')
     new_sms_event.save()
-    new_sms_event = sms_event(eventName='Tutorial Creation', defaultSMSContent="A new tutorial has been created in "
-                                                                               "the Subject @subject; Chapter "
-                                                                               "@tutorialChapter; Topic "
-                                                                               "@tutorialTopic korngl",
-                              defaultNotificationContent="A new tutorial has been created in the Subject @subject; "
-                                                         "Chapter @tutorialChapter; Topic @tutorialTopic")
+    new_sms_event = sms_event(eventName='Attendance Creation',
+                              defaultSMSContent="Your ward, @studentName is marked @attendanceStatus on @attendanceDate korngl",
+                              defaultNotificationContent="Your ward, @studentName is marked @attendanceStatus on "
+                                                         "@attendanceDate")
     new_sms_event.save()
-    new_sms_event = sms_event(eventName='Tutorial Updation',
-                              defaultSMSContent="The following tutorial has been edited -\n Topic @tutorialTopic; "
-                                                "Subject @subject; Chapter @tutorialChapter korngl",
-                              defaultNotificationContent="The following tutorial has been deleted -\n Topic "
-                                                         "@tutorialTopic; Subject @subject; Chapter "
-                                                         "@tutorialChapter")
-    new_sms_event.save()
-    new_sms_event = sms_event(eventName='Tutorial Deletion',
-                              defaultSMSContent="The following tutorial has been deleted -\n Topic @tutorialTopic; "
-                                                "Subject @subject; Chapter @tutorialChapter korngl",
-                              defaultNotificationContent="The following tutorial has been edited -\n Topic "
-                                                         "@tutorialTopic; Subject @subject; Chapter "
-                                                         "@tutorialChapter")
+    new_sms_event = sms_event(eventName='Attendance Updation',
+                              defaultSMSContent="Your ward's attendance has been corrected to @attendanceStatus korngl",
+                              defaultNotificationContent="Your ward's attendance has been corrected to "
+                                                         "@attendanceStatus")
     new_sms_event.save()
     new_sms_event = sms_event(eventName='Homework Creation',
                               defaultSMSContent="New Homework is added in @subject,Title -\n '@homeworkName' Last "
@@ -54,15 +43,25 @@ def populate_sms_events(apps, schema_editor):
                               defaultNotificationContent="Your Homework @homeworkName of Subject @subject has been "
                                                          "checked")
     new_sms_event.save()
-    new_sms_event = sms_event(eventName='Attendance Creation',
-                              defaultSMSContent="Your ward, @studentName is marked @attendanceStatus on @attendanceDate korngl",
-                              defaultNotificationContent="Your ward, @studentName is marked @attendanceStatus on "
-                                                         "@attendanceDate")
-    new_sms_event.save()
-    new_sms_event = sms_event(eventName='Attendance Updation',
-                              defaultSMSContent="Your ward's attendance has been corrected to @attendanceStatus korngl",
-                              defaultNotificationContent="Your ward's attendance has been corrected to "
-                                                         "@attendanceStatus")
-    new_sms_event.save()
 
-
+    new_sms_event = sms_event(eventName='Tutorial Creation', defaultSMSContent="A new tutorial has been created in "
+                                                                               "the Subject @subject; Chapter "
+                                                                               "@tutorialChapter; Topic "
+                                                                               "@tutorialTopic korngl",
+                              defaultNotificationContent="A new tutorial has been created in the Subject @subject; "
+                                                         "Chapter @tutorialChapter; Topic @tutorialTopic")
+    new_sms_event.save()
+    new_sms_event = sms_event(eventName='Tutorial Updation',
+                              defaultSMSContent="The following tutorial has been edited -\n Topic @tutorialTopic; "
+                                                "Subject @subject; Chapter @tutorialChapter korngl",
+                              defaultNotificationContent="The following tutorial has been deleted -\n Topic "
+                                                         "@tutorialTopic; Subject @subject; Chapter "
+                                                         "@tutorialChapter")
+    new_sms_event.save()
+    new_sms_event = sms_event(eventName='Tutorial Deletion',
+                              defaultSMSContent="The following tutorial has been deleted -\n Topic @tutorialTopic; "
+                                                "Subject @subject; Chapter @tutorialChapter korngl",
+                              defaultNotificationContent="The following tutorial has been edited -\n Topic "
+                                                         "@tutorialTopic; Subject @subject; Chapter "
+                                                         "@tutorialChapter")
+    new_sms_event.save()

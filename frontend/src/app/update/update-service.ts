@@ -299,6 +299,8 @@ export class UpdateService {
             smsId: smsId,
         };
 
+        console.log(sms_data);
+
         const notification_data = notification_list.map((item) => {
             return {
                 parentMessageType: null,
@@ -337,8 +339,9 @@ export class UpdateService {
     getMessageFromTemplate = (message, obj) => {
         let ret = message;
         for (let key in obj) {
-            ret = ret.replace('@' + key, obj[key]);
+            ret = ret.replace(new RegExp('@' + key, "g"), obj[key]);
         }
+        ret.replace(/@/g, '');
         return ret;
     }
 
