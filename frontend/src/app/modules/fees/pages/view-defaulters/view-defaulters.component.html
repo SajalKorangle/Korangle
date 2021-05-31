@@ -639,24 +639,92 @@
                         <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                             <div class="example-element-detail"
                                 [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                                <!-- <div class="example-element-diagram"> -->
-                                <!-- <div class="example-element-position"> hello </div> -->
-                                <!-- <div class="example-element-symbol"> {{element.symbol}} </div>
-                                <div class="example-element-name"> {{element.name}} </div>
-                                <div class="example-element-weight"> {{element.weight}} </div>  -->
-                                <!-- </div> -->
-                                <!-- <div class="example-element-description"
+                                <table>
+                                    <tr>
+                                        <th style="width:20%">Sessions</th>
+                                        <th style="width:20%">FeesDue</th>
+                                        <th style="width:20%">TotalFees</th>
+                                        <th style="width:20%">Late Fees Due</th>
+                                        <th style="width:20%">Total Late Fees</th>
+                                    </tr>
+                                </table>
+                                <div class="example-element-description"
                                     *ngFor="let dueBySession of element.feesDueBySession; let i=index;">
-                                    <b>{{dueBySession.parentSession}}</b><br />
-                                    {{getSessionFeesDue(element.id,dueBySession.parentSession)}} <br>
-                                    {{getSessionTotalFees(element.id,dueBySession.parentSession)}} <br>
-                                    {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}} <br>
-                                    {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}} <br>
-                                </div> -->
-                                <!-- <div class="example-element-description" *ngFor="let studentFee of getStudentFeeByStudentId(element.id)">
-                                    {{studentFee|json}}
-                                    </div> -->
-                                
+                                    <table>
+                                        <tr>
+                                            <th style="width:20%">{{dueBySession.parentSession}}</th>
+                                            <th style="width:20%">
+                                                {{getSessionFeesDue(element.id,dueBySession.parentSession)}}</th>
+                                            <th style="width:20%">
+                                                {{getSessionTotalFees(element.id,dueBySession.parentSession)}}</th>
+                                            <th style="width:20%">
+                                                {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}}</th>
+                                            <th style="width:20%">
+                                                {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}</th>
+                                        </tr>
+                                    </table>
+                                    <div
+                                        *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);let studenFeeIndex=index">
+                                        <div *ngIf="studentFee.isAnnually">
+                                            <!-- Student Fee Annually -->
+                                            <table>
+                                                <tr>
+                                                    <td style="width:20%">
+                                                        {{
+                                                        getFeeTypeByStudentFee(studentFee).name }}
+                                                    </td>
+                                                    <td style="width:20%">{{ getStudentFeeInstallmentFeesDue(studentFee,
+                                                        'april') }}
+                                                    </td>
+                                                    <td style="width:20%">{{
+                                                        getStudentFeeInstallmentTotalFees(studentFee,
+                                                        'april') }}
+                                                    </td>
+                                                    <td style="width:20%" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{ getStudentFeeInstallmentLateFeesDue(studentFee, 'april') }}
+                                                    </td>
+                                                    <td style="width:20%" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{ getStudentFeeInstallmentLateFeeTotal(studentFee, 'april') }}
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div *ngIf="!studentFee.isAnnually">
+                                            <!-- Student Fee Not Annually -->
+                                            <table>
+                                                <tr>
+                                                    <td style="width:20%">
+                                                        {{
+                                                        getFeeTypeByStudentFee(studentFee).name }}
+                                                    </td>
+                                                    <td style="width:20%">{{ getStudentFeeFeesDue(studentFee) }}</td>
+                                                    <td style="width:20%">{{ getStudentFeeTotalFees(studentFee) }}</td>
+                                                    <td style="width:20%" *ngIf="getTotalLateFees(element.id)>0">{{
+                                                        getStudentFeeLateFeesDue(studentFee) }}</td>
+                                                    <td style="width:20%" *ngIf="getTotalLateFees(element.id)>0">{{
+                                                        getStudentFeeLateFeeTotal(studentFee) }}</td>
+                                                    <td>
+                                                        <button type="button"
+                                                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                                            style="padding: 3px 8px"
+                                                            (click)="showOrHideStudentFeeDetails(studentFee)">
+                                                            <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">
+                                                                +</ng-container>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!-- <div *ngIf="studentFeeDetailsVisible(studentFee)">
+                                                <ng-container *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee);let installmentIndex=index">
+
+                                                </ng-container>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </ng-container>
@@ -687,4 +755,3 @@
     </ng-container>
 
 </div>
- 

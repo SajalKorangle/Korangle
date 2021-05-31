@@ -52,6 +52,9 @@ export class ViewDefaultersComponent implements OnInit {
     newFeeReceiptList=[];
     newRemark = null;
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
+    studentFeeDetailsVisibleList = [];
+    lateFeeVisible = true;
+
 
 
 
@@ -1030,9 +1033,47 @@ export class ViewDefaultersComponent implements OnInit {
 
         return true;
     }
+    showOrHideStudentFeeDetails(studentFee: any): void {
+        if (
+            this.studentFeeDetailsVisibleList.find((item) => {
+                return item == studentFee.id;
+            })
+        ) {
+            this.studentFeeDetailsVisibleList = this.studentFeeDetailsVisibleList.filter((item) => {
+                return item != studentFee.id;
+            });
+        } else {
+            this.studentFeeDetailsVisibleList.push(studentFee.id);
+        }
+    }
+    getFilteredInstallmentListByStudentFee(studentFee: any): any {
+        return this.installmentList.filter((installment) => {
+            return studentFee[installment + 'Amount'] ? studentFee[installment + 'Amount'] > 0 : false;
+        });
+    }
+    studentFeeDetailsVisible(studentFee: any): boolean {
+        return (
+            this.studentFeeDetailsVisibleList.find((item) => {
+                return item == studentFee.id;
+            }) != undefined
+        );
+    }
+
     getStudentFeeByStudentId(id:any):any{
         return this.myStudentFeeList.filter((studentFee)=>{
             return studentFee.parentStudent==id 
+        });
+    }
+    getStudentFeeByStudentIdAndSession(id:any,sessionName:any):any{
+        let studentFeeList=this.getStudentFeeByStudentId(id);
+        let session=this.getSessionBySessionName(sessionName);
+        return studentFeeList.filter((studentFee)=>{
+            return studentFee.parentSession==session.id;
+        });
+    }
+    getFeeTypeByStudentFee(studentFee: any): any {
+        return this.myFeeTypeList.find((feeType) => {
+            return feeType.id == studentFee.parentFeeType;
         });
     }
     getTotalLateFees(id:any):any{
@@ -1116,7 +1157,42 @@ export class ViewDefaultersComponent implements OnInit {
         });
         return amount;
     }
- 
+    getStudentFeeFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
+        let amount = 0;
+        this.installmentList.forEach((installment) => {
+            amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment, includeNewSubFeeReceipt);
+        });
+        return amount;
+
+
+    }
+    getStudentFeeLateFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
+            amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment, includeNewSubFeeReceipt);
+        });
+        return amount;
+    }
+    getStudentFeeLateFeeTotal(studentFee: any): number {
+        let amount = 0;
+        this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
+            amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
+        });
+        return amount;
+    }
+    getStudentFeeTotalFees(studentFee: any): number {
+        let amount = 0;
+        this.installmentList.forEach((installment) => {
+            amount += this.getStudentFeeInstallmentTotalFees(studentFee, installment);
+        });
+        return amount;
+    }
+    getStudentFeeInstallmentTotalFees(studentFee: any, installment: string): number {
+        let amount = 0;
+        amount += studentFee[installment + 'Amount'];
+        return amount;
+    }
+
     getStudentFeeInstallmentLateFeeTotal(studentFee: any, installment: string): number {
         let amount = 0;
         if (studentFee[installment + 'LastDate'] && studentFee[installment + 'LateFee'] && studentFee[installment + 'LateFee'] > 0) {

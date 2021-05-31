@@ -126,7 +126,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .example-element-detail {
   overflow: hidden;
-  display: flex;
+  /* display: flex; */
 }
 
 .example-element-diagram {
