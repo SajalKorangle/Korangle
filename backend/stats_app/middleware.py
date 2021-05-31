@@ -9,6 +9,7 @@ class APIStats:
         self.get_response = get_response
 
     def __call__(self, request):
+        # print(request.META['HTTP_REFERER'])
         startTime = time.time()
         activeSchoolId = request.GET.get('activeSchoolID', None)
         queryString = request.GET

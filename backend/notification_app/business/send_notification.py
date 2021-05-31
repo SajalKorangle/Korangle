@@ -1,6 +1,5 @@
 
 from push_notifications.models import GCMDevice
-from school_app.model.models import School
 
 
 # def send_notification(data_list):
@@ -12,5 +11,5 @@ from school_app.model.models import School
 def send_notification(data):
 
     school_sms_id = data.parentSchool.smsId
-    fcm_devices = GCMDevice.objects.filter(user=data.parentUser)
+    fcm_devices = GCMDevice.objects.get(user=data.parentUser)
     fcm_devices.send_message(data.content, title=school_sms_id)

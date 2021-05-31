@@ -123,7 +123,7 @@ export class RestApiGateway {
     }
 
     public getDataWithPost(url: any, data?: any) {
-        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken(), });
+        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken(), 'HTTP_REFERER': location.href });
         const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
         absoluteURL.searchParams.append('method', 'GET');
         if (data) {
