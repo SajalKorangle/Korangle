@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Constants } from '../../classes/constants';
 import { environment } from '../../../environments/environment';
 
-import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { DataStorage } from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 

@@ -1,8 +1,3 @@
-from .business.send_sms import send_sms, send_different_sms
-from .business.sms_purchase import get_sms_purchase_list
-from .business.msg_club_delivery_report import handle_msg_club_delivery_report, get_msg_club_delivery_report_list
-from .business.send_sms import send_sms_old
-from .business.sms_count import get_sms_count
 from common.common_views_3 import CommonView, CommonListView
 from common.common_serializer_interface_3 import create_object
 from decorators import user_permission, user_permission_3
@@ -32,6 +27,7 @@ class SMSOldListView(APIView):
 
 
 ############## SMS Count ##############
+from .business.sms_count import get_sms_count
 
 
 class SMSCountView(APIView):
@@ -45,6 +41,7 @@ class SMSCountView(APIView):
 
 
 ############## Send SMS Old ##############
+from .business.send_sms import send_sms_old
 
 
 class SendSMSView(APIView):
@@ -56,6 +53,7 @@ class SendSMSView(APIView):
 
 
 ############## Msg Club Delivery Report ##############
+from .business.msg_club_delivery_report import handle_msg_club_delivery_report, get_msg_club_delivery_report_list
 
 
 class MsgClubDeliveryReportView(APIView):
@@ -75,6 +73,7 @@ def handle_msg_club_delivery_report_view(request):
 
 
 ############## SMS Purchase ##############
+from .business.sms_purchase import get_sms_purchase_list
 
 
 class SMSPurchaseView(APIView):
@@ -88,34 +87,34 @@ class SMSPurchaseView(APIView):
 
 
 ############## SMS ##############
+from .business.send_sms import send_sms, send_different_sms
 
 
 class SmsView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool= ['parentSchool__id']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        return_data = {'status': 'success'}
+        return_data = { 'status': 'success' }
         if data['mobileNumberList'] != '':
             return_data = send_sms(data)
             print(data)
             if return_data['status'] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'],
-                                                    activeStudentID=kwargs['activeStudentID'])
+                return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         else:
             data['requestId'] = 1
             return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         return return_data
 
 
-# Mobile number list and count still needed
+## Mobile number list and count still needed
 
 class SmsDifferentView(CommonView, APIView):
     Model = SMS
-    RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool= ['parentSchool__id']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
@@ -127,14 +126,14 @@ class SmsDifferentView(CommonView, APIView):
             return_data = send_different_sms(data)
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'],
-                                                    activeStudentID=kwargs['activeStudentID'])
+                return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         else:
             return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
             print(return_data)
         return return_data
 
 
+
 class SmsListView(CommonListView, APIView):
     Model = SMS
-    RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool= ['parentSchool__id']
