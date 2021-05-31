@@ -130,8 +130,8 @@ export class ViewDefaultersComponent implements OnInit {
     studentDataSource: any;
     parentDataSource: any;
 
-    columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
-    columnsToDisplayParent = ['select', 'parent', 'student', 'class.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
+    columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
+    columnsToDisplayParent = ['select', 'parent', 'student', 'class.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
 
     feesDueBySession = [];
 
@@ -185,13 +185,17 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     handleLoading(): void {
-        console.log(this.parentList);
+        this.sessionList.forEach((session)=>{
+            console.log(session.name);
+            
+        })
+        // console.log(this.parentList);
         this.studentList.forEach(student => {
 
             let filteredStudentFeeList = this.studentFeeList.filter(studentFee => {
                 return studentFee.parentStudent == student.id;
             });
-            console.log(filteredStudentFeeList);
+            // console.log(filteredStudentFeeList);
             let filteredStudentFeeSessions = [...new Set(filteredStudentFeeList.map(item => item.parentSession))];
 
 
@@ -211,7 +215,7 @@ export class ViewDefaultersComponent implements OnInit {
                 let filteredInstallmentList = [];
                 if (studentFee.parentSession == this.currentSession.id) {
                     filteredInstallmentList = this.installmentList.slice(0, this.installmentNumber + 1);
-                    console.log(filteredInstallmentList);
+                    // console.log(filteredInstallmentList);
                 } else {
                     filteredInstallmentList = this.installmentList;
                 }
@@ -471,8 +475,9 @@ export class ViewDefaultersComponent implements OnInit {
             if (orderNumber != 0) { return orderNumber; }
             return a.section.orderNumber - b.section.orderNumber;
         })
-        this.studentDataSource = this.studentList
-        this.parentDataSource = this.parentList
+        this.studentDataSource = this.studentList;
+        this.parentDataSource = this.parentList;
+        
     }
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
@@ -793,7 +798,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`],
+                'Fees Due (overall)', 'Fees Due (Session 2018-19)','Fees Due (Session 2019-20)','Fees Due (Session 2020-21)','Fees Due (Session 2021-22)',`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`],
 
         ];
 
@@ -808,11 +813,15 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
+            for(let i=1;i<this.sessionList.length;i++)
+            {
+              row.push(this.getSessionFeesDue(student.id,this.sessionList[i].name)+this.getSessionLateFeesDue(student.id,this.sessionList[i].name));
+            }
             row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
             row.push(student.discountThisSession);
             template.push(row);
-            console.log(student.feesDueTillMonth);
+            // console.log(student.feesDueTillMonth);
         });
         this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, { user: this.user, template: template });
     }
