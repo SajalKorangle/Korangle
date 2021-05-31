@@ -54,6 +54,10 @@ export class AppComponent implements OnInit {
         }
 
         this.versionCheckService.initVersionCheck(environment.versionCheckURL);
+
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.body.appendChild(tag);
     }
 
     showTutorial(url: any) {
