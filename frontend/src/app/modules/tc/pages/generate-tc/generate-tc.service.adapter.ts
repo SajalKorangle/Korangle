@@ -28,7 +28,7 @@ export class GenerateTCServiceAdapter {
 
         const request_next_session_student_section_data = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId + 1,
-            fields__korangle: ['parentSchool'],
+            fields__korangle: ['parentStudent'],
         };
 
         const request_tc_settings = {

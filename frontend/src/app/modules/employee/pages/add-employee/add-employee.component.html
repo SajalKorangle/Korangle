@@ -226,9 +226,13 @@
                             <div class="row" style="margin-bottom: 8px">
                                 <ng-container *ngFor="let task of module.taskList">
                                     <div class="col-md-3">
-                                        <mat-checkbox [(ngModel)]="task.selected">
+                                        <mat-checkbox [(ngModel)]="task.selected"
+                                            (ngModelChange)="task.selected==false?task.configJSON=null:null">
                                             {{ task.title }}
                                         </mat-checkbox>
+                                        <span *ngIf="hasInPageTaskPermission(module, task)"
+                                            (click)="openInPagePermissionDialog(module, task)"
+                                            style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
                                     </div>
                                 </ng-container>
                                 <br />

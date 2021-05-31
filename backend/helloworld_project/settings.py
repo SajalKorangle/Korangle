@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'report_card_app.report_card_mp_board_app',
     'errors_app',
     'tc_app',
+    'online_classes_app',
 
     'corsheaders',
 
@@ -231,3 +232,9 @@ else:
     except ImportError:
         print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
         exit()
+
+
+#ZOOM
+ZOOM_API_KEY = 'GY5heSVqQIWo8YGY_Patrg'
+ZOOM_SECRET_KEY = 'trQY4s4DkL9GrB20JrInNY7A6ZmTJZ7G6fO0'
+ZOOM_EMAIL_ID = 'korangleplus@gmail.com'

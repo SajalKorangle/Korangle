@@ -418,13 +418,10 @@ export class UpdateMarksServiceAdapter {
                     studentPresent = true;
                     if (item.marksObtained == 0.0) {
                         item.marksObtained = null;
-                        item.newMarksObtained = null;
                     } else {
                         item.marksObtained = Number(item.marksObtained.toString());
                         let mark = item.marksObtained;
-                        item['newMarksObtained'] = mark;
                     }
-
                     result.push(item);
                 }
             });
@@ -434,8 +431,8 @@ export class UpdateMarksServiceAdapter {
                     parentStudent: student.dbId,
                     parentSubject: this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.id,
                     parentExamination: this.vm.selectedExamination.id,
-                    marksObtained: 0.0,
-                    newMarksObtained: 0.0,
+                    marksObtained: null,
+                    absent: false,
                     testType: testType,
                 });
             }
@@ -450,71 +447,49 @@ export class UpdateMarksServiceAdapter {
         });
     }
 
-    // Update Student Test Details
-    updateStudentTestDetails(): void {
-        this.vm.isLoading = true;
-        let data = [];
-
-        this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach((item) => {
-            item.testDetails.forEach((itemTwo) => {
-                console.log(itemTwo.marksObtained);
-                console.log(itemTwo.newMarksObtained);
-                if (itemTwo.newMarksObtained == null) {
-                    itemTwo.newMarksObtained = 0.0;
-                }
-                itemTwo.newMarksObtained = parseFloat(itemTwo.newMarksObtained.toString()).toFixed(3);
-                if (itemTwo.newMarksObtained != itemTwo.marksObtained) data.push(itemTwo);
-            });
-        });
-
-        let toBeUpdated = [];
-        let toBeCreated = [];
-        data.forEach((item) => {
-            item.marksObtained = item.newMarksObtained;
-            if (item.id != null) toBeUpdated.push(item);
-            else toBeCreated.push(item);
-        });
-
+    // Create Student Test Details
+    createStudentTestDetails(studentTest: any, event: any): void {
+        const newStudentTest = this.copyObject(studentTest);
+        if (newStudentTest.marksObtained == null) {
+            newStudentTest.marksObtained = 0;
+        }
         Promise.all([
-            this.vm.examinationService.updateObjectList(this.vm.examinationService.student_test, toBeUpdated),
-            this.vm.examinationService.createObjectList(this.vm.examinationService.student_test, toBeCreated),
+            this.vm.examinationService.createObject(this.vm.examinationService.student_test, newStudentTest),
         ]).then(
             (value) => {
-                if (value[0] != null)
-                    value[0].forEach((test) => {
-                        console.log(test);
-                        this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach((student) => {
-                            student.testDetails.forEach((studentTest) => {
-                                if (test.id === studentTest.id) {
-                                    if (test.marksObtained == 0.0) {
-                                        studentTest.newMarksObtained = null;
-                                    } else {
-                                        studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(3);
-                                    }
-                                }
-                            });
-                        });
-                    });
-                if (value[1] != null)
-                    value[1].forEach((test) => {
-                        console.log(test);
-                        this.vm.selectedExamination.selectedClass.selectedSection.selectedSubject.studentList.forEach((student) => {
-                            student.testDetails.forEach((studentTest) => {
-                                if (test.id === studentTest.id) {
-                                    if (test.marksObtained == 0.0) {
-                                        studentTest.newMarksObtained = null;
-                                    } else {
-                                        studentTest.newMarksObtained = parseFloat(test.marksObtained.toString()).toFixed(3);
-                                    }
-                                }
-                            });
-                        });
-                    });
+                studentTest.id = value[0].id;
                 this.vm.isUpdated = false;
-                this.vm.isLoading = false;
+                if (event) {
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
+                }
             },
             (error) => {
-                this.vm.isLoading = false;
+                if (event) {
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
+                }
+            }
+        );
+    }
+
+    // Update Student Test Details
+    updateStudentTestDetails(studentTest: any, event: any): void {
+        const newStudentTest = this.copyObject(studentTest);
+        if (newStudentTest.marksObtained == null) {
+            newStudentTest.marksObtained = 0;
+        }
+        Promise.all([
+            this.vm.examinationService.updateObject(this.vm.examinationService.student_test, newStudentTest),
+        ]).then(
+            (value) => {
+                this.vm.isUpdated = false;
+                if (event) {
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
+                }
+            },
+            (error) => {
+                if (event) {
+                    this.vm.renderer.removeClass(event.target, 'updatingField');
+                }
             }
         );
     }

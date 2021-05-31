@@ -100,10 +100,6 @@ export class AddTutorialComponent implements OnInit {
         this.serviceAdapter = new AddTutorialServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        document.body.appendChild(tag);
     }
 
 

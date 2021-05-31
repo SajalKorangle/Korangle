@@ -81,7 +81,7 @@ class Student(models.Model):
     )
     newReligionField = models.CharField(max_length=20, choices=RELIGION, null=True)
 
-    fatherOccupation = models.TextField(null=True)
+    fatherOccupation = models.TextField(null=True,blank=True)
     address = models.TextField(null=True, blank=True)
     familySSMID = models.IntegerField(null=True)
     childSSMID = models.IntegerField(null=True)
