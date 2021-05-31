@@ -39,7 +39,8 @@ class RestrictedStudent(models.Model):
     parentStudent = models.ForeignKey(Student, unique=True, on_delete=models.CASCADE)
 
 
-class StudentAttendence(models.Model):
-    parentStudentSection = models.ForeignKey(StudentSection)
-    dateTime = models.DateTimeField()
+class StudentAttendance(models.Model):
+    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.CASCADE)
+    parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
+    dateTime = models.DateTimeField(auto_now_add=True, blank=True)
     duration = models.IntegerField()    # in seconds

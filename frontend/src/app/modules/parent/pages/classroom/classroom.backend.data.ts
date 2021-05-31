@@ -11,6 +11,8 @@ export class ClassroomBackendData {
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
 
+    studentAttendance: any;
+
     studentSection: any;
 
     constructor() { }

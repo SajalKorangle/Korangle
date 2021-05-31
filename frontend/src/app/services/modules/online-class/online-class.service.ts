@@ -10,6 +10,7 @@ export class OnlineClassService extends ServiceObject {
     public online_class = '/online-class';
     public account_info = '/account-info';
     public restricted_students = '/restricted-students';
+    public student_attendance = '/student-attendance';
     public zoom_meeting_signature = '/zoom-meeting-signature';
 
 }
