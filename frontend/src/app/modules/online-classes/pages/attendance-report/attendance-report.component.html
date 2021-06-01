@@ -1,5 +1,30 @@
-<div class="card-content">
-    Under Construction !!!
+<div class="card-content" *ngIf="!stateKeeper.isLoading">
+    <div>
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass">
+                <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
+                    {{ classs.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedDivision">
+                <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
+                    {{ division.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select placeholder="Select Subject" [(ngModel)]="userInput.selectedParsedClassSubject"
+                [disabled]="!(userInput.selectedClass && userInput.selectedDivision)">
+                <mat-option *ngFor="let classSubject of getFilteredClassSubjectList()" [value]="classSubject">
+                    {{ classSubject.subjectInstance.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
 </div>
 <ng-container *ngIf="stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
