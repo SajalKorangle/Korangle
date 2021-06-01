@@ -35,14 +35,32 @@ export class StudentPermissionServiceAdapter {
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.restricted_students, restricted_student_request), //3
             ]);
 
-        const request_student_data = {
-            id__in: this.vm.backendData.studentSectionList.map(ss => ss.parentStudent),
+        let request_student_data = {
+            id__in: [],
             fields__korangle: ['id', 'name', 'fathersName', 'scholarNumber', 'mobileNumber']
         };
 
-        this.vm.backendData.studentList = await this.vm.studentService.getObjectList(
-            this.vm.studentService.student, request_student_data
-        );
+        const student_data_service_list = [];
+        let student_id_chunk = [];
+        this.vm.backendData.studentSectionList.forEach(ss => {
+            student_id_chunk.push(ss.parentStudent);
+            if (student_id_chunk.join(',').length > 900) {
+                request_student_data = { ...request_student_data, id__in: [...student_id_chunk] };
+                student_data_service_list.push(this.vm.studentService.getObjectList(
+                    this.vm.studentService.student, request_student_data
+                ));
+                student_id_chunk = [];
+            }
+        });
+        if (student_id_chunk.join(',').length > 0) {
+            request_student_data = { ...request_student_data, id__in: [...student_id_chunk] };
+            student_data_service_list.push(this.vm.studentService.getObjectList(
+                this.vm.studentService.student, request_student_data
+            ));
+        }
+
+        this.vm.backendData.studentList = (await Promise.all(student_data_service_list))
+            .reduce((acc, studentChunk) => [...acc, ...studentChunk], []);
 
         this.vm.initilizeHTMLRenderedData();
         this.vm.isLoading = false;
@@ -70,7 +88,7 @@ export class StudentPermissionServiceAdapter {
             serviceList.push(this.vm.onlineClassService.deleteObjectList(this.vm.onlineClassService.restricted_students, deleteRequest));
         }
 
-        const [createdResponse, ] = await Promise.all(serviceList);
+        const [createdResponse,] = await Promise.all(serviceList);
 
         this.vm.backendData.restrictedStudentList = this.vm.backendData.restrictedStudentList.filter(restrictedStudent => {
             return allRestrictedStudentList.find(rs => rs.parentStudent == restrictedStudent.parentStudent);
