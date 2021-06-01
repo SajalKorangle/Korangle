@@ -293,12 +293,8 @@ export class AddTutorialServiceAdapter {
     populateStudentList(tutorial): any {
         this.vm.currentClassStudentList.forEach((student) => {
             let studentSection = this.vm.backendData.currentClassStudentSectionList.find(stuSec => stuSec.parentStudent == student.id);
-
-            student.tutorialChapter = tutorial.chapter;
-            student.tutorialTopic = tutorial.topic;
-            student.date = moment(new Date()).format('DD/MM/YYYY');
-            student.studentName = student.name;
-            student.schoolName = this.vm.user.activeSchool.printName;
+            student.tutorialDetails = tutorial;
+            student.school = this.vm.user.activeSchool;
             student.subject = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
             student.class = this.vm.backendData.classList.find(classs => classs.id == studentSection.parentClass).name + ', '
                 + this.vm.backendData.sectionList.find(sec => sec.id == studentSection.parentDivision).name;

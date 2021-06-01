@@ -10,7 +10,7 @@ from team_app.db_script.add_manage_sms_id_task import add_manage_sms_id_task
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0025_auto_20210420_1018'),
+        ('team_app', '0026_auto_20210423_0916'),
     ]
 
     operations = [

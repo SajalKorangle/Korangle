@@ -386,4 +386,12 @@ export class UpdateService {
             return Math.ceil(message.length / 160);
         }
     }
+
+    getMappedContent(eventVariableList: any, personData: any) {
+        let temp = {};
+        eventVariableList.forEach(eventVariable => {
+            temp[eventVariable.variable] = eventVariable.getValueFunc(personData);
+        });
+        return temp;
+    }
 }
