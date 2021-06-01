@@ -60,6 +60,6 @@ class StudentAttendanceView(CommonView):
     RelationsToStudent = ['parentStudentSection__parentStudent__id']
 
 class StudenAttendanceListView(CommonListView):
-    Models = StudentAttendance
+    Model = StudentAttendance
     RelationsToSchool =['parentClassSubject__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudentSection__parentStudent__id']

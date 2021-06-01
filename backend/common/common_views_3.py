@@ -88,7 +88,7 @@ class CommonBaseView(APIView):
             query_filters[self.RelationsToStudent[0]+'__in'] = activeStudentID     # takes the first relation to student only(should be the closest)
         elif (len(self.RelationsToSchool)>0):
             query_filters[self.RelationsToSchool[0]] = activeSchoolID    # takes the first relation to school only(should be the the closest)
-
+        print(query_filters)
         return self.Model.objects.filter(**query_filters)
 
 
