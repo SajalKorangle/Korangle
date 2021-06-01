@@ -1,11 +1,25 @@
-<h2 mat-dialog-title style="display: flex; flex-direction: row; align-items: center;">
+<h2 *ngIf="!isMobile() else MobileHeader" mat-dialog-title
+    style="display: flex; flex-direction: row; align-items: center;">
     <span>In Page Permission:</span>
     <mat-icon style="margin-left: 24px; margin-right: 8px;">{{data.module.icon}}</mat-icon>
     <span>{{data.module.title}}</span>
     <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
 </h2>
+<ng-template #MobileHeader>
+    <h4 mat-dialog-title>
+        <span>In Page Permission:</span><br />
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <mat-icon style="margin-right: 8px;">{{data.module.icon}}</mat-icon>
+            <span>{{data.module.title}}</span>
+            <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
+        </div>
+    </h4>
+</ng-template>
 <mat-dialog-content style="height: 62vh; width: 75vw">
-    <h3>Employee: {{data.employee.name}}</h3>
+    <h3 *ngIf="!isMobile() else MobileEmployee">Employee: {{data.employee.name}}</h3>
+    <ng-template #MobileEmployee>
+        <h5>Employee: {{data.employee.name}}</h5>
+    </ng-template>
     <ng-container *ngFor="let groupName of groupList">
         <div style="display: flex; flex-direction: row; align-items: center;" *ngIf="groupName else HR">
             <hr style="width: 20px; margin-right: 4px; background-color: black;" />

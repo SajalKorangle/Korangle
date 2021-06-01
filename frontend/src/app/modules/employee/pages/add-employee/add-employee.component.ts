@@ -8,7 +8,7 @@ import { EmployeeService } from '../../../../services/modules/employee/employee.
 import { BankService } from '../../../../services/bank.service';
 
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
-import { TASK_PERMISSION_LIST } from '@classes/task-settings';
+import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
 
 @Component({
     selector: 'add-employee',
@@ -33,7 +33,7 @@ export class AddEmployeeComponent implements OnInit {
         private employeeService: EmployeeService,
         private bankService: BankService,
         private teamService: TeamService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

@@ -118,6 +118,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/accounts/accounts.module#AccountsModule',
     },
     {
+        path: 'online_classes',
+        loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
@@ -150,4 +154,4 @@ const routes: Routes = [
     exports: [CommonModule, RouterModule],
     providers: [CustomPreload],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -1,5 +1,6 @@
 type InputTypeInterface = "number" | "select";
 type AllowedValueInterface = Array<[any, string]>;   // [any: value, string: displayName]
+export type valueType = number | string;
 
 interface Options {
     groupName?: string;
@@ -37,3 +38,6 @@ export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All
 // Fees -> Total Collection
 const feesTotalCollection = new TaskPermissionStructure('fees', 'total_collection');
 feesTotalCollection.inPagePermissionMappedByKey['numberOfDays'] = new InPagePermission('No. of Days', 'number');
+
+// Online Classes
+import '@modules/online-classes/pages/add-account/add-account.permissions';
