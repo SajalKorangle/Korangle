@@ -887,7 +887,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
-                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`],
+                'Fees Due (overall)','Fees Due (Session 2018-19)','Fees Due (Session 2019-20)','Fees Due (Session 2020-21)','Fees Due (Session 2021-22)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`],
 
         ];
 
@@ -903,6 +903,10 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.address);
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
+            for(let i=1;i<this.sessionList.length;i++)
+            {
+              row.push(this.getSessionFeesDue(student.id,this.sessionList[i].name)+this.getSessionLateFeesDue(student.id,this.sessionList[i].name));
+            }
             row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
             row.push(student.discountThisSession);

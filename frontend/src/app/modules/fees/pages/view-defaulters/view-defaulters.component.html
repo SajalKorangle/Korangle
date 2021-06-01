@@ -304,6 +304,11 @@
                         <th>Mobile No. (2)</th>
                         <th>Fees Due<br />(Till Month)</th>
                         <th>Fees Due<br />(Overall)</th>
+                        <!-- <th *ngFor="let session of sessionList;let sessionIndex=index">
+                            <div *ngIf="sessionIndex!=0">
+                                Fees Due<br />({{session.name}})
+                            </div>
+                        </th> -->
                         <th>Total Fees<br />({{getCurrentSessionName()}})</th>
                         <th>Fees Paid<br />({{getCurrentSessionName()}})</th>
                         <th>Discount<br />({{getCurrentSessionName()}})</th>
@@ -353,6 +358,11 @@
                             </ng-template>
                             <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
                             <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
+                            <!-- <td *ngFor="let session of sessionList;let sessionIndex=index">
+                                <div *ngIf="sessionIndex!=0">
+                                    Hello
+                                </div>
+                            </td> -->
                             <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                             <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
                             <td>{{getParentDiscount(parent) | indianCurrency}}</td>
