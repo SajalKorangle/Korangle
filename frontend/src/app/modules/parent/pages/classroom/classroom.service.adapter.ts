@@ -76,7 +76,6 @@ export class ClassroomServiceAdapter {
         this.vm.populateMeetingParametersAndStart(onlineClass, response.signature, response.apiKey);
 
         this.vm.isLoading = false;
-        this.markAttendance();
     }
 
     async markAttendance() {
@@ -90,9 +89,9 @@ export class ClassroomServiceAdapter {
         };
         this.vm.backendData.studentAttendance = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.student_attendance, student_attendance_request);
         if (this.vm.backendData.studentAttendance) {
-            const currentTime = new Date();
-            const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);
-            this.vm.studentAttendanceDownTime = (currentTime.getTime() - startTime.getTime()) / 1000 - this.vm.backendData.studentAttendance.duration;
+            // const currentTime = new Date();
+            // const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);
+            // this.vm.studentAttendanceDownTime = (currentTime.getTime() - startTime.getTime()) / 1000 - this.vm.backendData.studentAttendance.duration;
             return;
         }
         const studentAttendance = {
@@ -103,12 +102,12 @@ export class ClassroomServiceAdapter {
         this.vm.backendData.studentAttendance = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance);
     }
 
-    updateAttendance = async () => {
-        const currentTime = new Date();
-        const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);
-        const duration = ((currentTime.getTime() - startTime.getTime()) / (1000)) - this.vm.studentAttendanceDownTime; // in seconds
-        this.vm.backendData.studentAttendance.duration = Math.ceil(duration);
-        await this.vm.onlineClassService.updateObject(this.vm.onlineClassService.student_attendance, this.vm.backendData.studentAttendance);
-    };
+    // updateAttendance = async () => {
+    //     const currentTime = new Date();
+    //     const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);
+    //     const duration = ((currentTime.getTime() - startTime.getTime()) / (1000)) - this.vm.studentAttendanceDownTime; // in seconds
+    //     this.vm.backendData.studentAttendance.duration = Math.ceil(duration);
+    //     await this.vm.onlineClassService.updateObject(this.vm.onlineClassService.student_attendance, this.vm.backendData.studentAttendance);
+    // };
 
 }

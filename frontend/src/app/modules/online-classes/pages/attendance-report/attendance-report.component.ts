@@ -131,7 +131,7 @@ export class AttendanceReportComponent implements OnInit {
 
     getDaysDiff() {
         if (this.userInput.startDate && this.userInput.endDate) {
-            return (this.userInput.endDate.getTime() - this.userInput.startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
+            return Math.floor((this.userInput.endDate.getTime() - this.userInput.startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
         }
         return '-';
     }

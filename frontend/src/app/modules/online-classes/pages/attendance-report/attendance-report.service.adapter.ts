@@ -35,6 +35,7 @@ export class AttendanceReportServiceAdapter {
 
     async loadAttendance() {
         this.vm.stateKeeper.isLoading = true;
+        this.vm.userInput.endDate.setHours(23, 59, 59);
         const student_attendance_request = {
             parentStudentSection__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudentSection__parentClass: this.vm.userInput.selectedClass.id,

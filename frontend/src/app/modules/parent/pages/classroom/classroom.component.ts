@@ -42,9 +42,9 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     meetingParameters: any;
 
-    attendanceUpdateDuration: number = 180; // in seconds
-    attendanceMarkerInterval: any;
-    studentAttendanceDownTime: number = 0;  // in seconds
+    // attendanceUpdateDuration: number = 180; // in seconds
+    // attendanceMarkerInterval: any;
+    // studentAttendanceDownTime: number = 0;  // in seconds
 
     restrictedStudent = null;
     isActiveSession: boolean = false;
@@ -76,7 +76,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        clearInterval(this.attendanceMarkerInterval);
+        // clearInterval(this.attendanceMarkerInterval);
     }
 
     getObjetKeys(obj: { [key: string]: any; }): Array<string> {
@@ -91,7 +91,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
-        clearInterval(this.attendanceMarkerInterval);
+        // clearInterval(this.attendanceMarkerInterval);
         this.meetingParameters = {
             signature,
             api_key: apiKey,
@@ -113,7 +113,8 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
             }
-            this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
+            // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
+            this.serviceAdapter.markAttendance();
         });
     }
 
