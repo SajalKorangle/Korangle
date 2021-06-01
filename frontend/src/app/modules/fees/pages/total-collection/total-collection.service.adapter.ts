@@ -26,8 +26,8 @@ export class TotalCollectionServiceAdapter {
         let employee_permission_data = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentTask: 65
-        }
-        
+        };
+
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list), // 1
@@ -46,10 +46,10 @@ export class TotalCollectionServiceAdapter {
                 this.vm.sessionList = value[5];
                 if (value[6].configJSON['numberOfDays'] != null) {
                     let numberOfDays = value[6].configJSON['numberOfDays'];
-                    if (!isNaN(numberOfDays) && numberOfDays>=1) {
+                    if (!isNaN(numberOfDays) && numberOfDays >= 1) {
                         const currentDate = new Date();
                         this.vm.minDate = new Date(currentDate);
-                        this.vm.minDate.setDate(currentDate.getDate() - Math.floor(numberOfDays))
+                        this.vm.minDate.setDate(currentDate.getDate() - Math.floor(numberOfDays));
                     }
                 }
 
