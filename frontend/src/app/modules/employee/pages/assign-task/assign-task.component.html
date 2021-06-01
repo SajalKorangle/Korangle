@@ -74,7 +74,7 @@
                                         </mat-checkbox>
                                         <span *ngIf="hasInPageTaskPermission(module, task)"
                                             (click)="openInPagePermissionDialog(module, task, selectedEmployee)"
-                                            style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
+                                            style="cursor: pointer; color: blue;">&nbsp;(<u>more</u>)</span>
                                         <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom">
                                         </div>
                                     </div>
@@ -99,8 +99,8 @@
                         {{ employee.name }}
                     </mat-checkbox>
                     <span *ngIf="hasInPageTaskPermission(getModuleById(selectedTask.parentModule), selectedTask)"
-                        (click)="openInPagePermissionDialog(getModuleById(selectedTask.parentModule), selectedTask, employee)"
-                        style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
+                          (click)="openInPagePermissionDialog(getModuleById(selectedTask.parentModule), selectedTask, employee)"
+                          style="cursor: pointer; color: blue;">&nbsp;(<u>more</u>)</span>
                     <div *ngIf="isPermissionLoading(employee, selectedTask)" class="loader-custom"></div>
                     <br />
                 </ng-container>

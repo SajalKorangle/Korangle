@@ -109,13 +109,8 @@ export class AssignTaskComponent implements OnInit {
     }
 
     hasInPageTaskPermission(module, task): boolean {
-        /*console.log(module.path);
-        console.log(task.path);*/
-        if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path)) {
-            console.log(module.path);
-            console.log(task.path);
+        if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path))
             return true;
-        }
         return false;
     }
 }
