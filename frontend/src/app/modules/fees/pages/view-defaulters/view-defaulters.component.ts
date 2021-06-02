@@ -127,7 +127,7 @@ export class ViewDefaultersComponent implements OnInit {
     studentDataSource: any;
     parentDataSource: any;
 
-    columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
+    columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`]//[`Session 2017-18`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
     columnsToDisplayParent = ['select', 'parent', 'student', 'class.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
 
     feesDueBySession = [];
@@ -470,6 +470,11 @@ export class ViewDefaultersComponent implements OnInit {
         this.studentDataSource = this.studentList;
         this.parentDataSource = this.parentList;
         this.sessionListWithNoDues=this.getSessionsWithNoDue();
+        this.sessionListWithNoDues.forEach(session=>{
+            this.columnsToDisplay.push(session.name);
+        });
+        let tempArr=[`totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
+        this.columnsToDisplay.push(...tempArr);
     }
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
@@ -755,7 +760,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getSessionsWithNoDue():any{
         return this.sessionList.filter(session=>{
-            return this.getFilteredStudentListFeesDueBySession(session)===0 ;
+            return this.getFilteredStudentListFeesDueBySession(session)>0 ;
         });
     }
     getFilteredStudentListTotalFeesDemand(): any {
