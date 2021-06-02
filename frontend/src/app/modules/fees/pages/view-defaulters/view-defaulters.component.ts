@@ -17,7 +17,6 @@ import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { StudentFee } from '@services/modules/fees/models/student-fee';
 import {FeeType} from '@services/modules/fees/models/fee-type';
-import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { SubDiscount } from '../../../../services/modules/fees/models/sub-discount';
 import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt';
@@ -41,11 +40,8 @@ import { MODE_OF_PAYMENT_LIST} from '../../classes/constants';
 
 export class ViewDefaultersComponent implements OnInit {
 
-    myStudentFeeList:StudentFee[];
+    // myStudentFeeList:StudentFee[];
     myFeeTypeList:FeeType[];
-    mySchoolFeeRuleList: SchoolFeeRule[];
-    mySubFeeReceiptList:SubFeeReceipt[];
-    mySubDiscountList:SubDiscount[];
     myFeeReceiptList: FeeReceipt[];
     myDiscountList: Discount[];
     newSubFeeReceiptList = [];
@@ -754,6 +750,13 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
+    getFilteredStudentListFeesDueBySession(session:any):any{
+        let amount=0;
+        this.getFilteredStudentList().forEach(student=>{
+            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
+        });
+        return amount;
+    }
     getFilteredStudentListTotalFeesDemand(): any {
         return this.getFilteredStudentList().reduce((total, student) => {
             return total + student['totalFeesThisSession'];
@@ -1086,7 +1089,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     getStudentFeeByStudentId(id:any):any{
-        return this.myStudentFeeList.filter((studentFee)=>{
+        return this.studentFeeList.filter((studentFee)=>{
             return studentFee.parentStudent==id 
         });
     }

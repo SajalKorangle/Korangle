@@ -15,23 +15,18 @@ export class ViewDefaultersServiceAdapter {
     initializeData(): void {
         
         Promise.all
-        ([  this.vm.feeService.getList(this.vm.feeService.student_fees, {}),
+        ([  
+            // this.vm.feeService.getList(this.vm.feeService.student_fees, {}),
             this.vm.feeService.getList(this.vm.feeService.fee_type,{}),
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules,{}),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts,{}),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts,{}),
             this.vm.feeService.getList(this.vm.feeService.fee_receipts,{}),
             this.vm.feeService.getList(this.vm.feeService.discounts,{}),
 
         ])
         .then((val)=>{
-            this.vm.myStudentFeeList=val[0];
-            this.vm.myFeeTypeList=val[1];
-            this.vm.mySchoolFeeRuleList=val[2];
-            this.vm.mySubFeeReceiptList=val[3];
-            this.vm.mySubDiscountList=val[4];
-            this.vm.myFeeReceiptList=val[5];
-            this.vm.myDiscountList=val[6];
+            // this.vm.myStudentFeeList=val[0];
+            this.vm.myFeeTypeList=val[0];
+            this.vm.myFeeReceiptList=val[1];
+            this.vm.myDiscountList=val[2];
         });
         this.vm.isLoading = true;
 
@@ -147,6 +142,7 @@ export class ViewDefaultersServiceAdapter {
                         while (loopVariable < iterationCount) {
                             this.vm.studentList = this.vm.studentList.concat(remaining_result[loopVariable * 4]);
                             this.vm.studentFeeList = this.vm.studentFeeList.concat(remaining_result[loopVariable * 4 + 1]);
+                            // this.vm.myStudentFeeList=this.vm.studentFeeList;
                             this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(remaining_result[loopVariable * 4 + 2]);
                             this.vm.subDiscountList = this.vm.subDiscountList.concat(remaining_result[loopVariable * 4 + 3]);
                             loopVariable = loopVariable + 1;
