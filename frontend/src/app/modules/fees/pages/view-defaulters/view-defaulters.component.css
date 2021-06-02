@@ -16,6 +16,37 @@
   width: 100% !important;
   margin: 0 auto !important;
 }
+.expanded-header{
+  width:200px;
+  height:50px;
+}
+.expanded-session{
+  width:200px;
+  height:40px;
+}
+.expanded-session-name{
+  width:200px;
+  height:40px;
+  padding-left: 15px;
+}
+.expanded-Feetype{
+  width:200px;
+  height:40px;
+}
+.expanded-Feetype-name{
+  width:200px;
+  height:40px;
+  padding-left: 30px;
+}
+.expanded-installment{
+  width:200px;
+  height:40px;
+}
+.expanded-installment-name{
+  width:200px;
+  height:40px;
+  padding-left: 50px;
+}
 
 .main-content {
   height: 95%;
@@ -118,7 +149,7 @@ tr.example-element-row:not(.example-expanded-row):hover {
 
 tr.example-element-row:not(.example-expanded-row):active {
   background: #efefef;
-}
+} 
 
 .example-element-row td {
   border-bottom-width: 0;

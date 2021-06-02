@@ -686,6 +686,13 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
+    getParentFeesDueBySession(parent:any,session:any){
+        let amount=0;
+        parent.studentList.forEach(student => {
+            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
+        });
+        return amount;
+    }
     getFilteredParentFeesDueOverall(): any {
         return this.getFilteredParentList().reduce((total, parent) => {
             return total + parent.studentList.reduce((total, student) => {
@@ -833,7 +840,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [
 
             ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
+                'Fees Due (overall)','Fees Due (Session 2018-19)','Fees Due (Session 2019-20)','Fees Due (Session 2020-21)','Fees Due (Session 2021-22)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
 
         ];
 
@@ -855,6 +862,9 @@ export class ViewDefaultersComponent implements OnInit {
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
+            for(let i=1;i<this.sessionList.length;i++){
+                row.push(this.getParentFeesDueBySession(parent,this.sessionList[i]));
+            }
             row.push(this.getParentTotalFees(parent));
             row.push(this.getParentFeesPaid(parent));
             row.push(this.getParentDiscount(parent));
@@ -870,6 +880,9 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
+                    for(let i=1;i<this.sessionList.length;i++){
+                        newRow.push(this.getSessionFeesDue(student.id,this.sessionList[i].name)+this.getSessionLateFeesDue(student.id,this.sessionList[i].name));
+                    }
                     newRow.push(student.totalFeesThisSession);
                     newRow.push(student.feesPaidThisSession);
                     newRow.push(student.discountThisSession);
