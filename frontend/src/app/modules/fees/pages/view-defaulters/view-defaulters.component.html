@@ -304,10 +304,8 @@
                         <th>Mobile No. (2)</th>
                         <th>Fees Due<br />(Till Month)</th>
                         <th>Fees Due<br />(Overall)</th>
-                        <th *ngFor="let session of sessionList;let sessionIndex=index">
-                            <div *ngIf="sessionIndex!=0">
+                        <th *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
                                 Fees Due<br />({{session.name}})
-                            </div>
                         </th>
                         <th>Total Fees<br />({{getCurrentSessionName()}})</th>
                         <th>Fees Paid<br />({{getCurrentSessionName()}})</th>
@@ -358,10 +356,8 @@
                             </ng-template>
                             <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
                             <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
-                            <td *ngFor="let session of sessionList;let sessionIndex=index">
-                                <div *ngIf="sessionIndex!=0">
+                            <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
                                     {{getParentFeesDueBySession(parent,session)}}
-                                </div>
                             </td>
                             <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                             <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
@@ -386,10 +382,8 @@
                                     </td>
                                     <td>{{student.feesDueTillMonth | indianCurrency}}</td>
                                     <td>{{student.feesDueOverall | indianCurrency}}</td>
-                                    <td *ngFor="let session of sessionList;let sessionIndex=index">
-                                        <div *ngIf="sessionIndex!=0">
+                                    <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
                                             {{getSessionFeesDue(student.id,session.name)+getSessionLateFeesDue(student.id,session.name)}}
-                                        </div>
                                     </td>
                                     <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                                     <td>{{student.feesPaidThisSession | indianCurrency}}</td>

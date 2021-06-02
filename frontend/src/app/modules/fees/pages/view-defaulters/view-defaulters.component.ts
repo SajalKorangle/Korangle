@@ -50,6 +50,7 @@ export class ViewDefaultersComponent implements OnInit {
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
     studentFeeDetailsVisibleList = [];
     lateFeeVisible = true;
+    sessionListWithNoDues=[];
 
 
 
@@ -181,11 +182,6 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     handleLoading(): void {
-        this.sessionList.forEach((session)=>{
-            console.log(session.name);
-            
-        })
-        // console.log(this.parentList);
         this.studentList.forEach(student => {
 
             let filteredStudentFeeList = this.studentFeeList.filter(studentFee => {
@@ -473,7 +469,7 @@ export class ViewDefaultersComponent implements OnInit {
         })
         this.studentDataSource = this.studentList;
         this.parentDataSource = this.parentList;
-        
+        this.sessionListWithNoDues=this.getSessionsWithNoDue();
     }
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
@@ -756,6 +752,11 @@ export class ViewDefaultersComponent implements OnInit {
             amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
         });
         return amount;
+    }
+    getSessionsWithNoDue():any{
+        return this.sessionList.filter(session=>{
+            return this.getFilteredStudentListFeesDueBySession(session)===0 ;
+        });
     }
     getFilteredStudentListTotalFeesDemand(): any {
         return this.getFilteredStudentList().reduce((total, student) => {
