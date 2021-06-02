@@ -785,9 +785,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printStudentFeesReport(): void {
-        let tempArray=['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        let tempArray=['S No.', 'Name', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
         this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push(session.name);
+            tempArray.push("Fees Due ("+session.name+")");
         });
         tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`);
         let template: any;
@@ -803,10 +803,9 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
-            for(let i=1;i<this.sessionList.length;i++)
-            {
-              row.push(this.getSessionFeesDue(student.id,this.sessionList[i].name)+this.getSessionLateFeesDue(student.id,this.sessionList[i].name));
-            }
+            this.sessionListWithNoDues.forEach(session=>{
+                row.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+            })
             row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
             row.push(student.discountThisSession);
@@ -876,9 +875,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadStudentFeesReport(): void {
-        let tempArray=['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        let tempArray=['S No.', 'Name', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)','Address', 'Fees Due (till month)','Fees Due (overall)'];
         this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push(session.name);
+            tempArray.push("Fees Due ("+session.name+")");
         });
         tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`);
         let template: any;
@@ -910,9 +909,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadParentFeesReport(): void {
-        let tempArray=['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        let tempArray=['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)','Address', 'Fees Due (till month)','Fees Due (overall)'];
         this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push(session.name);
+            tempArray.push("Fees Due ("+session.name+")");
         });
         tempArray.push( `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
 
