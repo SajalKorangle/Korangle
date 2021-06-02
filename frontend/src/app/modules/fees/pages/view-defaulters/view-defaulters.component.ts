@@ -40,14 +40,11 @@ import { MODE_OF_PAYMENT_LIST} from '../../classes/constants';
 
 export class ViewDefaultersComponent implements OnInit {
 
-    // myStudentFeeList:StudentFee[];
     myFeeTypeList:FeeType[];
     myFeeReceiptList: FeeReceipt[];
     myDiscountList: Discount[];
     newSubFeeReceiptList = [];
     newFeeReceiptList=[];
-    newRemark = null;
-    newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
     studentFeeDetailsVisibleList = [];
     lateFeeVisible = true;
     sessionListWithNoDues=[];
@@ -128,7 +125,6 @@ export class ViewDefaultersComponent implements OnInit {
     parentDataSource: any;
 
     columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`]//[`Session 2017-18`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
-    columnsToDisplayParent = ['select', 'parent', 'student', 'class.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
 
     feesDueBySession = [];
 
@@ -187,7 +183,6 @@ export class ViewDefaultersComponent implements OnInit {
             let filteredStudentFeeList = this.studentFeeList.filter(studentFee => {
                 return studentFee.parentStudent == student.id;
             });
-            // console.log(filteredStudentFeeList);
             let filteredStudentFeeSessions = [...new Set(filteredStudentFeeList.map(item => item.parentSession))];
 
 
@@ -207,7 +202,6 @@ export class ViewDefaultersComponent implements OnInit {
                 let filteredInstallmentList = [];
                 if (studentFee.parentSession == this.currentSession.id) {
                     filteredInstallmentList = this.installmentList.slice(0, this.installmentNumber + 1);
-                    // console.log(filteredInstallmentList);
                 } else {
                     filteredInstallmentList = this.installmentList;
                 }
@@ -683,13 +677,6 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
-    getParentFeesDueBySession(parent:any,session:any){
-        let amount=0;
-        parent.studentList.forEach(student => {
-            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
-        });
-        return amount;
-    }
     getFilteredParentFeesDueOverall(): any {
         return this.getFilteredParentList().reduce((total, parent) => {
             return total + parent.studentList.reduce((total, student) => {
@@ -751,18 +738,6 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
-    getFilteredStudentListFeesDueBySession(session:any):any{
-        let amount=0;
-        this.getFilteredStudentList().forEach(student=>{
-            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
-        });
-        return amount;
-    }
-    getSessionsWithNoDue():any{
-        return this.sessionList.filter(session=>{
-            return this.getFilteredStudentListFeesDueBySession(session)>0 ;
-        });
-    }
     getFilteredStudentListTotalFeesDemand(): any {
         return this.getFilteredStudentList().reduce((total, student) => {
             return total + student['totalFeesThisSession'];
@@ -810,14 +785,13 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printStudentFeesReport(): void {
+        let tempArray=['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session=>{
+            tempArray.push(session.name);
+        });
+        tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`);
         let template: any;
-        template = [
-
-            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)', 'Fees Due (Session 2018-19)','Fees Due (Session 2019-20)','Fees Due (Session 2020-21)','Fees Due (Session 2021-22)',`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`],
-
-        ];
-
+        template = [tempArray];
         let count = 0;
         this.getFilteredStudentList().forEach(student => {
             let row = [];
@@ -843,16 +817,14 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printParentFeesReport(): void {
-
+        let tempArray=['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session=>{
+            tempArray.push("Fees Due ("+session.name+")");
+        });
+        tempArray.push( `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
         let template: any;
 
-        template = [
-
-            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)',
-                'Fees Due (overall)','Fees Due (Session 2018-19)','Fees Due (Session 2019-20)','Fees Due (Session 2020-21)','Fees Due (Session 2021-22)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
-
-        ];
-
+        template = [tempArray];
         let count = 0;
         this.getFilteredParentList().forEach(parent => {
             let row = [];
@@ -871,9 +843,9 @@ export class ViewDefaultersComponent implements OnInit {
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
-            for(let i=1;i<this.sessionList.length;i++){
-                row.push(this.getParentFeesDueBySession(parent,this.sessionList[i]));
-            }
+            this.sessionListWithNoDues.forEach(session=>{
+                row.push(this.getParentFeesDueBySession(parent,session));
+            });
             row.push(this.getParentTotalFees(parent));
             row.push(this.getParentFeesPaid(parent));
             row.push(this.getParentDiscount(parent));
@@ -889,9 +861,9 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
-                    for(let i=1;i<this.sessionList.length;i++){
-                        newRow.push(this.getSessionFeesDue(student.id,this.sessionList[i].name)+this.getSessionLateFeesDue(student.id,this.sessionList[i].name));
-                    }
+                    this.sessionListWithNoDues.forEach(session => {
+                        newRow.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+                    });
                     newRow.push(student.totalFeesThisSession);
                     newRow.push(student.feesPaidThisSession);
                     newRow.push(student.discountThisSession);
@@ -904,14 +876,13 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadStudentFeesReport(): void {
-
+        let tempArray=['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session=>{
+            tempArray.push(session.name);
+        });
+        tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`);
         let template: any;
-        template = [
-
-            ['S No.', 'Student', 'Parent', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
-                'Fees Due (overall)','Fees Due (Session 2018-19)','Fees Due (Session 2019-20)','Fees Due (Session 2020-21)','Fees Due (Session 2021-22)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`],
-
-        ];
+        template = [tempArray];
 
         let count = 0;
         this.getFilteredStudentList().forEach(student => {
@@ -925,10 +896,10 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.address);
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
-            for(let i=1;i<this.sessionList.length;i++)
+            this.sessionListWithNoDues.forEach(session=>
             {
-              row.push(this.getSessionFeesDue(student.id,this.sessionList[i].name)+this.getSessionLateFeesDue(student.id,this.sessionList[i].name));
-            }
+              row.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+            });
             row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
             row.push(student.discountThisSession);
@@ -939,15 +910,15 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadParentFeesReport(): void {
+        let tempArray=['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session=>{
+            tempArray.push(session.name);
+        });
+        tempArray.push( `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
 
         let template: any;
 
-        template = [
-
-            ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)',
-                'Fees Due (overall)', `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`],
-
-        ];
+        template = [tempArray];
 
         let count = 0;
         this.getFilteredParentList().forEach(parent => {
@@ -969,6 +940,9 @@ export class ViewDefaultersComponent implements OnInit {
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
+            this.sessionListWithNoDues.forEach(session=>{
+                row.push(this.getParentFeesDueBySession(parent,session));
+            });
             row.push(this.getParentTotalFees(parent));
             row.push(this.getParentFeesPaid(parent));
             row.push(this.getParentDiscount(parent));
@@ -985,6 +959,9 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(student.address);
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
+                    this.sessionListWithNoDues.forEach(session => {
+                        newRow.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+                    });
                     newRow.push(student.totalFeesThisSession);
                     newRow.push(student.feesPaidThisSession);
                     newRow.push(student.discountThisSession);
@@ -1093,7 +1070,25 @@ export class ViewDefaultersComponent implements OnInit {
             }) != undefined
         );
     }
-
+    getParentFeesDueBySession(parent:any,session:any){
+        let amount=0;
+        parent.studentList.forEach(student => {
+            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
+        });
+        return amount;
+    }
+    getFilteredStudentListFeesDueBySession(session:any):any{
+        let amount=0;
+        this.getFilteredStudentList().forEach(student=>{
+            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
+        });
+        return amount;
+    }
+    getSessionsWithNoDue():any{
+        return this.sessionList.filter(session=>{
+            return this.getFilteredStudentListFeesDueBySession(session)===0 ;
+        });
+    }
     getStudentFeeByStudentId(id:any):any{
         return this.studentFeeList.filter((studentFee)=>{
             return studentFee.parentStudent==id 
@@ -1310,34 +1305,5 @@ export class ViewDefaultersComponent implements OnInit {
             );
         });
         return filteredSubDiscountList;
-    }
-    createNewSubFeeReceipt(studentFee: any, installment: any, payment: any): void {
-        let subFeeReceipt = new SubFeeReceipt();
-        subFeeReceipt.parentStudentFee = studentFee.id;
-        subFeeReceipt.parentFeeType = studentFee.parentFeeType;
-        subFeeReceipt.parentSession = studentFee.parentSession;
-        subFeeReceipt.isAnnually = studentFee.isAnnually;
-        subFeeReceipt[installment] = payment;
-        this.newSubFeeReceiptList.push(subFeeReceipt);
-
-        this.checkAndCreateNewFeeReceipt(studentFee);
-    }
-    checkAndCreateNewFeeReceipt(studentFee: any): void {
-        if (
-            this.newFeeReceiptList.filter((feeReceipt) => {
-                return feeReceipt.parentStudent == studentFee.parentStudent && feeReceipt.parentSession == studentFee.parentSession;
-            }).length == 0
-        ) {
-            let feeReceipt = new FeeReceipt();
-            feeReceipt.remark = this.newRemark;
-            feeReceipt.cancelled = false;
-            feeReceipt.parentStudent = studentFee.parentStudent;
-            feeReceipt.parentSession = studentFee.parentSession;
-            feeReceipt.parentSchool = this.user.activeSchool.dbId;
-            feeReceipt.parentEmployee = this.user.activeSchool.employeeId;
-            feeReceipt.modeOfPayment = this.newModeOfPayment;
-
-            this.newFeeReceiptList.push(feeReceipt);
-        }
     }
 }
