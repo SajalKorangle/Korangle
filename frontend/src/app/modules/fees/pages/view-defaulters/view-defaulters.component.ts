@@ -1085,7 +1085,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getSessionsWithNoDue():any{
         return this.sessionList.filter(session=>{
-            return this.getFilteredStudentListFeesDueBySession(session)===0 ;
+            return this.getFilteredStudentListFeesDueBySession(session)>0 ;
         });
     }
     getStudentFeeByStudentId(id:any):any{
