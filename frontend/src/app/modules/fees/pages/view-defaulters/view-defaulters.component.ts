@@ -41,10 +41,6 @@ import { MODE_OF_PAYMENT_LIST} from '../../classes/constants';
 export class ViewDefaultersComponent implements OnInit {
 
     myFeeTypeList:FeeType[];
-    myFeeReceiptList: FeeReceipt[];
-    myDiscountList: Discount[];
-    newSubFeeReceiptList = [];
-    newFeeReceiptList=[];
     studentFeeDetailsVisibleList = [];
     lateFeeVisible = true;
     sessionListWithNoDues=[];
@@ -1090,7 +1086,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getStudentFeeByStudentId(id:any):any{
         return this.studentFeeList.filter((studentFee)=>{
-            return studentFee.parentStudent==id 
+            return studentFee.parentStudent==id && this.getStudentFeeTotalFees(studentFee)>0 ;
         });
     }
     getStudentFeeByStudentIdAndSession(id:any,sessionName:any):any{
@@ -1139,7 +1135,7 @@ export class ViewDefaultersComponent implements OnInit {
         let amount=0;
         filteredStudentFeeList.forEach((studentFee)=>{
             this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentFeesDue(studentFee,installment,true);
+                amount+=this.getStudentFeeInstallmentFeesDue(studentFee,installment);
             });
         });
         return amount;
@@ -1167,7 +1163,7 @@ export class ViewDefaultersComponent implements OnInit {
         let amount=0;
         filteredStudentFeeList.forEach((studentFee)=>{
             this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentLateFeesDue(studentFee,installment,true);
+                amount+=this.getStudentFeeInstallmentLateFeesDue(studentFee,installment);
             });
         });
         return amount;
@@ -1186,19 +1182,19 @@ export class ViewDefaultersComponent implements OnInit {
         });
         return amount;
     }
-    getStudentFeeFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
+    getStudentFeeFeesDue(studentFee: any): number {
         let amount = 0;
         this.installmentList.forEach((installment) => {
-            amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment, includeNewSubFeeReceipt);
+            amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
         });
         return amount;
 
 
     }
-    getStudentFeeLateFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
+    getStudentFeeLateFeesDue(studentFee: any): number {
         let amount = 0;
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
-            amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment, includeNewSubFeeReceipt);
+            amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
         });
         return amount;
     }
@@ -1240,9 +1236,9 @@ export class ViewDefaultersComponent implements OnInit {
         }
         return amount;
     }
-    getStudentFeeInstallmentFeesDue(studentFee: any, installment: string, includeNewSubFeeReceipt = true): number {
+    getStudentFeeInstallmentFeesDue(studentFee: any, installment: string): number {
         let amount = 0;
-        let filteredSubReceiptList = this.getFilteredSubFeeReceiptListByStudentFee(studentFee, includeNewSubFeeReceipt);
+        let filteredSubReceiptList = this.getFilteredSubFeeReceiptListByStudentFee(studentFee);
         let filteredSubDiscountList = this.getFilteredSubDiscountListByStudentFee(studentFee);
         amount += studentFee[installment + 'Amount'] ? studentFee[installment + 'Amount'] : 0;
         filteredSubReceiptList.forEach((subFeeReceipt) => {
@@ -1258,9 +1254,9 @@ export class ViewDefaultersComponent implements OnInit {
         return amount;
     }
 
-    getStudentFeeInstallmentLateFeesDue(studentFee: any, installment: string, includeNewSubFeeReceipt = true): number {
+    getStudentFeeInstallmentLateFeesDue(studentFee: any, installment: string): number {
         let amount = 0;
-        let filteredSubReceiptList = this.getFilteredSubFeeReceiptListByStudentFee(studentFee, includeNewSubFeeReceipt);
+        let filteredSubReceiptList = this.getFilteredSubFeeReceiptListByStudentFee(studentFee);
         let filteredSubDiscountList = this.getFilteredSubDiscountListByStudentFee(studentFee);
         amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         filteredSubReceiptList.forEach((subFeeReceipt) => {
@@ -1275,32 +1271,18 @@ export class ViewDefaultersComponent implements OnInit {
         });
         return amount;
     }
-    getFilteredSubFeeReceiptListByStudentFee(studentFee: any, includeNewSubFeeReceipt = true): any {
+    getFilteredSubFeeReceiptListByStudentFee(studentFee: any): any {
         let filteredSubFeeReceiptList = this.subFeeReceiptList.filter((subFeeReceipt) => {
             return (
-                subFeeReceipt.parentStudentFee == studentFee.id &&
-                !this.myFeeReceiptList.find((feeReceipt) => {
-                    return feeReceipt.id == subFeeReceipt.parentFeeReceipt;
-                }).cancelled
+                subFeeReceipt.parentStudentFee == studentFee.id 
             );
         });
-        if (includeNewSubFeeReceipt) {
-            let newSubFeeReceipt = this.newSubFeeReceiptList.find((subFeeReceipt) => {
-                return subFeeReceipt.parentStudentFee == studentFee.id;
-            });
-            if (newSubFeeReceipt) {
-                filteredSubFeeReceiptList.push(newSubFeeReceipt);
-            }
-        }
         return filteredSubFeeReceiptList;
     }
     getFilteredSubDiscountListByStudentFee(studentFee: any): any {
         let filteredSubDiscountList = this.subDiscountList.filter((subDiscount) => {
             return (
-                subDiscount.parentStudentFee == studentFee.id &&
-                !this.myDiscountList.find((discount) => {
-                    return discount.id == subDiscount.parentDiscount;
-                }).cancelled
+                subDiscount.parentStudentFee == studentFee.id 
             );
         });
         return filteredSubDiscountList;

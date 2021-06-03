@@ -14,19 +14,15 @@ export class ViewDefaultersServiceAdapter {
 
     initializeData(): void {
         
+        const feeTypeList={
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+        };
         Promise.all
         ([  
-            // this.vm.feeService.getList(this.vm.feeService.student_fees, {}),
-            this.vm.feeService.getList(this.vm.feeService.fee_type,{}),
-            this.vm.feeService.getList(this.vm.feeService.fee_receipts,{}),
-            this.vm.feeService.getList(this.vm.feeService.discounts,{}),
-
+            this.vm.feeService.getList(this.vm.feeService.fee_type,feeTypeList),
         ])
         .then((val)=>{
-            // this.vm.myStudentFeeList=val[0];
             this.vm.myFeeTypeList=val[0];
-            this.vm.myFeeReceiptList=val[1];
-            this.vm.myDiscountList=val[2];
         });
         this.vm.isLoading = true;
 
