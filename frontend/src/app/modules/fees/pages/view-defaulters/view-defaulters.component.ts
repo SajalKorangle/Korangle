@@ -15,14 +15,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
 import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { StudentFee } from '@services/modules/fees/models/student-fee';
 import {FeeType} from '@services/modules/fees/models/fee-type';
-import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
-import { SubDiscount } from '../../../../services/modules/fees/models/sub-discount';
-import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt';
-import { Discount } from '../../../../services/modules/fees/models/discount';
-import { MODE_OF_PAYMENT_LIST} from '../../classes/constants';
-
 
 @Component({
     selector: 'view-defaulters',
