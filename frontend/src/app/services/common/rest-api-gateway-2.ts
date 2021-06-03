@@ -19,7 +19,7 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
-    getAbsoluteURL(url: string, params?: { [key: string]: string; }): string {
+    getAbsoluteURL(url: string): string {
         let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
         let user = DataStorage.getInstance().getUser();
         if (user.activeSchool) {
@@ -124,8 +124,20 @@ export class RestApiGateway {
 
     public getDataWithPost(url: any, data?: any) {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+        const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
+        absoluteURL.searchParams.append('method', 'GET');
+        if (data) {
+            Object.keys(data).forEach(key => absoluteURL.searchParams.delete(key));
+        }
+        let postData;
+        if (data && !(data instanceof FormData)) {
+            postData = new FormData();
+            Object.entries(data).forEach(([key, value]) => postData.append(key, value));
+        } else {
+            postData = data;
+        }
         return this.http
-            .post(this.getAbsoluteURL(url, { method: 'GET' }), data, { headers: headers })
+            .post(absoluteURL.toString(), postData, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -141,14 +153,11 @@ export class RestApiGateway {
     }
 
     public getData(url: any, params?: any): Promise<any> {
-        // check here
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
-        const absoluteURL = this.getAbsoluteURL(url, params);
-        /*console.log(absoluteURL);
-        if (absoluteURL.length > MAX_URL_LENGTH) {
-            console.log('going with get data with post');
+        const absoluteURL = this.getAbsoluteURL(url);
+        if (absoluteURL.length > MAX_URL_LENGTH || true) {
             return this.getDataWithPost(url, params);
-        }*/
+        }
         return this.http
             .get(absoluteURL, { headers: headers })
             .toPromise()
