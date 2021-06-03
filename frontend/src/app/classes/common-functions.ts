@@ -1,4 +1,5 @@
 declare const $: any;
+import { SESSION_CONSTANT, Session } from '@services/modules/school/models/session';
 
 export class CommonFunctions {
     static instance: CommonFunctions;
