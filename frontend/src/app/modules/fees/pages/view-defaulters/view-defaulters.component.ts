@@ -16,6 +16,7 @@ import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
 import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {FeeType} from '@services/modules/fees/models/fee-type';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
     selector: 'view-defaulters',
@@ -110,7 +111,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    studentDataSource: any;
+    studentDataSource: MatTableDataSource<any>=new MatTableDataSource();
 
     columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`]//[`Session 2017-18`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
 
