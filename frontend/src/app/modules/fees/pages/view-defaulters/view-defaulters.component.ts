@@ -111,7 +111,6 @@ export class ViewDefaultersComponent implements OnInit {
     isLoading = false;
 
     studentDataSource: any;
-    parentDataSource: any;
 
     columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`]//[`Session 2017-18`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
 
@@ -451,7 +450,6 @@ export class ViewDefaultersComponent implements OnInit {
             return a.section.orderNumber - b.section.orderNumber;
         })
         this.studentDataSource = this.studentList;
-        this.parentDataSource = this.parentList;
         this.sessionListWithNoDues=this.getSessionsWithNoDue();
         this.sessionListWithNoDues.forEach(session=>{
             this.columnsToDisplay.push(session.name);
