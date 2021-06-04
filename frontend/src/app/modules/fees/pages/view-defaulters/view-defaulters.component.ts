@@ -16,6 +16,7 @@ import {PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/view-defaulters.html.renderer';
 import {UpdateService} from '../../../../update/update-service';
 import moment = require('moment');
+import {STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 @Component({
     selector: 'view-defaulters',
@@ -76,6 +77,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     selectedClassSection = null;
     filteredClassSectionList = [];
+    dataForMapping =  {} as any;
 
     message = '';
 
@@ -802,23 +804,27 @@ export class ViewDefaultersComponent implements OnInit {
 
     getEstimatedNotificationCount = () => {
         let count = 0;
+        let studentList = [];
         if (this.selectedSentType == this.sentTypeList[0]) {
             return 0;
         }
         if (this.selectedFilterType == this.filterTypeList[0]) {
-            count = this.getFilteredStudentList().filter((item) => {
+            this.getFilteredStudentList().filter((item) => {
                 return item.mobileNumber && item.selected && item.notification;
-            }).length;
+            }).forEach(student => {
+                if (!this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message)) {
+                    count++;
+                    studentList.push(student);
+                }
+            });
         } else {
             this.getFilteredParentList().filter((item) => {
                 return item.mobileNumber && item.selected;
             }).forEach(parent => {
-                let tempContentList = [];
                 parent.studentList.forEach(student => {
-                    let tempContent = this.getMappingData(student);
-                    if (!tempContentList.some(content => tempContent == content)) {
-                        tempContentList.push(tempContent);
-                        count += 1;
+                    if (!this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message)) {
+                        count++;
+                        studentList.push(student);
                     }
                 });
             });
@@ -828,17 +834,24 @@ export class ViewDefaultersComponent implements OnInit {
 
     getEstimatedSMSCount = () => {
         let count = 0;
+        let studentList = [];
         if (this.selectedSentType == this.sentTypeList[1]) {
             return 0;
         }
         if (this.selectedFilterType == this.filterTypeList[0]) {
+            this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((item) => item.mobileNumber && item.selected);
             this.getFilteredStudentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
                     if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
-                        count += this.getMessageCount(
-                            this.updateService.getMessageFromTemplate(this.message, this.getMappingData(item))
-                        );
+                        if (!this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, item.id, this.message))
+                        {
+                            count += this.getMessageCount(
+                                this.updateService.getMessageFromTemplate(this.message,
+                                    this.updateService.getMappingData(STUDENT_VARIABLES, this.dataForMapping, 'student', item.id))
+                            );
+                            studentList.push(item);
+                        }
                     }
                 });
         } else {
@@ -846,15 +859,16 @@ export class ViewDefaultersComponent implements OnInit {
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
                     if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
-                        let tempContentList = [];
+                        this.dataForMapping['studentList'] = item.studentList;
                         item.studentList.forEach(student => {
-                            let tempContent = this.getMappingData(student);
-                            if (!tempContentList.some(content => tempContent == content)) {
-                                tempContentList.push(tempContent);
-                                count += this.getMessageCount(
-                                    this.updateService.getMessageFromTemplate(this.message, tempContent)
-                                );
-                            }
+                        if (this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message))
+                        {
+                            count += this.getMessageCount(
+                                this.updateService.getMessageFromTemplate(this.message,
+                                    this.updateService.getMappingData(STUDENT_VARIABLES, this.dataForMapping, 'student', student.id))
+                            );
+                            studentList.push(student);
+                        }
                         });
                     }
                 });
@@ -864,24 +878,6 @@ export class ViewDefaultersComponent implements OnInit {
 
     getCurrencyInINR = (data) => {
         return 'Rs. ' + Number(data).toLocaleString('en-IN');
-    }
-
-    getMappingData(student: any): any {
-        let temp = {};
-        temp['schoolName'] = this.user.activeSchool.printName;
-        temp['notification'] = student.notification;
-        temp['date'] = moment(new Date()).format('DD/MM/YYYY');
-        temp['studentName'] = student.name;
-        temp['studentScholarNumber'] = student.scholarNumber;
-        let studentSection = this.studentSectionList.find(studSec => studSec.parentStudent == student.id);
-        let classs = this.filteredClassSectionList.find(classSec => classSec.class.id == studentSection.parentClass
-            && classSec.section.id == studentSection.parentDivision);
-        temp['class'] = classs.class.name + ', ' + classs.section.name;
-        temp['fathersName'] = student.fathersName ? student.fathersName : '';
-        temp['feesDueTillMonth'] = this.getCurrencyInINR(student.feesDueTillMonth);
-        temp['feesDueOverall'] = this.getCurrencyInINR(student.feesDueOverall);
-        temp['mobileNumber'] = student.mobileNumber;
-        return temp;
     }
 
 }

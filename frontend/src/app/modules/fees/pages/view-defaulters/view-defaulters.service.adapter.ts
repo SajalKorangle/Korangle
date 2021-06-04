@@ -72,6 +72,8 @@ export class ViewDefaultersServiceAdapter {
             (valueList) => {
                 this.vm.studentSectionList = valueList;
 
+                this.vm.dataForMapping['studentSectionList'] = valueList;
+
                 const tempStudentIdList = valueList.map((a) => a.parentStudent);
 
                 const iterationCount = Math.ceil(tempStudentIdList.length / this.vm.STUDENT_LIMITER);
@@ -134,6 +136,10 @@ export class ViewDefaultersServiceAdapter {
                         this.vm.sectionList = value[1];
                         this.vm.smsBalance = 10;
 
+                        this.vm.dataForMapping['classList'] = value[0];
+                        this.vm.dataForMapping['divisionList'] = value[1];
+                        this.vm.dataForMapping['school'] = this.vm.user.activeSchool.dbId;
+
                         this.vm.studentList = [];
                         this.vm.studentFeeList = [];
                         this.vm.subFeeReceiptList = [];
@@ -179,19 +185,14 @@ export class ViewDefaultersServiceAdapter {
         if (this.vm.selectedFilterType == this.vm.filterTypeList[0]) {
             this.vm.getFilteredStudentList().forEach((student) => {
                 if (student.selected && student.mobileNumber) {
-                    studentData.push(this.vm.getMappingData(student));
+                    studentData.push(student);
                 }
             });
         } else {
             this.vm.getFilteredParentList().forEach((parent) => {
                 if (parent.selected && parent.mobileNumber) {
-                    let tempContentList = [];
                     parent.studentList.forEach(student => {
-                        let tempContent = this.vm.getMappingData(student);
-                        if (!tempContentList.some(content => tempContent == content)) {
-                            tempContentList.push(tempContent);
-                            studentData.push(tempContent);
-                        }
+                            studentData.push(student);
                     });
                 }
             });
@@ -199,8 +200,10 @@ export class ViewDefaultersServiceAdapter {
         if ( this.vm.getEstimatedSMSCount() > 0 && !confirm('Please confirm that you are sending ' + this.vm.getEstimatedSMSCount() + ' SMS.')) {
             return;
         }
+
+        this.vm.dataForMapping['studentList'] = studentData;
         await this.vm.updateService.smsNotificationSender(
-            studentData,
+            this.vm.dataForMapping,
             this.vm.backendData.defaultersSMSEvent,
             this.vm.sentTypeList.indexOf(this.vm.selectedSentType) + 2,
             this.vm.message,

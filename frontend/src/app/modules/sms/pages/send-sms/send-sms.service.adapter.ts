@@ -61,6 +61,12 @@ export class SendSmsServiceAdapter {
 
         this.vm.backendData.classList = value[0];
         this.vm.backendData.sectionList = value[1];
+
+        this.vm.dataForMapping['classList'] = value[0];
+        this.vm.dataForMapping['divisionList'] = value[1];
+        this.vm.dataForMapping['studentSectionList'] = value[2];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
         this.vm.studentSectionList = value[2];
         this.populateStudentList(value[3]);
         this.populateEmployeeList(value[4]);
@@ -154,18 +160,23 @@ export class SendSmsServiceAdapter {
 
     async sendSMSAndNotification() {
         if (this.vm.getMobileNumberList('sms').length > 0 &&
-            !confirm('Please confirm that you are sending ' + this.vm.getMobileNumberList('sms').length  * this.vm.htmlRenderer.getSMSCount() + ' SMS.')) {
+            !confirm('Please confirm that you are sending ' + this.vm.htmlRenderer.getEstimatedSMSCount() + ' SMS.')) {
             return;
         }
         this.vm.stateKeeper.isLoading = true;
-        let personsDataList = [];
-        this.vm.getMobileNumberList('both').forEach(person => {
-            personsDataList.push(this.vm.getMappingData(person));
-        });
 
-        let updateService = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? this.vm.studentUpdateService : this.vm.employeeUpdateService;
+        let updateService;
+        if (this.vm.userInput.selectedSendTo == this.vm.sendToList[0]) {
+            this.vm.dataForMapping['studentList'] = this.vm.getMobileNumberList('both');
+            updateService = this.vm.employeeUpdateService;
+
+        } else {
+            this.vm.dataForMapping['employeeList'] = this.vm.getMobileNumberList('both');
+            updateService = this.vm.employeeUpdateService;
+        }
+
         await updateService.smsNotificationSender(
-            personsDataList,
+            this.vm.dataForMapping,
             this.vm.backendData.smsEvent,
             this.vm.userInput.selectedSentType.id,
             this.vm.message,

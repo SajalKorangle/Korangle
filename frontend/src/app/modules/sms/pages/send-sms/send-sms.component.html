@@ -56,7 +56,7 @@
                 <br/>
                 <ng-container *ngIf="htmlRenderer.isSMSNeeded()">
                     <span style="font-size: 14px;float:left"># of Characters/SMS: {{ message.length }}
-                        /{{ htmlRenderer.getSMSCount() }}</span><span style="font-size: 14px;float:right">Estimated SMS Count: {{ getMobileNumberList('sms').length * htmlRenderer.getSMSCount() }}</span><br/>
+                        /{{ htmlRenderer.getEstimatedSMSCount() }}</span><span style="font-size: 14px;float:right">Estimated SMS Count: {{ htmlRenderer.getEstimatedSMSCount() }}</span><br/>
                 </ng-container>
                 <ng-container
                         *ngIf="!htmlRenderer.isSMSNeeded()">
@@ -69,11 +69,11 @@
                     You can Modify only the <b>@</b> variables in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
                     <span *ngIf="htmlRenderer.isSMSNeeded() &&
-                        this.backendData.smsBalance < getMobileNumberList('sms').length * htmlRenderer.getSMSCount()"
+                        this.backendData.smsBalance < htmlRenderer.getEstimatedSMSCount()"
                           style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You are short by <b>{{ getMobileNumberList('sms').length * htmlRenderer.getSMSCount() - this.backendData.smsBalance }}</b> SMS.
-                </span>
-
+                    You are short by <b>{{ htmlRenderer.getEstimatedSMSCount() - this.backendData.smsBalance }}</b> SMS.
+                </span><br/>
+    
                 </ng-container>
                 <button
                         type="submit"

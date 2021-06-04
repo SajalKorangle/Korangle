@@ -69,6 +69,8 @@ export class IssueHomeworkComponent implements OnInit {
     noPermission: any;
     smsBalance: any;
 
+    dataForMapping =  {} as any;
+
     // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 

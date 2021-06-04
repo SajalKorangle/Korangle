@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import {ComponentsModule} from "@components/components.module";
-import {SmsEventSettingsComponent} from '@modules/sms/pages/manage-templates/sms-event-settings.component';
-import {SmsEventSettingsRouting} from '@modules/sms/pages/manage-templates/sms-event-settings.routing';
+import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
+import {ManageTemplatesRouting} from '@modules/sms/pages/manage-templates/manage-templates.routing';
 
 @NgModule({
     declarations: [
-        SmsEventSettingsComponent,
+        ManageTemplatesComponent,
     ],
     imports: [
-        SmsEventSettingsRouting,
+        ManageTemplatesRouting,
         ComponentsModule,
     ],
     exports: [],
     providers: [],
-    bootstrap: [ SmsEventSettingsComponent ]
+    bootstrap: [ ManageTemplatesComponent ]
 })
-export class SmsEventSettingsModule { }
+export class ManageTemplatesModule { }

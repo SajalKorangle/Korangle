@@ -1,5 +1,5 @@
 import {SendSmsComponent} from '@modules/sms/pages/send-sms/send-sms.component';
-import {EMPLOYEE_VARIABLES, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 export class SendSmsHtmlRenderer {
 
@@ -17,8 +17,10 @@ export class SendSmsHtmlRenderer {
             this.vm.message = this.vm.message.replace(/@employeeName/g, '@studentName');
         } else {
             STUDENT_VARIABLES.forEach(variable => {
-                let reg = new RegExp('@' + variable, 'g');
-                this.vm.message = this.vm.message.replace(reg, '@employeeName');
+                if (!COMMON_VARIABLES.some(x => x == variable)) {
+                    let reg = new RegExp('@' + variable, 'g');
+                    this.vm.message = this.vm.message.replace(reg, '@employeeName');
+                }
             });
         }
     }
@@ -46,21 +48,21 @@ export class SendSmsHtmlRenderer {
     isSendDisabled() {
         let disabled = this.vm.getMobileNumberList('both').length == 0 || this.vm.message.length == 0;
         if (!disabled && this.isSMSNeeded()) {
-            disabled = this.vm.backendData.smsBalance < this.vm.getMobileNumberList('sms').length * this.getSMSCount();
             disabled = this.vm.message.replace(this.vm.variableRegex, '{#var#}') != this.vm.userInput.selectedTemplate.rawContent;
+            disabled = this.vm.backendData.smsBalance < this.getEstimatedSMSCount();
         }
         return disabled;
     }
 
     getButtonText() {
         if (this.vm.userInput.selectedSentType.id == 2) {
-            return 'Send ' + this.vm.getMobileNumberList('sms').length * this.getSMSCount() + ' SMS';
+            return 'Send ' + this.getEstimatedSMSCount() + ' SMS';
         }
         if (this.vm.userInput.selectedSentType.id == 3) {
             return 'Send ' + this.vm.getMobileNumberList('notification').length + ' notifications';
         }
         if (this.vm.userInput.selectedSentType.id == 4) {
-            return 'Send ' + this.vm.getMobileNumberList('sms').length * this.getSMSCount() + ' SMS & '
+            return 'Send ' + this.getEstimatedSMSCount() + ' SMS & '
                 + this.vm.getMobileNumberList('notification').length + ' notifications';
         }
     }
@@ -75,9 +77,9 @@ export class SendSmsHtmlRenderer {
 
     getVariables() {
         if (this.vm.userInput.selectedSendTo == 'Students') {
-            return STUDENT_VARIABLES;
+            return STUDENT_VARIABLES.map(a => a.displayVariable);
         } else {
-            return EMPLOYEE_VARIABLES;
+            return EMPLOYEE_VARIABLES.map(a => a.displayVariable);
         }
     }
 
@@ -152,11 +154,26 @@ export class SendSmsHtmlRenderer {
         });
     }
 
-    getSMSCount(): number {
-        if (this.vm.hasUnicode()) {
-            return Math.ceil(this.vm.message.length / 70);
+    getSMSCount(message): number {
+        if (this.vm.hasUnicode(message)) {
+            return Math.ceil(message.length / 70);
         } else {
-            return Math.ceil(this.vm.message.length / 160);
+            return Math.ceil(message.length / 160);
         }
+    }
+
+    getEstimatedSMSCount = () => {
+        let count = 0;
+        if (this.vm.userInput.selectedSentType == this.vm.sentTypeList[1]) {
+            return 0;
+        }
+        let person = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? 'student' : 'employee';
+        this.vm.getMobileNumberList('sms').forEach(student => {
+            count += this.getSMSCount(
+                this.vm.studentUpdateService.getMessageFromTemplate(this.vm.message,
+                    this.vm.studentUpdateService.getMappingData(STUDENT_VARIABLES, this.vm.dataForMapping, person, student.id))
+            );
+        });
+        return count;
     }
 }

@@ -5,123 +5,150 @@ export const SENT_UPDATE_TYPE = [{id: 1, name: 'NULL'}, {id: 2, name: 'SMS'}, {i
 
 class VariableStructure {
 
-    static getStructure(variable: any, backendKey: any, getValueFunc: any) {
+    static getStructure(displayVariableName: any, backendKey: any, getValueFunc: any) {
         return {
-            variable: variable,
+            displayVariable: displayVariableName,
             backendKey: backendKey,
             getValueFunc: getValueFunc,
         };
     }
+}
 
+class StudentOrEmployeeVariableStructure {
+    static getStructure(displayVariable: any, person: any, backendKey: any, getValFunc: any = (dataObject) => {
+        return dataObject[person + 'List'].find(stud => stud.id == dataObject[person + 'Id'])[backendKey];
+    }) {
+        return VariableStructure.getStructure(
+            displayVariable,
+            backendKey,
+            getValFunc,
+        );
+    }
+}
+
+
+class SettingsStructure {
+    static getStructure(displayVariable: any, modelName: any, backendKey: any) {
+        let func = (dataObject) => {
+            return dataObject[modelName][backendKey];
+        };
+        if (backendKey == 'subject') {
+            func = (dataObject) => {
+                return dataObject.subjectList.find(sub =>
+                    sub.id == dataObject.classSubjectList.find(
+                    classSub => classSub.id == dataObject[modelName].parentClassSubject)
+                        .parentSubject).name;
+            };
+        }
+        if (modelName == 'attendance') {
+            return StudentOrEmployeeVariableStructure.getStructure(displayVariable, 'student', backendKey);
+        }
+        return VariableStructure.getStructure(
+            displayVariable,
+            backendKey,
+            func,
+        );
+    }
 }
 
 export const COMMON_VARIABLES = [
-    VariableStructure.getStructure('Date', 'date', () => {
+    VariableStructure.getStructure('Date', 'date', (objectData) => {
         return moment(new Date()).format('DD/MM/YYYY');
     }),
-    VariableStructure.getStructure('SchoolName', 'printName', (dataObject) => {
-        return dataObject.school.printName;
-    }),
-    VariableStructure.getStructure('MobileNumber', 'mobileNumber', (dataObject) => {
-        return dataObject.mobileNumber;
-    })
-];
-
-export const STUDENT_VARIABLES = [
-    COMMON_VARIABLES.concat(
-        [
-            VariableStructure.getStructure('StudentName', 'name', (dataObject) => {
-                return dataObject.name;
-            }),
-            VariableStructure.getStructure('Class', 'class', (dataObject) => {
-                return dataObject.class.name;
-            }),
-            VariableStructure.getStructure('Section', 'section', (dataObject) => {
-                return dataObject.section.name;
-            }),
-            VariableStructure.getStructure('Class-Section', 'class-section', (dataObject) => {
-                return dataObject.class.name + ', ' + dataObject.section.name;
-            }),
-            VariableStructure.getStructure('FathersName', 'fathersName', (dataObject) => {
-                return dataObject.fathersName;
-            }),
-            VariableStructure.getStructure('StudentScholarId', 'scholarNumber', (dataObject) => {
-                return dataObject.scholarNumber;
-            }),
-
-        ]
-    )
-];
-
-export const EMPLOYEE_VARIABLES = [
-    COMMON_VARIABLES.concat(
-        [
-            VariableStructure.getStructure('employeeName', 'name', (dataObject) => {
-                return dataObject.name;
-            })
-        ]
-    )
-];
-
-export const DEFAULTER_VARIABLES = [
-    VariableStructure.getStructure('FeesDueTillMonth', 'feesDueTillMonth', (dataObject) => {
-        return dataObject.feesDetails.feesDueTillMonth;
-    }),
-    VariableStructure.getStructure('FeesDueOverall', 'feesDueOverall', (dataObject) => {
-        return dataObject.feesDetails.feesDueOverall;
-    }),
-];
-
-export const ATTENDANCE_VARIABLES = [
-    VariableStructure.getStructure('AttendanceStatus', 'attendanceStatus', (dataObject) => {
-        return dataObject.attendanceDetails.attendanceStatus;
-    }),
-    VariableStructure.getStructure('attendanceDate', 'date', (dataObject) => {
-        return moment(new Date(dataObject.attendanceDetails.date.toString())).format('DD/MM/YYYY');
+    VariableStructure.getStructure('SchoolName', 'printName', (objectData) => {
+        return objectData.school.printName;
     }),
 ];
 
 
-export const HOMEWORK_VARIABLES = [
-    VariableStructure.getStructure('HomeworkName', 'homeworkName', (dataObject) => {
-        return dataObject.homeworkDetails.homeworkName;
-    }),
-    VariableStructure.getStructure('DeadLine', 'deadLine', (dataObject) => {
-        return dataObject.homeworkDetails.deadLine;
-    }),
-];
+export const STUDENT_VARIABLES = COMMON_VARIABLES.concat(
+    [
+        StudentOrEmployeeVariableStructure.getStructure('StudentName', 'student', 'name'),
+        StudentOrEmployeeVariableStructure.getStructure('Class', 'student', 'class', (dataObject) => {
+            return dataObject.classList.find(
+                classs => {
+                    return classs.id === dataObject.studentSectionList.find(
+                        x => x.parentStudent === dataObject.studentId
+                    ).parentClass;
+                }
+            ).name;
+        }),
+        StudentOrEmployeeVariableStructure.getStructure('Section', 'student', 'section', (dataObject) => {
+            return dataObject.divisionList.find(
+                division => {
+                    return division.id === dataObject.studentSectionList.find(
+                        x => x.parentStudent === dataObject.studentId
+                    ).parentDivision;
+                }
+            ).name;
+        }),
+        StudentOrEmployeeVariableStructure.getStructure('Class-Section', 'student', 'class-section', (dataObject) => {
+            return dataObject.classList.find(
+                classs => {
+                    return classs.id === dataObject.studentSectionList.find(
+                        x => x.parentStudent === dataObject.studentId
+                    ).parentClass;
+                }
+                ).name
+                + ', '
+                + dataObject.divisionList.find(
+                    division => {
+                        return division.id === dataObject.studentSectionList.find(
+                            x => x.parentStudent === dataObject.studentId
+                        ).parentDivision;
+                    }
+                ).name;
+        }),
+        StudentOrEmployeeVariableStructure.getStructure('FathersName', 'student', 'fathersName'),
+        StudentOrEmployeeVariableStructure.getStructure('StudentScholarId', 'student', 'scholarNumber'),
+        StudentOrEmployeeVariableStructure.getStructure('MobileNumber', 'student', 'mobileNumber'),
+    ]
+);
 
-export const TUTORIAL_VARIABLES = [
-    VariableStructure.getStructure('TutorialChapter', 'tutorialChapter', (dataObject) => {
-        return dataObject.tutorialDetails.tutorialChapter;
-    }),
-    VariableStructure.getStructure('TutorialTopic', 'tutorialTopic', (dataObject) => {
-        return dataObject.tutorialDetails.tutorialTopic;
-    }),
-    VariableStructure.getStructure('Subject', 'subject', (dataObject) => {
-        return dataObject.tutorialDetails.subject;
-    }),
-];
+export const EMPLOYEE_VARIABLES = COMMON_VARIABLES.concat(
+    [
+        StudentOrEmployeeVariableStructure.getStructure('EmployeeName', 'employee', 'name'),
+        StudentOrEmployeeVariableStructure.getStructure('MobileNumber', 'employee', 'mobileNumber'),
+    ]
+);
+
+export const DEFAULTER_VARIABLES = STUDENT_VARIABLES.concat([SettingsStructure.getStructure('FeesDueTillMonth', 'fee', 'feesDueTillMonth'),
+    SettingsStructure.getStructure('FeesDueOverall', 'fee', 'feesDueOverall')]);
+
+export const ATTENDANCE_VARIABLES = STUDENT_VARIABLES.concat([SettingsStructure.getStructure('AttendanceStatus', 'attendance', 'attendanceStatus'),
+    SettingsStructure.getStructure('AttendanceDate', 'attendance', 'date')]);
+
+
+export const HOMEWORK_VARIABLES = STUDENT_VARIABLES.concat([SettingsStructure.getStructure('HomeworkName', 'homework', 'homeworkName'),
+    SettingsStructure.getStructure('DeadLine', 'homework', 'deadLine'),
+    SettingsStructure.getStructure('Subject', 'homework', 'subject')]);
+
+export const TUTORIAL_VARIABLES = STUDENT_VARIABLES.concat([SettingsStructure.getStructure('TutorialChapter', 'tutorial', 'tutorialChapter'),
+    SettingsStructure.getStructure('TutorialTopic', 'tutorial', 'tutorialTopic'),
+    SettingsStructure.getStructure('Subject', 'tutorial', 'subject')]);
 
 class SettingsPageStructure {
-
     static getStructure(pageName: any, eventsInOrder: any, VariableList: any) {
         return {
             name: pageName,
             orderedEvents: eventsInOrder,
-            variableList: STUDENT_VARIABLES.concat(VariableList),
+            variableList: VariableList,
         };
     }
-
 }
 
 
 export const EVENT_SETTING_PAGES = [
     SettingsPageStructure.getStructure('General', [], []),
     SettingsPageStructure.getStructure('Notify Defaulters', [], DEFAULTER_VARIABLES),
-    SettingsPageStructure.getStructure('Attendance', ['Attendance Creation', 'Attendance Updation'], ATTENDANCE_VARIABLES),
-    SettingsPageStructure.getStructure('Homework', ['Homework Creation', 'Homework Updation', 'Homework Checked', 'Homework Resubmission', 'Homework Deletion'],
+    SettingsPageStructure.getStructure('Attendance',
+        ['Attendance Creation', 'Attendance Updation'],
+        ATTENDANCE_VARIABLES),
+    SettingsPageStructure.getStructure('Homework',
+        ['Homework Creation', 'Homework Updation', 'Homework Checked', 'Homework Resubmission', 'Homework Deletion'],
         HOMEWORK_VARIABLES),
-    SettingsPageStructure.getStructure('Tutorial', ['Tutorial Creation', 'Tutorial Updation', 'Tutorial Deletion'], TUTORIAL_VARIABLES)
+    SettingsPageStructure.getStructure('Tutorial',
+        ['Tutorial Creation', 'Tutorial Updation', 'Tutorial Deletion'],
+        TUTORIAL_VARIABLES)
 ];
 

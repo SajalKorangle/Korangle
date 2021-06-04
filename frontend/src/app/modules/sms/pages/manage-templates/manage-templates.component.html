@@ -285,7 +285,7 @@
                     </div>
 
                     <div class="row">
-                        <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables - {{commonVariables.concat(userInput.selectedPage.variablesList)}}</span>
+                        <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables - {{htmlRenderer.getVariableList()}}</span>
                         <br>
                         <mat-form-field [style.width]="htmlRenderer.isMobile()?'90%':'40%'"
                                         style="margin-left: 13px;" appearance="none">
@@ -294,7 +294,7 @@
                             [ngModel]="htmlRenderer.getNotificationContent(smsEvent)"
                             (ngModelChange)="htmlRenderer.setNotificationContent(smsEvent,$event)"
                             cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; margin-bottom:80px;padding: 12px 12px 20px;overflow: hidden"
+                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px;padding: 12px 12px 20px;overflow: hidden"
                   ></textarea>
                         </mat-form-field>
                     </div>
@@ -357,7 +357,7 @@
                                     Content</b>
                             </div>
                             <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
-                                <span style="font-size: 10px;color:rebeccapurple;">Change @variables with - {{commonVariables.concat(userInput.selectedPage.variablesList)}}</span>
+                                <span style="font-size: 10px;color:rebeccapurple;">Change @variables with - {{htmlRenderer.getVariableList()}}</span>
                             </div>
                             <div class="row">
                                 <mat-form-field style="width: 100%;" appearance="none">

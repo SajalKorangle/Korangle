@@ -26,11 +26,10 @@ const routes: Routes = [
         data: { moduleName: 'sms' },
     },
     {
-        path: 'sms_event_settings',
-        loadChildren: 'app/modules/sms/pages/sms-event-settings/sms-event-settings.module#SmsEventSettingsModule',
+        path: 'manage_templates',
+        loadChildren: 'app/modules/sms/pages/manage-templates/manage-templates.module#ManageTemplatesModule',
         data: { moduleName: 'sms' },
     },
-
 
     {
         path: '',

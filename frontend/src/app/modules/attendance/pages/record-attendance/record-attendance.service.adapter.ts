@@ -37,6 +37,9 @@ export class RecordAttendanceServiceAdapter {
 
         ]);
         this.vm.smsBalance = value[4];
+        this.vm.dataForMapping['classList'] = value[2];
+        this.vm.dataForMapping['divisionList'] = value[3];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
         this.vm.backendData.eventList = value[0];
         let fetch_event_settings_list = {
@@ -60,6 +63,7 @@ export class RecordAttendanceServiceAdapter {
         };
 
         const secondValue = await Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)]);
+        this.vm.dataForMapping['studentSection'] = secondValue[0];
         let student_id_list = [];
         let student_data = {
             id__in: student_id_list,
@@ -138,13 +142,8 @@ export class RecordAttendanceServiceAdapter {
                     });
                 }
                 let studentDetails = studentDetailsList.find((studentDetails) => studentDetails.id == student.parentStudent);
-                let tempData = {
-                    name: studentDetails.name,
-                    dbId: studentDetails.id,
-                    scholarNumber: studentDetails.scholarNumber,
-                    mobileNumber: studentDetails.mobileNumber,
-                };
-                this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
+                 studentDetails['dbId'] =  studentDetails.id;
+                this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(studentDetails);
             }
         });
         this.vm.classSectionStudentList.forEach((classs) => {
@@ -191,18 +190,12 @@ export class RecordAttendanceServiceAdapter {
             classs.sectionList.forEach((section) => {
                 if (this.vm.selectedSection.dbId === section.dbId && classs.dbId === this.vm.selectedClass.dbId) {
                     section.studentList.forEach((student) => {
-                        let tempItem = {
-                            dbId: student.dbId,
-                            name: student.name,
-                            scholarNumber: student.scholarNumber,
-                            mobileNumber: student.mobileNumber,
-                            attendanceStatusList: [],
-                        };
+                        student['attendanceStatusList'] = [];
                         let dateList = this.vm.getDateList();
                         dateList.forEach((date) => {
-                            tempItem.attendanceStatusList.push(this.vm.getStudentAttendanceStatusObject(student, date, attendanceList));
+                            student.attendanceStatusList.push(this.vm.getStudentAttendanceStatusObject(student, date, attendanceList));
                         });
-                        this.vm.studentAttendanceStatusList.push(tempItem);
+                        this.vm.studentAttendanceStatusList.push(student);
                     });
                 }
             });
@@ -269,28 +262,23 @@ export class RecordAttendanceServiceAdapter {
                 let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(student, attendanceStatus.date);
                 if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== attendanceStatus.status) {
                     if (attendanceStatus.status !== null && this.checkMobileNumber(student.mobileNumber) == true) {
-                        let tempData = {
-                            studentName: student.name,
+                        student['attendance'] = {
                             attendanceDate: this.vm.formatDate(attendanceStatus.date.toString(), ''),
-                            attendanceStatus: attendanceStatus.status,
-                            mobileNumber: student.mobileNumber,
-                            notification: student.notification,
-                            date: moment(new Date()).format('DD/MM/YYYY'),
-                            class: this.vm.selectedClass.name,
+                            attendanceStatus: attendanceStatus.status
                         };
                         if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null) {
-                                this.vm.updatedStudentList.push(tempData);
+                                this.vm.updatedStudentList.push(student);
                             }else {
-                                this.vm.createdStudentList.push(tempData);
+                                this.vm.createdStudentList.push(student);
                             }
                         }
                         if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null &&
                                 updatedSettings.receiverType == this.vm.receiverList[0]) {
-                                this.vm.updatedStudentList.push(tempData);
+                                this.vm.updatedStudentList.push(student);
                             }else if (createdSettings.receiverType == this.vm.receiverList[0]) {
-                                this.vm.createdStudentList.push(tempData);
+                                this.vm.createdStudentList.push(student);
                             }
                         }
                     }
@@ -302,6 +290,7 @@ export class RecordAttendanceServiceAdapter {
         if (this.vm.by == 'date' && this.vm.startDate == this.vm.formatDate(currentDate, '')) {
 
             if (this.vm.createdStudentList.length > 0) {
+                this.vm.dataForMapping['studentList'] = this.vm.createdStudentList;
                 this.vm.updateService.sendEventNotification(
                     this.vm.createdStudentList,
                     'Attendance Creation',
@@ -311,8 +300,9 @@ export class RecordAttendanceServiceAdapter {
             }
 
             if (this.vm.updatedStudentList.length > 0) {
+                this.vm.dataForMapping['studentList'] = this.vm.updatedStudentList;
                 this.vm.updateService.sendEventNotification(
-                    this.vm.updatedStudentList,
+                    this.vm.dataForMapping,
                     'Attendance Updation',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance

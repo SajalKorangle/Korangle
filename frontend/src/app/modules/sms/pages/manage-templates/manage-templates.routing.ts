@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import {SmsEventSettingsComponent} from '@modules/sms/pages/manage-templates/sms-event-settings.component';
+import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 
 
 const routes: Routes = [
     {
         path: '',
-        component: SmsEventSettingsComponent ,
+        component: ManageTemplatesComponent ,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class SmsEventSettingsRouting { }
+export class ManageTemplatesRouting { }

@@ -10,9 +10,8 @@ import {SendSmsServiceAdapter} from './send-sms.service.adapter';
 import {NotificationService} from '../../../../services/modules/notification/notification.service';
 import {UserService} from '../../../../services/modules/user/user.service';
 import {UpdateService} from '../../../../update/update-service';
-import moment = require('moment');
 import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
-import {SENT_UPDATE_TYPE} from '@modules/sms/classes/constants';
+import {SENT_UPDATE_TYPE, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 @Component({
     selector: 'send-sms',
@@ -34,8 +33,10 @@ export class SendSmsComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    sentTypeList = SENT_UPDATE_TYPE;
+    sentTypeList = SENT_UPDATE_TYPE.filter(type => type.name != 'NULL');
     sendToList = ['Students', 'Employees'];
+
+    dataForMapping = {} as any;
 
     employeeList = [];
     populatedTemplateList = [];
@@ -63,7 +64,7 @@ export class SendSmsComponent implements OnInit {
     userInput = {
         selectedSendTo: null,
         selectedTemplate: {} as any,
-        selectedSentType: SENT_UPDATE_TYPE[1],
+        selectedSentType: this.sentTypeList[0],
     };
 
     backendData = {
@@ -156,34 +157,26 @@ export class SendSmsComponent implements OnInit {
 
     getMobileNumberList(returnType: string): any {
         let tempList = [];
+
         if (this.userInput.selectedSendTo == this.sendToList[0]) {
-            this.getFilteredStudentList()
+
+            this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((x) => {
+                return x.selected;
+            }).map(a => a.student);
+
+              this.getFilteredStudentList()
                 .filter((x) => {
                     return x.selected;
                 })
                 .forEach((studentSection) => {
-                    let duplicate = tempList.find(temp => temp.mobileNumber == studentSection.student.mobileNumber);
-                    if (duplicate != undefined) {
-                        let duplicateMappedData = this.studentUpdateService.getMessageFromTemplate(this.message, this.getMappingData(duplicate));
-                        let orgMappedData = this.studentUpdateService.getMessageFromTemplate(this.message, this.getMappingData(studentSection.student));
-                        if (duplicateMappedData != orgMappedData) {
-                            tempList.push(studentSection.student);
-                        }
-                    } else {
+                    if (!this.studentUpdateService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                        studentSection.student.id, this.message)) {
                         tempList.push(studentSection.student);
                     }
                     if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                        duplicate = tempList.find(temp => temp.mobileNumber == studentSection.student.secondMobileNumber);
-                        let tempStudent = JSON.parse(JSON.stringify(studentSection.student));
-                        tempStudent.mobileNumber = studentSection.student.secondMobileNumber;
-                        if (duplicate != undefined) {
-                            let dMappedData = this.studentUpdateService.getMessageFromTemplate(this.message, this.getMappingData(duplicate));
-                            let oMappedData = this.studentUpdateService.getMessageFromTemplate(this.message, this.getMappingData(studentSection.student));
-                            if (dMappedData != oMappedData) {
-                                tempList.push(tempStudent);
-                            }
-                        } else {
-                            tempList.push(tempStudent);
+                        if (!this.studentUpdateService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                            studentSection.student.id, this.message, true)) {
+                            tempList.push(studentSection.student);
                         }
                     }
                 });
@@ -195,13 +188,13 @@ export class SendSmsComponent implements OnInit {
                 }
             });
         }
-        if (this.userInput.selectedSentType.id == 2) {
+        if (this.userInput.selectedSentType == this.sentTypeList[0]) {
             this.smsPersonList = tempList;
             this.notificationPersonList = [];
-        } else if (this.userInput.selectedSentType.id == 3) {
+        } else if (this.userInput.selectedSentType == this.sentTypeList[1]) {
             this.smsPersonList = [];
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
-        } else if (this.userInput.selectedSentType.id == 3) {
+        } else if (this.userInput.selectedSentType == this.sentTypeList[2]) {
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
             this.smsPersonList = tempList.filter((temp1) => {
                 return (
@@ -225,9 +218,9 @@ export class SendSmsComponent implements OnInit {
         }
     }
 
-    hasUnicode(): boolean {
+    hasUnicode(message): boolean {
         for (let i = 0; i < this.message.length; ++i) {
-            if (this.message.charCodeAt(i) > 127) {
+            if (message.charCodeAt(i) > 127) {
                 return true;
             }
         }
@@ -397,27 +390,6 @@ export class SendSmsComponent implements OnInit {
         return this.classSectionList.find((classSection) => {
             return classSection['class'].id == classId && classSection['section'].id == sectionId;
         }).selected;
-    }
-
-    getMappingData(person: any): any {
-        let temp = {};
-        temp['schoolName'] = this.user.activeSchool.printName;
-        temp['notification'] = person.notification;
-        temp['date'] = moment(new Date()).format('DD/MM/YYYY');
-        if (this.userInput.selectedSendTo == this.sendToList[0]) {
-            temp['studentName'] = person.name;
-            temp['studentScholarNumber'] = person.scholarNumber;
-            let studentSection = this.studentSectionList.find(studSec => studSec.parentStudent == person.id);
-            let classs = this.classSectionList.find(classSec => classSec.class.id == studentSection.parentClass
-                && classSec.section.id == studentSection.parentDivision);
-            temp['class'] = classs.class.name + ', ' + classs.section.name;
-            temp['fathersName'] = person.fathersName ? person.fathersName : '';
-        } else if (this.userInput.selectedSendTo == this.sendToList[1]) {
-            console.log(person);
-            temp['employeeName'] = person.name;
-        }
-        temp['mobileNumber'] = person.mobileNumber;
-        return temp;
     }
 
 }

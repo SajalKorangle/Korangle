@@ -53,12 +53,12 @@ describe('SendSmsComponent', () => {
     // Component Functions
     it('Component -> hasUnicode() return true', fakeAsync( () =>  {
         component.message = 'This message contains देवनागरी';
-        expect(component.hasUnicode()).toBe(true);
+        expect(component.hasUnicode(component.message)).toBe(true);
     }));
 
     it('Component -> hasUnicode() return false', fakeAsync( () =>  {
         component.message = 'This is a normal English message';
-        expect(component.hasUnicode()).toBe(false);
+        expect(component.hasUnicode(component.message)).toBe(false);
     }));
 
     function compareArray(a: any, b: any): boolean {

@@ -1,14 +1,14 @@
-import {SmsEventSettingsComponent} from '@modules/sms/pages/manage-templates/sms-event-settings.component';
+import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 import {isMobile} from '@classes/common';
 
-export class SmsEventSettingsHtmlRenderer {
+export class ManageTemplatesHtmlRenderer {
 
-    vm: SmsEventSettingsComponent;
+    vm: ManageTemplatesComponent;
 
     constructor() {
     }
 
-    initialize(vm: SmsEventSettingsComponent): void {
+    initialize(vm: ManageTemplatesComponent): void {
         this.vm = vm;
     }
 
@@ -151,4 +151,8 @@ export class SmsEventSettingsHtmlRenderer {
             smsEvent.customEventTemplate.mappedContent.replace(this.vm.variableRegex, '{#var#}') != smsEvent.customEventTemplate.rawContent;
     }
 
+    getVariableList() {
+        console.log(this.vm.userInput.selectedPage);
+        return this.vm.userInput.selectedPage.variableList.map(a => a.displayVariable);
+    }
 }

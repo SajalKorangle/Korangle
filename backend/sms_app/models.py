@@ -202,7 +202,7 @@ class SMSTemplate(models.Model):
 
     communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
                                          verbose_name='communicationType')
-    mappedContent = models.TextField(null=True, verbose_name='mappedContent')
+    mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
 
     APPROVED = 'APPROVED'
     PENDING = 'PENDING'

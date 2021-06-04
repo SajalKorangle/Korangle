@@ -1,13 +1,13 @@
-import {SmsEventSettingsComponent} from '@modules/sms/pages/manage-templates/sms-event-settings.component';
+import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 
-export class SmsEventSettingsServiceAdapter {
+export class ManageTemplatesServiceAdapter {
 
-    vm: SmsEventSettingsComponent;
+    vm: ManageTemplatesComponent;
 
     constructor() {
     }
 
-    initialize(vm: SmsEventSettingsComponent): void {
+    initialize(vm: ManageTemplatesComponent): void {
         this.vm = vm;
     }
 

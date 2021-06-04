@@ -33,6 +33,8 @@ export class RecordAttendanceComponent implements OnInit {
 
     selectedSection: any;
 
+    dataForMapping =  {} as any;
+
     by = 'date';
 
     startDate = null;

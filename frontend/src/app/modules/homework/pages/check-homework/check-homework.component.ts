@@ -34,6 +34,8 @@ export class CheckHomeworkComponent implements OnInit {
     notif_usernames = [];
     smsBalance = 0;
 
+    dataForMapping =  {} as any; 
+
     classSectionHomeworkList: any;
     selectedClassSection: any;
     selectedSubject: any;

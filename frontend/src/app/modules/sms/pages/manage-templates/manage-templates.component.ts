@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { DataStorage } from "@classes/data-storage";
 
-import { SmsEventSettingsServiceAdapter } from './sms-event-settings.service.adapter';
-import { SmsEventSettingsHtmlRenderer } from './sms-event-settings.html.renderer';
+import { ManageTemplatesServiceAdapter } from './manage-templates.service.adapter';
+import { ManageTemplatesHtmlRenderer } from './manage-templates.html.renderer';
 import {SmsService} from '@services/modules/sms/sms.service';
 import {RECEIVER_LIST} from '@modules/attendance/classes/constants';
 import {
@@ -14,18 +14,18 @@ import {
 } from '@modules/sms/classes/constants';
 
 @Component({
-    selector: 'sms-event-settings',
-    templateUrl: './sms-event-settings.component.html',
-    styleUrls: ['./sms-event-settings.component.css' , 'sms-event-settings.component.scss'],
+    selector: 'manage-templates',
+    templateUrl: './manage-templates.component.html',
+    styleUrls: ['./manage-templates.component.css' , 'manage-templates.component.scss'],
     providers: [ SmsService ],
 })
 
-export class SmsEventSettingsComponent implements OnInit {
+export class ManageTemplatesComponent implements OnInit {
 
     user: any;
 
-    serviceAdapter: SmsEventSettingsServiceAdapter;
-    htmlRenderer: SmsEventSettingsHtmlRenderer;
+    serviceAdapter: ManageTemplatesServiceAdapter;
+    htmlRenderer: ManageTemplatesHtmlRenderer;
 
     communicationTypeList = COMMUNICATION_TYPE;
     settingsPagesList = EVENT_SETTING_PAGES;
@@ -77,10 +77,10 @@ export class SmsEventSettingsComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.htmlRenderer = new SmsEventSettingsHtmlRenderer();
+        this.htmlRenderer = new ManageTemplatesHtmlRenderer();
         this.htmlRenderer.initialize(this);
 
-        this.serviceAdapter = new SmsEventSettingsServiceAdapter();
+        this.serviceAdapter = new ManageTemplatesServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
 
