@@ -17,6 +17,8 @@ import { Constants } from 'app/classes/constants';
 
 import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
 
+import { openZoomMeeting, isMobile } from '@classes/common.js';
+
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
@@ -111,7 +113,12 @@ export class ClassroomComponent implements OnInit, OnDestroy {
             if (this.htmlRenderer.meetingEntered) {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                if (isMobile()) {
+                    openZoomMeeting("https://korangle.com" + '/assets/zoom/index.html?' + searchParams.toString());
+                }
+                else {
+                    zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                }
             }
             // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
             this.serviceAdapter.markAttendance();
