@@ -14,6 +14,8 @@ import { SchoolService } from '@services/modules/school/school.service';
 
 import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 
+import { isMobile } from '@classes/common.js';
+
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
@@ -24,6 +26,8 @@ import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/onlin
 export class ClassroomComponent implements OnInit, OnDestroy {
 
     user: any;
+
+    isMobile = isMobile;
 
     weekdays = WEEKDAYS;
 
