@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit,ViewChild,AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import { StudentService } from "../../../../services/modules/student/student.service";
@@ -15,7 +15,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
 import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import {FeeType} from '@services/modules/fees/models/fee-type';
+import { FeeType } from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
 
@@ -36,16 +36,16 @@ import { MatPaginator } from '@angular/material';
 export class ViewDefaultersComponent implements OnInit {
     studentDataSource: MatTableDataSource<any> = new MatTableDataSource([]);
 
-paginator: MatPaginator;
-    @ViewChild(MatPaginator,{static:false})
-set appBacon(paginator: MatPaginator) {
-  this.paginator = paginator;
-  this.studentDataSource.paginator = this.paginator;
-}
-    myFeeTypeList:FeeType[];
+    paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false })
+    set appBacon(paginator: MatPaginator) {
+        this.paginator = paginator;
+        this.studentDataSource.paginator = this.paginator;
+    }
+    myFeeTypeList: FeeType[];
     studentFeeDetailsVisibleList = [];
     lateFeeVisible = true;
-    sessionListWithNoDues=[];
+    sessionListWithNoDues = [];
 
 
 
@@ -450,8 +450,8 @@ set appBacon(paginator: MatPaginator) {
             if (amount != 0) { return amount; }
             return b.totalFeesThisSession - a.totalFeesThisSession;
         });
-        this.studentList.forEach((student,index)=>{
-            student['position']=index+1;
+        this.studentList.forEach((student, index) => {
+            student['position'] = index + 1;
         });
 
         this.filteredClassSectionList = this.filteredClassSectionList.sort((a, b) => {
@@ -459,13 +459,13 @@ set appBacon(paginator: MatPaginator) {
             if (orderNumber != 0) { return orderNumber; }
             return a.section.orderNumber - b.section.orderNumber;
         })
-        this.sessionListWithNoDues=this.getSessionsWithNoDue();
-        this.sessionListWithNoDues.forEach(session=>{
+        this.sessionListWithNoDues = this.getSessionsWithNoDue();
+        this.sessionListWithNoDues.forEach(session => {
             this.columnsToDisplay.push(session.name);
         });
-        let tempArr=[`totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
+        let tempArr = [`totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
         this.columnsToDisplay.push(...tempArr);
-        this.studentDataSource=new MatTableDataSource(this.studentList);
+        this.studentDataSource = new MatTableDataSource(this.studentList);
     }
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
@@ -782,9 +782,9 @@ set appBacon(paginator: MatPaginator) {
     }
 
     printStudentFeesReport(): void {
-        let tempArray=['S No.', 'Name', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
-        this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push("Fees Due ("+session.name+")");
+        let tempArray = ['S No.', 'Name', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session => {
+            tempArray.push("Fees Due (" + session.name + ")");
         });
         tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`);
         let template: any;
@@ -800,8 +800,8 @@ set appBacon(paginator: MatPaginator) {
             row.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
-            this.sessionListWithNoDues.forEach(session=>{
-                row.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+            this.sessionListWithNoDues.forEach(session => {
+                row.push(this.getSessionFeesDue(student.id, session.name) + this.getSessionLateFeesDue(student.id, session.name));
             })
             row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
@@ -813,11 +813,11 @@ set appBacon(paginator: MatPaginator) {
     }
 
     printParentFeesReport(): void {
-        let tempArray=['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)','Fees Due (overall)'];
-        this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push("Fees Due ("+session.name+")");
+        let tempArray = ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session => {
+            tempArray.push("Fees Due (" + session.name + ")");
         });
-        tempArray.push( `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
+        tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
         let template: any;
 
         template = [tempArray];
@@ -839,8 +839,8 @@ set appBacon(paginator: MatPaginator) {
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
-            this.sessionListWithNoDues.forEach(session=>{
-                row.push(this.getParentFeesDueBySession(parent,session));
+            this.sessionListWithNoDues.forEach(session => {
+                row.push(this.getParentFeesDueBySession(parent, session));
             });
             row.push(this.getParentTotalFees(parent));
             row.push(this.getParentFeesPaid(parent));
@@ -858,7 +858,7 @@ set appBacon(paginator: MatPaginator) {
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
                     this.sessionListWithNoDues.forEach(session => {
-                        newRow.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+                        newRow.push(this.getSessionFeesDue(student.id, session.name) + this.getSessionLateFeesDue(student.id, session.name));
                     });
                     newRow.push(student.totalFeesThisSession);
                     newRow.push(student.feesPaidThisSession);
@@ -872,9 +872,9 @@ set appBacon(paginator: MatPaginator) {
     }
 
     downloadStudentFeesReport(): void {
-        let tempArray=['S No.', 'Name', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)','Address', 'Fees Due (till month)','Fees Due (overall)'];
-        this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push("Fees Due ("+session.name+")");
+        let tempArray = ['S No.', 'Name', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session => {
+            tempArray.push("Fees Due (" + session.name + ")");
         });
         tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()})`);
         let template: any;
@@ -892,9 +892,8 @@ set appBacon(paginator: MatPaginator) {
             row.push(student.address);
             row.push(student.feesDueTillMonth);
             row.push(student.feesDueOverall);
-            this.sessionListWithNoDues.forEach(session=>
-            {
-              row.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+            this.sessionListWithNoDues.forEach(session => {
+                row.push(this.getSessionFeesDue(student.id, session.name) + this.getSessionLateFeesDue(student.id, session.name));
             });
             row.push(student.totalFeesThisSession);
             row.push(student.feesPaidThisSession);
@@ -906,11 +905,11 @@ set appBacon(paginator: MatPaginator) {
     }
 
     downloadParentFeesReport(): void {
-        let tempArray=['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)','Address', 'Fees Due (till month)','Fees Due (overall)'];
-        this.sessionListWithNoDues.forEach(session=>{
-            tempArray.push("Fees Due ("+session.name+")");
+        let tempArray = ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
+        this.sessionListWithNoDues.forEach(session => {
+            tempArray.push("Fees Due (" + session.name + ")");
         });
-        tempArray.push( `Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
+        tempArray.push(`Total Fees (${this.getCurrentSessionName()})`, `Fees Paid (${this.getCurrentSessionName()})`, `Discount (${this.getCurrentSessionName()}))`);
 
         let template: any;
 
@@ -936,8 +935,8 @@ set appBacon(paginator: MatPaginator) {
             }
             row.push(this.getParentFeesDueTillMonth(parent));
             row.push(this.getParentFeesDueOverall(parent));
-            this.sessionListWithNoDues.forEach(session=>{
-                row.push(this.getParentFeesDueBySession(parent,session));
+            this.sessionListWithNoDues.forEach(session => {
+                row.push(this.getParentFeesDueBySession(parent, session));
             });
             row.push(this.getParentTotalFees(parent));
             row.push(this.getParentFeesPaid(parent));
@@ -956,7 +955,7 @@ set appBacon(paginator: MatPaginator) {
                     newRow.push(student.feesDueTillMonth);
                     newRow.push(student.feesDueOverall);
                     this.sessionListWithNoDues.forEach(session => {
-                        newRow.push(this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name));
+                        newRow.push(this.getSessionFeesDue(student.id, session.name) + this.getSessionLateFeesDue(student.id, session.name));
                     });
                     newRow.push(student.totalFeesThisSession);
                     newRow.push(student.feesPaidThisSession);
@@ -1066,35 +1065,35 @@ set appBacon(paginator: MatPaginator) {
             }) != undefined
         );
     }
-    getParentFeesDueBySession(parent:any,session:any){
-        let amount=0;
+    getParentFeesDueBySession(parent: any, session: any) {
+        let amount = 0;
         parent.studentList.forEach(student => {
-            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
+            amount += this.getSessionFeesDue(student.id, session.name) + this.getSessionLateFeesDue(student.id, session.name);
         });
         return amount;
     }
-    getFilteredStudentListFeesDueBySession(session:any):any{
-        let amount=0;
-        this.getFilteredStudentList().forEach(student=>{
-            amount+=this.getSessionFeesDue(student.id,session.name)+this.getSessionLateFeesDue(student.id,session.name);
+    getFilteredStudentListFeesDueBySession(session: any): any {
+        let amount = 0;
+        this.getFilteredStudentList().forEach(student => {
+            amount += this.getSessionFeesDue(student.id, session.name) + this.getSessionLateFeesDue(student.id, session.name);
         });
         return amount;
     }
-    getSessionsWithNoDue():any{
-        return this.sessionList.filter(session=>{
-            return this.getFilteredStudentListFeesDueBySession(session)>0 ;
+    getSessionsWithNoDue(): any {
+        return this.sessionList.filter(session => {
+            return this.getFilteredStudentListFeesDueBySession(session) > 0;
         });
     }
-    getStudentFeeByStudentId(id:any):any{
-        return this.studentFeeList.filter((studentFee)=>{
-            return studentFee.parentStudent==id && this.getStudentFeeTotalFees(studentFee)>0 ;
+    getStudentFeeByStudentId(id: any): any {
+        return this.studentFeeList.filter((studentFee) => {
+            return studentFee.parentStudent == id && this.getStudentFeeTotalFees(studentFee) > 0;
         });
     }
-    getStudentFeeByStudentIdAndSession(id:any,sessionName:any):any{
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let session=this.getSessionBySessionName(sessionName);
-        return studentFeeList.filter((studentFee)=>{
-            return studentFee.parentSession==session.id;
+    getStudentFeeByStudentIdAndSession(id: any, sessionName: any): any {
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let session = this.getSessionBySessionName(sessionName);
+        return studentFeeList.filter((studentFee) => {
+            return studentFee.parentSession == session.id;
         });
     }
     getFeeTypeByStudentFee(studentFee: any): any {
@@ -1102,83 +1101,83 @@ set appBacon(paginator: MatPaginator) {
             return feeType.id == studentFee.parentFeeType;
         });
     }
-    getTotalLateFees(id:any):any{
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let amount=0;
-        studentFeeList.forEach((studentFee)=>{
-            this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentLateFeeTotal(studentFee,installment);
+    getTotalLateFees(id: any): any {
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let amount = 0;
+        studentFeeList.forEach((studentFee) => {
+            this.installmentList.forEach((installment) => {
+                amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
             });
         })
         return amount;
     }
-    getTotalLateFeesDue(id:any):any{
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let amount=0;
-        studentFeeList.forEach((studentFee)=>{
-            this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentLateFeesDue(studentFee,installment);
+    getTotalLateFeesDue(id: any): any {
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let amount = 0;
+        studentFeeList.forEach((studentFee) => {
+            this.installmentList.forEach((installment) => {
+                amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
             })
         })
         return amount;
     }
-    getSessionBySessionName(sessionName:any):any{
-      return  this.sessionList.find((session)=>{
-            return session.name==sessionName;
+    getSessionBySessionName(sessionName: any): any {
+        return this.sessionList.find((session) => {
+            return session.name == sessionName;
         });
     }
-    getSessionFeesDue(id:any,sessionName:any):any{
-        let session=this.getSessionBySessionName(sessionName);
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let filteredStudentFeeList=studentFeeList.filter((studentFee)=>{
-            return studentFee.parentSession==session.id ;
+    getSessionFeesDue(id: any, sessionName: any): any {
+        let session = this.getSessionBySessionName(sessionName);
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let filteredStudentFeeList = studentFeeList.filter((studentFee) => {
+            return studentFee.parentSession == session.id;
         });
-        let amount=0;
-        filteredStudentFeeList.forEach((studentFee)=>{
-            this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentFeesDue(studentFee,installment);
+        let amount = 0;
+        filteredStudentFeeList.forEach((studentFee) => {
+            this.installmentList.forEach((installment) => {
+                amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
             });
         });
         return amount;
     }
-    getSessionTotalFees(id:any,sessionName:any):any{
-        let session=this.getSessionBySessionName(sessionName);
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let filteredStudentFeeList=studentFeeList.filter((studentFee)=>{
-            return studentFee.parentSession==session.id ;
+    getSessionTotalFees(id: any, sessionName: any): any {
+        let session = this.getSessionBySessionName(sessionName);
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let filteredStudentFeeList = studentFeeList.filter((studentFee) => {
+            return studentFee.parentSession == session.id;
         });
-        let amount=0;
-        filteredStudentFeeList.forEach((studentFee)=>{
-            this.installmentList.forEach((installment)=>{
-                amount+=studentFee[installment+"Amount"];
+        let amount = 0;
+        filteredStudentFeeList.forEach((studentFee) => {
+            this.installmentList.forEach((installment) => {
+                amount += studentFee[installment + "Amount"];
             });
         });
         return amount;
     }
-    getSessionLateFeesDue(id:any,sessionName:any):any{
-        let session=this.getSessionBySessionName(sessionName);
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let filteredStudentFeeList=studentFeeList.filter((studentFee)=>{
-            return studentFee.parentSession==session.id ;
+    getSessionLateFeesDue(id: any, sessionName: any): any {
+        let session = this.getSessionBySessionName(sessionName);
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let filteredStudentFeeList = studentFeeList.filter((studentFee) => {
+            return studentFee.parentSession == session.id;
         });
-        let amount=0;
-        filteredStudentFeeList.forEach((studentFee)=>{
-            this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentLateFeesDue(studentFee,installment);
+        let amount = 0;
+        filteredStudentFeeList.forEach((studentFee) => {
+            this.installmentList.forEach((installment) => {
+                amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
             });
         });
         return amount;
     }
-    getSessionLateFeeTotal(id:any,sessionName:any):any{
-        let session=this.getSessionBySessionName(sessionName);
-        let studentFeeList=this.getStudentFeeByStudentId(id);
-        let filteredStudentFeeList=studentFeeList.filter((studentFee)=>{
-            return studentFee.parentSession==session.id ;
+    getSessionLateFeeTotal(id: any, sessionName: any): any {
+        let session = this.getSessionBySessionName(sessionName);
+        let studentFeeList = this.getStudentFeeByStudentId(id);
+        let filteredStudentFeeList = studentFeeList.filter((studentFee) => {
+            return studentFee.parentSession == session.id;
         });
-        let amount=0;
-        filteredStudentFeeList.forEach((studentFee)=>{
-            this.installmentList.forEach((installment)=>{
-                amount+=this.getStudentFeeInstallmentLateFeeTotal(studentFee,installment);
+        let amount = 0;
+        filteredStudentFeeList.forEach((studentFee) => {
+            this.installmentList.forEach((installment) => {
+                amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
             });
         });
         return amount;
@@ -1275,7 +1274,7 @@ set appBacon(paginator: MatPaginator) {
     getFilteredSubFeeReceiptListByStudentFee(studentFee: any): any {
         let filteredSubFeeReceiptList = this.subFeeReceiptList.filter((subFeeReceipt) => {
             return (
-                subFeeReceipt.parentStudentFee == studentFee.id 
+                subFeeReceipt.parentStudentFee == studentFee.id
             );
         });
         return filteredSubFeeReceiptList;
@@ -1283,7 +1282,7 @@ set appBacon(paginator: MatPaginator) {
     getFilteredSubDiscountListByStudentFee(studentFee: any): any {
         let filteredSubDiscountList = this.subDiscountList.filter((subDiscount) => {
             return (
-                subDiscount.parentStudentFee == studentFee.id 
+                subDiscount.parentStudentFee == studentFee.id
             );
         });
         return filteredSubDiscountList;

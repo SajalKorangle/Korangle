@@ -3,27 +3,27 @@ import { ViewDefaultersComponent } from './view-defaulters.component';
 export class ViewDefaultersServiceAdapter {
     vm: ViewDefaultersComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
-  
+
 
     initializeAdapter(vm: ViewDefaultersComponent): void {
         this.vm = vm;
     }
 
     initializeData(): void {
-        
-        const feeTypeList={
+
+        const feeTypeList = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
         };
         Promise.all
-        ([  
-            this.vm.feeService.getList(this.vm.feeService.fee_type,feeTypeList),
-        ])
-        .then((val)=>{
-            this.vm.myFeeTypeList=val[0];
-        });
+            ([
+                this.vm.feeService.getList(this.vm.feeService.fee_type, feeTypeList),
+            ])
+            .then((val) => {
+                this.vm.myFeeTypeList = val[0];
+            });
         this.vm.isLoading = true;
 
         const student_section_list = {

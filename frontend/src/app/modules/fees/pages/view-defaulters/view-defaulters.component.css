@@ -1,14 +1,13 @@
 @media only screen and (min-width: 992px) {
   .main-content {
-      padding: 0px;
-      margin: 0px;
+    padding: 0px;
+    margin: 0px;
   }
 
   .table-content {
-      margin-top: 40px;
-      margin-left: 40px;
+    margin-top: 40px;
+    margin-left: 40px;
   }
-
 }
 .table {
   display: flex !important;
@@ -16,39 +15,39 @@
   width: 100% !important;
   margin: 0 auto !important;
 }
-th{
+th {
   text-align: left;
-  padding:12px;
+  padding: 12px;
 }
-.expanded-header{
-  width:200px;
-  height:50px;
+.expanded-header {
+  width: 200px;
+  height: 50px;
 }
-.expanded-session{
-  width:200px;
-  height:40px;
+.expanded-session {
+  width: 200px;
+  height: 40px;
 }
-.expanded-session-name{
-  width:200px;
-  height:40px;
+.expanded-session-name {
+  width: 200px;
+  height: 40px;
   padding-left: 15px;
 }
-.expanded-Feetype{
-  width:200px;
-  height:40px;
+.expanded-Feetype {
+  width: 200px;
+  height: 40px;
 }
-.expanded-Feetype-name{
-  width:200px;
-  height:40px;
+.expanded-Feetype-name {
+  width: 200px;
+  height: 40px;
   padding-left: 30px;
 }
-.expanded-installment{
-  width:200px;
-  height:40px;
+.expanded-installment {
+  width: 200px;
+  height: 40px;
 }
-.expanded-installment-name{
-  width:200px;
-  height:40px;
+.expanded-installment-name {
+  width: 200px;
+  height: 40px;
   padding-left: 50px;
 }
 .container-fluid {
@@ -79,7 +78,7 @@ tr.example-element-row:not(.example-expanded-row):hover {
 
 tr.example-element-row:not(.example-expanded-row):active {
   background: #efefef;
-} 
+}
 
 .example-element-row td {
   border-bottom-width: 0;

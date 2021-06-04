@@ -3,7 +3,7 @@ import { MatTableModule } from '@angular/material'
 import { ViewDefaultersRoutingModule } from './view-defaulters.routing';
 import { ComponentsModule } from "../../../../components/components.module";
 import { ViewDefaultersComponent } from "./view-defaulters.component";
-import { MatPaginatorModule} from '@angular/material';
+import { MatPaginatorModule } from '@angular/material';
 
 
 @NgModule({
