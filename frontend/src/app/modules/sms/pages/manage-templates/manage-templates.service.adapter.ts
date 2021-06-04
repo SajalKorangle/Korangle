@@ -1,4 +1,4 @@
-import {SmsEventSettingsComponent} from '@modules/sms/pages/sms-event-settings/sms-event-settings.component';
+import {SmsEventSettingsComponent} from '@modules/sms/pages/manage-templates/sms-event-settings.component';
 
 export class SmsEventSettingsServiceAdapter {
 

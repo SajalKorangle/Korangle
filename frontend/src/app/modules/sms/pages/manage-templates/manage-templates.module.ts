@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import {ComponentsModule} from "@components/components.module";
-import {SmsEventSettingsComponent} from '@modules/sms/pages/sms-event-settings/sms-event-settings.component';
-import {SmsEventSettingsRouting} from '@modules/sms/pages/sms-event-settings/sms-event-settings.routing';
-import {ModuleComponentsModule} from '@modules/module-components/module-components.module';
+import {SmsEventSettingsComponent} from '@modules/sms/pages/manage-templates/sms-event-settings.component';
+import {SmsEventSettingsRouting} from '@modules/sms/pages/manage-templates/sms-event-settings.routing';
 
 @NgModule({
     declarations: [
@@ -11,7 +10,6 @@ import {ModuleComponentsModule} from '@modules/module-components/module-componen
     imports: [
         SmsEventSettingsRouting,
         ComponentsModule,
-        ModuleComponentsModule,
     ],
     exports: [],
     providers: [],
