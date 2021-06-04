@@ -292,9 +292,9 @@
                 </div>
             </div>
 
-            <table class="table table-hover example-container">
+            <table class="table table-hover">
                 <tbody>
-                <!-- <thead class="text-{{user.activeSchool.secondaryThemeColor}}"> -->
+                    <!-- <thead class="text-{{user.activeSchool.secondaryThemeColor}}"> -->
                     <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
                         <th>Select</th>
                         <th>S No.</th>
@@ -306,14 +306,14 @@
                         <th>Fees Due<br />(Till Month)</th>
                         <th>Fees Due<br />(Overall)</th>
                         <th *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
-                                Fees Due<br />({{session.name}})
+                            Fees Due<br />({{session.name}})
                         </th>
                         <th>Total Fees<br />({{getCurrentSessionName()}})</th>
                         <th>Fees Paid<br />({{getCurrentSessionName()}})</th>
                         <th>Discount<br />({{getCurrentSessionName()}})</th>
                     </tr>
-                <!-- </thead> -->
-                <!-- <tbody> -->
+                    <!-- </thead> -->
+                    <!-- <tbody> -->
                     <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
                         <tr>
                             <td>
@@ -358,7 +358,7 @@
                             <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
                             <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
                             <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
-                                    {{getParentFeesDueBySession(parent,session)}}
+                                {{getParentFeesDueBySession(parent,session)}}
                             </td>
                             <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
                             <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
@@ -384,7 +384,7 @@
                                     <td>{{student.feesDueTillMonth | indianCurrency}}</td>
                                     <td>{{student.feesDueOverall | indianCurrency}}</td>
                                     <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
-                                            {{getSessionFeesDue(student.id,session.name)+getSessionLateFeesDue(student.id,session.name)}}
+                                        {{getSessionFeesDue(student.id,session.name)+getSessionLateFeesDue(student.id,session.name)}}
                                     </td>
                                     <td>{{student.totalFeesThisSession | indianCurrency}}</td>
                                     <td>{{student.feesPaidThisSession | indianCurrency}}</td>
@@ -566,7 +566,7 @@
                 </div>
             </div>
 
-            <div class="example-container mat-elevation-z8 ">
+            
 
                 <table mat-table [dataSource]="studentDataSource" multiTemplateDataRows>
                     <ng-container matColumnDef="select">
@@ -578,7 +578,7 @@
                     </ng-container>&ensp;
                     <ng-container matColumnDef="s.no">
                         <th mat-header-cell *matHeaderCellDef> <b>S.No</b> </th>
-                        <td align="center" mat-cell *matCellDef="let element;dataIndex as i"> {{i+1}}. </td>
+                        <td align="center" mat-cell *matCellDef="let element"> {{element.position}}. </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef> <b>Student</b> </th>
@@ -658,128 +658,132 @@
                             <div class="example-element-detail"
                                 [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                                 <table class="table table-hover">
-                                    
+
+                                    <tr style="font-weight: 500 !important; font-size: 16px !important">
+                                        <th class="expanded-header">Sessions</th>
+                                        <th class="expanded-header">Fees Due</th>
+                                        <th class="expanded-header">Fees total</th>
+                                        <th class="expanded-header">Late Fees Due</th>
+                                        <th class="expanded-header">Late Fees Total</th>
+                                        <th class="expanded-header"></th>
+                                    </tr>
+
+
+
+
+                                    <div *ngFor="let dueBySession of element.feesDueBySession; index as sessionIndex;">
+
                                         <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                            <th class="expanded-header">Sessions</th>
-                                            <th class="expanded-header">Fees Due</th>
-                                            <th class="expanded-header">Fees total</th>
-                                            <th class="expanded-header">Late Fees Due</th>
-                                            <th class="expanded-header">Late Fees Total</th>
-                                            <th class="expanded-header"></th>
+                                            <td class="expanded-session-name">
+                                                {{sessionIndex+1}}.{{dueBySession.parentSession}}</td>
+                                            <td class="expanded-session">
+                                                {{getSessionFeesDue(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                            <td class="expanded-session">
+                                                {{getSessionTotalFees(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                            <td class="expanded-session">
+                                                {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                            <td class="expanded-session">
+                                                {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}
+                                            </td>
                                         </tr>
-                                    
-                                    
 
-                                        
-                                        <div 
-                                            *ngFor="let dueBySession of element.feesDueBySession; index as sessionIndex;">
+                                        <div
+                                            *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);index as studentFeeIndex">
+                                            <div *ngIf="studentFee.isAnnually">
+                                                <!-- Student Fee Annually -->
 
-                                            <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                <td class="expanded-session-name">{{sessionIndex+1}}.{{dueBySession.parentSession}}</td>
-                                                <td class="expanded-session">
-                                                    {{getSessionFeesDue(element.id,dueBySession.parentSession)}}
-                                                </td>
-                                                <td class="expanded-session">
-                                                    {{getSessionTotalFees(element.id,dueBySession.parentSession)}}
-                                                </td>
-                                                <td class="expanded-session">
-                                                    {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}}
-                                                </td>
-                                                <td class="expanded-session">
-                                                    {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}
-                                                </td>
-                                            </tr>
+                                                <tr style="font-weight: 500 !important; font-size: 16px !important">
+                                                    <td align="left" class="expanded-Feetype-name">
+                                                        {{studentFeeIndex+1}}.
+                                                        {{
+                                                        getFeeTypeByStudentFee(studentFee).name }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{
+                                                        getStudentFeeInstallmentFeesDue(studentFee,
+                                                        'april') }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{
+                                                        getStudentFeeInstallmentTotalFees(studentFee,
+                                                        'april') }}
+                                                    </td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{ getStudentFeeInstallmentLateFeesDue(studentFee,
+                                                        'april')
+                                                        }}
+                                                    </td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{ getStudentFeeInstallmentLateFeeTotal(studentFee,
+                                                        'april')
+                                                        }}
+                                                    </td>
 
-                                            <div
-                                                *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);index as studentFeeIndex">
-                                                <div *ngIf="studentFee.isAnnually">
-                                                    <!-- Student Fee Annually -->
+                                                </tr>
 
-                                                    <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                        <td align="left" class="expanded-Feetype-name">{{studentFeeIndex+1}}.
-                                                            {{
-                                                            getFeeTypeByStudentFee(studentFee).name }}
-                                                        </td>
-                                                        <td class="expanded-Feetype">{{
-                                                            getStudentFeeInstallmentFeesDue(studentFee,
-                                                            'april') }}
-                                                        </td>
-                                                        <td class="expanded-Feetype">{{
-                                                            getStudentFeeInstallmentTotalFees(studentFee,
-                                                            'april') }}
-                                                        </td>
-                                                        <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
-                                                            {{ getStudentFeeInstallmentLateFeesDue(studentFee,
-                                                            'april')
-                                                            }}
-                                                        </td>
-                                                        <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
-                                                            {{ getStudentFeeInstallmentLateFeeTotal(studentFee,
-                                                            'april')
-                                                            }}
-                                                        </td>
+                                            </div>
+                                            <div *ngIf="!studentFee.isAnnually">
+                                                <!-- Student Fee Not Annually -->
 
-                                                    </tr>
+                                                <tr style="font-weight: 500 !important; font-size: 16px !important">
+                                                    <td align="left" class="expanded-Feetype-name">
+                                                        {{studentFeeIndex+1}}.
+                                                        {{
+                                                        getFeeTypeByStudentFee(studentFee).name }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{ getStudentFeeFeesDue(studentFee) }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{ getStudentFeeTotalFees(studentFee)
+                                                        }}
+                                                    </td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{
+                                                        getStudentFeeLateFeesDue(studentFee) }}</td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{
+                                                        getStudentFeeLateFeeTotal(studentFee) }}</td>
+                                                    <td class="expanded-Feetype">
+                                                        <button type="button"
+                                                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                                            style="padding: 3px 8px"
+                                                            (click)="showOrHideStudentFeeDetails(studentFee)">
+                                                            <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">
+                                                                +</ng-container>
+                                                        </button>
+                                                    </td>
+                                                </tr>
 
-                                                </div>
-                                                <div *ngIf="!studentFee.isAnnually">
-                                                    <!-- Student Fee Not Annually -->
+                                                <div *ngIf="studentFeeDetailsVisible(studentFee)">
+                                                    <ng-container
+                                                        *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee);index as installmentIndex">
 
-                                                    <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                        <td align="left" class="expanded-Feetype-name">  {{studentFeeIndex+1}}. 
-                                                            {{
-                                                            getFeeTypeByStudentFee(studentFee).name }}
-                                                        </td>
-                                                        <td class="expanded-Feetype">{{ getStudentFeeFeesDue(studentFee) }}
-                                                        </td>
-                                                        <td class="expanded-Feetype">{{ getStudentFeeTotalFees(studentFee)
-                                                            }}
-                                                        </td>
-                                                        <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">{{
-                                                            getStudentFeeLateFeesDue(studentFee) }}</td>
-                                                        <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">{{
-                                                            getStudentFeeLateFeeTotal(studentFee) }}</td>
-                                                        <td class="expanded-Feetype">
-                                                            <button type="button"
-                                                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                                                                style="padding: 3px 8px"
-                                                                (click)="showOrHideStudentFeeDetails(studentFee)">
-                                                                <ng-container
-                                                                    *ngIf="studentFeeDetailsVisible(studentFee)">-
-                                                                </ng-container>
-                                                                <ng-container
-                                                                    *ngIf="!studentFeeDetailsVisible(studentFee)">
-                                                                    +</ng-container>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
+                                                        <tr
+                                                            style="font-weight: 500 !important; font-size: 16px !important">
+                                                            <td align="left" class="expanded-installment-name">
+                                                                {{installmentIndex+1}}.{{installment|titlecase}}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentFeesDue(studentFee,
+                                                                installment) }}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentTotalFees(studentFee,
+                                                                installment) }}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentLateFeesDue(studentFee,
+                                                                installment) }}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentLateFeeTotal(studentFee,
+                                                                installment) }}</td>
+                                                        </tr>
 
-                                                    <div *ngIf="studentFeeDetailsVisible(studentFee)">
-                                                        <ng-container
-                                                            *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee);index as installmentIndex">
-
-                                                            <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                                <td align="left" class="expanded-installment-name">{{installmentIndex+1}}.{{installment|titlecase}}</td>
-                                                                <td class="expanded-installment">{{
-                                                                    getStudentFeeInstallmentFeesDue(studentFee,
-                                                                    installment) }}</td>
-                                                                <td class="expanded-installment">{{
-                                                                    getStudentFeeInstallmentTotalFees(studentFee,
-                                                                    installment) }}</td>
-                                                                <td class="expanded-installment">{{
-                                                                    getStudentFeeInstallmentLateFeesDue(studentFee,
-                                                                    installment) }}</td>
-                                                                <td class="expanded-installment">{{
-                                                                    getStudentFeeInstallmentLateFeeTotal(studentFee,
-                                                                    installment) }}</td>
-                                                            </tr>
-
-                                                        </ng-container>
-                                                    </div>
+                                                    </ng-container>
                                                 </div>
                                             </div>
                                         </div>
-                                    
+                                    </div>
+
                                 </table>
                             </div>
                         </td>
@@ -794,13 +798,13 @@
                         [ngClass]="{gray: even}" class="mat-row example-detail-row">
                     </tr>
                 </table>
+                <mat-paginator [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
 
 
 
 
 
-
-            </div>
+            
 
         </ng-container>
 

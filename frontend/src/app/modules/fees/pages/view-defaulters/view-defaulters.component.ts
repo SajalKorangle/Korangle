@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit,ViewChild,AfterViewInit } from '@angular/core';
 import { ViewDefaultersServiceAdapter } from "./view-defaulters.service.adapter";
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import { StudentService } from "../../../../services/modules/student/student.service";
@@ -17,6 +17,7 @@ import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {FeeType} from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
+import { MatPaginator } from '@angular/material';
 
 @Component({
     selector: 'view-defaulters',
@@ -33,7 +34,14 @@ import { MatTableDataSource } from '@angular/material';
 })
 
 export class ViewDefaultersComponent implements OnInit {
+    studentDataSource: MatTableDataSource<any> = new MatTableDataSource([]);
 
+paginator: MatPaginator;
+    @ViewChild(MatPaginator,{static:false})
+set appBacon(paginator: MatPaginator) {
+  this.paginator = paginator;
+  this.studentDataSource.paginator = this.paginator;
+}
     myFeeTypeList:FeeType[];
     studentFeeDetailsVisibleList = [];
     lateFeeVisible = true;
@@ -111,7 +119,6 @@ export class ViewDefaultersComponent implements OnInit {
 
     isLoading = false;
 
-    studentDataSource: MatTableDataSource<any>=new MatTableDataSource();
 
     columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`]//[`Session 2017-18`,`Session 2018-19`,`Session 2019-20`,`Session 2020-21`,`Session 2021-22`, `totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
 
@@ -167,8 +174,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     handleLoading(): void {
-        this.studentList.forEach(student => {
-
+        this.studentList.forEach((student) => {
             let filteredStudentFeeList = this.studentFeeList.filter(studentFee => {
                 return studentFee.parentStudent == student.id;
             });
@@ -444,19 +450,22 @@ export class ViewDefaultersComponent implements OnInit {
             if (amount != 0) { return amount; }
             return b.totalFeesThisSession - a.totalFeesThisSession;
         });
+        this.studentList.forEach((student,index)=>{
+            student['position']=index+1;
+        });
 
         this.filteredClassSectionList = this.filteredClassSectionList.sort((a, b) => {
             let orderNumber = a.class.orderNumber - b.class.orderNumber
             if (orderNumber != 0) { return orderNumber; }
             return a.section.orderNumber - b.section.orderNumber;
         })
-        this.studentDataSource = this.studentList;
         this.sessionListWithNoDues=this.getSessionsWithNoDue();
         this.sessionListWithNoDues.forEach(session=>{
             this.columnsToDisplay.push(session.name);
         });
         let tempArr=[`totalFeesThisSession`, `feesPaidThisSession`, 'discountThisSession'];
         this.columnsToDisplay.push(...tempArr);
+        this.studentDataSource=new MatTableDataSource(this.studentList);
     }
 
     checkAndAddToFilteredClassSectionList(classs: any, section: any): void {
