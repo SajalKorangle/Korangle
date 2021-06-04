@@ -101,11 +101,6 @@ const routes: Routes = [
         loadChildren: 'app/modules/fees/pages/update-via-excel/update-via-excel.module#UpdateViaExcelModule',
         data: { moduleName: 'fees' },
     },
-    {
-        path: 'manage_defaulters_template',
-        loadChildren: 'app/modules/fees/pages/manage-defaulters-template/manage-defaulters-template.module#ManageDefaultersTemplateModule',
-        data: { moduleName: 'fees' },
-    },
 
     {
         path: '',

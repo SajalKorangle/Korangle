@@ -1,6 +1,6 @@
-import {UserService} from '../services/modules/user/user.service';
-import {NotificationService} from '../services/modules/notification/notification.service';
-import {SmsService} from '../services/modules/sms/sms.service';
+import {UserService} from './modules/user/user.service';
+import {NotificationService} from './modules/notification/notification.service';
+import {SmsService} from './modules/sms/sms.service';
 import {EVENT_SETTING_PAGES} from '@modules/sms/classes/constants';
 
 /*
@@ -19,7 +19,7 @@ SentUpdateType -
     ],
 })*/
 
-export class UpdateService {
+export class MessageService {
     STUDENT_LIMITER = 200;
     notif_usernames = [];
     sentTypeList = ['NULL', 'SMS', 'NOTIFICATION', 'NOTIF./SMS'];

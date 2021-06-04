@@ -201,7 +201,7 @@ export class CheckHomeworkServiceAdapter {
                             this.getHomeworkReport();
                             this.vm.isLoading = false;
                         }
-                        this.vm.updateService.fetchGCMDevicesNew(this.vm.studentList);
+                        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
                         this.vm.dataForMapping['studentList'] = this.vm.studentList;
                     },
                     (error) => {
@@ -276,14 +276,14 @@ export class CheckHomeworkServiceAdapter {
            this.vm.dataForMapping['homework'] = this.vm.selectedHomework;
            this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
            if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
-                this.vm.updateService.sendEventNotification(
+                this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
                     'Homework Checked',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
                 );
             } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
-               this.vm.updateService.sendEventNotification(
+               this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
                     'Homework Resubmission',
                     this.vm.user.activeSchool.dbId,

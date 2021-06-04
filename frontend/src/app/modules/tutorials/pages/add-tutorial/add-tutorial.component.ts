@@ -6,7 +6,7 @@ import { StudentService } from '@services/modules/student/student.service';
 import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { SmsService } from 'app/services/modules/sms/sms.service';
@@ -50,7 +50,7 @@ export class AddTutorialComponent implements OnInit {
 
     smsBalance: any;
 
-    updateService: any;
+    messageService: any;
 
     dataForMapping =  {} as any;
 
@@ -97,7 +97,7 @@ export class AddTutorialComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.htmlRenderer = new AddTutorialHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);

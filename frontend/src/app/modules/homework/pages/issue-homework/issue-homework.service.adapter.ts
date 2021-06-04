@@ -155,7 +155,7 @@ export class IssueHomeworkServiceAdapter {
                     // });
                     this.studentNotificationList = value[0];
                     // this.fetchGCMDevices(this.studentNotificationList);
-                    this.vm.updateService.fetchGCMDevicesNew(this.studentNotificationList);
+                    this.vm.messageService.fetchGCMDevicesNew(this.studentNotificationList);
                     this.vm.dataForMapping['studentList'] = this.studentNotificationList;
                     this.vm.isLoading = false;
                 });
@@ -237,7 +237,7 @@ export class IssueHomeworkServiceAdapter {
         this.vm.currentHomework = new Homework();
         this.vm.currentHomeworkImages = [];
         this.vm.isLoading = false;
-        this.vm.updateService.sendEventNotification(
+        this.vm.messageService.sendEventNotification(
             this.vm.dataForMapping,
             'Homework Creation',
             this.vm.user.activeSchool.dbId,
@@ -293,7 +293,7 @@ export class IssueHomeworkServiceAdapter {
                 this.vm.homeworkList.splice(index, 1);
             }
         });
-        this.vm.updateService.sendEventNotification(
+        this.vm.messageService.sendEventNotification(
             this.studentNotificationList,
             'Homework Deletion',
             this.vm.user.activeSchool.dbId,
@@ -351,7 +351,7 @@ export class IssueHomeworkServiceAdapter {
         const value = await Promise.all(promises);
         this.populateEditedHomework(value);
         this.vm.dataForMapping['homework'] = value[0];
-        this.vm.updateService.sendEventNotification(
+        this.vm.messageService.sendEventNotification(
             this.studentNotificationList,
             'Homework Updation',
             this.vm.user.activeSchool.dbId,

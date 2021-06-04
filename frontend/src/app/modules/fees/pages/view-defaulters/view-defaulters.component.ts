@@ -14,7 +14,7 @@ import {SchoolService} from '../../../../services/modules/school/school.service'
 import {PrintService} from '../../../../print/print-service';
 import {PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/view-defaulters.html.renderer';
-import {UpdateService} from '../../../../update/update-service';
+import {MessageService} from '@services/message-service';
 import moment = require('moment');
 import {STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
@@ -68,7 +68,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     selectedFilterType = this.filterTypeList[0];
 
-    updateService: any;
+    messageService: any;
 
     installmentNumber = 0;
 
@@ -122,7 +122,7 @@ export class ViewDefaultersComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -812,7 +812,7 @@ export class ViewDefaultersComponent implements OnInit {
             this.getFilteredStudentList().filter((item) => {
                 return item.mobileNumber && item.selected && item.notification;
             }).forEach(student => {
-                if (!this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message)) {
+                if (!this.messageService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message)) {
                     count++;
                     studentList.push(student);
                 }
@@ -822,7 +822,7 @@ export class ViewDefaultersComponent implements OnInit {
                 return item.mobileNumber && item.selected;
             }).forEach(parent => {
                 parent.studentList.forEach(student => {
-                    if (!this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message)) {
+                    if (!this.messageService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message)) {
                         count++;
                         studentList.push(student);
                     }
@@ -844,11 +844,11 @@ export class ViewDefaultersComponent implements OnInit {
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
                     if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
-                        if (!this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, item.id, this.message))
+                        if (!this.messageService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, item.id, this.message))
                         {
                             count += this.getMessageCount(
-                                this.updateService.getMessageFromTemplate(this.message,
-                                    this.updateService.getMappingData(STUDENT_VARIABLES, this.dataForMapping, 'student', item.id))
+                                this.messageService.getMessageFromTemplate(this.message,
+                                    this.messageService.getMappingData(STUDENT_VARIABLES, this.dataForMapping, 'student', item.id))
                             );
                             studentList.push(item);
                         }
@@ -861,11 +861,11 @@ export class ViewDefaultersComponent implements OnInit {
                     if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
                         this.dataForMapping['studentList'] = item.studentList;
                         item.studentList.forEach(student => {
-                        if (this.updateService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message))
+                        if (this.messageService.checkForDuplicate(STUDENT_VARIABLES, studentList, this.dataForMapping, student.id, this.message))
                         {
                             count += this.getMessageCount(
-                                this.updateService.getMessageFromTemplate(this.message,
-                                    this.updateService.getMappingData(STUDENT_VARIABLES, this.dataForMapping, 'student', student.id))
+                                this.messageService.getMessageFromTemplate(this.message,
+                                    this.messageService.getMappingData(STUDENT_VARIABLES, this.dataForMapping, 'student', student.id))
                             );
                             studentList.push(student);
                         }

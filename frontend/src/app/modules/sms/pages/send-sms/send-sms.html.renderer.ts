@@ -170,8 +170,8 @@ export class SendSmsHtmlRenderer {
         let person = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? 'student' : 'employee';
         this.vm.getMobileNumberList('sms').forEach(student => {
             count += this.getSMSCount(
-                this.vm.studentUpdateService.getMessageFromTemplate(this.vm.message,
-                    this.vm.studentUpdateService.getMappingData(STUDENT_VARIABLES, this.vm.dataForMapping, person, student.id))
+                this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
+                    this.vm.studentMessageService.getMappingData(STUDENT_VARIABLES, this.vm.dataForMapping, person, student.id))
             );
         });
         return count;

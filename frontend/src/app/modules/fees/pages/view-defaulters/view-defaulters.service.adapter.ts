@@ -156,7 +156,7 @@ export class ViewDefaultersServiceAdapter {
                             loopVariable = loopVariable + 1;
                         }
 
-                        this.vm.updateService.fetchGCMDevicesNew(this.vm.studentList);
+                        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
                         this.vm.handleLoading();
                         this.vm.selectedFilterType = this.vm.filterTypeList[0];
                         this.vm.isLoading = false;
@@ -202,7 +202,7 @@ export class ViewDefaultersServiceAdapter {
         }
 
         this.vm.dataForMapping['studentList'] = studentData;
-        await this.vm.updateService.smsNotificationSender(
+        await this.vm.messageService.smsNotificationSender(
             this.vm.dataForMapping,
             this.vm.backendData.defaultersSMSEvent,
             this.vm.sentTypeList.indexOf(this.vm.selectedSentType) + 2,

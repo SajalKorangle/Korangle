@@ -1,10 +1,9 @@
-import {AddTutorialComponent} from './add-tutorial.component';
+import { AddTutorialComponent } from './add-tutorial.component';
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
 
-    constructor() {
-    }
+    constructor() {}
 
     initializeAdapter(vm: AddTutorialComponent): void {
         this.vm = vm;
@@ -158,7 +157,7 @@ export class AddTutorialServiceAdapter {
         this.vm.initializeNewTutorial();
         this.vm.stateKeeper.isLoading = false;
         this.vm.dataForMapping['tutorial'] = value[0];
-        this.vm.updateService.sendEventNotification(
+        this.vm.messageService.sendEventNotification(
             this.vm.dataForMapping,
             this.vm.tutorialPageSetting.variableList,
             'Tutorial Creation',
@@ -195,7 +194,7 @@ export class AddTutorialServiceAdapter {
             this.vm.stateKeeper.tutorialUpdating = false;
             tutorial.editable = false;
             this.vm.dataForMapping['tutorial'] = tutorial;
-            this.vm.updateService.sendEventNotification(
+            this.vm.messageService.sendEventNotification(
                 this.vm.dataForMapping,
                 this.vm.tutorialPageSetting.variableList,
                 'Tutorial Updation',
@@ -265,7 +264,7 @@ export class AddTutorialServiceAdapter {
                 this.vm.htmlRenderer.checkEnableAddButton();
                 this.vm.dataForMapping['tutorial'] = tutorial;
                 this.vm.stateKeeper.tutorialUpdating = false;
-                this.vm.updateService.sendEventNotification(
+                this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
                     this.vm.tutorialPageSetting.variableList,
                     'Tutorial Deletion',
@@ -295,7 +294,7 @@ export class AddTutorialServiceAdapter {
         this.vm.currentClassStudentList = value[0];
         this.vm.backendData.currentClassStudentSectionList = value[1];
         this.vm.dataForMapping['studentSectionList'] = value[1];
-        this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
         this.vm.dataForMapping['studentList'] = this.vm.currentClassStudentList;
 
     }

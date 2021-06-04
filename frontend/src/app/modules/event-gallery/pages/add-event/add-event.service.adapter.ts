@@ -137,7 +137,7 @@ export class AddEventServiceAdapter {
                     (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
                 );
                 this.attachEventTitle(this.vm.notifyPersonData, value1[0]);
-                this.vm.updateService.sendSMSNotificationNew(
+                this.vm.messageService.sendSMSNotificationNew(
                     this.vm.notifyPersonData,
                     this.vm.eventPostedMessage,
                     this.informationMessageType,
@@ -244,7 +244,7 @@ export class AddEventServiceAdapter {
                 );
                 this.attachEventTitle(this.vm.notifyPersonData, editingEvent);
                 console.log(this.vm.notifyPersonData);
-                this.vm.updateService.sendSMSNotificationNew(
+                this.vm.messageService.sendSMSNotificationNew(
                     this.vm.notifyPersonData,
                     this.vm.eventDeletedMessage,
                     this.informationMessageType,
@@ -281,7 +281,7 @@ export class AddEventServiceAdapter {
             ]).then((value2) => {
                 this.populateNotifyPersonData(value2[0], value2[1]);
                 this.populateStudentClassList(this.notifyPersonData, value1[0]);
-                this.vm.updateService.fetchGCMDevicesNew(this.notifyPersonData);
+                this.vm.messageService.fetchGCMDevicesNew(this.notifyPersonData);
             });
         });
     }

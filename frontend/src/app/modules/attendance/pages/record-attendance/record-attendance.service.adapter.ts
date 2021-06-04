@@ -1,6 +1,5 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import moment = require('moment');
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
@@ -200,7 +199,7 @@ export class RecordAttendanceServiceAdapter {
                 }
             });
         });
-        this.vm.updateService.fetchGCMDevicesNew(this.vm.studentAttendanceStatusList);
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentAttendanceStatusList);
     }
 
     updateStudentAttendanceList(): void {
@@ -291,7 +290,7 @@ export class RecordAttendanceServiceAdapter {
 
             if (this.vm.createdStudentList.length > 0) {
                 this.vm.dataForMapping['studentList'] = this.vm.createdStudentList;
-                this.vm.updateService.sendEventNotification(
+                this.vm.messageService.sendEventNotification(
                     this.vm.createdStudentList,
                     'Attendance Creation',
                     this.vm.user.activeSchool.dbId,
@@ -301,7 +300,7 @@ export class RecordAttendanceServiceAdapter {
 
             if (this.vm.updatedStudentList.length > 0) {
                 this.vm.dataForMapping['studentList'] = this.vm.updatedStudentList;
-                this.vm.updateService.sendEventNotification(
+                this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
                     'Attendance Updation',
                     this.vm.user.activeSchool.dbId,

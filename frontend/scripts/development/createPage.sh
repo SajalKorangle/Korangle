@@ -43,7 +43,7 @@ file_suffix_array=('module.ts' 'routing.ts' 'component.ts' 'component.html' 'com
 for file_suffix in "${file_suffix_array[@]}";
 do
   cp scripts/development/sample-page-files/page-name.$file_suffix src/app/modules/$moduleName/pages/$pageName/$pageName.$file_suffix
-	sed -i "s/page-name/$pageName/g" "src/app/modules/$moduleName/pages/$pageName/$pageName.$file_suffix"
-	sed -i "s/PageName/$componentName/g" "src/app/modules/$moduleName/pages/$pageName/$pageName.$file_suffix"
+	sed -i '' "s/page-name/$pageName/g" "src/app/modules/$moduleName/pages/$pageName/$pageName.$file_suffix"
+	sed -i '' "s/PageName/$componentName/g" "src/app/modules/$moduleName/pages/$pageName/$pageName.$file_suffix"
 done
 

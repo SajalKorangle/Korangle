@@ -126,7 +126,7 @@ export class SendSmsServiceAdapter {
 
     populateStudentList(studentList: any): void {
         this.vm.backendData.studentList = studentList;
-        this.vm.studentUpdateService.fetchGCMDevicesNew(this.vm.backendData.studentList);
+        this.vm.studentMessageService.fetchGCMDevicesNew(this.vm.backendData.studentList);
     }
 
     populateEmployeeList(employeeList: any): void {
@@ -135,7 +135,7 @@ export class SendSmsServiceAdapter {
             employee['selected'] = true;
             employee['validMobileNumber'] = this.vm.isMobileNumberValid(employee.mobileNumber);
         });
-        this.vm.employeeUpdateService.fetchGCMDevicesNew(this.vm.employeeList);
+        this.vm.employeeMessageService.fetchGCMDevicesNew(this.vm.employeeList);
     }
 
     populateStudentSectionList(): void {
@@ -165,17 +165,17 @@ export class SendSmsServiceAdapter {
         }
         this.vm.stateKeeper.isLoading = true;
 
-        let updateService;
+        let messageService;
         if (this.vm.userInput.selectedSendTo == this.vm.sendToList[0]) {
             this.vm.dataForMapping['studentList'] = this.vm.getMobileNumberList('both');
-            updateService = this.vm.employeeUpdateService;
+            messageService = this.vm.employeeMessageService;
 
         } else {
             this.vm.dataForMapping['employeeList'] = this.vm.getMobileNumberList('both');
-            updateService = this.vm.employeeUpdateService;
+            messageService = this.vm.employeeMessageService;
         }
 
-        await updateService.smsNotificationSender(
+        await messageService.smsNotificationSender(
             this.vm.dataForMapping,
             this.vm.backendData.smsEvent,
             this.vm.userInput.selectedSentType.id,

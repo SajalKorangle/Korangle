@@ -9,7 +9,7 @@ import {DataStorage} from '../../../../classes/data-storage';
 import {SendSmsServiceAdapter} from './send-sms.service.adapter';
 import {NotificationService} from '../../../../services/modules/notification/notification.service';
 import {UserService} from '../../../../services/modules/user/user.service';
-import {UpdateService} from '../../../../update/update-service';
+import {MessageService} from '@services/message-service';
 import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
 import {SENT_UPDATE_TYPE, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
@@ -49,8 +49,8 @@ export class SendSmsComponent implements OnInit {
 
     variableRegex = /\B@([\w+\\#%*(){}.,$!=\-/[\]]?)+/g;
 
-    studentUpdateService: any;
-    employeeUpdateService: any;
+    studentMessageService: any;
+    employeeMessageService: any;
 
     rows;
     timeout: any;
@@ -144,8 +144,8 @@ export class SendSmsComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.studentUpdateService = new UpdateService(this.notificationService, this.userService, this.smsService);
-        this.employeeUpdateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.studentMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
+        this.employeeMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -169,12 +169,12 @@ export class SendSmsComponent implements OnInit {
                     return x.selected;
                 })
                 .forEach((studentSection) => {
-                    if (!this.studentUpdateService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                    if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
                         studentSection.student.id, this.message)) {
                         tempList.push(studentSection.student);
                     }
                     if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                        if (!this.studentUpdateService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                        if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
                             studentSection.student.id, this.message, true)) {
                             tempList.push(studentSection.student);
                         }
