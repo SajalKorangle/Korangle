@@ -15,7 +15,6 @@ import {PrintService} from '../../../../print/print-service';
 import {PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/view-defaulters.html.renderer';
 import {MessageService} from '@services/message-service';
-import moment = require('moment');
 import {STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 @Component({
