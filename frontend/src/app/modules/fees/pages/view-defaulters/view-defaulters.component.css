@@ -16,7 +16,7 @@
   width: 100% !important;
   margin: 0 auto !important;
 }
-th.mat-header-cell{
+th{
   text-align: left;
   padding:12px;
 }
