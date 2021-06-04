@@ -8,6 +8,8 @@ import { SettingsHtmlRenderer } from './settings.html.renderer';
 import { SettingsUserInput } from './settings.user.input';
 import { SettingsBackendData } from './settings.backend.data';
 
+import { USER_PERMISSION_KEY, TEACHER_PERMISSION } from './settings.permissions';
+
 // Services
 import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
@@ -79,6 +81,13 @@ export class SettingsComponent implements OnInit {
 
     getObjetKeys(obj: { [key: string]: any; }): Array<string> {
         return Object.keys(obj);
+    }
+
+    hasAdminPermission() {
+        if (this.backendData.employeePermission.configJSON[USER_PERMISSION_KEY] == TEACHER_PERMISSION) {
+            return false;
+        }
+        return true;
     }
 
 }

@@ -17,6 +17,7 @@ export class SettingsBackendData {
     subjectList: Array<Subject>;
 
     employeeList: Array<any>;
+    employeePermission: any;
 
     vm: SettingsComponent;
 

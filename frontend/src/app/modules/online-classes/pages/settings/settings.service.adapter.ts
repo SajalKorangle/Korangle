@@ -1,5 +1,5 @@
-import { create } from 'lodash';
 import { SettingsComponent } from './settings.component';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class SettingsServiceAdapter {
 
@@ -30,6 +30,13 @@ export class SettingsServiceAdapter {
             fields__korangle: ['id', 'name'],
         };
 
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
         [
             this.vm.backendData.classList,
             this.vm.backendData.divisionList,
@@ -38,6 +45,7 @@ export class SettingsServiceAdapter {
             this.vm.backendData.subjectList,
             this.vm.backendData.employeeList,
             this.vm.backendData.accountInfoList,
+            this.vm.backendData.employeePermission,
         ] = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
@@ -46,6 +54,7 @@ export class SettingsServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //4
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list_request), //5
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}), // 6
+            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request), //7
         ]);
 
         this.vm.parseBacknedData();

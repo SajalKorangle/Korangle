@@ -114,7 +114,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 if (isMobile()) {
-                    openZoomMeeting("https://korangle.com" + '/assets/zoom/index.html?' + searchParams.toString());
+                    openZoomMeeting(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
                 }
                 else {
                     zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
