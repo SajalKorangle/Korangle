@@ -16,7 +16,7 @@ import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
 import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FeeType } from '@services/modules/fees/models/fee-type';
-import { MatTableDataSource } from '@angular/material';
+import { MatTable, MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
 
 @Component({
@@ -150,6 +150,9 @@ export class ViewDefaultersComponent implements OnInit {
 
         const monthNumber = (new Date()).getMonth();
         this.installmentNumber = (monthNumber > 2) ? monthNumber - 3 : monthNumber + 9;
+    }
+    applyFilters(){
+        this.studentDataSource=new MatTableDataSource(this.getFilteredStudentList());
     }
 
     detectChanges(): void {
