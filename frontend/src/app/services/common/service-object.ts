@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { RestApiGateway } from './rest-api-gateway-2';
+import { RestApiGateway } from './rest-api-gateway';
 
 const JSON_OBJECT_RESPOSNE_PARSER = (responseData) => {
     if (responseData) { // json parse if key ends with JSON
