@@ -87,7 +87,10 @@ export class ClassroomServiceAdapter {
             dateTime__month: today.getUTCMonth() + 1,
             dateTime__year: today.getUTCFullYear(),
         };
-        this.vm.backendData.studentAttendance = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.student_attendance, student_attendance_request);
+        this.vm.backendData.studentAttendance = await this.vm.onlineClassService.getObject(
+            this.vm.onlineClassService.student_attendance,
+            student_attendance_request
+        );
         if (this.vm.backendData.studentAttendance) {
             // const currentTime = new Date();
             // const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);

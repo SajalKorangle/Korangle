@@ -37,11 +37,7 @@
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
-                    <a href="zoomus://zoom.us/join/" *ngIf="isMobile() && activeClass.meetingNumber">
-                        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}">EnterClass</button>
-                    </a>
-                    <button *ngIf="!isMobile() && activeClass.meetingNumber"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    <button *ngIf="activeClass.meetingNumber" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="redirectToMeeting(activeClass)">Enter
                         Class</button>
                 </div>

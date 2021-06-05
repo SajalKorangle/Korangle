@@ -99,7 +99,8 @@ export class AttendanceReportComponent implements OnInit {
     }
 
     getFilteredClassSubjectList(): Array<ParsedClassSubject> {
-        return this.parsedClassSubjectList.filter(cs => cs.classInstance == this.userInput.selectedClass && cs.divisionInstance == this.userInput.selectedDivision);
+        return this.parsedClassSubjectList.filter(cs => cs.classInstance == this.userInput.selectedClass
+            && cs.divisionInstance == this.userInput.selectedDivision);
     }
 
     validUserInput(): boolean {
@@ -146,7 +147,8 @@ export class AttendanceReportComponent implements OnInit {
     }
 
     getAttendanceCount(studentSection: ParsedStudentSection): number {
-        const filteredAttendanceList = this.backendData.studentAttendance.filter(studentAttendance => studentAttendance.parentStudentSection == studentSection.id);
+        const filteredAttendanceList = this.backendData.studentAttendance.filter(studentAttendance =>
+            studentAttendance.parentStudentSection == studentSection.id);
         return filteredAttendanceList.length;
     }
 

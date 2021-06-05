@@ -1,5 +1,8 @@
 import { SettingsComponent } from './settings.component';
-import { ColorPaletteHandle, ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
+import {
+    ColorPaletteHandle, ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator,
+    TimeSpanComparator, Time, TimeSpan
+} from '@modules/online-classes/class/constants';
 
 import { NewOnlineClassDialogComponent } from '@modules/online-classes/components/new-online-class-dialog/new-online-class-dialog.component';
 
@@ -27,7 +30,8 @@ export class SettingsHtmlRenderer {
             if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
                 return;
             ColorPaletteHandle.reset();
-            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
+            // filter online classes for selected class and section
+            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {
                 const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
                 if (classSubject.parentClass == this.vm.userInput.selectedClass.id
                     && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
@@ -39,7 +43,8 @@ export class SettingsHtmlRenderer {
             if (!this.vm.userInput.selectedEmployee)
                 return;
             ColorPaletteHandle.reset();
-            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
+            // filter online classes for selected class and section
+            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {
                 const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
                 if (classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
                     return true;
@@ -174,13 +179,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));

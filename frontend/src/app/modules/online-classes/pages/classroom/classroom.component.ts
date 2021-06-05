@@ -15,7 +15,7 @@ import { SchoolService } from '@services/modules/school/school.service';
 
 import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 
-import { isMobile } from '@classes/common.js';
+import { isMobile, openZoomMeeting } from '@classes/common.js';
 
 @Component({
     selector: 'classroom',
@@ -91,6 +91,10 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     redirectToMeeting(onlineClass: ParsedOnlineClass): void {
+        if (isMobile()) {
+            openZoomMeeting(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber);
+            return;
+        }
         window.open(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber, '_blank');
     }
 
