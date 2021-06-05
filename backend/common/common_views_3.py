@@ -14,9 +14,6 @@ from functools import reduce
 from django.http import HttpResponseForbidden
 
 
-def notPermittedFunction(*args, **kwargs):
-    return HttpResponseForbidden()
-
 
 def get_model_serializer(Model, fields__korangle, validator):
 
@@ -55,7 +52,11 @@ class CommonBaseView():
     def __init__(self):
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
         for method in list(set(['get', 'post', 'put', 'patch', 'delete']) - set(self.permittedMethods)):
-            setattr(self, method, notPermittedFunction)
+            setattr(self, method, self.notPermittedFunction)
+
+    @user_permission_3
+    def notPermittedFunction(*args, **kwargs):
+        return HttpResponseForbidden()
 
     def validator(self, validated_data, activeSchoolID, activeStudentID):
 
