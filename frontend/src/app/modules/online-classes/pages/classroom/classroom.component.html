@@ -20,8 +20,18 @@
                     </div>
 
                     <div style="margin-left: 32px;">
-                        <span>Username: {{backendData.accountInfo?.username || 'N/A'}}</span><br />
-                        <span>Password: {{backendData.accountInfo?.password || 'N/A'}}</span><br />
+                        <div style="display: flex; flex-direction: row;">
+                            <span>Username: <span #Username>{{backendData.accountInfo?.username || 'N/A'}}</span></span>
+                            <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                                (click)="selectTextFromElement(Username)">content_copy
+                            </mat-icon>
+                        </div>
+                        <div style="display: flex; flex-direction: row;">
+                            <span>Password: <span #Password>{{backendData.accountInfo?.password || 'N/A'}}</span></span>
+                            <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                                (click)="selectTextFromElement(Password)">content_copy
+                            </mat-icon>
+                        </div>
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">

@@ -115,6 +115,13 @@
         <mat-divider style="margin-top: 32px;"></mat-divider>
         <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
             (click)="serviceAdapter.updateOnlineClassList();">Update</button>
+
+        <ul>
+            <li>Drag blocks to move to a different time slot</li>
+            <li>Dropping block to an already existing block will swap blocks</li>
+            <li>Shift + Drag to make a copy of the block</li>
+        </ul>
+
     </ng-container>
 
 </div>

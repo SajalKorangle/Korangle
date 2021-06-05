@@ -92,4 +92,8 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         window.open(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber, '_blank');
     }
 
+    selectTextFromElement(element: HTMLElement) {
+
+    }
+
 }
