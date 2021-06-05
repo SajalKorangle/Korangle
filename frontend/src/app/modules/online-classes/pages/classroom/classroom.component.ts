@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -50,6 +51,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public schoolService: SchoolService,
+        public snackBar: MatSnackBar,
     ) { }
 
     ngOnInit(): void {
@@ -93,7 +95,8 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     selectTextFromElement(element: HTMLElement) {
-
+        navigator.clipboard.writeText(element.innerText);
+        this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 
 }
