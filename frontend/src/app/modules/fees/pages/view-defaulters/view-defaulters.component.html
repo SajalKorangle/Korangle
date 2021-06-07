@@ -70,7 +70,7 @@
         <!-- Parent -->
 
         <ng-container *ngIf="selectedFilterType==filterTypeList[1]">
-            <mat-tab-group>
+            <mat-tab-group dynamicHeight>
             <mat-tab label="Summary">
             <div class="container-fluid">
                 <div class="row">
@@ -365,7 +365,7 @@
 
         <ng-container *ngIf="selectedFilterType==filterTypeList[0]">
 
-            <mat-tab-group>
+            <mat-tab-group dynamicHeight>
             <mat-tab label="Summary">
             <div class="container-fluid">
                 <div class="row">
