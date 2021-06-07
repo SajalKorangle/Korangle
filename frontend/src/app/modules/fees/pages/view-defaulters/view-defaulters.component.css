@@ -15,6 +15,10 @@
   width: 100% !important;
   margin: 0 auto !important;
 }
+.data-table{
+  overflow: auto;
+  max-height: 500px;
+}
 th {
   text-align: left;
   padding: 12px;

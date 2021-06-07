@@ -293,7 +293,7 @@
                     </button>
                 </div>
             </div>
-
+            <div class="data-table">
             <table class="table table-hover">
                 <tbody>
                     <!-- <thead class="text-{{user.activeSchool.secondaryThemeColor}}"> -->
@@ -397,6 +397,7 @@
                     </ng-container>
                 </tbody>
             </table>
+            </div>
 
         </ng-container>
 
@@ -569,7 +570,7 @@
             </div>
 
 
-
+            <div class="data-table">
             <table mat-table [dataSource]="studentDataSource" multiTemplateDataRows>
                 <ng-container matColumnDef="select">
                     <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
@@ -812,6 +813,7 @@
                     class="mat-row example-detail-row">
                 </tr>
             </table>
+            </div>
             <mat-paginator [pageSizeOptions]="[10,20,50,100]" showFirstLastButtons></mat-paginator>
 
 
