@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SettingsComponent } from '@modules/online-classes/pages/settings/settings.component';
-import { TimeSpan, ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { TimeSpan, ParsedOnlineClass, TimeComparator } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -48,6 +48,31 @@ export class NewOnlineClassDialogComponent implements OnInit {
       return;
     const classSubject = this.filteredClassSubject.find(cs => cs.id == this.parentClassSubject);
     return this.data.vm.backendData.accountInfoList.find(accountInfo => accountInfo.parentEmployee == classSubject.parentEmployee);
+  }
+
+  isOccupied(classSubject: ClassSubject): boolean {
+    if (this.data.vm.view == 'employee')
+      return false;
+
+    const parentEmployee = classSubject.parentEmployee;
+
+    const bookedSlotOnlineClass = this.data.vm.backendData.onlineClassList.find(onlineClass => {
+      const classSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+      if (classSubject.parentEmployee != parentEmployee) {
+        return false;
+      }
+      if (classSubject.parentClass == this.data.vm.userInput.selectedClass.id
+        && classSubject.parentDivision == this.data.vm.userInput.selectedSection.id) {
+        return false;
+      }
+      if (this.data.weekday == onlineClass.day
+        && TimeComparator(this.data.timespan.startTime, onlineClass.endTimeJSON) < 0
+        && TimeComparator(onlineClass.startTimeJSON, this.data.timespan.endTime) < 0) {
+        return true;
+      }
+    });
+
+    return Boolean(bookedSlotOnlineClass);
   }
 
   selectText(text: string) {
