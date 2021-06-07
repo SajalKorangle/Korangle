@@ -4,7 +4,6 @@ import { AttendanceReportComponent } from "./attendance-report.component";
 import { AttendanceReportRouting } from "./attendance-report.routing";
 import { ComponentsModule } from "@components/components.module";
 import { MatTableModule } from '@angular/material/table';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
     declarations: [
@@ -14,7 +13,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         AttendanceReportRouting,
         ComponentsModule,
         MatTableModule,
-        MatSnackBarModule
     ],
     exports: [],
     providers: [],

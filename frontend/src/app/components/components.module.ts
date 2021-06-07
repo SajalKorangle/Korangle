@@ -23,6 +23,7 @@ import { MatDialogModule } from '@angular/material';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import 'hammerjs';
 
@@ -84,6 +85,7 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatCardModule,
         MatTabsModule,
         MatSliderModule,
+        MatSnackBarModule,
 
         MatInputModule,
         MatTableModule,

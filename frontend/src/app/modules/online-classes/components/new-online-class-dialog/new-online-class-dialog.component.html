@@ -22,13 +22,35 @@
     <div class="Flex-Row-Col" *ngIf="data.vm.hasAdminPermission() && getAccountInfoForSelectedSubject()"
         style="margin: 24px 0;">
         <div style="margin: 16px">
-            <span>Username: {{getAccountInfoForSelectedSubject().username}}</span><br />
-            <span>Password: {{getAccountInfoForSelectedSubject().password}}</span>
+            <div style="display: flex; flex-direction: row;">
+                <span>Username: {{getAccountInfoForSelectedSubject().username}}</span>
+                <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                    (click)="selectText(getAccountInfoForSelectedSubject().username)">content_copy
+                </mat-icon>
+            </div>
+
+            <div style="display: flex; flex-direction: row;">
+                <span>Password: <span
+                        *ngIf="isPasswordVisible else HiddenPassword">{{getAccountInfoForSelectedSubject().password}}</span></span>
+                <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                    (click)="selectText(getAccountInfoForSelectedSubject().password)">content_copy
+                </mat-icon>
+            </div>
         </div>
 
         <div style="margin: 16px">
-            <span>Meeting ID: {{getAccountInfoForSelectedSubject().meetingNumber}}</span><br />
-            <span>Passcode: {{getAccountInfoForSelectedSubject().passcode}}</span>
+            <div style="display: flex; flex-direction: row;">
+                <span>Meeting ID: {{getAccountInfoForSelectedSubject().meetingNumber}}</span>
+                <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                    (click)="selectText(getAccountInfoForSelectedSubject().meetingNumber)">content_copy
+                </mat-icon>
+            </div>
+            <div style="display: flex; flex-direction: row;">
+                <span>Passcode: {{getAccountInfoForSelectedSubject().passcode}}</span>
+                <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                    (click)="selectText(getAccountInfoForSelectedSubject().passcode)">content_copy
+                </mat-icon>
+            </div>
         </div>
     </div>
 
@@ -38,3 +60,7 @@
     <button mat-button (click)="apply()" class="btn" style="background-color: blue; margin-left: auto;"
         cdkFocusInitial>Apply</button>
 </div>
+
+<ng-template #HiddenPassword>
+    <span style="cursor: pointer;" (click)="isPasswordVisible=true;">*******</span>
+</ng-template>

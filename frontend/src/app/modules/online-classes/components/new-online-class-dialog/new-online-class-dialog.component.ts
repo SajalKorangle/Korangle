@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SettingsComponent } from '@modules/online-classes/pages/settings/settings.component';
 import { TimeSpan, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-online-class-dialog',
@@ -15,12 +16,15 @@ export class NewOnlineClassDialogComponent implements OnInit {
 
   filteredClassSubject: Array<ClassSubject>;
 
+  isPasswordVisible: boolean = false;
+
   constructor(public dialogRef: MatDialogRef<NewOnlineClassDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     vm: SettingsComponent,
     weekday: string,
     timespan: TimeSpan,
     onlineClass: ParsedOnlineClass,
-  }
+  },
+    public snackBar: MatSnackBar
   ) {
     this.filteredClassSubject = data.vm.backendData.classSubjectList.filter(classSubject => {
       if (data.vm.view == 'class' && classSubject.parentClass == data.vm.userInput.selectedClass.id
@@ -44,6 +48,11 @@ export class NewOnlineClassDialogComponent implements OnInit {
       return;
     const classSubject = this.filteredClassSubject.find(cs => cs.id == this.parentClassSubject);
     return this.data.vm.backendData.accountInfoList.find(accountInfo => accountInfo.parentEmployee == classSubject.parentEmployee);
+  }
+
+  selectText(text: string) {
+    navigator.clipboard.writeText(text);
+    this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
   }
 
   apply(): void {

@@ -21,17 +21,20 @@
 
                     <div style="margin-left: 32px;">
                         <div style="display: flex; flex-direction: row;">
-                            <span>Username: <span #Username>{{backendData.accountInfo?.username || 'N/A'}}</span></span>
+                            <span>Username: <span>{{backendData.accountInfo?.username || 'N/A'}}</span></span>
                             <mat-icon *ngIf="backendData.accountInfo?.username"
                                 style="font-size: medium; margin-left: 8px; cursor: pointer;"
-                                (click)="selectTextFromElement(Username)">content_copy
+                                (click)="selectText(backendData.accountInfo.username)">content_copy
                             </mat-icon>
                         </div>
                         <div style="display: flex; flex-direction: row;">
-                            <span>Password: <span #Password>{{backendData.accountInfo?.password || 'N/A'}}</span></span>
+                            <span>Password: <span
+                                    *ngIf="isPasswordVisible else HiddenPassword">{{backendData.accountInfo?.password
+                                    ||
+                                    'N/A'}}</span></span>
                             <mat-icon *ngIf="backendData.accountInfo?.password "
                                 style="font-size: medium; margin-left: 8px; cursor: pointer;"
-                                (click)="selectTextFromElement(Password)">content_copy
+                                (click)="selectText(backendData.accountInfo.password)">content_copy
                             </mat-icon>
                         </div>
                     </div>
@@ -98,4 +101,8 @@
 
 <ng-template #NotActiveSession>
     <span style="color: red;">This session is closed</span>
+</ng-template>
+
+<ng-template #HiddenPassword>
+    <span style="cursor: pointer;" (click)="isPasswordVisible=true;">*******</span>
 </ng-template>

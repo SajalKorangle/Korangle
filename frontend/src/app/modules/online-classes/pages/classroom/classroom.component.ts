@@ -42,6 +42,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
+    isPasswordVisible: boolean = false;
     isActiveSession: boolean;
 
     isLoading: any;
@@ -98,8 +99,8 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         window.open(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber, '_blank');
     }
 
-    selectTextFromElement(element: HTMLElement) {
-        navigator.clipboard.writeText(element.innerText);
+    selectText(text: string) {
+        navigator.clipboard.writeText(text);
         this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 
