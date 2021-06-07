@@ -70,7 +70,10 @@ export class AddAccountServiceAdapter {
             this.vm.isLoading = false;
             return;
         }
-        const createdAccountInfo = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.account_info, { ...this.vm.userInput.newAccountInfo });
+        const createdAccountInfo = await this.vm.onlineClassService.createObject(
+            this.vm.onlineClassService.account_info,
+            { ...this.vm.userInput.newAccountInfo }
+        );
         this.vm.backendData.accountInfoList.push(createdAccountInfo);
         this.vm.userInput.resetNewAccountInfo();
         this.vm.isLoading = false;
