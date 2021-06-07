@@ -2,20 +2,19 @@
 
     <ng-container *ngIf="!isLoading">
 
-        <button (click)="applyFilters()">Filter</button>
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Min. No. (Fees Due till month)</label>
                     <input type="number" class="form-control" (keypress)="policeNumberInput($event)"
-                        [ngModel]="minimumNumber" (ngModelChange)="minimumNumber=$event;" />
+                        [ngModel]="minimumNumber" (ngModelChange)="minimumNumber=$event;applyFilters()" />
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Max. No. (Fees Due till month)</label>
                     <input type="number" class="form-control" (keypress)="policeNumberInput($event)"
-                        [ngModel]="maximumNumber" (ngModelChange)="maximumNumber=$event;" />
+                        [ngModel]="maximumNumber" (ngModelChange)="maximumNumber=$event;applyFilters()" />
                 </div>
             </div>
             <div class="col-sm-3">
@@ -32,7 +31,7 @@
                 <div>
                     <mat-form-field>
                         <mat-select placeholder="Select Class" [ngModel]="selectedClassSection"
-                            (ngModelChange)="selectedClassSection=$event;">
+                            (ngModelChange)="selectedClassSection=$event;applyFilters()">
                             <mat-option [value]="nullValue">All</mat-option>
                             <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
                                 {{classSection.class.name}}, {{classSection.section.name}}
@@ -71,12 +70,10 @@
         <!-- Parent -->
 
         <ng-container *ngIf="selectedFilterType==filterTypeList[1]">
+            <mat-tab-group>
+            <mat-tab label="Summary">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-6">
-                        Selected: <b>{{getSelectedParentCount()}}</b>, Showing:
-                        <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
-                    </div>
                     <div *ngIf="!isMobile()" class="col-sm-6">
 
                         <div style="float: right;width: 392px;">
@@ -217,16 +214,22 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <button class="btn" style="padding: 4px 7px"
-                        (click)="selectAllHandler(); $event.stopPropagation();">Select All
-                    </button>
-                    <button class="btn" style="padding: 4px 7px"
-                        (click)="clearAllHandler(); $event.stopPropagation();">Clear All
-                    </button>
+            </mat-tab>
+            <mat-tab label="Parent Fees Table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Selected: <b>{{getSelectedParentCount()}}</b>, Showing:
+                        <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
+                    </div>
+                    <div class="col-sm-12">
+                        <button class="btn" style="padding: 4px 7px"
+                            (click)="selectAllHandler(); $event.stopPropagation();">Select All
+                        </button>
+                        <button class="btn" style="padding: 4px 7px"
+                            (click)="clearAllHandler(); $event.stopPropagation();">Clear All
+                        </button>
+                    </div>
                 </div>
-            </div>
             <div class="data-table">
                 <table class="table table-hover">
                     <tbody>
@@ -337,6 +340,24 @@
                     </tbody>
                 </table>
             </div>
+            <!-- print , download buttons -->
+            <div class=" print-download-buttons">
+
+                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
+                    tooltip-position="left" (click)="downloadFeesReport()">
+                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+
+
+
+                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
+                    style="padding: 12px 15px; margin-right: 17px;" matTooltip="Print the following list"
+                    tooltip-position="left" (click)="printFeesReport()">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
+
+            </div>
+            </mat-tab>
+            </mat-tab-group>
 
         </ng-container>
 
@@ -344,13 +365,10 @@
 
         <ng-container *ngIf="selectedFilterType==filterTypeList[0]">
 
+            <mat-tab-group>
+            <mat-tab label="Summary">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-6">
-                        Selected: <b>{{getSelectedChildrenCount()}}</b>, Showing:
-                        <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
-                    </div>
-
                     <div *ngIf="!isMobile()" class="col-sm-6">
 
                         <div style="float: right;width: 392px;">
@@ -496,8 +514,14 @@
                     </div>
                 </div>
             </div>
+            </mat-tab>
 
+            <mat-tab label="Student Fees Table">
             <div class="row">
+                <div class="col-sm-6">
+                    Selected: <b>{{getSelectedChildrenCount()}}</b>, Showing:
+                    <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
+                </div>
                 <div class="col-sm-12">
                     <button class="btn" style="padding: 4px 7px"
                         (click)="selectAllHandler(); $event.stopPropagation();">Select All
@@ -769,8 +793,6 @@
                 </table>
             </div>
             <mat-paginator [pageSizeOptions]="[5,10,20,50,100]" showFirstLastButtons></mat-paginator>
-
-
             <!-- print , download buttons -->
             <div class=" print-download-buttons">
 
@@ -787,6 +809,11 @@
                     Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
 
             </div>
+            </mat-tab>
+            </mat-tab-group>
+
+
+            
 
             <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
                 <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
