@@ -28,9 +28,11 @@ export class AddAccountComponent implements OnInit {
     userInput: AddAccountUserInput;
     backendData: AddAccountBackendData;
 
-    isLoading: any;
+    isLoading: boolean = true;
 
-    constructor(public onlineClassService: OnlineClassService, public employeeService: EmployeeService) { }
+    constructor(public onlineClassService: OnlineClassService, public employeeService: EmployeeService) {
+        console.log('this', this);
+    }
 
     ngOnInit(): void {
 
@@ -48,13 +50,16 @@ export class AddAccountComponent implements OnInit {
         this.serviceAdapter = new AddAccountServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
+    }
 
-        // console.log('this', this);
+    dataLoadSetUp() {
+        this.userInput.resetNewAccountInfo();
+        this.isLoading = false;
     }
 
     newAccountInfoSanatyCheck(): boolean {
-        if (this.userInput.newUsername == '' || this.userInput.newPassword == '') {
-            alert("Username or Password cannot be empty");
+        if (!Object.values(this.userInput.newAccountInfo).every(v => v)) {  // check for all the fields
+            alert("All fields are required");
             return false;
         }
         return true;

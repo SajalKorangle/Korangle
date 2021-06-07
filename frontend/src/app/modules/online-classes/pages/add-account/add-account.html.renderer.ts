@@ -14,4 +14,8 @@ export class AddAccountHtmlRenderer {
         return { ...obj };
     }
 
+    hasAccountInfo(employee): boolean {
+        return Boolean(this.vm.backendData.accountInfoList.find(accountInfo => accountInfo.parentEmployee == employee.id));
+    }
+
 }

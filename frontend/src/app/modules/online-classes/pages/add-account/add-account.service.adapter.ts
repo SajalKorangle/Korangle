@@ -1,7 +1,6 @@
 import { AddAccountComponent } from './add-account.component';
 import { CommonFunctions } from '@modules/common/common-functions';
 
-
 export class AddAccountServiceAdapter {
 
     vm: AddAccountComponent;
@@ -25,10 +24,10 @@ export class AddAccountServiceAdapter {
         this.vm.backendData.inPagePermissionMappedByKey = (await
             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
-        const account_info_list_request = {
+        const account_info_list_request = { // all acount info
         };
 
-        if (!this.vm.hasAdminPermission()) {
+        if (!this.vm.hasAdminPermission()) {    // restrict to only user's accountInfo
             account_info_list_request['parentEmployee'] = this.vm.user.activeSchool.employeeId;
         }
 
@@ -36,35 +35,32 @@ export class AddAccountServiceAdapter {
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, account_info_list_request),
         ];
 
-        if (this.vm.hasAdminPermission()) {
-            const employee_request = {
-                parentSchool: this.vm.user.activeSchool.dbId,
-                fields__korangle: ['id', 'name'],
-            };
-            serviceList.push(
-                this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_request)
-            );
+        const employee_request = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            fields__korangle: ['id', 'name'],
+        };
+        if (!this.vm.hasAdminPermission()) {
+            employee_request['parentEmployee'] = this.vm.user.activeSchool.employeeId;
         }
+
+        serviceList.push(
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_request)
+        );
 
         [
             this.vm.backendData.accountInfoList,
             this.vm.backendData.employeeList] = await Promise.all(serviceList);
 
-        this.vm.isLoading = false;
+        this.vm.dataLoadSetUp();
     }
 
     async addNewAccountInfo() {
         if (!this.vm.newAccountInfoSanatyCheck())
             return;
-        const newAccountInfo = {
-            parentEmployee: this.vm.userInput.parentEmployeeForAccountInfo,
-            username: this.vm.userInput.newUsername,
-            password: this.vm.userInput.newPassword,
-        };
 
         const account_info_request = {
             parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
-            username: this.vm.userInput.newUsername,
+            username: this.vm.userInput.newAccountInfo.username,
         };
 
         this.vm.isLoading = true;
@@ -74,19 +70,31 @@ export class AddAccountServiceAdapter {
             this.vm.isLoading = false;
             return;
         }
-        const createdAccountInfo = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.account_info, newAccountInfo);
+        const createdAccountInfo = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.account_info, { ...this.vm.userInput.newAccountInfo });
         this.vm.backendData.accountInfoList.push(createdAccountInfo);
-        this.vm.userInput.newUsername = '';
-        this.vm.userInput.newPassword = '';
-        this.vm.userInput.parentEmployeeForAccountInfo = this.vm.user.activeSchool.employeeId;
+        this.vm.userInput.resetNewAccountInfo();
         this.vm.isLoading = false;
     }
 
     async updateAccountInfo(accountInfo) {
+        this.vm.isLoading = true;
         const responseAccountInfo = await this.vm.onlineClassService.updateObject(this.vm.onlineClassService.account_info, accountInfo);
         const originalAccountInfo = this.vm.backendData.accountInfoList.find(ai => ai.id == accountInfo.id);
         Object.assign(originalAccountInfo, responseAccountInfo);
         this.vm.userInput.selectedAccountInfo = null;
+        this.vm.isLoading = false;
+    }
+
+    async deleteAccountInfo(accountInfo) {
+        this.vm.isLoading = true;
+        if (!confirm('This account will be deleted permanently'))
+            return;
+        const delete_request = {
+            id: accountInfo.id
+        };
+        await this.vm.onlineClassService.deleteObject(this.vm.onlineClassService.account_info, delete_request);
+        this.vm.backendData.accountInfoList = this.vm.backendData.accountInfoList.filter(a => a.id != accountInfo.id);
+        this.vm.isLoading = false;
     }
 
 }

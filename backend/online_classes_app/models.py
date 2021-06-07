@@ -10,6 +10,9 @@ class AccountInfo(models.Model):
     parentEmployee = models.ForeignKey(Employee, unique=True, on_delete=models.CASCADE)
     username = models.CharField(max_length=150)
     password = models.CharField(max_length=150)
+    meetingNumber = models.BigIntegerField()
+    passcode = models.CharField(max_length=10)
+
 
 
 class OnlineClass(models.Model):
@@ -26,8 +29,6 @@ class OnlineClass(models.Model):
     )
 
     day = models.CharField(max_length=20, choices=WEEKDAYS_CHOICES)
-    meetingNumber = models.BigIntegerField(blank=True, null=True)
-    password = models.CharField(max_length=10, blank=True, null=True)
     startTimeJSON = models.CharField(max_length=100)
     endTimeJSON = models.CharField(max_length=100)
 
@@ -43,4 +44,3 @@ class StudentAttendance(models.Model):
     parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.CASCADE)
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
     dateTime = models.DateTimeField(auto_now_add=True, blank=True)
-    duration = models.IntegerField()    # in seconds
