@@ -37,8 +37,8 @@
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
-                    <button *ngIf="activeClass.meetingNumber" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="redirectToMeeting(activeClass)">Enter
+                    <button *ngIf="backendData.accountInfo" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="redirectToMeeting()">Enter
                         Class</button>
                 </div>
             </ng-container>
@@ -68,7 +68,7 @@
                                             <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
                                             <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
                                                 {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span>
-                                            <span *ngIf="onlineClass.meetingNumber"
+                                            <span *ngIf="backendData.accountInfo"
                                                 style="position: absolute; bottom: 8px; right: 8px;"
                                                 class="glow-active"></span>
                                         </td>

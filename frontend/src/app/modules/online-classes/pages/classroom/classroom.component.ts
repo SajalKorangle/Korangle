@@ -90,12 +90,12 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         });
     }
 
-    redirectToMeeting(onlineClass: ParsedOnlineClass): void {
+    redirectToMeeting(): void {
         if (isMobile()) {
-            openZoomMeeting(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber);
+            openZoomMeeting(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber);
             return;
         }
-        window.open(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber, '_blank');
+        window.open(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber, '_blank');
     }
 
     selectTextFromElement(element: HTMLElement) {
