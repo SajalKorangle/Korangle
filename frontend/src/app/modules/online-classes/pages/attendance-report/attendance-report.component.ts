@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -71,7 +72,8 @@ export class AttendanceReportComponent implements OnInit {
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public subjectService: SubjectService,
-        public studentService: StudentService
+        public studentService: StudentService,
+        public snackBar: MatSnackBar,
     ) { }
 
     ngOnInit(): void {

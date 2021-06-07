@@ -19,14 +19,16 @@
                             </div>
 
                             <div style="margin-left: 32px;">
-                                <span>Meeting Id: {{activeClass.meetingNumber || '-'}}</span><br />
-                                <span>Pass Code: {{activeClass.password || '-'}}</span><br />
+                                <span>Meeting Id: {{htmlRenderer.getClassAccountInfo(activeClass)?.meetingNumber ||
+                                    '-'}}</span><br />
+                                <span>Pass Code: {{htmlRenderer.getClassAccountInfo(activeClass)?.passcode ||
+                                    '-'}}</span><br />
                             </div>
                         </div>
                         <div style="margin-bottom: 24px;">
-                            <button *ngIf="activeClass.meetingNumber"
+                            <button *ngIf="htmlRenderer.getClassAccountInfo(activeClass)"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="serviceAdapter.initilizeMeetingData(activeClass)">EnterClass</button>
+                                (click)="serviceAdapter.initilizeMeetingData(htmlRenderer.getClassAccountInfo(activeClass))">EnterClass</button>
                         </div>
                     </ng-container>
 
@@ -56,7 +58,7 @@
                                                     [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                                     [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
                                                     <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
-                                                    <span *ngIf="onlineClass.meetingNumber"
+                                                    <span *ngIf="htmlRenderer.getClassAccountInfo(onlineClass)"
                                                         style="position: absolute; bottom: 8px; right: 8px;"
                                                         class="glow-active"></span>
                                                 </td>

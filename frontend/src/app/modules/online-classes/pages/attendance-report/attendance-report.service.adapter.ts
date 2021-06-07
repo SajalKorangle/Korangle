@@ -40,6 +40,7 @@ export class AttendanceReportServiceAdapter {
             parentStudentSection__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudentSection__parentClass: this.vm.userInput.selectedClass.id,
             parentStudentSection__parentDivision: this.vm.userInput.selectedDivision.id,
+            parentClassSubject: this.vm.userInput.selectedParsedClassSubject.id,
             dateTime__gte: this.vm.userInput.startDate.toJSON(),
             dateTime__lte: this.vm.userInput.endDate.toJSON()
         };
@@ -61,7 +62,9 @@ export class AttendanceReportServiceAdapter {
         const student_request = {
             id__in: this.vm.backendData.studentSectionList.map(ss => ss.parentStudent),
         };
-
+        if (this.vm.backendData.studentAttendance.length == 0) {
+            this.vm.snackBar.open("No Attendance for selected Date Range", undefined, { duration: 10000 });
+        }
         this.vm.backendData.studentList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_request);
         this.vm.parseStudentData();
         this.vm.stateKeeper.isLoading = false;

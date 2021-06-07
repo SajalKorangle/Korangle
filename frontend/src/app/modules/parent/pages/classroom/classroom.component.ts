@@ -92,13 +92,13 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         });
     }
 
-    populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
+    populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
         // clearInterval(this.attendanceMarkerInterval);
         this.meetingParameters = {
             signature,
             api_key: apiKey,
-            meeting_number: onlineClass.meetingNumber,
-            password: onlineClass.password,
+            meeting_number: accountInfo.meetingNumber,
+            password: accountInfo.passcode,
             role: 0,
             username: this.activeStudent.name,
             leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',

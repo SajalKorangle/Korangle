@@ -2,6 +2,7 @@ import { ClassroomComponent } from './classroom.component';
 import { ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { Subject } from '@services/modules/subject/models/subject';
+import { AccountInfo } from '@services/modules/online-class/models/account-info';
 
 export class ClassroomBackendData {
 
@@ -10,6 +11,7 @@ export class ClassroomBackendData {
     onlineClassList: Array<ParsedOnlineClass>;
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
+    accountInfoList: Array<AccountInfo>;
 
     studentAttendance: any;
 
@@ -27,6 +29,10 @@ export class ClassroomBackendData {
 
     getSubjectById(id: number) {
         return this.subjectList.find(subject => subject.id == id);
+    }
+
+    getAccountInfoByParentEmployee(employeeId: number) {
+        return this.accountInfoList.find(accountInfo => accountInfo.parentEmployee == employeeId);
     }
 
 }

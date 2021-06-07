@@ -49,12 +49,15 @@ export class ClassroomServiceAdapter {
             [
                 this.vm.backendData.onlineClassList,
                 this.vm.backendData.classSubjectList,
-                this.vm.backendData.subjectList
+                this.vm.backendData.subjectList,
+                this.vm.backendData.accountInfoList
             ] = await Promise.all([
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request),
                 this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request),
                 this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+                this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
             ]);
+
             this.vm.parseBacknedData();
             this.vm.htmlRenderer.initilizeTimeTable();
         }
@@ -65,15 +68,15 @@ export class ClassroomServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    async initilizeMeetingData(onlineClass) {
+    async initilizeMeetingData(accountInfo) {
         this.vm.isLoading = true;
         const signature_request = {
-            meetingNumber: onlineClass.meetingNumber,
+            meetingNumber: accountInfo.meetingNumber,
             role: 0,
         };
         const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_meeting_signature, signature_request);
 
-        this.vm.populateMeetingParametersAndStart(onlineClass, response.signature, response.apiKey);
+        this.vm.populateMeetingParametersAndStart(accountInfo, response.signature, response.apiKey);
 
         this.vm.isLoading = false;
     }
