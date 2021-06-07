@@ -17,6 +17,7 @@ export class SettingsBackendData {
     subjectList: Array<Subject>;
 
     employeeList: Array<any>;
+    employeePermission: any;
 
     vm: SettingsComponent;
 
@@ -26,7 +27,15 @@ export class SettingsBackendData {
         this.vm = vm;
     }
 
-    getClassSubjectById(id: number) {
+    getClassById(classId: number) {
+        return this.classList.find(c => c.id == classId);
+    }
+
+    getDivisionById(divisionId: number) {
+        return this.divisionList.find(d => d.id == divisionId);
+    }
+
+    getClassSubjectById(id: number): ClassSubject {
         return this.classSubjectList.find(classSubject => classSubject.id == id);
     }
 
@@ -36,6 +45,10 @@ export class SettingsBackendData {
 
     getEmployeeById(id: number) {
         return this.employeeList.find(employee => employee.id == id);
+    }
+
+    getAccountInfoByParentEmployee(employeeId: number) {
+        return this.accountInfoList.find(accountInfo => accountInfo.parentEmployee == employeeId);
     }
 
 }

@@ -49,12 +49,15 @@ export class ClassroomServiceAdapter {
             [
                 this.vm.backendData.onlineClassList,
                 this.vm.backendData.classSubjectList,
-                this.vm.backendData.subjectList
+                this.vm.backendData.subjectList,
+                this.vm.backendData.accountInfoList
             ] = await Promise.all([
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request),
                 this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request),
                 this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+                this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
             ]);
+
             this.vm.parseBacknedData();
             this.vm.htmlRenderer.initilizeTimeTable();
         }
@@ -65,17 +68,48 @@ export class ClassroomServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    async initilizeMeetingData(onlineClass) {
+    async initilizeMeetingData(accountInfo) {
         this.vm.isLoading = true;
         const signature_request = {
-            meetingNumber: onlineClass.meetingNumber,
+            meetingNumber: accountInfo.meetingNumber,
             role: 0,
         };
         const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_meeting_signature, signature_request);
 
-        this.vm.populateMeetingParametersAndStart(onlineClass, response.signature, response.apiKey);
+        this.vm.populateMeetingParametersAndStart(accountInfo, response.signature, response.apiKey);
 
         this.vm.isLoading = false;
     }
+
+    async markAttendance() {
+        const today = new Date();
+        const student_attendance_request = {
+            parentStudentSection: this.vm.backendData.studentSection.id,
+            parentClassSubject: this.vm.htmlRenderer.getActiveClass().parentClassSubject,
+            dateTime__day: today.getUTCDate(),
+            dateTime__month: today.getUTCMonth() + 1,
+            dateTime__year: today.getUTCFullYear(),
+        };
+        this.vm.backendData.studentAttendance = await this.vm.onlineClassService.getObject(
+            this.vm.onlineClassService.student_attendance,
+            student_attendance_request
+        );
+        if (this.vm.backendData.studentAttendance) {
+            return;
+        }
+        const studentAttendance = {
+            parentStudentSection: this.vm.backendData.studentSection.id,
+            parentClassSubject: this.vm.htmlRenderer.getActiveClass().parentClassSubject,
+        };
+        this.vm.backendData.studentAttendance = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance);
+    }
+
+    // updateAttendance = async () => {
+    //     const currentTime = new Date();
+    //     const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);
+    //     const duration = ((currentTime.getTime() - startTime.getTime()) / (1000)) - this.vm.studentAttendanceDownTime; // in seconds
+    //     this.vm.backendData.studentAttendance.duration = Math.ceil(duration);
+    //     await this.vm.onlineClassService.updateObject(this.vm.onlineClassService.student_attendance, this.vm.backendData.studentAttendance);
+    // };
 
 }

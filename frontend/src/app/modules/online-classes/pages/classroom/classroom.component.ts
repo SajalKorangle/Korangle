@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -14,6 +15,8 @@ import { SchoolService } from '@services/modules/school/school.service';
 
 import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 
+import { isMobile, openZoomMeeting } from '@classes/common.js';
+
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
@@ -24,6 +27,8 @@ import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/onlin
 export class ClassroomComponent implements OnInit, OnDestroy {
 
     user: any;
+
+    isMobile = isMobile;
 
     weekdays = WEEKDAYS;
 
@@ -37,6 +42,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
+    isPasswordVisible: boolean = false;
     isActiveSession: boolean;
 
     isLoading: any;
@@ -46,6 +52,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public schoolService: SchoolService,
+        public snackBar: MatSnackBar,
     ) { }
 
     ngOnInit(): void {
@@ -84,8 +91,17 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         });
     }
 
-    redirectToMeeting(onlineClass: ParsedOnlineClass): void {
-        window.open(ZOOM_BASE_URL + '/' + onlineClass.meetingNumber, '_blank');
+    redirectToMeeting(): void {
+        if (isMobile()) {
+            openZoomMeeting(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber);
+            return;
+        }
+        window.open(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber, '_blank');
+    }
+
+    selectText(text: string) {
+        navigator.clipboard.writeText(text);
+        this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 
 }

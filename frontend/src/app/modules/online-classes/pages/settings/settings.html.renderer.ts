@@ -1,5 +1,8 @@
 import { SettingsComponent } from './settings.component';
-import { ColorPaletteHandle, ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator, TimeSpanComparator, Time, TimeSpan } from '@modules/online-classes/class/constants';
+import {
+    ColorPaletteHandle, ParsedOnlineClass, getDefaultTimeSpanList, TimeComparator,
+    TimeSpanComparator, Time, TimeSpan
+} from '@modules/online-classes/class/constants';
 
 import { NewOnlineClassDialogComponent } from '@modules/online-classes/components/new-online-class-dialog/new-online-class-dialog.component';
 
@@ -23,22 +26,39 @@ export class SettingsHtmlRenderer {
     }
 
     initilizeTimeTable() {
-        if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
-            return;
-        ColorPaletteHandle.reset();
-        this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {    // filter online classes for selected class and section
-            const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
-                && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
-                return true;
-            }
-            return false;
-        });
+        if (this.vm.view == 'class') {
+            if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
+                return;
+            ColorPaletteHandle.reset();
+            // filter online classes for selected class and section
+            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {
+                const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                if (classSubject.parentClass == this.vm.userInput.selectedClass.id
+                    && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            if (!this.vm.userInput.selectedEmployee)
+                return;
+            ColorPaletteHandle.reset();
+            // filter online classes for selected class and section
+            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {
+                const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                if (classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
+                    return true;
+                }
+                return false;
+            });
+        }
 
         this.editTimeSpanFormIndex = -1;    // reset display for new time table
         this.newTimeSpanForm = false;
 
-        this.timeSpanList = [];
+        if (JSON.stringify(this.timeSpanList) == JSON.stringify(getDefaultTimeSpanList())) {
+            this.timeSpanList = []; // if default then empty
+        }
         this.filteredOnlineClassList.forEach(onlineClass => {
             let result: boolean = false;
             this.timeSpanList.every(timeSpan => {
@@ -99,12 +119,12 @@ export class SettingsHtmlRenderer {
                         day: this.vm.weekdays[weekdayKey],
                         startTimeJSON: new Time({ ...timespan.startTime }),
                         endTimeJSON: new Time({ ...timespan.endTime }),
-                        meetingNumber: null,
-                        password: null,
                     };
                     this.filteredOnlineClassList.push(onlineClass);
                 }
-                Object.assign(onlineClass, data);
+                else {
+                    Object.assign(onlineClass, data);
+                }
             }
         });
     }
@@ -213,5 +233,33 @@ export class SettingsHtmlRenderer {
         const onlineClassIndex = this.filteredOnlineClassList.findIndex(oc => oc == onlineClass);
         this.filteredOnlineClassList.splice(onlineClassIndex, 1);
     }
+
+    getOnlineClassIndex(onlineClass): number {
+        return this.filteredOnlineClassList.findIndex(oc => oc == onlineClass);
+    }
+
+    moveOnlineClass(event, weekdayKey: string, timespan: TimeSpan) {
+        const onlineClassIndex = parseInt(event.dataTransfer.getData('onlineClassIndex'));
+        let onlineClass = this.filteredOnlineClassList[onlineClassIndex];
+        if (event.shiftKey) {
+            onlineClass = { ...onlineClass, id: null };
+            this.filteredOnlineClassList.push(onlineClass);
+        }
+        onlineClass.day = this.vm.weekdays[weekdayKey];
+        onlineClass.startTimeJSON = new Time({ ...timespan.startTime });
+        onlineClass.endTimeJSON = new Time({ ...timespan.endTime });
+    }
+
+    swapOnlineClass(event, onlineClass2: ParsedOnlineClass) {
+        const onlineClass1 = this.filteredOnlineClassList[event.dataTransfer.getData('onlineClassIndex')];
+        if (event.shiftKey) {
+            onlineClass2.parentClassSubject = onlineClass1.parentClassSubject;
+            return;
+        }
+        [onlineClass1.day, onlineClass2.day] = [onlineClass2.day, onlineClass1.day];
+        [onlineClass1.startTimeJSON, onlineClass2.startTimeJSON] = [onlineClass2.startTimeJSON, onlineClass1.startTimeJSON];
+        [onlineClass1.endTimeJSON, onlineClass2.endTimeJSON] = [onlineClass2.endTimeJSON, onlineClass1.endTimeJSON];
+    }
+
 
 }

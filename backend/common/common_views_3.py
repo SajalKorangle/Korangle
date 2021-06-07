@@ -42,7 +42,7 @@ def get_model_serializer(Model, fields__korangle, validator):
 
 ########### Common View ########
 
-class CommonBaseView():
+class CommonBaseView(APIView):
 
     Model = ''
     ModelSerializer = ''
@@ -50,7 +50,8 @@ class CommonBaseView():
     RelationsToStudent = []
     permittedMethods = ['get', 'post', 'put', 'patch', 'delete']
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=None, validator=self.validator)
         for method in list(set(['get', 'post', 'put', 'patch', 'delete']) - set(self.permittedMethods)):
             setattr(self, method, notPermittedFunction)
@@ -87,7 +88,6 @@ class CommonBaseView():
             query_filters[self.RelationsToStudent[0]+'__in'] = activeStudentID     # takes the first relation to student only(should be the closest)
         elif (len(self.RelationsToSchool)>0):
             query_filters[self.RelationsToSchool[0]] = activeSchoolID    # takes the first relation to school only(should be the the closest)
-
         return self.Model.objects.filter(**query_filters)
 
 
