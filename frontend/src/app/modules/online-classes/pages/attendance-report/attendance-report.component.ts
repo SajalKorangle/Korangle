@@ -86,7 +86,7 @@ export class AttendanceReportComponent implements OnInit {
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initilizeData();
         this.backendData.activeSession = SESSION_CONSTANT.find(session => session.id == this.user.activeSchool.currentSessionDbId);
-        console.log('this: ', this);
+        // console.log('this: ', this);
     }
 
     populateInitilizationData(): void {
@@ -152,6 +152,10 @@ export class AttendanceReportComponent implements OnInit {
         const filteredAttendanceList = this.backendData.studentAttendance.filter(studentAttendance =>
             studentAttendance.parentStudentSection == studentSection.id);
         return filteredAttendanceList.length;
+    }
+
+    handleStartDateSelection() {
+        this.userInput.endDate = new Date(this.userInput.startDate);
     }
 
 }

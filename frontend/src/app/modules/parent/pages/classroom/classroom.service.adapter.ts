@@ -95,15 +95,11 @@ export class ClassroomServiceAdapter {
             student_attendance_request
         );
         if (this.vm.backendData.studentAttendance) {
-            // const currentTime = new Date();
-            // const startTime = new Date(this.vm.backendData.studentAttendance.dateTime);
-            // this.vm.studentAttendanceDownTime = (currentTime.getTime() - startTime.getTime()) / 1000 - this.vm.backendData.studentAttendance.duration;
             return;
         }
         const studentAttendance = {
             parentStudentSection: this.vm.backendData.studentSection.id,
             parentClassSubject: this.vm.htmlRenderer.getActiveClass().parentClassSubject,
-            duration: 0
         };
         this.vm.backendData.studentAttendance = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance);
     }

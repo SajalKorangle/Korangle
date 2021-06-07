@@ -29,7 +29,7 @@
             <mat-label>Start Date</mat-label>
             <input matInput [matDatepicker]="picker1" [min]="backendData.activeSession.startDate"
                 [max]="backendData.activeSession.endDate" [(ngModel)]="userInput.startDate"
-                (ngModelChange)="!userInput.endDate?userInput.endDate=$event:null">
+                (ngModelChange)="handleStartDateSelection()">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>

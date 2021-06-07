@@ -18,7 +18,7 @@ export class AddAccountUserInput {
     resetNewAccountInfo(): void {
         this.newAccountInfo = { ...DEFAULT_ACCOUNT_INFO };
         if (!this.vm.hasAdminPermission()) {
-            this.newAccountInfo = this.vm.user.activeSchool.employeeId;
+            this.newAccountInfo.parentEmployee = this.vm.user.activeSchool.employeeId;
         }
     }
 
