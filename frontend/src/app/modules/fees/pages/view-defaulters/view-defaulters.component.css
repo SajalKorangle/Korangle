@@ -19,6 +19,9 @@
   overflow: auto;
   max-height: 500px;
 }
+.print-download-buttons{
+  text-align: center;
+}
 th {
   text-align: left;
   padding: 12px;

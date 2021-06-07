@@ -64,72 +64,6 @@
             </ng-container>
             <br />
         </ng-container>
-
-        <!-- print , download buttons -->
-        <div class="row">
-            <div class="col-sm-3">
-                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
-                    tooltip-position="left" (click)="downloadFeesReport()">
-                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
-            </div>
-
-            <div class="col-sm-3">
-                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
-                    style="padding: 12px 15px; margin-right: 17px;" matTooltip="Print the following list"
-                    tooltip-position="left" (click)="printFeesReport()">
-                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
-            </div>
-        </div>
-
-        <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
-            <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
-        </div>
-
-        <button class="btn" style="padding: 4px 7px" (click)="showSMSSection=!showSMSSection">
-            <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
-            <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
-        </button>
-        <ng-container *ngIf="showSMSSection">
-            <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group form-black label-floating">
-                        <label class="control-label">Common Message to append</label>
-                        <textarea type="text" rows="5" class="form-control"
-                            [(ngModel)]="extraDefaulterMessage"></textarea>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <mat-form-field style="margin-top: 23px;">
-                        <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
-                            <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
-                                {{sentType}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <div style="font-size: 14px; margin-top: 5px;">
-                        # of extra Characters/SMS: {{getExtraMessageLength()}}<br />
-                        # of Mobile devices: {{getNumberOfMobileDevice()}}<br />
-                        Estimated SMS Count: {{getEstimatedSMSCount()}}<br />
-                        Estimated Notification Count: {{getEstimatedNotificationCount()}}<br />
-                    </div>
-                    <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
-                        <button *ngIf="getEstimatedSMSCount()<=smsBalance" type="button"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            style="padding: 12px 15px; margin-right: 17px;"
-                            matTooltip="Notify all the selected defaulters" tooltip-position="left"
-                            (click)="notifyDefaulters();">
-                            {{getButtonText()}}
-                        </button>
-                        <span *ngIf="getEstimatedSMSCount()>smsBalance" style="font-size: 16px;">
-                            You are short by <b>{{getEstimatedSMSCount() - smsBalance}}</b> SMS.
-                        </span>
-                    </ng-container>
-                </div>
-            </div>
-        </ng-container>
-
         <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
             <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
         </div>
@@ -294,109 +228,114 @@
                 </div>
             </div>
             <div class="data-table">
-            <table class="table table-hover">
-                <tbody>
-                    <!-- <thead class="text-{{user.activeSchool.secondaryThemeColor}}"> -->
-                    <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
-                        <th>Select</th>
-                        <th>S No.</th>
-                        <th>Parent</th>
-                        <th>Student</th>
-                        <th>Class</th>
-                        <th>Mobile No.</th>
-                        <th>Mobile No. (2)</th>
-                        <th>Fees Due<br />(Till Month)</th>
-                        <th>Fees Due<br />(Overall)</th>
-                        <th *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
-                            Fees Due<br />({{session.name}})
-                        </th>
-                        <th>Total Fees<br />({{getCurrentSessionName()}})</th>
-                        <th>Fees Paid<br />({{getCurrentSessionName()}})</th>
-                        <th>Discount<br />({{getCurrentSessionName()}})</th>
-                    </tr>
-                    <!-- </thead> -->
-                    <!-- <tbody> -->
-                    <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
-                        <tr>
-                            <td>
-                                <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
-                            </td>
-                            <td>{{i+1}}.</td>
-                            <td style="font-weight: 600;">{{parent.name}}</td>
-                            <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">
-                                <td>{{parent.studentList[0].name}}</td>
-                                <td>{{parent.studentList[0].class.name}}, {{parent.studentList[0].section.name}}</td>
-                                <td>
-                                    <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
-                                        <span class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
-                                        <span class="visible-xs visible-sm">
-                                            <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
-                                        </span>
-                                    </ng-container>
-                                </td>
-                                <td>
-                                    <ng-container *ngIf="checkMobileNumber(parent.studentList[0].secondMobileNumber)">
-                                        <span
-                                            class="hidden-xs hidden-sm">{{parent.studentList[0].secondMobileNumber}}</span>
-                                        <span class="visible-xs visible-sm">
-                                            <a href="tel:{{parent.studentList[0].secondMobileNumber}}">Call Me</a>
-                                        </span>
-                                    </ng-container>
-                                </td>
-                            </ng-container>
-                            <ng-template #multipleStudents>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
-                                        <span class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
-                                        <span class="visible-xs visible-sm">
-                                            <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
-                                        </span>
-                                    </ng-container>
-                                </td>
-                                <td></td>
-                            </ng-template>
-                            <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}</td>
-                            <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
-                            <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
-                                {{getParentFeesDueBySession(parent,session)}}
-                            </td>
-                            <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
-                            <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
-                            <td>{{getParentDiscount(parent) | indianCurrency}}</td>
+                <table class="table table-hover">
+                    <tbody>
+                        <!-- <thead class="text-{{user.activeSchool.secondaryThemeColor}}"> -->
+                        <tr class="text-{{user.activeSchool.secondaryThemeColor}}">
+                            <th>Select</th>
+                            <th>S No.</th>
+                            <th>Parent</th>
+                            <th>Student</th>
+                            <th>Class</th>
+                            <th>Mobile No.</th>
+                            <th>Mobile No. (2)</th>
+                            <th>Fees Due<br />(Till Month)</th>
+                            <th>Fees Due<br />(Overall)</th>
+                            <th *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
+                                Fees Due<br />({{session.name}})
+                            </th>
+                            <th>Total Fees<br />({{getCurrentSessionName()}})</th>
+                            <th>Fees Paid<br />({{getCurrentSessionName()}})</th>
+                            <th>Discount<br />({{getCurrentSessionName()}})</th>
                         </tr>
-                        <ng-container *ngIf="parent.studentList.length > 1">
-                            <ng-container *ngFor="let student of parent.studentList;">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{student.name}}</td>
-                                    <td>{{student.class.name}}, {{student.section.name}}</td>
-                                    <td></td>
+                        <!-- </thead> -->
+                        <!-- <tbody> -->
+                        <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
+                            <tr>
+                                <td>
+                                    <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
+                                </td>
+                                <td>{{i+1}}.</td>
+                                <td style="font-weight: 600;">{{parent.name}}</td>
+                                <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">
+                                    <td>{{parent.studentList[0].name}}</td>
+                                    <td>{{parent.studentList[0].class.name}}, {{parent.studentList[0].section.name}}
+                                    </td>
                                     <td>
-                                        <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
-                                            <span class="hidden-xs hidden-sm">{{student.secondMobileNumber}}</span>
+                                        <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                            <span
+                                                class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
                                             <span class="visible-xs visible-sm">
-                                                <a href="tel:{{student.secondMobileNumber}}">Call Me 2</a>
+                                                <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
                                             </span>
                                         </ng-container>
                                     </td>
-                                    <td>{{student.feesDueTillMonth | indianCurrency}}</td>
-                                    <td>{{student.feesDueOverall | indianCurrency}}</td>
-                                    <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
-                                        {{getSessionFeesDue(student.id,session.name)+getSessionLateFeesDue(student.id,session.name)}}
+                                    <td>
+                                        <ng-container
+                                            *ngIf="checkMobileNumber(parent.studentList[0].secondMobileNumber)">
+                                            <span
+                                                class="hidden-xs hidden-sm">{{parent.studentList[0].secondMobileNumber}}</span>
+                                            <span class="visible-xs visible-sm">
+                                                <a href="tel:{{parent.studentList[0].secondMobileNumber}}">Call Me</a>
+                                            </span>
+                                        </ng-container>
                                     </td>
-                                    <td>{{student.totalFeesThisSession | indianCurrency}}</td>
-                                    <td>{{student.feesPaidThisSession | indianCurrency}}</td>
-                                    <td>{{student.discountThisSession | indianCurrency}}</td>
-                                </tr>
+                                </ng-container>
+                                <ng-template #multipleStudents>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                            <span
+                                                class="hidden-xs hidden-sm">{{parent.studentList[0].mobileNumber}}</span>
+                                            <span class="visible-xs visible-sm">
+                                                <a href="tel:{{parent.studentList[0].mobileNumber}}">Call Me</a>
+                                            </span>
+                                        </ng-container>
+                                    </td>
+                                    <td></td>
+                                </ng-template>
+                                <td style="font-weight: 600;">{{getParentFeesDueTillMonth(parent) | indianCurrency}}
+                                </td>
+                                <td>{{getParentFeesDueOverall(parent) | indianCurrency}}</td>
+                                <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
+                                    {{getParentFeesDueBySession(parent,session)}}
+                                </td>
+                                <td>{{getParentTotalFees(parent) | indianCurrency}}</td>
+                                <td>{{getParentFeesPaid(parent) | indianCurrency}}</td>
+                                <td>{{getParentDiscount(parent) | indianCurrency}}</td>
+                            </tr>
+                            <ng-container *ngIf="parent.studentList.length > 1">
+                                <ng-container *ngFor="let student of parent.studentList;">
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{student.name}}</td>
+                                        <td>{{student.class.name}}, {{student.section.name}}</td>
+                                        <td></td>
+                                        <td>
+                                            <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
+                                                <span class="hidden-xs hidden-sm">{{student.secondMobileNumber}}</span>
+                                                <span class="visible-xs visible-sm">
+                                                    <a href="tel:{{student.secondMobileNumber}}">Call Me 2</a>
+                                                </span>
+                                            </ng-container>
+                                        </td>
+                                        <td>{{student.feesDueTillMonth | indianCurrency}}</td>
+                                        <td>{{student.feesDueOverall | indianCurrency}}</td>
+                                        <td *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
+                                            {{getSessionFeesDue(student.id,session.name)+getSessionLateFeesDue(student.id,session.name)}}
+                                        </td>
+                                        <td>{{student.totalFeesThisSession | indianCurrency}}</td>
+                                        <td>{{student.feesPaidThisSession | indianCurrency}}</td>
+                                        <td>{{student.discountThisSession | indianCurrency}}</td>
+                                    </tr>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
-                    </ng-container>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
             </div>
 
         </ng-container>
@@ -571,259 +510,331 @@
 
 
             <div class="data-table">
-            <table mat-table [dataSource]="studentDataSource" multiTemplateDataRows>
-                <ng-container matColumnDef="select">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Select</b> </th>
-                    <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
-                        <mat-checkbox class="example-margin" [(ngModel)]="element.selected">
-                        </mat-checkbox>
-                    </td>
-                </ng-container>&ensp;
-                <ng-container matColumnDef="s.no">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>S.No</b> </th>
-                    <td align="center" mat-cell *matCellDef="let element"> {{element.position}}. </td>
-                </ng-container>
-                <ng-container matColumnDef="name">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Student</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                </ng-container>
-                <ng-container matColumnDef="fathersName">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}"
-                        class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Father Name</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.fathersName}} </td>
-                </ng-container>
-                <ng-container matColumnDef="class.name">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Class</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.class.name}} </td>
-                </ng-container>
-                <ng-container matColumnDef="section.name">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Section</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.section.name}} </td>
-                </ng-container>
-                <ng-container matColumnDef="mobileNumber">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Mobile No.</b> </th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="checkMobileNumber(element.mobileNumber)">
-                            <span class="hidden-xs hidden-sm">{{element.mobileNumber}}</span>
-                            <span class="visible-xs visible-sm">
-                                <a href="tel:{{element.mobileNumber}}">Call Me</a>
-                            </span>
-                        </ng-container>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="secondMobileNumber">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Mobile No (2).</b> </th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="checkMobileNumber(element.secondMobileNumber)">
-                            <span class="hidden-xs hidden-sm">{{element.secondMobileNumber}} </span>
-                            <span class="visible-xs visible-sm">
-                                <a href="tel:{{element.secondMobileNumber}}">Call Me 2</a>
-                            </span>
-                        </ng-container>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="feesDueTillMonth">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Fees Due (Till Month)</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.feesDueTillMonth}} </td>
-                </ng-container>
-                <ng-container matColumnDef="feesDueOverall">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef><b>Fees
-                            Due (Overall)</b> </th>
-                    <td mat-cell *matCellDef="let element"> {{element.feesDueOverall}} </td>
-                </ng-container>
-                <div *ngFor="let session of sessionListWithNoDues">
-                    <ng-container matColumnDef={{session.name}}>
+                <table mat-table [dataSource]="studentDataSource" multiTemplateDataRows>
+                    <ng-container matColumnDef="select">
                         <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                            <b>Fees Due <br> ({{session.name}})</b> </th>
+                            <b>Select</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+                            <mat-checkbox class="example-margin" [(ngModel)]="element.selected">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>&ensp;
+                    <ng-container matColumnDef="s.no">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>S.No</b>
+                        </th>
+                        <td align="center" mat-cell *matCellDef="let element"> {{element.position}}. </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Student</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fathersName">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}"
+                            class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Father Name</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fathersName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="class.name">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Class</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.class.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="section.name">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Section</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.section.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="mobileNumber">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Mobile No.</b>
+                        </th>
                         <td mat-cell *matCellDef="let element">
-                            {{getSessionFeesDue(element.id,session.name)+getSessionLateFeesDue(element.id,session.name)}}
+                            <ng-container *ngIf="checkMobileNumber(element.mobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{element.mobileNumber}}</span>
+                                <span class="visible-xs visible-sm">
+                                    <a href="tel:{{element.mobileNumber}}">Call Me</a>
+                                </span>
+                            </ng-container>
                         </td>
                     </ng-container>
-                </div>
-                <ng-container matColumnDef="totalFeesThisSession">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Total
-                            Fees<br />({{getCurrentSessionName()}})</b>
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.totalFeesThisSession}} </td>
-                </ng-container>
-                <ng-container matColumnDef="feesPaidThisSession">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef><b>Fees
-                            Paid<br />({{getCurrentSessionName()}})</b>
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.feesPaidThisSession}} </td>
-                </ng-container>
-                <ng-container matColumnDef="discountThisSession">
-                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
-                        <b>Discount<br />({{getCurrentSessionName()}})</b>
-                    </th>
-                    <td mat-cell *matCellDef="let element"> {{element.discountThisSession}} </td>
-                </ng-container>
+                    <ng-container matColumnDef="secondMobileNumber">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Mobile No (2).</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="checkMobileNumber(element.secondMobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{element.secondMobileNumber}} </span>
+                                <span class="visible-xs visible-sm">
+                                    <a href="tel:{{element.secondMobileNumber}}">Call Me 2</a>
+                                </span>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="feesDueTillMonth">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Fees Due (Till Month)</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.feesDueTillMonth}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="feesDueOverall">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Fees
+                                Due (Overall)</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.feesDueOverall}} </td>
+                    </ng-container>
+                    <div *ngFor="let session of sessionListWithNoDues">
+                        <ng-container matColumnDef={{session.name}}>
+                            <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                *matHeaderCellDef>
+                                <b>Fees Due <br> ({{session.name}})</b>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{getSessionFeesDue(element.id,session.name)+getSessionLateFeesDue(element.id,session.name)}}
+                            </td>
+                        </ng-container>
+                    </div>
+                    <ng-container matColumnDef="totalFeesThisSession">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Total
+                                Fees<br />({{getCurrentSessionName()}})</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalFeesThisSession}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="feesPaidThisSession">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Fees
+                                Paid<br />({{getCurrentSessionName()}})</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.feesPaidThisSession}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="discountThisSession">
+                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell *matHeaderCellDef>
+                            <b>Discount<br />({{getCurrentSessionName()}})</b>
+                        </th>
+                        <td mat-cell *matCellDef="let element"> {{element.discountThisSession}} </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="expandedDetail">
-                    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-                        <div class="example-element-detail"
-                            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                            <table class="table table-hover">
-
-                                <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                    <th class="expanded-header">Sessions</th>
-                                    <th class="expanded-header">Fees Due</th>
-                                    <th class="expanded-header">Fees total</th>
-                                    <th class="expanded-header">Late Fees Due</th>
-                                    <th class="expanded-header">Late Fees Total</th>
-                                    <th class="expanded-header"></th>
-                                </tr>
-
-
-
-
-                                <div *ngFor="let dueBySession of element.feesDueBySession; index as sessionIndex;">
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                            <div class="example-element-detail"
+                                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                <table class="table table-hover">
 
                                     <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                        <td class="expanded-session-name">
-                                            {{sessionIndex+1}}.{{dueBySession.parentSession}}</td>
-                                        <td class="expanded-session">
-                                            {{getSessionFeesDue(element.id,dueBySession.parentSession)}}
-                                        </td>
-                                        <td class="expanded-session">
-                                            {{getSessionTotalFees(element.id,dueBySession.parentSession)}}
-                                        </td>
-                                        <td class="expanded-session">
-                                            {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}}
-                                        </td>
-                                        <td class="expanded-session">
-                                            {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}
-                                        </td>
+                                        <th class="expanded-header">Sessions</th>
+                                        <th class="expanded-header">Fees Due</th>
+                                        <th class="expanded-header">Fees total</th>
+                                        <th class="expanded-header">Late Fees Due</th>
+                                        <th class="expanded-header">Late Fees Total</th>
+                                        <th class="expanded-header"></th>
                                     </tr>
 
-                                    <div
-                                        *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);index as studentFeeIndex">
-                                        <div *ngIf="studentFee.isAnnually">
-                                            <!-- Student Fee Annually -->
 
-                                            <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                <td align="left" class="expanded-Feetype-name">
-                                                    {{studentFeeIndex+1}}.
-                                                    {{
-                                                    getFeeTypeByStudentFee(studentFee).name }}
-                                                </td>
-                                                <td class="expanded-Feetype">{{
-                                                    getStudentFeeInstallmentFeesDue(studentFee,
-                                                    'april') }}
-                                                </td>
-                                                <td class="expanded-Feetype">{{
-                                                    getStudentFeeInstallmentTotalFees(studentFee,
-                                                    'april') }}
-                                                </td>
-                                                <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
-                                                    {{ getStudentFeeInstallmentLateFeesDue(studentFee,
-                                                    'april')
-                                                    }}
-                                                </td>
-                                                <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
-                                                    {{ getStudentFeeInstallmentLateFeeTotal(studentFee,
-                                                    'april')
-                                                    }}
-                                                </td>
 
-                                            </tr>
 
-                                        </div>
-                                        <div *ngIf="!studentFee.isAnnually">
-                                            <!-- Student Fee Not Annually -->
+                                    <div *ngFor="let dueBySession of element.feesDueBySession; index as sessionIndex;">
 
-                                            <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                <td align="left" class="expanded-Feetype-name">
-                                                    {{studentFeeIndex+1}}.
-                                                    {{
-                                                    getFeeTypeByStudentFee(studentFee).name }}
-                                                </td>
-                                                <td class="expanded-Feetype">{{ getStudentFeeFeesDue(studentFee) }}
-                                                </td>
-                                                <td class="expanded-Feetype">{{ getStudentFeeTotalFees(studentFee)
-                                                    }}
-                                                </td>
-                                                <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
-                                                    {{
-                                                    getStudentFeeLateFeesDue(studentFee) }}</td>
-                                                <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
-                                                    {{
-                                                    getStudentFeeLateFeeTotal(studentFee) }}</td>
-                                                <td class="expanded-Feetype">
-                                                    <button type="button"
-                                                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                                                        style="padding: 3px 8px"
-                                                        (click)="showOrHideStudentFeeDetails(studentFee)">
-                                                        <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-
-                                                        </ng-container>
-                                                        <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">
-                                                            +</ng-container>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                        <tr style="font-weight: 500 !important; font-size: 16px !important">
+                                            <td class="expanded-session-name">
+                                                {{sessionIndex+1}}.{{dueBySession.parentSession}}</td>
+                                            <td class="expanded-session">
+                                                {{getSessionFeesDue(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                            <td class="expanded-session">
+                                                {{getSessionTotalFees(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                            <td class="expanded-session">
+                                                {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                            <td class="expanded-session">
+                                                {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}
+                                            </td>
+                                        </tr>
 
-                                            <div *ngIf="studentFeeDetailsVisible(studentFee)">
-                                                <ng-container
-                                                    *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee);index as installmentIndex">
+                                        <div
+                                            *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);index as studentFeeIndex">
+                                            <div *ngIf="studentFee.isAnnually">
+                                                <!-- Student Fee Annually -->
 
-                                                    <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                        <td align="left" class="expanded-installment-name">
-                                                            {{installmentIndex+1}}.{{installment|titlecase}}</td>
-                                                        <td class="expanded-installment">{{
-                                                            getStudentFeeInstallmentFeesDue(studentFee,
-                                                            installment) }}</td>
-                                                        <td class="expanded-installment">{{
-                                                            getStudentFeeInstallmentTotalFees(studentFee,
-                                                            installment) }}</td>
-                                                        <td class="expanded-installment">{{
-                                                            getStudentFeeInstallmentLateFeesDue(studentFee,
-                                                            installment) }}</td>
-                                                        <td class="expanded-installment">{{
-                                                            getStudentFeeInstallmentLateFeeTotal(studentFee,
-                                                            installment) }}</td>
-                                                    </tr>
+                                                <tr style="font-weight: 500 !important; font-size: 16px !important">
+                                                    <td align="left" class="expanded-Feetype-name">
+                                                        {{studentFeeIndex+1}}.
+                                                        {{
+                                                        getFeeTypeByStudentFee(studentFee).name }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{
+                                                        getStudentFeeInstallmentFeesDue(studentFee,
+                                                        'april') }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{
+                                                        getStudentFeeInstallmentTotalFees(studentFee,
+                                                        'april') }}
+                                                    </td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{ getStudentFeeInstallmentLateFeesDue(studentFee,
+                                                        'april')
+                                                        }}
+                                                    </td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{ getStudentFeeInstallmentLateFeeTotal(studentFee,
+                                                        'april')
+                                                        }}
+                                                    </td>
 
-                                                </ng-container>
+                                                </tr>
+
+                                            </div>
+                                            <div *ngIf="!studentFee.isAnnually">
+                                                <!-- Student Fee Not Annually -->
+
+                                                <tr style="font-weight: 500 !important; font-size: 16px !important">
+                                                    <td align="left" class="expanded-Feetype-name">
+                                                        {{studentFeeIndex+1}}.
+                                                        {{
+                                                        getFeeTypeByStudentFee(studentFee).name }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{ getStudentFeeFeesDue(studentFee) }}
+                                                    </td>
+                                                    <td class="expanded-Feetype">{{ getStudentFeeTotalFees(studentFee)
+                                                        }}
+                                                    </td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{
+                                                        getStudentFeeLateFeesDue(studentFee) }}</td>
+                                                    <td class="expanded-Feetype" *ngIf="getTotalLateFees(element.id)>0">
+                                                        {{
+                                                        getStudentFeeLateFeeTotal(studentFee) }}</td>
+                                                    <td class="expanded-Feetype">
+                                                        <button type="button"
+                                                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                                            style="padding: 3px 8px"
+                                                            (click)="showOrHideStudentFeeDetails(studentFee)">
+                                                            <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">
+                                                                +</ng-container>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                                <div *ngIf="studentFeeDetailsVisible(studentFee)">
+                                                    <ng-container
+                                                        *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee);index as installmentIndex">
+
+                                                        <tr
+                                                            style="font-weight: 500 !important; font-size: 16px !important">
+                                                            <td align="left" class="expanded-installment-name">
+                                                                {{installmentIndex+1}}.{{installment|titlecase}}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentFeesDue(studentFee,
+                                                                installment) }}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentTotalFees(studentFee,
+                                                                installment) }}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentLateFeesDue(studentFee,
+                                                                installment) }}</td>
+                                                            <td class="expanded-installment">{{
+                                                                getStudentFeeInstallmentLateFeeTotal(studentFee,
+                                                                installment) }}</td>
+                                                        </tr>
+
+                                                    </ng-container>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                            </table>
-                        </div>
-                    </td>
-                </ng-container>
+                                </table>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="mat-row example-element-row"
-                    [class.example-expanded-row]="expandedElement === element"
-                    (click)="expandedElement = expandedElement === element ? null : element">
-                </tr>
-                <tr mat-row *matRowDef="let row; let even = even;  columns: ['expandedDetail']" [ngClass]="{gray: even}"
-                    class="mat-row example-detail-row">
-                </tr>
-            </table>
+                    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="mat-row example-element-row"
+                        [class.example-expanded-row]="expandedElement === element"
+                        (click)="expandedElement = expandedElement === element ? null : element">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; let even = even;  columns: ['expandedDetail']"
+                        [ngClass]="{gray: even}" class="mat-row example-detail-row">
+                    </tr>
+                </table>
             </div>
             <mat-paginator [pageSizeOptions]="[5,10,20,50,100]" showFirstLastButtons></mat-paginator>
 
 
+            <!-- print , download buttons -->
+            <div class=" print-download-buttons">
+
+                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
+                    tooltip-position="left" (click)="downloadFeesReport()">
+                    Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
 
 
 
+                <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
+                    style="padding: 12px 15px; margin-right: 17px;" matTooltip="Print the following list"
+                    tooltip-position="left" (click)="printFeesReport()">
+                    Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
 
+            </div>
 
+            <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+                <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
+            </div>
+            <button class="btn" style="padding: 4px 7px" (click)="showSMSSection=!showSMSSection">
+                <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
+                <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
+            </button>
+            <ng-container *ngIf="showSMSSection">
+                <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group form-black label-floating">
+                            <label class="control-label">Common Message to append</label>
+                            <textarea type="text" rows="5" class="form-control"
+                                [(ngModel)]="extraDefaulterMessage"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field style="margin-top: 23px;">
+                            <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
+                                <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
+                                    {{sentType}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div style="font-size: 14px; margin-top: 5px;">
+                            # of extra Characters/SMS: {{getExtraMessageLength()}}<br />
+                            # of Mobile devices: {{getNumberOfMobileDevice()}}<br />
+                            Estimated SMS Count: {{getEstimatedSMSCount()}}<br />
+                            Estimated Notification Count: {{getEstimatedNotificationCount()}}<br />
+                        </div>
+                        <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
+                            <button *ngIf="getEstimatedSMSCount()<=smsBalance" type="button"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                style="padding: 12px 15px; margin-right: 17px;"
+                                matTooltip="Notify all the selected defaulters" tooltip-position="left"
+                                (click)="notifyDefaulters();">
+                                {{getButtonText()}}
+                            </button>
+                            <span *ngIf="getEstimatedSMSCount()>smsBalance" style="font-size: 16px;">
+                                You are short by <b>{{getEstimatedSMSCount() - smsBalance}}</b> SMS.
+                            </span>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
         </ng-container>
-
     </ng-container>
 
     <ng-container *ngIf="isLoading">
