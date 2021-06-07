@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>Add Online Class</h2>
-<mat-dialog-content style="height: 62vh; width: 50vw; min-height: 300px; min-width: 480px;">
+<mat-dialog-content style="height: 65vh; width: 60vw; min-height: 300px; min-width: 280px; overflow: hidden;">
 
     <h4>{{data.weekday}}: {{data.timespan.startTime.getDisplayString()}} -
         {{data.timespan.endTime.getDisplayString()}}</h4>
 
-    <mat-form-field style="width: max(240px, 90%);">
+    <mat-form-field style="width: -webkit-fill-available">
         <mat-label>Subject</mat-label>
         <mat-select [(ngModel)]="parentClassSubject">
             <ng-container *ngFor="let classSubject of filteredClassSubject">
@@ -18,20 +18,18 @@
         </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
-        <mat-label>Meeting ID</mat-label>
-        <input matInput type="number" [(ngModel)]="meetingNumber">
-    </mat-form-field>
-
-    <mat-form-field>
-        <mat-label>Pass Code</mat-label>
-        <input matInput type="text" [(ngModel)]="password">
-    </mat-form-field>
     <br />
-    <div *ngIf="data.vm.hasAdminPermission() && getAccountInfoForSelectedSubject()" style="margin: 24px;">
+    <div class="Flex-Row-Col" *ngIf="data.vm.hasAdminPermission() && getAccountInfoForSelectedSubject()"
+        style="margin: 24px 0;">
+        <div style="margin: 16px">
+            <span>Username: {{getAccountInfoForSelectedSubject().username}}</span><br />
+            <span>Password: {{getAccountInfoForSelectedSubject().password}}</span>
+        </div>
 
-        <span>Username: {{getAccountInfoForSelectedSubject().username}}</span><br />
-        <span>Password: {{getAccountInfoForSelectedSubject().password}}</span>
+        <div style="margin: 16px">
+            <span>Meeting ID: {{getAccountInfoForSelectedSubject().meetingNumber}}</span><br />
+            <span>Passcode: {{getAccountInfoForSelectedSubject().passcode}}</span>
+        </div>
     </div>
 
 

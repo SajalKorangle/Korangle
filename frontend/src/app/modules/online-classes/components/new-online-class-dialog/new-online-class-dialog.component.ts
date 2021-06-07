@@ -12,8 +12,6 @@ import { ClassSubject } from '@services/modules/subject/models/class-subject';
 export class NewOnlineClassDialogComponent implements OnInit {
 
   parentClassSubject: number;
-  meetingNumber: number;
-  password: string = '';
 
   filteredClassSubject: Array<ClassSubject>;
 
@@ -34,8 +32,6 @@ export class NewOnlineClassDialogComponent implements OnInit {
     });
     if (data.onlineClass) {
       this.parentClassSubject = data.onlineClass.parentClassSubject;
-      this.meetingNumber = data.onlineClass.meetingNumber;
-      this.password = data.onlineClass.password;
     }
   }
 
@@ -51,7 +47,7 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
 
   apply(): void {
-    this.dialogRef.close({ parentClassSubject: this.parentClassSubject, meetingNumber: this.meetingNumber, password: this.password });
+    this.dialogRef.close({ parentClassSubject: this.parentClassSubject, });
   }
 
 }

@@ -119,12 +119,12 @@ export class SettingsHtmlRenderer {
                         day: this.vm.weekdays[weekdayKey],
                         startTimeJSON: new Time({ ...timespan.startTime }),
                         endTimeJSON: new Time({ ...timespan.endTime }),
-                        meetingNumber: null,
-                        password: null,
                     };
                     this.filteredOnlineClassList.push(onlineClass);
                 }
-                Object.assign(onlineClass, data);
+                else {
+                    Object.assign(onlineClass, data);
+                }
             }
         });
     }
@@ -179,13 +179,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
@@ -260,5 +260,6 @@ export class SettingsHtmlRenderer {
         [onlineClass1.startTimeJSON, onlineClass2.startTimeJSON] = [onlineClass2.startTimeJSON, onlineClass1.startTimeJSON];
         [onlineClass1.endTimeJSON, onlineClass2.endTimeJSON] = [onlineClass2.endTimeJSON, onlineClass1.endTimeJSON];
     }
+
 
 }

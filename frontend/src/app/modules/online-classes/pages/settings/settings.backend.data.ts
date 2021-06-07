@@ -35,7 +35,7 @@ export class SettingsBackendData {
         return this.divisionList.find(d => d.id == divisionId);
     }
 
-    getClassSubjectById(id: number) {
+    getClassSubjectById(id: number): ClassSubject {
         return this.classSubjectList.find(classSubject => classSubject.id == id);
     }
 
@@ -45,6 +45,10 @@ export class SettingsBackendData {
 
     getEmployeeById(id: number) {
         return this.employeeList.find(employee => employee.id == id);
+    }
+
+    getAccountInfoByParentEmployee(employeeId: number) {
+        return this.accountInfoList.find(accountInfo => accountInfo.parentEmployee == employeeId);
     }
 
 }
