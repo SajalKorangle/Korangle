@@ -34,7 +34,6 @@ def upload_image_assets_to(instance, filename):
     return '%s/tc_layouts/imageAssets/%s_%s' % (instance.parentLayout.parentSchool.id, now().timestamp(), filename)
 
 class TCImageAssets(models.Model): # implement image data size
-    parentLayout = models.ForeignKey(TCLayout, on_delete=models.CASCADE, blank=False)
     image = models.ImageField(upload_to=upload_image_assets_to)
 
 
