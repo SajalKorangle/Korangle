@@ -1,10 +1,8 @@
-
-import {CreateTestComponent} from './create-test.component';
+import { CreateTestComponent } from './create-test.component';
 
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 
 export class CreateTestServiceAdapter {
-
     vm: CreateTestComponent;
 
     test_type_list = TEST_TYPE_LIST;
@@ -26,7 +24,6 @@ export class CreateTestServiceAdapter {
     classSubjectList: any;
 
     student_mini_profile_list: any;
-
 
     initializeAdapter(vm: CreateTestComponent): void {
         this.vm = vm;
@@ -52,80 +49,73 @@ export class CreateTestServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.subject, {}),
             this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject, request_class_section_subject_data),
-        ]).then(value => {
-            this.vm.examinationList = value[0];
-            this.classList = value[1];
-            this.sectionList = value[2];
-            this.subjectList = value[3];
-            this.classSubjectList = value[4];
-            this.vm.classSectionSubjectList = [];
+        ]).then(
+            (value) => {
+                this.vm.examinationList = value[0];
+                this.classList = value[1];
+                this.sectionList = value[2];
+                this.subjectList = value[3];
+                this.classSubjectList = value[4];
+                this.vm.classSectionSubjectList = [];
 
-            value[4].forEach((item) => {
-                var classIndex = this.vm.classSectionSubjectList.findIndex(
-                    (data) => data.classId === item.parentClass
-                );
-                var sectionIndex = -1,
-                    subjectIndex = -1;
-                if (classIndex != -1) {
-                    sectionIndex = this.vm.classSectionSubjectList[
-                        classIndex
-                    ].sectionList.findIndex(
-                        (section) => section.sectionId === item.parentDivision
-                    );
-
-                    if (sectionIndex != -1) {
-                        subjectIndex = this.vm.classSectionSubjectList[
-                            classIndex
-                        ].sectionList[sectionIndex].subjectList.findIndex(
-                            (subject) => subject.subjectId === item.parentSubject
+                value[4].forEach((item) => {
+                    var classIndex = this.vm.classSectionSubjectList.findIndex((data) => data.classId === item.parentClass);
+                    var sectionIndex = -1,
+                        subjectIndex = -1;
+                    if (classIndex != -1) {
+                        sectionIndex = this.vm.classSectionSubjectList[classIndex].sectionList.findIndex(
+                            (section) => section.sectionId === item.parentDivision
                         );
+
+                        if (sectionIndex != -1) {
+                            subjectIndex = this.vm.classSectionSubjectList[classIndex].sectionList[sectionIndex].subjectList.findIndex(
+                                (subject) => subject.subjectId === item.parentSubject
+                            );
+                        }
                     }
-                }
 
-                let tempSubject = {
-                    subjectName: this.getSubjectName(item.parentSubject),
-                    subjectId: item.parentSubject,
-                };
+                    let tempSubject = {
+                        subjectName: this.getSubjectName(item.parentSubject),
+                        subjectId: item.parentSubject,
+                    };
 
-                let tempSubjectList = [];
-                tempSubjectList.push(tempSubject);
+                    let tempSubjectList = [];
+                    tempSubjectList.push(tempSubject);
 
-                let tempSection = {
-                    sectionName: this.getSectionName(item.parentDivision),
-                    sectionId: item.parentDivision,
-                    selected: false,
-                    subjectList: tempSubjectList,
-                };
+                    let tempSection = {
+                        sectionName: this.getSectionName(item.parentDivision),
+                        sectionId: item.parentDivision,
+                        selected: false,
+                        subjectList: tempSubjectList,
+                    };
 
-                let tempSectionList = [];
-                tempSectionList.push(tempSection);
+                    let tempSectionList = [];
+                    tempSectionList.push(tempSection);
 
-                let tempClass = {
-                    className: this.getClassName(item.parentClass),
-                    classId: item.parentClass,
-                    sectionList: tempSectionList,
-                };
+                    let tempClass = {
+                        className: this.getClassName(item.parentClass),
+                        classId: item.parentClass,
+                        sectionList: tempSectionList,
+                    };
 
-                if (classIndex === -1) {
-                    this.vm.classSectionSubjectList.push(tempClass);
-                } else if (sectionIndex === -1) {
-                    this.vm.classSectionSubjectList[classIndex].sectionList.push(
-                        tempSection
-                    );
-                } else if (subjectIndex === -1) {
-                    this.vm.classSectionSubjectList[classIndex].sectionList[
-                        sectionIndex
-                    ].subjectList.push(tempSubject);
-                }
-            });
+                    if (classIndex === -1) {
+                        this.vm.classSectionSubjectList.push(tempClass);
+                    } else if (sectionIndex === -1) {
+                        this.vm.classSectionSubjectList[classIndex].sectionList.push(tempSection);
+                    } else if (subjectIndex === -1) {
+                        this.vm.classSectionSubjectList[classIndex].sectionList[sectionIndex].subjectList.push(tempSubject);
+                    }
+                });
 
-            //sort the classSection list
-            this.classSectionSubjectListSort();
-            this.vm.subjectList = this.subjectList;
-            this.vm.isInitialLoading = false;
-        }, error => {
-            this.vm.isInitialLoading = false;
-        });
+                //sort the classSection list
+                this.classSectionSubjectListSort();
+                this.vm.subjectList = this.subjectList;
+                this.vm.isInitialLoading = false;
+            },
+            (error) => {
+                this.vm.isInitialLoading = false;
+            }
+        );
     }
     //Get Test and Subject Details New implemented to ready the data and check if test list can be fetched or not
     getTestAndSubjectDetailsNew(): void {
@@ -155,18 +145,14 @@ export class CreateTestServiceAdapter {
             parentDivision__in: this.sectionListForTest.join(','),
         };
 
-        Promise.all([
-            this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject, request_subject_data),
-        ]).then(
+        Promise.all([this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject, request_subject_data)]).then(
             (value) => {
                 let commonSubjectList = [];
 
                 value[0].forEach((item) => {
                     for (let i = 0; i < this.classListForTest.length; i++) {
                         if (this.classListForTest[i] === item.parentClass && this.sectionListForTest[i] === item.parentDivision) {
-                            var subIdx = commonSubjectList.findIndex(
-                                (sub) => sub.subjectId === item.parentSubject
-                            );
+                            var subIdx = commonSubjectList.findIndex((sub) => sub.subjectId === item.parentSubject);
 
                             let tempClass = {
                                 className: this.getClassName(item.parentClass),
@@ -197,13 +183,10 @@ export class CreateTestServiceAdapter {
                             }
                         }
                     }
-
                 });
                 this.populateSubjectList(commonSubjectList);
 
-                var findOne = commonSubjectList.findIndex(
-                    (item) => item.classList.length != totalNumberOfListRequired
-                );
+                var findOne = commonSubjectList.findIndex((item) => item.classList.length != totalNumberOfListRequired);
 
                 if (findOne === -1) {
                     this.vm.dataCanBeFetched = true;
@@ -223,7 +206,6 @@ export class CreateTestServiceAdapter {
 
     //Get Test And Subject Details
     getTestAndSubjectDetails(): void {
-
         this.vm.isLoading = true;
 
         let request_test_data_list = {
@@ -232,94 +214,87 @@ export class CreateTestServiceAdapter {
             parentDivision__in: this.sectionListForTest.join(','),
         };
 
-        Promise.all([
-            this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data_list),
-        ]).then(value => {
-            this.vm.newTestList = [];
-            value[0].forEach((test) => {
-
-                //Filter test for selected class and section only
-                for (let i = 0; i < this.classListForTest.length; i++) {
-                    if (this.classListForTest[i] === test.parentClass && this.sectionListForTest[i] === test.parentDivision) {
-                        var subIdx = this.vm.newTestList.findIndex(
-                            (sub) =>
-                                sub.subjectId === test.parentSubject &&
-                                sub.testType === test.testType &&
-                                sub.maximumMarks === test.maximumMarks
-                        );
-
-                        var classIdx = -1,
-                            sectionIdx = -1;
-
-                        if (subIdx != -1) {
-                            classIdx = this.vm.newTestList[subIdx].classList.findIndex(
-                                (cl) => cl.classId === test.parentClass
+        Promise.all([this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data_list)]).then(
+            (value) => {
+                this.vm.newTestList = [];
+                value[0].forEach((test) => {
+                    //Filter test for selected class and section only
+                    for (let i = 0; i < this.classListForTest.length; i++) {
+                        if (this.classListForTest[i] === test.parentClass && this.sectionListForTest[i] === test.parentDivision) {
+                            var subIdx = this.vm.newTestList.findIndex(
+                                (sub) =>
+                                    sub.subjectId === test.parentSubject &&
+                                    sub.testType === test.testType &&
+                                    sub.maximumMarks === test.maximumMarks
                             );
 
-                            if (classIdx != -1) {
-                                sectionIdx = this.vm.newTestList[subIdx].classList[
-                                    classIdx
-                                ].sectionList.findIndex(
-                                    (sec) => sec.sectionId === test.parentDivision
-                                );
+                            var classIdx = -1,
+                                sectionIdx = -1;
+
+                            if (subIdx != -1) {
+                                classIdx = this.vm.newTestList[subIdx].classList.findIndex((cl) => cl.classId === test.parentClass);
+
+                                if (classIdx != -1) {
+                                    sectionIdx = this.vm.newTestList[subIdx].classList[classIdx].sectionList.findIndex(
+                                        (sec) => sec.sectionId === test.parentDivision
+                                    );
+                                }
+                            }
+
+                            let tempSection = {
+                                sectionName: this.getSectionName(test.parentDivision),
+                                sectionId: test.parentDivision,
+                                testId: test.id,
+                            };
+
+                            let tempSectionList = [];
+                            tempSectionList.push(tempSection);
+
+                            let tempClass = {
+                                className: this.getClassName(test.parentClass),
+                                classId: test.parentClass,
+                                sectionList: tempSectionList,
+                            };
+                            let tempClassList = [];
+                            tempClassList.push(tempClass);
+
+                            let tempSubject = {
+                                parentExamination: test.parentExamination,
+                                deleted: false,
+                                subjectId: test.parentSubject,
+                                subjectName: this.getSubjectName(test.parentSubject),
+                                testType: test.testType,
+                                newTestType: test.testType,
+                                maximumMarks: test.maximumMarks,
+                                newMaximumMarks: test.maximumMarks,
+                                classList: tempClassList,
+                            };
+
+                            if (subIdx === -1) {
+                                this.vm.newTestList.push(tempSubject);
+                            } else if (classIdx === -1) {
+                                this.vm.newTestList[subIdx].classList.push(tempClass);
+                            } else if (sectionIdx === -1) {
+                                this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
                             }
                         }
-
-                        let tempSection = {
-                            sectionName: this.getSectionName(test.parentDivision),
-                            sectionId: test.parentDivision,
-                            testId: test.id,
-                        };
-
-                        let tempSectionList = [];
-                        tempSectionList.push(tempSection);
-
-                        let tempClass = {
-                            className: this.getClassName(test.parentClass),
-                            classId: test.parentClass,
-                            sectionList: tempSectionList,
-                        };
-                        let tempClassList = [];
-                        tempClassList.push(tempClass);
-
-                        let tempSubject = {
-                            parentExamination: test.parentExamination,
-                            deleted: false,
-                            subjectId: test.parentSubject,
-                            subjectName: this.getSubjectName(test.parentSubject),
-                            testType: test.testType,
-                            newTestType: test.testType,
-                            maximumMarks: test.maximumMarks,
-                            newMaximumMarks: test.maximumMarks,
-                            classList: tempClassList,
-                        };
-
-                        if (subIdx === -1) {
-                            this.vm.newTestList.push(tempSubject);
-                        } else if (classIdx === -1) {
-                            this.vm.newTestList[subIdx].classList.push(tempClass);
-                        } else if (sectionIdx === -1) {
-                            this.vm.newTestList[subIdx].classList[classIdx].sectionList.push(
-                                tempSection
-                            );
-                        }
                     }
-                }
-            });
+                });
 
-            this.vm.fetchedList = this.vm.newTestList.length;
-            if (this.vm.newTestList.length === 0) {
-                this.vm.createTestFromTemplate();
-            }
-            this.vm.handleUpdate('', '');
-            this.vm.isLoading = false;
-            this.vm.showTestDetails = true;
-            this.vm.selectedSubject = null;
-            this.vm.selectedTestType = null;
-        },
+                this.vm.fetchedList = this.vm.newTestList.length;
+                if (this.vm.newTestList.length === 0) {
+                    this.vm.createTestFromTemplate();
+                }
+                this.vm.handleUpdate('', '');
+                this.vm.isLoading = false;
+                this.vm.showTestDetails = true;
+                this.vm.selectedSubject = null;
+                this.vm.selectedTestType = null;
+            },
             (error) => {
                 this.vm.isLoading = false;
-            });
+            }
+        );
     }
 
     populateSubjectList(commonSubjectList): void {
@@ -335,7 +310,6 @@ export class CreateTestServiceAdapter {
 
     //Create Test New implemented to created test with provided class and section parameter for specific subject and test type
     createTestNew(parentClass: any, parentDivision: any): void {
-
         if (this.vm.selectedSubject === null) {
             alert('Subject should be selected');
             return;
@@ -345,8 +319,7 @@ export class CreateTestServiceAdapter {
             this.vm.selectedTestType = null;
         }
 
-        if (!this.isOnlyGrade(this.vm.selectedSubject)
-            && (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)) {
+        if (!this.isOnlyGrade(this.vm.selectedSubject) && (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)) {
             alert('Invalid Maximum Marks');
             return;
         }
@@ -376,7 +349,6 @@ export class CreateTestServiceAdapter {
                     if (cll.classId === data.parentClass) {
                         cll.sectionList.forEach((secc) => {
                             if (secc.sectionId === data.parentDivision) {
-
                                 testAlreadyAdded = true;
                             }
                         });
@@ -392,13 +364,12 @@ export class CreateTestServiceAdapter {
 
         this.vm.isLoading = true;
 
-        Promise.all([
-            this.vm.examinationService.createObject(this.vm.examinationService.test_second, data),
-        ]).then(
+        Promise.all([this.vm.examinationService.createObject(this.vm.examinationService.test_second, data)]).then(
             (value) => {
                 this.addTestToNewTestList(value[0]);
                 this.vm.isLoading = false;
-            }, (error) => {
+            },
+            (error) => {
                 this.vm.isLoading = false;
             }
         );
@@ -410,24 +381,19 @@ export class CreateTestServiceAdapter {
 
     addTestToNewTestList(test: any): void {
         var subIdx = this.vm.newTestList.findIndex(
-            (sub) =>
-                sub.subjectId === test.parentSubject &&
-                sub.testType === test.testType &&
-                sub.maximumMarks === test.maximumMarks
+            (sub) => sub.subjectId === test.parentSubject && sub.testType === test.testType && sub.maximumMarks === test.maximumMarks
         );
 
         var classIdx = -1,
             sectionIdx = -1;
 
         if (subIdx != -1) {
-            classIdx = this.vm.newTestList[subIdx].classList.findIndex(
-                (cl) => cl.classId === test.parentClass
-            );
+            classIdx = this.vm.newTestList[subIdx].classList.findIndex((cl) => cl.classId === test.parentClass);
 
             if (classIdx != -1) {
-                sectionIdx = this.vm.newTestList[subIdx].classList[
-                    classIdx
-                ].sectionList.findIndex((sec) => sec.sectionId === test.parentDivision);
+                sectionIdx = this.vm.newTestList[subIdx].classList[classIdx].sectionList.findIndex(
+                    (sec) => sec.sectionId === test.parentDivision
+                );
             }
         }
 
@@ -472,15 +438,15 @@ export class CreateTestServiceAdapter {
     extractTime(dateStr: any): any {
         let d = new Date(dateStr);
 
-        let hour = ((d.getHours()<10)?'0':'') + d.getHours();
+        let hour = (d.getHours() < 10 ? '0' : '') + d.getHours();
         let minute = '' + d.getMinutes();
 
-        return hour+":"+minute;
+        return hour + ':' + minute;
     }
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(subject => {
+        this.subjectList.every((subject) => {
             if (subject.id === subjectId) {
                 result = subject.name;
                 return false;
@@ -515,9 +481,9 @@ export class CreateTestServiceAdapter {
 
     isOnlyGrade(subjectId: any): boolean {
         let result = false;
-        this.classSubjectList.every(item => {
+        this.classSubjectList.every((item) => {
             if (item.parentSubject === subjectId) {
-                if(item.onlyGrade) {
+                if (item.onlyGrade) {
                     result = true;
                 }
                 return false;
@@ -530,6 +496,9 @@ export class CreateTestServiceAdapter {
     //Update Test List New
     updateTestNew(): any {
         this.vm.isLoading = true;
+        let createTest = [];
+        let updateTest = [];
+        let deleteTest = [];
         let promises = [];
         //Update the test list if any value changed in any of the test from test list
         this.vm.newTestList.forEach((test) => {
@@ -552,38 +521,53 @@ export class CreateTestServiceAdapter {
                         if (test.deleted) {
                             //nothing has to be done!!
                         } else {
-                            promises.push(this.vm.examinationService.createObject(this.vm.examinationService.test_second, data));
+                            createTest.push(data);
                         }
                     }
 
                     //if deleted
                     else if (test.deleted) {
-                        promises.push(this.vm.examinationService.deleteObject(this.vm.examinationService.test_second, data));
+                        deleteTest.push(data.id);
                     }
 
                     //if updated
-                    else if (
-                        test.newMaximumMarks != test.maximumMarks ||
-                        test.newTestType != test.testType
-                    ) {
-                        promises.push(this.vm.examinationService.updateObject(this.vm.examinationService.test_second, data));
+                    else if (test.newMaximumMarks != test.maximumMarks || test.newTestType != test.testType) {
+                        updateTest.push(data);
                     }
                 });
             });
         });
+        console.log(createTest);
+        console.log(updateTest);
+        console.log(deleteTest);
+        if (createTest.length) {
+            promises.push(this.vm.examinationService.createObjectList(this.vm.examinationService.test_second, createTest));
+        }
+        if (updateTest.length) {
+            promises.push(this.vm.examinationService.updateObjectList(this.vm.examinationService.test_second, updateTest));
+        }
+        if (deleteTest.length) {
+            let delete_data = {
+                'id__in': deleteTest
+            };
+            promises.push(this.vm.examinationService.deleteObjectList(this.vm.examinationService.test_second, delete_data));
+        }
         return promises;
     }
 
     UpdateHelper() {
         let promises = this.updateTestNew();
-        Promise.all(promises).then(value => {
-            alert('Test/s updated successfully');
-            this.getTestAndSubjectDetails();
-            this.vm.handleUpdate('', '');
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        })
+        Promise.all(promises).then(
+            (value) => {
+                alert('Test/s updated successfully');
+                this.getTestAndSubjectDetails();
+                this.vm.handleUpdate('', '');
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     //Sort the nested list
@@ -620,6 +604,4 @@ export class CreateTestServiceAdapter {
             });
         }
     }
-
-
 }

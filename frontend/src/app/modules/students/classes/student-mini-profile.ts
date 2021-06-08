@@ -1,5 +1,3 @@
-
-
 export class StudentMiniProfile {
     dbId: number;
     name: string;

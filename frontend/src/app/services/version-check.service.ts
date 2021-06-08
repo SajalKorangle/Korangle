@@ -26,7 +26,8 @@ export class VersionCheckService {
      */
     private checkVersion(url) {
         // timestamp these requests to invalidate caches
-        this.http.get(url + '?t=' + new Date().getTime())
+        this.http
+            .get(url + '?t=' + new Date().getTime())
             .toPromise()
             .then(
                 (response: any) => {
@@ -48,7 +49,7 @@ export class VersionCheckService {
                         location.assign('www.korangle.com');
                         location.reload(true);
                     }
-                     this.lastUpdation = computerLastUpdation;
+                    this.lastUpdation = computerLastUpdation;
                 },
                 (err) => {
                     console.error(err, 'Could not get version');

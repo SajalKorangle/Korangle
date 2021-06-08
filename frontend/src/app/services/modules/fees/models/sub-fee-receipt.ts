@@ -1,6 +1,4 @@
-
 export class SubFeeReceipt {
-
     id: number = null;
     parentFeeReceipt: number = null;
     parentStudentFee: number = null;
@@ -55,5 +53,4 @@ export class SubFeeReceipt {
     // March
     marchAmount: number = null;
     marchLateFee: number = null;
-
 }

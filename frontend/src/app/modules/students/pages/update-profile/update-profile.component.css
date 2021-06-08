@@ -1,49 +1,61 @@
 @media only screen and (min-width: 992px) {
-	.main-content {
-		padding: 0px;
-		margin: 0px;
-	}
+    .main-content {
+        padding: 0px;
+        margin: 0px;
+    }
 
-	.table-content {
-		margin-top: 40px;
-		margin-left: 40px;
-	}
+    .table-content {
+        margin-top: 40px;
+        margin-left: 40px;
+    }
+}
 
+@media only screen and (max-width: 992px) {
+    .row .col-md-5 {
+        width: 100% !important;
+    }
 }
 
 .main-content {
-	height: 95%;
+    height: 95%;
 }
 
 .container-fluid {
-	height: 100%;
+    height: 100%;
 }
 
+p {
+    word-break: break-all;
+}
 .loader {
-	border: 8px solid #FFFFFF; /* White */
-	border-top: 8px solid Red; /* Red */
-	border-radius: 50%;
-	width: 120px;
-	height: 120px;
-	animation: spin 2s linear infinite;
+    border: 8px solid #ffffff; /* White */
+    border-top: 8px solid Red; /* Red */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .fieldChanged {
-	background-color: #FFFFEA;
+    background-color: #ffffea;
 }
 
 .fieldRight {
-	color: lightgreen;
-	font-weight: 400;
+    color: lightgreen;
+    font-weight: 400;
 }
 
 mat-form-field {
-	margin-top: 23px;
+    margin-top: 23px;
 }
 
 .dropzone {
@@ -85,15 +97,13 @@ mat-form-field {
 .documentText {
     position: absolute;
     left: 102px;
-    top: 47px;
-    z-index: 3;
+    top: 25px;
 }
 
 .documentLabel {
-    position: absolute;
-    left: 102px;
-    top: 19px;
+    display: block;
     font-size: 16px;
+    margin-bottom: 10px;
     color: black;
 }
 
@@ -125,7 +135,7 @@ mat-form-field {
 
 .none {
     background: rgba(172, 204, 174, 0.1);
-    border: 1px dashed #56AE5A;
+    border: 1px dashed #56ae5a;
 }
 
 .sticky {
@@ -135,6 +145,6 @@ mat-form-field {
     bottom: 30px;
 }
 
-.row .col-md-5{
-    width: 38.66666667%
+.row .col-md-5 {
+    width: 38.66666667%;
 }

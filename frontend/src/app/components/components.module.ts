@@ -11,29 +11,32 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material';
 
-import { MatInputModule } from '@angular/material/input'
-import { MatTableModule } from '@angular/material';  
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material';
-import {MatListModule} from '@angular/material/list';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import 'hammerjs';
- 
-import { BasicComponentsModule } from "../basic-components/basic-components.module";
+
+import { BasicComponentsModule } from '../basic-components/basic-components.module';
 
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateOldComponent } from './day-date-old/day-date-old.component';
-import { DayDateComponent } from "./day-date/day-date.component";
+import { DayDateComponent } from './day-date/day-date.component';
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
-import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
+import { ParentStudentFilterComponent } from './parent-student-filter/parent-student-filter.component';
 import { CustomizedNumberInputComponent } from './customized-number-input/customized-number-input.component';
-import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component'
+import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component';
+import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
 
 // Pipes
 
@@ -42,97 +45,102 @@ import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
 import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
+import { LocalDatePipe } from './../pipes/local-date-format.pipe';
+import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
 
 @NgModule({
-    declarations: [
+        declarations: [
+                ParentStudentFilterComponent,
+                MonthDateComponent,
+                DayDateOldComponent,
+                DayDateComponent,
+                CustomizedNumberInputComponent,
+                ImagePreviewDialogComponent,
+                ViewImageModalComponent,
 
-        ParentStudentFilterComponent,
-        MonthDateComponent,
-        DayDateOldComponent,
-        DayDateComponent,
-        CustomizedNumberInputComponent,
-        ImagePreviewDialogComponent,
+                AmountInWordsPipe,
+                DateInWordsPipe,
+                IndianCurrencyPipe,
+                LocalDatePipe,
+                NumberAndStringPipe,
 
-        AmountInWordsPipe,
-        DateInWordsPipe,
-        IndianCurrencyPipe,
+                EmployeeFilterComponent,
+                ImagePdfPreviewDialogComponent,
 
-        EmployeeFilterComponent,
-        ImagePdfPreviewDialogComponent,
+        ],
+        imports: [
+                CommonModule,
+                FormsModule,
+                ReactiveFormsModule,
 
-    ],
-    imports: [
+                ScrollDispatchModule,
 
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
+                MatRadioModule,
+                MatSelectModule,
+                MatCheckboxModule,
+                MatTooltipModule,
+                MatMenuModule,
+                MatAutocompleteModule,
+                MatProgressBarModule,
+                MatDatepickerModule,
+                MatNativeDateModule,
+                MatExpansionModule,
+                MatSortModule,
+                MatCardModule,
+                MatTabsModule,
+                MatSliderModule,
+                MatSnackBarModule,
 
-        ScrollDispatchModule,
+                MatInputModule,
+                MatTableModule,
+                MatDialogModule,
+                MatListModule,
+                MatSlideToggleModule,
 
-        MatRadioModule,
-        MatSelectModule,
-        MatCheckboxModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatAutocompleteModule,
-        MatProgressBarModule,
-        MatDatepickerModule,
-        MatExpansionModule,
-        MatSortModule,
-        MatCardModule,
-        MatTabsModule,
-        MatSliderModule,
+                BasicComponentsModule,
+        ],
+        exports: [
+                BasicComponentsModule,
 
-        MatInputModule,
-        MatTableModule,
-        MatDialogModule,
-        MatListModule,
-        MatSlideToggleModule,
-        
-        BasicComponentsModule,
+                ParentStudentFilterComponent,
+                EmployeeFilterComponent,
+                MonthDateComponent,
+                DayDateOldComponent,
+                DayDateComponent,
+                CustomizedNumberInputComponent,
+                ImagePreviewDialogComponent,
+                ImagePdfPreviewDialogComponent,
 
-    ],
-    exports: [
+                ViewImageModalComponent,
+                AmountInWordsPipe,
+                DateInWordsPipe,
+                IndianCurrencyPipe,
+                LocalDatePipe,
+                NumberAndStringPipe,
 
-        BasicComponentsModule,
+                CommonModule,
+                FormsModule,
+                ReactiveFormsModule,
 
-        ParentStudentFilterComponent,
-        EmployeeFilterComponent,
-        MonthDateComponent,
-        DayDateOldComponent,
-        DayDateComponent,
-        CustomizedNumberInputComponent,
-        ImagePreviewDialogComponent,
-        ImagePdfPreviewDialogComponent,
+                ScrollDispatchModule,
 
-        AmountInWordsPipe,
-        DateInWordsPipe,
-        IndianCurrencyPipe,
-
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-
-        ScrollDispatchModule,
-
-        MatRadioModule,
-        MatSelectModule,
-        MatCheckboxModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatAutocompleteModule,
-        MatProgressBarModule,
-        MatDatepickerModule,
-        MatExpansionModule,
-        MatSortModule,
-        MatCardModule,
-        MatTabsModule,
-        MatSliderModule,
-        MatInputModule,
-        MatDialogModule,
-        MatListModule,
-        MatSlideToggleModule,
-        
-    ],
+                MatRadioModule,
+                MatSelectModule,
+                MatCheckboxModule,
+                MatTooltipModule,
+                MatMenuModule,
+                MatAutocompleteModule,
+                MatProgressBarModule,
+                MatDatepickerModule,
+                MatExpansionModule,
+                MatSortModule,
+                MatCardModule,
+                MatTabsModule,
+                MatSliderModule,
+                MatInputModule,
+                MatDialogModule,
+                MatListModule,
+                MatSlideToggleModule,
+        ],
 })
 export class ComponentsModule { }

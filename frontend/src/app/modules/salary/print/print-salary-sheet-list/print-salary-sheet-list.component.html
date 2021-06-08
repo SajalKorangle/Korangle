@@ -1,77 +1,82 @@
-<div class="container-fluid" style="height: 100vh;" *ngIf="employeeList">
-
+<div class="container-fluid" style="height: 100vh" *ngIf="employeeList">
     <table class="table table-hover">
-        <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-        <tr>
-            <th colspan="50" style="border: none !important;">
+        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+            <tr>
+                <th colspan="50" style="border: none !important">
+                    <img
+                        src="{{ user.activeSchool.profileImage }}"
+                        style="border-radius: 2px; position: fixed; top: 40px; left: 20px; width: 56px; height: 56px"
+                    />
 
-                <img src="{{user.activeSchool.profileImage}}"
-                     style="border-radius: 2px; position: fixed;
-                     top: 40px; left: 20px;
-                     width: 56px; height: 56px;"/>
+                    <!-- Reg. No. , Dise Code -->
+                    <div class="row" style="margin-top: 0px">
+                        <div class="col-xs-6 d-flex custom-padding">Reg. No. : {{ user.activeSchool.registrationNumber }}</div>
+                        <div class="col-xs-6 d-flex custom-padding" align="end">Dise code : {{ user.activeSchool.diseCode }}</div>
+                    </div>
 
-                <!-- Reg. No. , Dise Code -->
-                <div class="row " style="margin-top: 0px;">
-                    <div class="col-xs-6 d-flex custom-padding">
-                        Reg. No. : {{user.activeSchool.registrationNumber}}
+                    <!-- School Name -->
+                    <div class="row" style="margin-top: 2px">
+                        <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px">
+                            <span style="font-size: 30px">
+                                <b>{{ user.activeSchool.printName }}</b> </span
+                            ><br />
+                            <span style="font-size: 15px">
+                                {{ user.activeSchool.address }}
+                            </span>
+                        </div>
                     </div>
-                    <div class="col-xs-6 d-flex custom-padding" align="end">
-                        Dise code : {{user.activeSchool.diseCode}}
-                    </div>
-                </div>
 
-                <!-- School Name -->
-                <div class="row " style="margin-top: 2px;">
-                    <div class="col-xs-12 d-flex justify-content-center" align="center" style="padding: 0px;">
-                        <span style="font-size: 30px">
-                            <b>{{user.activeSchool.printName}}</b>
-                        </span><br>
-                        <span style="font-size: 15px">
-                            {{user.activeSchool.address}}
-                        </span>
+                    <!-- Salary Sheet -->
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
+                            <span style="font-size: 21px"
+                                ><u>Salary Sheet of {{ month }}-{{ year }}</u></span
+                            ><br />
+                        </div>
                     </div>
-                </div>
-
-                <!-- Salary Sheet -->
-                <div class="row " style="margin-top: 10px">
-                    <div class="col-xs-12 d-flex justify-content-center custom-padding" align="center">
-                        <span style="font-size: 21px;"><u>Salary Sheet of {{month}}-{{year}}</u></span><br/>
-                    </div>
-                </div>
-            </th>
-        </tr>
-        <tr>
-            <th class="text-center">S No.</th>
-            <th class="text-center">Name</th>
-            <th class="text-center">Father's Name</th>
-            <th class="text-center">Monthly Salary</th>
-            <th class="text-center">Working Days</th>
-            <th class="text-center">Net Salary</th>
-            <th class="text-center">Signature</th>
-        </tr>
+                </th>
+            </tr>
+            <tr>
+                <th class="text-center">S No.</th>
+                <th class="text-center">Name</th>
+                <th class="text-center">Father's Name</th>
+                <th class="text-center">Monthly Salary</th>
+                <th class="text-center">Working Days</th>
+                <th class="text-center">Net Salary</th>
+                <th class="text-center">Signature</th>
+            </tr>
         </thead>
         <tbody>
-        <ng-container *ngFor="let employee of employeeList; let i=index; let last=last;">
-            <tr [class.bottomBorder]="last">
-                <td align="center">{{i+1}}.</td>
-                <td align="left">{{employee.name}}</td>
-                <td align="left">{{employee.fatherName}}</td>
-                <td align="right">{{employee.monthlySalary}}</td>
-                <td align="center">{{employee.numberOfWorkingDays}}</td>
-                <td align="right">{{employee.netSalary}}</td>
-                <td align="center"></td>
+            <ng-container *ngFor="let employee of employeeList; let i = index; let last = last">
+                <tr [class.bottomBorder]="last">
+                    <td align="center">{{ i + 1 }}.</td>
+                    <td align="left">{{ employee.name }}</td>
+                    <td align="left">{{ employee.fatherName }}</td>
+                    <td align="right">{{ employee.monthlySalary }}</td>
+                    <td align="center">{{ employee.numberOfWorkingDays }}</td>
+                    <td align="right">{{ employee.netSalary }}</td>
+                    <td align="center"></td>
+                </tr>
+            </ng-container>
+            <tr class="totalRow">
+                <td style="border-top: 1px solid black !important; border-right: none !important"></td>
+                <td
+                    align="center"
+                    style="border-top: 1px solid black !important; border-right: none !important; border-left: none !important"
+                >
+                    <b>Total</b>
+                </td>
+                <td style="border-top: 1px solid black !important; border-right: none !important; border-left: none !important"></td>
+                <td style="border-top: 1px solid black !important; border-right: none !important; border-left: none !important"></td>
+                <td style="border-top: 1px solid black !important; border-right: none !important; border-left: none !important"></td>
+                <td
+                    align="right"
+                    style="border-top: 1px solid black !important; border-right: none !important; border-left: none !important"
+                >
+                    <b>{{ getNetTotalAmount() }}</b>
+                </td>
+                <td style="border-top: 1px solid black !important; border-left: none !important"></td>
             </tr>
-        </ng-container>
-        <tr class='totalRow'>
-            <td style="border-top: 1px solid black !important; border-right: none !important;"></td>
-            <td align="center" style="border-top: 1px solid black !important;border-right: none !important; border-left: none !important;"><b>Total</b></td>
-            <td style="border-top: 1px solid black !important;border-right: none !important; border-left: none !important;"></td>
-            <td style="border-top: 1px solid black !important;border-right: none !important; border-left: none !important;"></td>
-            <td style="border-top: 1px solid black !important;border-right: none !important; border-left: none !important;"></td>
-            <td align="right" style="border-top: 1px solid black !important;border-right: none !important; border-left: none !important;"><b>{{getNetTotalAmount()}}</b></td>
-            <td style="border-top: 1px solid black !important;border-left: none !important;"></td>
-        </tr>
         </tbody>
     </table>
-
 </div>

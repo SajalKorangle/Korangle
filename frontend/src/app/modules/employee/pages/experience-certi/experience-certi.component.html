@@ -1,21 +1,14 @@
 <div class="card-content">
-
-    <app-employee-filter [user]="user"
-                         [showAllEmployees]="true"
-                         (employee)="getEmployeeProfile($event)"></app-employee-filter>
-
+    <app-employee-filter [user]="user" [showAllEmployees]="true" (employee)="getEmployeeProfile($event)"></app-employee-filter>
 
     <ng-container *ngIf="selected && !isLoading">
-
-        <div class="row" style="font-weight: 800;">
+        <div class="row" style="font-weight: 800">
             <div class="col-md-3">
-                {{employee.name | titlecase}}
+                {{ employee.name | titlecase }}
             </div>
+            <div class="col-md-3">Mr. {{ employeeFullProfile.fatherName | titlecase }}</div>
             <div class="col-md-3">
-                Mr. {{employeeFullProfile.fatherName | titlecase}}
-            </div>
-            <div class="col-md-3">
-                {{employee.employeeNumber}}
+                {{ employee.employeeNumber }}
             </div>
         </div>
 
@@ -23,14 +16,11 @@
             <div class="col-md-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Certificate No.</label>
-                    <input type="text"
-                           class="form-control"
-                           [(ngModel)]="certificateNumber">
+                    <input type="text" class="form-control" [(ngModel)]="certificateNumber" />
                 </div>
             </div>
-            <div class="col-md-3" style="margin-top: 23px;">
-                <day-date-old [placeHolder]="'Issue Date'"
-                              (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date-old>
+            <div class="col-md-3" style="margin-top: 23px">
+                <day-date-old [placeHolder]="'Issue Date'" (onDateSelected)="handleEmployeeCertiIssueDate($event)"></day-date-old>
             </div>
         </div>
 
@@ -39,8 +29,7 @@
                 <div class="form-group">
                     <div class="form-group form-black label-floating">
                         <label class="control-label">Remark</label>
-                        <textarea class="form-control" rows="3"
-                                  [(ngModel)]="remark"></textarea>
+                        <textarea class="form-control" rows="3" [(ngModel)]="remark"></textarea>
                     </div>
                 </div>
             </div>
@@ -61,17 +50,17 @@
             </div>
         </div>
 
-        <button type="button"
-                *ngIf="numberOfMissingParameters === 0"
-                (click)="genrateExpCerti()"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}">Generate Experience Certificate</button>
-
+        <button
+            type="button"
+            *ngIf="numberOfMissingParameters === 0"
+            (click)="genrateExpCerti()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        >
+            Generate Experience Certificate
+        </button>
 
         <div class="clearfix"></div>
-
     </ng-container>
-
-
 </div>
 
 <ng-container *ngIf="isLoading">

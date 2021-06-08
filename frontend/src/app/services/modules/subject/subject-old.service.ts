@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 
 @Injectable()
 export class SubjectOldService extends CommonServiceRequirements {
-
     // Subject
     getSubjectList(token: any): Promise<any> {
         return super.getData(token, '/subject/subjects');
@@ -15,8 +12,8 @@ export class SubjectOldService extends CommonServiceRequirements {
     // Class Subject
     getClassSubjectList(data: any, token: any): Promise<any> {
         let url = '/subject/class-subjects/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
         /*if ('subjectList' in data) {
@@ -49,27 +46,32 @@ export class SubjectOldService extends CommonServiceRequirements {
     }
 
     updateClassSubject(data: any, token: any): Promise<any> {
-        return super.putData(data, token, '/subject/class-subjects/'+data['id']);
+        return super.putData(data, token, '/subject/class-subjects/' + data['id']);
     }
 
     deleteClassSubject(data: any, token: any): Promise<any> {
-        return super.deleteData(token, '/subject/class-subjects/'+data);
+        return super.deleteData(token, '/subject/class-subjects/' + data);
     }
 
     // Student Subject
     getStudentSubjectList(data: any, token: any): Promise<any> {
         if (data['studentList']) {
-            let url = '/subject/student-subjects/batch' +
-                '?studentList=' + data['studentList'].join() +
-                '&subjectList=' + data['subjectList'].join() +
-                '&sessionList=' + data['sessionList'].join();
+            let url =
+                '/subject/student-subjects/batch' +
+                '?studentList=' +
+                data['studentList'].join() +
+                '&subjectList=' +
+                data['subjectList'].join() +
+                '&sessionList=' +
+                data['sessionList'].join();
             return super.getData(token, url);
         } else if (data['schoolId']) {
-            return super.getData(token,
-                '/subject/student-subjects/batch?sessionId='+data['sessionId']+'&schoolId='+data['schoolId']);
-        } else if(data['studentId']) {
-            return super.getData(token,
-                '/subject/student-subjects/batch?sessionId='+data['sessionId']+'&studentId='+data['studentId']);
+            return super.getData(token, '/subject/student-subjects/batch?sessionId=' + data['sessionId'] + '&schoolId=' + data['schoolId']);
+        } else if (data['studentId']) {
+            return super.getData(
+                token,
+                '/subject/student-subjects/batch?sessionId=' + data['sessionId'] + '&studentId=' + data['studentId']
+            );
         }
     }
 
@@ -78,7 +80,7 @@ export class SubjectOldService extends CommonServiceRequirements {
     }
 
     deleteStudentSubjectList(data: any, token: any): Promise<any> {
-        return super.deleteData(token, '/subject/student-subjects/batch/'+data);
+        return super.deleteData(token, '/subject/student-subjects/batch/' + data);
     }
 
     createStudentSubject(data: any, token: any): Promise<any> {
@@ -86,14 +88,14 @@ export class SubjectOldService extends CommonServiceRequirements {
     }
 
     deleteStudentSubject(data: any, token: any): Promise<any> {
-        return super.deleteData(token, '/subject/student-subjects/'+data);
+        return super.deleteData(token, '/subject/student-subjects/' + data);
     }
 
     // Extra Field
     getExtraFieldList(data: any, token: any): Promise<any> {
         let url = '/subject/extra-fields/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
     }
@@ -101,10 +103,9 @@ export class SubjectOldService extends CommonServiceRequirements {
     // Extra Sub Field
     getExtraSubFieldList(data: any, token: any): Promise<any> {
         let url = '/subject/extra-sub-fields/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&'+key+'='+data[key];
+        Object.keys(data).forEach((key) => {
+            url += '&' + key + '=' + data[key];
         });
         return super.getData(token, url);
     }
-
 }

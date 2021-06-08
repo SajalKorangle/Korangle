@@ -8,7 +8,6 @@
         margin-top: 40px;
         margin-left: 40px;
     }
-
 }
 
 .main-content {
@@ -20,7 +19,7 @@
 }
 
 .loader {
-    border: 8px solid #FFFFFF;
+    border: 8px solid #ffffff;
     border-top: 8px solid Red;
     border-radius: 50%;
     width: 120px;
@@ -29,8 +28,12 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .dataListDiv {
@@ -85,10 +88,10 @@ ngx-datatable-column:hover {
     background-color: lightgrey;
 }
 
-/deep/ .datatable-body-cell{
-    margin-top:  15px;
+/deep/ .datatable-body-cell {
+    margin-top: 15px;
 }
 
-/deep/ .highlight{
+/deep/ .highlight {
     background: yellow;
 }

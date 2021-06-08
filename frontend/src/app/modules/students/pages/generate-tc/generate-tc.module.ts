@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {GenerateTcRoutingModule} from './generate-tc.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {GenerateTcComponent} from "./generate-tc.component";
-
+import { GenerateTcRoutingModule } from './generate-tc.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { GenerateTcComponent } from './generate-tc.component';
 
 @NgModule({
-    declarations: [
-        GenerateTcComponent
-    ],
+    declarations: [GenerateTcComponent],
 
-    imports: [
-        GenerateTcRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [GenerateTcRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [GenerateTcComponent]
+    bootstrap: [GenerateTcComponent],
 })
-export class GenerateTcModule { }
+export class GenerateTcModule {}

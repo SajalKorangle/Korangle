@@ -1,6 +1,4 @@
-
 export class Student {
-
     id: number = null;
 
     profileImage: string = null;
@@ -39,8 +37,8 @@ export class Student {
     rte: string = null;
 
     admissionSession: number = null;
+    parentAdmissionClass: string = null;
     dateOfAdmission: any = null;
 
     parentTransferCertificate: number = null;
-
 }

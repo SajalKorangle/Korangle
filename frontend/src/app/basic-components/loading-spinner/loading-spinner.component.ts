@@ -7,7 +7,6 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./loading-spinner.component.css'],
 })
 export class LoadingSpinnerComponent {
-
     @Input() user;
 
     @Input() timer = null;
@@ -19,22 +18,16 @@ export class LoadingSpinnerComponent {
     intervalFunction: any;
 
     ngOnInit(): void {
-
         if (this.timer) {
-
-            this.countDownTime = new Date().getTime() + (this.timer * 1000);
+            this.countDownTime = new Date().getTime() + this.timer * 1000;
 
             this.intervalFunction = setInterval(() => {
-
-                this.countDown = Math.ceil((this.countDownTime - (new Date().getTime()))/1000);
-
+                this.countDown = Math.ceil((this.countDownTime - new Date().getTime()) / 1000);
             }, 1000);
-
         }
     }
 
     ngOnDestroy(): void {
         clearInterval(this.intervalFunction);
     }
-
 }

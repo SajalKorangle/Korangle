@@ -16,7 +16,7 @@ export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
 
 // Report Card
 
-    // M.P. Board
+// M.P. Board
 export const PRINT_STUDENT_NINTH_FINAL_REPORT = 'print-student-ninth-final-report';
 export const PRINT_STUDENT_NINTH_FINAL_REPORT_2019 = 'print-student-ninth-final-report-2019';
 export const PRINT_STUDENT_ELEVENTH_FINAL_REPORT = 'print-student-eleventh-final-report';
@@ -24,7 +24,7 @@ export const PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT = 'print-student-comprehen
 export const PRINT_STUDENT_ELEGANT_FINAL_REPORT = 'print-student-elegant-final-report';
 export const PRINT_STUDENT_CLASSIC_FINAL_REPORT = 'print-student-classic-final-report';
 
-    // C.B.S.E.
+// C.B.S.E.
 export const PRINT_STUDENT_JUNIOR_REPORT = 'print-student-junior-report';
 export const PRINT_STUDENT_SENIOR_REPORT = 'print-student-senior-report';
 
@@ -39,7 +39,13 @@ export const PRINT_MARKSHEET = 'print-marksheet';
 export const PRINT_MARKSHEET_SECOND_FORMAT = 'print-marksheet-second-format';
 
 //enquiry
-export const PRINT_ENQUIRY_LIST='print-enquiry-list';
+export const PRINT_ENQUIRY_LIST = 'print-enquiry-list';
 
 // Custom Report Card
 export const PRINT_CUSTOM_REPORTCARD = 'print-custom-report-card';
+
+// Transactions
+export const PRINT_TRANSACTIONS = 'print-transactions';
+
+// Ledger
+export const PRINT_LEDGER = 'print-ledger';

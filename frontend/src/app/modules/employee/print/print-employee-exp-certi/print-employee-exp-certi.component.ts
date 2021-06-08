@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, AfterViewChecked, Input, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, Input, ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
@@ -6,12 +6,11 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-employee-exp-certi.component.css'],
 })
 export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterViewChecked {
-
-    user : any;
+    user: any;
 
     printExpCertiComponentSubscription: any;
 
-    viewChecked =  true;
+    viewChecked = true;
 
     employeeProfile: any;
 
@@ -19,8 +18,7 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
 
     employee: any;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
-
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -30,7 +28,6 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
         this.employee = this.employeeProfile.employeeFullProfile;
         this.viewChecked = false;
     }
-
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
@@ -44,5 +41,4 @@ export class PrintEmployeeExpCertiComponent implements OnInit, OnDestroy, AfterV
     ngOnDestroy(): void {
         this.employeeProfile = null;
     }
-
 }

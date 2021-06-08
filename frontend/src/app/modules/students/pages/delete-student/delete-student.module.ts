@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
-import { ComponentsModule } from "../../../../components/components.module";
+import { ComponentsModule } from '../../../../components/components.module';
 import { DeleteStudentComponent } from './delete-student.component';
 import { DeleteStudentRoutingModule } from './delete-student.routing';
 
-
 @NgModule({
-    declarations: [
-        DeleteStudentComponent
-    ],
+    declarations: [DeleteStudentComponent],
 
-    imports: [
-        DeleteStudentRoutingModule,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [DeleteStudentRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [DeleteStudentComponent]
+    bootstrap: [DeleteStudentComponent],
 })
-export class DeleteStudentModule { }
+export class DeleteStudentModule {}

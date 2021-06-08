@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import {TEST_TYPE_LIST} from '../../../../../classes/constants/test-type';
+import { TEST_TYPE_LIST } from '../../../../../classes/constants/test-type';
 import { PrintService } from '../../../../../print/print-service';
 
 @Component({
@@ -10,8 +10,7 @@ import { PrintService } from '../../../../../print/print-service';
     styleUrls: ['./print-student-eleventh-final-report-list.component.css'],
 })
 export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnDestroy, AfterViewChecked {
-
-    user : any;
+    user: any;
 
     viewChecked = true;
 
@@ -24,7 +23,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
 
     marksDecimalPoint: any;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -35,7 +34,8 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         this.showPrincipalSignature = value['showPrincipalSignature'];
         this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
-        this.marksDecimalPoint = '1.'+this.reportCardMapping.minimumDecimalPoints.toString()+'-'+this.reportCardMapping.maximumDecimalPoints;
+        this.marksDecimalPoint =
+            '1.' + this.reportCardMapping.minimumDecimalPoints.toString() + '-' + this.reportCardMapping.maximumDecimalPoints;
         this.viewChecked = false;
     }
 
@@ -56,7 +56,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(subject => {
+        this.subjectList.every((subject) => {
             if (subject.id == subjectId) {
                 result = subject.name;
                 return false;
@@ -69,117 +69,137 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
     getQuarterlyMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 100;
-        let tempMaxMarks = student.parentExaminationQuarterlyHigh.classTestList.filter(item => {
-            return item.parentSubject == subjectId;
-        }).reduce((total, item) => {
-            return total + parseFloat(item.maximumMarks);
-        }, 0);
+        let tempMaxMarks = student.parentExaminationQuarterlyHigh.classTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId;
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.maximumMarks);
+            }, 0);
         if (tempMaxMarks != 0) {
             classMaxMarks = tempMaxMarks;
         }
-        studentMarks = student.parentExaminationQuarterlyHigh.studentTestList.filter(item => {
-            return item.parentSubject == subjectId;
-        }).reduce((total, item) => {
-            return total + parseFloat(item.marksObtained);
-        }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
+        studentMarks = student.parentExaminationQuarterlyHigh.studentTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId;
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.marksObtained);
+            }, 0);
+        return parseFloat(((studentMarks * maxMarks) / classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getHalfYearlyMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 100;
-        let tempMaxMarks = student.parentExaminationHalfYearlyHigh.classTestList.filter(item => {
-            return item.parentSubject == subjectId;
-        }).reduce((total, item) => {
-            return total + parseFloat(item.maximumMarks);
-        }, 0);
+        let tempMaxMarks = student.parentExaminationHalfYearlyHigh.classTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId;
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.maximumMarks);
+            }, 0);
         if (tempMaxMarks != 0) {
             classMaxMarks = tempMaxMarks;
         }
-        studentMarks = student.parentExaminationHalfYearlyHigh.studentTestList.filter(item => {
-            return item.parentSubject == subjectId;
-        }).reduce((total, item) => {
-            return total + parseFloat(item.marksObtained);
-        }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
+        studentMarks = student.parentExaminationHalfYearlyHigh.studentTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId;
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.marksObtained);
+            }, 0);
+        return parseFloat(((studentMarks * maxMarks) / classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getFinalMarks(student: any, subjectId: any, maxMarks: any): number {
         if (this.isPractical(student, subjectId)) {
             if (maxMarks == 100) {
-                return this.getFinalTheoryMarks(student, subjectId, 70)
-                    + this.getFinalPracticalMarks(student, subjectId, 30);
+                return this.getFinalTheoryMarks(student, subjectId, 70) + this.getFinalPracticalMarks(student, subjectId, 30);
             } else {
-                return this.getFinalTheoryMarks(student, subjectId, 70)
-                    + this.getFinalPracticalMarks(student, subjectId, 20);
+                return this.getFinalTheoryMarks(student, subjectId, 70) + this.getFinalPracticalMarks(student, subjectId, 20);
             }
         } else {
             let studentMarks = 0;
             let classMaxMarks = 100;
-            let tempMaxMarks = student.parentExaminationFinalHigh.classTestList.filter(item => {
-                return item.parentSubject == subjectId;
-            }).reduce((total, item) => {
-                return total + parseFloat(item.maximumMarks);
-            }, 0);
+            let tempMaxMarks = student.parentExaminationFinalHigh.classTestList
+                .filter((item) => {
+                    return item.parentSubject == subjectId;
+                })
+                .reduce((total, item) => {
+                    return total + parseFloat(item.maximumMarks);
+                }, 0);
             if (tempMaxMarks != 0) {
                 classMaxMarks = tempMaxMarks;
             }
-            studentMarks = student.parentExaminationFinalHigh.studentTestList.filter(item => {
-                return item.parentSubject == subjectId;
-            }).reduce((total, item) => {
-                return total + parseFloat(item.marksObtained);
-            }, 0);
-            return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
+            studentMarks = student.parentExaminationFinalHigh.studentTestList
+                .filter((item) => {
+                    return item.parentSubject == subjectId;
+                })
+                .reduce((total, item) => {
+                    return total + parseFloat(item.marksObtained);
+                }, 0);
+            return parseFloat(((studentMarks * maxMarks) / classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
         }
     }
 
     getFinalTheoryMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 70;
-        let tempMaxMarks = student.parentExaminationFinalHigh.classTestList.filter(item => {
-            return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[2];
-        }).reduce((total, item) => {
-            return total + parseFloat(item.maximumMarks);
-        }, 0);
+        let tempMaxMarks = student.parentExaminationFinalHigh.classTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[2];
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.maximumMarks);
+            }, 0);
         if (tempMaxMarks != 0) {
             classMaxMarks = tempMaxMarks;
         }
-        studentMarks = student.parentExaminationFinalHigh.studentTestList.filter(item => {
-            return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[2];
-        }).reduce((total, item) => {
-            return total + parseFloat(item.marksObtained);
-        }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
+        studentMarks = student.parentExaminationFinalHigh.studentTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[2];
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.marksObtained);
+            }, 0);
+        return parseFloat(((studentMarks * maxMarks) / classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getFinalPracticalMarks(student: any, subjectId: any, maxMarks: any): number {
         let studentMarks = 0;
         let classMaxMarks = 30;
-        let tempMaxMarks = student.parentExaminationFinalHigh.classTestList.filter(item => {
-            return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[3];
-        }).reduce((total, item) => {
-            return total + parseFloat(item.maximumMarks);
-        }, 0);
+        let tempMaxMarks = student.parentExaminationFinalHigh.classTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[3];
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.maximumMarks);
+            }, 0);
         if (tempMaxMarks != 0) {
             classMaxMarks = tempMaxMarks;
         }
-        studentMarks = student.parentExaminationFinalHigh.studentTestList.filter(item => {
-            return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[3];
-        }).reduce((total, item) => {
-            return total + parseFloat(item.marksObtained);
-        }, 0);
-        return parseFloat(((studentMarks*maxMarks)/classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
+        studentMarks = student.parentExaminationFinalHigh.studentTestList
+            .filter((item) => {
+                return item.parentSubject == subjectId && item.testType == TEST_TYPE_LIST[3];
+            })
+            .reduce((total, item) => {
+                return total + parseFloat(item.marksObtained);
+            }, 0);
+        return parseFloat(((studentMarks * maxMarks) / classMaxMarks).toFixed(this.reportCardMapping.maximumDecimalPoints));
     }
 
     getTotalSubjectMarks(student: any, subjectId: any): number {
-        return this.getQuarterlyMarks(student, subjectId, 5)
-            + this.getHalfYearlyMarks(student, subjectId, 5)
-            + this.getFinalMarks(student, subjectId, 90);
+        return (
+            this.getQuarterlyMarks(student, subjectId, 5) +
+            this.getHalfYearlyMarks(student, subjectId, 5) +
+            this.getFinalMarks(student, subjectId, 90)
+        );
     }
 
     getTotalMarks(student: any): number {
         let marks_list = [];
-        student.subjectList.forEach(subject => {
+        student.subjectList.forEach((subject) => {
             marks_list.push(this.getTotalSubjectMarks(student, subject.parentSubject));
         });
         return marks_list.reduce((total, item) => {
@@ -189,7 +209,7 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
 
     isPractical(student: any, subjectId: any): boolean {
         let result = false;
-        student.parentExaminationFinalHigh.classTestList.every(item => {
+        student.parentExaminationFinalHigh.classTestList.every((item) => {
             if (item.testType == TEST_TYPE_LIST[3] && item.parentSubject == subjectId) {
                 result = true;
                 return false;
@@ -213,22 +233,22 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
 
     getOverallResult(student: any): any {
         let marks_list = [];
-        student.subjectList.forEach(subject => {
+        student.subjectList.forEach((subject) => {
             let tempItem = {
-                'subject': subject,
-                'marks': this.getTotalSubjectMarks(student, subject.parentSubject),
+                subject: subject,
+                marks: this.getTotalSubjectMarks(student, subject.parentSubject),
             };
             marks_list.push(tempItem);
         });
         let failNumber = 0;
         let supplSubject = [];
-        marks_list.forEach(item => {
+        marks_list.forEach((item) => {
             if (item.marks < 26.4) {
                 failNumber += 1;
                 supplSubject.push(this.getSubjectName(item.subject.parentSubject));
             }
         });
-        if (failNumber > (marks_list.length-4)) {
+        if (failNumber > marks_list.length - 4) {
             return 'FAIL';
         } else if (failNumber == 0) {
             return 'PASS';
@@ -247,12 +267,12 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
 
     getPercentage(student: any): any {
         let marksObtained = this.getTotalMarks(student);
-        return marksObtained/student.subjectList.length;
+        return marksObtained / student.subjectList.length;
     }
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -323,7 +343,9 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
 
     getDivision(student: any): any {
         let result = this.getOverallResult(student);
-        if (result == 'FAIL' || result.match('SUPPL.') != '') { return result; }
+        if (result == 'FAIL' || result.match('SUPPL.') != '') {
+            return result;
+        }
         let percentage = this.getPercentage(student);
         if (percentage >= 60) {
             return 'Pass with First Division';
@@ -334,5 +356,4 @@ export class PrintStudentEleventhFinalReportListComponent implements OnInit, OnD
         }
         return '';
     }
-
 }

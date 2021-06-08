@@ -1,157 +1,185 @@
-<ng-container *ngFor="let studentProfile of studentProfileList; let i=index; let last=last;">
-
-    <div style="display: inline-block;
-                margin-bottom: 23px;
-                margin-right: 10px;">
-        <div class="container-fluid"
-             style="width: 3.455in; height: 2.205in;
-             border-radius: 4px;
-             background-color: #fffdae !important;
-             position: relative;
-             overflow: hidden;
-             padding: 0px !important;
-             font-weight: 800 !important;">
-
+<ng-container *ngFor="let studentProfile of studentProfileList; let i = index; let last = last">
+    <div style="display: inline-block; margin-bottom: 23px; margin-right: 10px">
+        <div
+            class="container-fluid"
+            style="
+                width: 3.455in;
+                height: 2.205in;
+                border-radius: 4px;
+                background-color: #fffdae !important;
+                position: relative;
+                overflow: hidden;
+                padding: 0px !important;
+                font-weight: 800 !important;
+            "
+        >
             <!-- Background Watermark -->
-            <img src="{{user.activeSchool.profileImage}}"
-                 style="border-radius: 2px; position: absolute;
-                 top: 55px; left: 110px;
-                 width: 108px; height: 108px;
-                 opacity: 0.2;
-                 filter: grayscale(100%);
-                 z-index: 1;"/>
+            <img
+                src="{{ user.activeSchool.profileImage }}"
+                style="
+                    border-radius: 2px;
+                    position: absolute;
+                    top: 55px;
+                    left: 110px;
+                    width: 108px;
+                    height: 108px;
+                    opacity: 0.2;
+                    filter: grayscale(100%);
+                    z-index: 1;
+                "
+            />
 
-            <div class="row no-gutters"
-                 style="padding: 11px 11px 10px 11px;
-                        margin: 0px !important;
-                        background-color: #3949AB !important;
-                        border-bottom: 1px solid lightgrey">
-
-                <div class="col-xs-3" style="padding: 0px !important;">
-                    <img src="{{user.activeSchool.profileImage}}"
-                         style="border-radius: 2px;
-                         width: 34px; height: 34px;"/>
+            <div
+                class="row no-gutters"
+                style="
+                    padding: 11px 11px 10px 11px;
+                    margin: 0px !important;
+                    background-color: #3949ab !important;
+                    border-bottom: 1px solid lightgrey;
+                "
+            >
+                <div class="col-xs-3" style="padding: 0px !important">
+                    <img src="{{ user.activeSchool.profileImage }}" style="border-radius: 2px; width: 34px; height: 34px" />
                 </div>
 
-                <div class="col-xs-9" align="right" style="padding: 0px !important;">
-                    <div style="font-size: 14px; line-height: normal !important;
-                                padding: 0px !important; margin: 0px !important;
-                                color: white !important;">
-                        {{user.activeSchool.printName}}
+                <div class="col-xs-9" align="right" style="padding: 0px !important">
+                    <div
+                        style="
+                            font-size: 14px;
+                            line-height: normal !important;
+                            padding: 0px !important;
+                            margin: 0px !important;
+                            color: white !important;
+                        "
+                    >
+                        {{ user.activeSchool.printName }}
                     </div>
-                    <div style="font-size: 9px; line-height: normal !important;
-                                padding: 0px !important; margin: 0px !important;
-                                color: white !important;">
-                        {{user.activeSchool.address}}
+                    <div
+                        style="
+                            font-size: 9px;
+                            line-height: normal !important;
+                            padding: 0px !important;
+                            margin: 0px !important;
+                            color: white !important;
+                        "
+                    >
+                        {{ user.activeSchool.address }}
                     </div>
-                    <div style="font-size: 9px; line-height: normal !important;
-                                padding: 0px !important; margin: 0px !important;
-                                color: white !important;">
-                        Phone: {{user.activeSchool.mobileNumber}}
+                    <div
+                        style="
+                            font-size: 9px;
+                            line-height: normal !important;
+                            padding: 0px !important;
+                            margin: 0px !important;
+                            color: white !important;
+                        "
+                    >
+                        Phone: {{ user.activeSchool.mobileNumber }}
                     </div>
                 </div>
-
             </div>
 
-            <div class="row no-gutters"
-                 style="padding: 7px 11px 0px 11px;
-                        line-height: normal !important;
-                        margin: 0px !important;">
+            <div class="row no-gutters" style="padding: 7px 11px 0px 11px; line-height: normal !important; margin: 0px !important">
                 <div class="col-xs-8">
-
                     <!-- Name -->
-                    <div class="row no-gutters" style="font-size: 15px;">
-                        <div class="col-xs-12" style="color: #0000f3 !important; padding: 0px !important;">
+                    <div class="row no-gutters" style="font-size: 15px">
+                        <div class="col-xs-12" style="color: #0000f3 !important; padding: 0px !important">
                             {{ studentProfile.name | titlecase }}
                         </div>
                     </div>
 
                     <!-- Father's Name -->
-                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important;">
-                        <div class="col-xs-12" style="padding: 0px !important;">
-                            <div style="font-size: 8px;"><i>Father's Name</i></div>
-                            <div style="margin-left: 5px !important;">{{ studentProfile.fathersName | titlecase}}</div>
+                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important">
+                        <div class="col-xs-12" style="padding: 0px !important">
+                            <div style="font-size: 8px"><i>Father's Name</i></div>
+                            <div style="margin-left: 5px !important">{{ studentProfile.fathersName | titlecase }}</div>
                         </div>
                     </div>
 
                     <!-- Date of Birth, Standard -->
-                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important;">
-                        <div class="col-xs-7" style="padding: 0px !important;">
-                            <div style="font-size: 8px;"><i>Date of Birth</i></div>
-                            <div style="margin-left: 5px !important;">{{studentProfile.dateOfBirth | date: 'dd/MM/yyyy'}}</div>
+                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important">
+                        <div class="col-xs-7" style="padding: 0px !important">
+                            <div style="font-size: 8px"><i>Date of Birth</i></div>
+                            <div style="margin-left: 5px !important">{{ studentProfile.dateOfBirth | date: 'dd/MM/yyyy' }}</div>
                         </div>
-                        <div class="col-xs-5" *ngIf="showClass" style="padding: 0px !important;">
-                            <div style="font-size: 8px;"><i>Standard</i></div>
-                            <div style="margin-left: 5px !important;">{{studentProfile.className}}</div>
+                        <div class="col-xs-5" *ngIf="showClass" style="padding: 0px !important">
+                            <div style="font-size: 8px"><i>Standard</i></div>
+                            <div style="margin-left: 5px !important">{{ studentProfile.className }}</div>
                         </div>
                     </div>
 
                     <!-- Scholar No. -->
-                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important;">
-                        <div class="col-xs-7" style="padding: 0px !important;">
-                            <div style="font-size: 8px;"><i>Mobile No.</i></div>
-                            <div style="margin-left: 5px !important;">{{studentProfile.mobileNumber}}</div>
+                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important">
+                        <div class="col-xs-7" style="padding: 0px !important">
+                            <div style="font-size: 8px"><i>Mobile No.</i></div>
+                            <div style="margin-left: 5px !important">{{ studentProfile.mobileNumber }}</div>
                         </div>
-                        <div class="col-xs-5" style="padding: 0px !important;">
-                            <div style="font-size: 8px;"><i>Scholar No.</i></div>
-                            <div [class.nineSize]="isLongScholarNumber(studentProfile.scholarNumber)"
-                                 style="margin-left: 5px !important;">{{studentProfile.scholarNumber}}</div>
+                        <div class="col-xs-5" style="padding: 0px !important">
+                            <div style="font-size: 8px"><i>Scholar No.</i></div>
+                            <div [class.nineSize]="isLongScholarNumber(studentProfile.scholarNumber)" style="margin-left: 5px !important">
+                                {{ studentProfile.scholarNumber }}
+                            </div>
                         </div>
                     </div>
 
                     <!-- Address -->
-                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important;">
-                        <div class="col-xs-12" style="padding: 0px !important;">
-                            <div style="font-size: 8px;"><i>Address</i></div>
-                            <div style="margin-left: 5px !important;">{{ studentProfile.address | titlecase}}</div>
+                    <div class="row no-gutters" style="font-size: 11px; margin-top: 3px !important">
+                        <div class="col-xs-12" style="padding: 0px !important">
+                            <div style="font-size: 8px"><i>Address</i></div>
+                            <div style="margin-left: 5px !important">{{ studentProfile.address | titlecase }}</div>
                         </div>
                     </div>
-
                 </div>
-                <div class="col-xs-4" align="right" style="padding: 0px !important;">
-                    <img src="{{studentProfile.profileImage}}"
-                         style="border: 1px solid black;
-                                 border-radius: 8px;
-                                 z-index: 10;
-                                 width: 85px;
-                                 height: 85px;">
+                <div class="col-xs-4" align="right" style="padding: 0px !important">
+                    <img
+                        src="{{ studentProfile.profileImage }}"
+                        style="border: 1px solid black; border-radius: 8px; z-index: 10; width: 85px; height: 85px"
+                    />
                 </div>
             </div>
 
             <!-- Principal Signature Image -->
-            <img src="{{user.activeSchool.principalSignatureImage}}"
-                 *ngIf="user.activeSchool.principalSignatureImage != null"
-                 style="position: absolute;
-                        bottom: 30px; left: 253px;
-                        width: 40px; height: 20px;
-                        z-index: 1;"/>
-
+            <img
+                src="{{ user.activeSchool.principalSignatureImage }}"
+                *ngIf="user.activeSchool.principalSignatureImage != null"
+                style="position: absolute; bottom: 30px; left: 253px; width: 40px; height: 20px; z-index: 1"
+            />
 
             <!-- Signature -->
-            <div class="row no-gutters"
-                 style="position: absolute;
-                        bottom:18px; width: 100%;
-                        padding: 0px 11px 0px 0px;
-                        line-height: normal !important;
-                        margin: 0px !important;">
-                <div class="col-xs-offset-6 col-xs-6 custom-padding"
-                     style="font-size: 8px; padding: 0px 5px 0px 0px !important;"
-                     align="end">
+            <div
+                class="row no-gutters"
+                style="
+                    position: absolute;
+                    bottom: 18px;
+                    width: 100%;
+                    padding: 0px 11px 0px 0px;
+                    line-height: normal !important;
+                    margin: 0px !important;
+                "
+            >
+                <div
+                    class="col-xs-offset-6 col-xs-6 custom-padding"
+                    style="font-size: 8px; padding: 0px 5px 0px 0px !important"
+                    align="end"
+                >
                     Principal's Signature
                 </div>
             </div>
 
-            <div class="row no-gutters"
-                 style="position: absolute;
-                        bottom: 0px; width: 100%;
-                        height: 15px;
-                        padding: 0px !important;
-                        background-color: #3949AB !important;
-                        margin: 0px !important;">
-                <div class="col-xs-12"> </div>
+            <div
+                class="row no-gutters"
+                style="
+                    position: absolute;
+                    bottom: 0px;
+                    width: 100%;
+                    height: 15px;
+                    padding: 0px !important;
+                    background-color: #3949ab !important;
+                    margin: 0px !important;
+                "
+            >
+                <div class="col-xs-12"></div>
             </div>
-
         </div>
     </div>
-
 </ng-container>

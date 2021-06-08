@@ -1,8 +1,7 @@
-
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import {CustomPreload} from "./custom-preload";
+import { CustomPreload } from './custom-preload';
 
 const routes: Routes = [
     {
@@ -66,6 +65,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/report-card-3/report-card.module#ReportCardModule',
     },
     {
+        path: 'tc',
+        loadChildren: 'app/modules/tc/tc.module#TCModule',
+    },
+    {
         path: 'salary',
         loadChildren: 'app/modules/salary/salary.module#SalaryModule',
     },
@@ -107,41 +110,48 @@ const routes: Routes = [
         loadChildren: 'app/modules/homework/homework.module#HomeworkModule',
     },
     {
+        path: 'event_gallery',
+        loadChildren: 'app/modules/event-gallery/event-gallery.module#EventGalleryModule',
+    },
+    {
+        path: 'accounts',
+        loadChildren: 'app/modules/accounts/accounts.module#AccountsModule',
+    },
+    {
+        path: 'online_classes',
+        loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
-            {path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule'},
-            {path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule'},
-            {path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule'},
-            {path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule'},
-            {path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule'},
-            {path: 'report_card_mp_board', loadChildren: 'app/modules/report-card/mp-board/report-card-mp-board.module#ReportCardMpBoardModule'},
-            {path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule'},
-            {path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule'},
-            {path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule'},
-            {path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule'},
-        ]
-    }
+            { path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule' },
+            { path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule' },
+            { path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule' },
+            { path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule' },
+            { path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule' },
+            {
+                path: 'report_card_mp_board',
+                loadChildren: 'app/modules/report-card/mp-board/report-card-mp-board.module#ReportCardMpBoardModule',
+            },
+            { path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule' },
+            { path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule' },
+            { path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule' },
+            { path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule' },
+            { path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule' },
+        ],
+    },
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(
-        routes,
-        {
+    imports: [
+        CommonModule,
+        RouterModule.forRoot(routes, {
             preloadingStrategy: CustomPreload,
-            onSameUrlNavigation:'reload'
-        }
-    )
-  ],
-  exports: [
-      CommonModule,
-      RouterModule,
-  ],
-    providers: [
-        CustomPreload,
-    ]
+            onSameUrlNavigation: 'reload',
+        }),
+    ],
+    exports: [CommonModule, RouterModule],
+    providers: [CustomPreload],
 })
-
 export class AppRoutingModule { }

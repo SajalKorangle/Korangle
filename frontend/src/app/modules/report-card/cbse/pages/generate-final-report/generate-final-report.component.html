@@ -1,129 +1,135 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
         <ng-container *ngIf="reportCardMappingList.length > 0 && studentSectionList.length > 0">
-
             <!-- Class Filter -->
-            <mat-form-field style="margin-right: 15px;">
-                <mat-select placeholder="Select Class"
-                            style="width: 100%"
-                            [(ngModel)]="selectedClassSection">
-                    <mat-option *ngFor="let classSection of classSectionList;" [value]="classSection">
-                        {{classSection.class.name}}<span *ngIf="showSectionName(classSection)">, {{classSection.section.name}}</span>
+            <mat-form-field style="margin-right: 15px">
+                <mat-select placeholder="Select Class" style="width: 100%" [(ngModel)]="selectedClassSection">
+                    <mat-option *ngFor="let classSection of classSectionList" [value]="classSection">
+                        {{ classSection.class.name }}<span *ngIf="showSectionName(classSection)">, {{ classSection.section.name }}</span>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    [disabled]="getSelectedStudentNumber()==0"
-                    (click)="serviceAdapter.getStudentFinalReport()">GET</button>
+            <button
+                type="submit"
+                style="margin-left: 20px"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                [disabled]="getSelectedStudentNumber() == 0"
+                (click)="serviceAdapter.getStudentFinalReport()"
+            >
+                GET
+            </button>
 
             <div>
-                <mat-checkbox [(ngModel)]="showPrincipalSignature">
-                    Show Principal Signature
-                </mat-checkbox>
-                <mat-checkbox style="margin-left: 10px;"
-                              [(ngModel)]="showClassTeacherSignature">
+                <mat-checkbox [(ngModel)]="showPrincipalSignature"> Show Principal Signature </mat-checkbox>
+                <mat-checkbox style="margin-left: 10px" [(ngModel)]="showClassTeacherSignature">
                     Show Class Teacher Signature
                 </mat-checkbox>
+                <mat-checkbox style="margin-left: 10px" [(ngModel)]="showPromotionStatement"> Show Promotion </mat-checkbox>
+                <mat-checkbox style="margin-left: 10px" [(ngModel)]="showAbsentOnZero"> Show Absent on '0' </mat-checkbox>
             </div>
 
-            <br/>
-            <ng-container *ngIf="getFilteredStudentSectionList().length>0">
-                <ng-container *ngFor="let item of ' '.repeat((getFilteredStudentSectionList().length+9)/10).split(''); let i = index; let last=last;">
-                    <mat-checkbox *ngIf="!last"
-                                  [ngModel]="getSelectedStudentsValue(i*10, i*10+10)"
-                                  (ngModelChange)="selectStudents(i*10, i*10+10, $event)"
-                                  style="margin-right: 20px;">
-                        {{i*10+1}} - {{i*10+10}},
+            <br />
+            <ng-container *ngIf="getFilteredStudentSectionList().length > 0">
+                <ng-container
+                    *ngFor="
+                        let item of ' '.repeat((getFilteredStudentSectionList().length + 9) / 10).split('');
+                        let i = index;
+                        let last = last
+                    "
+                >
+                    <mat-checkbox
+                        *ngIf="!last"
+                        [ngModel]="getSelectedStudentsValue(i * 10, i * 10 + 10)"
+                        (ngModelChange)="selectStudents(i * 10, i * 10 + 10, $event)"
+                        style="margin-right: 20px"
+                    >
+                        {{ i * 10 + 1 }} - {{ i * 10 + 10 }},
                     </mat-checkbox>
-                    <mat-checkbox *ngIf="last"
-                                  [ngModel]="getSelectedStudentsValue(i*10, getFilteredStudentSectionList().length)"
-                                  (ngModelChange)="selectStudents(i*10, getFilteredStudentSectionList().length, $event)"
-                                  style="margin-right: 20px;">
-                        {{i*10+1}} - {{getFilteredStudentSectionList().length}},
+                    <mat-checkbox
+                        *ngIf="last"
+                        [ngModel]="getSelectedStudentsValue(i * 10, getFilteredStudentSectionList().length)"
+                        (ngModelChange)="selectStudents(i * 10, getFilteredStudentSectionList().length, $event)"
+                        style="margin-right: 20px"
+                    >
+                        {{ i * 10 + 1 }} - {{ getFilteredStudentSectionList().length }},
                     </mat-checkbox>
                 </ng-container>
             </ng-container>
-            <br>
-            Selected: <b><i>{{getSelectedStudentNumber()}}</i></b>
-            <br/>
+            <br />
+            Selected:
+            <b
+                ><i>{{ getSelectedStudentNumber() }}</i></b
+            >
+            <br />
 
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th>S No.</th>
-                    <th class="text-center">Selected</th>
-                    <th>Photo</th>
-                    <th>Name</th>
-                    <th>Roll No.</th>
-                    <th>Father's Name</th>
-                    <th>Scholar No.</th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th class="text-center">Selected</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Roll No.</th>
+                        <th>Father's Name</th>
+                        <th>Scholar No.</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i=index;">
-                    <tr>
-                        <ng-container>
-                            <td>{{i+1}}.</td>
-                            <td align="center">
-                                <mat-checkbox [(ngModel)]="studentSection.selected"
-                                              [disabled]="!studentSection.selected && getSelectedStudentNumber()>=10">
-                                    <!-- span *ngIf="studentSection.selected">Selected</span>
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionList(); let i = index">
+                        <tr>
+                            <ng-container>
+                                <td>{{ i + 1 }}.</td>
+                                <td align="center">
+                                    <mat-checkbox
+                                        [(ngModel)]="studentSection.selected"
+                                        [disabled]="!studentSection.selected && getSelectedStudentNumber() >= 10"
+                                    >
+                                        <!-- span *ngIf="studentSection.selected">Selected</span>
                                     <span *ngIf="!studentSection.selected">Unselected</span -->
-                                </mat-checkbox>
-                            </td>
-                            <td>
-                                <img src="{{getStudent(studentSection).profileImage}}" style="width: 30px; height: 30px;">
-                            </td>
-                            <td>{{getStudent(studentSection).name}}</td>
-                            <td>{{studentSection.rollNumber}}</td>
-                            <td>{{getStudent(studentSection).fathersName}}</td>
-                            <td>{{getStudent(studentSection).scholarNumber}}</td>
-                        </ng-container>
-                    </tr>
-                </ng-container>
+                                    </mat-checkbox>
+                                </td>
+                                <td>
+                                    <img src="{{ getStudent(studentSection).profileImage }}" style="width: 30px; height: 30px" />
+                                </td>
+                                <td>{{ getStudent(studentSection).name }}</td>
+                                <td>{{ studentSection.rollNumber }}</td>
+                                <td>{{ getStudent(studentSection).fathersName }}</td>
+                                <td>{{ getStudent(studentSection).scholarNumber }}</td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
 
             <ng-container *ngFor="let studentSection of studentSectionList">
-                <img src="{{getStudent(studentSection).profileImage}}" style="width: 0px; height: 0px;">
+                <img src="{{ getStudent(studentSection).profileImage }}" style="width: 0px; height: 0px" />
             </ng-container>
-            <img src="https://www.enewstime.in/wp-content/uploads/2018/03/PICNN616.jpg" style="width: 0px; height: 0px;">
-
+            <img src="https://www.enewstime.in/wp-content/uploads/2018/03/PICNN616.jpg" style="width: 0px; height: 0px" />
         </ng-container>
 
-        <ng-container *ngIf="reportCardMappingList.length == 0">
-            Please "set report card" before generating them.
-        </ng-container>
+        <ng-container *ngIf="reportCardMappingList.length == 0"> Please "set report card" before generating them. </ng-container>
 
-        <ng-container *ngIf="studentSectionList.length === 0">
-            No students in this session.
-        </ng-container>
+        <ng-container *ngIf="studentSectionList.length === 0"> No students in this session. </ng-container>
 
-        <img src="{{user.activeSchool.principalSignatureImage}}"
-             *ngIf="user.activeSchool.principalSignatureImage != null"
-             style="display: none;
-             bottom: 25px; left: 600px;
-             width: 100px; height: 50px;
-             z-index: 1;"/>
-        <img *ngFor="let signature of classTeacherSignatureList" src="{{signature.signatureImage}}" style="display: none;
-             bottom: 25px; left: 600px;
-             width: 100px; height: 50px;
-             z-index: 1;"/>
+        <img
+            src="{{ user.activeSchool.principalSignatureImage }}"
+            *ngIf="user.activeSchool.principalSignatureImage != null"
+            style="display: none; bottom: 25px; left: 600px; width: 100px; height: 50px; z-index: 1"
+        />
+        <img
+            *ngFor="let signature of classTeacherSignatureList"
+            src="{{ signature.signatureImage }}"
+            style="display: none; bottom: 25px; left: 600px; width: 100px; height: 50px; z-index: 1"
+        />
         <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
              style="display: none;
              bottom: 25px; left: 600px;
              width: 100px; height: 50px;
              z-index: 1;"/ -->
-
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

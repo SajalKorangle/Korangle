@@ -1,43 +1,34 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
         <ng-container *ngIf="reportCardMapping && classStudentList.length > 0">
-
-            <mat-form-field style="margin-top: 23px;">
-                <mat-select placeholder="Select Class"
-                            [ngModel]="selectedClass"
-                            (ngModelChange)="selectedClass=$event;">
-                    <mat-option *ngFor='let classs of classStudentList;' [value]="classs">
-                        {{classs.name}}
+            <mat-form-field style="margin-top: 23px">
+                <mat-select placeholder="Select Class" [ngModel]="selectedClass" (ngModelChange)="selectedClass = $event">
+                    <mat-option *ngFor="let classs of classStudentList" [value]="classs">
+                        {{ classs.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
+            <button
+                type="submit"
+                style="margin-left: 20px"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.getClassGoshwara()"
+            >
+                GET
+            </button>
 
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.getClassGoshwara()">GET</button>
-
-            <br/><br/>
+            <br /><br />
 
             <a href="http://www.anupreetiti.com/korangle_data/Goswara.xlsx">Goshwara (Final format)</a>
-
         </ng-container>
 
-        <ng-container *ngIf="reportCardMapping == null">
-            Please set the final report card before generating patrak.
-        </ng-container>
+        <ng-container *ngIf="reportCardMapping == null"> Please set the final report card before generating patrak. </ng-container>
 
-        <ng-container *ngIf="classStudentList.length === 0">
-            No students in Class 1 - 8.
-        </ng-container>
-
+        <ng-container *ngIf="classStudentList.length === 0"> No students in Class 1 - 8. </ng-container>
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

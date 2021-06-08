@@ -1,42 +1,31 @@
 <div class="card-content">
 
 
-    <app-employee-filter [user]="user"
-                         [showAllEmployees]="true"
-                         (employee)="serviceAdapter.getEmployeeProfile($event)"
-                         (emitEmployeeList)="getEmployeeList($event)"></app-employee-filter>
+    <app-employee-filter [user]="user" [showAllEmployees]="true" (employee)="serviceAdapter.getEmployeeProfile($event)"
+        (emitEmployeeList)="getEmployeeList($event)"></app-employee-filter>
 
 
     <ng-container *ngIf="selectedEmployeeProfile && selectedEmployeeSessionProfile && !isLoading">
-
         <div class="row hidden-md hidden-lg hidden-sm">
             <div class="col-xs-3">
-                <a href="tel:{{selectedEmployeeProfile.mobileNumber}}">Call Me</a>
+                <a href="tel:{{ selectedEmployeeProfile.mobileNumber }}">Call Me</a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-3 visible-sm visible-xs" align="center">
-
-                <img *ngIf="selectedEmployeeProfile.profileImage"
-                     src="{{selectedEmployeeProfile.profileImage}}"
-                     style="width: 50%">
+                <img *ngIf="selectedEmployeeProfile.profileImage" src="{{ selectedEmployeeProfile.profileImage }}"
+                    style="width: 50%" />
 
                 <img *ngIf="!selectedEmployeeProfile.profileImage"
-                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                     style="width: 50%"/>
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%" />
 
-                <br/>
+                <br />
 
-                <input type='file'
-                       (change)="onImageSelect($event)"
-                       multiple="false"
-                       style="display: none"
-                       accept="image/*"
-                       #imageInput>
+                <input type="file" (change)="onImageSelect($event)" multiple="false" style="display: none"
+                    accept="image/*" #imageInput />
 
-                <a (click)="imageInput.click()"
-                   style="cursor: pointer">Select & Upload Image</a>
-
+                <a (click)="imageInput.click()" style="cursor: pointer">Select & Upload Image</a>
             </div>
 
             <div class="col-md-9">
@@ -44,64 +33,54 @@
                 <div class="row">
                     <div class="col-md-4">
                         <mat-form-field>
-                            <input matInput
-                                   type="text"
-                                   placeholder="Name"
-                                   (ngModelChange)="currentEmployeeProfile.name=$event"
-                                   [ngModel]="selectedEmployeeProfile.name">
+                            <input matInput type="text" placeholder="Name"
+                                (ngModelChange)="currentEmployeeProfile.name = $event"
+                                [ngModel]="selectedEmployeeProfile.name" />
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
                         <mat-form-field>
-                            <input matInput
-                                   type="text"
-                                   placeholder="Father's Name"
-                                   (ngModelChange)="currentEmployeeProfile.fatherName=$event"
-                                   [ngModel]="selectedEmployeeProfile.fatherName">
+                            <input matInput type="text" placeholder="Father's Name"
+                                (ngModelChange)="currentEmployeeProfile.fatherName = $event"
+                                [ngModel]="selectedEmployeeProfile.fatherName" />
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
                         <mat-form-field>
-                            <input matInput
-                                   type="text"
-                                   placeholder="Mother's Name"
-                                   (ngModelChange)="currentEmployeeProfile.motherName=$event"
-                                   [ngModel]="selectedEmployeeProfile.motherName">
+                            <input matInput type="text" placeholder="Mother's Name"
+                                (ngModelChange)="currentEmployeeProfile.motherName = $event"
+                                [ngModel]="selectedEmployeeProfile.motherName" />
                         </mat-form-field>
                     </div>
                 </div>
 
                 <!--  Mobile Number , Date of Birth, Gender -->
                 <div class="row">
-                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedEmployeeProfile.mobileNumber,currentEmployeeProfile.mobileNumber)">
+                    <div class="col-md-4"
+                        [class.fieldChanged]="checkFieldChanged(selectedEmployeeProfile.mobileNumber, currentEmployeeProfile.mobileNumber)">
                         <mat-form-field>
                             <mat-label>Mobile Number
                                 <span *ngIf="checkLength(currentEmployeeProfile.mobileNumber)"
-                                      [class.fieldRight]="checkRight(currentEmployeeProfile.mobileNumber,10)">
-                                        - {{currentEmployeeProfile.mobileNumber.toString().length}}</span>
+                                    [class.fieldRight]="checkRight(currentEmployeeProfile.mobileNumber, 10)">
+                                    - {{ currentEmployeeProfile.mobileNumber.toString().length }}</span>
                             </mat-label>
-                            <input matInput
-                                   type="number"
-                                   (keypress)="policeNumberInput($event)"
-                                   (ngModelChange)="currentEmployeeProfile.mobileNumber=$event"
-                                   [ngModel]="selectedEmployeeProfile.mobileNumber">
+                            <input matInput type="number" (keypress)="policeNumberInput($event)"
+                                (ngModelChange)="currentEmployeeProfile.mobileNumber = $event"
+                                [ngModel]="selectedEmployeeProfile.mobileNumber" />
                         </mat-form-field>
                     </div>
 
                     <div class="col-md-4">
                         <mat-form-field>
-                            <input matInput
-                                   type="date"
-                                   placeholder="Date of Birth"
-                                   (ngModelChange)="currentEmployeeProfile.dateOfBirth=$event"
-                                   [ngModel]="selectedEmployeeProfile.dateOfBirth">
+                            <input matInput type="date" placeholder="Date of Birth"
+                                (ngModelChange)="currentEmployeeProfile.dateOfBirth = $event"
+                                [ngModel]="selectedEmployeeProfile.dateOfBirth" />
                         </mat-form-field>
                     </div>
                     <div class="col-md-4">
                         <mat-form-field>
-                            <mat-select placeholder="Gender"
-                                        (ngModelChange)="currentEmployeeProfile.gender=$event"
-                                        [ngModel]="selectedEmployeeProfile.gender">
+                            <mat-select placeholder="Gender" (ngModelChange)="currentEmployeeProfile.gender = $event"
+                                [ngModel]="selectedEmployeeProfile.gender">
                                 <mat-option>None</mat-option>
                                 <mat-option value="Male">Male</mat-option>
                                 <mat-option value="Female">Female</mat-option>
@@ -110,75 +89,59 @@
                         </mat-form-field>
                     </div>
                 </div>
-
             </div>
 
             <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
-
-                <img *ngIf="selectedEmployeeProfile.profileImage"
-                     src="{{selectedEmployeeProfile.profileImage}}"
-                     style="width: 50%">
+                <img *ngIf="selectedEmployeeProfile.profileImage" src="{{ selectedEmployeeProfile.profileImage }}"
+                    style="width: 50%" />
 
                 <img *ngIf="!selectedEmployeeProfile.profileImage"
-                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                     style="width: 50%"/>
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%" />
 
-                <br/>
+                <br />
 
-                <input type='file'
-                       (change)="onImageSelect($event)"
-                       multiple="false"
-                       style="display: none"
-                       accept="image/*"
-                       #imageInputTwo>
+                <input type="file" (change)="onImageSelect($event)" multiple="false" style="display: none"
+                    accept="image/*" #imageInputTwo />
 
-                <a (click)="imageInputTwo.click()"
-                   style="cursor: pointer">Select & Upload Image</a>
-
+                <a (click)="imageInputTwo.click()" style="cursor: pointer">Select & Upload Image</a>
             </div>
         </div>
 
         <!-- Aadhar number, Passport number, Employee Number, Job Title -->
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedEmployeeProfile.aadharNumber,currentEmployeeProfile.aadharNumber)">
+            <div class="col-md-3"
+                [class.fieldChanged]="checkFieldChanged(selectedEmployeeProfile.aadharNumber, currentEmployeeProfile.aadharNumber)">
                 <mat-form-field>
                     <mat-label>Aadhar Number
                         <span *ngIf="checkLength(currentEmployeeProfile.aadharNumber)"
-                              [class.fieldRight]="checkRight(currentEmployeeProfile.aadharNumber,12)">
-                                        - {{currentEmployeeProfile.aadharNumber.toString().length}}</span>
+                            [class.fieldRight]="checkRight(currentEmployeeProfile.aadharNumber, 12)">
+                            - {{ currentEmployeeProfile.aadharNumber.toString().length }}</span>
                     </mat-label>
-                    <input matInput
-                           type="number"
-                           (keypress)="policeNumberInput($event)"
-                           (ngModelChange)="currentEmployeeProfile.aadharNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.aadharNumber">
+                    <input matInput type="number" (keypress)="policeNumberInput($event)"
+                        (ngModelChange)="currentEmployeeProfile.aadharNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.aadharNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Passport Number"
-                           (ngModelChange)="currentEmployeeProfile.passportNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.passportNumber">
+                    <input matInput type="text" placeholder="Passport Number"
+                        (ngModelChange)="currentEmployeeProfile.passportNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.passportNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Employee Number"
-                           (ngModelChange)="currentEmployeeProfile.employeeNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.employeeNumber">
+                    <input matInput type="text" placeholder="Employee Number"
+                        (ngModelChange)="currentEmployeeProfile.employeeNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.employeeNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Job Title"
-                           (ngModelChange)="currentEmployeeProfile.currentPost=$event"
-                           [ngModel]="selectedEmployeeProfile.currentPost">
+                    <input matInput type="text" placeholder="Job Title"
+                        (ngModelChange)="currentEmployeeProfile.currentPost = $event"
+                        [ngModel]="selectedEmployeeProfile.currentPost" />
                 </mat-form-field>
             </div>
         </div>
@@ -187,38 +150,30 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Qualification"
-                           (ngModelChange)="currentEmployeeProfile.qualification=$event"
-                           [ngModel]="selectedEmployeeProfile.qualification">
+                    <input matInput type="text" placeholder="Qualification"
+                        (ngModelChange)="currentEmployeeProfile.qualification = $event"
+                        [ngModel]="selectedEmployeeProfile.qualification" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="date"
-                           placeholder="Date of Joining"
-                           (ngModelChange)="currentEmployeeProfile.dateOfJoining=$event"
-                           [ngModel]="selectedEmployeeProfile.dateOfJoining">
+                    <input matInput type="date" placeholder="Date of Joining"
+                        (ngModelChange)="currentEmployeeProfile.dateOfJoining = $event"
+                        [ngModel]="selectedEmployeeProfile.dateOfJoining" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Bank Name"
-                           (ngModelChange)="currentEmployeeProfile.bankName=$event"
-                           [ngModel]="selectedEmployeeProfile.bankName">
+                    <input matInput type="text" placeholder="Bank Name"
+                        (ngModelChange)="currentEmployeeProfile.bankName = $event"
+                        [ngModel]="selectedEmployeeProfile.bankName" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Bank Account Number"
-                           (ngModelChange)="currentEmployeeProfile.bankAccountNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.bankAccountNumber">
+                    <input matInput type="text" placeholder="Bank Account Number"
+                        (ngModelChange)="currentEmployeeProfile.bankAccountNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.bankAccountNumber" />
                 </mat-form-field>
             </div>
         </div>
@@ -227,72 +182,55 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="EPF Account No."
-                           (ngModelChange)="currentEmployeeProfile.epfAccountNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.epfAccountNumber">
+                    <input matInput type="text" placeholder="EPF Account No."
+                        (ngModelChange)="currentEmployeeProfile.epfAccountNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.epfAccountNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Pan Number"
-                           (ngModelChange)="currentEmployeeProfile.panNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.panNumber">
+                    <input matInput type="text" placeholder="Pan Number"
+                        (ngModelChange)="currentEmployeeProfile.panNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.panNumber" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Monthly Salary"
-                           (keypress)="policeNumberInput($event)"
-                           (ngModelChange)="currentEmployeeProfile.monthlySalary=$event"
-                           [ngModel]="selectedEmployeeProfile.monthlySalary">
+                    <input matInput type="number" placeholder="Monthly Salary" (keypress)="policeNumberInput($event)"
+                        (ngModelChange)="currentEmployeeProfile.monthlySalary = $event"
+                        [ngModel]="selectedEmployeeProfile.monthlySalary" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="number"
-                           placeholder="Paid Leaves"
-                           (keypress)="policeNumberInput($event)"
-                           (ngModelChange)="currentEmployeeSessionProfile.paidLeaveNumber=$event"
-                           [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber">
+                    <input matInput type="number" placeholder="Paid Leaves" (keypress)="policeNumberInput($event)"
+                        (ngModelChange)="currentEmployeeSessionProfile.paidLeaveNumber = $event"
+                        [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber" />
                 </mat-form-field>
             </div>
-
         </div>
 
         <!-- Date of leaving, Spouse name, PRAN Number -->
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="date"
-                           placeholder="Date of Leaving"
-                           (ngModelChange)="currentEmployeeProfile.dateOfLeaving=$event"
-                           [ngModel]="selectedEmployeeProfile.dateOfLeaving">
+                    <input matInput type="date" placeholder="Date of Leaving"
+                        (ngModelChange)="currentEmployeeProfile.dateOfLeaving = $event"
+                        [ngModel]="selectedEmployeeProfile.dateOfLeaving" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="Spouse's Name"
-                           (ngModelChange)="currentEmployeeProfile.spouseName=$event"
-                           [ngModel]="selectedEmployeeProfile.spouseName">
+                    <input matInput type="text" placeholder="Spouse's Name"
+                        (ngModelChange)="currentEmployeeProfile.spouseName = $event"
+                        [ngModel]="selectedEmployeeProfile.spouseName" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput
-                           type="text"
-                           placeholder="PRAN Number"
-                           (ngModelChange)="currentEmployeeProfile.pranNumber=$event"
-                           [ngModel]="selectedEmployeeProfile.pranNumber">
+                    <input matInput type="text" placeholder="PRAN Number"
+                        (ngModelChange)="currentEmployeeProfile.pranNumber = $event"
+                        [ngModel]="selectedEmployeeProfile.pranNumber" />
                 </mat-form-field>
             </div>
         </div>
@@ -301,20 +239,16 @@
         <div class="row">
             <div class="col-md-6">
                 <mat-form-field>
-                    <textarea matInput
-                              rows="4"
-                              placeholder="Address"
-                              (ngModelChange)="currentEmployeeProfile.address=$event"
-                              [ngModel]="selectedEmployeeProfile.address"></textarea>
+                    <textarea matInput rows="4" placeholder="Address"
+                        (ngModelChange)="currentEmployeeProfile.address = $event"
+                        [ngModel]="selectedEmployeeProfile.address"></textarea>
                 </mat-form-field>
             </div>
             <div class="col-md-6">
                 <mat-form-field>
-                    <textarea matInput
-                              rows="4"
-                              placeholder="Remark"
-                              (ngModelChange)="currentEmployeeProfile.remark=$event"
-                              [ngModel]="selectedEmployeeProfile.remark"></textarea>
+                    <textarea matInput rows="4" placeholder="Remark"
+                        (ngModelChange)="currentEmployeeProfile.remark = $event"
+                        [ngModel]="selectedEmployeeProfile.remark"></textarea>
                 </mat-form-field>
             </div>
         </div>
@@ -323,35 +257,35 @@
         <div class="row">
             <div *ngFor="let parameter of employeeParameterList">
                 <div *ngIf="parameter.parameterType!=='DOCUMENT'" class="col-md-3"
-                     [class.fieldChanged]="checkCustomFieldChanged(parameter)">
-		            <mat-form-field  style="width: 100%;">
-		                <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
-		                <input matInput  *ngIf="parameter.parameterType==='TEXT'"
-		                    type="text"
-		                    (ngModelChange)="updateParameterValue(parameter, $event)"
-		                    [ngModel]="getParameterValue(parameter)">
-		                <ng-container *ngIf="parameter.parameterType==='FILTER'">
-		                    <mat-select placeholder="{{parameter.name}}"
-		                        [ngModel]="getParameterValue(parameter)"
-		                        (ngModelChange)="updateParameterValue(parameter, $event)">
-		                            <mat-option [value]="NULL_CONSTANT">None</mat-option>
-		                            <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
-		                    </mat-select>
-		                </ng-container>
-		            </mat-form-field>
-	            </div>
+                    [class.fieldChanged]="checkCustomFieldChanged(parameter)">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label *ngIf="parameter.parameterType==='TEXT'">{{parameter.name}}</mat-label>
+                        <input matInput *ngIf="parameter.parameterType==='TEXT'" type="text"
+                            (ngModelChange)="updateParameterValue(parameter, $event)"
+                            [ngModel]="getParameterValue(parameter)">
+                        <ng-container *ngIf="parameter.parameterType==='FILTER'">
+                            <mat-select placeholder="{{parameter.name}}" [ngModel]="getParameterValue(parameter)"
+                                (ngModelChange)="updateParameterValue(parameter, $event)">
+                                <mat-option [value]="NULL_CONSTANT">None</mat-option>
+                                <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}
+                                </mat-option>
+                            </mat-select>
+                        </ng-container>
+                    </mat-form-field>
+                </div>
             </div>
         </div>
-        
+
         <!-- Custom Documents Parameter -->
         <div class="row">
             <div *ngFor="let parameter of employeeParameterList">
-            	<div *ngIf="parameter.parameterType=='DOCUMENT'" class="col-md-5" style="margin-top: 10px;margin-right:10px" [class.fieldChanged]="checkCustomFieldChanged(parameter)">
-                    <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
-                    	<input id="{{parameter.id}}" class="dropinput"
-                    		type="file"
-                    		multiple="true"
-                    		(input)="updateDocuments(parameter,$event,imageInput)" #imageInput>
+                <div *ngIf="parameter.parameterType=='DOCUMENT'" class="col-md-5"
+                    style="margin-top: 10px;margin-right:10px"
+                    [class.fieldChanged]="checkCustomFieldChanged(parameter)">
+                    <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)"
+                        class="drop">
+                        <input id="{{parameter.id}}" class="dropinput" type="file" multiple="true"
+                            (input)="updateDocuments(parameter,$event,imageInput)" #imageInput>
                         <label class="documentLabel">{{parameter.name}}</label>
                         <div *ngIf="getParameterDocumentType(parameter)=='none'">
                             <div class="documentIcon">
@@ -360,7 +294,8 @@
                             <div class="documentText">
                                 <p class="documentName">Select a file or Drag it here</p>
                                 <button (click)="imageInput.click()" class="documentButton">Upload</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)"
+                                    class="documentButton">Reset</button>
                             </div>
                         </div>
                         <div *ngIf="getParameterDocumentType(parameter)=='img'">
@@ -371,7 +306,8 @@
                                 <p class="documentName">{{getDocumentName(parameter)}}</p>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)"
+                                    class="documentButton">Reset</button>
                             </div>
                         </div>
                         <div *ngIf="getParameterDocumentType(parameter)=='pdf'">
@@ -382,7 +318,8 @@
                                 <p class="documentName">{{getDocumentName(parameter)}}</p>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">Reset</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)"
+                                    class="documentButton">Reset</button>
                             </div>
                         </div>
                     </div>
@@ -390,15 +327,17 @@
             </div>
         </div>
 
-        <button *ngIf="!isMobile()" type="submit" id="action-add-employee" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="serviceAdapter.updateEmployeeProfile()">Update Profile</button>
-        <button [ngClass]="'sticky mobileButton-'+user.activeSchool.secondaryThemeColor" *ngIf="isMobile()" mat-fab color="primary" (click)="serviceAdapter.updateEmployeeProfile()"><mat-icon>check</mat-icon></button>
+        <button *ngIf="!isMobile()" type="submit" id="action-add-employee"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            (click)="serviceAdapter.updateEmployeeProfile()">Update Profile</button>
+        <button [ngClass]="'sticky mobileButton-'+user.activeSchool.secondaryThemeColor" *ngIf="isMobile()" mat-fab
+            color="primary" (click)="serviceAdapter.updateEmployeeProfile()">
+            <mat-icon>check</mat-icon>
+        </button>
         <div class="clearfix"></div>
-
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

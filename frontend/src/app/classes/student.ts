@@ -1,6 +1,4 @@
-
 export class Student {
-
     profileImage: string;
 
     name: string;
@@ -43,7 +41,6 @@ export class Student {
     sessionDbId: number;
 
     copy(student: any) {
-
         this.profileImage = student.profileImage;
 
         this.name = student.name;
@@ -82,7 +79,5 @@ export class Student {
 
         this.classDbId = student.classDbId;
         this.sessionDbId = student.sessionDbId;
-
     }
-
 }

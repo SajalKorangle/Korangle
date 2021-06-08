@@ -1,13 +1,11 @@
-
 import { UpdateStudentFeesComponent } from './update-student-fees.component';
-import {CommonFunctions} from "../../../../classes/common-functions";
-import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
+import { CommonFunctions } from '../../../../classes/common-functions';
+import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
 
 export class UpdateStudentFeesServiceAdapter {
-
     vm: UpdateStudentFeesComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -17,40 +15,38 @@ export class UpdateStudentFeesServiceAdapter {
 
     //initialize data
     initializeData(): void {
-
-        this.vm.isLoading = true; 
+        this.vm.isLoading = true;
 
         let schoolId = this.vm.user.activeSchool.dbId;
         let sessionId = this.vm.user.activeSchool.currentSessionDbId;
 
         let request_fee_type_data = {
-            'parentSchool': schoolId,
+            parentSchool: schoolId,
         };
 
         let request_school_fee_rule_data = {
-            'parentFeeType__parentSchool': schoolId,
-            'parentSession': sessionId,
+            parentFeeType__parentSchool: schoolId,
+            parentSession: sessionId,
         };
 
         let request_class_filter_fee_data = {
-            'parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
-            'parentSchoolFeeRule__parentSession': sessionId,
+            parentSchoolFeeRule__parentFeeType__parentSchool: schoolId,
+            parentSchoolFeeRule__parentSession: sessionId,
         };
 
         let request_bus_stop_filter_fee_data = {
-            'parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
-            'parentSchoolFeeRule__parentSession': sessionId,
+            parentSchoolFeeRule__parentFeeType__parentSchool: schoolId,
+            parentSchoolFeeRule__parentSession: sessionId,
         };
 
         let request_bus_stop_data = {
             parentSchool: schoolId,
         };
 
-        let lock_fees_list = {
+        let fee_settings_request = {
             'parentSchool': schoolId,
             'parentSession': sessionId,
         };
-        
 
         Promise.all([
             this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
@@ -58,9 +54,9 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
-            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
-            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
         ]).then(value => {
 
             this.vm.feeTypeList = value[0];
@@ -68,7 +64,7 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.classFilterFeeList = value[2];
             this.vm.busStopFilterFeeList = value[3];
             this.vm.busStopList = value[4];
-            if (value[5].length == 1) { this.vm.lockFees = value[5]; }
+            if (value[5].length == 1) { this.vm.lockFees = value[5].sessionLocked; }
             this.vm.classList = value[6];
             this.vm.sectionList = value[7];
 
@@ -81,22 +77,21 @@ export class UpdateStudentFeesServiceAdapter {
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
-
         let student_fee_data = {
-            'parentStudent': this.vm.selectedStudent.id,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent: this.vm.selectedStudent.id,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let sub_fee_receipt_data = {
-            'parentStudentFee__parentStudent': this.vm.selectedStudent.id,
-            'parentFeeReceipt__cancelled': 'false__boolean',
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentStudentFee__parentStudent: this.vm.selectedStudent.id,
+            parentFeeReceipt__cancelled: 'false__boolean',
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         let sub_discount_data = {
-            'parentStudentFee__parentStudent': this.vm.selectedStudent.id,
-            'parentDiscount__cancelled': 'false__boolean',
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
+            parentStudentFee__parentStudent: this.vm.selectedStudent.id,
+            parentDiscount__cancelled: 'false__boolean',
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
         this.vm.isLoading = true;
@@ -105,101 +100,97 @@ export class UpdateStudentFeesServiceAdapter {
             this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_data),
             this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_data),
             this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_data),
-        ]).then(value => {
+        ]).then(
+            (value) => {
+                this.vm.studentFeeList = value[0];
+                this.vm.subFeeReceiptList = value[1];
+                this.vm.subDiscountList = value[2];
 
-            this.vm.studentFeeList = value[0];
-            this.vm.subFeeReceiptList = value[1];
-            this.vm.subDiscountList = value[2];
-
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     // Delete Student Fee
     deleteStudentFee(): void {
-
         let student_fee_data = {
-            'id': this.vm.selectedStudentFee.id,
+            id: this.vm.selectedStudentFee.id,
         };
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.delete(this.vm.feeService.student_fees, student_fee_data).then( value => {
-
-            alert('Student Fee deletion successful');
-            this.deleteFromStudentFee(parseInt(value));
-            this.vm.changeSelectedStudentFee();
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        this.vm.feeService.delete(this.vm.feeService.student_fees, student_fee_data).then(
+            (value) => {
+                alert('Student Fee deletion successful');
+                this.deleteFromStudentFee(parseInt(value));
+                this.vm.changeSelectedStudentFee();
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     deleteFromStudentFee(studentFeeId: number): void {
-        this.vm.studentFeeList = this.vm.studentFeeList.filter(item => {
+        this.vm.studentFeeList = this.vm.studentFeeList.filter((item) => {
             return item.id != studentFeeId;
         });
     }
 
     // Edit Student Fee Rule
     editStudentFee(): void {
-
         this.vm.isLoading = true;
 
-        this.vm.feeService.update(this.vm.feeService.student_fees, this.vm.newStudentFee).then(value => {
+        this.vm.feeService.update(this.vm.feeService.student_fees, this.vm.newStudentFee).then(
+            (value) => {
+                alert('Student Fee updated successfully');
 
-            alert('Student Fee updated successfully');
+                this.deleteFromStudentFee(this.vm.newStudentFee.id);
+                this.vm.studentFeeList.push(value);
+                this.vm.changeSelectedStudentFee();
 
-            this.deleteFromStudentFee(this.vm.newStudentFee.id);
-            this.vm.studentFeeList.push(value);
-            this.vm.changeSelectedStudentFee();
-
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     // Attach Rule
     attachToThisRule(schoolFeeRule: any): void {
-
         let tempObject = {
-            'parentStudent': this.vm.selectedStudent.id,
-            'parentSchoolFeeRule': schoolFeeRule.id,
-            'parentFeeType': schoolFeeRule.parentFeeType,
-            'parentSession': schoolFeeRule.parentSession,
-            'isAnnually': schoolFeeRule.isAnnually,
-            'cleared': false,
+            parentStudent: this.vm.selectedStudent.id,
+            parentSchoolFeeRule: schoolFeeRule.id,
+            parentFeeType: schoolFeeRule.parentFeeType,
+            parentSession: schoolFeeRule.parentSession,
+            isAnnually: schoolFeeRule.isAnnually,
+            cleared: false,
         };
-        this.vm.installmentList.forEach(installment => {
-            tempObject[installment+'Amount'] = schoolFeeRule[installment+'Amount'];
-            tempObject[installment+'LastDate'] = schoolFeeRule[installment+'LastDate'];
-            tempObject[installment+'LateFee'] = schoolFeeRule[installment+'LateFee'];
-            tempObject[installment+'MaximumLateFee'] = schoolFeeRule[installment+'MaximumLateFee'];
-            tempObject[installment+'ClearanceDate'] = null;
+        this.vm.installmentList.forEach((installment) => {
+            tempObject[installment + 'Amount'] = schoolFeeRule[installment + 'Amount'];
+            tempObject[installment + 'LastDate'] = schoolFeeRule[installment + 'LastDate'];
+            tempObject[installment + 'LateFee'] = schoolFeeRule[installment + 'LateFee'];
+            tempObject[installment + 'MaximumLateFee'] = schoolFeeRule[installment + 'MaximumLateFee'];
+            tempObject[installment + 'ClearanceDate'] = null;
         });
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.create(this.vm.feeService.student_fees, tempObject).then(value => {
-
-            alert('Group attached to students profile');
-            this.vm.studentFeeList.push(value);
-            this.vm.changeSelectedStudentFee();
-            this.vm.isLoading = false;
-
-        }, error => {
-            this.vm.isLoading = false;
-        });
-
+        this.vm.feeService.create(this.vm.feeService.student_fees, tempObject).then(
+            (value) => {
+                alert('Group attached to students profile');
+                this.vm.studentFeeList.push(value);
+                this.vm.changeSelectedStudentFee();
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
-
 }

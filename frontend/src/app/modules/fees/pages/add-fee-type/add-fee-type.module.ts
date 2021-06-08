@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {AddFeeTypeRoutingModule } from './add-fee-type.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {AddFeeTypeComponent} from "./add-fee-type.component";
-
+import { AddFeeTypeRoutingModule } from './add-fee-type.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { AddFeeTypeComponent } from './add-fee-type.component';
 
 @NgModule({
-    declarations: [
-        AddFeeTypeComponent
-    ],
+    declarations: [AddFeeTypeComponent],
 
-    imports: [
-        AddFeeTypeRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [AddFeeTypeRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [AddFeeTypeComponent]
+    bootstrap: [AddFeeTypeComponent],
 })
-export class AddFeeTypeModule { }
+export class AddFeeTypeModule {}

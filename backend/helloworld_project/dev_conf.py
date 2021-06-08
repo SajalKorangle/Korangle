@@ -15,6 +15,10 @@ except ImportError:
 DEBUG = True
 
 
+# hosts config (allow inc. conn. from all hosts during debug)
+ALLOWED_HOSTS = ['*']
+
+
 # Database config
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 import subprocess

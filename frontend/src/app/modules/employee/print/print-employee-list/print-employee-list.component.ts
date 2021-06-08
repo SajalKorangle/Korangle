@@ -10,13 +10,12 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-employee-list.component.css'],
 })
 export class PrintEmployeeListComponent implements OnInit, AfterViewChecked {
-
     employeeList: any;
     columnFilter: any;
 
     viewChecked = true;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { value } = this.printService.getData();
@@ -34,5 +33,4 @@ export class PrintEmployeeListComponent implements OnInit, AfterViewChecked {
             this.cdRef.detectChanges();
         }
     }
-
 }

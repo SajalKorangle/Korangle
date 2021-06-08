@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {CancelFeeReceiptComponent} from "./cancel-fee-receipt.component";
+import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: CancelFeeReceiptComponent ,
-    }
+        component: CancelFeeReceiptComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class CancelFeeReceiptRoutingModule { }
+export class CancelFeeReceiptRoutingModule {}

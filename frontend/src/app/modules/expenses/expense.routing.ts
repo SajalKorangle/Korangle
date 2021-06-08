@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { PRINT_EXPENSES } from '../../print/print-routes.constants';
@@ -9,26 +9,21 @@ const routes: Routes = [
     {
         path: 'add_expense',
         loadChildren: 'app/modules/expenses/pages/add-expense/add-expense.module#AddExpenseModule',
-        data: {moduleName: 'expenses'},
+        data: { moduleName: 'expenses' },
     },
     {
         path: 'expense_list',
         loadChildren: 'app/modules/expenses/pages/expense-list/expense-list.module#ExpenseListModule',
-        data: {moduleName: 'expenses'},
+        data: { moduleName: 'expenses' },
     },
     {
         path: PRINT_EXPENSES,
         component: PrintExpensesComponent,
-    }
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class ExpenseRoutingModule { }
+export class ExpenseRoutingModule {}

@@ -15,9 +15,8 @@ def upload_document_to(instance,filename):
 
 class Employee(models.Model):
 
-    #ProfileImage
+    # ProfileImage
     profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
-
 
     # Name
     name = models.CharField(max_length=100)
@@ -61,7 +60,7 @@ class Employee(models.Model):
     # Joining Date
     dateOfJoining = models.DateField(null=True)
 
-    #Bank IFSC Code
+    # Bank IFSC Code
     bankIfscCode = models.TextField(null=True, blank=True)
 
     # Bank Name
@@ -111,6 +110,7 @@ class EmployeePermission(models.Model):
 
     parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
+    configJSON = models.TextField(default="{}")
 
     def __str__(self):
         return self.parentEmployee.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)

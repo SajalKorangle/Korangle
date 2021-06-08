@@ -8,18 +8,16 @@ import { StudentOldService } from '../../../../services/modules/student/student-
 import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TC } from '../../../../print/print-routes.constants';
-import {DataStorage} from "../../../../classes/data-storage";
-import {SchoolService} from "../../../../services/modules/school/school.service";
+import { DataStorage } from '../../../../classes/data-storage';
+import { SchoolService } from '../../../../services/modules/school/school.service';
 
 @Component({
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [ StudentOldService, SchoolOldService, SchoolService ],
+    providers: [StudentOldService, SchoolOldService, SchoolService],
 })
-
 export class GenerateTcComponent implements OnInit {
-
     user;
 
     selectedStudent: Student;
@@ -40,7 +38,7 @@ export class GenerateTcComponent implements OnInit {
     sessionList: any;
 
     boardList: any;
-    
+
     isStudentListLoading = false;
 
     // Boolean variable to check if all the required fields are coming from student profile
@@ -59,19 +57,17 @@ export class GenerateTcComponent implements OnInit {
     flag = false;
     count = 0;
 
-    constructor (private studentService: StudentOldService,
-                 private schoolService: SchoolService,
-                 private printService: PrintService) { }
+    constructor(private studentService: StudentOldService, private schoolService: SchoolService, private printService: PrintService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        Promise.all([
-            this.schoolService.getObjectList(this.schoolService.board,{}),
-        ]).then(value => {
-            this.boardList = value[0];
-        }, error => {
-        });
+        Promise.all([this.schoolService.getObjectList(this.schoolService.board, {})]).then(
+            (value) => {
+                this.boardList = value[0];
+            },
+            (error) => {}
+        );
 
         this.getSessionList();
     }
@@ -88,9 +84,9 @@ export class GenerateTcComponent implements OnInit {
     }
 
     getSessionList(): void {
-        this.schoolService.getObjectList(this.schoolService.session,{}).then(sessionList => {
+        this.schoolService.getObjectList(this.schoolService.session, {}).then((sessionList) => {
             this.sessionList = sessionList;
-            this.sessionList.every(session => {
+            this.sessionList.every((session) => {
                 if (session.id === this.user.activeSchool.currentSessionDbId) {
                     this.selectedSession = session;
                     return false;
@@ -113,24 +109,27 @@ export class GenerateTcComponent implements OnInit {
             Promise.all([
                 this.studentService.getStudentProfile(student_data, this.user.jwt),
                 this.studentService.getTransferCertificate(transfer_certificate_data, this.user.jwt),
-            ]).then(value => {
-                this.isLoading = false;
-                if (this.selectedStudent.dbId === value[0].dbId) {
-                    this.selectedStudent = new Student();
-                    this.selectedStudent.copy(value[0]);
+            ]).then(
+                (value) => {
+                    this.isLoading = false;
+                    if (this.selectedStudent.dbId === value[0].dbId) {
+                        this.selectedStudent = new Student();
+                        this.selectedStudent.copy(value[0]);
+                    }
+                    if (this.selectedStudent.parentTransferCertificate === value[1].id) {
+                        this.selectedTransferCertificate.copy(value[1]);
+                        this.currentTransferCertificate.copy(value[1]);
+                    }
+                    this.showDetails = true;
+                    this.checkAllRequiredDetailsAreComing(this.selectedStudent);
+                },
+                (error) => {
+                    this.isLoading = false;
                 }
-                if (this.selectedStudent.parentTransferCertificate === value[1].id) {
-                    this.selectedTransferCertificate.copy(value[1]);
-                    this.currentTransferCertificate.copy(value[1]);
-                }
-                this.showDetails = true;
-                this.checkAllRequiredDetailsAreComing(this.selectedStudent);
-            }, error => {
-                this.isLoading = false;
-            });
+            );
         } else {
             this.studentService.getStudentProfile(student_data, this.user.jwt).then(
-                student => {
+                (student) => {
                     this.isLoading = false;
                     if (this.selectedStudent.dbId === student.dbId) {
                         this.selectedStudent = new Student();
@@ -140,7 +139,8 @@ export class GenerateTcComponent implements OnInit {
                     }
                     this.showDetails = true;
                     this.checkAllRequiredDetailsAreComing(this.selectedStudent);
-                }, error => {
+                },
+                (error) => {
                     this.isLoading = false;
                 }
             );
@@ -186,33 +186,32 @@ export class GenerateTcComponent implements OnInit {
         this.isLoading = true;
         let selectedStudentId = this.selectedStudent.dbId;
         this.studentService.createTransferCertificate(this.currentTransferCertificate, this.user.jwt).then(
-            response => {
+            (response) => {
                 // alert(response.message);
                 if (response.id !== 0) {
                     const data = {
                         id: selectedStudentId,
                         parentTransferCertificate: response.id,
                     };
-                    this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then(
-                        response => {
-                            this.isLoading = false;
-                            if (response.status === 'success') {
-                                alert('Transfer Certificate generated successfully');
-                                this.currentTransferCertificate.id = data.parentTransferCertificate;
-                                this.selectedTransferCertificate.copy(this.currentTransferCertificate);
-                                this.printTCSecondFormat();
-                            } else {
-                                alert('Failed to link generated transfer certificate to student, Contact Admin');
-                            }
+                    this.studentService.partiallyUpdateStudentFullProfile(data, this.user.jwt).then((response) => {
+                        this.isLoading = false;
+                        if (response.status === 'success') {
+                            alert('Transfer Certificate generated successfully');
+                            this.currentTransferCertificate.id = data.parentTransferCertificate;
+                            this.selectedTransferCertificate.copy(this.currentTransferCertificate);
+                            this.printTCSecondFormat();
+                        } else {
+                            alert('Failed to link generated transfer certificate to student, Contact Admin');
                         }
-                    );
+                    });
                     this.selectedStudent.parentTransferCertificate = response.id;
                     this.studentFromFilter.parentTransferCertificate = response.id;
                 } else {
                     this.isLoading = false;
                     alert('Failed to generate Transfer Certificate');
                 }
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
             }
         );
@@ -224,11 +223,12 @@ export class GenerateTcComponent implements OnInit {
         }
         this.isLoading = true;
         this.studentService.updateTransferCertificate(this.currentTransferCertificate, this.user.jwt).then(
-            response => {
+            (response) => {
                 this.isLoading = false;
                 alert(response.message);
                 this.selectedTransferCertificate.copy(this.currentTransferCertificate);
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
             }
         );
@@ -241,22 +241,23 @@ export class GenerateTcComponent implements OnInit {
             boardList: this.boardList,
             twoCopies: this.twoCopies,
         };
-        this.printService.navigateToPrintRoute(PRINT_TC, {user: this.user, value});
+        this.printService.navigateToPrintRoute(PRINT_TC, { user: this.user, value });
     }
 
     cancelTc(): void {
         if (!confirm('Are you sure, you want to cancel TC')) {
             return;
         }
-        this.isLoading = true ;
-        this.studentService.deleteTransferCertificate(this.selectedStudent.parentTransferCertificate , this.user.jwt).then(
-            response => {
+        this.isLoading = true;
+        this.studentService.deleteTransferCertificate(this.selectedStudent.parentTransferCertificate, this.user.jwt).then(
+            (response) => {
                 this.isLoading = false;
                 alert('TC has been cancelled successfully');
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;
                 this.studentFromFilter.parentTransferCertificate = null;
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
             }
         );
@@ -332,6 +333,5 @@ export class GenerateTcComponent implements OnInit {
         } else {
             this.count++;
         }
-
     }
 }

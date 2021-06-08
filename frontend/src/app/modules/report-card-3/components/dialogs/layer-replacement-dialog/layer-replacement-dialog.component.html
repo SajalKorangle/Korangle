@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Layer Replacement</h2>
+<mat-dialog-content style="min-height: 25vh; max-height: 68vh; min-width: 50vw">
+    <div style="padding: 4px; border-radius: 4px; text-align: center" class="bg-white inner-content">
+        <ng-container *ngFor="let fieldKey of ca.vm.htmlAdapter.getFieldKeys(); let i = index">
+            <mat-form-field style="margin: 25px" *ngIf="getFilteredParameterList(ca.vm.htmlAdapter.fields[fieldKey]).length > 0">
+                <mat-label>
+                    {{ ca.vm.htmlAdapter.fields[fieldKey].displayFieldName }}
+                </mat-label>
+                <mat-select>
+                    <mat-option
+                        *ngFor="let parameter of getFilteredParameterList(ca.vm.htmlAdapter.fields[fieldKey])"
+                        (click)="selectedParameter = parameter"
+                        [value]="parameter.displayParameterNameFunc()"
+                    >
+                        {{ parameter.displayParameterNameFunc() }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+
+        <h3 *ngIf="selectedParameter">
+            Replacing Layer:{{ selectedParameter.field.displayFieldName }} {{ selectedParameter.displayParameterNameFunc() }}
+        </h3>
+    </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue; display: block; margin-left: auto" cdkFocusInitial>
+        Apply
+    </button>
+</div>
