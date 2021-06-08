@@ -10,6 +10,7 @@ import { AddEmployeeServiceAdapter } from './add-employee-service.adapter';
 
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
 import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
+declare const $: any;
 
 @Component({
     selector: 'add-employee',
