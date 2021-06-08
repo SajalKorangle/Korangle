@@ -22,6 +22,9 @@
 .print-download-buttons{
   text-align: center;
 }
+.mat-tab-element{
+    padding-top: 20px;
+}
 th {
   text-align: left;
   padding: 12px;
