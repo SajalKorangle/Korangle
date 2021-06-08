@@ -48,6 +48,14 @@ export class AddEmployeeComponent implements OnInit {
 
     }
 
+    grantAll() {
+        this.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                task.selected = true;
+            });
+        });
+    }
+
     removeAll() {
         this.moduleList.forEach((module) => {
             module.taskList.forEach((task) => {
