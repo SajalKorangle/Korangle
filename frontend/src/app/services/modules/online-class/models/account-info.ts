@@ -3,4 +3,6 @@ export class AccountInfo {
     parentEmployee: number;
     username: string;
     password: string;
+    meetingNumber: number;
+    passcode: string;
 }
