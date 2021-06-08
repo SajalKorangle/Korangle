@@ -22,7 +22,7 @@ export class ManageParameterServiceAdapter {
             this.vm.isLoading = false;
         }, err => {
             this.vm.isLoading = false;
-        })
+        });
     }
 
     saveParameter(): void {
@@ -31,7 +31,7 @@ export class ManageParameterServiceAdapter {
         const data = {...this.vm.currentParameter, filterValues: JSON.stringify(this.vm.currentParameter.filterValues)};
         if (this.vm.currentParameter.id) {
             service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_parameter, data));
-            if (this.vm.currentParameter.parameterType==this.vm.customParameterTypeList[1]) {
+            if (this.vm.currentParameter.parameterType == this.vm.customParameterTypeList[1]) {
                 this.vm.oldFilterValueList.filter(item => !this.vm.currentParameter.filterValues.includes(item)).forEach(item => {
                     service_list.push(this.vm.employeeService.deleteObjectList(this.vm.employeeService.employee_parameter_value, {
                         parentStudentParameter: this.vm.currentParameter.id,
@@ -44,7 +44,7 @@ export class ManageParameterServiceAdapter {
         }
         Promise.all(service_list).then(val => {
             // Remove existing parameter
-            this.vm.customParameterList = this.vm.customParameterList.filter(x => x.id!==val[0].id);
+            this.vm.customParameterList = this.vm.customParameterList.filter(x => x.id !== val[0].id);
             // Push the updated value
             this.vm.customParameterList.push(val[0]);
             // Set the currentParameter to updated value
@@ -52,7 +52,7 @@ export class ManageParameterServiceAdapter {
             this.vm.isLoading = false;
         }, err => {
             this.vm.isLoading = false;
-        })
+        });
     }
 
     deleteParameter = () => {
@@ -67,7 +67,7 @@ export class ManageParameterServiceAdapter {
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
-        })
+        });
     }
 
 }

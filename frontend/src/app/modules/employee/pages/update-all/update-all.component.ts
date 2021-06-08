@@ -93,7 +93,7 @@ export class UpdateAllComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    };
+    }
 
     getDocumentName(employee, parameter) {
         let item = this.employeeParameterValueList.find(x => x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id);
@@ -111,7 +111,8 @@ export class UpdateAllComponent implements OnInit {
 
     getDocumentIcon(employee, parameter) {
         try {
-            let value = this.employeeParameterValueList.find(x => x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).document_value;
+            let value = this.employeeParameterValueList.find(x => x.parentEmployee === employee.id
+                && x.parentEmployeeParameter === parameter.id).document_value;
             if (value) {
                 if (value === "" || value === undefined) {
                     return this.NULL_CONSTANT;

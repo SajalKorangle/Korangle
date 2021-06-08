@@ -1,16 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { ManageParameterServiceAdapter } from './manage-parameter.service.adapter';
-import {DataStorage} from '../../../../classes/data-storage';
+import { DataStorage } from '../../../../classes/data-storage';
 import { EmployeeService } from 'app/services/modules/employee/employee.service';
 //import {StudentService} from './../../../../services/modules/student/student.service'
 
 
 @Component({
-  selector: 'manage-parameter',
-  templateUrl: './manage-parameter.component.html',
-  styleUrls: ['./manage-parameter.component.css'],
-  providers: [ EmployeeService ],
+    selector: 'manage-parameter',
+    templateUrl: './manage-parameter.component.html',
+    styleUrls: ['./manage-parameter.component.css'],
+    providers: [EmployeeService],
 })
 
 export class ManageParameterComponent implements OnInit {
@@ -44,7 +44,7 @@ export class ManageParameterComponent implements OnInit {
         'Remark'
     ];
 
-    ADD_PARAMETER_STRING='<Add New Parameter>';
+    ADD_PARAMETER_STRING = '<Add New Parameter>';
 
     // customParameterTypeList: any[] = [{type: 'TEXT', name: 'Text'}, {type: 'FILTER', name: 'Filter'}];
     customParameterTypeList = [
@@ -61,7 +61,7 @@ export class ManageParameterComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (
+    constructor(
         //public studentService: StudentService
         public employeeService: EmployeeService
     ) { }
@@ -82,7 +82,7 @@ export class ManageParameterComponent implements OnInit {
     }
 
     setActiveParameter = parameter => {
-        this.currentParameter = {...parameter, filterValues: JSON.parse(parameter.filterValues)};
+        this.currentParameter = { ...parameter, filterValues: JSON.parse(parameter.filterValues) };
         this.oldFilterValueList = this.currentParameter.filterValues;
     }
 
@@ -92,11 +92,11 @@ export class ManageParameterComponent implements OnInit {
             name: '',
             parameterType: 'TEXT',
             filterValues: []
-        }
+        };
     }
 
     deleteFilter(filter: any) {
-        this.currentParameter.filterValues = this.currentParameter.filterValues.filter(x => x!==filter);
+        this.currentParameter.filterValues = this.currentParameter.filterValues.filter(x => x !== filter);
     }
 
     addFilter(filter: any) {
@@ -110,7 +110,8 @@ export class ManageParameterComponent implements OnInit {
     }
 
     isValidParameterName() {
-        return !(this.globalParametersList.find(x => x===this.currentParameter.name) || this.customParameterList.find(x => x.name===this.currentParameter.name && x.id!==this.currentParameter.id))
+        return !(this.globalParametersList.find(x => x === this.currentParameter.name)
+            || this.customParameterList.find(x => x.name === this.currentParameter.name && x.id !== this.currentParameter.id));
     }
 
 }

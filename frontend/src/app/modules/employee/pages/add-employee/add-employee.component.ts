@@ -133,7 +133,7 @@ export class AddEmployeeComponent implements OnInit {
         } catch {
             return null;
         }
-    };
+    }
 
     updateParameterValue = (parameter, value) => {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
@@ -143,13 +143,14 @@ export class AddEmployeeComponent implements OnInit {
         } else {
             item.value = value;
         }
-    };
+    }
 
     deleteDocument(parameter) {
         if (confirm('Are you sure want to delete this document?')) {
             let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
             if (item) {
-                this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList.filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
+                this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList
+                    .filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
             }
         }
     }
@@ -335,7 +336,7 @@ export class AddEmployeeComponent implements OnInit {
                     if (this.check_document(value.target.files[i])) {
                         files.push(value.target.files[i]);
                     }
-                };
+                }
                 if (files.length) {
                     let choiceList = [];
                     options.forEach(x => (
@@ -369,7 +370,7 @@ export class AddEmployeeComponent implements OnInit {
             }
         }
         element.value = '';
-    };
+    }
 
     updateDocumentValue = (parameter, file) => {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
@@ -389,7 +390,7 @@ export class AddEmployeeComponent implements OnInit {
             }
         };
         reader.readAsDataURL(document_value);
-    };
+    }
 
     dragEnter(value) {
         $(".dropinput").css({ "z-index": "6" });

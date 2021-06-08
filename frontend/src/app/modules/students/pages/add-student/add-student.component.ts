@@ -158,7 +158,7 @@ export class AddStudentComponent implements OnInit {
         } catch {
             return this.nullValue;
         }
-    };
+    }
 
     updateParameterValue = (parameter, value) => {
         let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
@@ -168,7 +168,7 @@ export class AddStudentComponent implements OnInit {
         } else {
             item.value = value;
         }
-    };
+    }
 
     deleteDocument(parameter) {
         if (confirm('Are you sure want to delete this document?')) {
@@ -386,7 +386,7 @@ export class AddStudentComponent implements OnInit {
             }
         }
         element.value = '';
-    };
+    }
 
     updateDocumentValue = (parameter, file) => {
         let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
@@ -410,7 +410,7 @@ export class AddStudentComponent implements OnInit {
             }
         };
         reader.readAsDataURL(document_value);
-    };
+    }
 
     dragEnter(value) {
         $('.dropinput').css({ 'z-index': '6' });

@@ -21,7 +21,7 @@ export class AddEmployeeServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
             'fields__korangle': 'id,name,mobileNumber,employeeNumber,dataOfLeaving',
         };
-        
+
 
         let module_data = {
             'parentBoard__or': this.vm.user.activeSchool.parentBoard,
@@ -36,7 +36,7 @@ export class AddEmployeeServiceAdapter {
         };
 
         Promise.all([
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees,data),
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, data),
             this.vm.teamService.getObjectList(this.vm.teamService.module, module_data),
             this.vm.teamService.getObjectList(this.vm.teamService.task, task_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, {parentSchool: this.vm.user.activeSchool.dbId}),
@@ -44,7 +44,7 @@ export class AddEmployeeServiceAdapter {
             console.log(value[0]);
             this.vm.employeeList = value[0];
             this.vm.employeeParameterList = value[3].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
-            this.vm.initializeModuleList(value[1],value[2]);
+            this.vm.initializeModuleList(value[1], value[2]);
             this.vm.isLoading = false;
 
         }, error => {
@@ -53,18 +53,18 @@ export class AddEmployeeServiceAdapter {
 
     }
 
-    isSelected(task: any){
-        if(task.selected){
-            return task.id
+    isSelected(task: any) {
+        if (task.selected) {
+            return task.id;
         }
     }
 
-    grantAll(){
+    grantAll() {
         this.vm.moduleList.forEach(module => {
             module.taskList.forEach(task => {
                 task.selected = true;
-            })
-        })
+            });
+        });
     }
 
 
@@ -98,7 +98,7 @@ export class AddEmployeeServiceAdapter {
             this.vm.newEmployee.mobileNumber = null;
             alert('Mobile number is required');
             return;
-        } else if (this.vm.newEmployee.mobileNumber.toString().length != 10){
+        } else if (this.vm.newEmployee.mobileNumber.toString().length != 10) {
             alert('Mobile number should be of 10 digits');
             return;
         } else {
@@ -109,7 +109,7 @@ export class AddEmployeeServiceAdapter {
                 }
             });
             if (selectedEmployee) {
-                alert('Mobile Number already exists in '+selectedEmployee.name+'\'s profile');
+                alert('Mobile Number already exists in ' + selectedEmployee.name + '\'s profile');
                 return;
             }
         }
@@ -134,21 +134,21 @@ export class AddEmployeeServiceAdapter {
                 this.vm.employeeService.createObject(this.vm.employeeService.employee_session_detail, post_data).then(res => {
                     console.log(response);
                     let data = [];
-                    this.vm.moduleList.forEach(module=>{
-                        module.taskList.forEach(task=>{
-                            if(task.selected){
+                    this.vm.moduleList.forEach(module => {
+                        module.taskList.forEach(task => {
+                            if (task.selected) {
                                 data.push({
                                     'parentEmployee': response.id,
                                     'parentTask': task.id,
-                                })
+                                });
                             }
-                        })
+                        });
                     });
-                    this.vm.employeeService.createObjectList(this.vm.employeeService.employee_permissions,data).then(value => {
-                        this.vm.moduleList.forEach(module=>{
-                            module.taskList.forEach(task=>{
+                    this.vm.employeeService.createObjectList(this.vm.employeeService.employee_permissions, data).then(value => {
+                        this.vm.moduleList.forEach(module => {
+                            module.taskList.forEach(task => {
                                 task.selected = false;
-                            })
+                            });
                         });
 
                         this.vm.currentEmployeeParameterValueList = this.vm.currentEmployeeParameterValueList.filter(x => {
@@ -157,36 +157,36 @@ export class AddEmployeeServiceAdapter {
                         this.vm.currentEmployeeParameterValueList.forEach(x => {
                             x.parentEmployee = response.id;
                         });
-                        
+
                         let form_data_list = [];
                         this.vm.employeeParameterList.forEach(parameter => {
-                            console.log('into the parameter')
-                            console.dir(parameter)
-                            console.log('end')
+                            console.log('into the parameter');
+                            console.dir(parameter);
+                            console.log('end');
                             let temp_obj = this.vm.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
-                            if (temp_obj){
-                                const data = { ...temp_obj}
+                            if (temp_obj) {
+                                const data = { ...temp_obj};
                                 const form_data = new FormData();
                                  Object.keys(data).forEach(key => {
-                                     if (data[key]){
-                                         if (key =="document_name"|| key=="document_size"){}
-                                         else if (key=='document_value'){
-                                             form_data.append(key,this.dataURLtoFile(data[key],data['document_name']))
-                                             form_data.append('document_size',data['document_size'])
+                                     if (data[key]) {
+                                         if (key == "document_name" || key == "document_size") {}
+                                         else if (key == 'document_value') {
+                                             form_data.append(key, this.dataURLtoFile(data[key], data['document_name']));
+                                             form_data.append('document_size', data['document_size']);
                                             }
                                         else {
-                                            form_data.append(key,data[key])
+                                            form_data.append(key, data[key]);
                                         }
                                     }
-                                })
-                                form_data_list.push(form_data)
+                                });
+                                form_data_list.push(form_data);
                             }
                         });
 
-                        console.dir(form_data_list)
+                        console.dir(form_data_list);
                         form_data_list.forEach(x => {
-                            this.vm.employeeService.createObject(this.vm.employeeService.employee_parameter_value,x)
-                        })
+                            this.vm.employeeService.createObject(this.vm.employeeService.employee_parameter_value, x);
+                        });
 
                         this.vm.isLoading = false;
                         alert('Employee Profile Created Successfully');
@@ -194,7 +194,7 @@ export class AddEmployeeServiceAdapter {
                         this.vm.newEmployeeSessionDetail = {};
                         this.vm.currentEmployeeParameterValueList = [];
 
-                    })
+                    });
                 });
             }, error => {
                 this.vm.isLoading = false;
@@ -222,6 +222,6 @@ export class AddEmployeeServiceAdapter {
         }
     }
 
-    
+
 
 }

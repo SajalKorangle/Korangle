@@ -1,13 +1,13 @@
-import {ViewAllComponent} from './view-all.component'
+import {ViewAllComponent} from './view-all.component';
 import {CommonFunctions} from '@classes/common-functions';
 
 export class ViewAllServiceAdapter {
-    vm: ViewAllComponent
+    vm: ViewAllComponent;
 
     constructor () {}
 
     initializeAdapter (vm: ViewAllComponent): void {
-        this.vm = vm
+        this.vm = vm;
     }
 
     initializeData (): void {
@@ -30,12 +30,12 @@ export class ViewAllServiceAdapter {
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, employee_parameter_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, employee_parameter_value_data),
         ]).then(value => {
-            console.dir(value[0])
+            console.dir(value[0]);
             this.vm.employeeProfileList = value[0].filter(employee => {
                 return employee.dateOfLeaving === null;
             });
             this.vm.initializeEmployeeProfileList(this.vm.employeeProfileList);
-            console.dir(this.vm.employeeProfileList)
+            console.dir(this.vm.employeeProfileList);
             this.vm.employeeParameterList = value[1].map(x =>
                 ({
                     ...x,
@@ -45,7 +45,7 @@ export class ViewAllServiceAdapter {
             this.vm.employeeParameterValueList = value[2];
             this.vm.employeeParameterDocumentList = this.vm.employeeParameterList.filter(x => x.parameterType == 'DOCUMENT');
             this.vm.employeeParameterOtherList = this.vm.employeeParameterList.filter(x => x.parameterType !== 'DOCUMENT');
-            
+
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

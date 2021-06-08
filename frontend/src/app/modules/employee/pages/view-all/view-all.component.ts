@@ -136,7 +136,7 @@ export class ViewAllComponent implements OnInit {
 
         });
 
-    };
+    }
 
     selectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
@@ -256,7 +256,7 @@ export class ViewAllComponent implements OnInit {
         this.employeeParameterDocumentList.forEach(item => {
             item.show = true;
         });
-    };
+    }
 
     unSelectAllDocuments(): void {
         Object.keys(this.documentFilter).forEach((key) => {
@@ -265,7 +265,7 @@ export class ViewAllComponent implements OnInit {
         this.employeeParameterDocumentList.forEach(item => {
             item.show = false;
         });
-    };
+    }
 
     getParameterValue(employee, parameter) {
         try {
@@ -406,10 +406,10 @@ export class ViewAllComponent implements OnInit {
                                     this.percent_download_comlpleted = 0;
                                     this.totalDownloadSize = 0;
                                 });
-                            };
-                        };
+                            }
+                        }
                     });
-                };
+                }
             });
         } else {
             alert("No documents are available for download.");
@@ -474,7 +474,8 @@ export class ViewAllComponent implements OnInit {
 
     getDocumentIcon(employee, parameter) {
         try {
-            let value = this.employeeParameterValueList.find(x => x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).document_value;
+            let value = this.employeeParameterValueList.find(x => x.parentEmployee === employee.id
+                && x.parentEmployeeParameter === parameter.id).document_value;
             if (value) {
                 if (value === "" || value === undefined) {
                     return this.NULL_CONSTANT;

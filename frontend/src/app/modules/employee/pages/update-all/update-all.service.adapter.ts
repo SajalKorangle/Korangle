@@ -20,7 +20,10 @@ export class UpdateAllServiceAdapter {
         Promise.all([
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_req_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, { parentSchool: this.vm.user.activeSchool.dbId }),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, { parentEmployee__parentSchool: this.vm.user.activeSchool.dbId })
+            this.vm.employeeService.getObjectList(
+                this.vm.employeeService.employee_parameter_value,
+                { parentEmployee__parentSchool: this.vm.user.activeSchool.dbId }
+            )
         ]).then(value => {
             // this.vm.employeeFullProfileList = value[0];
             this.initializeEmployeeFullProfileList(value[0]);
@@ -179,7 +182,7 @@ export class UpdateAllServiceAdapter {
         }, error => {
             alert('Failed to update value');
         });
-    };
+    }
 
     check_document(value): boolean {
         let type = value.type;
@@ -238,6 +241,6 @@ export class UpdateAllServiceAdapter {
         else {
             document.getElementById(employee.id + '-' + parameter.id + '-text').innerHTML = '';
         }
-    };
+    }
 
 }

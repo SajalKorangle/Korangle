@@ -47,7 +47,7 @@ export class UpdateProfileComponent implements OnInit {
 
 
     constructor(public employeeService: EmployeeService,
-        public dialog: MatDialog,) { }
+        public dialog: MatDialog, ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -239,7 +239,7 @@ export class UpdateProfileComponent implements OnInit {
         } catch {
             return null;
         }
-    };
+    }
 
     updateParameterValue = (parameter, value) => {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
@@ -249,7 +249,7 @@ export class UpdateProfileComponent implements OnInit {
         } else {
             item.value = value;
         }
-    };
+    }
 
     checkCustomFieldChanged = (parameter) => {
         const item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
@@ -263,7 +263,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         }
         return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
-    };
+    }
 
 
 
@@ -274,7 +274,7 @@ export class UpdateProfileComponent implements OnInit {
             return false;
         }
         return true;
-    };
+    }
 
     getParameterDocumentType(parameter) {
         try {
@@ -326,7 +326,8 @@ export class UpdateProfileComponent implements OnInit {
                 if (item.id) {
                     this.deleteList.push(item);
                 }
-                this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList.filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
+                this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList
+                    .filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
             }
         }
     }
@@ -344,7 +345,8 @@ export class UpdateProfileComponent implements OnInit {
                     item.document_name = old_item.document_name;
                     this.deleteList = this.deleteList.filter(x => x.id !== old_item.id);
                 } else {
-                    this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList.filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
+                    this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList
+                        .filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
                 }
             } else if (old_item) {
                 item = {
@@ -400,7 +402,7 @@ export class UpdateProfileComponent implements OnInit {
                     if (this.check_document(value.target.files[i])) {
                         files.push(value.target.files[i]);
                     }
-                };
+                }
                 if (files.length) {
                     let choiceList = [];
                     options.forEach(x => (
@@ -434,7 +436,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         }
         element.value = '';
-    };
+    }
 
     updateDocumentValue = (parameter, file) => {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
@@ -468,7 +470,7 @@ export class UpdateProfileComponent implements OnInit {
             }
         };
         reader.readAsDataURL(document_value);
-    };
+    }
 
     dragEnter(value) {
         $(".dropinput").css({ "z-index": "6" });
