@@ -4,9 +4,15 @@ export function sendDataToAndroid( data ) {
     }
 }
 
-export function openZoomMeeting( url ) {
+export function openUrlInBrowser( url ) {
     if ( navigator.userAgent == 'Mobile' ) {
-        Android.openZoomMeeting( url );
+        Android.parseUrl( url );
+    }
+}
+
+export function openUrlInChrome( url ) {
+    if ( navigator.userAgent == 'Mobile' ) {
+        Android.openInChrome( url );
     }
 }
 

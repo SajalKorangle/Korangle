@@ -48,11 +48,20 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public void openZoomMeeting(String url){
+    public void parseUrl(String url){
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         this.mContext.startActivity(intent);
     }
 
+    @JavascriptInterface
+    public void openInChrome(String url){
+        Uri chromeUri = Uri.parse("googlechrome://navigate?url=" + url);
+        Intent i = new Intent(Intent.ACTION_VIEW, chromeUri);
+        if (i.resolveActivity(this.mContext.getPackageManager()) == null) {
+            i.setData(Uri.parse(url));
+        }
+        this.mContext.startActivity(i);
+    }
 
 
 
