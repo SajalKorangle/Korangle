@@ -868,56 +868,52 @@
                     </div>    
                 </mat-tab>
             </mat-tab-group>
-
-
-
-
-            <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
-                <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
-            </div>
-            <button class="btn" style="padding: 4px 7px" (click)="showSMSSection=!showSMSSection">
-                <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
-                <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
-            </button>
-            <ng-container *ngIf="showSMSSection">
-                <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group form-black label-floating">
-                            <label class="control-label">Common Message to append</label>
-                            <textarea type="text" rows="5" class="form-control"
-                                [(ngModel)]="extraDefaulterMessage"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <mat-form-field style="margin-top: 23px;">
-                            <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
-                                <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
-                                    {{sentType}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <div style="font-size: 14px; margin-top: 5px;">
-                            # of extra Characters/SMS: {{getExtraMessageLength()}}<br />
-                            # of Mobile devices: {{getNumberOfMobileDevice()}}<br />
-                            Estimated SMS Count: {{getEstimatedSMSCount()}}<br />
-                            Estimated Notification Count: {{getEstimatedNotificationCount()}}<br />
-                        </div>
-                        <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
-                            <button *ngIf="getEstimatedSMSCount()<=smsBalance" type="button"
-                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                style="padding: 12px 15px; margin-right: 17px;"
-                                matTooltip="Notify all the selected defaulters" tooltip-position="left"
-                                (click)="notifyDefaulters();">
-                                {{getButtonText()}}
-                            </button>
-                            <span *ngIf="getEstimatedSMSCount()>smsBalance" style="font-size: 16px;">
-                                You are short by <b>{{getEstimatedSMSCount() - smsBalance}}</b> SMS.
-                            </span>
-                        </ng-container>
+        </ng-container>
+        <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
+            <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
+        </div>
+        <button class="btn" style="padding: 4px 7px" (click)="showSMSSection=!showSMSSection">
+            <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
+            <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
+        </button>
+        <ng-container *ngIf="showSMSSection">
+            <div>SMS count: <b>{{smsBalance}}</b> <br /></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group form-black label-floating">
+                        <label class="control-label">Common Message to append</label>
+                        <textarea type="text" rows="5" class="form-control"
+                            [(ngModel)]="extraDefaulterMessage"></textarea>
                     </div>
                 </div>
-            </ng-container>
+                <div class="col-sm-3">
+                    <mat-form-field style="margin-top: 23px;">
+                        <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
+                            <mat-option *ngFor='let sentType of sentTypeList;' [value]="sentType">
+                                {{sentType}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div style="font-size: 14px; margin-top: 5px;">
+                        # of extra Characters/SMS: {{getExtraMessageLength()}}<br />
+                        # of Mobile devices: {{getNumberOfMobileDevice()}}<br />
+                        Estimated SMS Count: {{getEstimatedSMSCount()}}<br />
+                        Estimated Notification Count: {{getEstimatedNotificationCount()}}<br />
+                    </div>
+                    <ng-container *ngIf="getEstimatedSMSCount()>0 || getEstimatedNotificationCount()>0">
+                        <button *ngIf="getEstimatedSMSCount()<=smsBalance" type="button"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            style="padding: 12px 15px; margin-right: 17px;"
+                            matTooltip="Notify all the selected defaulters" tooltip-position="left"
+                            (click)="notifyDefaulters();">
+                            {{getButtonText()}}
+                        </button>
+                        <span *ngIf="getEstimatedSMSCount()>smsBalance" style="font-size: 16px;">
+                            You are short by <b>{{getEstimatedSMSCount() - smsBalance}}</b> SMS.
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
         </ng-container>
     </ng-container>
 
