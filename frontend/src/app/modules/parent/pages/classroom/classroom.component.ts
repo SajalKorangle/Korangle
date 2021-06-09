@@ -115,6 +115,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 if (isMobile()) {
                     openUrlInChrome(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                    this.htmlRenderer.meetingEntered = false;
                 }
                 else {
                     zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
