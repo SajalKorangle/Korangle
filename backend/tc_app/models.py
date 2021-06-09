@@ -31,7 +31,7 @@ class TCLayoutSharing(models.Model):
 
 
 def upload_image_assets_to(instance, filename):
-    return '%s/tc_layouts/imageAssets/%s_%s' % (instance.parentLayout.parentSchool.id, now().timestamp(), filename)
+    return 'tc_layouts/imageAssets/%s_%s' % (now().timestamp(), filename)
 
 class TCImageAssets(models.Model): # implement image data size
     image = models.ImageField(upload_to=upload_image_assets_to)
