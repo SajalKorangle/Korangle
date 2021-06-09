@@ -153,7 +153,7 @@ export class ViewDefaultersComponent implements OnInit {
         this.installmentNumber = (monthNumber > 2) ? monthNumber - 3 : monthNumber + 9;
     }
     applyFilters(){
-        this.studentDataSource=new MatTableDataSource(this.getFilteredStudentList());
+        this.studentDataSource.data=this.getFilteredStudentList();
     }
 
     detectChanges(): void {
