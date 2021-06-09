@@ -1,86 +1,82 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isInitialLoading">
-
         <div class="row">
             <div class="col-md-9" *ngIf="examinationClassSectionList.length > 0">
                 <mat-form-field>
-                    <mat-select placeholder="Select Examination"
-                                [ngModel]="selectedExamination"
-                                [disabled]="isLoading"
-                                (ngModelChange)="selectedExamination=$event;detectChanges();">
-                        <mat-option *ngFor='let examination of examinationClassSectionList;' [value]="examination">
-                            {{examination.name}}
+                    <mat-select
+                        placeholder="Select Examination"
+                        [ngModel]="selectedExamination"
+                        [disabled]="isLoading"
+                        (ngModelChange)="selectedExamination = $event; detectChanges()"
+                    >
+                        <mat-option *ngFor="let examination of examinationClassSectionList" [value]="examination">
+                            {{ examination.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Class"
-                                [ngModel]="selectedExamination.selectedClass"
-                                (ngModelChange)="selectedExamination.selectedClass=$event;detectChanges();">
-                        <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
-                            {{classs.name}}
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
+                    <mat-select
+                        placeholder="Select Class"
+                        [ngModel]="selectedExamination.selectedClass"
+                        (ngModelChange)="selectedExamination.selectedClass = $event; detectChanges()"
+                    >
+                        <mat-option *ngFor="let classs of selectedExamination.classList" [value]="classs">
+                            {{ classs.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Select Section"
-                                [ngModel]="selectedExamination.selectedClass.selectedSection"
-                                (ngModelChange)="selectedExamination.selectedClass.selectedSection=$event;detectChanges();">
-                        <mat-option *ngFor='let section of selectedExamination.selectedClass.sectionList;' [value]="section">
-                            {{section.name}}
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
+                    <mat-select
+                        placeholder="Select Section"
+                        [ngModel]="selectedExamination.selectedClass.selectedSection"
+                        (ngModelChange)="selectedExamination.selectedClass.selectedSection = $event; detectChanges()"
+                    >
+                        <mat-option *ngFor="let section of selectedExamination.selectedClass.sectionList" [value]="section">
+                            {{ section.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <button type="submit"
-                        style="margin-left: 20px;"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getStudentTestDetails()">GET</button>
+                <button
+                    type="submit"
+                    style="margin-left: 20px"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.getStudentTestDetails()"
+                >
+                    GET
+                </button>
 
-                <br/><br/>
+                <br /><br />
                 <ng-container *ngIf="selectedExamination">
                     <ng-container *ngFor="let student of selectedExamination.selectedClass.selectedSection.studentList">
-                        <img src="{{student.profileImage}}"
-                             style="border: 1px solid black;
-                                     margin-right: 5px;
-                                     width: 20px; height: 20px;"/>
+                        <img
+                            src="{{ student.profileImage }}"
+                            style="border: 1px solid black; margin-right: 5px; width: 20px; height: 20px"
+                        />
                     </ng-container>
                 </ng-container>
-
             </div>
 
-            <div class="col-md-9" *ngIf="examinationClassSectionList.length === 0">
-                No tests for you to update marks!
-            </div>
-
+            <div class="col-md-9" *ngIf="examinationClassSectionList.length === 0">No tests for you to update marks!</div>
         </div>
 
-        <ng-container *ngIf="showTestDetails && !isLoading">
+        <ng-container *ngIf="showTestDetails && !isLoading"> - </ng-container>
 
-            -
-
-        </ng-container>
-
-
-        <img src="{{user.activeSchool.principalSignatureImage}}"
-             *ngIf="user.activeSchool.principalSignatureImage != null"
-             style="display: none;
-             bottom: 25px; left: 600px;
-             width: 100px; height: 50px;
-             z-index: 1;"/>
+        <img
+            src="{{ user.activeSchool.principalSignatureImage }}"
+            *ngIf="user.activeSchool.principalSignatureImage != null"
+            style="display: none; bottom: 25px; left: 600px; width: 100px; height: 50px; z-index: 1"
+        />
         <!-- img src="https://s3.amazonaws.com/korangleplus/schools/13/principal_signature/1551291073.55681"
              style="display: none;
              bottom: 25px; left: 600px;
              width: 100px; height: 50px;
              z-index: 1;"/ -->
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

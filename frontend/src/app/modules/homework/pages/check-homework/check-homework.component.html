@@ -1,100 +1,120 @@
-<div class="card-content table-responsive" *ngIf="classSectionHomeworkList.length == 0 && !isInitialLoading">
-    No Homeworks Given Yet
-</div>
+<div class="card-content table-responsive" *ngIf="classSectionHomeworkList.length == 0 && !isInitialLoading">No Homeworks Given Yet</div>
 <div class="card-content table-responsive" *ngIf="classSectionHomeworkList.length > 0 && !isInitialLoading && !isChecking">
-
     <ng-container>
-        <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;">
-            <mat-select placeholder="Select Class" [ngModel]="selectedClassSection"
-                (ngModelChange)="selectedClassSection = $event; changeClassSection()">
-                <mat-option *ngFor="let classs of classSectionHomeworkList" style="width: 100%;" [value]="classs">
-                    {{classs.className + ' ' + classs.divisionName}}
+        <mat-form-field style="margin-top: 23px; margin-right: 15px; margin-bottom: 10px">
+            <mat-select
+                placeholder="Select Class"
+                [ngModel]="selectedClassSection"
+                (ngModelChange)="selectedClassSection = $event; changeClassSection()"
+            >
+                <mat-option *ngFor="let classs of classSectionHomeworkList" style="width: 100%" [value]="classs">
+                    {{ classs.className + ' ' + classs.divisionName }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field style="margin-top: 23px ; margin-right: 15px; margin-bottom: 10px;">
-            <mat-select placeholder="Select Subject" [ngModel]="selectedSubject"
-                (ngModelChange)="selectedSubject = $event; changeSubject()">
-                <mat-option *ngFor="let subject of selectedClassSection.subjectList" style="width: 100%;"
-                    [value]="subject">
-                    {{subject.name}}
+        <mat-form-field style="margin-top: 23px; margin-right: 15px; margin-bottom: 10px">
+            <mat-select
+                placeholder="Select Subject"
+                [ngModel]="selectedSubject"
+                (ngModelChange)="selectedSubject = $event; changeSubject()"
+            >
+                <mat-option *ngFor="let subject of selectedClassSection.subjectList" style="width: 100%" [value]="subject">
+                    {{ subject.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <br>
+        <br />
 
-        <mat-nav-list *ngFor="let homework of selectedSubject.homeworkList" style="width: 100%;">
+        <mat-nav-list *ngFor="let homework of selectedSubject.homeworkList" style="width: 100%">
             <a mat-list-item class="list-item" (click)="serviceAdapter.getHomework(homework)" testId="homeworkCount">
-                <div style="width: 100%;">
-                    <strong>{{homework.homeworkName}}</strong>
-                    <div style="float: right;">
-                        <span *ngIf="!isMobile()" style="color: #494949; font-size: 15px">Issued On: &nbsp;</span><i *ngIf="!isMobile()">{{displayDateTime(homework.startDate, homework.startTime)}}</i>
-                        <span class="material-icons" style="font-size: 25px; margin-left: 15px;" >keyboard_arrow_right</span>
+                <div style="width: 100%">
+                    <strong>{{ homework.homeworkName }}</strong>
+                    <div style="float: right">
+                        <span *ngIf="!isMobile()" style="color: #494949; font-size: 15px">Issued On: &nbsp;</span
+                        ><i *ngIf="!isMobile()">{{ displayDateTime(homework.startDate, homework.startTime) }}</i>
+                        <span class="material-icons" style="font-size: 25px; margin-left: 15px">keyboard_arrow_right</span>
                     </div>
                 </div>
             </a>
-        </mat-nav-list>
-        
-    </ng-container><br>
+        </mat-nav-list> </ng-container
+    ><br />
 
-    <div *ngIf="!isMobile()" class="row" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px;">
+    <div *ngIf="!isMobile()" class="row" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px">
         <div class="col-md-12"></div>
     </div>
 </div>
 
-
-
 <div *ngIf="!isLoading && currentHomework != null && isChecking">
-        
     <div class="col-md-6 card-content table-responsive" style="overflow: auto; max-height: 85vh">
-        <button type="submit"
-            class="btn"
-            style="float:left ;cursor: pointer; padding: 4px 7px;"
-            (click)="isChecking = false;">Go Back</button><br><br>
-        
-        <mat-expansion-panel *ngIf="currentHomework != null" [expanded]="true" style="margin-top: 5px; margin-bottom:5px;">
+        <button type="submit" class="btn" style="float: left; cursor: pointer; padding: 4px 7px" (click)="isChecking = false">
+            Go Back</button
+        ><br /><br />
+
+        <mat-expansion-panel *ngIf="currentHomework != null" [expanded]="true" style="margin-top: 5px; margin-bottom: 5px">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i>{{currentHomework.name}}</i> &nbsp;
+                    <i>{{ currentHomework.name }}</i> &nbsp;
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <div *ngIf="!isMobile()">
-                <span class="hidden-xs" style="color: #7b7b7b;">Issued On: &nbsp;</span><i>{{displayDateTime(currentHomework.startDate, currentHomework.startTime)}}</i><br>
-                <span  class="hidden-xs" style="color: #7b7b7b;">Due On: &nbsp;</span><i>{{displayDateTime(currentHomework.endDate, currentHomework.endTime)}}</i><br>
-                <strong>Total: {{studentHomeworkList.length}} ; Submitted: {{homeworkReport.submitted}} ; Checked: {{homeworkReport.checked}} ; Asked For Resubmission: {{homeworkReport.resubmission}}<br></strong>
-    
-            </div>
-            
-            <div *ngIf="isMobile()">
-                <span style="color: #7b7b7b; font-size: 12px">Issued On: &nbsp;</span><i>{{displayDateTime(currentHomework.startDate, currentHomework.startTime)}}</i><br>
-                <span style="color: #7b7b7b; font-size: 12px">Due On: &nbsp;</span><i>{{displayDateTime(currentHomework.endDate, currentHomework.endTime)}}</i><br>
-                <strong style="font-size: 12px">Total: {{studentHomeworkList.length}} ; Submitted: {{homeworkReport.submitted}} <br>Checked: {{homeworkReport.checked}} ; Asked For Resubmission: {{homeworkReport.resubmission}}<br></strong>
-            </div>
-            <div style="margin-top: 30px;">
-                <span style="color: #7b7b7b;">Homework Questions: <br></span>
-                    <pre>{{currentHomework.text}}</pre><br>
-            </div>
-            
-            <div style="margin-top: 5px;" *ngIf="!isMobile()">
-                <span class="hidden-xs" style="color: #7b7b7b;">Homework Images: <br></span>
-                <div class="image-row">
-                    <div  *ngFor="let images of currentHomework.images; let i = index">
-                        <img src="{{images.questionImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(currentHomework.images, i, 0)">
-                    </div>
-                </div>
-                <br>
+                <span class="hidden-xs" style="color: #7b7b7b">Issued On: &nbsp;</span
+                ><i>{{ displayDateTime(currentHomework.startDate, currentHomework.startTime) }}</i
+                ><br />
+                <span class="hidden-xs" style="color: #7b7b7b">Due On: &nbsp;</span
+                ><i>{{ displayDateTime(currentHomework.endDate, currentHomework.endTime) }}</i
+                ><br />
+                <strong
+                    >Total: {{ studentHomeworkList.length }} ; Submitted: {{ homeworkReport.submitted }} ; Checked:
+                    {{ homeworkReport.checked }} ; Asked For Resubmission: {{ homeworkReport.resubmission }}<br
+                /></strong>
             </div>
 
-            <div style="margin-top: 5px;" *ngIf="isMobile()">
-                <span style="color: #7b7b7b;">Homework Images: <br></span>
+            <div *ngIf="isMobile()">
+                <span style="color: #7b7b7b; font-size: 12px">Issued On: &nbsp;</span
+                ><i>{{ displayDateTime(currentHomework.startDate, currentHomework.startTime) }}</i
+                ><br />
+                <span style="color: #7b7b7b; font-size: 12px">Due On: &nbsp;</span
+                ><i>{{ displayDateTime(currentHomework.endDate, currentHomework.endTime) }}</i
+                ><br />
+                <strong style="font-size: 12px"
+                    >Total: {{ studentHomeworkList.length }} ; Submitted: {{ homeworkReport.submitted }} <br />Checked:
+                    {{ homeworkReport.checked }} ; Asked For Resubmission: {{ homeworkReport.resubmission }}<br
+                /></strong>
+            </div>
+            <div style="margin-top: 30px">
+                <span style="color: #7b7b7b">Homework Questions: <br /></span>
+                <pre>{{ currentHomework.text }}</pre>
+                <br />
+            </div>
+
+            <div style="margin-top: 5px" *ngIf="!isMobile()">
+                <span class="hidden-xs" style="color: #7b7b7b">Homework Images: <br /></span>
                 <div class="image-row">
-                    <div  *ngFor="let images of currentHomework.images; let i = index">
-                        <img src="{{images.questionImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(currentHomework.images, i, 0)">
+                    <div *ngFor="let images of currentHomework.images; let i = index">
+                        <img
+                            src="{{ images.questionImage }}"
+                            class="hover-shadow cursor image-column"
+                            (click)="openImagePreviewDialog(currentHomework.images, i, 0)"
+                        />
                     </div>
                 </div>
-                <br>
+                <br />
+            </div>
+
+            <div style="margin-top: 5px" *ngIf="isMobile()">
+                <span style="color: #7b7b7b">Homework Images: <br /></span>
+                <div class="image-row">
+                    <div *ngFor="let images of currentHomework.images; let i = index">
+                        <img
+                            src="{{ images.questionImage }}"
+                            class="hover-shadow cursor image-column-mobile"
+                            (click)="openImagePreviewDialog(currentHomework.images, i, 0)"
+                        />
+                    </div>
+                </div>
+                <br />
             </div>
         </mat-expansion-panel>
     </div>
@@ -103,84 +123,126 @@
         <div class="col-md-12"></div>
     </div> -->
     <div class="col-md-6 card-content table-responsive" style="overflow: auto; max-height: 85vh">
-        <br>G: Given &nbsp;&nbsp; S: Submitted &nbsp;&nbsp; C: Checked &nbsp;&nbsp; R: Asked For Resubmission <br><br>
+        <br />G: Given &nbsp;&nbsp; S: Submitted &nbsp;&nbsp; C: Checked &nbsp;&nbsp; R: Asked For Resubmission <br /><br />
         <mat-accordion [multi]="false">
-            <ng-container *ngFor="let studentHomework of studentHomeworkList; let i=index;">
-                <mat-expansion-panel style="margin-top: 5px; margin-bottom:5px;">
+            <ng-container *ngFor="let studentHomework of studentHomeworkList; let i = index">
+                <mat-expansion-panel style="margin-top: 5px; margin-bottom: 5px">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Student Name: &nbsp;</span><strong style="margin-top: 10px;">{{studentHomework.studentName}}</strong> &nbsp;
+                            <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px">Student Name: &nbsp;</span
+                            ><strong style="margin-top: 10px">{{ studentHomework.studentName }}</strong> &nbsp;
                         </mat-panel-title>
                         <mat-panel-description>
-                            <strong *ngIf="isSubmittedLate(currentHomework.endDate, currentHomework.endTime, studentHomework.submissionDate, studentHomework.submissionTime)" style="color: #fa0909; margin-top: 10px;">(L)&nbsp;</strong>
-                            <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px;">Status: &nbsp;</span>
-                            <button type="submit"
-                                style="padding: 3px 8px;"
-                                class="{{getButtonClass(studentHomework.status)}}"
-                                (click)="changeStudentHomeworkStatus(studentHomework);$event.stopPropagation();serviceAdapter.changeStudentHomeworkStatus(studentHomework);">
-                                {{getButtonString(studentHomework.status)}}
+                            <strong
+                                *ngIf="
+                                    isSubmittedLate(
+                                        currentHomework.endDate,
+                                        currentHomework.endTime,
+                                        studentHomework.submissionDate,
+                                        studentHomework.submissionTime
+                                    )
+                                "
+                                style="color: #fa0909; margin-top: 10px"
+                                >(L)&nbsp;</strong
+                            >
+                            <span class="hidden-xs" style="color: #7b7b7b; margin-top: 10px">Status: &nbsp;</span>
+                            <button
+                                type="submit"
+                                style="padding: 3px 8px"
+                                class="{{ getButtonClass(studentHomework.status) }}"
+                                (click)="
+                                    changeStudentHomeworkStatus(studentHomework);
+                                    $event.stopPropagation();
+                                    serviceAdapter.changeStudentHomeworkStatus(studentHomework)
+                                "
+                            >
+                                {{ getButtonString(studentHomework.status) }}
                             </button>
-                            <div class="{{getLoaderClass(studentHomework)}}"></div>
-                            
+                            <div class="{{ getLoaderClass(studentHomework) }}"></div>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
 
                     <div *ngIf="studentHomework.submissionDate != null">
                         <div *ngIf="!isMobile()">
-                            <span class="hidden-xs" style="color: #7b7b7b;">Submitted On: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
+                            <span class="hidden-xs" style="color: #7b7b7b">Submitted On: &nbsp;</span
+                            ><i>{{ displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime) }}</i>
                         </div>
                         <div *ngIf="isMobile()">
-                            <span style="color: #7b7b7b; font-size: 12px">Submitted On: &nbsp;</span><i>{{displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime)}}</i>    
+                            <span style="color: #7b7b7b; font-size: 12px">Submitted On: &nbsp;</span
+                            ><i>{{ displayDateTime(studentHomework.submissionDate, studentHomework.submissionTime) }}</i>
                         </div>
-                    </div>   
+                    </div>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <mat-form-field >
-                                <input type="text" 
-                                    matInput 
+                            <mat-form-field>
+                                <input
+                                    type="text"
+                                    matInput
                                     cdkTextareaAutosize
                                     [ngModel]="studentHomework.remark"
-                                    (ngModelChange)="studentHomework.remark=$event;" 
+                                    (ngModelChange)="studentHomework.remark = $event"
                                     (blur)="serviceAdapter.changeStudentRemark(studentHomework)"
-                                    placeholder="Enter Remark">
+                                    placeholder="Enter Remark"
+                                />
                             </mat-form-field>
                             <div *ngIf="studentHomework.isRemarkLoading" class="loader-custom"></div>
                         </div>
                         <div class="col-md-6">
-                            <mat-slide-toggle *ngIf="isMobile()" [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]" style="font-size: 30px; margin-top: 10px" (click)="askForResubmission(studentHomework);serviceAdapter.changeStudentHomeworkStatus(studentHomework);" [disabled]="studentHomework.status == HOMEWORK_STATUS[3]">Ask For Resubmission</mat-slide-toggle>
-                            <mat-slide-toggle *ngIf="!isMobile()" [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]" style="float:right ;font-size: 30px; margin-top: 10px" (click)="askForResubmission(studentHomework);serviceAdapter.changeStudentHomeworkStatus(studentHomework);" [disabled]="studentHomework.status == HOMEWORK_STATUS[3]">Ask For Resubmission</mat-slide-toggle>
+                            <mat-slide-toggle
+                                *ngIf="isMobile()"
+                                [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]"
+                                style="font-size: 30px; margin-top: 10px"
+                                (click)="askForResubmission(studentHomework); serviceAdapter.changeStudentHomeworkStatus(studentHomework)"
+                                [disabled]="studentHomework.status == HOMEWORK_STATUS[3]"
+                                >Ask For Resubmission</mat-slide-toggle
+                            >
+                            <mat-slide-toggle
+                                *ngIf="!isMobile()"
+                                [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]"
+                                style="float: right; font-size: 30px; margin-top: 10px"
+                                (click)="askForResubmission(studentHomework); serviceAdapter.changeStudentHomeworkStatus(studentHomework)"
+                                [disabled]="studentHomework.status == HOMEWORK_STATUS[3]"
+                                >Ask For Resubmission</mat-slide-toggle
+                            >
                         </div>
                     </div>
-                    <div style="margin-top: 10px;">
-                        <span style="color: #7b7b7b;">Answer: <br></span>
-                        <div >
-                            <pre>{{studentHomework.text}}</pre>
+                    <div style="margin-top: 10px">
+                        <span style="color: #7b7b7b">Answer: <br /></span>
+                        <div>
+                            <pre>{{ studentHomework.text }}</pre>
                         </div>
-                    </div><br>
-                    
-                    <div style="margin-top: 5px;" *ngIf="!isMobile()">
-                        <span class="hidden-xs" style="color: #7b7b7b;">Answer Images: <br></span>
+                    </div>
+                    <br />
+
+                    <div style="margin-top: 5px" *ngIf="!isMobile()">
+                        <span class="hidden-xs" style="color: #7b7b7b">Answer Images: <br /></span>
                         <div class="image-row">
-                            <div  *ngFor="let images of studentHomework.images; let i = index">
-                                <img src="{{images.answerImage}}" class="hover-shadow cursor image-column" (click)="openImagePreviewDialog(studentHomework.images, i, 0)">
+                            <div *ngFor="let images of studentHomework.images; let i = index">
+                                <img
+                                    src="{{ images.answerImage }}"
+                                    class="hover-shadow cursor image-column"
+                                    (click)="openImagePreviewDialog(studentHomework.images, i, 0)"
+                                />
                             </div>
                         </div>
-                        <br>
+                        <br />
                     </div>
 
-                    <div style="margin-top: 5px;" *ngIf="isMobile()">
-                        <span style="color: #7b7b7b;">Answer Images: <br></span>
+                    <div style="margin-top: 5px" *ngIf="isMobile()">
+                        <span style="color: #7b7b7b">Answer Images: <br /></span>
                         <div class="image-row">
-                            <div  *ngFor="let images of studentHomework.images; let i = index">
-                                <img src="{{images.answerImage}}" class="hover-shadow cursor image-column-mobile" (click)="openImagePreviewDialog(studentHomework.images, i, 0)">
+                            <div *ngFor="let images of studentHomework.images; let i = index">
+                                <img
+                                    src="{{ images.answerImage }}"
+                                    class="hover-shadow cursor image-column-mobile"
+                                    (click)="openImagePreviewDialog(studentHomework.images, i, 0)"
+                                />
                             </div>
                         </div>
-                        <br>
+                        <br />
                     </div>
-
                 </mat-expansion-panel>
-
             </ng-container>
         </mat-accordion>
     </div>
@@ -188,4 +250,4 @@
 
 <ng-container *ngIf="isLoading || isInitialLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container> 
+</ng-container>

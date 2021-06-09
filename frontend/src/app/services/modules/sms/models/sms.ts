@@ -1,6 +1,4 @@
-
 export class Sms {
-
     id: number = null;
     contentType: string = null;
     content: string = null;
@@ -11,5 +9,4 @@ export class Sms {
     notificationMobileNumberList: number = null;
     requestId: string = null;
     parentSchool: number = null;
-
 }

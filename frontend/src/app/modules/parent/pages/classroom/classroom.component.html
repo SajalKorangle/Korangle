@@ -1,0 +1,105 @@
+<div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
+    <ng-container *ngIf="!restrictedStudent else RestrictedStudent">
+        <ng-container *ngIf="isActiveSession else NotActiveSession">
+
+            <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
+                <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
+                    <h3>{{htmlRenderer.getTime()}}</h3>
+
+                    <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                        <h4>Ongoing Class:</h4>
+                        <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
+
+                            <div style="margin-left: 12px;">
+                                <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span><br />
+                                <span>
+                                    {{activeClass.startTimeJSON.getDisplayString()}} -
+                                    {{activeClass.endTimeJSON.getDisplayString()}}
+                                </span>
+                            </div>
+
+                            <div style="margin-left: 32px;">
+                                <span>Meeting Id: {{htmlRenderer.getClassAccountInfo(activeClass)?.meetingNumber ||
+                                    '-'}}</span><br />
+                                <span>Pass Code: {{htmlRenderer.getClassAccountInfo(activeClass)?.passcode ||
+                                    '-'}}</span><br />
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 24px;">
+                            <button *ngIf="htmlRenderer.getClassAccountInfo(activeClass)"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="serviceAdapter.initilizeMeetingData(htmlRenderer.getClassAccountInfo(activeClass))">EnterClass</button>
+                        </div>
+                    </ng-container>
+
+                    <div style="overflow: auto;">
+                        <table class="mat-elevation-z8 table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th *ngFor="let weekdayKey of getObjetKeys(weekdays)"
+                                        [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
+                                        {{weekdays[weekdayKey]}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container
+                                    *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                                    <tr>
+                                        <td style="width: 160px"
+                                            [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
+                                            {{timespan.startTime.getDisplayString()}} -
+                                            {{timespan.endTime.getDisplayString()}}
+                                        </td>
+                                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                            <ng-container
+                                                *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                                <td style="position: relative; min-width: 100px;"
+                                                    [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
+                                                    [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
+                                                    <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
+                                                    <span *ngIf="htmlRenderer.getClassAccountInfo(onlineClass)"
+                                                        style="position: absolute; bottom: 8px; right: 8px;"
+                                                        class="glow-active"></span>
+                                                </td>
+                                            </ng-container>
+                                            <ng-template #NoClass>
+                                                <td></td>
+                                            </ng-template>
+                                        </ng-container>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+</div>
+<ng-template #Loader>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
+
+<ng-template #NotActiveSession>
+    <span style="color: red;">This session is closed</span>
+</ng-template>
+
+<ng-template #NoClassReg>
+    <span>No Online Registered Class</span>
+</ng-template>
+
+<ng-template #zoomIframe>
+    <button (click)="htmlRenderer.meetingEntered = false;"
+        style="margin-bottom: 12px; display: flex; border-radius: 50%;background-color: black; color:white;">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *"
+        style="width: 100%; height: 75vh;"></iframe>
+</ng-template>
+
+<ng-template #RestrictedStudent>
+    <span style="color: red">Permission Denied!</span>
+</ng-template>

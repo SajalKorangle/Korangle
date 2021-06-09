@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import {TEST_TYPE_LIST} from '../../../../classes/constants/test-type';
+import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
@@ -10,8 +10,7 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-student-marksheet-list.component.css'],
 })
 export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, AfterViewChecked {
-
-    user : any;
+    user: any;
 
     boardList: any;
 
@@ -19,7 +18,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     examination: any;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -43,18 +42,18 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getFilteredStudentList(studentList: any): any {
-        return studentList.filter(student => {
+        return studentList.filter((student) => {
             if (student.parentTransferCertificate === null) {
                 return true;
             }
             return false;
-        })
+        });
     }
 
     isOralIncluded(student: any): boolean {
         let result = false;
-        student.subjectList.every(item => {
-            item.testDetails.every(itemTwo => {
+        student.subjectList.every((item) => {
+            item.testDetails.every((itemTwo) => {
                 if (itemTwo.testType === TEST_TYPE_LIST[0]) {
                     result = true;
                     return false;
@@ -71,8 +70,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     isPracticalIncluded(student: any): boolean {
         let result = false;
-        student.subjectList.every(item => {
-            item.testDetails.every(itemTwo => {
+        student.subjectList.every((item) => {
+            item.testDetails.every((itemTwo) => {
                 if (itemTwo.testType === TEST_TYPE_LIST[3]) {
                     result = true;
                     return false;
@@ -89,7 +88,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     isMainSubject(subject: any): boolean {
         let result = false;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id && item.mainSubject === true) {
                 result = true;
                 return false;
@@ -101,7 +100,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     isOnlyGrade(subject: any): boolean {
         let result = false;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id && item.onlyGrade === true) {
                 result = true;
                 return false;
@@ -112,7 +111,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getMainSubjectList(subjectList: any): any {
-        return subjectList.filter(item => {
+        return subjectList.filter((item) => {
             if (item.mainSubject === true) {
                 return true;
             }
@@ -121,7 +120,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getNonMainSubjectList(subjectList: any): any {
-        return subjectList.filter(item => {
+        return subjectList.filter((item) => {
             if (item.mainSubject === false) {
                 return true;
             }
@@ -146,9 +145,9 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectOralMaxMarks(subject: any): any {
         let result = 0;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id) {
-                item.testDetails.every(itemTwo => {
+                item.testDetails.every((itemTwo) => {
                     if (itemTwo.testType === TEST_TYPE_LIST[0]) {
                         result = parseInt(itemTwo.maximumMarks);
                         return false;
@@ -168,9 +167,9 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectWrittenMaxMarks(subject: any): any {
         let result = 0;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id) {
-                item.testDetails.every(itemTwo => {
+                item.testDetails.every((itemTwo) => {
                     if (itemTwo.testType === TEST_TYPE_LIST[1]) {
                         result = parseInt(itemTwo.maximumMarks);
                         return false;
@@ -190,9 +189,9 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectTheoryMaxMarks(subject: any): any {
         let result = 0;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id) {
-                item.testDetails.every(itemTwo => {
+                item.testDetails.every((itemTwo) => {
                     if (itemTwo.testType === TEST_TYPE_LIST[2]) {
                         result = parseInt(itemTwo.maximumMarks);
                         return false;
@@ -212,9 +211,9 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectPracticalMaxMarks(subject: any): any {
         let result = 0;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id) {
-                item.testDetails.every(itemTwo => {
+                item.testDetails.every((itemTwo) => {
                     if (itemTwo.testType === TEST_TYPE_LIST[3]) {
                         result = parseInt(itemTwo.maximumMarks);
                         return false;
@@ -234,9 +233,9 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectTotalMaxMarks(subject: any): any {
         let result = 0;
-        this.examination.selectedClass.selectedSection.subjectList.every(item => {
+        this.examination.selectedClass.selectedSection.subjectList.every((item) => {
             if (item.id === subject.id) {
-                item.testDetails.forEach(itemTwo => {
+                item.testDetails.forEach((itemTwo) => {
                     result += parseInt(itemTwo.maximumMarks);
                 });
                 return false;
@@ -248,7 +247,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectOralMarksObtained(subject: any): any {
         let result = 0;
-        subject.testDetails.every(item => {
+        subject.testDetails.every((item) => {
             if (item.testType === TEST_TYPE_LIST[0]) {
                 result = parseFloat(item.marksObtained);
                 return false;
@@ -264,7 +263,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectWrittenMarksObtained(subject: any): any {
         let result = 0;
-        subject.testDetails.every(item => {
+        subject.testDetails.every((item) => {
             if (item.testType === TEST_TYPE_LIST[1]) {
                 result = parseFloat(item.marksObtained);
                 return false;
@@ -280,7 +279,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectTheoryMarksObtained(subject: any): any {
         let result = 0;
-        subject.testDetails.every(item => {
+        subject.testDetails.every((item) => {
             if (item.testType === TEST_TYPE_LIST[2]) {
                 result = parseFloat(item.marksObtained);
                 return false;
@@ -296,7 +295,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectPracticalMarksObtained(subject: any): any {
         let result = 0;
-        subject.testDetails.every(item => {
+        subject.testDetails.every((item) => {
             if (item.testType === TEST_TYPE_LIST[3]) {
                 result = parseFloat(item.marksObtained);
                 return false;
@@ -312,7 +311,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getSubjectTotalMarksObtained(subject: any): any {
         let result = 0;
-        subject.testDetails.forEach(item => {
+        subject.testDetails.forEach((item) => {
             result += parseFloat(item.marksObtained);
         });
         return result;
@@ -320,18 +319,18 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     getTotalMaximumMarks(student: any): any {
         let result = 0;
-        student.subjectList.forEach(item => {
-            if(this.isMainSubject(item)) {
+        student.subjectList.forEach((item) => {
+            if (this.isMainSubject(item)) {
                 result += parseInt(this.getSubjectTotalMaxMarks(item));
             }
         });
         return result;
     }
 
-    getTotalMarksObtained(student: any, parseToInt=false): any {
+    getTotalMarksObtained(student: any, parseToInt = false): any {
         let result = 0;
-        student.subjectList.forEach(item => {
-            if(this.isMainSubject(item)) {
+        student.subjectList.forEach((item) => {
+            if (this.isMainSubject(item)) {
                 result += parseFloat(this.getSubjectTotalMarksObtained(item));
             }
         });
@@ -343,24 +342,22 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getSubjectGrade(subject: any): any {
-
         let marksObtained = this.getSubjectTotalMarksObtained(subject);
         let maximumMarks = this.getSubjectTotalMaxMarks(subject);
 
-        let percentage = marksObtained/maximumMarks*100;
+        let percentage = (marksObtained / maximumMarks) * 100;
 
         return this.getGradeFromPercentage(percentage);
     }
 
     getOverallGrade(student: any): any {
-
         let percentage = this.getPercentage(student);
 
         return this.getGradeFromPercentage(percentage);
     }
 
     getGradeFromPercentage(percentage: any): any {
-        if (percentage >=75) {
+        if (percentage >= 75) {
             return 'A';
         } else if (percentage >= 60) {
             return 'B';
@@ -374,12 +371,12 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getPercentage(student: any) {
-        return this.getTotalMarksObtained(student)/this.getTotalMaximumMarks(student)*100;
+        return (this.getTotalMarksObtained(student) / this.getTotalMaximumMarks(student)) * 100;
     }
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -394,7 +391,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getRomanClassName(className: any): any {
-        switch(className) {
+        switch (className) {
             case 'Class - 1':
                 return 'Class - I';
             case 'Class - 2':
@@ -423,5 +420,4 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
                 return className;
         }
     }
-
 }

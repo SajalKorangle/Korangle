@@ -45,11 +45,19 @@ path {
     fill: transparent;
 }
 
-table, tbody, th, tr, td {
+table,
+tbody,
+th,
+tr,
+td {
     background: transparent;
 }
 
-div, span, i, td, b {
+div,
+span,
+i,
+td,
+b {
     color: navy !important;
     text-decoration-color: navy !important;
 }
@@ -65,7 +73,6 @@ td.bold {
 .pageBreakAfter {
     page-break-after: always;
 }
-
 
 .fontHandle {
     font-size: 12.6px;

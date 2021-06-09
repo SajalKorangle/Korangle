@@ -1,16 +1,14 @@
 import { Component, OnInit, Input, AfterViewChecked } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {INSTALLMENT_LIST} from "../../classes/constants";
+import { INSTALLMENT_LIST } from '../../classes/constants';
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
     templateUrl: './print-fee-receipt-list.component.html',
     styleUrls: ['./print-fee-receipt-list.component.css'],
 })
-
 export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
-
     installmentList = INSTALLMENT_LIST;
     sessionList = [];
 
@@ -23,16 +21,16 @@ export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
-        const {user, value} = this.printService.getData();
-        console.log(value)
+        const { user, value } = this.printService.getData();
+        console.log(value);
         this.user = user;
         this.data = value;
-        this.sessionList = this.data.sessionList
+        this.sessionList = this.data.sessionList;
         this.checkView = true;
     }
 
     ngAfterViewChecked(): void {
-        if(this.checkView) {
+        if (this.checkView) {
             this.checkView = false;
             this.printService.print();
             this.data = null;
@@ -41,15 +39,22 @@ export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return this.data.subFeeReceiptList.filter(subFeeReceipt => {
-            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-        }).reduce((totalSubFeeReceipt, subFeeReceipt) => {
-            return totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
-                return totalInstallment
-                    + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
-                    + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
+        return this.data.subFeeReceiptList
+            .filter((subFeeReceipt) => {
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+            })
+            .reduce((totalSubFeeReceipt, subFeeReceipt) => {
+                return (
+                    totalSubFeeReceipt +
+                    this.installmentList.reduce((totalInstallment, installment) => {
+                        return (
+                            totalInstallment +
+                            (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
+                            (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
+                        );
+                    }, 0)
+                );
             }, 0);
-        }, 0);
     }
 
     getFeeReceiptListTotalAmount(): any {
@@ -57,5 +62,4 @@ export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
             return total + this.getFeeReceiptTotalAmount(feeReceipt);
         }, 0);
     }
-
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, AfterViewChecked, Input, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, Input, ChangeDetectorRef } from '@angular/core';
 
 import { PrintService } from '../../../../print/print-service';
 
@@ -7,7 +7,6 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-employee-i-cards.component.css'],
 })
 export class PrintEmployeeICardsComponent implements OnInit, OnDestroy, AfterViewChecked {
-
     user: any;
 
     viewChecked = true;
@@ -16,7 +15,7 @@ export class PrintEmployeeICardsComponent implements OnInit, OnDestroy, AfterVie
 
     printICardsComponentSubscription: any;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
         const { user, value } = this.printService.getData();
@@ -37,5 +36,4 @@ export class PrintEmployeeICardsComponent implements OnInit, OnDestroy, AfterVie
     ngOnDestroy(): void {
         this.employeeProfileList = null;
     }
-
 }

@@ -6,23 +6,12 @@ import { SchoolComponent } from './school.component';
 
 import { SchoolRoutingModule } from './school.routing';
 
-
 @NgModule({
-    declarations: [
+    declarations: [SchoolComponent],
 
-        SchoolComponent,
-
-    ],
-
-    imports: [
-
-        SchoolRoutingModule,
-        ComponentsModule,
-
-    ],
-    exports: [
-    ],
+    imports: [SchoolRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [SchoolComponent]
+    bootstrap: [SchoolComponent],
 })
-export class SchoolModule { }
+export class SchoolModule {}

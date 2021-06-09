@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -6,6 +8,8 @@ from school_app.model.models import School, Session
 from student_app.models import Student
 from class_app.models import Class, Division
 from subject_app.models import Subject, SubjectSecond, ExtraSubField
+from student_app.models import StudentSection
+
 
 
 class MaximumMarksAllowed(models.Model):
@@ -139,12 +143,20 @@ class StudentTest(models.Model):
     parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
     parentSubject = models.ForeignKey(SubjectSecond, models.PROTECT, null=False, default=0, verbose_name='parentSubject')
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
-    testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
-    marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
+    testType = models.CharField(max_length=11, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=3,null=False, verbose_name='marksObtained', default=0)
+    absent = models.BooleanField(default=False, verbose_name='absent')
+
 
     class Meta:
         db_table = 'student_test'
         unique_together = ('parentExamination', 'parentSubject', 'parentStudent', 'testType')
+
+
+@receiver(post_delete, sender=TestSecond)
+def delete_test_second_student_test(sender, instance, **kwargs):
+    for student_section in StudentSection.objects.filter(parentStudent__parentSchool=instance.parentExamination.parentSchool,parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
+        StudentTest.objects.filter(testType=instance.testType,parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent).delete()
 
 
 class StudentExtraSubField(models.Model):

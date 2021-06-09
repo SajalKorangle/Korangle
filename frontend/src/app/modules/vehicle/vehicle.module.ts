@@ -14,24 +14,16 @@ import { VehicleOldService } from '../../services/modules/vehicle/vehicle-old.se
 
 @NgModule({
     declarations: [
-
         VehicleComponent,
 
         // AddBusStopComponent,
         // DeleteBusStopComponent,
         // UpdateBusStopComponent,
-
     ],
 
-    imports: [
-
-        ComponentsModule,
-        VehicleRoutingModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, VehicleRoutingModule],
+    exports: [],
     providers: [VehicleOldService],
-    bootstrap: [VehicleComponent]
+    bootstrap: [VehicleComponent],
 })
-export class VehicleModule { }
+export class VehicleModule {}

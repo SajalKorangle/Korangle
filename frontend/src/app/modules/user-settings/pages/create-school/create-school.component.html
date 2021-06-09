@@ -1,24 +1,16 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
         <div class="row">
             <!-- Print Name -->
             <div class="col-md-9">
                 <mat-form-field class="example-full-width">
-                    <input matInput
-                           placeholder="Print Name (for certificates)"
-                           type="text"
-                           [(ngModel)]="schoolProfile.printName">
+                    <input matInput placeholder="Print Name (for certificates)" type="text" [(ngModel)]="schoolProfile.printName" />
                 </mat-form-field>
             </div>
             <!-- Name -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input matInput
-                           placeholder="Name* (less than 15 characters)"
-                           type="text"
-                           [(ngModel)]="schoolProfile.name">
+                    <input matInput placeholder="Name* (less than 15 characters)" type="text" [(ngModel)]="schoolProfile.name" />
                 </mat-form-field>
             </div>
         </div>
@@ -28,8 +20,8 @@
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
                     <mat-select placeholder="Board*" [(ngModel)]="schoolProfile.parentBoard">
-                        <mat-option *ngFor="let board of boardList;" [value]="board.id">
-                            {{board.name}}
+                        <mat-option *ngFor="let board of boardList" [value]="board.id">
+                            {{ board.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -38,8 +30,8 @@
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
                     <mat-select placeholder="Medium*" [(ngModel)]="schoolProfile.medium">
-                        <mat-option *ngFor="let medium of mediumList;" [value]="medium">
-                            {{medium}}
+                        <mat-option *ngFor="let medium of mediumList" [value]="medium">
+                            {{ medium }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -50,28 +42,19 @@
             <!-- Dise Code -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input matInput
-                           placeholder="Dise Code"
-                           type="text"
-                           [(ngModel)]="schoolProfile.diseCode">
+                    <input matInput placeholder="Dise Code" type="text" [(ngModel)]="schoolProfile.diseCode" />
                 </mat-form-field>
             </div>
             <!-- Registration No. -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input matInput
-                           placeholder="Registration No."
-                           type="text"
-                           [(ngModel)]="schoolProfile.registrationNumber">
+                    <input matInput placeholder="Registration No." type="text" [(ngModel)]="schoolProfile.registrationNumber" />
                 </mat-form-field>
             </div>
             <!-- Affiliation No./School Code -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input matInput
-                           [placeholder]="getAffiliationPlaceholder()"
-                           type="text"
-                           [(ngModel)]="schoolProfile.affiliationNumber">
+                    <input matInput [placeholder]="getAffiliationPlaceholder()" type="text" [(ngModel)]="schoolProfile.affiliationNumber" />
                 </mat-form-field>
             </div>
         </div>
@@ -80,22 +63,19 @@
             <!-- Pincode -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input matInput
-                           placeholder="Pincode"
-                           type="number"
-                           (ngModelChange)="schoolProfile.pincode=$event;serviceAdapter.getPincodeDetails()"
-                           [ngModel]="schoolProfile.pincode">
+                    <input
+                        matInput
+                        placeholder="Pincode"
+                        type="number"
+                        (ngModelChange)="schoolProfile.pincode = $event; serviceAdapter.getPincodeDetails()"
+                        [ngModel]="schoolProfile.pincode"
+                    />
                 </mat-form-field>
             </div>
             <!-- Street Address -->
             <div class="col-md-6">
                 <mat-form-field class="example-full-width">
-                    <textarea matInput
-                              placeholder="Street"
-                              type="text"
-                              rows="3"
-                              [(ngModel)]="schoolProfile.address">
-                    </textarea>
+                    <textarea matInput placeholder="Street" type="text" rows="3" [(ngModel)]="schoolProfile.address"> </textarea>
                 </mat-form-field>
             </div>
         </div>
@@ -104,17 +84,21 @@
             <!-- Village/City -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input type="text"
-                           placeholder="Village/City"
-                           matInput
-                           [formControl]="villageCityFormControl"
-                           [(ngModel)]="schoolProfile.villageCity"
-                           [matAutocomplete]="autoVillageCity">
-                    <mat-autocomplete #autoVillageCity="matAutocomplete"
-                                      (optionSelected)="schoolProfile.villageCity=$event.option.value"
-                                      [displayWith]="displayFunction">
+                    <input
+                        type="text"
+                        placeholder="Village/City"
+                        matInput
+                        [formControl]="villageCityFormControl"
+                        [(ngModel)]="schoolProfile.villageCity"
+                        [matAutocomplete]="autoVillageCity"
+                    />
+                    <mat-autocomplete
+                        #autoVillageCity="matAutocomplete"
+                        (optionSelected)="schoolProfile.villageCity = $event.option.value"
+                        [displayWith]="displayFunction"
+                    >
                         <mat-option *ngFor="let villageCity of filteredVillageCityList | async" [value]="villageCity">
-                            {{displayListFunction(villageCity)}}
+                            {{ displayListFunction(villageCity) }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -122,17 +106,21 @@
             <!-- Block -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input type="text"
-                           matInput
-                           placeholder="Block"
-                           [formControl]="blockFormControl"
-                           [(ngModel)]="schoolProfile.block"
-                           [matAutocomplete]="autoBlock">
-                    <mat-autocomplete #autoBlock="matAutocomplete"
-                                      (optionSelected)="schoolProfile.block=$event.option.value;"
-                                      [displayWith]="displayFunction">
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="Block"
+                        [formControl]="blockFormControl"
+                        [(ngModel)]="schoolProfile.block"
+                        [matAutocomplete]="autoBlock"
+                    />
+                    <mat-autocomplete
+                        #autoBlock="matAutocomplete"
+                        (optionSelected)="schoolProfile.block = $event.option.value"
+                        [displayWith]="displayFunction"
+                    >
                         <mat-option *ngFor="let block of filteredBlockList | async" [value]="block">
-                            {{displayListFunction(block)}}
+                            {{ displayListFunction(block) }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -140,17 +128,21 @@
             <!-- District -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input type="text"
-                           matInput
-                           placeholder="District"
-                           [formControl]="districtFormControl"
-                           [(ngModel)]="schoolProfile.district"
-                           [matAutocomplete]="autoDistrict">
-                    <mat-autocomplete #autoDistrict="matAutocomplete"
-                                      (optionSelected)="schoolProfile.district=$event.option.value;"
-                                      [displayWith]="displayFunction">
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="District"
+                        [formControl]="districtFormControl"
+                        [(ngModel)]="schoolProfile.district"
+                        [matAutocomplete]="autoDistrict"
+                    />
+                    <mat-autocomplete
+                        #autoDistrict="matAutocomplete"
+                        (optionSelected)="schoolProfile.district = $event.option.value"
+                        [displayWith]="displayFunction"
+                    >
                         <mat-option *ngFor="let district of filteredDistrictList | async" [value]="district">
-                            {{displayListFunction(district)}}
+                            {{ displayListFunction(district) }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -158,39 +150,42 @@
             <!-- State -->
             <div class="col-md-3">
                 <mat-form-field class="example-full-width">
-                    <input type="text"
-                           matInput
-                           placeholder="State"
-                           [formControl]="stateFormControl"
-                           [(ngModel)]="schoolProfile.state"
-                           [matAutocomplete]="autoState">
-                    <mat-autocomplete #autoState="matAutocomplete"
-                                      (optionSelected)="schoolProfile.state=$event.option.value;"
-                                      [displayWith]="displayFunction">
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="State"
+                        [formControl]="stateFormControl"
+                        [(ngModel)]="schoolProfile.state"
+                        [matAutocomplete]="autoState"
+                    />
+                    <mat-autocomplete
+                        #autoState="matAutocomplete"
+                        (optionSelected)="schoolProfile.state = $event.option.value"
+                        [displayWith]="displayFunction"
+                    >
                         <mat-option *ngFor="let state of filteredStateList | async" [value]="state">
-                            {{displayListFunction(state)}}
+                            {{ displayListFunction(state) }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
         </div>
 
-        <button *ngIf="user.activeSchool"
-                type="button"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="serviceAdapter.createSchool(schoolProfile)">Create</button>
+        <button
+            *ngIf="user.activeSchool"
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="serviceAdapter.createSchool(schoolProfile)"
+        >
+            Create
+        </button>
 
-        <button *ngIf="!user.activeSchool"
-                type="button"
-                class="btn btn-warning"
-                (click)="serviceAdapter.createSchool(schoolProfile)">Create</button>
-
-
+        <button *ngIf="!user.activeSchool" type="button" class="btn btn-warning" (click)="serviceAdapter.createSchool(schoolProfile)">
+            Create
+        </button>
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

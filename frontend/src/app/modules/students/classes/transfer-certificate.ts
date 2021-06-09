@@ -1,6 +1,4 @@
-
 export class TransferCertificate {
-
     id: number;
     certificateNumber: number;
     issueDate: any;
@@ -45,5 +43,4 @@ export class TransferCertificate {
         this.lastClassAttendance = null;
         this.attendanceOutOf = null;
     }
-
 }

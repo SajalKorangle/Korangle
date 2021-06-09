@@ -1,4 +1,4 @@
-import {Component, OnInit, ElementRef, ViewChild} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 
 import { IdCardService } from '../../../../services/modules/id-card/id-card.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
@@ -6,10 +6,10 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 
 import { GenerateIdCardServiceAdapter } from './generate-id-card.service.adapter';
 
-import {DataStorage} from "../../../../classes/data-storage";
-import DefaultIdCard from './../../class/id-card'
-import {SchoolService} from '@services/modules/school/school.service';
-import {PARAMETER_LIST} from '@modules/id-card/class/constants';
+import { DataStorage } from '../../../../classes/data-storage';
+import DefaultIdCard from './../../class/id-card';
+import { SchoolService } from '@services/modules/school/school.service';
+import { PARAMETER_LIST } from '@modules/id-card/class/constants';
 
 @Component({
     selector: 'generate-id-card',
@@ -17,16 +17,13 @@ import {PARAMETER_LIST} from '@modules/id-card/class/constants';
     styleUrls: ['./generate-id-card.component.css'],
     providers: [IdCardService, ClassService, StudentService, SchoolService],
 })
-
 export class GenerateIdCardComponent implements OnInit {
-
-    user
-    isLoading = false
+    user;
+    isLoading = false;
 
     parameterList = Object.assign([], PARAMETER_LIST);
 
-    @ViewChild('pdfTable', {static: false}) pdfTable:ElementRef;
-
+    @ViewChild('pdfTable', { static: false }) pdfTable: ElementRef;
 
     sessionList: any[] = [];
     classList: any[] = [];
@@ -43,20 +40,20 @@ export class GenerateIdCardComponent implements OnInit {
     isIFrameLoading = false;
     iFrameWarning = '';
 
-    selectedClassSection: any
-    selectedSection: any
-    selectedLayout: any
+    selectedClassSection: any;
+    selectedSection: any;
+    selectedLayout: any;
 
-    printMultiple: Boolean = false
+    printMultiple: Boolean = false;
 
-    serviceAdapter: GenerateIdCardServiceAdapter
+    serviceAdapter: GenerateIdCardServiceAdapter;
 
     constructor(
         public idCardService: IdCardService,
         public classService: ClassService,
         public studentService: StudentService,
         public schoolService: SchoolService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -67,45 +64,48 @@ export class GenerateIdCardComponent implements OnInit {
 
     populateClassSectionList = (classList, sectionList) => {
         this.classSectionList = [];
-        classList.filter(classs => {
-            sectionList.filter(section => {
-                if (this.studentSectionList.find(studentSection => {
-                        return studentSection.parentClass == classs.id
-                            && studentSection.parentDivision == section.id;
-                    }) != undefined) {
+        classList.filter((classs) => {
+            sectionList.filter((section) => {
+                if (
+                    this.studentSectionList.find((studentSection) => {
+                        return studentSection.parentClass == classs.id && studentSection.parentDivision == section.id;
+                    }) != undefined
+                ) {
                     this.classSectionList.push({
-                        'class': classs,
-                        'section': section,
-                        'selected': false
+                        class: classs,
+                        section: section,
+                        selected: false,
                     });
                 }
             });
         });
     }
 
-    getStudent = id => this.studentList.find(x => x.id===id)
-    getClass = id => this.classList.find(x => x.id===id)
-    getSection = id => this.sectionList.find(x => x.id===id)
+    getStudent = (id) => this.studentList.find((x) => x.id === id);
+    getClass = (id) => this.classList.find((x) => x.id === id);
+    getSection = (id) => this.sectionList.find((x) => x.id === id);
 
     getPrintData = () => {
         return {
             school: this.user.activeSchool,
             studentList: this.getSelectedStudentList(),
-            studentSectionList: this.filteredStudentSectionList.filter(x => x.selected),
+            studentSectionList: this.filteredStudentSectionList.filter((x) => x.selected),
             studentParameterList: this.studentParameterList,
             studentParameterValueList: this.studentParameterValueList,
             classList: this.classList,
             divisionList: this.sectionList,
             sessionList: this.sessionList,
-        }
+        };
     }
 
     getSelectedStudentList = () => {
-        let student_list = []
-        this.filteredStudentSectionList.filter(x => x.selected).forEach(x => {
-            student_list.push(this.getStudent(x.parentStudent))
-        })
-        return student_list
+        let student_list = [];
+        this.filteredStudentSectionList
+            .filter((x) => x.selected)
+            .forEach((x) => {
+                student_list.push(this.getStudent(x.parentStudent));
+            });
+        return student_list;
     }
 
     printIdCards = async () => {
@@ -132,37 +132,40 @@ export class GenerateIdCardComponent implements OnInit {
     }
 
     selectAllClasses = () => {
-        this.classSectionList.forEach(classSection => {
+        this.classSectionList.forEach((classSection) => {
             classSection.selected = true;
-        })
-        this.handleStudentDisplay()
+        });
+        this.handleStudentDisplay();
     }
 
     unselectAllClasses = () => {
-        this.classSectionList.forEach(classSection => {
+        this.classSectionList.forEach((classSection) => {
             classSection.selected = false;
-        })
-        this.handleStudentDisplay()
+        });
+        this.handleStudentDisplay();
     }
 
     handleStudentDisplay = () => {
-        this.filteredStudentSectionList = this.studentSectionList.filter(studentSection => {
-            return this.classSectionList.find(classSection => {
-                return classSection.class.id===studentSection.parentClass && classSection.section.id===studentSection.parentDivision && classSection.selected
-            })
-        })
+        this.filteredStudentSectionList = this.studentSectionList.filter((studentSection) => {
+            return this.classSectionList.find((classSection) => {
+                return (
+                    classSection.class.id === studentSection.parentClass &&
+                    classSection.section.id === studentSection.parentDivision &&
+                    classSection.selected
+                );
+            });
+        });
     }
 
     selectAllStudents = () => {
-        this.filteredStudentSectionList.forEach(x => {
-            x.selected = true
-        })
+        this.filteredStudentSectionList.forEach((x) => {
+            x.selected = true;
+        });
     }
 
     clearAllStudents = () => {
-        this.filteredStudentSectionList.forEach(x => {
-            x.selected = false
-        })
+        this.filteredStudentSectionList.forEach((x) => {
+            x.selected = false;
+        });
     }
-
 }

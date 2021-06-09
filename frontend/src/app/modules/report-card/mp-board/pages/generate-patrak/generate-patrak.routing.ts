@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {GeneratePatrakComponent} from "./generate-patrak.component";
+import { GeneratePatrakComponent } from './generate-patrak.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: GeneratePatrakComponent ,
-    }
+        component: GeneratePatrakComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class GeneratePatrakRoutingModule { }
+export class GeneratePatrakRoutingModule {}

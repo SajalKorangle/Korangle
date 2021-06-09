@@ -20,15 +20,25 @@ describe('Fees 3.0 -> Total Collection', () => {
         await page.waitForXPath('//mat-datepicker-toggle');
         const [datePicker] = await page.$x('//mat-datepicker-toggle');
         datePicker.click();
-        await page.waitForXPath('//tr[2]//following::td[2]');
         // clicking on the particular date
-        const [date] = await page.$x('//tr[2]//following::td[2]');
+        await page.waitForXPath('//mat-calendar-header//button');
+        const [range] = await page.$x('//mat-calendar-header//button');
+        range.click();
+        await page.waitForTimeout(2000);
+        const [year] = await page.$x('//tr[1]//following::td[1]');
+        year.click();
+        await page.waitForTimeout(2000);
+        const [month] = await page.$x('//tr[2]//following::td[1]');
+        month.click();
+        await page.waitForTimeout(2000);
+        const [date] = await page.$x('//tr[2]//following::td[1]');
         date.click();
-        // clicking on search button
+        const [today] = await page.$x('//tr[1]//following::td[2]');
+        today.click();
         await page.waitForSelector('button[type="button"]');
         const [search] = await page.$x('//button[@class=\'btn btn-warning\']');
         search.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(3000);
 
     });
 
@@ -36,7 +46,6 @@ describe('Fees 3.0 -> Total Collection', () => {
         let nodes;
 
         // checking the default type is valid
-        await page.waitForXPath('//mat-select//following::mat-select[4]');
         nodes = await containsAll('mat-select', 'Valid Receipts');
         expect(nodes.length).toBe(1);
         // Checking the number of rows to be equals to 4 -> 3 Receipts, 1 header row
@@ -45,16 +54,16 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(4);
         // Checking the number of cols to be equals to 7 -> Initially there are 7 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(7);
+        expect(nodes.length).toBe(8);
     });
 
     it('Total Collection: Fee receipt Type Toggle', async () => {
-        let nodes,node;
-        await page.waitForXPath('//mat-select//following::mat-select[4]');
+        let nodes, node;
+
         nodes = await containsFirst('mat-select', 'Valid Receipts');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-         [node] = await page.$x('//mat-option[2]');
+         node = await containsFirst('mat-option[2]', '');
         await node.click();
 
         // Checking the number of rows to be equals to 2 -> 1 CANCELLED Receipts, 1 header row
@@ -63,12 +72,11 @@ describe('Fees 3.0 -> Total Collection', () => {
 
         // Checking the number of cols to be equals to 8 -> cancelled remark and cancelled by gets added automatically then there are 8 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(9);
+        expect(nodes.length).toBe(10);
 
         nodes = await containsFirst('mat-select', 'Cancelled Receipts');
         await nodes.click();
-        await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[3]');
+        node = await containsFirst('mat-option[3]', '');
         await node.click();
         await page.waitForXPath('//mat-select//following::mat-select[4]');
         // Checking the number of rows to be equals to 5 -> All 4 Receipts, 1 header row
@@ -76,13 +84,13 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(5);
         // Checking the number of cols to be equals to 7 -> Default 7 cols
         nodes = await containsAll('th', '');  //count check
-        expect(nodes.length).toBe(7);
+        expect(nodes.length).toBe(8);
 
         // again selecting only valid receipts
-        [node] = await page.$x('//mat-select//following::mat-select[4]');
+        node = await  containsFirst('mat-select//following::mat-select[4]', '');
         await node.click();
-        await page.waitForXPath('//mat-option');
-        [node] = await page.$x('//mat-option[1]');
+        //await page.waitForXPath('//mat-option');
+        node = await containsFirst('mat-option[1]', 'Valid Receipts');
         await node.click();
 
     });
@@ -95,15 +103,14 @@ describe('Fees 3.0 -> Total Collection', () => {
             await dialog.dismiss();
         });
 
-        [node] = await page.$x('//a[contains(text(),\'Cancel Receipt\')]');
-        node.click();
-        await page.waitForXPath('//mat-dialog-container//following::textarea[1]');
+        node = await containsFirst('a', 'Cancel Receipt');
+        await node.click();
 
         //wait for modal to load
-        [node] = await page.$x('//mat-dialog-container//following::textarea[1]');
-        node.type('Invalid Receipt');
-        node = await getNode('button', 'Cancel Receipt');
-        node.click();
+        node = await containsFirst('mat-dialog-container//following::textarea[1]', '');
+        await node.type('Invalid Receipt');
+        node = await containsFirst('button', 'Cancel Receipt');
+        await node.click();
         await page.waitForTimeout(1000);
         nodes = await containsAll('tr', '');  //count check again 1 should be cancelled from 4 list
         expect(nodes.length).toBe(3);
@@ -112,5 +119,5 @@ describe('Fees 3.0 -> Total Collection', () => {
 
     afterAll(async () => {
         await BeforeAfterEach.afterEach();
-    })
+    });
 });

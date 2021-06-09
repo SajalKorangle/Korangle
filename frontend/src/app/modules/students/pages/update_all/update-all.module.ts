@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import { UpdateAllRoutingModule} from './update-all.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {UpdateAllComponent} from "./update-all.component";
-
+import { UpdateAllRoutingModule } from './update-all.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { UpdateAllComponent } from './update-all.component';
 
 @NgModule({
-    declarations: [
-        UpdateAllComponent
-    ],
+    declarations: [UpdateAllComponent],
 
-    imports: [
-        UpdateAllRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [UpdateAllRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [UpdateAllComponent]
+    bootstrap: [UpdateAllComponent],
 })
-export class UpdateAllModule { }
+export class UpdateAllModule {}

@@ -1,180 +1,182 @@
 <ng-container *ngIf="examination">
-
-    <ng-container *ngFor="let student of getFilteredStudentList(examination.selectedClass.selectedSection.studentList); let isLast = last;">
-
-        <div class="container-fluid" [class.pageBreakAfter]="!isLast"
-             style="width: 100%; height: 100%;
-             border: 6px double #b87333;
-             position: relative;
-             overflow: hidden;
-             border-radius: 8px;
-             font-weight: 800 !important;">
-
+    <ng-container *ngFor="let student of getFilteredStudentList(examination.selectedClass.selectedSection.studentList); let isLast = last">
+        <div
+            class="container-fluid"
+            [class.pageBreakAfter]="!isLast"
+            style="
+                width: 100%;
+                height: 100%;
+                border: 6px double #b87333;
+                position: relative;
+                overflow: hidden;
+                border-radius: 8px;
+                font-weight: 800 !important;
+            "
+        >
             <!-- Background Watermark -->
-            <img src="{{user.activeSchool.profileImage}}"
-                 style="border-radius: 2px; position: absolute;
-                 top: 460px; left: 178px;
-                 width: 350px; height: 350px;
-                 opacity: 0.07;
-                 filter: grayscale(100%);
-                 z-index: 10;"/>
+            <img
+                src="{{ user.activeSchool.profileImage }}"
+                style="
+                    border-radius: 2px;
+                    position: absolute;
+                    top: 460px;
+                    left: 178px;
+                    width: 350px;
+                    height: 350px;
+                    opacity: 0.07;
+                    filter: grayscale(100%);
+                    z-index: 10;
+                "
+            />
 
             <!-- School Logo -->
-            <img src="{{user.activeSchool.profileImage}}"
-                 style="border-radius: 2px;
-                        position: absolute; top: 115px; left: 30px;
-                        opacity: 0.8;
-                        width: 100px; height: 100px;"/>
+            <img
+                src="{{ user.activeSchool.profileImage }}"
+                style="border-radius: 2px; position: absolute; top: 115px; left: 30px; opacity: 0.8; width: 100px; height: 100px"
+            />
 
             <!-- Student Photo -->
-            <img src="{{student.profileImage}}"
-                 style="border: 1px solid black;
-                             border-radius: 10px;
-                             position: absolute; top: 115px; left: 580px;
-                             width: 100px; height: 100px;"/>
+            <img
+                src="{{ student.profileImage }}"
+                style="
+                    border: 1px solid black;
+                    border-radius: 10px;
+                    position: absolute;
+                    top: 115px;
+                    left: 580px;
+                    width: 100px;
+                    height: 100px;
+                "
+            />
 
             <!-- Reg. No. , Dise Code -->
-            <div class="row no-gutters" style="margin-bottom: 0px !important;">
-                <div class="col-xs-6 d-flex custom-padding">
-                    Dise code : {{user.activeSchool.diseCode}}
-                </div>
+            <div class="row no-gutters" style="margin-bottom: 0px !important">
+                <div class="col-xs-6 d-flex custom-padding">Dise code : {{ user.activeSchool.diseCode }}</div>
                 <div class="col-xs-6 d-flex custom-padding" align="end">
-                    <ng-container *ngIf="user.activeSchool.parentBoard==boardList[0].id;">
-                        School Code :
-                    </ng-container>
-                    <ng-container *ngIf="user.activeSchool.parentBoard==boardList[1].id;">
-                        Affiliation No. :
-                    </ng-container>
-                    {{user.activeSchool.affiliationNumber}}
+                    <ng-container *ngIf="user.activeSchool.parentBoard == boardList[0].id"> School Code : </ng-container>
+                    <ng-container *ngIf="user.activeSchool.parentBoard == boardList[1].id"> Affiliation No. : </ng-container>
+                    {{ user.activeSchool.affiliationNumber }}
                 </div>
             </div>
 
             <!-- School Name -->
-            <div class="row no-gutters" style="margin-top: 25px;">
-                <div class="col-xs-12 " align="center">
-                    <span style="font-size: 45px; font-weight: 800; color: red !important;">
-                        {{user.activeSchool.printName}}
+            <div class="row no-gutters" style="margin-top: 25px">
+                <div class="col-xs-12" align="center">
+                    <span style="font-size: 45px; font-weight: 800; color: red !important">
+                        {{ user.activeSchool.printName }}
                     </span>
                 </div>
             </div>
 
             <!-- Address -->
-            <div class="row no-gutters" style="margin-top: 5px !important; line-height: normal !important;">
+            <div class="row no-gutters" style="margin-top: 5px !important; line-height: normal !important">
                 <div class="col-xs-12" align="center">
-                    <span style="font-size: 22px;">
-                        {{user.activeSchool.address}}
+                    <span style="font-size: 22px">
+                        {{ user.activeSchool.address }}
                     </span>
                 </div>
             </div>
 
             <!-- Annual Report, Class, Session -->
-            <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+            <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important">
                 <div class="col-xs-12" align="center">
-                    <span style="font-size: 35px;">{{examination.name}}</span>
+                    <span style="font-size: 35px">{{ examination.name }}</span>
                 </div>
             </div>
 
             <!-- Session -->
-            <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+            <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important">
                 <div class="col-xs-12" align="center">
-                    <span style="font-size: 25px">{{getSessionName(user.activeSchool.currentSessionDbId)}}</span>
+                    <span style="font-size: 25px">{{ getSessionName(user.activeSchool.currentSessionDbId) }}</span>
                 </div>
             </div>
 
             <!-- Class -->
-            <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important;">
+            <div class="row no-gutters" style="margin-top: 3px !important; line-height: normal !important">
                 <div class="col-xs-12" align="center">
-                    <span style="font-size: 30px;">{{getRomanClassName(student.className)}}</span>
+                    <span style="font-size: 30px">{{ getRomanClassName(student.className) }}</span>
                 </div>
             </div>
 
             <!-- Roll No. , Scholar No. -->
-            <div class="row no-gutters" style="margin-top: 15px !important; margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
-                    Roll No.<span style="float: right">:</span>
+            <div class="row no-gutters" style="margin-top: 15px !important; margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">Roll No.<span style="float: right">:</span></div>
+                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important">
+                    {{ student.rollNumber }}
                 </div>
-                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important;">
-                    {{student.rollNumber}}
-                </div>
-                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important;font-weight: normal !important;">
+                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important; font-weight: normal !important">
                     Scholar No.<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important;">
-                    {{student.scholarNumber}}
+                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important">
+                    {{ student.scholarNumber }}
                 </div>
             </div>
 
             <!-- Student's Name -->
-            <div class="row no-gutters" style="margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
+            <div class="row no-gutters" style="margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">
                     Student's Name<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important; font-size: 25px !important;">
-                    <span *ngIf="student.gender=='Male'">Master</span>
-                    <span *ngIf="student.gender=='Female'">Miss</span>
+                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important; font-size: 25px !important">
+                    <span *ngIf="student.gender == 'Male'">Master</span>
+                    <span *ngIf="student.gender == 'Female'">Miss</span>
                     {{ student.name | titlecase }}
                 </div>
             </div>
 
             <!-- Father's Name , Category -->
-            <div class="row no-gutters" style="margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
+            <div class="row no-gutters" style="margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">
                     Father's Name<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important;">
-                    Mr. {{ student.fathersName | titlecase }}
-                </div>
+                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important">Mr. {{ student.fathersName | titlecase }}</div>
             </div>
 
             <!-- Mother's Name , SSSMID -->
-            <div class="row no-gutters" style="margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
+            <div class="row no-gutters" style="margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">
                     Mother's Name<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important;">
-                    Mrs. {{ student.motherName | titlecase }}
-                </div>
+                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important">Mrs. {{ student.motherName | titlecase }}</div>
             </div>
 
             <!-- Date of Birth -->
-            <div class="row no-gutters" style="margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
+            <div class="row no-gutters" style="margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">
                     Date of birth<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important;">
-                    {{student.dateOfBirth | date: 'dd/MM/yyyy'}} ({{student.dateOfBirth | dateInWords}})
+                <div class="col-xs-9 studentInfo" style="padding-left: 0px !important">
+                    {{ student.dateOfBirth | date: 'dd/MM/yyyy' }} ({{ student.dateOfBirth | dateInWords }})
                 </div>
             </div>
 
             <!-- Aadhar No. , Category -->
-            <div class="row no-gutters" style="margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
-                    Aadhar No.<span style="float: right">:</span>
+            <div class="row no-gutters" style="margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">Aadhar No.<span style="float: right">:</span></div>
+                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important">
+                    {{ student.aadharNum }}
                 </div>
-                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important;">
-                    {{student.aadharNum}}
-                </div>
-                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important;font-weight: normal !important;">
+                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important; font-weight: normal !important">
                     Category<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important;">
-                    {{student.category}}
+                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important">
+                    {{ student.category }}
                 </div>
             </div>
 
             <!-- Child SSMID , Family SSMID -->
-            <div class="row no-gutters" style="margin-bottom: 7px !important;">
-                <div class="col-xs-3 studentInfo" style="font-weight: normal !important;">
+            <div class="row no-gutters" style="margin-bottom: 7px !important">
+                <div class="col-xs-3 studentInfo" style="font-weight: normal !important">
                     Child SSMID<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important;">
-                    {{student.childSSMID}}
+                <div class="col-xs-4 studentInfo" style="padding-left: 0px !important">
+                    {{ student.childSSMID }}
                 </div>
-                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important;font-weight: normal !important;">
+                <div class="col-xs-3 studentInfo" style="padding-left: 0px !important; font-weight: normal !important">
                     Family SSMID<span style="float: right">:</span>
                 </div>
-                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important;">
-                    {{student.familySSMID}}
+                <div class="col-xs-2 studentInfo" style="padding-left: 0px !important">
+                    {{ student.familySSMID }}
                 </div>
             </div>
 
@@ -195,174 +197,188 @@
             </div -->
 
             <!-- Marksheet -->
-            <div class="row no-gutters"
-                 style="margin-top: 25px;"
-                 *ngIf="!isMultipleTest(student);">
+            <div class="row no-gutters" style="margin-top: 25px" *ngIf="!isMultipleTest(student)">
                 <div class="col-xs-12">
-                    <table class="table updownBorder" style="font-size: 16px !important;">
+                    <table class="table updownBorder" style="font-size: 16px !important">
                         <tbody>
-                        <tr>
-                            <td class="upBorder leftBorder downBorder bold" style="padding: 5px" align="left"><b>Subject</b></td>
-                            <td class="upBorder downBorder bold" align="right"><b>Max. Marks</b></td>
-                            <td class="upBorder downBorder bold" align="right"><b>Marks Obt.</b></td>
-                            <td class="upBorder rightBorder downBorder bold" align="center"><b>Grade</b></td>
-                        </tr>
-                        <ng-container *ngFor="let subject of getMainSubjectList(student.subjectList); let i = index;">
                             <tr>
-                                <td class="leftBorder" style="padding: 5px;">{{subject.name}}</td>
-                                <td style="padding: 5px; padding-right: 30px;" align="right">{{getSubjectTotalMaxMarks(subject)}}</td>
-                                <td style="padding: 5px; padding-right: 30px;" align="right">{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
-                                <td class="rightBorder" style="padding: 5px;" align="center">{{getSubjectGrade(subject)}}</td>
+                                <td class="upBorder leftBorder downBorder bold" style="padding: 5px" align="left"><b>Subject</b></td>
+                                <td class="upBorder downBorder bold" align="right"><b>Max. Marks</b></td>
+                                <td class="upBorder downBorder bold" align="right"><b>Marks Obt.</b></td>
+                                <td class="upBorder rightBorder downBorder bold" align="center"><b>Grade</b></td>
                             </tr>
-                        </ng-container>
-                        <tr>
-                            <td class="updownBorder leftBorder bold" style="padding: 5px;">Total</td>
-                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getTotalMaximumMarks(student)}}</td>
-                            <td class="updownBorder bold" style="padding: 5px; padding-right: 30px;" align="right">{{getTotalMarksObtained(student)}}</td>
-                            <td class="updownBorder rightBorder bold" style="padding: 5px;" align="center">{{getOverallGrade(student)}}</td>
-                        </tr>
-                        <tr>
-                            <td class="bold rightBorder leftBorder"
-                                colspan="4"
-                                style="padding: 5px;">
-                                Total Marks In Words: - {{ getTotalMarksObtained(student, true) | amountInWords }}
-                            </td>
-                        </tr>
-                        <ng-container *ngFor="let subject of getNonMainSubjectList(student.subjectList); let i = index;">
+                            <ng-container *ngFor="let subject of getMainSubjectList(student.subjectList); let i = index">
+                                <tr>
+                                    <td class="leftBorder" style="padding: 5px">{{ subject.name }}</td>
+                                    <td style="padding: 5px; padding-right: 30px" align="right">{{ getSubjectTotalMaxMarks(subject) }}</td>
+                                    <td style="padding: 5px; padding-right: 30px" align="right">
+                                        {{ getSubjectTotalMarksObtained(subject) | number: '1.0-2' }}
+                                    </td>
+                                    <td class="rightBorder" style="padding: 5px" align="center">{{ getSubjectGrade(subject) }}</td>
+                                </tr>
+                            </ng-container>
                             <tr>
-                                <td [class.upBorder]="i==0" class="leftBorder" style="padding: 5px;">{{subject.name}}</td>
-                                <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getSubjectTotalMaxMarks(subject)}}</td>
-                                <td [class.upBorder]="i==0" style="padding: 5px; padding-right: 30px;" align="right">{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
-                                <td [class.upBorder]="i==0" class="rightBorder" style="padding: 5px;" align="center">{{getSubjectGrade(subject)}}</td>
+                                <td class="updownBorder leftBorder bold" style="padding: 5px">Total</td>
+                                <td class="updownBorder bold" style="padding: 5px; padding-right: 30px" align="right">
+                                    {{ getTotalMaximumMarks(student) }}
+                                </td>
+                                <td class="updownBorder bold" style="padding: 5px; padding-right: 30px" align="right">
+                                    {{ getTotalMarksObtained(student) }}
+                                </td>
+                                <td class="updownBorder rightBorder bold" style="padding: 5px" align="center">
+                                    {{ getOverallGrade(student) }}
+                                </td>
                             </tr>
-                        </ng-container>
+                            <tr>
+                                <td class="bold rightBorder leftBorder" colspan="4" style="padding: 5px">
+                                    Total Marks In Words: - {{ getTotalMarksObtained(student, true) | amountInWords }}
+                                </td>
+                            </tr>
+                            <ng-container *ngFor="let subject of getNonMainSubjectList(student.subjectList); let i = index">
+                                <tr>
+                                    <td [class.upBorder]="i == 0" class="leftBorder" style="padding: 5px">{{ subject.name }}</td>
+                                    <td [class.upBorder]="i == 0" style="padding: 5px; padding-right: 30px" align="right">
+                                        {{ getSubjectTotalMaxMarks(subject) }}
+                                    </td>
+                                    <td [class.upBorder]="i == 0" style="padding: 5px; padding-right: 30px" align="right">
+                                        {{ getSubjectTotalMarksObtained(subject) | number: '1.0-2' }}
+                                    </td>
+                                    <td [class.upBorder]="i == 0" class="rightBorder" style="padding: 5px" align="center">
+                                        {{ getSubjectGrade(subject) }}
+                                    </td>
+                                </tr>
+                            </ng-container>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="row no-gutters" *ngIf="isMultipleTest(student);">
+            <div class="row no-gutters" *ngIf="isMultipleTest(student)">
                 <div class="col-xs-12">
-                    <table class="table updownBorder" style="font-size: 16px !important;">
+                    <table class="table updownBorder" style="font-size: 16px !important">
                         <tbody>
-                        <tr>
-                            <td class="upBorder downBorder leftBorder rightBorderLight bold"
-                                style="padding: 5px"
-                                rowspan="2"
-                                align="center"><b>Subject</b></td>
+                            <tr>
+                                <td
+                                    class="upBorder downBorder leftBorder rightBorderLight bold"
+                                    style="padding: 5px"
+                                    rowspan="2"
+                                    align="center"
+                                >
+                                    <b>Subject</b>
+                                </td>
 
-                            <td class="upBorder rightBorderLight bold" align="center" colspan="3"><b>Max. Marks</b></td>
+                                <td class="upBorder rightBorderLight bold" align="center" colspan="3"><b>Max. Marks</b></td>
 
-                            <td class="upBorder rightBorderLight bold" align="center" colspan="3"><b>Marks Obt.</b></td>
+                                <td class="upBorder rightBorderLight bold" align="center" colspan="3"><b>Marks Obt.</b></td>
 
-                            <td class="upBorder downBorder rightBorder bold"
-                                rowspan="2"
-                                align="center"><b>Grade</b></td>
-                        </tr>
-                        <tr *ngIf="isOralIncluded(student)">
-                            <!-- td class="leftBorder downBorder rightBorderLight bold" style="padding: 5px" align="left"></td -->
-
-                            <td class="downBorder bold" align="center"><b>Oral</b></td>
-                            <td class="downBorder bold" align="center"><b>Written</b></td>
-                            <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
-
-                            <td class="downBorder bold" align="center"><b>Oral</b></td>
-                            <td class="downBorder bold" align="center"><b>Written</b></td>
-                            <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
-
-                            <!-- td class="rightBorder downBorder bold" align="center"></td -->
-                        </tr>
-                        <tr *ngIf="isPracticalIncluded(student)">
-                            <!-- td class="leftBorder downBorder rightBorderLight bold" style="padding: 5px" align="left"></td -->
-
-                            <td class="downBorder bold" align="center"><b>Practical</b></td>
-                            <td class="downBorder bold" align="center"><b>Theory</b></td>
-                            <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
-
-                            <td class="downBorder bold" align="center"><b>Practical</b></td>
-                            <td class="downBorder bold" align="center"><b>Theory</b></td>
-                            <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
-
-                            <!-- td class="rightBorder downBorder bold" align="center"></td -->
-                        </tr>
-                        <ng-container *ngFor="let subject of getMainSubjectList(student.subjectList); let i = index;">
+                                <td class="upBorder downBorder rightBorder bold" rowspan="2" align="center"><b>Grade</b></td>
+                            </tr>
                             <tr *ngIf="isOralIncluded(student)">
+                                <!-- td class="leftBorder downBorder rightBorderLight bold" style="padding: 5px" align="left"></td -->
 
-                                <td class="leftBorder rightBorderLight" style="padding: 5px;">{{subject.name}}</td>
+                                <td class="downBorder bold" align="center"><b>Oral</b></td>
+                                <td class="downBorder bold" align="center"><b>Written</b></td>
+                                <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
 
-                                <td style="padding: 5px;" align="center">{{getSubjectOralMaxMarks(subject)}}</td>
-                                <td style="padding: 5px;" align="center">{{getSubjectWrittenMaxMarks(subject)}}</td>
-                                <td style="padding: 5px;" class="rightBorderLight" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
+                                <td class="downBorder bold" align="center"><b>Oral</b></td>
+                                <td class="downBorder bold" align="center"><b>Written</b></td>
+                                <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
 
-                                <td style="padding: 5px;" align="center">{{getSubjectOralMarksObtained(subject)}}</td>
-                                <td style="padding: 5px;" align="center">{{getSubjectWrittenMarksObtained(subject)}}</td>
-                                <td style="padding: 5px;" class="rightBorderLight" align="center"  >{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
-
-                                <td class="rightBorder" style="padding: 5px;" align="center">{{getSubjectGrade(subject)}}</td>
+                                <!-- td class="rightBorder downBorder bold" align="center"></td -->
                             </tr>
                             <tr *ngIf="isPracticalIncluded(student)">
+                                <!-- td class="leftBorder downBorder rightBorderLight bold" style="padding: 5px" align="left"></td -->
 
-                                <td class="leftBorder rightBorderLight" style="padding: 5px;">{{subject.name}}</td>
+                                <td class="downBorder bold" align="center"><b>Practical</b></td>
+                                <td class="downBorder bold" align="center"><b>Theory</b></td>
+                                <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
 
-                                <td style="padding: 5px;" align="center">{{getSubjectPracticalMaxMarks(subject)}}</td>
-                                <td style="padding: 5px;" align="center">{{getSubjectTheoryMaxMarks(subject)}}</td>
-                                <td style="padding: 5px;" class="rightBorderLight" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
+                                <td class="downBorder bold" align="center"><b>Practical</b></td>
+                                <td class="downBorder bold" align="center"><b>Theory</b></td>
+                                <td class="downBorder rightBorderLight bold" align="center"><b>Total</b></td>
 
-                                <td style="padding: 5px;" align="center">{{getSubjectPracticalMarksObtained(subject)}}</td>
-                                <td style="padding: 5px;" align="center">{{getSubjectTheoryMarksObtained(subject)}}</td>
-                                <td style="padding: 5px;" class="rightBorderLight" align="center">{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
-
-                                <td class="rightBorder" style="padding: 5px;" align="center">{{getSubjectGrade(subject)}}</td>
+                                <!-- td class="rightBorder downBorder bold" align="center"></td -->
                             </tr>
-                        </ng-container>
-                        <tr>
-                            <td class="updownBorder leftBorder rightBorderLight bold" style="padding: 5px;">Total</td>
+                            <ng-container *ngFor="let subject of getMainSubjectList(student.subjectList); let i = index">
+                                <tr *ngIf="isOralIncluded(student)">
+                                    <td class="leftBorder rightBorderLight" style="padding: 5px">{{ subject.name }}</td>
 
-                            <td class="updownBorder bold" align="center"></td>
-                            <td class="updownBorder bold" align="center"></td>
-                            <td class="updownBorder rightBorderLight bold" align="center">{{getTotalMaximumMarks(student)}}</td>
+                                    <td style="padding: 5px" align="center">{{ getSubjectOralMaxMarks(subject) }}</td>
+                                    <td style="padding: 5px" align="center">{{ getSubjectWrittenMaxMarks(subject) }}</td>
+                                    <td style="padding: 5px" class="rightBorderLight" align="center">
+                                        {{ getSubjectTotalMaxMarks(subject) }}
+                                    </td>
 
-                            <td class="updownBorder bold" align="right"></td>
-                            <td class="updownBorder bold" align="right"></td>
-                            <td class="updownBorder rightBorderLight bold" align="center">{{getTotalMarksObtained(student)}}</td>
+                                    <td style="padding: 5px" align="center">{{ getSubjectOralMarksObtained(subject) }}</td>
+                                    <td style="padding: 5px" align="center">{{ getSubjectWrittenMarksObtained(subject) }}</td>
+                                    <td style="padding: 5px" class="rightBorderLight" align="center">
+                                        {{ getSubjectTotalMarksObtained(subject) | number: '1.0-2' }}
+                                    </td>
 
-                            <td class="updownBorder rightBorder bold" style="padding: 5px;" align="center">{{getOverallGrade(student)}}</td>
-                        </tr>
-                        <tr>
-                            <td class="bold rightBorder leftBorder"
-                                colspan="8"
-                                style="padding: 5px;">
-                                Total Marks In Words: - {{ getTotalMarksObtained(student, true) | amountInWords }}
-                            </td>
-                        </tr>
-                        <ng-container *ngFor="let subject of getNonMainSubjectList(student.subjectList); let i = index;">
+                                    <td class="rightBorder" style="padding: 5px" align="center">{{ getSubjectGrade(subject) }}</td>
+                                </tr>
+                                <tr *ngIf="isPracticalIncluded(student)">
+                                    <td class="leftBorder rightBorderLight" style="padding: 5px">{{ subject.name }}</td>
+
+                                    <td style="padding: 5px" align="center">{{ getSubjectPracticalMaxMarks(subject) }}</td>
+                                    <td style="padding: 5px" align="center">{{ getSubjectTheoryMaxMarks(subject) }}</td>
+                                    <td style="padding: 5px" class="rightBorderLight" align="center">
+                                        {{ getSubjectTotalMaxMarks(subject) }}
+                                    </td>
+
+                                    <td style="padding: 5px" align="center">{{ getSubjectPracticalMarksObtained(subject) }}</td>
+                                    <td style="padding: 5px" align="center">{{ getSubjectTheoryMarksObtained(subject) }}</td>
+                                    <td style="padding: 5px" class="rightBorderLight" align="center">
+                                        {{ getSubjectTotalMarksObtained(subject) | number: '1.0-2' }}
+                                    </td>
+
+                                    <td class="rightBorder" style="padding: 5px" align="center">{{ getSubjectGrade(subject) }}</td>
+                                </tr>
+                            </ng-container>
                             <tr>
-                                <td [class.upBorder]="i==0" class="leftBorder" style="padding: 5px;">{{subject.name}}</td>
-                                <td [class.upBorder]="i==0" align="center"></td>
-                                <td [class.upBorder]="i==0" align="center"></td>
-                                <td [class.upBorder]="i==0" align="center">{{getSubjectTotalMaxMarks(subject)}}</td>
-                                <td [class.upBorder]="i==0" align="center"></td>
-                                <td [class.upBorder]="i==0" align="center"></td>
-                                <td [class.upBorder]="i==0" align="center">{{getSubjectTotalMarksObtained(subject) | number: '1.0-2'}}</td>
-                                <td [class.upBorder]="i==0" align="center">{{getSubjectGrade(subject)}}</td>
+                                <td class="updownBorder leftBorder rightBorderLight bold" style="padding: 5px">Total</td>
+
+                                <td class="updownBorder bold" align="center"></td>
+                                <td class="updownBorder bold" align="center"></td>
+                                <td class="updownBorder rightBorderLight bold" align="center">{{ getTotalMaximumMarks(student) }}</td>
+
+                                <td class="updownBorder bold" align="right"></td>
+                                <td class="updownBorder bold" align="right"></td>
+                                <td class="updownBorder rightBorderLight bold" align="center">{{ getTotalMarksObtained(student) }}</td>
+
+                                <td class="updownBorder rightBorder bold" style="padding: 5px" align="center">
+                                    {{ getOverallGrade(student) }}
+                                </td>
                             </tr>
-                        </ng-container>
+                            <tr>
+                                <td class="bold rightBorder leftBorder" colspan="8" style="padding: 5px">
+                                    Total Marks In Words: - {{ getTotalMarksObtained(student, true) | amountInWords }}
+                                </td>
+                            </tr>
+                            <ng-container *ngFor="let subject of getNonMainSubjectList(student.subjectList); let i = index">
+                                <tr>
+                                    <td [class.upBorder]="i == 0" class="leftBorder" style="padding: 5px">{{ subject.name }}</td>
+                                    <td [class.upBorder]="i == 0" align="center"></td>
+                                    <td [class.upBorder]="i == 0" align="center"></td>
+                                    <td [class.upBorder]="i == 0" align="center">{{ getSubjectTotalMaxMarks(subject) }}</td>
+                                    <td [class.upBorder]="i == 0" align="center"></td>
+                                    <td [class.upBorder]="i == 0" align="center"></td>
+                                    <td [class.upBorder]="i == 0" align="center">
+                                        {{ getSubjectTotalMarksObtained(subject) | number: '1.0-2' }}
+                                    </td>
+                                    <td [class.upBorder]="i == 0" align="center">{{ getSubjectGrade(subject) }}</td>
+                                </tr>
+                            </ng-container>
                         </tbody>
                     </table>
                 </div>
             </div>
 
             <!-- Percentage, Grade, Attendance, Division -->
-            <div class="row no-gutters" style="font-size: 16px !important;">
-                <div class="col-xs-5 d-flex custom-padding">
-                    Remark:
-                </div>
-                <div class="col-xs-3 d-flex custom-padding">
-
-                </div>
-                <div class="col-xs-4 custom-padding"  align="end">
-                    Percentage - {{getPercentage(student) | number: '1.0-2'}}%
-                </div>
+            <div class="row no-gutters" style="font-size: 16px !important">
+                <div class="col-xs-5 d-flex custom-padding">Remark:</div>
+                <div class="col-xs-3 d-flex custom-padding"></div>
+                <div class="col-xs-4 custom-padding" align="end">Percentage - {{ getPercentage(student) | number: '1.0-2' }}%</div>
             </div>
 
             <!-- img src="{{user.activeSchool.principalSignatureImage}}"
@@ -378,20 +394,10 @@
                  z-index: 1;"/ -->
 
             <!-- Class Teacher's Sign. , Headmaster's Sign. -->
-            <div class="row no-gutters"
-                 style="position: absolute; bottom: 10px; width: 100%;">
-                <div class="col-xs-6 custom-padding" style="padding-left: 30px">
-                    Class Teacher's Signature
-                </div>
-                <div class="col-xs-6 custom-padding" style="padding-right: 40px" align="end">
-                    Principal's Signature
-                </div>
+            <div class="row no-gutters" style="position: absolute; bottom: 10px; width: 100%">
+                <div class="col-xs-6 custom-padding" style="padding-left: 30px">Class Teacher's Signature</div>
+                <div class="col-xs-6 custom-padding" style="padding-right: 40px" align="end">Principal's Signature</div>
             </div>
-
         </div>
-
     </ng-container>
-
 </ng-container>
-
-

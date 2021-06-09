@@ -1,6 +1,4 @@
-
 export class StudentSection {
-
     id: number = null;
     parentStudent: number = null;
     parentSession: number = null;
@@ -8,5 +6,4 @@ export class StudentSection {
     parentDivision: number = null;
     rollNumber: number = null;
     attendance: number = null;
-
 }

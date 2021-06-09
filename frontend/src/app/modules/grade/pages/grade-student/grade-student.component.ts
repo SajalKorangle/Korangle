@@ -1,75 +1,78 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {DataStorage} from '../../../../classes/data-storage';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DataStorage } from '../../../../classes/data-storage';
 import { GradeStudentServiceAdapter } from './grade-student.service.adapter';
 import { GradeService } from '../../../../services/modules/grade/grade.service';
-import {AttendanceService} from '../../../../services/modules/attendance/attendance.service';
-import {ClassService} from '../../../../services/modules/class/class.service';
-import {StudentService} from '../../../../services/modules/student/student.service';
-import {ExaminationService} from '@services/modules/examination/examination.service';
+import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
+import { ExaminationService } from '@services/modules/examination/examination.service';
 
 @Component({
-  selector: 'app-grade-student',
-  templateUrl: './grade-student.component.html',
-  styleUrls: ['./grade-student.component.css'],
-  providers: [ GradeService, ClassService, AttendanceService, StudentService, ExaminationService ]
+    selector: 'app-grade-student',
+    templateUrl: './grade-student.component.html',
+    styleUrls: ['./grade-student.component.css'],
+    providers: [GradeService, ClassService, AttendanceService, StudentService, ExaminationService],
 })
 export class GradeStudentComponent implements OnInit {
+    user;
 
-  user;
+    isLoading = false;
+    isInitialLoading = false;
+    showTestDetails = false;
 
-  isLoading = false;
-  isInitialLoading = false;
-  showTestDetails = false;
+    serviceAdapter: GradeStudentServiceAdapter;
 
-  serviceAdapter: GradeStudentServiceAdapter;
+    classList = [];
+    sectionList = [];
 
-  classList = [];
-  sectionList = [];
+    selectedClassSection = null;
+    filteredClassSectionList = [];
+    attendancePermissionList = [];
 
-  selectedClassSection = null;
-  filteredClassSectionList = [];
-  attendancePermissionList = [];
+    selectedExamination = null;
+    examinationList = [];
 
-  selectedExamination = null;
-  examinationList = [];
+    selectedGrade = null;
+    gradeList = [];
+    studentList = [];
 
-  selectedGrade = null;
-  gradeList = [];
-  studentList = [];
+    constructor(
+        public gradeService: GradeService,
+        public examinationService: ExaminationService,
+        public studentService: StudentService,
+        public attendanceService: AttendanceService,
+        public classService: ClassService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
-  constructor(public gradeService: GradeService,
-              public examinationService: ExaminationService,
-              public studentService: StudentService,
-              public attendanceService: AttendanceService,
-              public classService: ClassService,
-              private cdRef: ChangeDetectorRef) { }
+    ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+        this.serviceAdapter = new GradeStudentServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+    }
 
-  ngOnInit() {
-    this.user = DataStorage.getInstance().getUser();
-    this.serviceAdapter = new GradeStudentServiceAdapter();
-    this.serviceAdapter.initializeAdapter(this);
-    this.serviceAdapter.initializeData();
-  }
+    detectChanges(): void {
+        this.showTestDetails = false;
+        this.cdRef.detectChanges();
+    }
 
-  detectChanges(): void {
-    this.showTestDetails = false;
-    this.cdRef.detectChanges();
-  }
+    getFilteredStudentList(): any {
+        return this.studentList.filter((student) => {
+            return (
+                student.studentSection.parentClass === this.selectedClassSection.class.id &&
+                student.studentSection.parentDivision === this.selectedClassSection.section.id
+            );
+        });
+    }
 
-  getFilteredStudentList(): any {
-    return this.studentList.filter(student => {
-      return student.studentSection.parentClass === this.selectedClassSection.class.id
-          && student.studentSection.parentDivision === this.selectedClassSection.section.id;
-    });
-  }
-
-  /*selectClass(classs: any){
+    /*selectClass(classs: any){
     this.selectedClass = classs;
     this.showTestDetails = false;
     this.selectedSection = this.getSectionList(this.selectedClass)[0].id;
   }*/
 
-  /*getFilteredClassList() {
+    /*getFilteredClassList() {
     if(this.attendancePermissionList.length > 0){
       return this.classList.filter(classs =>{
         if(this.attendancePermissionList.find(attendencePermission => {
@@ -103,5 +106,4 @@ export class GradeStudentComponent implements OnInit {
       return [];
     }
   }*/
-
 }

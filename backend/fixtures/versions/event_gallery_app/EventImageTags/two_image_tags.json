@@ -1,0 +1,4 @@
+[
+    {"model": "event_gallery_app.eventimagetags", "pk": 1, "fields": {"parentEventImage": 1, "parentEventTag": 1}},
+    {"model": "event_gallery_app.eventimagetags", "pk": 2, "fields": {"parentEventImage": 2, "parentEventTag": 2}}
+]

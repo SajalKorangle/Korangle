@@ -1,28 +1,26 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import { TotalDiscountServiceAdapter } from "./total-discount.service.adapter";
-import { FeeService } from "../../../../services/modules/fees/fee.service";
-import {DiscountColumnFilter, INSTALLMENT_LIST} from "../../classes/constants";
-import {EmployeeService} from "../../../../services/modules/employee/employee.service";
-import {StudentService} from "../../../../services/modules/student/student.service";
-import {ClassService} from "../../../../services/modules/class/class.service";
-import {CommonFunctions} from "../../../../classes/common-functions";
-import {DataStorage} from "../../../../classes/data-storage";
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { TotalDiscountServiceAdapter } from './total-discount.service.adapter';
+import { FeeService } from '../../../../services/modules/fees/fee.service';
+import { DiscountColumnFilter, INSTALLMENT_LIST } from '../../classes/constants';
+import { EmployeeService } from '../../../../services/modules/employee/employee.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { CommonFunctions } from '../../../../classes/common-functions';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'total-discount',
     templateUrl: './total-discount.component.html',
     styleUrls: ['./total-discount.component.css'],
-    providers: [ FeeService, EmployeeService, StudentService, ClassService ],
+    providers: [FeeService, EmployeeService, StudentService, ClassService],
 })
-
 export class TotalDiscountComponent implements OnInit {
-
     // Constants
     discountColumnFilter = new DiscountColumnFilter();
     nullValue = null;
     installmentList = INSTALLMENT_LIST;
 
-     user;
+    user;
 
     startDate: any;
     endDate: any;
@@ -46,11 +44,13 @@ export class TotalDiscountComponent implements OnInit {
     isInitialLoading = false;
     isLoading = false;
 
-    constructor(public feeService: FeeService,
-                public employeeService: EmployeeService,
-                public studentService: StudentService,
-                public classService: ClassService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(
+        public feeService: FeeService,
+        public employeeService: EmployeeService,
+        public studentService: StudentService,
+        public classService: ClassService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -62,11 +62,10 @@ export class TotalDiscountComponent implements OnInit {
         this.discountColumnFilter.scholarNumber = false;
         this.discountColumnFilter.discountNumber = false;
 
-        if(CommonFunctions.getInstance().isMobileMenu()) {
+        if (CommonFunctions.getInstance().isMobileMenu()) {
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
-
     }
 
     detectChanges(): void {
@@ -78,11 +77,11 @@ export class TotalDiscountComponent implements OnInit {
     }
 
     getFilteredEmployeeList(): any {
-        let tempEmployeeIdList = this.discountList.map(a => a.parentEmployee);
+        let tempEmployeeIdList = this.discountList.map((a) => a.parentEmployee);
         tempEmployeeIdList = tempEmployeeIdList.filter((item, index) => {
             return tempEmployeeIdList.indexOf(item) == index;
         });
-        return this.employeeList.filter(employee => {
+        return this.employeeList.filter((employee) => {
             return tempEmployeeIdList.includes(employee.id);
         });
     }
@@ -90,7 +89,7 @@ export class TotalDiscountComponent implements OnInit {
     getFilteredDiscountList(): any {
         let tempList = this.discountList;
         if (this.selectedEmployee) {
-            tempList = tempList.filter(feeReceipt => {
+            tempList = tempList.filter((feeReceipt) => {
                 return feeReceipt.parentEmployee == this.selectedEmployee.id;
             });
         }
@@ -104,15 +103,21 @@ export class TotalDiscountComponent implements OnInit {
     }
 
     getDiscountTotalAmount(discount: any): number {
-        return this.subDiscountList.filter(subDiscount => {
-            return subDiscount.parentDiscount == discount.id;
-        }).reduce((totalSubDiscount, subDiscount) => {
-            return totalSubDiscount + this.installmentList.reduce((totalInstallment, installment) => {
-                return totalInstallment
-                    + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
-                    + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
+        return this.subDiscountList
+            .filter((subDiscount) => {
+                return subDiscount.parentDiscount == discount.id;
+            })
+            .reduce((totalSubDiscount, subDiscount) => {
+                return (
+                    totalSubDiscount +
+                    this.installmentList.reduce((totalInstallment, installment) => {
+                        return (
+                            totalInstallment +
+                            (subDiscount[installment + 'Amount'] ? subDiscount[installment + 'Amount'] : 0) +
+                            (subDiscount[installment + 'LateFee'] ? subDiscount[installment + 'LateFee'] : 0)
+                        );
+                    }, 0)
+                );
             }, 0);
-        }, 0);
     }
-
 }

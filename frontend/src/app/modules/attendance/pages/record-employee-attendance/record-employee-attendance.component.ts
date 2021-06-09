@@ -1,27 +1,22 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { AttendanceOldService } from '../../../../services/modules/attendance/attendance-old.service';
 
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
-import {ExcelService} from "../../../../excel/excel-service";
-import {DataStorage} from "../../../../classes/data-storage";
+import { ExcelService } from '../../../../excel/excel-service';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'record-employee-attendance',
-  templateUrl: './record-employee-attendance.component.html',
-  styleUrls: ['./record-employee-attendance.component.css'],
-    providers: [
-        AttendanceOldService,
-        EmployeeOldService,
-    ],
+    selector: 'record-employee-attendance',
+    templateUrl: './record-employee-attendance.component.html',
+    styleUrls: ['./record-employee-attendance.component.css'],
+    providers: [AttendanceOldService, EmployeeOldService],
 })
-
 export class RecordEmployeeAttendanceComponent implements OnInit {
-
     user;
 
     employeeList: any;
@@ -41,11 +36,12 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
-    constructor (private attendanceService: AttendanceOldService,
-                 private employeeService: EmployeeOldService,
-                 private excelService: ExcelService,
-                 private printService: PrintService) { }
-
+    constructor(
+        private attendanceService: AttendanceOldService,
+        private employeeService: EmployeeOldService,
+        private excelService: ExcelService,
+        private printService: PrintService
+    ) {}
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -57,35 +53,33 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
         this.isInitialLoading = true;
 
-        Promise.all([
-            this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt),
-        ]).then(value => {
-            this.isInitialLoading = false;
-            this.initializeEmployeeList(value[0]);
-        }, error => {
-            this.isInitialLoading = false;
-        });
-
+        Promise.all([this.employeeService.getEmployeeMiniProfileList(request_employee_data, this.user.jwt)]).then(
+            (value) => {
+                this.isInitialLoading = false;
+                this.initializeEmployeeList(value[0]);
+            },
+            (error) => {
+                this.isInitialLoading = false;
+            }
+        );
     }
 
     initializeEmployeeList(employeeList: any): void {
-        this.employeeList = employeeList.filter(employee => {
-            return employee.dateOfLeaving===null;
+        this.employeeList = employeeList.filter((employee) => {
+            return employee.dateOfLeaving === null;
         });
     }
-
 
     // Server Handling - 1
     getEmployeeIdList(): any {
         let employeeIdList = [];
-        this.employeeList.forEach(employee => {
+        this.employeeList.forEach((employee) => {
             employeeIdList.push(employee.id);
         });
         return employeeIdList;
     }
 
     getEmployeesAttendanceStatusList(): void {
-
         let data = {
             employeeIdList: this.getEmployeeIdList(),
             startDate: this.startDate,
@@ -95,18 +89,20 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         this.isLoading = true;
         this.showEmployeeList = true;
 
-        this.attendanceService.getEmployeeAttendanceList(data, this.user.jwt).then(attendanceList => {
-            this.isLoading = false;
-            this.populateEmployeeAttendanceList(attendanceList);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.attendanceService.getEmployeeAttendanceList(data, this.user.jwt).then(
+            (attendanceList) => {
+                this.isLoading = false;
+                this.populateEmployeeAttendanceList(attendanceList);
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     populateEmployeeAttendanceList(attendanceList: any): void {
         this.employeeAttendanceStatusList = [];
-        this.employeeList.forEach(employee => {
+        this.employeeList.forEach((employee) => {
             let tempItem = {
                 id: employee.id,
                 name: employee.name,
@@ -114,7 +110,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
                 attendanceStatusList: [],
             };
             let dateList = this.getDateList();
-            dateList.forEach(date => {
+            dateList.forEach((date) => {
                 tempItem.attendanceStatusList.push(this.getEmployeeAttendanceStatusObject(employee, date, attendanceList));
             });
             this.employeeAttendanceStatusList.push(tempItem);
@@ -126,9 +122,11 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
             date: date,
             status: null,
         };
-        attendanceStatusList.every(employeeAttendanceStatus => {
-            if (employeeAttendanceStatus.parentEmployee === employee.id
-                && (new Date(employeeAttendanceStatus.dateOfAttendance)).getTime() === date.getTime()) {
+        attendanceStatusList.every((employeeAttendanceStatus) => {
+            if (
+                employeeAttendanceStatus.parentEmployee === employee.id &&
+                new Date(employeeAttendanceStatus.dateOfAttendance).getTime() === date.getTime()
+            ) {
                 temp.status = employeeAttendanceStatus.status;
                 return false;
             }
@@ -137,12 +135,11 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         return temp;
     }
 
-
     // Server Handling - 2
     prepareEmployeeAttendanceStatusListData(): any {
         let employeeAttendanceStatusListData = [];
-        this.employeeAttendanceStatusList.forEach(employee => {
-            employee.attendanceStatusList.forEach(attendanceStatus => {
+        this.employeeAttendanceStatusList.forEach((employee) => {
+            employee.attendanceStatusList.forEach((attendanceStatus) => {
                 if (attendanceStatus.status !== null) {
                     let tempData = {
                         parentEmployee: employee.id,
@@ -157,7 +154,6 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     }
 
     updateEmployeeAttendanceList(): void {
-
         let data = this.prepareEmployeeAttendanceStatusListData();
 
         if (data.length === 0) {
@@ -166,15 +162,16 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.attendanceService.recordEmployeeAttendance(data, this.user.jwt).then(response => {
-            this.isLoading = false;
-            alert(response);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.attendanceService.recordEmployeeAttendance(data, this.user.jwt).then(
+            (response) => {
+                this.isLoading = false;
+                alert(response);
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
-
 
     // For Printing
     printEmployeeAttendanceList(): void {
@@ -184,19 +181,14 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
             endDate: this.endDate,
             by: this.by,
         };
-        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_ATTENDANCE, {user: this.user, value});
+        this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_ATTENDANCE, { user: this.user, value });
     }
 
     // For Downloading
     downloadList(): void {
-
         let template: any;
 
-        template = [
-
-            this.getHeaderValues(),
-
-        ];
+        template = [this.getHeaderValues()];
 
         this.employeeAttendanceStatusList.forEach((employee, index) => {
             template.push(this.getEmployeeDisplayInfo(employee, index));
@@ -214,7 +206,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
             headerValues.push('Attendance');
         } else {
             headerValues.push('Abs./Total');
-            this.getDateList().forEach(date => {
+            this.getDateList().forEach((date) => {
                 headerValues.push(date.getDate());
             });
         }
@@ -224,24 +216,23 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     getEmployeeDisplayInfo(employee: any, index: any): any {
         let employeeDisplay = [];
-        employeeDisplay.push(index+1);
+        employeeDisplay.push(index + 1);
         employeeDisplay.push(employee.name);
         employeeDisplay.push(employee.employeeNumber);
         if (this.by === 'month') {
             employeeDisplay.push(this.getEmployeeRecord(employee));
         }
-        employee.attendanceStatusList.forEach(attendanceStatus => {
+        employee.attendanceStatusList.forEach((attendanceStatus) => {
             employeeDisplay.push(this.getButtonString(attendanceStatus.status));
         });
 
         return employeeDisplay;
     }
 
-
     // Called from Html files
     declareAllPresent(): void {
-        this.employeeAttendanceStatusList.forEach(employee => {
-            employee.attendanceStatusList.forEach(attendanceStatus => {
+        this.employeeAttendanceStatusList.forEach((employee) => {
+            employee.attendanceStatusList.forEach((attendanceStatus) => {
                 if (attendanceStatus.status !== ATTENDANCE_STATUS_LIST[2]) {
                     attendanceStatus.status = ATTENDANCE_STATUS_LIST[0];
                 }
@@ -250,7 +241,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     }
 
     changeEmployeeAttendanceStatus(temp: any): void {
-        if(!temp.status) {
+        if (!temp.status) {
             temp.status = ATTENDANCE_STATUS_LIST[0];
             return;
         }
@@ -261,9 +252,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
                 break;
             }
         }
-        let nextCounter = (counter+1)%ATTENDANCE_STATUS_LIST.length;
+        let nextCounter = (counter + 1) % ATTENDANCE_STATUS_LIST.length;
         if (nextCounter === 2) {
-            nextCounter = (nextCounter+1)%ATTENDANCE_STATUS_LIST.length;
+            nextCounter = (nextCounter + 1) % ATTENDANCE_STATUS_LIST.length;
         }
         temp.status = ATTENDANCE_STATUS_LIST[nextCounter];
     }
@@ -290,7 +281,6 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     }
 
     formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -315,7 +305,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         let tempDate = new Date(this.startDate);
         let lastDate = new Date(this.endDate);
 
-        while(tempDate <= lastDate) {
+        while (tempDate <= lastDate) {
             dateList.push(new Date(tempDate));
             tempDate.setDate(tempDate.getDate() + 1);
         }
@@ -324,19 +314,19 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     }
 
     getButtonClass(status: any): any {
-        let classs = "btn";
+        let classs = 'btn';
         switch (status) {
             case ATTENDANCE_STATUS_LIST[3]:
-                classs += " btn-info";
+                classs += ' btn-info';
                 break;
             case ATTENDANCE_STATUS_LIST[2]:
-                classs += " btn-warning";
+                classs += ' btn-warning';
                 break;
             case ATTENDANCE_STATUS_LIST[1]:
-                classs += " btn-danger";
+                classs += ' btn-danger';
                 break;
             case ATTENDANCE_STATUS_LIST[0]:
-                classs += " btn-success";
+                classs += ' btn-success';
                 break;
         }
         return classs;
@@ -345,7 +335,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     getButtonString(status: any): any {
         let result = 'N';
         if (status) {
-            result = status.substring(0,1);
+            result = status.substring(0, 1);
         }
         if (status === ATTENDANCE_STATUS_LIST[3]) {
             result = result.toLowerCase();
@@ -355,17 +345,17 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     getStatusNumber(status: any): any {
         let count = 0;
-        if(status === undefined) {
-            this.employeeAttendanceStatusList.forEach(employee => {
-                employee.attendanceStatusList.forEach(attendanceStatus => {
+        if (status === undefined) {
+            this.employeeAttendanceStatusList.forEach((employee) => {
+                employee.attendanceStatusList.forEach((attendanceStatus) => {
                     if (attendanceStatus.status === null) {
                         count = count + 1;
                     }
                 });
             });
         } else {
-            this.employeeAttendanceStatusList.forEach(employee => {
-                employee.attendanceStatusList.forEach(attendanceStatus => {
+            this.employeeAttendanceStatusList.forEach((employee) => {
+                employee.attendanceStatusList.forEach((attendanceStatus) => {
                     if (attendanceStatus.status === status) {
                         count = count + 1;
                     }
@@ -376,8 +366,9 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
     }
 
     getEmployeeRecord(employee: any): any {
-        let absentCount = 0, totalCount = 0;
-        employee.attendanceStatusList.forEach(attendanceStatus => {
+        let absentCount = 0,
+            totalCount = 0;
+        employee.attendanceStatusList.forEach((attendanceStatus) => {
             if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
                 totalCount += 1;
             } else if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
@@ -393,10 +384,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     getMatTooltip(employee: any, attendance: any): any {
         let dateStr = this.formatDate(attendance.date.toString(), '');
-        dateStr = dateStr.substr(dateStr.length-2,2);
-        return employee.name
-            + ', '
-            + dateStr;
+        dateStr = dateStr.substr(dateStr.length - 2, 2);
+        return employee.name + ', ' + dateStr;
     }
-
 }

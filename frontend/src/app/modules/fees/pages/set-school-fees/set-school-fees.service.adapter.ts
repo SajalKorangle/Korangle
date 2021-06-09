@@ -1,13 +1,13 @@
 
 import { SetSchoolFeesComponent } from './set-school-fees.component';
-import {CommonFunctions} from "../../../../classes/common-functions";
-import {SchoolFeeRule} from "../../../../services/modules/fees/models/school-fee-rule";
+import { CommonFunctions } from "../../../../classes/common-functions";
+import { SchoolFeeRule } from "../../../../services/modules/fees/models/school-fee-rule";
 
 export class SetSchoolFeesServiceAdapter {
 
     vm: SetSchoolFeesComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -69,7 +69,7 @@ export class SetSchoolFeesServiceAdapter {
             'fields__korangle': 'id,parentStudentFee',
         };
 
-        let lock_fees_list = {
+        const fee_settings_request = {
             'parentSchool': schoolId,
             'parentSession': sessionId,
         };
@@ -77,18 +77,18 @@ export class SetSchoolFeesServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
-            this.vm.classService.getObjectList(this.vm.classService.classs,{}),
-            this.vm.classService.getObjectList(this.vm.classService.division,{}),
-            this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
-            this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
-            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.student_fees, request_student_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, request_sub_discount_data),
-            this.vm.feeService.getObjectList(this.vm.feeService.lock_fees, lock_fees_list),
+            this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data), // 0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),   // 2
+            this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt), // 3
+            this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),  // 4
+            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),  // 5
+            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),    // 6
+            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),  // 7
+            this.vm.feeService.getList(this.vm.feeService.student_fees, request_student_fee_data),  // 8
+            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),  // 9
+            this.vm.feeService.getList(this.vm.feeService.sub_discounts, request_sub_discount_data),    // 10
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),    // 11
         ]).then(value => {
 
             this.populateFeeTypeList(value[0]);
@@ -99,8 +99,8 @@ export class SetSchoolFeesServiceAdapter {
                 return student.parentTransferCertificate == null;
             });
 
-            this.vm.schoolFeeRuleList = value[5].sort( (a,b) => {
-                return a.ruleNumber-b.ruleNumber;
+            this.vm.schoolFeeRuleList = value[5].sort((a, b) => {
+                return a.ruleNumber - b.ruleNumber;
             });
 
             this.vm.classFilterFeeList = value[6];
@@ -108,19 +108,17 @@ export class SetSchoolFeesServiceAdapter {
             this.vm.studentFeeList = value[8];
             this.vm.subFeeReceiptList = value[9];
             this.vm.subDiscountList = value[10];
-            if (value[11].length == 1) { this.vm.lockFees = value[11]; }
+            if (value[11].length == 1) { this.vm.lockFees = value[11][0].sessionLocked; }
 
             this.vm.isLoading = false;
 
-        }, error => {
-            this.vm.isLoading = false;
         });
 
     }
 
     populateFeeTypeList(data: any): void {
-        this.vm.feeTypeList = data.sort( (a,b) => {
-            return a.orderNumber-b.orderNumber;
+        this.vm.feeTypeList = data.sort((a, b) => {
+            return a.orderNumber - b.orderNumber;
         });
     }
 
@@ -183,18 +181,18 @@ export class SetSchoolFeesServiceAdapter {
                 'cleared': false,
             };
             this.vm.installmentList.forEach(installment => {
-                tempObject[installment+'Amount'] = school_fee_rule_data[installment+'Amount'];
-                tempObject[installment+'LastDate'] = school_fee_rule_data[installment+'LastDate'];
-                tempObject[installment+'LateFee'] = school_fee_rule_data[installment+'LateFee'];
-                tempObject[installment+'MaximumLateFee'] = school_fee_rule_data[installment+'MaximumLateFee'];
-                tempObject[installment+'ClearanceDate'] = null;
+                tempObject[installment + 'Amount'] = school_fee_rule_data[installment + 'Amount'];
+                tempObject[installment + 'LastDate'] = school_fee_rule_data[installment + 'LastDate'];
+                tempObject[installment + 'LateFee'] = school_fee_rule_data[installment + 'LateFee'];
+                tempObject[installment + 'MaximumLateFee'] = school_fee_rule_data[installment + 'MaximumLateFee'];
+                tempObject[installment + 'ClearanceDate'] = null;
             });
             student_fee_list.push(tempObject);
         });
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.create(this.vm.feeService.school_fee_rules, school_fee_rule_data).then( value => {
+        this.vm.feeService.create(this.vm.feeService.school_fee_rules, school_fee_rule_data).then(value => {
 
             let service_list = [];
 
@@ -234,8 +232,8 @@ export class SetSchoolFeesServiceAdapter {
 
     addToSchoolFeeRuleList(schoolFeeRule: any): void {
         this.vm.schoolFeeRuleList.push(schoolFeeRule);
-        this.vm.schoolFeeRuleList = this.vm.schoolFeeRuleList.sort( (a,b) => {
-            return a.ruleNumber-b.ruleNumber;
+        this.vm.schoolFeeRuleList = this.vm.schoolFeeRuleList.sort((a, b) => {
+            return a.ruleNumber - b.ruleNumber;
         });
     }
 
@@ -321,7 +319,7 @@ export class SetSchoolFeesServiceAdapter {
 
         }, error => {
             this.vm.isLoading = false;
-        })
+        });
 
     }
 

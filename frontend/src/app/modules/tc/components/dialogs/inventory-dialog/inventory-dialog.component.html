@@ -1,0 +1,150 @@
+<h2 mat-dialog-title>Inventory</h2>
+<mat-dialog-content style="height: 62vh; width: 75vw">
+    <mat-tab-group mat-align-tabs="center" (selectedTabChange)="resetSelection()">
+        <mat-tab label="My Layouts">
+            <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
+                <div
+                    style="text-align: center; max-width: 150px; cursor: pointer; margin: 4px"
+                    (click)="selectedLayout = vm.ADD_LAYOUT_STRING"
+                >
+
+                    <div
+                        style="
+                            background-color: lightgrey;
+                            height: 150px;
+                            width: 102px;
+                            margin: 4px 12px;
+                            border: solid 3px;
+                            display: table-cell;
+                            vertical-align: middle;
+                        "
+                        [style.borderColor]="selectedLayout == vm.ADD_LAYOUT_STRING ? 'blue' : 'lightgrey'"
+                    >
+                        <span class="material-icons" style="font-size: xx-large">add</span>
+                    </div>
+                    <span>New Layout</span>
+                </div>
+
+                <ng-container *ngFor="let layout of vm.tcLayoutList; let i = index">
+                    <div
+                        style="text-align: center; max-width: 105px; cursor: pointer; margin: 4px"
+                        (click)="selectedLayout = layout"
+                    >
+                        <div
+                            style="
+                                height: 150px;
+                                width: 102px;
+                                margin: 4px 12px;
+                                background-color: lightgrey;
+                                display: table-cell;
+                                vertical-align: middle;
+                                text-align: center;
+                                border: solid 3px;
+                                position: relative;
+                            "
+                            [style.borderColor]="selectedLayout == layout? 'blue' : 'lightgrey'"
+                        >
+                            <img
+                                [src]="layout.thumbnail"
+                                style="display: block; max-height: 144px; width: 96px; position: relative; z-index: 2"
+                                alt="preview unavailable"
+                            />
+                            <div
+                                style="
+                                    height: 150px;
+                                    width: 102px;
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    z-index: 1;
+                                "
+                            >
+                                <mat-spinner diameter="20" style="margin: auto"></mat-spinner>
+                            </div>
+                        </div>
+                        <span>{{ layout.name }}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Public">
+            <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
+                <ng-container *ngFor="let layout of vm.publicLayoutList; let i = index">
+                    <div
+                        style="text-align: center; max-width: 150px; cursor: pointer" (click)="selectedLayout = layout">
+                        <div
+                            style="height: 150px; width: 102px; margin: 4px 12px; border: solid 3px"
+                            [style.borderColor]="selectedLayout == layout? 'blue' : 'lightgrey'"
+                        >
+                            <img
+                                [src]="layout.thumbnail"
+                                style="display: block; max-height: 144px; width: 96px"
+                                alt="preview unavailable"
+                            />
+                            <div
+                                style="
+                                    height: 144px;
+                                    width: 96px;
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    z-index: -1;
+                                "
+                            >
+                                <mat-spinner diameter="25" style="margin: auto"></mat-spinner>
+                            </div>
+                        </div>
+                        <span>{{ layout.name }}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Shared with me">
+            <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
+                <ng-container *ngFor="let layout of vm.sharedLayoutList; let i = index">
+                    <div
+                        style="text-align: center; max-width: 150px; cursor: pointer" (click)="selectedLayout = layout">
+                        <div
+                            style="height: 150px; width: 102px; margin: 4px 12px; border: solid 3px"
+                            [style.borderColor]="selectedLayout == layout? 'blue' : 'lightgrey'"
+                        >
+                            <img
+                                [src]="layout.thumbnail"
+                                style="display: block; max-height: 144px; width: 96px"
+                                alt="preview unavailable"
+                            />
+                            <div
+                                style="
+                                    height: 144px;
+                                    width: 96px;
+                                    display: flex;
+                                    align-items: center;
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    z-index: -1;
+                                "
+                            >
+                                <mat-spinner diameter="25" style="margin: auto"></mat-spinner>
+                            </div>
+                        </div>
+                        <span>{{ layout.name }}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+<div mat-dialog-actions style="color: white">
+    <span style="display: inline-block; margin-left: auto"></span>
+    <button mat-button *ngIf="isMyLayout()" (click)="copyAndApply()" class="btn" style="background-color: blue" cdkFocusInitial>
+        Duplicate
+    </button>
+    <button mat-button (click)="apply()" class="btn" style="background-color: blue" cdkFocusInitial>Apply</button>
+</div>

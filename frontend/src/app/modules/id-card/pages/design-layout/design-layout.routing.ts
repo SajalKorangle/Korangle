@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {DesignLayoutComponent} from "./design-layout.component";
+import { DesignLayoutComponent } from './design-layout.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: DesignLayoutComponent ,
-    }
+        component: DesignLayoutComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class DesignLayoutRoutingModule { }
+export class DesignLayoutRoutingModule {}

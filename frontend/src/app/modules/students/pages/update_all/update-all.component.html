@@ -1,215 +1,256 @@
 <div class="card-content table-responsive">
-
-            <!-- Class Filter -->
-            <mat-form-field style="margin-right: 15px;">
-                <mat-select placeholder="Select Class" style="width: 100%;">
-
-                    <ng-container *ngFor="let class of classSectionList">
-                        <ng-container *ngFor="let section of class.sectionList">
-                            <mat-option *ngIf="section.containsStudent" style="width: 100%;">
-                                <mat-checkbox [ngModel]="section.selected"
-                                              (ngModelChange)="unselectAllClasses();section.selected=true;handleStudentDisplay()"
-                                              (click)="$event.stopPropagation();">
-                                    {{class.name}}<span *ngIf="showSectionName(class)">, {{section.name}}</span>
-                                </mat-checkbox>
-                            </mat-option>
-                        </ng-container>
-                    </ng-container>
-
-                </mat-select>
-            </mat-form-field>
-
-            <!-- Column Filter -->
-            <mat-form-field style="margin-right: 15px;">
-                <mat-select placeholder="Select Columns">
-                    <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="hideAllColumns(); $event.stopPropagation();">Clear All
-                        </button>
-                    </mat-option>
-                    <ng-container *ngFor="let column of COLUMNHANDLES">
-                        <mat-option>
-                            <mat-checkbox [(ngModel)]="column.show" (click)="$event.stopPropagation();">
-                                {{column.name}}
-                            </mat-checkbox>
-                        </mat-option>
-                    </ng-container>
-                    <ng-container *ngFor="let parameter of studentParameterList">
-                        <mat-option>
-                            <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation();">
-                                {{parameter.name}}
-                            </mat-checkbox>
-                        </mat-option>
-                    </ng-container>
-                    <mat-option>
-                        <button class="btn"
-                                style="padding: 4px 7px"
-                                (click)="hideAllColumns(); $event.stopPropagation();">Clear All
-                        </button>
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <!-- Other Filters -->
-            <mat-form-field style="float: right;">
-                <mat-select placeholder="Filters">
-                    <mat-option>
-                        <mat-checkbox [(ngModel)]="scSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">SC,
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="stSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">ST,
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="obcSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">OBC,
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="generalSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">Gen.
+    <!-- Class Filter -->
+    <mat-form-field style="margin-right: 15px">
+        <mat-select placeholder="Select Class" style="width: 100%">
+            <ng-container *ngFor="let class of classSectionList">
+                <ng-container *ngFor="let section of class.sectionList">
+                    <mat-option *ngIf="section.containsStudent" style="width: 100%">
+                        <mat-checkbox
+                            [ngModel]="section.selected"
+                            (ngModelChange)="unselectAllClasses(); section.selected = true; handleStudentDisplay()"
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ class.name }}<span *ngIf="showSectionName(class)">, {{ section.name }}</span>
                         </mat-checkbox>
                     </mat-option>
-                    <mat-option>
-                        <mat-checkbox [(ngModel)]="maleSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">M
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="femaleSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">F
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="otherGenderSelected"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">Other
-                        </mat-checkbox>
-                    </mat-option>
-                    <mat-option>
-                        Admission:
-                        <mat-checkbox [(ngModel)]="newAdmission"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">New
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="oldAdmission"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">Old
-                        </mat-checkbox>
-                    </mat-option>
-                    <mat-option>
-                        RTE:
-                        <mat-checkbox [(ngModel)]="yesRTE"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">Yes
-                        </mat-checkbox>
-                        <mat-checkbox [(ngModel)]="noRTE"
-                                      style="margin-right: 5px;"
-                                      (ngModelChange)="handleStudentDisplay()"
-                                      (click)="$event.stopPropagation();">No
-                        </mat-checkbox>
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+                </ng-container>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
 
+    <!-- Column Filter -->
+    <mat-form-field style="margin-right: 15px">
+        <mat-select placeholder="Select Columns">
+            <mat-option>
+                <button class="btn" style="padding: 4px 7px" (click)="hideAllColumns(); $event.stopPropagation()">Clear All</button>
+            </mat-option>
+            <ng-container *ngFor="let column of COLUMNHANDLES">
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="column.show" (click)="$event.stopPropagation()">
+                        {{ column.name }}
+                    </mat-checkbox>
+                </mat-option>
+            </ng-container>
+            <ng-container *ngFor="let parameter of studentParameterList">
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation()">
+                        {{ parameter.name }}
+                    </mat-checkbox>
+                </mat-option>
+            </ng-container>
+            <mat-option>
+                <button class="btn" style="padding: 4px 7px" (click)="hideAllColumns(); $event.stopPropagation()">Clear All</button>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 
-    <br><i>Selected {{displayStudentNumber}} out of {{studentFullProfileList.length}} students</i>
+    <!-- Other Filters -->
+    <mat-form-field style="float: right">
+        <mat-select placeholder="Filters">
+            <mat-option>
+                <mat-checkbox
+                    [(ngModel)]="scSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >SC,
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="stSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >ST,
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="obcSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >OBC,
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="generalSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >Gen.
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                <mat-checkbox
+                    [(ngModel)]="maleSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >M
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="femaleSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >F
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="otherGenderSelected"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >Other
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                Admission:
+                <mat-checkbox
+                    [(ngModel)]="newAdmission"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >New
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="oldAdmission"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >Old
+                </mat-checkbox>
+            </mat-option>
+            <mat-option>
+                RTE:
+                <mat-checkbox
+                    [(ngModel)]="yesRTE"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >Yes
+                </mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="noRTE"
+                    style="margin-right: 5px"
+                    (ngModelChange)="handleStudentDisplay()"
+                    (click)="$event.stopPropagation()"
+                    >No
+                </mat-checkbox>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <br /><i>Selected {{ displayStudentNumber }} out of {{ studentFullProfileList.length }} students</i>
 
     <!-- Student Table List -->
     <ng-container *ngIf="!isLoading">
         <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
             <table class="table table-hover">
-                <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                <tr>
-                    <th style="min-width: 150px;" *ngFor="let column of COLUMNHANDLES"
-                        [class.hidden]="!column.show">
-                            {{column.name}}
-                    </th>
-                    <th style="min-width: 150px;" *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
-                        {{parameter.name}}
-                    <th>
-                </tr>
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th style="min-width: 150px" *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show">
+                            {{ column.name }}
+                        </th>
+                        <th style="min-width: 150px" *ngFor="let parameter of studentParameterList" [class.hidden]="!parameter.show">
+                            {{ parameter.name }}
+                        </th>
+
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
-                <ng-container *cdkVirtualFor="let student of getStudentFullProfileList()">
-                    <tr [class.hidden]="!student.show">
-                        <td *ngFor="let column of COLUMNHANDLES"
-                            [class.hidden]="!column.show"
-                            [attr.id]="column.key+student.dbId">
-                            <ng-container *ngIf="column.inputType===null">
-                                {{student[column.key]}}
-                            </ng-container>
-                            <ng-container *ngIf="column.inputType==='list'">
-                                <mat-form-field>
-                                    <mat-select [ngModel]="student[column.key]"
-                                                [attr.id]="student.dbId+column.key"
-                                                (ngModelChange)="serviceAdapter.updateStudentField(column.key, student, $event, 'list')">
-                                        <mat-option *ngFor='let item of column.list;' [value]="item">
-                                            {{item}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </ng-container>
-                            <ng-container *ngIf="column.inputType==='text' || column.inputType==='number' || column.inputType==='date'">
-                                <input [attr.type]="column.inputType"
-                                       [attr.id]="student.dbId+column.key"
-                                       class="customInput"
-                                       (blur)="serviceAdapter.updateStudentField(column.key,student, $event.target.value, column.inputType)"
-                                       [ngModel]="student[column.key]"/>
-                            </ng-container>
-                        </td>
-                        <ng-container *ngFor="let parameter of studentParameterList" >
-                        <td *ngIf="parameter.show"
-                            [attr.id]="parameter.id+'-'+student.dbId">
-                            <input matInput *ngIf="parameter.parameterType===parameter_type_list[0]"
-                                type="text"
-                                class="customInput"
-                                [attr.id]="student.dbId+'-'+parameter.id"
-                                (blur)="serviceAdapter.updateParameterValue(student, parameter, $event.target.value)"
-                                [ngModel]="getParameterValue(student, parameter)">
-                            <ng-container *ngIf="parameter.parameterType===parameter_type_list[1]">
-                                <mat-select placeholder="{{parameter.name}}"
-                                            [attr.id]="student.dbId+'-'+parameter.id"
+                    <ng-container *cdkVirtualFor="let student of getStudentFullProfileList()">
+                        <tr [class.hidden]="!student.show">
+                            <td *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show" [attr.id]="column.key + student.dbId">
+                                <ng-container *ngIf="column.inputType === null">
+                                    {{ student[column.key] }}
+                                </ng-container>
+                                <ng-container *ngIf="column.inputType === 'list'">
+                                    <mat-form-field>
+                                        <mat-select
+                                            [ngModel]="student[column.key]"
+                                            [attr.id]="student.dbId + column.key"
+                                            (ngModelChange)="serviceAdapter.updateStudentField(column.key, student, $event, 'list')"
+                                        >
+                                            <mat-option *ngFor="let item of column.list" [value]="item">
+                                                {{ item }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container
+                                    *ngIf="column.inputType === 'text' || column.inputType === 'number' || column.inputType === 'date'"
+                                >
+                                    <input
+                                        [attr.type]="column.inputType"
+                                        [attr.id]="student.dbId + column.key"
+                                        class="customInput"
+                                        (blur)="
+                                            serviceAdapter.updateStudentField(column.key, student, $event.target.value, column.inputType)
+                                        "
+                                        [ngModel]="student[column.key]"
+                                    />
+                                </ng-container>
+                                <ng-container *ngIf="column.inputType === 'classList'">
+                                    <mat-form-field>
+                                        <mat-select
+                                            [ngModel]="student[column.key]"
+                                            [attr.id]="student.dbId + column.key"
+                                            (ngModelChange)="serviceAdapter.updateStudentField(column.key, student, $event, 'classList')"
+                                        >
+                                            <mat-option *ngFor="let classInstance of classList" [value]="classInstance.id">
+                                                {{ classInstance.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                            </td>
+                            <ng-container *ngFor="let parameter of studentParameterList">
+                                <td *ngIf="parameter.show" [attr.id]="parameter.id + '-' + student.dbId">
+                                    <input
+                                        matInput
+                                        *ngIf="parameter.parameterType === parameter_type_list[0]"
+                                        type="text"
+                                        class="customInput"
+                                        [attr.id]="student.dbId + '-' + parameter.id"
+                                        (blur)="serviceAdapter.updateParameterValue(student, parameter, $event.target.value)"
+                                        [ngModel]="getParameterValue(student, parameter)"
+                                    />
+                                    <ng-container *ngIf="parameter.parameterType === parameter_type_list[1]">
+                                        <mat-select
+                                            placeholder="{{ parameter.name }}"
+                                            [attr.id]="student.dbId + '-' + parameter.id"
                                             [ngModel]="getParameterValue(student, parameter)"
-                                            (ngModelChange)="serviceAdapter.updateParameterValue(student, parameter, $event)">
-                                        <mat-option [value]="NULL_CONSTANT">None</mat-option>
-                                        <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{item}}</mat-option>
-                                </mat-select>
+                                            (ngModelChange)="serviceAdapter.updateParameterValue(student, parameter, $event)"
+                                        >
+                                            <mat-option [value]="NULL_CONSTANT">None</mat-option>
+                                            <mat-option *ngFor="let item of parameter.filterValues" [value]="item">{{ item }}</mat-option>
+                                        </mat-select>
+                                    </ng-container>
+                                    <ng-container *ngIf="parameter.parameterType === parameter_type_list[2]">
+                                        <div class="text-center">
+                                            <input
+                                                class="dropinput"
+                                                type="file"
+                                                [attr.id]="student.dbId + '-' + parameter.id"
+                                                title="{{ getDocumentName(student, parameter) }}"
+                                                (input)="serviceAdapter.updateParameterDocumentValue(student, parameter, $event)"
+                                            />
+                                            <img
+                                                [src]="getDocumentIcon(student, parameter)"
+                                                class="documenticon"
+                                                [id]="student.dbId + '-' + parameter.id + '-icon'"
+                                            />
+                                            <p [id]="student.dbId + '-' + parameter.id + '-text'"></p>
+                                        </div>
+                                    </ng-container>
+                                </td>
                             </ng-container>
-                            <ng-container *ngIf="parameter.parameterType===parameter_type_list[2]">
-                            	<div class="text-center">
-                            		<input class="dropinput" type="file"
-                            			   [attr.id]="student.dbId+'-'+parameter.id"
-                                           title="{{getDocumentName(student, parameter)}}"
-                            			   (input)="serviceAdapter.updateParameterDocumentValue(student,parameter,$event)">
-                                        <img [src]="getDocumentIcon(student, parameter)"
-                                        	 class="documenticon"
-                                        	 [id]="student.dbId+'-'+parameter.id+'-icon'">
-                                        <p [id]="student.dbId+'-'+parameter.id+'-text'"></p>
-                                    </div>
-                            </ng-container>
-                        </td>
-                        </ng-container>
-                    </tr>
-                </ng-container>
+                        </tr>
+                    </ng-container>
                 </tbody>
             </table>
         </cdk-virtual-scroll-viewport>
     </ng-container>
-
 </div>
 
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

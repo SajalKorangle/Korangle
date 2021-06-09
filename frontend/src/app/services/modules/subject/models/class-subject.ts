@@ -1,6 +1,4 @@
-
 export class ClassSubject {
-
     id: number = null;
 
     parentSubject: number = null;
@@ -12,5 +10,4 @@ export class ClassSubject {
     mainSubject: boolean = true;
     onlyGrade: boolean = false;
     orderNumber: number = null;
-
 }

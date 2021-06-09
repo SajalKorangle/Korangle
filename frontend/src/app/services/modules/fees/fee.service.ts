@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class FeeService extends ServiceObject {
-
     protected module_url = '/fees';
 
     // objects urls
@@ -19,9 +17,9 @@ export class FeeService extends ServiceObject {
     public discounts = '/discounts';
     public sub_discounts = '/sub-discounts';
     public fee_features = '/fee-features';
-    public lock_fees = '/lock-fees';
     public parent_transaction = '/parent-transaction';
     public online_payment_account = '/online-payment-account';
+    public fee_settings = '/fee-settings';
 
     // Fee Type
     get(object_url: any, data: any): Promise<any> {
@@ -73,5 +71,4 @@ export class FeeService extends ServiceObject {
         this.object_url = object_url;
         return this.deleteObjectList(object_url, data);
     }
-
 }

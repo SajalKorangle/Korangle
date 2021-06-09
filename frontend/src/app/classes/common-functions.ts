@@ -1,8 +1,7 @@
-
 declare const $: any;
+import { SESSION_CONSTANT, Session } from '@services/modules/school/models/session';
 
 export class CommonFunctions {
-
     static instance: CommonFunctions;
 
     static getInstance(): CommonFunctions {
@@ -19,7 +18,7 @@ export class CommonFunctions {
 
     copyObject(object: any): any {
         let tempObject = {};
-        Object.keys(object).forEach(key => {
+        Object.keys(object).forEach((key) => {
             tempObject[key] = object[key];
         });
         return tempObject;
@@ -30,11 +29,9 @@ export class CommonFunctions {
             return false;
         }
         return true;
-    };
+    }
 
-    
     static formatDate(dateStr: any, status: any): any {
-
         let d = new Date(dateStr);
 
         if (status === 'firstDate') {
@@ -54,7 +51,6 @@ export class CommonFunctions {
     }
 
     static formatTime(dateStr: any): any {
-
         let d = new Date(dateStr);
         let hours = '' + d.getHours();
         let minutes = '' + d.getMinutes();
@@ -66,7 +62,6 @@ export class CommonFunctions {
     }
 
     static dataURLtoFile(dataurl, filename) {
-
         try {
             const arr = dataurl.split(',');
             const mime = arr[0].match(/:(.*?);/)[1];
@@ -78,43 +73,35 @@ export class CommonFunctions {
                 u8arr[n] = bstr.charCodeAt(n);
             }
 
-            return new File([u8arr], filename, {type: mime});
+            return new File([u8arr], filename, { type: mime });
         } catch (e) {
             return null;
         }
     }
 
-    static getArrayFromRange(start, end, step=undefined): any {
-
-        let arr = [], len = 0;
+    static getArrayFromRange(start, end, step = undefined): any {
+        let arr = [],
+            len = 0;
 
         step = step === undefined ? 1 : step;
 
         if (arguments.length === 1) {
-
             len = start;
             start = 0;
             end = start;
-
         } else {
-
             start = start === undefined ? 1 : start;
             end = end === undefined ? 1 : end;
             len = end - start;
-
         }
 
         let i = 0;
         while (i < len) {
-
             arr.push(start + i * step);
 
             i += 1;
-
         }
 
         return arr;
     }
-
 }
-

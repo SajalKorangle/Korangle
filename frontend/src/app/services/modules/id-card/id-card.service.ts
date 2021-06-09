@@ -1,12 +1,10 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from '../../common/service-object';
+import { ServiceObject } from '../../common/service-object';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class IdCardService extends ServiceObject {
-
     // objects urls
     public id_card_layout = '/id-card-layout';
 
@@ -15,5 +13,4 @@ export class IdCardService extends ServiceObject {
     constructor(private http_class: HttpClient) {
         super(http_class);
     }
-
 }

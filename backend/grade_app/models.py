@@ -24,7 +24,7 @@ class SubGrade(models.Model):
 
 class StudentSubGrade(models.Model):
 
-    gradeObtained = models.TextField(verbose_name='gradeObtained')
+    gradeObtained = models.TextField(blank=True,verbose_name='gradeObtained')
     parentSubGrade = models.ForeignKey(SubGrade,on_delete=models.CASCADE,null=False,default=0, verbose_name='parentSubGrade')
     parentStudent = models.ForeignKey(Student,on_delete=models.CASCADE,null=False,default=0, verbose_name='parentStudent')
     parentExamination = models.ForeignKey(Examination, on_delete=models.CASCADE,null=False, default=0, verbose_name='parentExamination')

@@ -7,9 +7,8 @@ from fees_third_app.business.discount import create_discount_object, create_disc
 from fees_third_app.business.cashfree import generatePaymentToken, generateAuthToken, addVendor, getVendor
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount, LockFee, ParentTransaction, OnlinePaymentAccount
-from common.common_views import CommonView, CommonListView, APIView
-from common.common_serializer_interface import create_object, get_object, get_list
+    SubFeeReceipt, Discount, SubDiscount, ParentTransaction, OnlinePaymentAccount
+from common.common_serializer_interface_3 import create_object, get_object, get_list
 
 
 
@@ -165,21 +164,16 @@ class SubDiscountListView(CommonListView, APIView):
     RelationsToStudent = ['parentDiscount__parentStudent__id', 'parentStudentFee__parentStudent__id']
 
 
-########### Lock Fee #############
+########### Fee Settings #############
 
+from .models import FeeSettings
 
-class LockFeeView(CommonView, APIView):
-    Model = LockFee
-    RelationsToSchool = ['parentSchool__id']
-
-
-class LockFeeListView(CommonListView, APIView):
-    Model = LockFee
-    RelationsToSchool = ['parentSchool__id']
+class FeeSettingsView(CommonView, APIView):
+    Model = FeeSettings
+    RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
 
 
 ########### Parent Transaction #############
-
 class ParentTransactionListView(CommonListView, APIView):
     Model = ParentTransaction
 
@@ -230,3 +224,6 @@ class OnlinePaymentAccountView(CommonView, APIView):
             return(getVendor(vendorId))
         else:
             return response
+class FeeSettingsListView(CommonListView, APIView):
+    Model = FeeSettings
+    RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']

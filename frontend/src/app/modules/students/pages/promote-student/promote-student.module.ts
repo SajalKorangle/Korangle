@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {PromoteStudentRoutingModule} from './promote-student.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {PromoteStudentComponent} from "./promote-student.component";
-
+import { PromoteStudentRoutingModule } from './promote-student.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { PromoteStudentComponent } from './promote-student.component';
 
 @NgModule({
-    declarations: [
-        PromoteStudentComponent
-    ],
+    declarations: [PromoteStudentComponent],
 
-    imports: [
-        PromoteStudentRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [PromoteStudentRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [PromoteStudentComponent]
+    bootstrap: [PromoteStudentComponent],
 })
-export class PromoteStudentModule { }
+export class PromoteStudentModule {}

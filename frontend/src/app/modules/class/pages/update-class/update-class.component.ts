@@ -4,19 +4,17 @@ import { UpdateClassServiceAdapter } from './update-class.service.adapter';
 
 import { ChangeDetectorRef } from '@angular/core';
 
-import { DataStorage } from "../../../../classes/data-storage";
-import {ClassService} from "../../../../services/modules/class/class.service";
-import {StudentService} from "../../../../services/modules/student/student.service";
+import { DataStorage } from '../../../../classes/data-storage';
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
 
 @Component({
     selector: 'update-class',
     templateUrl: './update-class.component.html',
     styleUrls: ['./update-class.component.css'],
-    providers: [ ClassService, StudentService ],
+    providers: [ClassService, StudentService],
 })
-
 export class UpdateClassComponent implements OnInit {
-
     user;
 
     classSectionList = [];
@@ -30,9 +28,7 @@ export class UpdateClassComponent implements OnInit {
     isLoading = false;
     timeout: any;
 
-    constructor(public classService: ClassService,
-                public studentService: StudentService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(public classService: ClassService, public studentService: StudentService, private cdRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -45,5 +41,4 @@ export class UpdateClassComponent implements OnInit {
     detectChanges(): void {
         this.cdRef.detectChanges();
     }
-
 }

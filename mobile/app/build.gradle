@@ -7,7 +7,7 @@ android {
         applicationId "com.korangle.www.korangle"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 38
+        versionCode 39
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -43,4 +43,10 @@ dependencies {
     // implementation 'org.apache.commons:commons-compress:1.18'
     implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.google.android.play:core:1.5.0'
+}
+
+task GetIP {
+    exec {
+        executable = './gen_debug_ip.sh'
+    }
 }

@@ -4,24 +4,22 @@ import { ExaminationOldService } from '../../../../../services/modules/examinati
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 
 import { GenerateGoshwaraServiceAdapter } from './generate-goshwara.service.adapter';
-import {REPORT_CARD_TYPE_LIST} from '../../classes/constants';
+import { REPORT_CARD_TYPE_LIST } from '../../classes/constants';
 
 import { ChangeDetectorRef } from '@angular/core';
-import {ClassService} from '../../../../../services/modules/class/class.service';
-import {StudentOldService} from '../../../../../services/modules/student/student-old.service';
-import {SubjectOldService} from '../../../../../services/modules/subject/subject-old.service';
-import {ExcelService} from "../../../../../excel/excel-service";
-import {DataStorage} from "../../../../../classes/data-storage";
+import { ClassService } from '../../../../../services/modules/class/class.service';
+import { StudentOldService } from '../../../../../services/modules/student/student-old.service';
+import { SubjectOldService } from '../../../../../services/modules/subject/subject-old.service';
+import { ExcelService } from '../../../../../excel/excel-service';
+import { DataStorage } from '../../../../../classes/data-storage';
 
 @Component({
     selector: 'generate-goshwara',
     templateUrl: './generate-goshwara.component.html',
     styleUrls: ['./generate-goshwara.component.css'],
-    providers: [ ExaminationOldService, ClassService, StudentOldService, SubjectOldService, ExaminationService ],
+    providers: [ExaminationOldService, ClassService, StudentOldService, SubjectOldService, ExaminationService],
 })
-
 export class GenerateGoshwaraComponent implements OnInit {
-
     user;
 
     reportCardTypeList = REPORT_CARD_TYPE_LIST;
@@ -42,13 +40,15 @@ export class GenerateGoshwaraComponent implements OnInit {
     isLoading = true;
     timeout: any;
 
-    constructor(public examinationOldService: ExaminationOldService,
-                public examinationService : ExaminationService,
-                public classService: ClassService,
-                public studentService: StudentOldService,
-                public subjectService: SubjectOldService,
-                private excelService: ExcelService,
-                private cdRef: ChangeDetectorRef) {}
+    constructor(
+        public examinationOldService: ExaminationOldService,
+        public examinationService: ExaminationService,
+        public classService: ClassService,
+        public studentService: StudentOldService,
+        public subjectService: SubjectOldService,
+        private excelService: ExcelService,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -63,7 +63,7 @@ export class GenerateGoshwaraComponent implements OnInit {
     }
 
     getStudentsInGrade(studentList: any, grade: any): any {
-        return studentList.filter(student => {
+        return studentList.filter((student) => {
             if (this.getGrade(this.getOverallStudentMarks(student), this.getOverallStudentMaxMarks(student)) == grade) {
                 return true;
             }
@@ -72,9 +72,10 @@ export class GenerateGoshwaraComponent implements OnInit {
     }
 
     getStudentsInEGrade(studentList: any, subject: any, index: any): any {
-        return studentList.filter(student => {
-            if (this.getGrade(this.getOverallStudentSubjectMarks(student, subject, index),
-                    this.getOverallStudentSubjectMaxMarks()) == "E") {
+        return studentList.filter((student) => {
+            if (
+                this.getGrade(this.getOverallStudentSubjectMarks(student, subject, index), this.getOverallStudentSubjectMaxMarks()) == 'E'
+            ) {
                 return true;
             }
             return false;
@@ -82,7 +83,6 @@ export class GenerateGoshwaraComponent implements OnInit {
     }
 
     downloadGoshwara(): void {
-
         let template = [];
 
         template.push(this.getHeaderValues());
@@ -101,103 +101,89 @@ export class GenerateGoshwaraComponent implements OnInit {
     }
 
     getHeaderValues(): any {
-        let headerValues = [
-            'Description',
-            'Total',
-            'A Grade',
-            'B Grade',
-            'C Grade',
-            'D Grade',
-        ];
-        this.classSubjectList.forEach(classSubject => {
-            headerValues.push("E Grade - " + this.getSubjectName(classSubject.parentSubject));
+        let headerValues = ['Description', 'Total', 'A Grade', 'B Grade', 'C Grade', 'D Grade'];
+        this.classSubjectList.forEach((classSubject) => {
+            headerValues.push('E Grade - ' + this.getSubjectName(classSubject.parentSubject));
         });
         return headerValues;
     }
 
     getMaleStudentsGoshwara(): any {
-        let studentList = this.studentFinalReportCardList.filter(student => {return student.gender=="Male";});
-        let classValues = [
-            'Male',
-            studentList.length  ,
-        ];
-        classValues.push(this.getStudentsInGrade(studentList, "A"));
-        classValues.push(this.getStudentsInGrade(studentList,"B"));
-        classValues.push(this.getStudentsInGrade(studentList,"C"));
-        classValues.push(this.getStudentsInGrade(studentList,"D"));
+        let studentList = this.studentFinalReportCardList.filter((student) => {
+            return student.gender == 'Male';
+        });
+        let classValues = ['Male', studentList.length];
+        classValues.push(this.getStudentsInGrade(studentList, 'A'));
+        classValues.push(this.getStudentsInGrade(studentList, 'B'));
+        classValues.push(this.getStudentsInGrade(studentList, 'C'));
+        classValues.push(this.getStudentsInGrade(studentList, 'D'));
         this.classSubjectList.forEach((classSubject, index) => {
-            classValues.push(this.getStudentsInEGrade(studentList,classSubject, index));
+            classValues.push(this.getStudentsInEGrade(studentList, classSubject, index));
         });
         return classValues;
     }
 
     getFemaleStudentsGoshwara(): any {
-        let studentList = this.studentFinalReportCardList.filter(student => {return student.gender=="Female";});
-        let classValues = [
-            'Female',
-            studentList.length  ,
-        ];
-        classValues.push(this.getStudentsInGrade(studentList, "A"));
-        classValues.push(this.getStudentsInGrade(studentList,"B"));
-        classValues.push(this.getStudentsInGrade(studentList,"C"));
-        classValues.push(this.getStudentsInGrade(studentList,"D"));
+        let studentList = this.studentFinalReportCardList.filter((student) => {
+            return student.gender == 'Female';
+        });
+        let classValues = ['Female', studentList.length];
+        classValues.push(this.getStudentsInGrade(studentList, 'A'));
+        classValues.push(this.getStudentsInGrade(studentList, 'B'));
+        classValues.push(this.getStudentsInGrade(studentList, 'C'));
+        classValues.push(this.getStudentsInGrade(studentList, 'D'));
         this.classSubjectList.forEach((classSubject, index) => {
-            classValues.push(this.getStudentsInEGrade(studentList,classSubject, index));
+            classValues.push(this.getStudentsInEGrade(studentList, classSubject, index));
         });
         return classValues;
     }
 
     getTotalStudentsGoshwara(): any {
         let studentList = this.studentFinalReportCardList;
-        let classValues = [
-            'Total',
-            studentList.length  ,
-        ];
-        classValues.push(this.getStudentsInGrade(studentList, "A"));
-        classValues.push(this.getStudentsInGrade(studentList,"B"));
-        classValues.push(this.getStudentsInGrade(studentList,"C"));
-        classValues.push(this.getStudentsInGrade(studentList,"D"));
+        let classValues = ['Total', studentList.length];
+        classValues.push(this.getStudentsInGrade(studentList, 'A'));
+        classValues.push(this.getStudentsInGrade(studentList, 'B'));
+        classValues.push(this.getStudentsInGrade(studentList, 'C'));
+        classValues.push(this.getStudentsInGrade(studentList, 'D'));
         this.classSubjectList.forEach((classSubject, index) => {
-            classValues.push(this.getStudentsInEGrade(studentList,classSubject, index));
+            classValues.push(this.getStudentsInEGrade(studentList, classSubject, index));
         });
         return classValues;
     }
 
     getScStudentsGoshwara(): any {
-        let studentList = this.studentFinalReportCardList.filter(student => {return student.category=="SC";});
-        let classValues = [
-            'SC',
-            studentList.length  ,
-        ];
-        classValues.push(this.getStudentsInGrade(studentList, "A"));
-        classValues.push(this.getStudentsInGrade(studentList,"B"));
-        classValues.push(this.getStudentsInGrade(studentList,"C"));
-        classValues.push(this.getStudentsInGrade(studentList,"D"));
+        let studentList = this.studentFinalReportCardList.filter((student) => {
+            return student.category == 'SC';
+        });
+        let classValues = ['SC', studentList.length];
+        classValues.push(this.getStudentsInGrade(studentList, 'A'));
+        classValues.push(this.getStudentsInGrade(studentList, 'B'));
+        classValues.push(this.getStudentsInGrade(studentList, 'C'));
+        classValues.push(this.getStudentsInGrade(studentList, 'D'));
         this.classSubjectList.forEach((classSubject, index) => {
-            classValues.push(this.getStudentsInEGrade(studentList,classSubject, index));
+            classValues.push(this.getStudentsInEGrade(studentList, classSubject, index));
         });
         return classValues;
     }
 
     getStStudentsGoshwara(): any {
-        let studentList = this.studentFinalReportCardList.filter(student => {return student.gender=="ST";});
-        let classValues = [
-            'ST',
-            studentList.length  ,
-        ];
-        classValues.push(this.getStudentsInGrade(studentList, "A"));
-        classValues.push(this.getStudentsInGrade(studentList,"B"));
-        classValues.push(this.getStudentsInGrade(studentList,"C"));
-        classValues.push(this.getStudentsInGrade(studentList,"D"));
+        let studentList = this.studentFinalReportCardList.filter((student) => {
+            return student.gender == 'ST';
+        });
+        let classValues = ['ST', studentList.length];
+        classValues.push(this.getStudentsInGrade(studentList, 'A'));
+        classValues.push(this.getStudentsInGrade(studentList, 'B'));
+        classValues.push(this.getStudentsInGrade(studentList, 'C'));
+        classValues.push(this.getStudentsInGrade(studentList, 'D'));
         this.classSubjectList.forEach((classSubject, index) => {
-            classValues.push(this.getStudentsInEGrade(studentList,classSubject, index));
+            classValues.push(this.getStudentsInEGrade(studentList, classSubject, index));
         });
         return classValues;
     }
 
     getSubjectName(subjectId: any): any {
         let result = '';
-        this.subjectList.every(subject => {
+        this.subjectList.every((subject) => {
             if (subject.id == subjectId) {
                 result = subject.name;
                 return false;
@@ -249,7 +235,7 @@ export class GenerateGoshwaraComponent implements OnInit {
 
     getGrade(marksObtained: any, maximumMarks: any): any {
         let grade = '';
-        let percentage = marksObtained*100/maximumMarks;
+        let percentage = (marksObtained * 100) / maximumMarks;
         if (percentage >= 75) {
             grade = 'A';
         } else if (percentage >= 60) {
@@ -293,30 +279,34 @@ export class GenerateGoshwaraComponent implements OnInit {
     getOverallStudentTotalExtraFieldMarks(student: any, index1: any): any {
         let result = 0;
         this.extraFieldList[index1].extraSubFieldList.forEach((extraSubField, index2) => {
-            result += this.getOverallStudentExtraSubFieldMarks(student, index1*5+index2);
+            result += this.getOverallStudentExtraSubFieldMarks(student, index1 * 5 + index2);
         });
         return result;
     }
 
     getOverallStudentTotalExtraFieldMaxMarks(index: any): any {
-        return this.extraFieldList[index].extraSubFieldList.length*18;
+        return this.extraFieldList[index].extraSubFieldList.length * 18;
     }
 
     getOverallStudentMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMarks(student)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 0)
-            + this.getOverallStudentTotalExtraFieldMarks(student, 1);
+        return (
+            this.getOverallStudentTotalSubjectMarks(student) +
+            this.getOverallStudentTotalExtraFieldMarks(student, 0) +
+            this.getOverallStudentTotalExtraFieldMarks(student, 1)
+        );
     }
 
     getOverallStudentMaxMarks(student: any): any {
-        return this.getOverallStudentTotalSubjectMaxMarks(student)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(0)
-            + this.getOverallStudentTotalExtraFieldMaxMarks(1);
+        return (
+            this.getOverallStudentTotalSubjectMaxMarks(student) +
+            this.getOverallStudentTotalExtraFieldMaxMarks(0) +
+            this.getOverallStudentTotalExtraFieldMaxMarks(1)
+        );
     }
 
     getSessionName(sessionId: any): any {
         let result = '';
-        switch(sessionId) {
+        switch (sessionId) {
             case 1:
                 result = 'Session 2017-18';
                 break;
@@ -332,7 +322,7 @@ export class GenerateGoshwaraComponent implements OnInit {
 
     getNextStep(student: any): any {
         let result = '';
-        switch(student.className) {
+        switch (student.className) {
             case 'Play Group':
                 result = 'Promoted to Nursery';
                 break;
@@ -384,5 +374,4 @@ export class GenerateGoshwaraComponent implements OnInit {
         }
         return result;
     }
-
 }
