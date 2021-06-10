@@ -87,16 +87,26 @@ export class UpdateTransactionServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
         ]).then(val => {
             if (val[0].length > 0) {
-                let transaction_data = {
-                    parentTransaction: val[0][0].id,
-                };
-                const serviceList = [
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_data),
-                    this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
-                ];
-                Promise.all(serviceList).then(data => {
-                    this.initialiseTransactionData(val[0], data[0], data[1]);
-                    this.vm.isLoadingTransaction = false;
+                val[0].forEach(tra => {
+                    let transaction_data = {
+                        parentTransaction: tra.id,
+                    };
+                    const serviceList = [
+                        this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_account_details, transaction_data),
+                        this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
+                    ];
+                    Promise.all(serviceList).then(data => {
+                        let decider = true;
+                        data[0].forEach(dataa => {
+                            if (this.vm.accountsList.find(acccount => acccount.parentAccount == dataa.parentAccount) == undefined) {
+                                decider = false;
+                            }
+                        });
+                        if (decider) {
+                            this.initialiseTransactionData(val[0], data[0], data[1]);
+                            this.vm.isLoadingTransaction = false;
+                        }
+                    });
                 });
             }
             else {
