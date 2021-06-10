@@ -1,5 +1,6 @@
 import {SendSmsComponent} from '@modules/sms/pages/send-sms/send-sms.component';
 import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {isMobile} from '@classes/common';
 
 export class SendSmsHtmlRenderer {
 
@@ -26,7 +27,10 @@ export class SendSmsHtmlRenderer {
     }
 
     isTemplateModified() {
-        return this.isSMSNeeded() && this.vm.message.replace(this.vm.variableRegex, '{#var#}') != this.vm.userInput.selectedTemplate.rawContent;
+        //.replace(/\r\n?|\n/g, '"\n"');
+        let cont1 =  this.vm.message.replace(this.vm.variableRegex, '{#var#}');
+        let cont2 = this.vm.userInput.selectedTemplate.rawContent.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
+        return this.isSMSNeeded() && cont1 != cont2;
     }
 
     isSMSNeeded() {
@@ -41,15 +45,20 @@ export class SendSmsHtmlRenderer {
         this.vm.populatedTemplateList.forEach(temp => temp.selected = false);
         template.selected = true;
         let defaultVariable = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? '@studentName' : '@employeeName';
-        this.vm.message = template.rawContent.replace(/{#var#}/g, defaultVariable);
+        this.vm.message = template.rawContent.replace(/{#var#}/g, defaultVariable).replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
         this.vm.userInput.selectedTemplate = template;
+        let textArea = document.getElementById('messageBox');
+        textArea.style.height = '0px';
+        textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 
     isSendDisabled() {
         let disabled = this.vm.getMobileNumberList('both').length == 0 || this.vm.message.length == 0;
         if (!disabled && this.isSMSNeeded()) {
-            disabled = this.vm.message.replace(this.vm.variableRegex, '{#var#}') != this.vm.userInput.selectedTemplate.rawContent;
             disabled = this.vm.backendData.smsBalance < this.getEstimatedSMSCount();
+        }
+        if (!disabled && this.isSMSNeeded()) {
+            disabled = this.isTemplateModified();
         }
         return disabled;
     }
@@ -168,10 +177,11 @@ export class SendSmsHtmlRenderer {
             return 0;
         }
         let person = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? 'student' : 'employee';
-        this.vm.getMobileNumberList('sms').forEach(student => {
+        let variables = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? STUDENT_VARIABLES : EMPLOYEE_VARIABLES;
+        this.vm.getMobileNumberList('sms').forEach(studentOrEmployee => {
             count += this.getSMSCount(
                 this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
-                    this.vm.studentMessageService.getMappingData(STUDENT_VARIABLES, this.vm.dataForMapping, person, student.id))
+                    this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, studentOrEmployee.id))
             );
         });
         return count;

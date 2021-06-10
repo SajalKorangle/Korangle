@@ -21,9 +21,12 @@ export class ManageSmsIdServiceAdapter {
 
         let smsIdData = {
             'id__in': this.vm.backendData.SMSIdSchoolList.map((a) => a.parentSMSId).join(),
+            'korangle__order': '-id',
         };
 
         this.vm.backendData.SMSIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, smsIdData);
+        this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template,
+            {parentSchool: this.vm.user.activeSchool.dbId});
         this.vm.htmlRenderer.initializeNewSMSId();
         this.vm.stateKeeper.isPageLoading = false;
     }
@@ -55,7 +58,12 @@ export class ManageSmsIdServiceAdapter {
     }
 
     async deleteSMSId(SMSId: any) {
-        if (confirm('Are you sure want to delete this SMS ID ? , SMS Templates linked with this SMS ID will also be deleted !')) {
+        let templatesCount = this.vm.backendData.templateList.filter(temp => temp.parentSMSId == SMSId.id).length;
+        let confirmTextAppend = '';
+        if (templatesCount && templatesCount > 0) {
+            confirmTextAppend = ', ' + templatesCount + ' SMS Templates linked with this SMS ID will also be deleted !';
+        }
+        if (confirm('Are you sure want to delete this SMS ID ?' + confirmTextAppend)) {
             this.vm.stateKeeper.isSMSIdTableLoading = true;
             let sms_id_school_data = {
                 'id': this.vm.backendData.SMSIdSchoolList.find(smsSchool => smsSchool.parentSMSId == SMSId.id).id

@@ -1,7 +1,7 @@
 import {UserService} from './modules/user/user.service';
 import {NotificationService} from './modules/notification/notification.service';
 import {SmsService} from './modules/sms/sms.service';
-import {EVENT_SETTING_PAGES} from '@modules/sms/classes/constants';
+import {EMPLOYEE_VARIABLES, EVENT_SETTING_PAGES, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 /*
 SentUpdateType -
@@ -200,7 +200,7 @@ export class MessageService {
     ) {
         const smsEvent = await this.smsService.getObject(this.smsService.sms_event, {eventName: eventName});
         if (!smsEvent) {
-            return;
+            throw "No Events Found";
         } // if there is not event return
 
         let fetch_event_settings_list = {
@@ -217,9 +217,11 @@ export class MessageService {
 
         if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
             customSMSTemplate = await this.smsService.getObject(this.smsService.sms_template,
-                {id: eventSettings.parentSMSTemplate});
-            smsRawContent = customSMSTemplate.rawContent;
-            smsId = customSMSTemplate.parentSMSId;
+                {id: eventSettings.parentSMSTemplate, registrationStatus: "APPROVED"});
+            if (customSMSTemplate) {
+                smsRawContent = customSMSTemplate.mappedContent;
+                smsId = customSMSTemplate.parentSMSId;
+            }
         }
 
         notificationRawContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
@@ -250,13 +252,24 @@ export class MessageService {
         let notification_list = [];
         let sms_list = [];
         let personDetailsList = [];
-        let eventVariableList = EVENT_SETTING_PAGES.find(settingPage => smsEvent.eventName.includes(settingPage.name));
+        let eventSettingPage = EVENT_SETTING_PAGES.find(settingPage => smsEvent.eventName.includes(settingPage.name));
 
         let person = data.studentList ? 'student' : 'employee';
 
+        if (eventSettingPage.name == 'General') { // because in general we will be using student or employee Variables
+            eventSettingPage.variableList = person == 'student' ? STUDENT_VARIABLES : EMPLOYEE_VARIABLES;
+        }
+
+        console.log(data);
+
         data[person + 'List'].forEach(personData => {
-            personDetailsList.push(this.getMappingData(eventVariableList, data, person, personData.id));
+            let mappedObject = this.getMappingData(eventSettingPage.variableList, data, person, personData.id);
+            mappedObject['notification'] = personData.notification;
+            mappedObject['id'] = personData.id;
+            personDetailsList.push(mappedObject);
         });
+
+        console.log(personDetailsList);
 
         if (sentUpdateType == 2) {
             sms_list = personDetailsList;
@@ -280,23 +293,25 @@ export class MessageService {
         let smsMappedData = [];
         let notificationMappedData = [];
 
-        notification_list.forEach((item, index) => {
+        notification_list.forEach((item) => {
             let temp = {
                 mobileNumber: item.mobileNumber,
                 content: this.getMessageFromTemplate(notificationRawContent, item)
             };
-            if (!this.checkForDuplicate(eventVariableList, notificationMappedData, data, item.id, notificationRawContent)) {
+            let duplicateData = notificationMappedData.some(x => x.mobileNumber == item.mobileNumber && x.content == temp.content);
+            if (!duplicateData) {
                 notif_mobile_string += item.mobileNumber + ', ';
                 notificationMappedData.push(temp);
             }
         });
 
-        sms_list.forEach((item, index) => {
+        sms_list.forEach((item) => {
             let temp = {
                 mobileNumber: item.mobileNumber,
                 isAdvanceSms: this.getMessageFromTemplate(smsRawContent, item)
             };
-            if (this.checkForDuplicate(eventVariableList, smsMappedData, data, item.id, smsRawContent)) {
+            let duplicateData = smsMappedData.some(x => x.mobileNumber == temp.mobileNumber && x.isAdvanceSms == temp.isAdvanceSms);
+            if (!duplicateData) {
                 sms_mobile_string += item.mobileNumber + ', ';
                 smsMappedData.push(temp);
             }
@@ -311,7 +326,7 @@ export class MessageService {
             content: smsRawContent,
             parentMessageType: null,
             mobileNumberContentJson: JSON.stringify(smsMappedData),
-            count: this.getEstimatedSMSCount(sentUpdateType, personDetailsList, smsRawContent),
+            count: this.getEstimatedSMSCount(sentUpdateType, smsMappedData, smsRawContent),
             notificationCount: notificationMappedData.length,
             notificationMobileNumberList: notif_mobile_string,
             mobileNumberList: sms_mobile_string,
@@ -319,19 +334,21 @@ export class MessageService {
             smsId: smsId,
         };
 
-        console.log(sms_data);
 
-        const notification_data = notification_list.map((item) => {
+        const notification_data = notificationMappedData.map((item) => {
             return {
                 parentMessageType: null,
                 parentSMSEvent: smsEvent.id,
-                content: notificationMappedData.find(items => items.mobileNumber == item.mobileNumber).content,
+                content: item.content,
                 parentUser: this.notif_usernames.find((user) => {
                     return user.username == item.mobileNumber.toString();
                 }).id,
                 parentSchool: schoolId,
             };
         });
+
+        console.log(sms_data);
+        console.log(notification_data);
 
         service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
@@ -349,12 +366,12 @@ export class MessageService {
         }
     }
 
-    getMessageFromTemplate = (message, obj) => {
+    getMessageFromTemplate = (message, mappedDataObj) => {
         let ret = message;
-        for (let key in obj) {
-            ret = ret.replace(new RegExp('@' + key, 'g'), obj[key]);
+        for (let key in mappedDataObj) {
+            ret = ret.replace(new RegExp('@' + key, 'g'), mappedDataObj[key]);
         }
-        ret.replace(/@/g, '');
+        ret = ret.replace(/@/g, '').replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
         return ret;
     }
 
@@ -407,8 +424,9 @@ export class MessageService {
     getMappingData(eventVariableList: any, data: any, person: any, personId: any) {
         let temp = {};
         data[person + 'Id'] = personId;
+
         eventVariableList.forEach(eventVariable => {
-            temp[eventVariable.displayVariable] = eventVariable.getValueFunc(data);
+                temp[eventVariable.displayVariable] = eventVariable.getValueFunc(data);
         });
         return temp;
     }

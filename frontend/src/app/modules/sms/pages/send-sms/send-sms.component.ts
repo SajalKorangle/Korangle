@@ -47,7 +47,7 @@ export class SendSmsComponent implements OnInit {
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
-    variableRegex = /\B@([\w+\\#%*(){}.,$!=\-/[\]]?)+/g;
+    variableRegex = /@([\w+]?)+/g;
 
     studentMessageService: any;
     employeeMessageService: any;
@@ -111,6 +111,7 @@ export class SendSmsComponent implements OnInit {
         public userService: UserService,
         private cdRef: ChangeDetectorRef
     ) {
+        console.log(this);
     }
 
     onPage(event) {
@@ -187,6 +188,7 @@ export class SendSmsComponent implements OnInit {
                     tempList.push(employee);
                 }
             });
+            this.dataForMapping['employeeList'] = tempList;
         }
         if (this.userInput.selectedSentType == this.sentTypeList[0]) {
             this.smsPersonList = tempList;

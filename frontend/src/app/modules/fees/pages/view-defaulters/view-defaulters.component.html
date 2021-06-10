@@ -125,7 +125,7 @@
                 <mat-form-field style="margin: 20px 5px 5px;">
                     <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
                         <mat-option *ngFor="let sentType of sentTypeList" [value]="sentType">
-                            {{ sentType }}
+                            {{ sentType.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -147,21 +147,21 @@
 
         <div class="row">
             <div class="col-md-6">
-                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Use @Variables with studentName,studentScholarNumber,class,feesDueTillMonth,feesDueOverall,date,fathersName</span>
+                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
+                 word-wrap: break-word;">Use @Variables with - {{htmlRenderer.getVariables()}}</span>
                 <mat-form-field appearance="none" class="rowTextArea" style="width: 100%">
                 <textarea
                         matInput
                         id="messageBox"
-                        style="border-radius:10px;background-color:#c4c4c4;min-height: 130px;padding: 12px;overflow:hidden"
+                        style="border-radius:10px;background-color:#c4c4c4;min-height: 130px;padding: 12px;max-height: 300px"
                         [readonly]="htmlRenderer.getPlaceHolder().includes('Select')"
-                        cdkTextareaAutosize
                         [placeholder]="htmlRenderer.getPlaceHolder()"
                         [(ngModel)]="message"
                 ></textarea>
                 </mat-form-field>
                 <br/>
                 <ng-container *ngIf="selectedSentType != sentTypeList[1]">
-                    <span style="font-size: 14px;float:left"># of Characters/SMS: {{ htmlRenderer.getMessageLength() }}</span>
+                    <span style="font-size: 14px;float:left"># of Characters/SMS: {{htmlRenderer.getMessageLength()}}/{{getMessageCount(message)}}</span>
                     <span style="font-size: 14px;float:right">Estimated SMS Count: {{ getEstimatedSMSCount() }}</span><br/>
                 </ng-container>
                 <ng-container

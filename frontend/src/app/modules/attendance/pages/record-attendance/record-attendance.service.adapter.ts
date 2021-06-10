@@ -62,11 +62,11 @@ export class RecordAttendanceServiceAdapter {
         };
 
         const secondValue = await Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)]);
-        this.vm.dataForMapping['studentSection'] = secondValue[0];
+        this.vm.dataForMapping['studentSectionList'] = secondValue[0];
         let student_id_list = [];
         let student_data = {
             id__in: student_id_list,
-            fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
+            fields__korangle: 'id,name,mobileNumber,scholarNumber,fathersName,parentTransferCertificate',
         };
         secondValue[0].forEach((element) => {
             student_id_list.push(element.parentStudent);
@@ -291,7 +291,7 @@ export class RecordAttendanceServiceAdapter {
             if (this.vm.createdStudentList.length > 0) {
                 this.vm.dataForMapping['studentList'] = this.vm.createdStudentList;
                 this.vm.messageService.sendEventNotification(
-                    this.vm.createdStudentList,
+                   this.vm.dataForMapping,
                     'Attendance Creation',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance

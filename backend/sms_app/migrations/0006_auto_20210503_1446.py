@@ -44,6 +44,9 @@ class Migration(migrations.Migration):
                 ('parentSMSEvent', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSEvent',
                                                      verbose_name='parentSMSEvent')),
             ],
+            options={
+                'db_table': 'sms_event_settings',
+            },
         ),
         migrations.CreateModel(
             name='SMSId',

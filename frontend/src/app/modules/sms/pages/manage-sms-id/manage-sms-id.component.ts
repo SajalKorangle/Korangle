@@ -31,6 +31,7 @@ export class ManageSmsIdComponent implements OnInit {
         SMSIdList: [],
         SMSIdSchoolList: [],
         existingSMSIdDetails: null as any,
+        templateList: []
     };
 
     stateKeeper = {

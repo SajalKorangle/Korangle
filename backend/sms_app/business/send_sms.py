@@ -206,7 +206,7 @@ def send_sms(instance_dict):
         sms_count = get_sms_count(school_object.id)
 
         if instance_dict['count'] > sms_count['count']:
-            return {'remark': 'INSUFFICIENT BALANCE', 'requestId': 0}
+            return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1}
 
         print(instance_dict['smsId_id'])
 

@@ -28,22 +28,27 @@ export class ViewDefaultersHtmlRenderer {
     selectTemplate(template: any) {
         this.vm.populatedTemplateList.forEach(temp => temp.selected = false);
         template.selected = true;
-        this.vm.message = template.rawContent.replace(/{#var#}/g, '@studentName');
+        this.vm.message = template.rawContent.replace(/{#var#}/g, '@studentName').replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
         this.vm.userInput.selectedTemplate = template;
+        let textArea = document.getElementById('messageBox');
+        textArea.style.height = '0px';
+        textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 
     isSendDisabled() {
         let disabled = this.vm.getEstimatedSMSCount() + this.vm.getEstimatedNotificationCount() == 0 || this.vm.message.length == 0;
         if (!disabled && this.vm.selectedSentType != this.vm.sentTypeList[1]) {
             disabled = this.vm.getEstimatedSMSCount() > this.vm.smsBalance;
-            disabled = this.vm.message.replace(this.vm.variableRegex, '{#var#}') != this.vm.userInput.selectedTemplate.rawContent;
+            if (!disabled) {
+                disabled = this.isTemplateModified();
+            }
         }
         return disabled;
     }
 
     isTemplateModified() {
-        return this.vm.selectedSentType != this.vm.sentTypeList[1] &&
-            this.vm.message.replace(this.vm.variableRegex, '{#var#}') != this.vm.userInput.selectedTemplate.rawContent;
+        return this.vm.selectedSentType.id != this.vm.sentTypeList[1].id &&
+            this.vm.message.replace(this.vm.variableRegex, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
     }
 
     getButtonText() {
@@ -235,4 +240,7 @@ export class ViewDefaultersHtmlRenderer {
         }
     }
 
+    getVariables() {
+       return  this.vm.defaultersPageVariables.map(x => x.displayVariable);
+    }
 }

@@ -1,7 +1,7 @@
 <div class="card-content table-responsive" *ngIf="!stateKeeper.isLoading">
 
     <ng-container *ngIf="!userInput.selectedPage">
-        <b style="font-size:16px;margin-left:12px">SMS EVENT SETTINGS</b>
+        <b style="font-size:16px;margin-left:12px">SMS EVENT</b>
         <br/>
 
         <mat-nav-list *ngFor="let settingsPage of settingsPagesList" style="width: 100%">
@@ -24,7 +24,9 @@
             Go Back
         </button
         >
-        <br/><br/>
+        <br/>
+        <b style="font-size:16px;margin-left:12px">{{userInput.selectedPage.name}}</b>
+        <br/>
 
         <ng-container *ngIf="htmlRenderer.isGeneralOrDefaulters()">
             <mat-expansion-panel [expanded]="false"

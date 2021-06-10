@@ -45,6 +45,8 @@ export class AddEventComponent implements OnInit {
     loadMoreEvents = false;
     isEventListLoading = false;
 
+    dataForMapping: any;
+
     eventPostedMessage = 'A New Event "<eventTitle>" has been posted , view the event details in Events page ';
     eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the event list';
 

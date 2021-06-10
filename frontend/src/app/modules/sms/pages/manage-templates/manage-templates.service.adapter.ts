@@ -21,6 +21,7 @@ export class ManageTemplatesServiceAdapter {
 
         let smsIdData = {
             'id__in': this.vm.backendData.SMSIdSchoolList.map((a) => a.parentSMSId).join(),
+            'smsIdStatus': 'ACTIVATED',
         };
         this.vm.backendData.SMSIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, smsIdData);
 
@@ -66,12 +67,10 @@ export class ManageTemplatesServiceAdapter {
 
         let templateData = {
             'id__in': this.vm.backendData.selectedPageEventSettingsList.map(a => a.parentSMSTemplate).join(),
+            'korangle__order': '-id',
         };
         this.vm.backendData.selectedPageTemplateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, templateData);
 
-        this.vm.backendData.selectedPageTemplateList = this.vm.backendData.selectedPageTemplateList.
-            // @ts-ignore
-            sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
         if (this.vm.htmlRenderer.isGeneralOrDefaulters()) {
             this.vm.htmlRenderer.initializeNewTemplate();
         } else {
@@ -92,7 +91,7 @@ export class ManageTemplatesServiceAdapter {
                 temp['selectedSMSId'] = this.vm.populatedSMSIdList.find(smsId => smsId.id == temp['customEventTemplate'].parentSMSId);
             } else {
                 temp['selectedSMSId'] = this.vm.populatedSMSIdList.find(smsId => smsId.smsId == 'Default');
-                temp['customEventTemplate'] = {templateId: '', templateName: '', communicationType: '', rawContent: '', mappedContent: ''};
+                temp['customEventTemplate'] = {templateId: '', templateName: '', communicationType: '', rawContent: '', mappedContent: '', parentSMSId: 0};
             }
             temp['expansionPanelState'] = {  // for saving expansion panel closed or open state  after load
                 eventPanel: false,
@@ -133,19 +132,23 @@ export class ManageTemplatesServiceAdapter {
 
     async updateSettings(smsEvent: any) {
         this.vm.stateKeeper.isLoading = true;
-        let parentTemplateId = null;
         if (!this.vm.isDefaultSelected(smsEvent)) {
             let templateValue;
+            let originalTemplateData = this.vm.populatedSMSEventSettingsList.find(pop => pop.eventName == smsEvent.eventName);
             if (!smsEvent.customEventTemplate.id) {
                 templateValue = await this.vm.smsService.createObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
-                parentTemplateId = templateValue.id;
-            } else {
+            } else if (JSON.stringify(smsEvent.customEventTemplate) != JSON.stringify(originalTemplateData.customEventTemplate)) {
+                smsEvent.customEventTemplate.registrationStatus = "PENDING";
                 templateValue = await this.vm.smsService.updateObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
             }
-            smsEvent.customEventTemplate = JSON.parse(JSON.stringify(templateValue));
-            this.vm.backendData.selectedPageTemplateList.push(templateValue);
+            if (templateValue) {
+                smsEvent.eventSettings.parentSMSTemplate = templateValue.id;
+                smsEvent.customEventTemplate = JSON.parse(JSON.stringify(templateValue));
+                this.vm.backendData.selectedPageTemplateList.push(templateValue);
+            }
+        } else {
+            smsEvent.eventSettings.parentSMSTemplate = null;
         }
-        smsEvent.eventSettings.parentSMSTemplate = parentTemplateId;
 
         let value;
         if (smsEvent.eventSettings.id) { // checking whether it already has a dbId or creating a new setting

@@ -71,6 +71,7 @@ export class AddEventServiceAdapter {
                 console.log(this.vm.imageList);
 
                 this.vm.isEventListLoading = false;
+                this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
                 this.vm.isLoading = false;
             });
         });
@@ -136,12 +137,13 @@ export class AddEventServiceAdapter {
                 this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
                     (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
                 );
+                this.vm.dataForMapping['event'] = value1[0];
+                // both the studentList and employee List comes here as only common variables are used in events gallery
+                this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData;
                 this.attachEventTitle(this.vm.notifyPersonData, value1[0]);
-                this.vm.messageService.sendSMSNotificationNew(
-                    this.vm.notifyPersonData,
-                    this.vm.eventPostedMessage,
-                    this.informationMessageType,
-                    3,
+                this.vm.messageService.sendEventNotification(
+                    this.vm.dataForMapping,
+                    'Event Gallery Creation',
                     this.vm.user.activeSchool.dbId,
                     0
                 );
@@ -194,7 +196,7 @@ export class AddEventServiceAdapter {
                 console.log('Different');
                 Promise.all([
                     this.vm.eventGalleryService.deleteObjectList(this.vm.eventGalleryService.event_notify_class, data), //0
-                ]).then((value) => {
+                ]).then((value1) => {
                     let notify_list_data = [];
 
                     this.vm.eventNotifyList = this.vm.eventNotifyList.filter((element) => element.parentEvent != this.vm.editingEvent.id);
@@ -209,6 +211,33 @@ export class AddEventServiceAdapter {
                         value2[0].forEach((eachVal) => {
                             this.vm.eventNotifyList.push(eachVal);
                         });
+
+                        this.vm.notifySelectionList.forEach((notifyTo) => {
+                            notifyTo.selected =
+                                !!this.vm.eventNotifyList.find(
+                                    (eventNotify) => eventNotify.parentEvent === this.vm.editingEvent.id && eventNotify.parentClass === notifyTo.id
+                                ) ||
+                                (notifyTo.name == 'Employees' && this.vm.editingEvent.notifyEmployees);
+                        });
+                        let notifyList = this.vm.notifySelectionList.filter((notify) => notify.selected == true);
+                        this.vm.notifyPersonData = this.notifyPersonData.filter((person) =>
+                            notifyList.some(
+                                (notify) => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)
+                            )
+                        );
+                        this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
+                            (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
+                        );
+
+                        this.vm.dataForMapping['event'] = this.vm.editingEvent;
+                        // both the studentList and employee List comes here as only common variables are used in events gallery
+                        this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData;
+                        this.vm.messageService.sendEventNotification(
+                            this.vm.dataForMapping,
+                            'Event Gallery Updation',
+                            this.vm.user.activeSchool.dbId,
+                            0
+                        );
                     });
                 });
             }
@@ -242,13 +271,12 @@ export class AddEventServiceAdapter {
                 this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
                     (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
                 );
-                this.attachEventTitle(this.vm.notifyPersonData, editingEvent);
-                console.log(this.vm.notifyPersonData);
-                this.vm.messageService.sendSMSNotificationNew(
-                    this.vm.notifyPersonData,
-                    this.vm.eventDeletedMessage,
-                    this.informationMessageType,
-                    3,
+                this.vm.dataForMapping['event'] = editingEvent;
+                // both the studentList and employee List comes here as only common variables are used in events gallery
+                this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData;
+                this.vm.messageService.sendEventNotification(
+                    this.vm.dataForMapping,
+                    'Event Gallery Deletion',
                     this.vm.user.activeSchool.dbId,
                     0
                 );

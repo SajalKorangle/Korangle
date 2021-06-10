@@ -40,7 +40,7 @@ export class AddTutorialServiceAdapter {
         this.vm.backendData.fullStudentList = value[4];
 
         this.vm.dataForMapping['classList'] = value[0];
-        this.vm.dataForMapping['sectionList'] = value[1];
+        this.vm.dataForMapping['divisionList'] = value[1];
         this.vm.dataForMapping['subjectList'] = value[3];
         this.vm.dataForMapping['classSubjectList'] = value[2];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
@@ -159,7 +159,6 @@ export class AddTutorialServiceAdapter {
         this.vm.dataForMapping['tutorial'] = value[0];
         this.vm.messageService.sendEventNotification(
             this.vm.dataForMapping,
-            this.vm.tutorialPageSetting.variableList,
             'Tutorial Creation',
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
@@ -196,7 +195,6 @@ export class AddTutorialServiceAdapter {
             this.vm.dataForMapping['tutorial'] = tutorial;
             this.vm.messageService.sendEventNotification(
                 this.vm.dataForMapping,
-                this.vm.tutorialPageSetting.variableList,
                 'Tutorial Updation',
                 this.vm.user.activeSchool.dbId,
                 this.vm.smsBalance
@@ -266,7 +264,6 @@ export class AddTutorialServiceAdapter {
                 this.vm.stateKeeper.tutorialUpdating = false;
                 this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
-                    this.vm.tutorialPageSetting.variableList,
                     'Tutorial Deletion',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
@@ -286,7 +283,7 @@ export class AddTutorialServiceAdapter {
         });
         let student_data = {
             id__in: studentIdList,
-            fields__korangle: 'id,name,mobileNumber',
+            fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
         };
         const value = await Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
@@ -296,6 +293,5 @@ export class AddTutorialServiceAdapter {
         this.vm.dataForMapping['studentSectionList'] = value[1];
         this.vm.messageService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
         this.vm.dataForMapping['studentList'] = this.vm.currentClassStudentList;
-
     }
 }

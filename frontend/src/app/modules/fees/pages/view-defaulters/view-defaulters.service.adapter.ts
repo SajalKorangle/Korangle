@@ -16,7 +16,7 @@ export class ViewDefaultersServiceAdapter {
 
        const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
            {parentSchool: this.vm.user.activeSchool.dbId}), //0
-           this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {eventName: 'Notify Defaulters'}), //1
+           this.vm.smsService.getObject(this.vm.smsService.sms_event, {eventName: 'Notify Defaulters'}), //1
            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {parentSMSEvent__eventName: 'Notify Defaulters'})]); //2
 
        this.vm.backendData.smsIdSchoolList = firstValue[0];
@@ -24,11 +24,13 @@ export class ViewDefaultersServiceAdapter {
        this.vm.backendData.eventSettingsList = firstValue[2];
 
        this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
-           id__in: this.vm.backendData.smsIdSchoolList.map(a => a.parentSMSId)
+           id__in: this.vm.backendData.smsIdSchoolList.map(a => a.parentSMSId),
+           smsIdStatus: 'ACTIVATED'
        });
        this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
            id__in: this.vm.backendData.eventSettingsList.map(a => a.parentSMSTemplate),
            registrationStatus: 'APPROVED',
+           'korangle__order': '-id',
        });
 
        this.populateTemplateList();
@@ -94,7 +96,7 @@ export class ViewDefaultersServiceAdapter {
                         id__in: tempStudentIdList
                             .slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1))
                             .join(),
-                        fields__korangle: 'id,name,fathersName,mobileNumber,secondMobileNumber,address',
+                        fields__korangle: 'id,name,fathersName,mobileNumber,secondMobileNumber,address,scholarNumber',
                     };
 
                     const student_fee_list = {
@@ -134,11 +136,11 @@ export class ViewDefaultersServiceAdapter {
                     (value) => {
                         this.vm.classList = value[0];
                         this.vm.sectionList = value[1];
-                        this.vm.smsBalance = 10;
+                        this.vm.smsBalance = value[2].count;
 
                         this.vm.dataForMapping['classList'] = value[0];
                         this.vm.dataForMapping['divisionList'] = value[1];
-                        this.vm.dataForMapping['school'] = this.vm.user.activeSchool.dbId;
+                        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
                         this.vm.studentList = [];
                         this.vm.studentFeeList = [];
@@ -183,11 +185,7 @@ export class ViewDefaultersServiceAdapter {
         this.vm.isLoading = true;
         let studentData = [];
         if (this.vm.selectedFilterType == this.vm.filterTypeList[0]) {
-            this.vm.getFilteredStudentList().forEach((student) => {
-                if (student.selected && student.mobileNumber) {
-                    studentData.push(student);
-                }
-            });
+            studentData = this.vm.getFilteredStudentList().filter((item) => item.mobileNumber && item.selected);
         } else {
             this.vm.getFilteredParentList().forEach((parent) => {
                 if (parent.selected && parent.mobileNumber) {
@@ -205,14 +203,14 @@ export class ViewDefaultersServiceAdapter {
         await this.vm.messageService.smsNotificationSender(
             this.vm.dataForMapping,
             this.vm.backendData.defaultersSMSEvent,
-            this.vm.sentTypeList.indexOf(this.vm.selectedSentType) + 2,
+            this.vm.selectedSentType.id,
             this.vm.message,
             this.vm.message,
             this.vm.userInput.selectedTemplate.parentSMSId,
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
         );
-        alert(this.vm.selectedSentType + ' Sent Successfully');
+        alert(this.vm.selectedSentType.name + ' Sent Successfully');
         this.vm.isLoading = false;
     }
 }

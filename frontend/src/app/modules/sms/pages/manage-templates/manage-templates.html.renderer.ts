@@ -27,7 +27,8 @@ export class ManageTemplatesHtmlRenderer {
         return !this.vm.userInput.newTemplate.templateId || this.vm.userInput.newTemplate.templateId.trim() == '' ||
             !this.vm.userInput.newTemplate.templateName || this.vm.userInput.newTemplate.templateName.trim() == '' ||
             !this.vm.userInput.newTemplate.rawContent || this.vm.userInput.newTemplate.rawContent.trim() == '' ||
-            !this.vm.userInput.newTemplate.communicationType || this.vm.userInput.newTemplate.communicationType.trim() == '';
+            !this.vm.userInput.newTemplate.communicationType || this.vm.userInput.newTemplate.communicationType.trim() == '' ||
+            !this.vm.userInput.newTemplate.parentSMSId;
     }
 
     getTemplateShortContent(content: any) {
@@ -79,8 +80,9 @@ export class ManageTemplatesHtmlRenderer {
                 !smsEvent.customEventTemplate.communicationType || smsEvent.customEventTemplate.communicationType.trim() == '') {
                 return true;
             }
+            return this.isTemplateModified(smsEvent);
         }
-        return this.isTemplateModified(smsEvent);
+        return false;
     }
 
     getUpdateType(smsEvent: any) {
@@ -152,7 +154,6 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getVariableList() {
-        console.log(this.vm.userInput.selectedPage);
         return this.vm.userInput.selectedPage.variableList.map(a => a.displayVariable);
     }
 }

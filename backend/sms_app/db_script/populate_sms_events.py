@@ -65,3 +65,19 @@ def populate_sms_events(apps, schema_editor):
                                                          "@tutorialTopic; Subject @subject; Chapter "
                                                          "@tutorialChapter")
     new_sms_event.save()
+    new_sms_event = sms_event(eventName='Event Gallery Creation',
+                              defaultSMSContent="A New Event @eventTitle has been posted, view the event details in "
+                                                "Event Gallery page",
+                              defaultNotificationContent="A New Event @eventTitle has been posted, view the event "
+                                                         "details in Event Gallery page")
+    new_sms_event.save()
+    new_sms_event = sms_event(eventName='Event Gallery Updation',
+                              defaultSMSContent="The Event @eventTitle has been updated/edited, view the event "
+                                                "details in Event Gallery page",
+                              defaultNotificationContent="The Event @eventTitle has been updated/edited, view the "
+                                                         "event details in Event Gallery page")
+    new_sms_event.save()
+    new_sms_event = sms_event(eventName='Event Gallery Deletion',
+                              defaultSMSContent="The Event @eventTitle has been removed from the event list",
+                              defaultNotificationContent="The Event @eventTitle has been removed from the event list")
+    new_sms_event.save()

@@ -55,7 +55,7 @@ export class SendSmsServiceAdapter {
                 parentStudentParamter__parameterType: 'FILTER',
             }),
             this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, {parentSchool: this.vm.user.activeSchool.dbId}), //8
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {eventName: 'General'}), //9
+            this.vm.smsService.getObject(this.vm.smsService.sms_event, {eventName: 'General'}), //9
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {parentSMSEvent__eventName: 'General'}) //10
         ]);
 
@@ -84,11 +84,13 @@ export class SendSmsServiceAdapter {
         this.vm.backendData.eventSettingList = value[10];
 
         this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
-            id__in: this.vm.backendData.smsIdSchool.map(a => a.parentSMSId)
+            id__in: this.vm.backendData.smsIdSchool.map(a => a.parentSMSId),
+            smsIdStatus: 'ACTIVATED'
         });
         this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
             id__in: this.vm.backendData.eventSettingList.map(a => a.parentSMSTemplate),
             registrationStatus: 'APPROVED',
+            'korangle__order': '-id',
         });
 
         this.populateClassSectionList();
