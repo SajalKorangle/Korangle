@@ -707,28 +707,28 @@
 
 
                                                 <ng-container
-                                                    *ngFor="let dueBySession of element.feesDueBySession; index as sessionIndex;">
+                                                    *ngFor="let session of getSessionsWithNoDueByStudentId(element.id); index as sessionIndex;">
 
                                                     <tr style="font-weight: 500 !important; font-size: 16px !important">
                                                         <td class="expanded-session-name">
-                                                            {{sessionIndex+1}}.{{dueBySession.parentSession}}</td>
+                                                            {{sessionIndex+1}}.{{session.name}}</td>
                                                         <td class="expanded-session">
-                                                            {{getSessionFeesDue(element.id,dueBySession.parentSession)}}
+                                                            {{getSessionFeesDue(element.id,session.name)}}
                                                         </td>
                                                         <td class="expanded-session">
-                                                            {{getSessionTotalFees(element.id,dueBySession.parentSession)}}
+                                                            {{getSessionTotalFees(element.id,session.name)}}
                                                         </td>
                                                         <td class="expanded-session">
-                                                            {{getSessionLateFeesDue(element.id,dueBySession.parentSession)}}
+                                                            {{getSessionLateFeesDue(element.id,session.name)}}
                                                         </td>
                                                         <td class="expanded-session">
-                                                            {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}
+                                                            {{getSessionLateFeeTotal(element.id,session.name)}}
                                                         </td>
                                                         <td></td>
                                                     </tr>
 
                                                     <ng-container
-                                                        *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);index as studentFeeIndex">
+                                                        *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,session.name);index as studentFeeIndex">
                                                         <ng-container *ngIf="studentFee.isAnnually">
                                                             <!-- Student Fee Annually -->
 

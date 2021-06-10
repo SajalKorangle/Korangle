@@ -1088,6 +1088,11 @@ export class ViewDefaultersComponent implements OnInit {
             return this.getFilteredStudentListFeesDueBySession(session) > 0;
         });
     }
+    getSessionsWithNoDueByStudentId(id:any):any{
+        return this.sessionList.filter(session=>{
+            return this.getSessionFeesDue(id,session.name)+this.getSessionLateFeesDue(id,session.name)>0;
+        });
+    }
     getStudentFeeByStudentId(id: any): any {
         return this.studentFeeList.filter((studentFee) => {
             return studentFee.parentStudent == id && this.getStudentFeeTotalFees(studentFee) > 0;
