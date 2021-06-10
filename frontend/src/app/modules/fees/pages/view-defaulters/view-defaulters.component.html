@@ -566,7 +566,7 @@
                         <div class="data-table">
                             <table mat-table [dataSource]="studentDataSource" multiTemplateDataRows>
                                 <ng-container matColumnDef="select">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Select</b>
                                     </th>
@@ -576,43 +576,42 @@
                                     </td>
                                 </ng-container>&ensp;
                                 <ng-container matColumnDef="s.no">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>S.No</b>
                                     </th>
                                     <td align="center" mat-cell *matCellDef="let element"> {{element.position}}. </td>
                                 </ng-container>
                                 <ng-container matColumnDef="name">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Student</b>
                                     </th>
                                     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="fathersName">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}"
-                                        class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Father Name</b>
                                     </th>
                                     <td mat-cell *matCellDef="let element"> {{element.fathersName}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="class.name">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Class</b>
                                     </th>
                                     <td mat-cell *matCellDef="let element"> {{element.class.name}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="section.name">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Section</b>
                                     </th>
                                     <td mat-cell *matCellDef="let element"> {{element.section.name}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="mobileNumber">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Mobile No.</b>
                                     </th>
@@ -626,7 +625,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="secondMobileNumber">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Mobile No (2).</b>
                                     </th>
@@ -640,14 +639,14 @@
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="feesDueTillMonth">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Fees Due (Till Month)</b>
                                     </th>
                                     <td mat-cell *matCellDef="let element"> {{element.feesDueTillMonth}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="feesDueOverall">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Fees
                                             Due (Overall)</b>
@@ -656,7 +655,7 @@
                                 </ng-container>
                                 <ng-container *ngFor="let session of sessionListWithNoDues">
                                     <ng-container matColumnDef={{session.name}}>
-                                        <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                        <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                             *matHeaderCellDef>
                                             <b>Fees Due <br> ({{session.name}})</b>
                                         </th>
@@ -666,7 +665,7 @@
                                     </ng-container>
                                 </ng-container>
                                 <ng-container matColumnDef="totalFeesThisSession">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Total
                                             Fees<br />({{getCurrentSessionName()}})</b>
@@ -674,7 +673,7 @@
                                     <td mat-cell *matCellDef="let element"> {{element.totalFeesThisSession}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="feesPaidThisSession">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Fees
                                             Paid<br />({{getCurrentSessionName()}})</b>
@@ -682,7 +681,7 @@
                                     <td mat-cell *matCellDef="let element"> {{element.feesPaidThisSession}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="discountThisSession">
-                                    <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
+                                    <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
                                         <b>Discount<br />({{getCurrentSessionName()}})</b>
                                     </th>
@@ -693,7 +692,7 @@
                                     <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                                         <div class="example-element-detail"
                                             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                                            <table class="table table-hover">
+                                            <table class="expanded-table">
 
                                                 <tr style="font-weight: 500 !important; font-size: 16px !important">
                                                     <th class="expanded-header">Sessions</th>
@@ -725,6 +724,7 @@
                                                         <td class="expanded-session">
                                                             {{getSessionLateFeeTotal(element.id,dueBySession.parentSession)}}
                                                         </td>
+                                                        <td></td>
                                                     </tr>
 
                                                     <ng-container
@@ -759,6 +759,7 @@
                                                                     'april')
                                                                     }}
                                                                 </td>
+                                                                <td></td>
 
                                                             </tr>
 
@@ -826,6 +827,7 @@
                                                                         <td class="expanded-installment">{{
                                                                             getStudentFeeInstallmentLateFeeTotal(studentFee,
                                                                             installment) }}</td>
+                                                                        <td></td>
                                                                     </tr>
 
                                                                 </ng-container>

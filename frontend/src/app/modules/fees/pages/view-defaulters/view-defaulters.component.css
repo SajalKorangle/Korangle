@@ -9,12 +9,6 @@
     margin-left: 40px;
   }
 }
-.table {
-  display: flex !important;
-  flex-direction: column;
-  width: 100% !important;
-  margin: 0 auto !important;
-}
 .data-table{
   overflow: auto;
   max-height: 500px;
@@ -25,40 +19,58 @@
 .mat-tab-element{
     padding-top: 20px;
 }
-th {
+.expanded-table{
+  width:950px;
+}
+.expanded-table td{
+  border-bottom: 1px solid #ddd;
+}
+.expanded-table th{
+  border-bottom: 1px solid #ddd;
+}
+
+.mat-table-header{
   text-align: left;
   padding: 12px;
 }
+
 .expanded-header {
   width: 200px;
   height: 50px;
+  text-align: left;
 }
 .expanded-session {
   width: 200px;
   height: 40px;
+  font-weight: 600;
 }
 .expanded-session-name {
   width: 200px;
   height: 40px;
   padding-left: 15px;
+  font-weight: 600;
 }
 .expanded-Feetype {
   width: 200px;
   height: 40px;
+  font-weight: 500;
 }
 .expanded-Feetype-name {
   width: 200px;
   height: 40px;
   padding-left: 30px;
+  font-weight: 500;
 }
 .expanded-installment {
   width: 200px;
   height: 40px;
+  font-weight: 300;
 }
 .expanded-installment-name {
   width: 200px;
   height: 40px;
   padding-left: 50px;
+  font-weight: 300;
 }
 .container-fluid {
   height: 100%;
@@ -100,9 +112,4 @@ tr.example-element-row:not(.example-expanded-row):active {
   /* display: flex; */
 }
 
-.example-container {
-  height: 400px;
-  width: 1440px;
-  /* max-width: 100%; */
-  overflow: auto;
-}
+
