@@ -654,7 +654,7 @@
                                     </th>
                                     <td mat-cell *matCellDef="let element"> {{element.feesDueOverall}} </td>
                                 </ng-container>
-                                <div *ngFor="let session of sessionListWithNoDues">
+                                <ng-container *ngFor="let session of sessionListWithNoDues">
                                     <ng-container matColumnDef={{session.name}}>
                                         <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                             *matHeaderCellDef>
@@ -664,7 +664,7 @@
                                             {{getSessionFeesDue(element.id,session.name)+getSessionLateFeesDue(element.id,session.name)}}
                                         </td>
                                     </ng-container>
-                                </div>
+                                </ng-container>
                                 <ng-container matColumnDef="totalFeesThisSession">
                                     <th class="text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
                                         *matHeaderCellDef>
@@ -707,7 +707,7 @@
 
 
 
-                                                <div
+                                                <ng-container
                                                     *ngFor="let dueBySession of element.feesDueBySession; index as sessionIndex;">
 
                                                     <tr style="font-weight: 500 !important; font-size: 16px !important">
@@ -727,9 +727,9 @@
                                                         </td>
                                                     </tr>
 
-                                                    <div
+                                                    <ng-container
                                                         *ngFor="let studentFee of getStudentFeeByStudentIdAndSession(element.id,dueBySession.parentSession);index as studentFeeIndex">
-                                                        <div *ngIf="studentFee.isAnnually">
+                                                        <ng-container *ngIf="studentFee.isAnnually">
                                                             <!-- Student Fee Annually -->
 
                                                             <tr
@@ -762,8 +762,8 @@
 
                                                             </tr>
 
-                                                        </div>
-                                                        <div *ngIf="!studentFee.isAnnually">
+                                                        </ng-container>
+                                                        <ng-container *ngIf="!studentFee.isAnnually">
                                                             <!-- Student Fee Not Annually -->
 
                                                             <tr
@@ -804,7 +804,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <div *ngIf="studentFeeDetailsVisible(studentFee)">
+                                                            <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">
                                                                 <ng-container
                                                                     *ngFor="let installment of getFilteredInstallmentListByStudentFee(studentFee);index as installmentIndex">
 
@@ -829,10 +829,10 @@
                                                                     </tr>
 
                                                                 </ng-container>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ng-container>
 
                                             </table>
                                         </div>
