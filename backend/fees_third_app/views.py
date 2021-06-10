@@ -179,9 +179,10 @@ class ParentTransactionListView(CommonListView, APIView):
 
 class ParentTransactionView(CommonView, APIView):
     Model = ParentTransaction
-    @user_permission_new
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
+
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        data = request.data
         print(data)
         response = generatePaymentToken(data)
         print (response)
@@ -200,9 +201,9 @@ class OnlinePaymentAccountListView(CommonListView, APIView):
 class OnlinePaymentAccountView(CommonView, APIView):
     Model = OnlinePaymentAccount
 
-    @user_permission_new
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        data = request.data
         print(data)
         response =  addVendor(data) 
         if(response['status']=='SUCCESS'):
@@ -211,13 +212,13 @@ class OnlinePaymentAccountView(CommonView, APIView):
                 'parentEmployee' : data['parentEmployee'],
                 'vendorId' : 'VEN_'+ str(data['parentSchool']) + '_' + str(data['parentEmployee'])
             }
-            return create_object(temp, self.Model, self.ModelSerializer)
+            return create_object(temp, self.Model, self.ModelSerializer, *args, **kwargs)
         else:
             return response
     
-    @user_permission_new
-    def get(self, request):
-        response =  get_list(request.GET, self.Model,  self.ModelSerializer)
+    @user_permission_3
+    def get(self, request, *args, **kwargs):
+        response =  get_list(request.GET, self.permittedQuerySet(**kwargs),  self.ModelSerializer)
         if(len(response)>0):
             vendorId = response[0]['vendorId']
             print(vendorId)

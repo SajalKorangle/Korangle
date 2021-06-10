@@ -19,8 +19,7 @@ import { CommonFunctions } from '../../../../classes/common-functions';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
-import { values } from 'lodash';
-import { time } from 'console';
+
 declare const $: any;
 declare const CashFree: any;
 
