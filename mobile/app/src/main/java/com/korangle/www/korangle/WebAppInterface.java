@@ -47,6 +47,14 @@ public class WebAppInterface {
         this.data=data;
     }
 
+    @JavascriptInterface
+    public void openZoomMeeting(String url){
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        this.mContext.startActivity(intent);
+    }
+
+
+
 
       // this code an attempt to send multiple images to the phone default image viewer
 //    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) throws IOException {

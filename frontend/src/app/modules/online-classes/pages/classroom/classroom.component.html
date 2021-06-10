@@ -20,13 +20,28 @@
                     </div>
 
                     <div style="margin-left: 32px;">
-                        <span>Username: {{backendData.accountInfo?.username || 'N/A'}}</span><br />
-                        <span>Password: {{backendData.accountInfo?.password || 'N/A'}}</span><br />
+                        <div style="display: flex; flex-direction: row;">
+                            <span>Zoom Username: <span>{{backendData.accountInfo?.username || 'N/A'}}</span></span>
+                            <mat-icon *ngIf="backendData.accountInfo?.username"
+                                style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                                (click)="selectText(backendData.accountInfo.username)">content_copy
+                            </mat-icon>
+                        </div>
+                        <div style="display: flex; flex-direction: row;">
+                            <span>Zoom Password: <span
+                                    *ngIf="isPasswordVisible else HiddenPassword">{{backendData.accountInfo?.password
+                                    ||
+                                    'N/A'}}</span></span>
+                            <mat-icon *ngIf="backendData.accountInfo?.password "
+                                style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                                (click)="selectText(backendData.accountInfo.password)">content_copy
+                            </mat-icon>
+                        </div>
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
-                    <button *ngIf="activeClass.meetingNumber" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="redirectToMeeting(activeClass)">Enter
+                    <button *ngIf="backendData.accountInfo" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="redirectToMeeting()">Enter
                         Class</button>
                 </div>
             </ng-container>
@@ -56,7 +71,7 @@
                                             <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
                                             <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
                                                 {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span>
-                                            <span *ngIf="onlineClass.meetingNumber"
+                                            <span *ngIf="backendData.accountInfo"
                                                 style="position: absolute; bottom: 8px; right: 8px;"
                                                 class="glow-active"></span>
                                         </td>
@@ -86,4 +101,8 @@
 
 <ng-template #NotActiveSession>
     <span style="color: red;">This session is closed</span>
+</ng-template>
+
+<ng-template #HiddenPassword>
+    <span style="cursor: pointer;" (click)="isPasswordVisible=true;">*******</span>
 </ng-template>
