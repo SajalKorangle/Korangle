@@ -1130,6 +1130,20 @@ export class ViewDefaultersComponent implements OnInit {
         })
         return amount;
     }
+    getAllSessionsFeesDueByStudentId(id:any):any{
+        let amount=0;
+        this.sessionList.forEach(session=>{
+            amount+=this.getSessionFeesDue(id,session.name);
+        });
+        return amount;
+    }
+    getAllSessionsTotalFeesByStudentId(id:any):any{
+        let amount=0;
+        this.sessionList.forEach(session=>{
+            amount+=this.getSessionTotalFees(id,session.name);
+        });
+        return amount;
+    }
     getSessionBySessionName(sessionName: any): any {
         return this.sessionList.find((session) => {
             return session.name == sessionName;

@@ -695,14 +695,21 @@
                                             <table class="expanded-table">
 
                                                 <tr style="font-weight: 500 !important; font-size: 16px !important">
-                                                    <th class="expanded-header">Sessions</th>
+                                                    <th class="expanded-header">Title</th>
                                                     <th class="expanded-header">Fees Due</th>
                                                     <th class="expanded-header">Fees total</th>
-                                                    <th class="expanded-header">Late Fees Due</th>
-                                                    <th class="expanded-header">Late Fees Total</th>
-                                                    <th class="expanded-header"></th>
+                                                    <th *ngIf="getTotalLateFeesDue(element.id)>0" class="expanded-header">Late Fees Due</th>
+                                                    <th *ngIf="getTotalLateFeesDue(element.id)>0" class="expanded-header">Late Fees Total</th>
+                                                    <th  class="expanded-header"></th>
                                                 </tr>
-
+                                                <tr style="font-size: 16px;">
+                                                    <th>All Sessions</th>
+                                                    <th>{{getAllSessionsFeesDueByStudentId(element.id)}}</th>
+                                                    <th>{{getAllSessionsTotalFeesByStudentId(element.id)}}</th>
+                                                    <th *ngIf="getTotalLateFeesDue(element.id)>0">{{getTotalLateFeesDue(element.id)}}</th>
+                                                    <th *ngIf="getTotalLateFeesDue(element.id)>0">{{getTotalLateFees(element.id)}}</th>
+                                                    <th></th>
+                                                </tr>
 
 
 
@@ -718,10 +725,10 @@
                                                         <td class="expanded-session">
                                                             {{getSessionTotalFees(element.id,session.name)}}
                                                         </td>
-                                                        <td class="expanded-session">
+                                                        <td *ngIf="getTotalLateFeesDue(element.id)>0" class="expanded-session">
                                                             {{getSessionLateFeesDue(element.id,session.name)}}
                                                         </td>
-                                                        <td class="expanded-session">
+                                                        <td *ngIf="getTotalLateFeesDue(element.id)>0" class="expanded-session">
                                                             {{getSessionLateFeeTotal(element.id,session.name)}}
                                                         </td>
                                                         <td></td>
@@ -748,13 +755,13 @@
                                                                     'april') }}
                                                                 </td>
                                                                 <td class="expanded-Feetype"
-                                                                    *ngIf="getTotalLateFees(element.id)>0">
+                                                                    *ngIf="getTotalLateFeesDue(element.id)>0">
                                                                     {{ getStudentFeeInstallmentLateFeesDue(studentFee,
                                                                     'april')
                                                                     }}
                                                                 </td>
                                                                 <td class="expanded-Feetype"
-                                                                    *ngIf="getTotalLateFees(element.id)>0">
+                                                                *ngIf="getTotalLateFeesDue(element.id)>0">
                                                                     {{ getStudentFeeInstallmentLateFeeTotal(studentFee,
                                                                     'april')
                                                                     }}
@@ -782,11 +789,11 @@
                                                                     }}
                                                                 </td>
                                                                 <td class="expanded-Feetype"
-                                                                    *ngIf="getTotalLateFees(element.id)>0">
+                                                                    *ngIf="getTotalLateFeesDue(element.id)>0">
                                                                     {{
                                                                     getStudentFeeLateFeesDue(studentFee) }}</td>
                                                                 <td class="expanded-Feetype"
-                                                                    *ngIf="getTotalLateFees(element.id)>0">
+                                                                    *ngIf="getTotalLateFeesDue(element.id)>0">
                                                                     {{
                                                                     getStudentFeeLateFeeTotal(studentFee) }}</td>
                                                                 <td class="expanded-Feetype">
@@ -821,10 +828,10 @@
                                                                         <td class="expanded-installment">{{
                                                                             getStudentFeeInstallmentTotalFees(studentFee,
                                                                             installment) }}</td>
-                                                                        <td class="expanded-installment">{{
+                                                                        <td *ngIf="getTotalLateFeesDue(element.id)>0" class="expanded-installment">{{
                                                                             getStudentFeeInstallmentLateFeesDue(studentFee,
                                                                             installment) }}</td>
-                                                                        <td class="expanded-installment">{{
+                                                                        <td *ngIf="getTotalLateFeesDue(element.id)>0" class="expanded-installment">{{
                                                                             getStudentFeeInstallmentLateFeeTotal(studentFee,
                                                                             installment) }}</td>
                                                                         <td></td>
