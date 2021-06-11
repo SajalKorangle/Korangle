@@ -1,5 +1,5 @@
 import {SendSmsComponent} from '@modules/sms/pages/send-sms/send-sms.component';
-import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 import {isMobile} from '@classes/common';
 
 export class SendSmsHtmlRenderer {
@@ -15,12 +15,12 @@ export class SendSmsHtmlRenderer {
 
     changeMessageContent() {
         if (this.vm.userInput.selectedSendTo == 'Students') {
-            this.vm.message = this.vm.message.replace(/@employeeName/g, '@studentName');
+            this.vm.message = this.vm.message.replace(/{#employeeName#}/g, '{#studentName#}');
         } else {
             STUDENT_VARIABLES.forEach(variable => {
                 if (!COMMON_VARIABLES.some(x => x == variable)) {
-                    let reg = new RegExp('@' + variable, 'g');
-                    this.vm.message = this.vm.message.replace(reg, '@employeeName');
+                    let reg = new RegExp('{#' + variable + '#}', 'g');
+                    this.vm.message = this.vm.message.replace(reg, '{#employeeName#}');
                 }
             });
         }
@@ -29,7 +29,7 @@ export class SendSmsHtmlRenderer {
     isTemplateModified() {
         //.replace(/\r\n?|\n/g, '"\n"');
         let cont1 =  this.vm.message.replace(this.vm.variableRegex, '{#var#}');
-        let cont2 = this.vm.userInput.selectedTemplate.rawContent.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
+        let cont2 = this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
         return this.isSMSNeeded() && cont1 != cont2;
     }
 
@@ -44,8 +44,8 @@ export class SendSmsHtmlRenderer {
     selectTemplate(template: any) {
         this.vm.populatedTemplateList.forEach(temp => temp.selected = false);
         template.selected = true;
-        let defaultVariable = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? '@studentName' : '@employeeName';
-        this.vm.message = template.rawContent.replace(/{#var#}/g, defaultVariable).replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
+        let defaultVariable = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? '{#studentName#}' : '{#employeeName#}' ;
+        this.vm.message = template.rawContent.replace(/{#var#}/g, defaultVariable).replace(NEW_LINE_REGEX, "\n");
         this.vm.userInput.selectedTemplate = template;
         let textArea = document.getElementById('messageBox');
         textArea.style.height = '0px';
@@ -185,5 +185,11 @@ export class SendSmsHtmlRenderer {
             );
         });
         return count;
+    }
+
+    getPerStudentSMSCount() {
+        let estimatedCount = Number(this.getEstimatedSMSCount());
+        let count2 = Number(this.vm.getMobileNumberList('sms').length);
+        return isNaN(Math.round( estimatedCount / count2 )) ? 0 : Math.round( estimatedCount / count2 ) ;
     }
 }

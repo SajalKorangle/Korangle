@@ -1,4 +1,5 @@
 import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
+import {NEW_LINE_REGEX} from '@modules/sms/classes/constants';
 
 export class ManageTemplatesServiceAdapter {
 
@@ -105,8 +106,12 @@ export class ManageTemplatesServiceAdapter {
 
     async addNewTemplate() {
         this.vm.stateKeeper.isLoading = true;
+        this.vm.userInput.newTemplate.rawContent = this.vm.userInput.newTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
         const value = await this.vm.smsService.createObject(this.vm.smsService.sms_template, this.vm.userInput.newTemplate);
         this.vm.backendData.selectedPageTemplateList.push(value);
+        this.vm.backendData.selectedPageTemplateList.sort((a, b) => {
+            return b.id - a.id;
+        });
         let settings_data = {
             parentSMSEvent: this.vm.backendData.selectedPageSMSEventList[0].id,
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -136,6 +141,7 @@ export class ManageTemplatesServiceAdapter {
             let templateValue;
             let originalTemplateData = this.vm.populatedSMSEventSettingsList.find(pop => pop.eventName == smsEvent.eventName);
             if (!smsEvent.customEventTemplate.id) {
+                smsEvent.customEventTemplate.rawContent =  smsEvent.customEventTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
                 templateValue = await this.vm.smsService.createObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
             } else if (JSON.stringify(smsEvent.customEventTemplate) != JSON.stringify(originalTemplateData.customEventTemplate)) {
                 smsEvent.customEventTemplate.registrationStatus = "PENDING";

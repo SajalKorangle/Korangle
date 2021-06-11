@@ -47,7 +47,7 @@ export class SendSmsComponent implements OnInit {
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
-    variableRegex = /@([\w+]?)+/g;
+    variableRegex = /{#(.*?)#}/g;
 
     studentMessageService: any;
     employeeMessageService: any;

@@ -1,5 +1,6 @@
 import {ViewDefaultersComponent} from '@modules/fees/pages/view-defaulters/view-defaulters.component';
 import {isMobile} from '../../../../classes/common.js';
+import {NEW_LINE_REGEX} from '@modules/sms/classes/constants';
 
 export class ViewDefaultersHtmlRenderer {
 
@@ -28,7 +29,7 @@ export class ViewDefaultersHtmlRenderer {
     selectTemplate(template: any) {
         this.vm.populatedTemplateList.forEach(temp => temp.selected = false);
         template.selected = true;
-        this.vm.message = template.rawContent.replace(/{#var#}/g, '@studentName').replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
+        this.vm.message = template.rawContent.replace(/{#var#}/g, '{#studentName#}').replace(NEW_LINE_REGEX, "\n");
         this.vm.userInput.selectedTemplate = template;
         let textArea = document.getElementById('messageBox');
         textArea.style.height = '0px';
@@ -48,7 +49,7 @@ export class ViewDefaultersHtmlRenderer {
 
     isTemplateModified() {
         return this.vm.selectedSentType.id != this.vm.sentTypeList[1].id &&
-            this.vm.message.replace(this.vm.variableRegex, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
+            this.vm.message.replace(this.vm.variableRegex, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
     }
 
     getButtonText() {

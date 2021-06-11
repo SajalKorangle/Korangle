@@ -22,8 +22,8 @@
         <button type="submit" class="btn" style="float: left; cursor: pointer; padding: 4px 7px"
                 (click)="previousPage = userInput.selectedPage;userInput.selectedPage = null;">
             Go Back
-        </button
-        >
+        </button>
+        <br/>
         <br/>
         <b style="font-size:16px;margin-left:12px">{{userInput.selectedPage.name}}</b>
         <br/>
@@ -62,8 +62,9 @@
                     <textarea
                             matInput
                             type="text"
-                            cdkTextareaAutosize
-                            [(ngModel)]="userInput.newTemplate.rawContent"
+                            id="newTemplate"
+                            [ngModel]="userInput.newTemplate.rawContent"
+                            (ngModelChange)="htmlRenderer.newTemplateChanged($event)"
                             style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
                     ></textarea><br>
 
@@ -287,16 +288,17 @@
                     </div>
 
                     <div class="row">
-                        <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type @ to add variables - {{htmlRenderer.getVariableList()}}</span>
+                        <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type {{"{#varialbeName#}"}}
+                            to add variables - {{htmlRenderer.getVariableList()}}</span>
                         <br>
                         <mat-form-field [style.width]="htmlRenderer.isMobile()?'90%':'40%'"
                                         style="margin-left: 13px;" appearance="none">
                   <textarea matInput
-                            placeholder="Enter '@' and start typing..."
+                            id="notificationContent"
+                            placeholder="Enter {#variableName#} and start typing..."
                             [ngModel]="htmlRenderer.getNotificationContent(smsEvent)"
                             (ngModelChange)="htmlRenderer.setNotificationContent(smsEvent,$event)"
-                            cdkTextareaAutosize
-                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px;padding: 12px 12px 20px;overflow: hidden"
+                            style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px;padding: 12px 12px 20px;max-height:300px;"
                   ></textarea>
                         </mat-form-field>
                     </div>
@@ -341,7 +343,7 @@
                     <textarea
                             matInput
                             type="text"
-                            cdkTextareaAutosize
+                            id="smsTemplate"
                             [ngModel]="smsEvent.customEventTemplate.rawContent"
                             (ngModelChange)="htmlRenderer.rawContentChanged(smsEvent,$event)"
                             style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
@@ -359,17 +361,18 @@
                                     Content</b>
                             </div>
                             <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
-                                <span style="font-size: 10px;color:rebeccapurple;">Change @variables with - {{htmlRenderer.getVariableList()}}</span>
+                                <span style="font-size: 10px;color:rebeccapurple;">Change {{"{#varialbeName#}"}}
+                                    with - {{htmlRenderer.getVariableList()}}</span>
                             </div>
                             <div class="row">
                                 <mat-form-field style="width: 100%;" appearance="none">
                     <textarea matInput
                               type="text"
+                              id="mappedContent"
                               [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
                               (ngModelChange)="htmlRenderer.setMappedContent(smsEvent,$event)"
-                              cdkTextareaAutosize
                               [readonly]="isDefaultSelected(smsEvent)"
-                              style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
+                              style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px;max-height: 300px"
                     ></textarea>
                                 </mat-form-field>
                             </div>
@@ -412,7 +415,7 @@
                 </button>
                 <span *ngIf="htmlRenderer.isTemplateModified(smsEvent)"
                       style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You can Modify only the <b>@</b> variables in the SMS Template. (Max <b>20</b> Characters)
+                   You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
 
             </mat-expansion-panel>

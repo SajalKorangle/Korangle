@@ -1,5 +1,6 @@
 import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 import {isMobile} from '@classes/common';
+import {NEW_LINE_REGEX} from '@modules/sms/classes/constants';
 
 export class ManageTemplatesHtmlRenderer {
 
@@ -102,7 +103,10 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     setNotificationContent(smsEvent: any, $event: any) {
-        smsEvent.eventSettings.customNotificationContent = $event;
+        smsEvent.eventSettings.customNotificationContent = $event.replace(NEW_LINE_REGEX, "\n");
+        let textArea = document.getElementById('notificationContent');
+        textArea.style.height = '0px';
+        textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 
     setSMSIdSelection(smsEvent: any, $event: any) {
@@ -123,8 +127,11 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     rawContentChanged(smsEvent: any, $event: any) {
-        smsEvent.customEventTemplate.rawContent = $event;
-        smsEvent.customEventTemplate.mappedContent = smsEvent.customEventTemplate.rawContent.replace(/{#var#}/g, '@studentName');
+        smsEvent.customEventTemplate.rawContent = $event.replace(NEW_LINE_REGEX, "\n");
+        smsEvent.customEventTemplate.mappedContent = smsEvent.customEventTemplate.rawContent.replace(/{#var#}/g, '{#studentName#}');
+        let textArea = document.getElementById('smsTemplate');
+        textArea.style.height = '0px';
+        textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 
     getExpandedState(panelName: string, smsEvent: any) {
@@ -146,6 +153,9 @@ export class ManageTemplatesHtmlRenderer {
         if (!this.vm.isDefaultSelected(smsEvent)) {
             smsEvent.customEventTemplate.mappedContent = $event;
         }
+        let textArea = document.getElementById('mappedContent');
+        textArea.style.height = '0px';
+        textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 
     isTemplateModified(smsEvent: any) {
@@ -155,5 +165,12 @@ export class ManageTemplatesHtmlRenderer {
 
     getVariableList() {
         return this.vm.userInput.selectedPage.variableList.map(a => a.displayVariable);
+    }
+
+    newTemplateChanged(event: any) {
+        this.vm.userInput.newTemplate.rawContent = event.replace(NEW_LINE_REGEX, "\n");
+        let textArea = document.getElementById('newTemplate');
+        textArea.style.height = '0px';
+        textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 }

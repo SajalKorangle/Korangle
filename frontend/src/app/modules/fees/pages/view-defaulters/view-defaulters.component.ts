@@ -91,7 +91,7 @@ export class ViewDefaultersComponent implements OnInit {
     };
 
     populatedTemplateList = [];
-    variableRegex = /\B@([\w+\\#%*(){}.,$!=\-/[\]]?)+/g;
+    variableRegex = /{#(.*?)#}/g;
 
 
     serviceAdapter: ViewDefaultersServiceAdapter;

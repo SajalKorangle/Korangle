@@ -1,7 +1,7 @@
 import {UserService} from './modules/user/user.service';
 import {NotificationService} from './modules/notification/notification.service';
 import {SmsService} from './modules/sms/sms.service';
-import {EMPLOYEE_VARIABLES, EVENT_SETTING_PAGES, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {EMPLOYEE_VARIABLES, EVENT_SETTING_PAGES, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 /*
 SentUpdateType -
@@ -369,9 +369,9 @@ export class MessageService {
     getMessageFromTemplate = (message, mappedDataObj) => {
         let ret = message;
         for (let key in mappedDataObj) {
-            ret = ret.replace(new RegExp('@' + key, 'g'), mappedDataObj[key]);
+            ret = ret.replace(new RegExp('{#' + key + '#}', 'g'), mappedDataObj[key]);
         }
-        ret = ret.replace(/@/g, '').replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
+        ret = ret.replace(/{#/g, '').replace(/#}/g, '').replace(NEW_LINE_REGEX, "\n");
         return ret;
     }
 

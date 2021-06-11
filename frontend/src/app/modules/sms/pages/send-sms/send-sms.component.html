@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col-md-6">
                 <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
-                word-wrap: break-word;">Use @Variables with - {{htmlRenderer.getVariables()}}</span>
+                word-wrap: break-word;">Use {{"{#variables#}"}} with - {{htmlRenderer.getVariables()}}</span>
                 <mat-form-field appearance="none" class="rowTextArea">
                 <textarea
                         matInput    
@@ -54,27 +54,25 @@
                 ></textarea>
                 </mat-form-field>
                 <br/>
-                <ng-container *ngIf="htmlRenderer.isSMSNeeded()">
-                    <span style="font-size: 14px;float:left"># of Characters/SMS: {{ message.length }}
-                        /{{ htmlRenderer.getSMSCount(message) }}</span><span style="font-size: 14px;float:right">Estimated SMS Count: {{ htmlRenderer.getEstimatedSMSCount() }}</span><br/>
-                </ng-container>
-                <ng-container
-                        *ngIf="!htmlRenderer.isSMSNeeded()">
-                    <span style="font-size: 14px;float:left"># of Mobile devices: {{ getMobileNumberList('both').length }}</span>
-                        <span style="font-size: 14px;float:right">Estimated Notification Count: {{ getMobileNumberList('notification').length }}</span>
-                </ng-container>
+                <span style="font-size: 14px;float:left"># of Mobile devices: {{ getMobileNumberList('both').length }}</span>
+                <span *ngIf="htmlRenderer.isSMSNeeded()" style="font-size: 14px;float:right">Estimated SMS Count: {{ htmlRenderer.getEstimatedSMSCount() }}</span>
+                <span *ngIf="!htmlRenderer.isSMSNeeded()" style="font-size: 14px;float:right">Estimated Notification Count: {{ getMobileNumberList('notification').length }}</span>
+                <br/>
+                <span *ngIf="htmlRenderer.isSMSNeeded()" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }} (Approx) </span>
+                <br/>
                 <ng-container *ngIf="getMobileNumberList('both').length !== 0 && message.length > 0">
            
-            <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You can Modify only the <b>@</b> variables in the SMS Template. (Max <b>20</b> Characters)
-                <br/></span>
-                    <span *ngIf="htmlRenderer.isSMSNeeded() &&
-                        this.backendData.smsBalance < htmlRenderer.getEstimatedSMSCount()"
-                          style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You are short by <b>{{ htmlRenderer.getEstimatedSMSCount() - this.backendData.smsBalance }}</b> SMS.
-                </span><br/>
-    
+                    <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                       You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
+                    <br/></span>
+                        <span *ngIf="htmlRenderer.isSMSNeeded() &&
+                            this.backendData.smsBalance < htmlRenderer.getEstimatedSMSCount()"
+                              style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                        You are short by <b>{{ htmlRenderer.getEstimatedSMSCount() - this.backendData.smsBalance }}</b> SMS.
+                         </span><br/>
+
                 </ng-container>
+                
                 <button
                         type="submit"
                         [disabled]="htmlRenderer.isSendDisabled()"

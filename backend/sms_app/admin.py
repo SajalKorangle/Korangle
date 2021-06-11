@@ -45,7 +45,6 @@ class SmsIdAdmin(admin.ModelAdmin):
     def Status(self, obj):
         return str(obj.smsIdStatus)
 
-
 @admin.register(SMSTemplate)
 class SmsTemplateAdmin(admin.ModelAdmin):
     search_fields = ('parentSMSId__entityName', 'parentSMSId__smsId')

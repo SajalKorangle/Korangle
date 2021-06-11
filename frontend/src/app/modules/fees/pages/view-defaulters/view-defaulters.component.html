@@ -148,7 +148,7 @@
         <div class="row">
             <div class="col-md-6">
                 <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
-                 word-wrap: break-word;">Use @Variables with - {{htmlRenderer.getVariables()}}</span>
+                 word-wrap: break-word;">Use {{"{#variables#}"}} with - {{htmlRenderer.getVariables()}}</span>
                 <mat-form-field appearance="none" class="rowTextArea" style="width: 100%">
                 <textarea
                         matInput
@@ -173,7 +173,7 @@
                 <ng-container *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
            
             <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You can Modify only the <b>@</b> variables in the SMS Template. (Max <b>20</b> Characters)
+                    You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
                     <span *ngIf="getEstimatedSMSCount() > smsBalance"
                           style="font-size: 15px;color:rgba(255,0,0,0.91)">
