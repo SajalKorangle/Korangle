@@ -587,7 +587,7 @@
                                         *matHeaderCellDef>
                                         <b>Student</b>
                                     </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                    <td style="font-weight:700;" mat-cell *matCellDef="let element"> {{element.name}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="fathersName">
                                     <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
@@ -643,7 +643,7 @@
                                         *matHeaderCellDef>
                                         <b>Fees Due (Till Month)</b>
                                     </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.feesDueTillMonth}} </td>
+                                    <td style="font-weight: 700;" mat-cell *matCellDef="let element"> {{element.feesDueTillMonth}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="feesDueOverall">
                                     <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
