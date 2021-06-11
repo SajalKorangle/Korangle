@@ -25,6 +25,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/sms/pages/manage-sms-id/manage-sms-id.module#ManageSmsIdModule',
         data: { moduleName: 'sms' },
     },
+    {
+        path: 'manage_templates',
+        loadChildren: 'app/modules/sms/pages/manage-templates/manage-templates.module#ManageTemplatesModule',
+        data: { moduleName: 'sms' },
+    },
 
     {
         path: '',

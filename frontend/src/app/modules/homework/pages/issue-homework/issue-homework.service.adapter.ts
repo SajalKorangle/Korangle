@@ -10,6 +10,7 @@ export class IssueHomeworkServiceAdapter {
     }
 
     studentNotificationList: any;
+
     // Data
 
     initializeAdapter(vm: IssueHomeworkComponent): void {
@@ -33,6 +34,13 @@ export class IssueHomeworkServiceAdapter {
             this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //4
         ]);
         this.vm.smsBalance = value[4];
+
+        this.vm.dataForMapping['classSubjectList'] = value[0];
+        this.vm.dataForMapping['subjectList'] = value[1];
+        this.vm.dataForMapping['classList'] = value[2];
+        this.vm.dataForMapping['divisionList'] = value[3];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
         this.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
         this.vm.isInitialLoading = false;
 
@@ -107,7 +115,6 @@ export class IssueHomeworkServiceAdapter {
             parentClass: this.vm.selectedClassSection.classDbId,
             parentDivision: this.vm.selectedClassSection.divisionDbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            fields__korangle: 'parentStudent',
         };
 
         const homework_data = {
@@ -123,6 +130,7 @@ export class IssueHomeworkServiceAdapter {
             // this.vm.
         ]).then(
             (value) => {
+                this.vm.dataForMapping['studentSectionList'] = value[2];
                 this.vm.homeworkImagesList = value[1];
                 this.initialiseHomeworks(value[0], value[1]);
                 let studentIdList = [];
@@ -131,22 +139,12 @@ export class IssueHomeworkServiceAdapter {
                 });
                 let student_data = {
                     id__in: studentIdList,
-                    fields__korangle: 'id,name,mobileNumber',
+                    fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
                 };
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then((value) => {
-                    value[0].forEach((element) => {
-                        let tempData = {
-                            dbId: element.id,
-                            name: element.name,
-                            mobileNumber: element.mobileNumber,
-                            subject: this.vm.selectedSubject.name,
-                            homeworkName: null,
-                            deadLine: null,
-                        };
-                        this.studentNotificationList.push(tempData);
-                    });
-                    // this.fetchGCMDevices(this.studentNotificationList);
-                    this.vm.updateService.fetchGCMDevicesNew(this.studentNotificationList);
+                    this.studentNotificationList = value[0];
+                    this.vm.messageService.fetchGCMDevicesNew(this.studentNotificationList);
+                    this.vm.dataForMapping['studentList'] = this.studentNotificationList;
                     this.vm.isLoading = false;
                 });
                 this.sortHomeworks();
@@ -220,13 +218,14 @@ export class IssueHomeworkServiceAdapter {
         this.populateCurrentHomework();
         const sValue = await Promise.all(this.getHomeworkServices());
         alert('Homework has been successfully created');
-        this.populateStudentList(this.studentNotificationList, this.vm.currentHomework);
+
+        this.vm.dataForMapping['homework'] = this.vm.currentHomework;
         this.populateCurrentHomeworkImages(value[0].id, sValue);
         this.vm.currentHomework = new Homework();
         this.vm.currentHomeworkImages = [];
         this.vm.isLoading = false;
-        this.vm.updateService.sendEventNotification(
-            this.studentNotificationList,
+        this.vm.messageService.sendEventNotification(
+            this.vm.dataForMapping,
             'Homework Creation',
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
@@ -247,21 +246,13 @@ export class IssueHomeworkServiceAdapter {
     populateCurrentHomeworkImages(homeworkId: any, imagesList: any): any {
         let tempHomework = this.vm.homeworkList.find((homework) => homework.id == homeworkId);
         imagesList.forEach((image) => {
-            if (image.questionImage != undefined) tempHomework.homeworkImages.push(image);
+            if (image.questionImage != undefined) {
+                tempHomework.homeworkImages.push(image);
+            }
         });
         this.sortHomeworks();
     }
 
-    populateStudentList(studentList: any, homeworkData: any): any {
-        studentList.forEach((student) => {
-            student.homeworkName = homeworkData.homeworkName;
-            student.deadLine = this.vm.displayDateTime(homeworkData.endDate, homeworkData.endTime);
-            student.date = moment(new Date()).format('DD/MM/YYYY');
-            student.schoolName = this.vm.user.activeSchool.printName;
-            student.studentName = student.name;
-            student.class = this.vm.selectedClassSection;
-        });
-    }
 
     async deleteHomework(homeworkId: any) {
         if (!confirm('Are you sure you want to delete this homework?')) {
@@ -274,13 +265,13 @@ export class IssueHomeworkServiceAdapter {
         const value = await this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question, {id: homeworkId});
         this.vm.homeworkList.forEach((homework, index) => {
             if (homework.id == homeworkId) {
+                this.vm.dataForMapping['homework'] = homework;
                 tempHomeworkName = homework.homeworkName;
                 this.vm.homeworkList.splice(index, 1);
             }
         });
-        this.populateStudentList(this.studentNotificationList, {homeworkName: tempHomeworkName});
-        this.vm.updateService.sendEventNotification(
-            this.studentNotificationList,
+        this.vm.messageService.sendEventNotification(
+            this.vm.dataForMapping,
             'Homework Deletion',
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
@@ -289,7 +280,7 @@ export class IssueHomeworkServiceAdapter {
         this.vm.isLoading = false;
     }
 
-   async updateHomework(data: any) {
+    async updateHomework(data: any) {
         const promises = [];
         let previousHomework = this.vm.homeworkList.find((homework) => homework.id === data.id);
 
@@ -309,7 +300,7 @@ export class IssueHomeworkServiceAdapter {
                     questionImage: image.questionImage,
                 };
                 let temp_form_data = new FormData();
-                const layout_data = { ...tempData };
+                const layout_data = {...tempData};
                 Object.keys(layout_data).forEach((key) => {
                     if (key === 'questionImage') {
                         temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'questionImage' + index + '.jpeg'));
@@ -336,9 +327,9 @@ export class IssueHomeworkServiceAdapter {
 
         const value = await Promise.all(promises);
         this.populateEditedHomework(value);
-        this.populateStudentList(this.studentNotificationList, value[0]);
-        this.vm.updateService.sendEventNotification(
-            this.studentNotificationList,
+        this.vm.dataForMapping['homework'] = value[0];
+        this.vm.messageService.sendEventNotification(
+            this.vm.dataForMapping,
             'Homework Updation',
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
@@ -356,7 +347,9 @@ export class IssueHomeworkServiceAdapter {
         previousHomework.homeworkText = tempHomeworkData.homeworkText;
         previousHomework.homeworkImages = [];
         data.forEach((image) => {
-            if (image.questionImage != undefined) previousHomework.homeworkImages.push(image);
+            if (image.questionImage != undefined) {
+                previousHomework.homeworkImages.push(image);
+            }
         });
     }
 }

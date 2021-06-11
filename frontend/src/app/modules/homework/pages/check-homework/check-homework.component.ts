@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
 
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -34,6 +34,8 @@ export class CheckHomeworkComponent implements OnInit {
     notif_usernames = [];
     smsBalance = 0;
 
+    dataForMapping =  {} as any;
+
     classSectionHomeworkList: any;
     selectedClassSection: any;
     selectedSubject: any;
@@ -48,7 +50,7 @@ export class CheckHomeworkComponent implements OnInit {
 
     HOMEWORK_STATUS = ['GIVEN', 'SUBMITTED', 'CHECKED', 'ASKED FOR RESUBMISSION'];
 
-    updateService: any;
+    messageService: any;
 
     constructor(
         public classService: ClassService,
@@ -69,7 +71,7 @@ export class CheckHomeworkComponent implements OnInit {
         this.classSectionHomeworkList = [];
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new CheckHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -69,10 +69,12 @@ export class IssueHomeworkComponent implements OnInit {
     noPermission: any;
     smsBalance: any;
 
+    dataForMapping =  {} as any;
+
     // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
-    updateService: any;
+    messageService: any;
 
     constructor(
         public subjectService: SubjectService,
@@ -97,7 +99,7 @@ export class IssueHomeworkComponent implements OnInit {
         this.currentHomework = new Homework();
         this.currentHomeworkImages = [];
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new IssueHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);

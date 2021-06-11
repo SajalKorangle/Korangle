@@ -33,6 +33,11 @@ export class CheckHomeworkServiceAdapter {
             this.vm.smsOldService.getSMSCount({ parentSchool: this.vm.user.activeSchool.dbId }, this.vm.user.jwt), //5
         ]);
         this.vm.smsBalance = value[5];
+        this.vm.dataForMapping['subjectList'] = value[0];
+        this.vm.dataForMapping['classList'] = value[1];
+        this.vm.dataForMapping['divisionList'] = value[2];
+        this.vm.dataForMapping['classSubjectList'] = value[4];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
         this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
         this.vm.isInitialLoading = false;
     }
@@ -119,7 +124,6 @@ export class CheckHomeworkServiceAdapter {
             parentClass: this.vm.selectedClassSection.classDbId,
             parentDivision: this.vm.selectedClassSection.divisionDbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            fields__korangle: 'parentStudent',
         };
 
         this.vm.currentHomework = {
@@ -137,6 +141,7 @@ export class CheckHomeworkServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //1
         ]).then(
             (value) => {
+                this.vm.dataForMapping['studentSectionList'] = value[1];
                 this.vm.currentHomework.images = value[0];
                 this.vm.currentHomework.images.sort((a, b) => (a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0));
                 let studentIdList = [];
@@ -146,7 +151,7 @@ export class CheckHomeworkServiceAdapter {
 
                 let student_data = {
                     id__in: studentIdList,
-                    fields__korangle: 'id,name,mobileNumber',
+                    fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
                 };
                 let student_homework_data = {
                     parentHomeworkQuestion: this.vm.selectedHomework.id,
@@ -161,17 +166,7 @@ export class CheckHomeworkServiceAdapter {
                     this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_image_data), //2
                 ]).then(
                     (value) => {
-                        value[0].forEach((element) => {
-                            let tempData = {
-                                dbId: element.id,
-                                name: element.name,
-                                mobileNumber: element.mobileNumber,
-                                subject: this.vm.selectedSubject.name,
-                                homeworkName: this.vm.selectedHomework.name,
-                                deadLine: null,
-                            };
-                            this.vm.studentList.push(tempData);
-                        });
+                        this.vm.studentList = value[0];
                         this.initialiseStudentHomeworkData(value[2], value[1]);
                         if (value[1].length != studentIdList.length) {
                             const createList = [];
@@ -197,7 +192,8 @@ export class CheckHomeworkServiceAdapter {
                             this.getHomeworkReport();
                             this.vm.isLoading = false;
                         }
-                        this.vm.updateService.fetchGCMDevicesNew(this.vm.studentList);
+                        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
+                        this.vm.dataForMapping['studentList'] = this.vm.studentList;
                     },
                     (error) => {
                         this.vm.isLoading = false;
@@ -212,7 +208,7 @@ export class CheckHomeworkServiceAdapter {
 
     initialiseStudentHomeworkData(studentHomeworkImagesList: any, studentHomeworkList: any): any {
         studentHomeworkList.forEach((studentHomework) => {
-            let tempStudent = this.vm.studentList.find((student) => student.dbId == studentHomework.parentStudent);
+            let tempStudent = this.vm.studentList.find((student) => student.id == studentHomework.parentStudent);
             let tempData = {
                 id: studentHomework.id,
                 studentName: tempStudent.name,
@@ -267,30 +263,19 @@ export class CheckHomeworkServiceAdapter {
                id: studentHomework.id,
                homeworkStatus: studentHomework.status,
            };
-           let tempStudent = this.vm.studentList.find((student) => student.dbId == studentHomework.parentStudent);
            const value = await Promise.all([this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData)]);
-
-            let studentDataList = [{
-               mobileNumber: studentHomework.mobileNumber,
-               homeworkName: this.vm.selectedHomework.homeworkName,
-               subject: this.vm.selectedSubject.name,
-               notification: tempStudent.notification,
-               date: moment(new Date()).format('DD/MM/YYYY'),
-               schoolName: this.vm.user.activeSchool.printName,
-               studentName: studentHomework.studentName,
-               class: this.vm.selectedClassSection,
-           }];
-
+           this.vm.dataForMapping['homework'] = this.vm.selectedHomework;
+           this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
            if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
-                this.vm.updateService.sendEventNotification(
-                    studentDataList,
+                this.vm.messageService.sendEventNotification(
+                    this.vm.dataForMapping,
                     'Homework Checked',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
                 );
             } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
-               this.vm.updateService.sendEventNotification(
-                    studentDataList,
+               this.vm.messageService.sendEventNotification(
+                    this.vm.dataForMapping,
                     'Homework Resubmission',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance

@@ -6,13 +6,14 @@ import { StudentService } from '@services/modules/student/student.service';
 import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { SmsService } from 'app/services/modules/sms/sms.service';
 import { UserService } from 'app/services/modules/user/user.service';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
+import {EVENT_SETTING_PAGES} from '@modules/sms/classes/constants';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -41,13 +42,17 @@ export class AddTutorialComponent implements OnInit {
     currentClassStudentList = [];
     classSectionSubjectList = [];
 
+    tutorialPageSetting = EVENT_SETTING_PAGES.find(page => page.name == 'Tutorial');
+
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
     smsBalance: any;
 
-    updateService: any;
+    messageService: any;
+
+    dataForMapping =  {} as any;
 
     backendData = {
         classList: [],
@@ -92,7 +97,7 @@ export class AddTutorialComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.htmlRenderer = new AddTutorialHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
@@ -100,10 +105,6 @@ export class AddTutorialComponent implements OnInit {
         this.serviceAdapter = new AddTutorialServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        document.body.appendChild(tag);
     }
 
 

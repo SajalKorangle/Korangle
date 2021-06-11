@@ -1,0 +1,18 @@
+.Flex-Row-Col{
+    display: flex;
+    flex-direction: row;
+}
+
+mat-form-field{
+    margin: 0 24px;
+}
+
+
+@media only screen and (max-width: 991px)  {
+    mat-form-field{
+        margin: 0 4px;
+    }
+    .Flex-Row-Col{
+        flex-direction: column;
+    }
+}

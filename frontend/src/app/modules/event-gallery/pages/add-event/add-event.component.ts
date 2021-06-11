@@ -7,7 +7,7 @@ import { FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { AddEventHtmlAdapter } from '@modules/event-gallery/pages/add-event/add-event.html.adapter';
 import { StudentService } from '@services/modules/student/student.service';
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 import { NotificationService } from '@services/modules/notification/notification.service';
 import { UserService } from '@services/modules/user/user.service';
 import { SmsService } from '@services/modules/sms/sms.service';
@@ -24,7 +24,7 @@ export class AddEventComponent implements OnInit {
 
     serviceAdapter: AddEventServiceAdapter;
     htmlAdapter: AddEventHtmlAdapter;
-    updateService: any;
+    messageService: any;
 
     imageList: any;
     notifySelectionList: any;
@@ -44,6 +44,8 @@ export class AddEventComponent implements OnInit {
     isLoading = false;
     loadMoreEvents = false;
     isEventListLoading = false;
+
+    dataForMapping: any;
 
     eventPostedMessage = 'A New Event "<eventTitle>" has been posted , view the event details in Events page ';
     eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the event list';
@@ -65,7 +67,7 @@ export class AddEventComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.htmlAdapter = new AddEventHtmlAdapter();
         this.htmlAdapter.initializeAdapter(this);

@@ -1,371 +1,384 @@
-<div class="card-content table-responsive" [class.hidden]="isLoading">
+<div class="card-content table-responsive" [class.hidden]="stateKeeper.isLoading">
     <!-- Gap -->
-    <div class="row" style="margin-bottom: 30px">
-        <div class="col-xs-12"></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <span style="font-size: 16px"
-                >SMS Balance:
-                <b
-                    ><i>{{ smsBalance }}</i></b
-                ><br
-            /></span>
-        </div>
-        <div class="col-md-6" align="end">
-            <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab" target="_blank">
-                Hindi Typing Extension
-            </a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <mat-form-field class="rowTextArea">
-                <textarea
-                    matInput
-                    style="padding-top: 10px; padding-bottom: 10px"
-                    rows="8"
-                    placeholder="Message"
-                    [(ngModel)]="message"
-                ></textarea>
+    <div class="row" style="margin-Top: 10px">
+        <div class="col-md-3">
+            <mat-form-field style="margin-top:20px;margin-bottom:5px;margin-left:5px">
+                <mat-select placeholder="Send To" [(ngModel)]="userInput.selectedSendTo"
+                            (ngModelChange)="htmlRenderer.changeMessageContent()">
+                    <mat-option *ngFor="let sendTo of sendToList" [value]="sendTo">
+                        {{sendTo}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-md-3">
-            <mat-form-field style="margin-top: 23px">
-                <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
-                    <mat-option *ngFor="let sentType of sentTypeList" [value]="sentType">
-                        {{ sentType }}
-                    </mat-option>
-                </mat-select> </mat-form-field
-            ><br />
-            <span style="font-size: 14px; margin-top: 5px">
-                # of Characters/SMS: {{ message.length }}/{{ getSMSCount() }}<br />
-                # of Mobile devices: {{ getMobileNumberList('both').length }}<br />
-                Estimated SMS Count: {{ getMobileNumberList('sms').length * getSMSCount() }}<br />
-                Estimated Notification Count: {{ getMobileNumberList('notification').length }}<br />
-            </span>
-            <span *ngIf="getMobileNumberList('both').length !== 0 && message.length > 0">
-                <span
-                    *ngIf="
-                        (selectedSentType == sentTypeList[0] || selectedSentType == sentTypeList[2]) &&
-                        smsBalance < getMobileNumberList('sms').length * getSMSCount()
-                    "
-                    style="font-size: 16px"
-                >
-                    You are short by <b>{{ getMobileNumberList('sms').length * getSMSCount() - smsBalance }}</b> SMS.
-                </span>
-                <ng-container *ngIf="smsBalance >= getMobileNumberList('sms').length * getSMSCount()">
-                    <button
-                        type="submit"
-                        *ngIf="selectedSentType == sentTypeList[0]"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                        (click)="serviceAdapter.sendSMSAndNotification()"
-                    >
-                        Send {{ getMobileNumberList('sms').length * getSMSCount() }} SMS
-                    </button>
-                    <button
-                        type="submit"
-                        *ngIf="selectedSentType == sentTypeList[2]"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                        (click)="serviceAdapter.sendSMSAndNotification()"
-                    >
-                        Send {{ getMobileNumberList('sms').length * getSMSCount() }} SMS &
-                        {{ getMobileNumberList('notification').length }} notifications
-                    </button>
+    </div>
+
+    <ng-container *ngIf="userInput.selectedSendTo">
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field style="margin: 20px 5px 5px;">
+                    <mat-select placeholder="Send via" [(ngModel)]="userInput.selectedSentType">
+                        <mat-option *ngFor="let sentType of sentTypeList" [value]="sentType">
+                            {{ sentType.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <span style="margin-left:5px;font-size: 16px"
+                      *ngIf="htmlRenderer.isSMSNeeded()"
+                >SMS Balance:
+                <b
+                ><i>{{ backendData.smsBalance }}</i></b
+                ><br
+                    /></span>
+            </div>
+            <div class="col-md-6" align="end">
+                <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
+                   target="_blank">
+                    Hindi Typing Extension
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
+                word-wrap: break-word;">Use {{"{#variables#}"}} with - {{htmlRenderer.getVariables()}}</span>
+                <mat-form-field appearance="none" class="rowTextArea">
+                <textarea
+                        matInput    
+                        id="messageBox"
+                        style="border-radius:10px;background-color:#c4c4c4;min-height: 130px;padding: 12px;max-height:300px;"
+                        [readonly]="htmlRenderer.getPlaceHolder().includes('Select')"
+                        [placeholder]="htmlRenderer.getPlaceHolder()"
+                        [(ngModel)]="message"
+                ></textarea>
+                </mat-form-field>
+                <br/>
+                <span style="font-size: 14px;float:left"># of Mobile devices: {{ getMobileNumberList('both').length }}</span>
+                <span *ngIf="htmlRenderer.isSMSNeeded()" style="font-size: 14px;float:right">Estimated SMS Count: {{ htmlRenderer.getEstimatedSMSCount() }}</span>
+                <span *ngIf="!htmlRenderer.isSMSNeeded()" style="font-size: 14px;float:right">Estimated Notification Count: {{ getMobileNumberList('notification').length }}</span>
+                <br/>
+                <span *ngIf="htmlRenderer.isSMSNeeded()" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }} (Approx) </span>
+                <br/>
+                <ng-container *ngIf="getMobileNumberList('both').length !== 0 && message.length > 0">
+           
+                    <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                       You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
+                    <br/></span>
+                        <span *ngIf="htmlRenderer.isSMSNeeded() &&
+                            this.backendData.smsBalance < htmlRenderer.getEstimatedSMSCount()"
+                              style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                        You are short by <b>{{ htmlRenderer.getEstimatedSMSCount() - this.backendData.smsBalance }}</b> SMS.
+                         </span><br/>
+
                 </ng-container>
+                
                 <button
-                    type="submit"
-                    *ngIf="selectedSentType == sentTypeList[1]"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                    (click)="serviceAdapter.sendSMSAndNotification()"
+                        type="submit"
+                        [disabled]="htmlRenderer.isSendDisabled()"
+                        style="border-radius: 15px"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        [class.disabledButton]="htmlRenderer.isSendDisabled()"
+                        (click)="serviceAdapter.sendSMSAndNotification()"
                 >
-                    Send {{ getMobileNumberList('notification').length }} notifications
+                    {{htmlRenderer.getButtonText()}}
                 </button>
-            </span>
-        </div>
-    </div>
-
-    <!-- Gap Line -->
-    <div class="row" style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px">
-        <div class="col-xs-12"></div>
-    </div>
-
-    <!-- Student List -->
-    <div class="row">
-        <div class="col-md-6">
-            <span style="font-size: 16px; font-weight: 600"><i>Student List</i></span>
-            <button
-                class="btn"
-                style="padding: 4px 7px; margin-left: 15px"
-                (click)="showStudentList = !showStudentList; $event.stopPropagation()"
-            >
-                <span *ngIf="showStudentList; else hideStudentList">Hide</span>
-                <ng-template #hideStudentList>Show</ng-template>
-            </button>
-        </div>
-    </div>
-
-    <div [class.hidden]="!showStudentList || studentList.length === 0">
-        <!-- Class Filter -->
-        <mat-form-field style="margin-right: 15px">
-            <mat-select placeholder="Select Class" style="width: 100%">
-                <mat-option>
-                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
-                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
-                </mat-option>
-
-                <mat-option *ngFor="let classSection of classSectionList" style="width: 100%">
-                    <mat-checkbox [(ngModel)]="classSection.selected" (click)="$event.stopPropagation()">
-                        {{ getClassSectionName(classSection.class.id, classSection.section.id) }}
-                    </mat-checkbox>
-                </mat-option>
-
-                <mat-option>
-                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
-                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
-        <mat-checkbox [(ngModel)]="includeSecondMobileNumber" (click)="$event.stopPropagation()">
-            Include Alternate Mobile Number
-        </mat-checkbox>
-
-        <mat-checkbox [(ngModel)]="invalidmobilenumber" style="margin-left: 15px" (click)="$event.stopPropagation()">
-            Show Invalid Mobile Number
-        </mat-checkbox>
-
-        <!-- Search by student's or father's name -->
-        <br />
-        <mat-form-field>
-            <input matInput testId="nameFilter" placeholder="Enter student's name, father's name.." type="text" [(ngModel)]="nameFilter" />
-        </mat-form-field>
-        <!-- EOF Search by student's or father's name -->
-
-        <!-- Custom Filters -->
-        <ng-container>
-            <br />
-            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
-                <ng-container *ngIf="!showFilters">Show Filters</ng-container>
-                <ng-container *ngIf="showFilters">Hide Filters</ng-container></button
-            ><br />
-
-            <ng-container *ngIf="showFilters">
-                <br />
-                <b>Default Filters</b><br />
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <!-- Category Filter -->
-                        <mat-form-field>
-                            <mat-label>Category</mat-label>
-                            <input matInput disabled="true" /> </mat-form-field
-                        ><br />
-                        <mat-checkbox [(ngModel)]="studentFilters.category.sc" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >SC </mat-checkbox
-                        >,
-                        <mat-checkbox [(ngModel)]="studentFilters.category.st" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >ST </mat-checkbox
-                        >,
-                        <mat-checkbox [(ngModel)]="studentFilters.category.obc" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >OBC </mat-checkbox
-                        >,
-                        <mat-checkbox
-                            [(ngModel)]="studentFilters.category.general"
-                            style="margin-right: 5px"
-                            (click)="$event.stopPropagation()"
-                            >GEN
-                        </mat-checkbox>
+            </div>
+            <div class="col-md-4">
+                <div style="border: 1px solid black;height: 200px;width:100%;overflow: auto">
+                    <div style="background: #c4c4c4;color:black;width:100%;font-weight: 600;padding:10px"
+                         class="text-center">Templates
                     </div>
-                    <div class="col-md-6">
-                        <!-- Gender Filter -->
-                        <mat-form-field>
-                            <mat-label>Gender</mat-label>
-                            <input matInput disabled="true" /> </mat-form-field
-                        ><br />
-                        <mat-checkbox [(ngModel)]="studentFilters.gender.male" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >M </mat-checkbox
-                        >,
-                        <mat-checkbox
-                            [(ngModel)]="studentFilters.gender.female"
-                            style="margin-right: 5px"
-                            (click)="$event.stopPropagation()"
-                            >F </mat-checkbox
-                        >,
-                        <mat-checkbox [(ngModel)]="studentFilters.gender.other" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >Other
-                        </mat-checkbox>
+                   <div class="text-center" style="margin-top: 5px">
+                       <span *ngIf="populatedTemplateList.length == 0" >You Have No APPROVED Templates</span>
+                   </div>
+                    <div *ngFor="let template of populatedTemplateList;let i = index;"
+                         style="padding:10px;cursor:pointer" (click)="htmlRenderer.selectTemplate(template)"
+                         class="text-center">
+                        <span style="margin-right:5px;">{{i + 1}}.</span><span>{{htmlRenderer.getSMSIdName(template)}}
+                        - {{template.templateName}}</span>
+                        <mat-icon style="color:green;font-size: 16px;position: relative;top: 2px;margin-left: 6px;"
+                                  *ngIf="template.selected">check
+                        </mat-icon>
+                        <div class="row" style="border-bottom: 1px solid black;margin-left:0;margin-right:0">
+                            <div class="col-xs-12"></div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <!-- Admission Filter -->
-                        <mat-form-field>
-                            <mat-label>Admission</mat-label>
-                            <input matInput disabled="true" /> </mat-form-field
-                        ><br />
-                        <mat-checkbox
-                            [(ngModel)]="studentFilters.admission.new"
-                            style="margin-right: 5px"
-                            (click)="$event.stopPropagation()"
-                            >New </mat-checkbox
-                        >,
-                        <mat-checkbox
-                            [(ngModel)]="studentFilters.admission.old"
-                            style="margin-right: 5px"
-                            (click)="$event.stopPropagation()"
-                            >Old
+        <!-- Gap Line -->
+        <div class="row" style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px">
+            <div class="col-xs-12"></div>
+        </div>
+
+        <!-- Student List -->
+        <div class="row" *ngIf="userInput.selectedSendTo == sendToList[0]">
+            <div class="col-md-4">
+                <span style="font-size: 16px; font-weight: 600"><i>Student List</i></span>
+            </div>
+        </div>
+
+        <div *ngIf="userInput.selectedSendTo == sendToList[0] && backendData.studentList.length > 0">
+            <!-- Class Filter -->
+            <mat-form-field style="margin-right: 15px">
+                <mat-select placeholder="Select Class" style="width: 100%">
+                    <mat-option>
+                        <button class="btn" style="padding: 4px 7px"
+                                (click)="htmlRenderer.selectAllClasses(); $event.stopPropagation()">Select All
+                        </button>
+                        <button class="btn" style="padding: 4px 7px"
+                                (click)="htmlRenderer.unselectAllClasses(); $event.stopPropagation()">Clear All
+                        </button>
+                    </mat-option>
+
+                    <mat-option *ngFor="let classSection of classSectionList" style="width: 100%">
+                        <mat-checkbox [(ngModel)]="classSection.selected" (click)="$event.stopPropagation()">
+                            {{ htmlRenderer.getClassSectionName(classSection.class.id, classSection.section.id) }}
                         </mat-checkbox>
+                    </mat-option>
+
+                    <mat-option>
+                        <button class="btn" style="padding: 4px 7px"
+                                (click)="htmlRenderer.selectAllClasses(); $event.stopPropagation()">Select All
+                        </button>
+                        <button class="btn" style="padding: 4px 7px"
+                                (click)="htmlRenderer.unselectAllClasses(); $event.stopPropagation()">Clear All
+                        </button>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-checkbox [(ngModel)]="includeSecondMobileNumber" (click)="$event.stopPropagation()">
+                Include Alternate Mobile Number
+            </mat-checkbox>
+
+            <mat-checkbox [(ngModel)]="invalidmobilenumber" style="margin-left: 15px"
+                          (click)="$event.stopPropagation()">
+                Show Invalid Mobile Number
+            </mat-checkbox>
+
+            <!-- Search by student's or father's name -->
+            <br/>
+            <mat-form-field>
+                <input matInput testId="nameFilter" placeholder="Enter student's name, father's name.." type="text"
+                       [(ngModel)]="nameFilter"/>
+            </mat-form-field>
+            <!-- EOF Search by student's or father's name -->
+
+            <!-- Custom Filters -->
+            <ng-container>
+                <br/>
+                <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
+                    <ng-container *ngIf="!showFilters">Show Filters</ng-container>
+                    <ng-container *ngIf="showFilters">Hide Filters</ng-container>
+                </button>
+                <br/>
+
+                <ng-container *ngIf="showFilters">
+                    <br/>
+                    <b>Default Filters</b><br/>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Category Filter -->
+                            <mat-form-field>
+                                <mat-label>Category</mat-label>
+                                <input matInput disabled="true"/></mat-form-field>
+                            <br/>
+                            <mat-checkbox [(ngModel)]="studentFilters.category.sc" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">SC
+                            </mat-checkbox>,
+                            <mat-checkbox [(ngModel)]="studentFilters.category.st" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">ST
+                            </mat-checkbox>,
+                            <mat-checkbox [(ngModel)]="studentFilters.category.obc" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">OBC
+                            </mat-checkbox>
+                            ,
+                            <mat-checkbox
+                                    [(ngModel)]="studentFilters.category.general"
+                                    style="margin-right: 5px"
+                                    (click)="$event.stopPropagation()">GEN
+                            </mat-checkbox>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Gender Filter -->
+                            <mat-form-field>
+                                <mat-label>Gender</mat-label>
+                                <input matInput disabled="true"/></mat-form-field>
+                            <br/>
+                            <mat-checkbox [(ngModel)]="studentFilters.gender.male" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">M
+                            </mat-checkbox>
+                            ,
+                            <mat-checkbox
+                                    [(ngModel)]="studentFilters.gender.female"
+                                    style="margin-right: 5px"
+                                    (click)="$event.stopPropagation()">F
+                            </mat-checkbox>
+                            ,
+                            <mat-checkbox [(ngModel)]="studentFilters.gender.other" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">Other
+                            </mat-checkbox>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <!-- RTE Filter -->
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Admission Filter -->
+                            <mat-form-field>
+                                <mat-label>Admission</mat-label>
+                                <input matInput disabled="true"/></mat-form-field>
+                            <br/>
+                            <mat-checkbox
+                                    [(ngModel)]="studentFilters.admission.new"
+                                    style="margin-right: 5px"
+                                    (click)="$event.stopPropagation()">New
+                            </mat-checkbox>
+                            ,
+                            <mat-checkbox
+                                    [(ngModel)]="studentFilters.admission.old"
+                                    style="margin-right: 5px"
+                                    (click)="$event.stopPropagation()">Old
+                            </mat-checkbox>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- RTE Filter -->
+                            <mat-form-field>
+                                <mat-label>RTE</mat-label>
+                                <input matInput disabled="true"/></mat-form-field>
+                            <br/>
+                            <mat-checkbox [(ngModel)]="studentFilters.rte.yes" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">Yes
+                            </mat-checkbox>
+                            ,
+                            <mat-checkbox [(ngModel)]="studentFilters.rte.no" style="margin-right: 5px"
+                                          (click)="$event.stopPropagation()">No
+                            </mat-checkbox>
+                        </div>
+                    </div>
+
+                    <div style="border: 1px dotted black; margin: 15px 0px; width: 100%"></div>
+
+                    <b>Custom Filters</b><br/>
+
+                    <!-- Other Filters-->
+                    <ng-container *ngFor="let parameter of studentParameterList">
                         <mat-form-field>
-                            <mat-label>RTE</mat-label>
-                            <input matInput disabled="true" /> </mat-form-field
-                        ><br />
-                        <mat-checkbox [(ngModel)]="studentFilters.rte.yes" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >Yes </mat-checkbox
-                        >,
-                        <mat-checkbox [(ngModel)]="studentFilters.rte.no" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                            >No
+                            <mat-label>{{ parameter.name }}</mat-label>
+                            <input matInput type="text" [(ngModel)]="parameter.filterFilterValues"/></mat-form-field>
+                        <br/>
+                        <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px"
+                                      (click)="$event.stopPropagation()">None
                         </mat-checkbox>
-                    </div>
-                </div>
+                        <mat-checkbox
+                                *ngFor="let filter of getFilteredFilterValues(parameter)"
+                                [(ngModel)]="filter.show"
+                                style="margin-right: 5px"
+                                (click)="$event.stopPropagation()">{{ filter.name }} </mat-checkbox>
+                        <br/>
+                    </ng-container>
 
-                <div style="border: 1px dotted black; margin: 15px 0px; width: 100%"></div>
-
-                <b>Custom Filters</b><br />
-
-                <!-- Other Filters-->
-                <ng-container *ngFor="let parameter of studentParameterList">
-                    <mat-form-field>
-                        <mat-label>{{ parameter.name }}</mat-label>
-                        <input matInput type="text" [(ngModel)]="parameter.filterFilterValues" /> </mat-form-field
-                    ><br />
-                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                        >None
-                    </mat-checkbox>
-                    <mat-checkbox
-                        *ngFor="let filter of getFilteredFilterValues(parameter)"
-                        [(ngModel)]="filter.show"
-                        style="margin-right: 5px"
-                        (click)="$event.stopPropagation()"
-                        >{{ filter.name }} </mat-checkbox
-                    ><br />
+                    <div style="border: 1px solid black; margin: 15px 0px; width: 100%"></div>
                 </ng-container>
-
-                <div style="border: 1px solid black; margin: 15px 0px; width: 100%"></div>
             </ng-container>
-        </ng-container>
 
-        <br />
-        Total Students: <i>{{ studentSectionList.length }}</i
-        >, Displaying: <i>{{ getDisplayStudentNumber() }}</i
-        >, Selected:
-        <b
-            ><i>{{ getSelectedStudentNumber() }}</i></b
-        >
-        <br />
+            <br/>
+            Total Students: <i>{{ studentSectionList.length }}</i>, Displaying: <i>{{ htmlRenderer.getDisplayStudentNumber() }}</i>, Selected:
+            <b><i>{{ htmlRenderer.getSelectedStudentNumber() }}</i></b>
+            <br/>
 
-        <button class="btn" style="padding: 4px 7px" (click)="selectAllStudents(); $event.stopPropagation()">Select All</button>
-        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllStudents(); $event.stopPropagation()">Clear All</button>
-
-        <ngx-datatable
-            class="material ngxDataTable"
-            *ngIf="showStudentList && studentSectionList.length > 0"
-            [rows]="getFilteredStudentList()"
-            [columnMode]="'force'"
-            [headerHeight]="50"
-            [footerHeight]="50"
-            [rowHeight]="getRowHeight"
-            [rowClass]="getRowClass"
-            [scrollbarV]="true"
-            [scrollbarH]="true"
-            (page)="onPage($event)"
-        >
-            <ngx-datatable-column name="Selected">
-                <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <mat-checkbox
-                        [ngModel]="row['selected']"
-                        (ngModelChange)="updateRowValue(row, $event)"
-                        [disabled]="!row.validMobileNumber"
-                    ></mat-checkbox>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Name">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <strong>{{ row.student.name }}</strong>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Class">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <strong>{{ getClassSectionName(row.parentClass, row.parentDivision) }}</strong>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Scholar No.">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{ row.student.scholarNumber }}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Father's Name">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{ row.student.fathersName }}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Mobile No.">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{ row.student.mobileNumber }}</i>
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Alt. Mobile No.">
-                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                    <i>{{ row.student.secondMobileNumber }}</i>
-                </ng-template>
-            </ngx-datatable-column>
-        </ngx-datatable>
-    </div>
-
-    <div [class.hidden]="!showStudentList || studentList.length > 0">Students need to be added or promoted in this session.</div>
-
-    <!-- Gap Line -->
-    <div class="row" style="border-bottom: 1px solid black; margin-bottom: 30px; margin-top: 30px">
-        <div class="col-xs-12"></div>
-    </div>
-
-    <!-- Employee List -->
-    <div class="row">
-        <div class="col-md-6">
-            <span style="font-size: 16px; font-weight: 600"><i>Employee List</i></span>
-            <button
-                class="btn"
-                style="padding: 4px 7px; margin-left: 15px"
-                (click)="showEmployeeList = !showEmployeeList; $event.stopPropagation()"
-            >
-                <span *ngIf="showEmployeeList; else hideEmployeeList">Hide</span>
-                <ng-template #hideEmployeeList>Show</ng-template>
+            <button class="btn" style="padding: 4px 7px"
+                    (click)="htmlRenderer.selectAllStudents(); $event.stopPropagation()">Select All
             </button>
+            <button class="btn" style="padding: 4px 7px"
+                    (click)="htmlRenderer.unSelectAllStudents(); $event.stopPropagation()">Clear All
+            </button>
+
+            <ngx-datatable
+                    class="material ngxDataTable"
+                    *ngIf="userInput.selectedSendTo == sendToList[0] && studentSectionList.length > 0"
+                    [rows]="getFilteredStudentList()"
+                    [columnMode]="'force'"
+                    [headerHeight]="50"
+                    [footerHeight]="50"
+                    [rowHeight]="getRowHeight"
+                    [rowClass]="getRowClass"
+                    [scrollbarV]="true"
+                    [scrollbarH]="true"
+                    (page)="onPage($event)">
+                <ngx-datatable-column name="Selected">
+                    <ng-template let-rowIndex="rowIndex" let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <mat-checkbox
+                                [ngModel]="row['selected']"
+                                (ngModelChange)="updateRowValue(row, $event)"
+                                [disabled]="!row.validMobileNumber"
+                        ></mat-checkbox>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <strong>{{ row.student.name }}</strong>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Class">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <strong>{{ htmlRenderer.getClassSectionName(row.parentClass, row.parentDivision) }}</strong>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Scholar No.">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{ row.student.scholarNumber }}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Father's Name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{ row.student.fathersName }}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Mobile No.">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{ row.student.mobileNumber }}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Alt. Mobile No.">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <i>{{ row.student.secondMobileNumber }}</i>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
         </div>
-    </div>
 
-    <div [class.hidden]="!showEmployeeList || employeeList.length === 0">
-        <br />
-        Total Employees: <i> {{ employeeList.length }} employee<span *ngIf="employeeList.length > 1">s</span></i
-        >, Selected:
-        <b
-            ><i>{{ getSelectedEmployeeNumber() }}</i></b
-        >
-        <br />
+        <div *ngIf="userInput.selectedSendTo == sendToList[0] && backendData.studentList.length == 0">Students need to be
+            added or promoted in this session.
+        </div>
 
-        <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">Select All</button>
-        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllEmployees(); $event.stopPropagation()">Clear All</button>
+        <!-- Employee List -->
+        <div class="row" *ngIf="userInput.selectedSendTo == sendToList[1]">
+            <div class="col-md-4">
+                <span style="font-size: 16px; font-weight: 600"><i>Employee List</i></span>
+            </div>
+        </div>
 
-        <!-- Employee Table List -->
-        <ng-container *ngIf="!isLoading">
-            <table class="table table-hover">
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+        <div *ngIf="userInput.selectedSendTo == sendToList[1] && employeeList.length > 0">
+            <br/>
+            Total Employees: <i> {{ employeeList.length }} employee<span *ngIf="employeeList.length > 1">s</span></i>, Selected:
+            <b><i>{{ htmlRenderer.getSelectedEmployeeNumber() }}</i></b>
+            <br/>
+
+            <button class="btn" style="padding: 4px 7px"
+                    (click)="htmlRenderer.selectAllEmployees(); $event.stopPropagation()">Select All
+            </button>
+            <button class="btn" style="padding: 4px 7px"
+                    (click)="htmlRenderer.unSelectAllEmployees(); $event.stopPropagation()">Clear All
+            </button>
+
+            <!-- Employee Table List -->
+            <ng-container *ngIf="!this.stateKeeper.isLoading">
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th></th>
                         <th>S No.</th>
@@ -375,13 +388,14 @@
                         <th>Mobile No.</th>
                         <!-- th>Post</th -->
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <ng-container *ngFor="let employee of employeeList; let i = index">
                         <tr>
                             <ng-container>
                                 <td>
-                                    <mat-checkbox [(ngModel)]="employee.selected" [disabled]="!employee.validMobileNumber"> </mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="employee.selected"
+                                                  [disabled]="!employee.validMobileNumber"></mat-checkbox>
                                 </td>
                                 <td>{{ i + 1 }}.</td>
                                 <td>{{ employee.name }}</td>
@@ -392,14 +406,16 @@
                             </ng-container>
                         </tr>
                     </ng-container>
-                </tbody>
-            </table>
-        </ng-container>
-    </div>
+                    </tbody>
+                </table>
+            </ng-container>
+        </div>
 
-    <div [class.hidden]="!showEmployeeList || employeeList.length > 0">Employees need to be added.</div>
+        <div *ngIf="userInput.selectedSendTo == sendToList[1] && employeeList.length == 0">Employees need to be added.
+        </div>
+    </ng-container>
 </div>
 
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="this.stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>

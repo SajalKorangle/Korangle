@@ -21,9 +21,12 @@ export class ManageSmsIdServiceAdapter {
 
         let smsIdData = {
             'id__in': this.vm.backendData.SMSIdSchoolList.map((a) => a.parentSMSId).join(),
+            'korangle__order': '-id',
         };
 
         this.vm.backendData.SMSIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, smsIdData);
+        this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template,
+            {parentSchool: this.vm.user.activeSchool.dbId});
         this.vm.htmlRenderer.initializeNewSMSId();
         this.vm.stateKeeper.isPageLoading = false;
     }
@@ -35,7 +38,7 @@ export class ManageSmsIdServiceAdapter {
             'entityRegistrationId': this.vm.userInput.newSMSId.entityRegistrationId,
             'smsId': this.vm.userInput.newSMSId.smsId,
             'smsIdRegistrationNumber': this.vm.userInput.newSMSId.smsIdRegistrationNumber
-        }
+        };
         let value;
         if (this.vm.backendData.existingSMSIdDetails) {
             value = this.vm.backendData.existingSMSIdDetails;
@@ -46,7 +49,7 @@ export class ManageSmsIdServiceAdapter {
             'parentSchool': this.vm.user.activeSchool.dbId,
             'parentSMSId': value.id,
         };
-        const value2 = await this.vm.smsService.createObject(this.vm.smsService.sms_id_school, sms_id_school_data)
+        const value2 = await this.vm.smsService.createObject(this.vm.smsService.sms_id_school, sms_id_school_data);
         this.vm.backendData.SMSIdList.push(value);
         this.vm.backendData.SMSIdSchoolList.push(value2);
         this.vm.htmlRenderer.initializeNewSMSId();
@@ -55,11 +58,16 @@ export class ManageSmsIdServiceAdapter {
     }
 
     async deleteSMSId(SMSId: any) {
-        if (confirm('Are you sure want to delete this SMS ID ?')) {
+        let templatesCount = this.vm.backendData.templateList.filter(temp => temp.parentSMSId == SMSId.id).length;
+        let confirmTextAppend = '';
+        if (templatesCount && templatesCount > 0) {
+            confirmTextAppend = ', ' + templatesCount + ' SMS Templates linked with this SMS ID will also be deleted !';
+        }
+        if (confirm('Are you sure want to delete this SMS ID ?' + confirmTextAppend)) {
             this.vm.stateKeeper.isSMSIdTableLoading = true;
             let sms_id_school_data = {
                 'id': this.vm.backendData.SMSIdSchoolList.find(smsSchool => smsSchool.parentSMSId == SMSId.id).id
-            }
+            };
             const value = await this.vm.smsService.deleteObject(this.vm.smsService.sms_id_school, sms_id_school_data);
             this.vm.backendData.SMSIdList = this.vm.backendData.SMSIdList.filter(smsId => smsId.id != SMSId.id);
             this.vm.backendData.SMSIdSchoolList = this.vm.backendData.SMSIdSchoolList.filter(smsSchool => smsSchool.id != value);

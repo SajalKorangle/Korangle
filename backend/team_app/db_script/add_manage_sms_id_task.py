@@ -14,9 +14,23 @@ def add_manage_sms_id_task(apps, schema_editor):
     addManageSMSId.parentBoard = None
     addManageSMSId.save()
 
+    addManageTemplates = Task()
+    addManageTemplates.parentModule = sms_module
+    addManageTemplates.path = 'manage_templates'
+    addManageTemplates.title = 'Manage Templates'
+    addManageTemplates.orderNumber = 4
+    addManageTemplates.parentBoard = None
+    addManageTemplates.save()
+
     # Add the employeePermission
     for employee_permission in EmployeePermission.objects.filter(parentTask__path='assign_task'):
         employee = EmployeePermission()
         employee.parentTask = addManageSMSId
         employee.parentEmployee = employee_permission.parentEmployee
         employee.save()
+
+        employee = EmployeePermission()
+        employee.parentTask = addManageTemplates
+        employee.parentEmployee = employee_permission.parentEmployee
+        employee.save()
+

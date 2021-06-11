@@ -76,4 +76,92 @@ export class AssignTaskServiceAdapter {
             return a.orderNumber - b.orderNumber;
         });
     }
+
+    async addPermission(employee: any, task: any, configJSON: any = {}) {
+        const newEmployeePermission = {
+            parentEmployee: employee.id,
+            parentTask: task.id,
+            configJSON,
+        };
+
+        const respone = await this.vm.employeeService.createObject(this.vm.employeeService.employee_permissions, newEmployeePermission);
+        this.vm.currentPermissionList.push(respone);
+        this.vm.updatePermissionLoading(employee, task, false);
+    }
+
+    async updatePermission(employeePermission, employee, task) {
+        const respone = await this.vm.employeeService.updateObject(this.vm.employeeService.employee_permissions, employeePermission);
+        const prevEmployeePermission = this.vm.hasPermission(employee, task);
+        Object.assign(prevEmployeePermission, respone);
+        this.vm.updatePermissionLoading(employee, task, false);
+    }
+
+    async deletePermission(employee: any, task: any) {
+        const employeePermission = this.vm.hasPermission(employee, task);
+        const data = {
+            id: employeePermission.id,
+        };
+        await this.vm.employeeService.deleteObject(this.vm.employeeService.employee_permissions, data);
+        this.vm.updatePermissionLoading(employee, task, false);
+        this.vm.currentPermissionList = this.vm.currentPermissionList.filter(employeePermission => employeePermission.id != data.id);
+    }
+
+    async assignAllTasks(employee) {
+        const toCreatePermissions = [];
+
+        this.vm.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                if (!this.vm.hasPermission(employee, task)) {
+                    this.vm.updatePermissionLoading(employee, task, true);
+                    toCreatePermissions.push(
+                        {
+                            parentEmployee: employee.id,
+                            parentTask: task.id,
+                        }
+                    );
+                }
+            });
+        });
+
+        const response = await this.vm.employeeService.createObjectList(this.vm.employeeService.employee_permissions, toCreatePermissions);
+        this.vm.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                if (!this.vm.hasPermission(employee, task)) {
+                    this.vm.updatePermissionLoading(employee, task, false);
+                }
+            });
+        });
+        this.vm.currentPermissionList.push(...response);
+
+    }
+
+    async removeAllPermissions(employee: any) {
+        const toDeletePermissions = [];
+        this.vm.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                const existingEmployeePermission = this.vm.hasPermission(employee, task);
+                if (existingEmployeePermission && !this.vm.isDisabled(module, task, employee)) {
+                    this.vm.updatePermissionLoading(employee, task, true);
+                    toDeletePermissions.push(existingEmployeePermission.id );
+                }
+            });
+        });
+
+        const delete_request = {
+            id__in: toDeletePermissions
+        };
+
+        const response = await this.vm.employeeService.deleteObjectList(this.vm.employeeService.employee_permissions, delete_request);
+        this.vm.moduleList.forEach((module) => {
+            module.taskList.forEach((task) => {
+                const existingEmployeePermission = this.vm.hasPermission(employee, task);
+                if (existingEmployeePermission) {
+                    this.vm.updatePermissionLoading(employee, task, false);
+                }
+            });
+        });
+        toDeletePermissions.forEach(id => {
+            this.vm.currentPermissionList = this.vm.currentPermissionList.filter(employeePermission => employeePermission.id != id);
+        });
+    }
 }

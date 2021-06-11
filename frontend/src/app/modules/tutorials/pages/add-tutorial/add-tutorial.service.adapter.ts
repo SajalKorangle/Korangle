@@ -1,11 +1,9 @@
-import {AddTutorialComponent} from './add-tutorial.component';
-import moment = require('moment');
+import { AddTutorialComponent } from './add-tutorial.component';
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
 
-    constructor() {
-    }
+    constructor() {}
 
     initializeAdapter(vm: AddTutorialComponent): void {
         this.vm = vm;
@@ -40,6 +38,13 @@ export class AddTutorialServiceAdapter {
         this.vm.backendData.classSubjectList = value[2];
         this.vm.backendData.subjectList = value[3];
         this.vm.backendData.fullStudentList = value[4];
+
+        this.vm.dataForMapping['classList'] = value[0];
+        this.vm.dataForMapping['divisionList'] = value[1];
+        this.vm.dataForMapping['subjectList'] = value[3];
+        this.vm.dataForMapping['classSubjectList'] = value[2];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
         this.populateClassSectionSubjectList();
         this.populateDefaults();
         this.vm.stateKeeper.isLoading = false;
@@ -147,14 +152,13 @@ export class AddTutorialServiceAdapter {
         const value = await Promise.all([this.vm.tutorialService.createObject(this.vm.tutorialService.tutorial, data)]);
 
         value[0]['editable'] = false;
-        this.populateStudentList(this.vm.userInput.newTutorial);
         this.vm.tutorialList.push(value[0]);
         this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         this.vm.initializeNewTutorial();
         this.vm.stateKeeper.isLoading = false;
-
-        this.vm.updateService.sendEventNotification(
-            this.vm.currentClassStudentList,
+        this.vm.dataForMapping['tutorial'] = value[0];
+        this.vm.messageService.sendEventNotification(
+            this.vm.dataForMapping,
             'Tutorial Creation',
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
@@ -188,9 +192,9 @@ export class AddTutorialServiceAdapter {
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber)); //getSortedFunction()
             this.vm.stateKeeper.tutorialUpdating = false;
             tutorial.editable = false;
-            this.populateStudentList(value[0]);
-            this.vm.updateService.sendEventNotification(
-                this.vm.currentClassStudentList,
+            this.vm.dataForMapping['tutorial'] = tutorial;
+            this.vm.messageService.sendEventNotification(
+                this.vm.dataForMapping,
                 'Tutorial Updation',
                 this.vm.user.activeSchool.dbId,
                 this.vm.smsBalance
@@ -256,11 +260,10 @@ export class AddTutorialServiceAdapter {
                     return item.id != tutorial.id;
                 });
                 this.vm.htmlRenderer.checkEnableAddButton();
-                this.populateStudentList(tutorial);
+                this.vm.dataForMapping['tutorial'] = tutorial;
                 this.vm.stateKeeper.tutorialUpdating = false;
-
-                this.vm.updateService.sendEventNotification(
-                    this.vm.currentClassStudentList,
+                this.vm.messageService.sendEventNotification(
+                    this.vm.dataForMapping,
                     'Tutorial Deletion',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
@@ -280,28 +283,15 @@ export class AddTutorialServiceAdapter {
         });
         let student_data = {
             id__in: studentIdList,
-            fields__korangle: 'id,name,mobileNumber',
+            fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
         };
         const value = await Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, {parentStudent__in: studentIdList})]); //1
         this.vm.currentClassStudentList = value[0];
         this.vm.backendData.currentClassStudentSectionList = value[1];
-        this.vm.updateService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
-    }
-
-    populateStudentList(tutorial): any {
-        this.vm.currentClassStudentList.forEach((student) => {
-            let studentSection = this.vm.backendData.currentClassStudentSectionList.find(stuSec => stuSec.parentStudent == student.id);
-
-            student.tutorialChapter = tutorial.chapter;
-            student.tutorialTopic = tutorial.topic;
-            student.date = moment(new Date()).format('DD/MM/YYYY');
-            student.studentName = student.name;
-            student.schoolName = this.vm.user.activeSchool.printName;
-            student.subject = this.vm.htmlRenderer.getSubjectName(this.vm.userInput.selectedSubject);
-            student.class = this.vm.backendData.classList.find(classs => classs.id == studentSection.parentClass).name + ', '
-                + this.vm.backendData.sectionList.find(sec => sec.id == studentSection.parentDivision).name;
-        });
+        this.vm.dataForMapping['studentSectionList'] = value[1];
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
+        this.vm.dataForMapping['studentList'] = this.vm.currentClassStudentList;
     }
 }

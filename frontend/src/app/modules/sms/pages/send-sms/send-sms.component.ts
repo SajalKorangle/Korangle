@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
-import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
-import { SmsService } from '../../../../services/modules/sms/sms.service';
-
-import { ChangeDetectorRef } from '@angular/core';
-import { DataStorage } from '../../../../classes/data-storage';
-import { SendSmsServiceAdapter } from './send-sms.service.adapter';
-import { NotificationService } from '../../../../services/modules/notification/notification.service';
-import { UserService } from '../../../../services/modules/user/user.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
+import {EmployeeService} from '../../../../services/modules/employee/employee.service';
+import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
+import {SmsService} from '../../../../services/modules/sms/sms.service';
+import {DataStorage} from '../../../../classes/data-storage';
+import {SendSmsServiceAdapter} from './send-sms.service.adapter';
+import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {UserService} from '../../../../services/modules/user/user.service';
+import {MessageService} from '@services/message-service';
+import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
+import {SENT_UPDATE_TYPE, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
 
 @Component({
     selector: 'send-sms',
@@ -21,53 +22,63 @@ import { UserService } from '../../../../services/modules/user/user.service';
 export class SendSmsComponent implements OnInit {
     user;
 
-    NUM_OF_MOBILE_NO = 600;
+    serviceAdapter: SendSmsServiceAdapter;
+    htmlRenderer: SendSmsHtmlRenderer;
 
     NULL_CONSTANT = null;
 
     showFilters = false;
-
-    sentTypeList = ['SMS', 'NOTIFICATION', 'NOTIF./SMS'];
-
-    selectedSentType = 'SMS';
-
     includeSecondMobileNumber = false;
-
     invalidmobilenumber = false;
-
-    employeeList = [];
 
     displayStudentNumber = 0;
 
+    sentTypeList = SENT_UPDATE_TYPE.filter(type => type.name != 'NULL');
+    sendToList = ['Students', 'Employees'];
+
+    dataForMapping = {} as any;
+
+    employeeList = [];
+    populatedTemplateList = [];
     classSectionList = [];
     studentSectionList = [];
-
-    studentList = [];
-
-    gcmDeviceList = [];
-    filteredUserList = [];
-
-    smsBalance = 0;
-
-    showStudentList = false;
-    showEmployeeList = false;
-
-    smsMobileNumberList = [];
-    notificationMobileNumberList = [];
-
+    smsPersonList = [];
+    notificationPersonList = [];
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
-    message = '';
+    variableRegex = /{#(.*?)#}/g;
 
-    isLoading = false;
+    studentMessageService: any;
+    employeeMessageService: any;
 
     rows;
     timeout: any;
-
     nameFilter = '';
+    message = '';
 
-    serviceAdapter: SendSmsServiceAdapter;
+    stateKeeper = {
+        isLoading: false
+    };
+
+    userInput = {
+        selectedSendTo: null,
+        selectedTemplate: {} as any,
+        selectedSentType: this.sentTypeList[0],
+    };
+
+    backendData = {
+        templateList: [],
+        smsIdList: [],
+        smsIdSchool: [],
+        eventSettingList: [],
+        studentList: [],
+        classList: [],
+        sectionList: [],
+        smsEvent: {} as any,
+        smsBalance: 0,
+    };
+
     studentFilters: any = {
         category: {
             sc: false,
@@ -99,7 +110,9 @@ export class SendSmsComponent implements OnInit {
         public notificationService: NotificationService,
         public userService: UserService,
         private cdRef: ChangeDetectorRef
-    ) {}
+    ) {
+        console.log(this);
+    }
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -132,62 +145,63 @@ export class SendSmsComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
+        this.studentMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
+        this.employeeMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
+
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new SendSmsHtmlRenderer();
+        this.htmlRenderer.initializeAdapter(this);
     }
 
     getMobileNumberList(returnType: string): any {
-        let mobileNumberList = [];
-        if (this.showStudentList) {
-            this.getFilteredStudentList()
+        let tempList = [];
+
+        if (this.userInput.selectedSendTo == this.sendToList[0]) {
+
+            this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((x) => {
+                return x.selected;
+            }).map(a => a.student);
+
+              this.getFilteredStudentList()
                 .filter((x) => {
                     return x.selected;
                 })
                 .forEach((studentSection) => {
-                    if (mobileNumberList.indexOf(studentSection.student.mobileNumber) === -1) {
-                        mobileNumberList.push(studentSection.student.mobileNumber);
+                    if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                        studentSection.student.id, this.message)) {
+                        tempList.push(studentSection.student);
                     }
                     if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                        if (mobileNumberList.indexOf(studentSection.student.secondMobileNumber) === -1) {
-                            mobileNumberList.push(studentSection.student.secondMobileNumber);
+                        if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                            studentSection.student.id, this.message, true)) {
+                            tempList.push(studentSection.student);
                         }
                     }
                 });
         }
-        if (this.showEmployeeList) {
+        if (this.userInput.selectedSendTo == this.sendToList[1]) {
             this.employeeList.forEach((employee) => {
                 if (employee.selected) {
-                    if (mobileNumberList.indexOf(employee.mobileNumber) === -1) {
-                        mobileNumberList.push(employee.mobileNumber);
-                    }
+                    tempList.push(employee);
                 }
             });
+            this.dataForMapping['employeeList'] = tempList;
         }
-        if (this.selectedSentType == this.sentTypeList[0]) {
-            this.smsMobileNumberList = mobileNumberList;
-            this.notificationMobileNumberList = [];
-        } else if (this.selectedSentType == this.sentTypeList[1]) {
-            this.smsMobileNumberList = [];
-            this.notificationMobileNumberList = mobileNumberList.filter((mobileNumber) => {
+        if (this.userInput.selectedSentType == this.sentTypeList[0]) {
+            this.smsPersonList = tempList;
+            this.notificationPersonList = [];
+        } else if (this.userInput.selectedSentType == this.sentTypeList[1]) {
+            this.smsPersonList = [];
+            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+        } else if (this.userInput.selectedSentType == this.sentTypeList[2]) {
+            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.smsPersonList = tempList.filter((temp1) => {
                 return (
-                    this.filteredUserList.find((user) => {
-                        return user.username == mobileNumber.toString();
-                    }) != undefined
-                );
-            });
-        } else if (this.selectedSentType == this.sentTypeList[2]) {
-            this.notificationMobileNumberList = mobileNumberList.filter((mobileNumber) => {
-                return (
-                    this.filteredUserList.find((user) => {
-                        return user.username == mobileNumber.toString();
-                    }) != undefined
-                );
-            });
-            this.smsMobileNumberList = mobileNumberList.filter((mobileNumber) => {
-                return (
-                    this.notificationMobileNumberList.find((mobileNumber2) => {
-                        return mobileNumber == mobileNumber2;
+                    this.notificationPersonList.find((temp2) => {
+                        return temp1.mobileNumber == temp2.mobileNumber;
                     }) == undefined
                 );
             });
@@ -195,32 +209,24 @@ export class SendSmsComponent implements OnInit {
             alert('Error');
         }
         if (returnType == 'sms') {
-            return this.smsMobileNumberList;
+            return this.smsPersonList;
         } else if (returnType == 'notification') {
-            return this.notificationMobileNumberList;
+            return this.notificationPersonList;
         } else if (returnType == 'both') {
-            return this.smsMobileNumberList.concat(this.notificationMobileNumberList);
+            return this.smsPersonList.concat(this.notificationPersonList);
         } else {
             alert('error');
             return null;
         }
     }
 
-    hasUnicode(): boolean {
+    hasUnicode(message): boolean {
         for (let i = 0; i < this.message.length; ++i) {
-            if (this.message.charCodeAt(i) > 127) {
+            if (message.charCodeAt(i) > 127) {
                 return true;
             }
         }
         return false;
-    }
-
-    getSMSCount(): number {
-        if (this.hasUnicode()) {
-            return Math.ceil(this.message.length / 70);
-        } else {
-            return Math.ceil(this.message.length / 160);
-        }
     }
 
     isMobileNumberValid(mobileNumber: any): boolean {
@@ -242,31 +248,6 @@ export class SendSmsComponent implements OnInit {
         return true;
     }
 
-    unselectAllClasses(): void {
-        this.classSectionList.forEach((classSection) => {
-            classSection['selected'] = false;
-        });
-    }
-
-    selectAllClasses(): void {
-        this.classSectionList.forEach((classSection) => {
-            classSection['selected'] = true;
-        });
-    }
-
-    selectAllStudents(): void {
-        this.studentSectionList.forEach((studentSection) => {
-            if (studentSection.validMobileNumber) {
-                studentSection.selected = true;
-            }
-        });
-    }
-
-    unSelectAllStudents(): void {
-        this.studentSectionList.forEach((studentSection) => {
-            studentSection.selected = false;
-        });
-    }
 
     getParameterValue = (student, parameter) => {
         try {
@@ -318,48 +299,74 @@ export class SendSmsComponent implements OnInit {
                     !this.studentFilters.category.sc &&
                     !this.studentFilters.category.st &&
                     !this.studentFilters.category.obc
-                )
+                ) {
                     return true;
+                }
                 // If something is checked
-                if (this.studentFilters.category.general && studentSection.student.newCategoryField === 'Gen.') return true;
-                if (this.studentFilters.category.sc && studentSection.student.newCategoryField === 'SC') return true;
-                if (this.studentFilters.category.st && studentSection.student.newCategoryField === 'ST') return true;
-                if (this.studentFilters.category.obc && studentSection.student.newCategoryField === 'OBC') return true;
+                if (this.studentFilters.category.general && studentSection.student.newCategoryField === 'Gen.') {
+                    return true;
+                }
+                if (this.studentFilters.category.sc && studentSection.student.newCategoryField === 'SC') {
+                    return true;
+                }
+                if (this.studentFilters.category.st && studentSection.student.newCategoryField === 'ST') {
+                    return true;
+                }
+                if (this.studentFilters.category.obc && studentSection.student.newCategoryField === 'OBC') {
+                    return true;
+                }
                 // For all other cases
                 return false;
             })
             .filter((studentSection) => {
                 // gender filter
                 // if none selected return all
-                if (!this.studentFilters.gender.male && !this.studentFilters.gender.female && !this.studentFilters.gender.other)
+                if (!this.studentFilters.gender.male && !this.studentFilters.gender.female && !this.studentFilters.gender.other) {
                     return true;
+                }
                 // If something is checked
-                if (this.studentFilters.gender.male && studentSection.student.gender == 'Male') return true;
-                if (this.studentFilters.gender.female && studentSection.student.gender == 'Female') return true;
-                if (this.studentFilters.gender.other && studentSection.student.gender == 'Other') return true;
+                if (this.studentFilters.gender.male && studentSection.student.gender == 'Male') {
+                    return true;
+                }
+                if (this.studentFilters.gender.female && studentSection.student.gender == 'Female') {
+                    return true;
+                }
+                if (this.studentFilters.gender.other && studentSection.student.gender == 'Other') {
+                    return true;
+                }
                 // For all other cases
                 return false;
             })
             .filter((studentSection) => {
-                if (!this.studentFilters.admission.new && !this.studentFilters.admission.old) return true;
+                if (!this.studentFilters.admission.new && !this.studentFilters.admission.old) {
+                    return true;
+                }
                 // admission new or old
                 if (
                     studentSection.student.admissionSession === this.user.activeSchool.currentSessionDbId &&
                     this.studentFilters.admission.new
-                )
+                ) {
                     return true;
+                }
                 if (
                     studentSection.student.admissionSession !== this.user.activeSchool.currentSessionDbId &&
                     this.studentFilters.admission.old
-                )
+                ) {
                     return true;
+                }
                 return false;
             })
             .filter((studentSection) => {
-                if (!this.studentFilters.rte.yes && !this.studentFilters.rte.no) return true;
+                if (!this.studentFilters.rte.yes && !this.studentFilters.rte.no) {
+                    return true;
+                }
                 // rte yes or no
-                if (studentSection.student.rte === 'YES' && this.studentFilters.rte.yes) return true;
-                if (studentSection.student.rte === 'NO' && this.studentFilters.rte.no) return true;
+                if (studentSection.student.rte === 'YES' && this.studentFilters.rte.yes) {
+                    return true;
+                }
+                if (studentSection.student.rte === 'NO' && this.studentFilters.rte.no) {
+                    return true;
+                }
                 return false;
             })
             .filter((studentSection) => {
@@ -380,38 +387,6 @@ export class SendSmsComponent implements OnInit {
             });
     }
 
-    selectAllEmployees(): void {
-        this.employeeList.forEach((employee) => {
-            if (employee.validMobileNumber) {
-                employee.selected = true;
-            }
-        });
-    }
-
-    unSelectAllEmployees(): void {
-        this.employeeList.forEach((employee) => {
-            employee.selected = false;
-        });
-    }
-
-    getSelectedStudentNumber = () => {
-        // console.log(this.getFilteredStudentList().reduce((acc,x) => acc+x.selected?1:0, 0))
-        return this.getFilteredStudentList().reduce((acc, x) => {
-            return x.selected ? acc + 1 : acc;
-        }, 0);
-    }
-
-    getDisplayStudentNumber = () => this.getFilteredStudentList().length;
-
-    getSelectedEmployeeNumber(): number {
-        let result = 0;
-        this.employeeList.forEach((employee) => {
-            if (employee.selected) {
-                ++result;
-            }
-        });
-        return result;
-    }
 
     isClassSectionSelected(classId: number, sectionId: number): boolean {
         return this.classSectionList.find((classSection) => {
@@ -419,14 +394,4 @@ export class SendSmsComponent implements OnInit {
         }).selected;
     }
 
-    getClassSectionName(classId: number, sectionId: number): string {
-        let classSection = this.classSectionList.find((classSection) => {
-            return classSection.class.id == classId && classSection.section.id == sectionId;
-        });
-        let multipleSections =
-            this.classSectionList.filter((classSection) => {
-                return classSection.class.id == classId;
-            }).length > 1;
-        return classSection.class.name + (multipleSections ? ', ' + classSection.section.name : '');
-    }
 }

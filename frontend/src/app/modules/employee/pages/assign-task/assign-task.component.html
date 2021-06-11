@@ -47,31 +47,42 @@
         </div>
 
         <div class="row" *ngIf="selectedAssignTaskOption == assignTaskOptions[0]">
+            <!--Filter by Employee-->
             <ng-container *ngIf="selectedEmployee && !isLoading">
                 <span style="font-weight: 800; font-size: 20px">{{ selectedEmployee.name }}</span
                 ><br />
-                <button class="btn" style="padding: 4px 7px" (click)="assignAllTasks(selectedEmployee); $event.stopPropagation()">
+                <button class="btn" style="padding: 4px 7px" (click)="serviceAdapter.assignAllTasks(selectedEmployee); $event.stopPropagation()">
                     Grant All</button
-                ><button class="btn" style="padding: 4px 7px" (click)="removeAllPermissions(selectedEmployee); $event.stopPropagation()">
+                ><button class="btn" style="padding: 4px 7px" (click)="serviceAdapter.removeAllPermissions(selectedEmployee); $event.stopPropagation()">
                     Remove All</button
                 ><br />
 
-                <ng-container *ngFor="let module of moduleList">
-                    <span style="font-weight: 800">{{ module.title }}</span
-                    ><br />
-                    <ng-container *ngFor="let task of module.taskList">
-                        <mat-checkbox
-                            [ngModel]="hasPermission(selectedEmployee, task)"
-                            (ngModelChange)="updatePermission(selectedEmployee, task)"
-                            [disabled]="isDisabled(module, task, selectedEmployee)"
-                        >
-                            {{ task.title }}
-                            <br />
-                        </mat-checkbox>
-                        <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom"></div>
-                        <br />
+                <div class="row">
+                    <ng-container *ngFor="let module of moduleList">
+                        <div class="col-xs-12" style="margin-left: 8px">
+                            <div class="row" style="margin-bottom: 5px">
+                                <span style="font-size: large; font-weight: 800">{{ module.title }}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 8px">
+                                <ng-container *ngFor="let task of module.taskList">
+                                    <div class="col-md-3">
+                                        <mat-checkbox [ngModel]="hasPermission(selectedEmployee, task)"
+                                            (ngModelChange)="updatePermission(selectedEmployee, task)"
+                                            [disabled]="isDisabled(module, task, selectedEmployee)">
+                                            {{ task.title }}
+                                        </mat-checkbox>
+                                        <span *ngIf="hasInPageTaskPermission(module, task)"
+                                            (click)="openInPagePermissionDialog(module, task, selectedEmployee)"
+                                            style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
+                                        <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom">
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <br />
+                            </div>
+                        </div>
                     </ng-container>
-                </ng-container>
+                </div>
             </ng-container>
         </div>
         <div class="row" *ngIf="selectedAssignTaskOption == assignTaskOptions[1]">
@@ -88,6 +99,9 @@
                         {{ employee.name }}
                         <br />
                     </mat-checkbox>
+                    <span *ngIf="hasInPageTaskPermission(getModuleById(selectedTask.parentModule), selectedTask)"
+                        (click)="openInPagePermissionDialog(getModuleById(selectedTask.parentModule), selectedTask, employee)"
+                        style="cursor: pointer; color: blue;">&nbsp;<u>more...</u></span>
                     <div *ngIf="isPermissionLoading(employee, selectedTask)" class="loader-custom"></div>
                     <br />
                 </ng-container>

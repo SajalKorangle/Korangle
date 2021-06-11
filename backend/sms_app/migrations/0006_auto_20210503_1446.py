@@ -44,6 +44,9 @@ class Migration(migrations.Migration):
                 ('parentSMSEvent', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSEvent',
                                                      verbose_name='parentSMSEvent')),
             ],
+            options={
+                'db_table': 'sms_event_settings',
+            },
         ),
         migrations.CreateModel(
             name='SMSId',
@@ -86,7 +89,7 @@ class Migration(migrations.Migration):
                 ('communicationType', models.CharField(
                     choices=[('SERVICE IMPLICIT', 'SERVICE IMPLICIT'), ('SERVICE EXPLICIT', 'SERVICE EXPLICIT'),
                              ('TRANSACTIONAL', 'TRANSACTIONAL')], max_length=20, verbose_name='communicationType')),
-                ('mappedContent', models.TextField(null=True, verbose_name='mappedContent')),
+                ('mappedContent', models.TextField(null=True, blank=True, verbose_name='mappedContent')),
                 ('registrationStatus',
                  models.CharField(choices=[('APPROVED', 'APPROVED'), ('PENDING', 'PENDING')], default='PENDING',
                                   max_length=15)),

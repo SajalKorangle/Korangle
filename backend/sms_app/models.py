@@ -124,10 +124,9 @@ def sms_sender(sender, created, instance, **kwargs):
                 response = send_sms(instance.__dict__)
         except Exception as e:
             traceback.print_exc()
-            response = {'remark': 'EXCEPTION OCCURRED', 'requestId': 0}
-            instance.sentStatus = False
+            response = {'remark': 'EXCEPTION OCCURRED', 'requestId': -1}
 
-        if response['requestId'] == 0:
+        if response['requestId'] == -1:
             instance.sentStatus = False
 
         instance.requestId = response['requestId']
@@ -202,7 +201,7 @@ class SMSTemplate(models.Model):
 
     communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
                                          verbose_name='communicationType')
-    mappedContent = models.TextField(null=True, verbose_name='mappedContent')
+    mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
 
     APPROVED = 'APPROVED'
     PENDING = 'PENDING'
@@ -235,3 +234,6 @@ class SMSEventSettings(models.Model):
 
     receiverType = models.CharField(max_length=20, choices=UPDATE_TO_CHOICES, null=True,
                                     verbose_name='receiverType')
+
+    class Meta:
+        db_table = 'sms_event_settings'

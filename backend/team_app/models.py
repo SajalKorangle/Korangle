@@ -36,4 +36,3 @@ class Task(models.Model):
     class Meta:
         db_table = 'task'
         unique_together = ('parentModule', 'path')
-
