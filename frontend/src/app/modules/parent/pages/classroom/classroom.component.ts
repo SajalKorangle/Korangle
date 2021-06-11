@@ -17,6 +17,8 @@ import { Constants } from 'app/classes/constants';
 
 import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
 
+import { openZoomMeeting, isMobile } from '@classes/common.js';
+
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
@@ -35,14 +37,16 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     today: string = Object.values(WEEKDAYS)[new Date().getDay()];
     currentTime: Date = new Date();
 
-    timeHandleInterval;
-
     serviceAdapter: ClassroomServiceAdapter;
     htmlRenderer: ClassroomHtmlRenderer;
     userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
     meetingParameters: any;
+
+    // attendanceUpdateDuration: number = 180; // in seconds
+    // attendanceMarkerInterval: any;
+    // studentAttendanceDownTime: number = 0;  // in seconds
 
     restrictedStudent = null;
     isActiveSession: boolean = false;
@@ -74,7 +78,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        clearInterval(this.timeHandleInterval);
+        // clearInterval(this.attendanceMarkerInterval);
     }
 
     getObjetKeys(obj: { [key: string]: any; }): Array<string> {
@@ -88,12 +92,13 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         });
     }
 
-    populateMeetingParametersAndStart(onlineClass, signature, apiKey) {
+    populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
+        // clearInterval(this.attendanceMarkerInterval);
         this.meetingParameters = {
             signature,
             api_key: apiKey,
-            meeting_number: onlineClass.meetingNumber,
-            password: onlineClass.password,
+            meeting_number: accountInfo.meetingNumber,
+            password: accountInfo.passcode,
             role: 0,
             username: this.activeStudent.name,
             leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
@@ -108,8 +113,15 @@ export class ClassroomComponent implements OnInit, OnDestroy {
             if (this.htmlRenderer.meetingEntered) {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                if (isMobile()) {
+                    openZoomMeeting(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                }
+                else {
+                    zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                }
             }
+            // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
+            this.serviceAdapter.markAttendance();
         });
     }
 

@@ -11,6 +11,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +23,7 @@ import { MatDialogModule } from '@angular/material';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import 'hammerjs';
 
@@ -77,11 +79,13 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatAutocompleteModule,
         MatProgressBarModule,
         MatDatepickerModule,
+        MatNativeDateModule,
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
         MatTabsModule,
         MatSliderModule,
+        MatSnackBarModule,
 
         MatInputModule,
         MatTableModule,
@@ -133,4 +137,4 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatSlideToggleModule,
     ],
 })
-export class ComponentsModule {}
+export class ComponentsModule { }

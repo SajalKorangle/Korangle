@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { ClassroomComponent } from "./classroom.component";
 import { ClassroomRouting } from "./classroom.routing";
-import {ComponentsModule} from "@components/components.module";
+import { ComponentsModule } from "@components/components.module";
 
 @NgModule({
     declarations: [
@@ -14,6 +14,6 @@ import {ComponentsModule} from "@components/components.module";
     ],
     exports: [],
     providers: [],
-    bootstrap: [ ClassroomComponent ]
+    bootstrap: [ClassroomComponent]
 })
 export class ClassroomModule { }
