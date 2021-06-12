@@ -160,3 +160,29 @@ def ifscVerification(ifsc):
     else:
         print(response.json())
         return None
+
+def bankVerification(accountNumber, ifsc):
+    headers = {
+        'Authorization': getBearerToken(),
+        'Content-Type': 'Application/JSON',
+    }
+    params ={
+        'bankAccount': accountNumber,
+        'ifsc': ifsc
+    }
+
+    response = requests.get(
+        url= bank_verification_base_url+'/payout/v1.2/validation/bankDetails',
+        headers= headers,
+        params = params,
+    )
+
+    assert response.json()['status'] == "SUCCESS", "Bank Verification Error: {0}".format(response.json())
+    
+    data = response.json()['data']
+    data.update({
+        'accountStatus': response.json()['accountStatus'],
+        'accountStatusCode': response.json()['accountStatusCode'],
+        'message': response.json()['message'],
+    })
+    return data
