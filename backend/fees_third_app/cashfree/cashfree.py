@@ -33,30 +33,31 @@ def verifyCredentials():
 
 
 def generatePaymentToken(data):
-    data1 = "appId=" + data['appId'] + "&orderId=" + data['orderId'] + "&orderAmount=" + data['orderAmount'] + "&customerEmail=" + data['customerEmail'] + "&customerPhone=" + data['customerPhone'] + "&orderCurrency=" + data['orderCurrency']
-    message = bytes(data1.encode('utf-8'))
-    secret = bytes(secretKey.encode('utf-8'))
-    paymentToken = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
+    # data1 = "appId=" + data['appId'] + "&orderId=" + data['orderId'] + "&orderAmount=" + data['orderAmount'] + "&customerEmail=" + data['customerEmail'] + "&customerPhone=" + data['customerPhone'] + "&orderCurrency=" + data['orderCurrency']
+    # message = bytes(data1.encode('utf-8'))
+    # secret = bytes(secretKey.encode('utf-8'))
+    # paymentToken = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
 
-    #get vendor id of school from the database
-    vendors = [
-                {
-                  "vendorId":"SELF", 
-                  "commission":50
-                },
-                {
-                  "vendorId":"VEN" + str(data['parentSchool']), 
-                  "commission":50
-                }
-            ]
-    json_encoded_list = json.dumps(vendors)
-    call = bytes(json_encoded_list.encode('utf-8'))
-    b64_encoded_list = base64.b64encode(call)
-    response = {
-        'vsplit' : b64_encoded_list.decode('utf-8'),
-        'paymentToken' : paymentToken.decode('utf-8')
-    }
-    return response
+    # #get vendor id of school from the database
+    # vendors = [
+    #             {
+    #               "vendorId":"SELF", 
+    #               "commission":50
+    #             },
+    #             {
+    #               "vendorId":"VEN" + str(data['parentSchool']), 
+    #               "commission":50
+    #             }
+    #         ]
+    # json_encoded_list = json.dumps(vendors)
+    # call = bytes(json_encoded_list.encode('utf-8'))
+    # b64_encoded_list = base64.b64encode(call)
+    # response = {
+    #     'vsplit' : b64_encoded_list.decode('utf-8'),
+    #     'paymentToken' : paymentToken.decode('utf-8')
+    # }
+    # return response
+    return None
 
 
 def addVendor(newVendorData, vendorId):
@@ -111,6 +112,8 @@ def getSettelmentsCycleList():
     return response.json()['settlementCycles']
 
 
+
+
 bank_verification_base_url = 'https://payout-gamma.cashfree.com'
 
 AUTH_DATA = {   # Default Auth Data
@@ -118,9 +121,8 @@ AUTH_DATA = {   # Default Auth Data
 	    "expiry": time.time()-1
     }
 
-
 def authenticate():
-    headers = {
+    headers = { 
         'X-Client-Secret': CASHFREE_CLIENT_SECRET, 
         'X-Client-Id': CASHFREE_CLIENT_ID,
         'Content-Type': 'application/json',
@@ -134,13 +136,27 @@ def authenticate():
     AUTH_DATA = response.json()['data']
     
 
-    
-
-def getToken():
+def getBearerToken():
     global AUTH_DATA 
     if(AUTH_DATA['expiry'] - time.time() < 5):
         authenticate()
-    return AUTH_DATA["token"] 
+    return 'Bearer ' + AUTH_DATA["token"] 
+
+
 
 def ifscVerification(ifsc):
-    pass
+    headers = {
+        'Authorization': getBearerToken(),
+        'Content-Type': 'Application/JSON',
+    }
+
+    response = requests.get(
+        url=bank_verification_base_url+'/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
+        headers=headers
+    )
+
+    if(response.json()["status"] == "SUCCESS"):
+        return response.json()['data']
+    else:
+        print(response.json())
+        return None
