@@ -81,7 +81,7 @@ export class JoinAllComponent implements OnInit {
         this.serviceAdapter.initializeData();
         this.timeHandleInterval = setInterval(() => this.currentTime = new Date(), 30000);
 
-        console.log(this);
+        // console.log(this);
     }
     ngOnDestroy(): void {
         clearInterval(this.timeHandleInterval);
