@@ -21,6 +21,8 @@ export class FeeService extends ServiceObject {
     public online_payment_account = '/online-payment-account';
     public fee_settings = '/fee-settings';
     public settelment_cycle = '/cashfree/settelment-cycle';
+    public ifsc_verification = '/cashfree/ifsc-verification';
+    public bank_account_verification = '/cashfree/bank-account-verification';
 
 
     // Fee Type

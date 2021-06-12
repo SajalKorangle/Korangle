@@ -145,6 +145,7 @@ def getBearerToken():
 
 
 def ifscVerification(ifsc):
+    print('printing ifsc: ', ifsc)
     headers = {
         'Authorization': getBearerToken(),
         'Content-Type': 'Application/JSON',
