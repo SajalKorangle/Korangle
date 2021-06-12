@@ -98,7 +98,7 @@ export class JoinAllComponent implements OnInit {
         });
     }
     isActiveClass(onlineClass: ParsedOnlineClass): boolean {
-        if(onlineClass.day!=this.today) return false;
+        if (onlineClass.day != this.today) return false;
         const currentTime = this.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
