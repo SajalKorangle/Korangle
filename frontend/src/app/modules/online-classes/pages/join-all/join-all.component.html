@@ -1,9 +1,63 @@
 <div class="card-content">
-    Under Construction !!!
+
+
+    <ng-container *ngIf="!isLoading">
+
+        <ng-container *ngIf="isActiveSession else NotActiveSession">
+
+            <ng-container *ngIf="getAllActiveClasses().length>0 else NoClasses">
+
+                <table class="table table-hover online-class-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th>Class Timings</th>
+                            <th>Go to Meeting</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let onlineClass of getAllActiveClasses();index as classIndex">
+                            <ng-container *ngIf="getClassSubjectById(onlineClass.parentClassSubject) as classSubject">
+                                <tr>
+                                    <td>{{classIndex+1}}</td>
+                                    <td>{{classSubject.className}}</td>
+                                    <td>{{classSubject.divisionName}}</td>
+                                    <td>{{classSubject.subjectName}}</td>
+                                    <td>{{classSubject.teacherName}}</td>
+                                    <td>{{onlineClass.startTimeJSON.getDisplayString()}} to
+                                        {{onlineClass.endTimeJSON.getDisplayString()}}</td>
+                                    <td>
+                                        <button *ngIf="classSubject.accountInfo"
+                                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                            (click)="redirectToMeeting(classSubject.accountInfo)">
+                                            Join Class
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </ng-container>
+
+        </ng-container>
+
+    </ng-container>
+
+    <ng-template #NoClasses>
+        <p>No classes Registered For Today</p>
+    </ng-template>
+
+    <ng-template #NotActiveSession>
+        <p>Not an active session</p>
+    </ng-template>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+
 </div>
-<ng-container *ngIf="!isLoading">
-    Hello World!
-</ng-container>
-<ng-container *ngIf="isLoading">
-    <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container>
