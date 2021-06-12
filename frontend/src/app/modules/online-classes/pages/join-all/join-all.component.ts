@@ -61,6 +61,7 @@ export class JoinAllComponent implements OnInit {
     meetingEntered:boolean=false;
     meetingParameters: any;
     userEmployee:any;
+    timeHandleInterval;
 
     constructor ( public subjectService: SubjectService,
         public onlineClassService: OnlineClassService,
@@ -78,7 +79,12 @@ export class JoinAllComponent implements OnInit {
         this.serviceAdapter = new JoinAllServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
+        this.timeHandleInterval = setInterval(() => this.currentTime = new Date(), 30000);
+
         // console.log(this);    
+    }
+    ngOnDestroy(): void {
+        clearInterval(this.timeHandleInterval);
     }
     parseBackendData() {
         this.onlineClassList.forEach(onlineClass => {

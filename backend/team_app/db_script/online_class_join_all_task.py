@@ -4,19 +4,7 @@ def online_class_join_all_task(apps, schema_editor):
     EmployeePermission = apps.get_model('employee_app', 'EmployeePermission')
 
     online_classes_module = Module.objects.get(path='online_classes')
-
-    # add_account = Task.objects.get(parentModule=online_classes_module, path='add_account')
-    # add_account.title = 'Add Zoom Account'
-    # join_all=Task.objects.get(parentModule=online_classes_module,path='join_all')
-    # join_all.title='Join All Classes'
-
-    # attendance_report_task = Task.objects.create(
-    #     parentModule=online_classes_module,
-    #     path='attendance_report',
-    #     title='Attendance Report',
-    #     orderNumber=5,
-    #     parentBoard=None
-    # )
+    
     join_all_task=Task.objects.create(
         parentModule=online_classes_module,
         path='join_all',

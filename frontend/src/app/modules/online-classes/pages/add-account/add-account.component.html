@@ -2,15 +2,6 @@
     <mat-card *ngIf="hasAdminPermission() || backendData.accountInfoList.length == 0">
         <h4>Add Account</h4>
         <div style="margin-left: 12px; width: fit-content;">
-            <mat-form-field>
-                <mat-label>Zoom Username</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.username">
-            </mat-form-field>
-
-            <mat-form-field>
-                <mat-label>Zoom Password</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.password">
-            </mat-form-field>
 
             <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput1.focus()">
                 <mat-label>Account Owner</mat-label>
@@ -60,8 +51,6 @@
         class="table table-hover table-responsive">
         <thead>
             <tr>
-                <th>Username</th>
-                <th>Password</th>
                 <th *ngIf="hasAdminPermission()">Employee</th>
                 <th>Meeting ID</th>
                 <th>Meeting Passcode</th>
@@ -72,8 +61,6 @@
             <ng-container *ngFor="let accountInfo of backendData.accountInfoList">
                 <tr style="cursor: pointer;"
                     (click)="userInput.selectedAccountInfo=htmlRenderer.copyObject(accountInfo)">
-                    <td>{{accountInfo.username}}</td>
-                    <td>{{accountInfo.password}}</td>
                     <td *ngIf="hasAdminPermission()">{{backendData.getEmployeeById(accountInfo.parentEmployee).name}}
                     </td>
                     <td>{{accountInfo.meetingNumber}}</td>
@@ -86,18 +73,8 @@
                 </tr>
                 <tr *ngIf="userInput.selectedAccountInfo && userInput.selectedAccountInfo.id == accountInfo.id">
                     <td [attr.colspan]="hasAdminPermission()?6:5" class="in-animate">
-                        <mat-form-field>
-                            <mat-label>Username</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.username">
-                        </mat-form-field>
-
-                        <mat-form-field>
-                            <mat-label>Password</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.password">
-                        </mat-form-field>
-
                         <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput2.focus()">
-                            <mat-label>Account Onner</mat-label>
+                            <mat-label>Account Owner</mat-label>
                             <mat-select [(ngModel)]="userInput.selectedAccountInfo.parentEmployee">
 
                                 <mat-option style="pointer-events: none;">
