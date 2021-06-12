@@ -58,4 +58,18 @@ export class JoinAllServiceAdapter {
         this.vm.isLoading=false;
     }
 
+    async initializeMeetingData(accountInfo) {
+        this.vm.isLoading = true;
+        const signature_request = {
+            meetingNumber: accountInfo.meetingNumber,
+            role: 0,
+        };
+        const response = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.zoom_meeting_signature, signature_request);
+        this.vm.isLoading = false;
+        this.vm.populateMeetingParametersAndStart(accountInfo, response.signature, response.apiKey);
+
+        
+    }
+
+
 }

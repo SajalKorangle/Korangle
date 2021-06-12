@@ -19,6 +19,10 @@ import { EmployeeService} from '@services/modules/employee/employee.service';
 import { TimeSpan, TimeComparator, TimeSpanComparator, Time, ColorPaletteHandle, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import {  WEEKDAYS, ZOOM_BASE_URL } from '@modules/online-classes/class/constants';
 import { isMobile, openZoomMeeting } from '@classes/common.js';
+import { Constants } from 'app/classes/constants';
+import { environment } from 'environments/environment';
+import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
+
 
 @Component({
     selector: 'join-all',
@@ -53,6 +57,11 @@ export class JoinAllComponent implements OnInit {
     backendData = {};
     isLoading: any;
     isActiveSession:any;
+
+    meetingEntered:boolean=false;
+    meetingParameters: any;
+    userEmployee:any;
+
     constructor ( public subjectService: SubjectService,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
@@ -120,11 +129,38 @@ export class JoinAllComponent implements OnInit {
         return {className,divisionName,subjectName,teacherName,accountInfo};
     }
 
-    redirectToMeeting(accountInfo:any): void {
-        if (isMobile()) {
-            openZoomMeeting(ZOOM_BASE_URL + '/' + accountInfo.meetingNumber);
-            return;
-        }
-        window.open(ZOOM_BASE_URL + '/' + accountInfo.meetingNumber, '_blank');
+    populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
+        // clearInterval(this.attendanceMarkerInterval);
+        this.userEmployee=this.employeeList.find((employee)=>{
+            return employee.id==this.user.activeSchool.employeeId;
+        });
+        // console.log(this.userEmployee.name);
+        this.meetingParameters = {
+            signature,
+            api_key: apiKey,
+            meeting_number: accountInfo.meetingNumber,
+            password: accountInfo.passcode,
+            role: 0,
+            username: this.userEmployee.name,
+            leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
+            error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
+        };
+        this.meetingEntered = true;
+        setTimeout(() => {
+            let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
+            while (!zoomIFrame && this.meetingEntered) {
+                zoomIFrame = document.getElementById('zoomIFrame');
+            }
+            if (this.meetingEntered) {
+                const searchParams = new URLSearchParams();
+                Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
+                if (isMobile()) {
+                    openZoomMeeting(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                }
+                else {
+                    zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                }
+            }
+        });
     }
 }
