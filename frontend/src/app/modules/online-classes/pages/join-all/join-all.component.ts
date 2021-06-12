@@ -28,7 +28,7 @@ import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.se
     selector: 'join-all',
     templateUrl: './join-all.component.html',
     styleUrls: ['./join-all.component.css'],
-    providers: [SubjectService, OnlineClassService, ClassService, SchoolService,EmployeeService ],
+    providers: [SubjectService, OnlineClassService, ClassService, SchoolService, EmployeeService ],
 })
 
 export class JoinAllComponent implements OnInit {
@@ -40,8 +40,8 @@ export class JoinAllComponent implements OnInit {
 
     classList: Array<any>;
     divisionList: Array<any>;
-    employeeList:Array<any>;
-    
+    employeeList: Array<any>;
+
 
     weekdays = WEEKDAYS;
 
@@ -56,18 +56,18 @@ export class JoinAllComponent implements OnInit {
     userInput = {};
     backendData = {};
     isLoading: any;
-    isActiveSession:any;
+    isActiveSession: any;
 
-    meetingEntered:boolean=false;
+    meetingEntered: boolean = false;
     meetingParameters: any;
-    userEmployee:any;
+    userEmployee: any;
     timeHandleInterval;
 
     constructor ( public subjectService: SubjectService,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public schoolService: SchoolService,
-        public employeeService:EmployeeService,
+        public employeeService: EmployeeService,
     ) { }
 
     ngOnInit(): void {
@@ -81,7 +81,7 @@ export class JoinAllComponent implements OnInit {
         this.serviceAdapter.initializeData();
         this.timeHandleInterval = setInterval(() => this.currentTime = new Date(), 30000);
 
-        // console.log(this);    
+        // console.log(this);
     }
     ngOnDestroy(): void {
         clearInterval(this.timeHandleInterval);
@@ -92,12 +92,12 @@ export class JoinAllComponent implements OnInit {
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
         });
     }
-    getAllActiveClasses():any{
-        return this.onlineClassList.filter(onlineClass=>{
+    getAllActiveClasses(): any {
+        return this.onlineClassList.filter(onlineClass => {
             return this.isActiveClass(onlineClass);
         });
     }
-    isActiveClass(onlineClass:ParsedOnlineClass):boolean{
+    isActiveClass(onlineClass: ParsedOnlineClass): boolean {
         const currentTime = this.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
@@ -112,33 +112,33 @@ export class JoinAllComponent implements OnInit {
         }
         return false;
     }
-    getClassSubjectById(id:any):any{
-        let tempClassSubject= this.classSubjectList.find((onlineClass)=>{
-            return onlineClass.id==id;
+    getClassSubjectById(id: any): any {
+        let tempClassSubject = this.classSubjectList.find((onlineClass) => {
+            return onlineClass.id == id;
         });
-        let className=this.classList.find((classItem)=>{
-            return classItem.id==tempClassSubject.parentClass;
+        let className = this.classList.find((classItem) => {
+            return classItem.id == tempClassSubject.parentClass;
         }).name;
-        let divisionName=this.divisionList.find((classItem)=>{
-            return classItem.id==tempClassSubject.parentDivision;
+        let divisionName = this.divisionList.find((classItem) => {
+            return classItem.id == tempClassSubject.parentDivision;
         }).name;
-        let subjectName=this.subjectList.find((subject)=>{
-            return subject.id==tempClassSubject.parentSubject;
+        let subjectName = this.subjectList.find((subject) => {
+            return subject.id == tempClassSubject.parentSubject;
         }).name;
-        let teacherName=this.employeeList.find((employee)=>{
-            return employee.id==tempClassSubject.parentEmployee;
+        let teacherName = this.employeeList.find((employee) => {
+            return employee.id == tempClassSubject.parentEmployee;
         }).name;
-        let accountInfo=this.accountInfoList.find((accountInfo)=>{
-            return accountInfo.parentEmployee==tempClassSubject.parentEmployee;
+        let accountInfo = this.accountInfoList.find((accountInfo) => {
+            return accountInfo.parentEmployee == tempClassSubject.parentEmployee;
         });
 
-        return {className,divisionName,subjectName,teacherName,accountInfo};
+        return {className, divisionName, subjectName, teacherName, accountInfo};
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
         // clearInterval(this.attendanceMarkerInterval);
-        this.userEmployee=this.employeeList.find((employee)=>{
-            return employee.id==this.user.activeSchool.employeeId;
+        this.userEmployee = this.employeeList.find((employee) => {
+            return employee.id == this.user.activeSchool.employeeId;
         });
         // console.log(this.userEmployee.name);
         this.meetingParameters = {

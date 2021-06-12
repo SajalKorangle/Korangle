@@ -12,19 +12,17 @@ export class JoinAllServiceAdapter {
         this.vm = vm;
     }
 
-    async initializeData(){
+    async initializeData() {
 
         const class_subject_request = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
-        const employee_request={
-            parentSchool:this.vm.user.activeSchool.dbId,
-            // parentSession:this.vm.user.activeSchool.currentSessionDbId,
-        }
-
-        // const account_info_request = {
-        //     parentEmployee: this.vm.user.activeSchool.employeeId,
-        // };
+        const employee_request = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+        const online_class_request = {
+            parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
 
         this.vm.isLoading = true;
         if (this.vm.user.activeSchool.currentSessionDbId != CommonFunctions.getActiveSession().id) {
@@ -41,21 +39,19 @@ export class JoinAllServiceAdapter {
             this.vm.subjectList,
             this.vm.accountInfoList,
             this.vm.employeeList,
+            this.vm.onlineClassList,
         ] = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees,employee_request),
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_request),
+            this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request),
         ]);
-        const online_class_request = {
-            parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            // parentClassSubject__in: this.vm.classSubjectList.map(classSubject => classSubject.id),
-        };
-        this.vm.onlineClassList=await this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request);
+
         this.vm.parseBackendData();
-        this.vm.isLoading=false;
+        this.vm.isLoading = false;
     }
 
     async initializeMeetingData(accountInfo) {
@@ -68,7 +64,7 @@ export class JoinAllServiceAdapter {
         this.vm.isLoading = false;
         this.vm.populateMeetingParametersAndStart(accountInfo, response.signature, response.apiKey);
 
-        
+
     }
 
 

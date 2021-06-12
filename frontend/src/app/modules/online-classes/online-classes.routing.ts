@@ -30,9 +30,9 @@ const routes: Routes = [
     data: { moduleName: 'online_classes' },
   },
   {
-    path:'join_all',
-    loadChildren:'app/modules/online-classes/pages/join-all/join-all.module#JoinAllModule',
-    data:{moduleName:'online_classes'},
+    path: 'join_all',
+    loadChildren: 'app/modules/online-classes/pages/join-all/join-all.module#JoinAllModule',
+    data: {moduleName: 'online_classes'},
   },
   {
     path: '',
