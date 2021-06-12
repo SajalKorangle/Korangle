@@ -1,177 +1,53 @@
+<div class="card-content table-responsive" *ngIf="!isLoading else Loader">
 
-<div class="card-content table-responsive">
+    <h4>Account Information</h4>
+    <div style="display: flex; flex-wrap: wrap;">
+        <mat-form-field>
+            <mat-label>Account Holder Name</mat-label>
+            <input matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountHolder">
+        </mat-form-field>
 
-    <div class="row" style="margin-bottom: 3vh;">
-        <h3 style="font-weight: bolder; padding-left: 1vw;">Payment Account</h3>
-        <div *ngIf="schoolExistingAccount" style="float: right;">
-            <h4>Status : {{school.status}}</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field style="width: 16vw;">
-                <mat-label>Name of School</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.name"
-                       >
-            </mat-form-field>
-        </div>
+        <mat-form-field>
+            <mat-label>Account Number</mat-label>
+            <input matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountNumber">
+        </mat-form-field>
 
-        <div class="col-md-4">
-            <mat-form-field style="width: 13vw;">
-                <mat-label>Email</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.email"
-                       >
-            </mat-form-field>
-        </div>
+        <mat-form-field>
+            <mat-label>IFSC</mat-label>
+            <input matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.ifsc">
+        </mat-form-field>
 
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Phone</mat-label>
-                <input matInput
-                       type="number"
-                       [(ngModel)]="school.phone"
-                       >
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field >
-                <mat-label>addhar Number</mat-label>
-                <input matInput
-                       type="number"
-                       [(ngModel)]="school.aadharNo" >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Pan number</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.panNo"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>GSTIN</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.gstin"
-                       >
-            </mat-form-field>
-        </div>
     </div>
 
-    <div class="row">
-        
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Account Number</mat-label>
-                <input matInput
-                       type="number"
-                       [(ngModel)]="school.bankAccount"
-                       >
-            </mat-form-field>
-        </div>
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>IFSC</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.ifsc"
-                       >
-            </mat-form-field>
-        </div>
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Account Holder Name</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.accountHolder"
-                       >
-            </mat-form-field>
-        </div>
+    <mat-form-field style="width: 300px;">
+        <mat-label>Settelment Cycle</mat-label>
+        <mat-select [(ngModel)]="onlinePaymentAccount.vendorData.settlementCycleId">
+            <ng-container *ngFor="let settelmentOption of settelmentCycleList">
+                <mat-option [value]="settelmentOption.id">{{settelmentOption.desc}}</mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
+    <hr />
 
-        
+    <h4>Personal Info</h4>
+    <div style="display: flex; flex-wrap: wrap;">
+        <mat-form-field>
+            <mat-label>Mobile Number</mat-label>
+            <input matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.phone">
+        </mat-form-field>
 
-        
-    </div>
+        <mat-form-field>
+            <mat-label>Info</mat-label>
+            <input matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.email">
+        </mat-form-field>
 
-    
-
-
-    <div class="row">
-        <div class="col-md-4">
-            <mat-form-field style="width: 25vw;">
-                <mat-label>Address 1</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.address1"
-                       >
-            </mat-form-field>
-        </div>
-
-        <div class="col-md-4">
-            <mat-form-field style="width: 25vw;">
-                <mat-label>Address 2</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.address2"
-                       >
-            </mat-form-field>
-        </div>        
-
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>City</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.city"
-                       >
-            </mat-form-field>
-        </div>
-    </div>
-
-    <div class="row">
-        
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>State</mat-label>
-                <input matInput
-                       type="text"
-                       [(ngModel)]="school.state"
-                       >
-            </mat-form-field>
-        </div>
-        <div class="col-md-4">
-            <mat-form-field>
-                <mat-label>Postal Code</mat-label>
-                <input matInput
-                       type="number"
-                       [(ngModel)]="school.pincode"
-                       >
-            </mat-form-field>
-        </div>
-
-        
-
-        
     </div>
 
     <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="submitForm()">
         Submit
     </button>
-
-    
-   
-    
-
-
 </div>
+
+<ng-template #Loader>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>

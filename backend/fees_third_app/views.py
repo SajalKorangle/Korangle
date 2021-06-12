@@ -4,12 +4,12 @@ import json
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_new, user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
-from fees_third_app.business.cashfree import generatePaymentToken, generateAuthToken, addVendor, getVendor
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
     SubFeeReceipt, Discount, SubDiscount, ParentTransaction, OnlinePaymentAccount
-from common.common_serializer_interface_3 import create_object, get_object, get_list
+from common.common_serializer_interface_3 import create_object, get_object
 
+from django.db.models import Max
 
 
 
@@ -180,51 +180,50 @@ class ParentTransactionListView(CommonListView, APIView):
 class ParentTransactionView(CommonView, APIView):
     Model = ParentTransaction
 
-    @user_permission_3
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        print(data)
-        response = generatePaymentToken(data)
-        print (response)
-        return response
+    # @user_permission_3
+    # def post(self, request, *args, **kwargs):
+    #     data = request.data
+    #     print(data)
+    #     response = generatePaymentToken(data)
+    #     print (response)
+    #     return response
     
         
 
 
 ########### Online Payment Account #############   
-
-
-class OnlinePaymentAccountListView(CommonListView, APIView):
-    Model = OnlinePaymentAccount
-
+from fees_third_app.cashfree.cashfree import addVendor, getVendor
 
 class OnlinePaymentAccountView(CommonView, APIView):
     Model = OnlinePaymentAccount
+    RelationsToSchool=['parentSchool']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        print(data)
-        response =  addVendor(data) 
-        if(response['status']=='SUCCESS'):
-            temp = {
-                'parentSchool' : data['parentSchool'],
-                'parentEmployee' : data['parentEmployee'],
-                'vendorId' : 'VEN_'+ str(data['parentSchool']) + '_' + str(data['parentEmployee'])
-            }
-            return create_object(temp, self.Model, self.ModelSerializer, *args, **kwargs)
-        else:
-            return response
+        maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max']
+        vendorId = str(maxId +1)
+        vendorData = data.vendorData
+        addVendor(vendorData, vendorId) 
+
+        del data['vendorData']
+        responseData = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
+        responseData.update({
+            'vendorData': getVendor(vendorId)
+        })
+        return responseData
+        
     
     @user_permission_3
     def get(self, request, *args, **kwargs):
-        response =  get_list(request.GET, self.permittedQuerySet(**kwargs),  self.ModelSerializer)
-        if(len(response)>0):
-            vendorId = response[0]['vendorId']
-            print(vendorId)
-            return(getVendor(vendorId))
-        else:
-            return response
+        responseData =  get_object(request.GET, self.permittedQuerySet(**kwargs),  self.ModelSerializer)
+        if(responseData):
+            responseData.update({
+                'vendorData': getVendor(responseData['vendorId'])
+            })
+        return responseData
+
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
     RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
+

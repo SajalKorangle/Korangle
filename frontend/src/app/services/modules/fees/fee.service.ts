@@ -20,6 +20,8 @@ export class FeeService extends ServiceObject {
     public parent_transaction = '/parent-transaction';
     public online_payment_account = '/online-payment-account';
     public fee_settings = '/fee-settings';
+    public settelment_cycle = '/cashfree/settelment-cycle';
+
 
     // Fee Type
     get(object_url: any, data: any): Promise<any> {

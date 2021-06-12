@@ -1,5 +1,4 @@
-
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 urlpatterns = []
 
@@ -83,10 +82,10 @@ urlpatterns += [
     url(r'^fee-settings', FeeSettingsView.as_view()),
 ]
 
-from fees_third_app.views import OnlinePaymentAccountView, OnlinePaymentAccountListView
+
+from fees_third_app.views import OnlinePaymentAccountView
 
 urlpatterns += [
-    url(r'^online-payment-account/batch', OnlinePaymentAccountListView.as_view()),
     url(r'^online-payment-account', OnlinePaymentAccountView.as_view()),
 ]
 
@@ -96,5 +95,9 @@ from fees_third_app.views import ParentTransactionListView, ParentTransactionVie
 urlpatterns += [
     url(r'^parent-transaction/batch', ParentTransactionListView.as_view()),
     url(r'^parent-transaction', ParentTransactionView.as_view()),
+]
 
+############### CashFree ####################
+urlpatterns += [
+    url(r'^cashfree/', include('fees_third_app.cashfree.urls')),
 ]

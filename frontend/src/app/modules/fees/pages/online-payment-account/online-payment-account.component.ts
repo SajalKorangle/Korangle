@@ -1,54 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { School } from '../../../../services/modules/fees/models/schoolData'
-import { Representative } from '../../../../services/modules/fees/models/representative'
-import { Owner } from '../../../../services/modules/fees/models/owner'
 import { DataStorage } from 'app/classes/data-storage';
-import { FeeService } from 'app/services/modules/fees/fee.service';
+import { FeeService } from '@services/modules/fees/fee.service';
 import { OnlinePaymentAccountServiceAdapter } from './online-payment-account.service.adapter';
-
+import { OnlinePaymentAccount } from '@services/modules/fees/models/online-payment-account';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-online-payment-account',
   templateUrl: './online-payment-account.component.html',
   styleUrls: ['./online-payment-account.component.css'],
-  providers: [ FeeService ]
+  providers: [FeeService]
 })
 export class OnlinePaymentAccountComponent implements OnInit {
 
   user;
 
+  onlinePaymentAccount: OnlinePaymentAccount = new OnlinePaymentAccount();
+  settelmentCycleList: Array<SettelmentOption> = [];
+
   serviceAdapter: OnlinePaymentAccountServiceAdapter;
-  //School data
-  school = new School
-  schoolData : any
 
-  schoolExistingAccount = false;
+  isLoading: boolean = true;
 
-  constructor(public feeService: FeeService) { }
+  constructor(public feeService: FeeService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new OnlinePaymentAccountServiceAdapter();
-        this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
+    this.serviceAdapter.initializeAdapter(this);
+    this.serviceAdapter.initializeData();
+
+    // populate data
+    this.onlinePaymentAccount.parentSchool = this.user.activeSchool.dbId;
+    this.onlinePaymentAccount.vendorData.name = this.user.activeSchool.name;
   }
 
-  submitForm()
-  {
-    
-    let data = {
-      parentSchool : this.user.activeSchool.dbId,
-      parentEmployee : this.user.activeSchool.employeeId,
-      schoolData  : this.school
+  submitForm() {
+    if (this.onlinePaymentAccount.id) { // update
+
     }
-
-    console.dir(data, {depth:null})
-
-    this.feeService.createObject(this.feeService.online_payment_account,data).then(value => {
-      console.log(value);
-    })
+    else { // create
+      this.serviceAdapter.createOnlinePaymentAccount();
+    }
   }
 
-  
+  removeNullKeys(obj: { [key: string]: any; }) {
+    obj = { ...obj };
+    Object.keys(obj).forEach(key => {
+      if (typeof obj[key] == 'object') {
+        obj[key] = this.removeNullKeys(obj[key]);
+      }
+      else if (!obj[key]) {
+        delete obj[key];
+      }
+    });
+    return obj;
+  }
 
+
+}
+
+
+interface SettelmentOption {
+  id: string;
+  desc: string;
 }

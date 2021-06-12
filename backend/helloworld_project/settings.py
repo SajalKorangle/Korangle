@@ -238,3 +238,12 @@ else:
 ZOOM_API_KEY = 'GY5heSVqQIWo8YGY_Patrg'
 ZOOM_SECRET_KEY = 'trQY4s4DkL9GrB20JrInNY7A6ZmTJZ7G6fO0'
 ZOOM_EMAIL_ID = 'korangleplus@gmail.com'
+
+################## PAYMENT_GATEWAY ##################
+
+CASHFREE_APP_ID = os.environ['CASHFREE_APP_ID']
+CASHFREE_SECRET_KEY = os.environ['CASHFREE_SECRET_KEY']
+CASHFREE_CLIENT_ID = os.environ['CLIENT_ID']
+CASHFREE_CLIENT_SECRET = os.environ['CLIENT_SECRET']
+
+######################################################

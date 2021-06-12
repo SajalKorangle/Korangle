@@ -14,6 +14,7 @@ from accounts_app.models import Transaction, AccountSession
 
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+import json
 
 # Create your models here.
 
@@ -444,10 +445,7 @@ class ParentTransaction(models.Model):
 
     
 class OnlinePaymentAccount(models.Model):
+    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
+    vendorId = models.CharField(max_length=20, blank=True)
 
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, verbose_name='parentEmployee')
-    vendorId = models.TextField(null=False, default=-1, verbose_name='vendorId')
 
-    class Meta:
-        db_table = 'online_payment_account'        
