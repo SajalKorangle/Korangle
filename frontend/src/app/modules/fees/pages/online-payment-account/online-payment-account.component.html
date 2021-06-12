@@ -77,7 +77,7 @@
                 [diameter]="20" *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
             </mat-spinner> </span><br />
     </div>
-    <app-loading-spinner [user]="user"></app-loading-spinner>
+    <app-loading-spinner *ngIf="!isUpdating()" [user]="user"></app-loading-spinner>
 </ng-template>
 
 <ng-template #CheckIcon>
