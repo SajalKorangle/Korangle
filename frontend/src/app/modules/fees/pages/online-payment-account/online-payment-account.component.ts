@@ -56,17 +56,19 @@ export class OnlinePaymentAccountComponent implements OnInit {
     console.log('this: ', this);
   }
 
-  removeNullKeys(obj: { [key: string]: any; }) {
-    obj = { ...obj };
-    Object.keys(obj).forEach(key => {
-      if (typeof obj[key] == 'object') {
-        obj[key] = this.removeNullKeys(obj[key]);
-      }
-      else if (!obj[key]) {
-        delete obj[key];
-      }
-    });
-    return obj;
+  resetintermediateUpdateState(): void {
+    this.intermediateUpdateState.accountVerificationLoading = false;
+    this.intermediateUpdateState.ifscVerificationLoading = false;
+    this.intermediateUpdateState.registrationLoading = false;
+  }
+
+  getRequiredPaymentAccountData() {
+    const requiredOnlyFields: OnlinePaymentAccount = JSON.parse(JSON.stringify(this.onlinePaymentAccount));
+    delete requiredOnlyFields.vendorData.addedOn;
+    delete requiredOnlyFields.vendorData.balance;
+    delete requiredOnlyFields.vendorData.status;
+    delete requiredOnlyFields.vendorData.upi;
+    return requiredOnlyFields;
   }
 
   ifscError = (): boolean => {
