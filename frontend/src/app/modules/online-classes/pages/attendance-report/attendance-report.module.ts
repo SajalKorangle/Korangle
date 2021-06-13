@@ -4,6 +4,7 @@ import { AttendanceReportComponent } from "./attendance-report.component";
 import { AttendanceReportRouting } from "./attendance-report.routing";
 import { ComponentsModule } from "@components/components.module";
 import { MatTableModule } from '@angular/material/table';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,7 @@ import { MatTableModule } from '@angular/material/table';
         MatTableModule,
     ],
     exports: [],
-    providers: [],
+    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
     bootstrap: [AttendanceReportComponent]
 })
 export class AttendanceReportModule { }
