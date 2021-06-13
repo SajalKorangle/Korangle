@@ -17,7 +17,7 @@ import { Constants } from 'app/classes/constants';
 
 import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
 
-import { openZoomMeeting, isMobile } from '@classes/common.js';
+import { openUrlInChrome, isMobile } from '@classes/common.js';
 
 @Component({
     selector: 'classroom',
@@ -114,7 +114,8 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 if (isMobile()) {
-                    openZoomMeeting(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                    openUrlInChrome(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                    this.htmlRenderer.meetingEntered = false;
                 }
                 else {
                     zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
