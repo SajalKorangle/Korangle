@@ -162,6 +162,7 @@ export class JoinAllComponent implements OnInit {
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 if (isMobile()) {
                     openUrlInChrome(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                    this.meetingEntered = false;
                 }
                 else {
                     zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();

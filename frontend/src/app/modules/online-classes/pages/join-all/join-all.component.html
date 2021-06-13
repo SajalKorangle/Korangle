@@ -8,43 +8,44 @@
             <ng-container *ngIf="getAllActiveClasses().length>0 else NoClasses">
 
                 <ng-container *ngIf="!meetingEntered else zoomIframe">
-
-                    <table class="table table-hover online-class-table">
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Class</th>
-                                <th>Section</th>
-                                <th>Subject</th>
-                                <th>Teacher</th>
-                                <th>Class Timings</th>
-                                <th>Go to Meeting</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngFor="let onlineClass of getAllActiveClasses();index as classIndex">
-                                <ng-container
-                                    *ngIf="getClassSubjectById(onlineClass.parentClassSubject) as classSubject">
-                                    <tr>
-                                        <td>{{classIndex+1}}</td>
-                                        <td>{{classSubject.className}}</td>
-                                        <td>{{classSubject.divisionName}}</td>
-                                        <td>{{classSubject.subjectName}}</td>
-                                        <td>{{classSubject.teacherName}}</td>
-                                        <td>{{onlineClass.startTimeJSON.getDisplayString()}} to
-                                            {{onlineClass.endTimeJSON.getDisplayString()}}</td>
-                                        <td>
-                                            <button *ngIf="classSubject.accountInfo"
-                                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                                (click)="serviceAdapter.initializeMeetingData(classSubject.accountInfo)">
-                                                Join Class
-                                            </button>
-                                        </td>
-                                    </tr>
+                    <div style="width: 100%; overflow: auto;">
+                        <table class="table table-hover online-class-table">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Subject</th>
+                                    <th>Teacher</th>
+                                    <th>Class Timings</th>
+                                    <th>Go to Meeting</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let onlineClass of getAllActiveClasses();index as classIndex">
+                                    <ng-container
+                                        *ngIf="getClassSubjectById(onlineClass.parentClassSubject) as classSubject">
+                                        <tr>
+                                            <td>{{classIndex+1}}</td>
+                                            <td>{{classSubject.className}}</td>
+                                            <td>{{classSubject.divisionName}}</td>
+                                            <td>{{classSubject.subjectName}}</td>
+                                            <td>{{classSubject.teacherName}}</td>
+                                            <td>{{onlineClass.startTimeJSON.getDisplayString()}} to
+                                                {{onlineClass.endTimeJSON.getDisplayString()}}</td>
+                                            <td>
+                                                <button *ngIf="classSubject.accountInfo"
+                                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                                    (click)="serviceAdapter.initializeMeetingData(classSubject.accountInfo)">
+                                                    Join Class
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
                                 </ng-container>
-                            </ng-container>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </ng-container>
             </ng-container>
 
