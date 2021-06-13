@@ -60,6 +60,7 @@ export class OnlinePaymentAccountComponent implements OnInit {
     this.intermediateUpdateState.accountVerificationLoading = false;
     this.intermediateUpdateState.ifscVerificationLoading = false;
     this.intermediateUpdateState.registrationLoading = false;
+    this.isLoading = false;
   }
 
   getRequiredPaymentAccountData() {
@@ -72,7 +73,7 @@ export class OnlinePaymentAccountComponent implements OnInit {
   }
 
   ifscError = (): boolean => {
-    if (!this.onlinePaymentAccount.vendorData.bank.ifsc)
+    if (!this.onlinePaymentAccount.vendorData.bank.ifsc || this.isIFSCLoading)
       return false;
     if (this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
       return false;

@@ -1,5 +1,9 @@
 import { OnlinePaymentAccountComponent } from './online-payment-account.component';
 
+async function sleep() {
+    await new Promise(resolve => setTimeout(resolve, 4000));
+}
+
 export class OnlinePaymentAccountServiceAdapter {
 
     vm: OnlinePaymentAccountComponent;
@@ -41,7 +45,7 @@ export class OnlinePaymentAccountServiceAdapter {
             };
             this.vm.cache.ifsc = await this.vm.feeService.getObject(this.vm.feeService.ifsc_verification, request_data);
         }
-        this.vm.isIFSCLoading = true;
+        this.vm.isIFSCLoading = false;
     }
 
     async createUpdateOnlinePaymentAccount() {
@@ -53,6 +57,7 @@ export class OnlinePaymentAccountServiceAdapter {
         this.vm.intermediateUpdateState.registrationLoading = true;
         this.vm.isLoading = true;
 
+        await sleep();
         const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
 
         await this.verifyIFSC();
@@ -62,7 +67,7 @@ export class OnlinePaymentAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
-
+        await sleep();
         const account_verification_data = {
             accountNumber: this.vm.onlinePaymentAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
@@ -74,7 +79,7 @@ export class OnlinePaymentAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
-
+        await sleep();
         if (this.vm.onlinePaymentAccount.id) {
             this.vm.onlinePaymentAccount =
                 await this.vm.feeService.updateObject(this.vm.feeService.online_payment_account, newOnlinePaymentAccount);
@@ -86,7 +91,6 @@ export class OnlinePaymentAccountServiceAdapter {
             this.vm.snackBar.open('Payment Account Created Successfully', undefined, { duration: 5000 });
         }
         this.vm.resetintermediateUpdateState();
-        this.vm.isLoading = false;
     }
 
 

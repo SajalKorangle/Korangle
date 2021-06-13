@@ -58,26 +58,28 @@
         </div>
 
         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit">
-            Submit
+            {{onlinePaymentAccount.id?'Update':'Submit'}}
         </button>
     </form>
 </div>
 
 <ng-template #Loader>
-    <div style="position: absolute; top: 10vh; left: 6vh;" *ngIf="isUpdating()">
-        <span class="intermediate-loaders-wrapper">IFSC Verification: <mat-spinner
-                style="display: inline; margin: 12px;" [diameter]="20"
-                *ngIf="intermediateUpdateState.ifscVerificationLoading else CheckIcon">
-            </mat-spinner> </span><br />
-        <span class="intermediate-loaders-wrapper">Account Verification: <mat-spinner
-                style="display: inline; margin: 12px;" [diameter]="20"
-                *ngIf="intermediateUpdateState.accountVerificationLoading else CheckIcon"></mat-spinner>
-        </span><br />
-        <span class="intermediate-loaders-wrapper">Registration: <mat-spinner style="display: inline; margin: 12px;"
-                [diameter]="20" *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
-            </mat-spinner> </span><br />
+    <div class="card-content table-responsive" style="height: 90vh;">
+        <div *ngIf="isUpdating()">
+            <span class="intermediate-loaders-wrapper">IFSC Verification: <mat-spinner
+                    style="display: inline; margin: 12px;" [diameter]="20"
+                    *ngIf="intermediateUpdateState.ifscVerificationLoading else CheckIcon">
+                </mat-spinner> </span><br />
+            <span class="intermediate-loaders-wrapper">Account Verification: <mat-spinner
+                    style="display: inline; margin: 12px;" [diameter]="20"
+                    *ngIf="intermediateUpdateState.accountVerificationLoading else CheckIcon"></mat-spinner>
+            </span><br />
+            <span class="intermediate-loaders-wrapper">Registration: <mat-spinner style="display: inline; margin: 12px;"
+                    [diameter]="20" *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
+                </mat-spinner> </span><br />
+        </div>
+        <app-loading-spinner *ngIf="!isUpdating()" [user]="user"></app-loading-spinner>
     </div>
-    <app-loading-spinner *ngIf="!isUpdating()" [user]="user"></app-loading-spinner>
 </ng-template>
 
 <ng-template #CheckIcon>

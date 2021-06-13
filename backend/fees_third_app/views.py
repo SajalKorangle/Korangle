@@ -7,7 +7,7 @@ from fees_third_app.business.discount import create_discount_object, create_disc
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
     SubFeeReceipt, Discount, SubDiscount, ParentTransaction, OnlinePaymentAccount
-from common.common_serializer_interface_3 import create_object, get_object
+from common.common_serializer_interface_3 import create_object, get_object, update_object
 
 from django.db.models import Max
 
@@ -192,11 +192,12 @@ class ParentTransactionView(CommonView, APIView):
 
 
 ########### Online Payment Account #############   
-from fees_third_app.cashfree.cashfree import addVendor, getVendor
+from fees_third_app.cashfree.cashfree import addVendor, getVendor, updateVendor
 
 class OnlinePaymentAccountView(CommonView, APIView):
     Model = OnlinePaymentAccount
     RelationsToSchool=['parentSchool']
+    permittedMethods= ['get', 'post', 'put']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
@@ -222,6 +223,17 @@ class OnlinePaymentAccountView(CommonView, APIView):
                 'vendorData': getVendor(responseData['vendorId'])
             })
         return responseData
+
+    @user_permission_3
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        vendorData = data.vendorData
+        updateVendor(vendorData)
+        data.update({
+            'vendorData': getVendor(data.vendorId)
+        })
+        return data
+
 
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings

@@ -81,6 +81,31 @@ def addVendor(newVendorData, vendorId):
     return response.json()['message']
 
 
+def updateVendor(vendorData):
+    vendorId = vendorData['id']
+
+    applicableFields = ['email', 'bank', 'phone', 'name', 'settlementCycleId']
+    toUpdateVendorData = {}
+    for field in applicableFields:
+        if(field in vendorData):
+            toUpdateVendorData[field] = vendorData[field]
+
+    headers = {
+        'x-client-id': CASHFREE_APP_ID, 
+        'x-client-secret': CASHFREE_SECRET_KEY,
+        'Content-Type': 'application/json'
+        }
+
+    response = requests.put(
+        url=base_url+'/api/v2/easy-split/vendors/{0}'.format(vendorId), 
+        data=toUpdateVendorData,
+        headers=headers
+        )
+    assert response.json()['status'] == 'OK'
+    return response.json()['message']
+
+
+
 def getVendor(vendorId):
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
@@ -171,6 +196,8 @@ def bankVerification(accountNumber, ifsc):
         'bankAccount': accountNumber,
         'ifsc': ifsc
     }
+
+    print('params: ', params)
 
     response = requests.get(
         url= bank_verification_base_url+'/payout/v1.2/validation/bankDetails',
