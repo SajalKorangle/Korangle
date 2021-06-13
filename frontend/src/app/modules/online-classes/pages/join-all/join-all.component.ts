@@ -8,17 +8,16 @@ import { JoinAllHtmlRenderer } from './join-all.html.renderer';
 import { AccountInfo } from '@services/modules/online-class/models/account-info';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { Subject } from '@services/modules/subject/models/subject';
-import {OnlineClass} from '@services/modules/online-class/models/online-class';
 
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SchoolService } from '@services/modules/school/school.service';
-import { EmployeeService} from '@services/modules/employee/employee.service';
+import { EmployeeService } from '@services/modules/employee/employee.service';
 
-import { TimeSpan, TimeComparator, TimeSpanComparator, Time, ColorPaletteHandle, ParsedOnlineClass } from '@modules/online-classes/class/constants';
-import {  WEEKDAYS, ZOOM_BASE_URL } from '@modules/online-classes/class/constants';
-import { isMobile, openZoomMeeting } from '@classes/common.js';
+import { Time, ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { WEEKDAYS, ZOOM_BASE_URL } from '@modules/online-classes/class/constants';
+import { isMobile, openUrlInChrome } from '@classes/common.js';
 import { Constants } from 'app/classes/constants';
 import { environment } from 'environments/environment';
 import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
@@ -28,7 +27,7 @@ import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.se
     selector: 'join-all',
     templateUrl: './join-all.component.html',
     styleUrls: ['./join-all.component.css'],
-    providers: [SubjectService, OnlineClassService, ClassService, SchoolService, EmployeeService ],
+    providers: [SubjectService, OnlineClassService, ClassService, SchoolService, EmployeeService],
 })
 
 export class JoinAllComponent implements OnInit {
@@ -63,7 +62,7 @@ export class JoinAllComponent implements OnInit {
     userEmployee: any;
     timeHandleInterval;
 
-    constructor ( public subjectService: SubjectService,
+    constructor(public subjectService: SubjectService,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public schoolService: SchoolService,
@@ -133,7 +132,7 @@ export class JoinAllComponent implements OnInit {
             return accountInfo.parentEmployee == tempClassSubject.parentEmployee;
         });
 
-        return {className, divisionName, subjectName, teacherName, accountInfo};
+        return { className, divisionName, subjectName, teacherName, accountInfo };
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
@@ -162,7 +161,7 @@ export class JoinAllComponent implements OnInit {
                 const searchParams = new URLSearchParams();
                 Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                 if (isMobile()) {
-                    openZoomMeeting(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
+                    openUrlInChrome(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
                 }
                 else {
                     zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
