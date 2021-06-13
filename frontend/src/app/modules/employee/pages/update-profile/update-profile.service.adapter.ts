@@ -56,16 +56,22 @@ export class UpdateProfileServiceAdapter {
         this.vm.isLoading = true;
         Promise.all([
             this.vm.employeeService.getObject(this.vm.employeeService.employees, data),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_session_detail, session_data),
+            this.vm.employeeService.getObject(this.vm.employeeService.employee_session_detail, session_data),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, { parentEmployee: employee.id, })
         ]).then(value => {
-            console.dir(value[0]);
+            // console.dir(value);
             this.vm.selectedEmployeeProfile = value[0];
             Object.keys(this.vm.selectedEmployeeProfile).forEach(key => {
                 this.vm.currentEmployeeProfile[key] = this.vm.selectedEmployeeProfile[key];
 
             });
-            this.vm.selectedEmployeeSessionProfile = value[1][0];
+            this.vm.selectedEmployeeSessionProfile = value[1] ? value[1] : {
+                id: null,
+                parentEmployee: employee.id,
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                paidLeaveNumber: null,
+            };
+
             Object.keys(this.vm.selectedEmployeeSessionProfile).forEach(key => {
                 this.vm.currentEmployeeSessionProfile[key] = this.vm.selectedEmployeeSessionProfile[key];
             });
@@ -157,7 +163,7 @@ export class UpdateProfileServiceAdapter {
 
         const employee_form_data = new FormData();
         const data = { ...this.vm.currentEmployeeProfile, content: JSON.stringify(this.vm.currentEmployeeProfile) };
-        console.log(data);
+        // console.log(data);
         Object.keys(data).forEach(key => {
             if (key === 'profileImage') {
                 if (this.vm.profileImage !== null) {
