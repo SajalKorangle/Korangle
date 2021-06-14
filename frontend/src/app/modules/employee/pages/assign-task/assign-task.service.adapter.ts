@@ -1,3 +1,4 @@
+  
 import { AssignTaskComponent } from './assign-task.component';
 
 export class AssignTaskServiceAdapter {
@@ -142,22 +143,26 @@ export class AssignTaskServiceAdapter {
                 const existingEmployeePermission = this.vm.hasPermission(employee, task);
                 if (existingEmployeePermission && !this.vm.isDisabled(module, task, employee)) {
                     this.vm.updatePermissionLoading(employee, task, true);
-                    toDeletePermissions.push({ id: existingEmployeePermission.id });
+                    toDeletePermissions.push(existingEmployeePermission.id );
                 }
             });
         });
 
-        const response = await this.vm.employeeService.deleteObjectList(this.vm.employeeService.employee_permissions, toDeletePermissions);
+        const delete_request = {
+            id__in: toDeletePermissions
+        };
+
+        const response = await this.vm.employeeService.deleteObjectList(this.vm.employeeService.employee_permissions, delete_request);
         this.vm.moduleList.forEach((module) => {
             module.taskList.forEach((task) => {
                 const existingEmployeePermission = this.vm.hasPermission(employee, task);
-                if (existingEmployeePermission && !this.vm.isDisabled(module, task, employee)) {
+                if (existingEmployeePermission) {
                     this.vm.updatePermissionLoading(employee, task, false);
                 }
             });
         });
-        response.forEach(res => {
-            this.vm.currentPermissionList = this.vm.currentPermissionList.filter(employeePermission => employeePermission.id != res.id);
+        toDeletePermissions.forEach(id => {
+            this.vm.currentPermissionList = this.vm.currentPermissionList.filter(employeePermission => employeePermission.id != id);
         });
     }
 }
