@@ -49,6 +49,7 @@
         <!--Filter by Employee-->
         <div class="row" *ngIf="selectedAssignTaskOption == assignTaskOptions[0]">
             <ng-container *ngIf="selectedEmployee && !isLoading">
+<<<<<<< HEAD
                 <span style="font-weight: 800; font-size: 20px">{{ selectedEmployee.name }}</span><br/>
                 <button class="btn" style="padding: 4px 7px" (click)="serviceAdapter.assignAllTasks(selectedEmployee); $event.stopPropagation()">
                     Grant All
@@ -57,6 +58,15 @@
                     Remove All
                 </button>
                 <br/>
+=======
+                <span style="font-weight: 800; font-size: 20px">{{ selectedEmployee.name }}</span
+                ><br />
+                <button class="btn" style="padding: 4px 7px" (click)="serviceAdapter.assignAllTasks(selectedEmployee); $event.stopPropagation()">
+                    Grant All</button
+                ><button class="btn" style="padding: 4px 7px" (click)="serviceAdapter.removeAllPermissions(selectedEmployee); $event.stopPropagation()">
+                    Remove All</button
+                ><br />
+>>>>>>> master
 
                 <div class="row">
                     <ng-container *ngFor="let module of moduleList">

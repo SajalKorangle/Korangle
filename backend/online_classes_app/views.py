@@ -1,3 +1,4 @@
+from django.db import models
 from .models import RestrictedStudent
 from .models import AccountInfo
 from .models import OnlineClass
@@ -48,3 +49,17 @@ class RestrictedStudentListView(CommonListView, APIView):
     Model = RestrictedStudent
     RelationsToSchool = ['parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
+
+
+
+from .models import StudentAttendance
+
+class StudentAttendanceView(CommonView):
+    Model = StudentAttendance
+    RelationsToSchool =['parentClassSubject__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudentSection__parentStudent__id']
+
+class StudenAttendanceListView(CommonListView):
+    Model = StudentAttendance
+    RelationsToSchool =['parentClassSubject__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
+    RelationsToStudent = ['parentStudentSection__parentStudent__id']

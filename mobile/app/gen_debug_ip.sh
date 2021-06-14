@@ -1,4 +1,4 @@
-IP=$(hostname -I | awk '{print $1}')
+IP=$(ipconfig getifaddr en0)
 
 echo "{
  \"IP\": \"$IP\"
