@@ -3,7 +3,7 @@ import { TotalDiscountComponent } from './total-discount.component';
 export class TotalDiscountServiceAdapter {
     vm: TotalDiscountComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -48,15 +48,15 @@ export class TotalDiscountServiceAdapter {
         this.vm.isLoading = true;
 
         let discount_list = {
-            generationDateTime__gte: this.vm.startDate + ' 00:00:00%2B05:30',
-            generationDateTime__lte: this.vm.endDate + ' 23:59:59%2B05:30',
+            generationDateTime__gte: this.vm.startDate + ' 00:00:00+05:30',
+            generationDateTime__lte: this.vm.endDate + ' 23:59:59+05:30',
             parentSchool: this.vm.user.activeSchool.dbId,
             cancelled: 'false__boolean',
         };
 
         let sub_discount_list = {
-            parentDiscount__generationDateTime__gte: this.vm.startDate + ' 00:00:00%2B05:30',
-            parentDiscount__generationDateTime__lte: this.vm.endDate + ' 23:59:59%2B05:30',
+            parentDiscount__generationDateTime__gte: this.vm.startDate + ' 00:00:00+05:30',
+            parentDiscount__generationDateTime__lte: this.vm.endDate + ' 23:59:59+05:30',
             parentDiscount__parentSchool: this.vm.user.activeSchool.dbId,
             parentDiscount__cancelled: 'false__boolean',
         };

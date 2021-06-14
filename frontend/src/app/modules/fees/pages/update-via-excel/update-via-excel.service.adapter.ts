@@ -4,7 +4,7 @@ import { UpdateViaExcelComponent } from './update-via-excel.component';
 export class UpdateViaExcelServiceAdapter {
     vm: UpdateViaExcelComponent;
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: UpdateViaExcelComponent): void {
         this.vm = vm;
@@ -27,7 +27,7 @@ export class UpdateViaExcelServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, request_fee_type_data),
         ]).then(
             (value) => {
                 this.vm.classList = value[1];
@@ -49,7 +49,7 @@ export class UpdateViaExcelServiceAdapter {
 
                 Promise.all([
                     this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-                    this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_data),
+                    this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_data),
                 ]).then((value2) => {
                     value[0].forEach((ss) => {
                         ss['student'] = value2[0].find((student) => student.id === ss.parentStudent); // storing student data inside student session data
@@ -190,9 +190,9 @@ export class UpdateViaExcelServiceAdapter {
                                 newSchoolFeeRule.ruleNumber =
                                     schoolFeeRuleListBackendFilteredByFeeTypeId.length > 0
                                         ? Math.max.apply(
-                                              Math,
-                                              schoolFeeRuleListBackendFilteredByFeeTypeId.map((item) => item.ruleNumber)
-                                          ) + 1
+                                            Math,
+                                            schoolFeeRuleListBackendFilteredByFeeTypeId.map((item) => item.ruleNumber)
+                                        ) + 1
                                         : 1;
 
                                 schoolFeeRuleListToBeUploaded.push(newSchoolFeeRule);
@@ -205,7 +205,7 @@ export class UpdateViaExcelServiceAdapter {
                 console.log(schoolFeeRuleListToBeUploaded);
                 if (schoolFeeRuleListToBeUploaded.length > 0) {
                     // Creating School Fee Rules
-                    this.vm.feeService.createList(this.vm.feeService.school_fee_rules, schoolFeeRuleListToBeUploaded).then(
+                    this.vm.feeService.createObjectList(this.vm.feeService.school_fee_rules, schoolFeeRuleListToBeUploaded).then(
                         (schoolFeeRuleListCreated) => {
                             studentFeeListToBeUploaded.forEach((studentFee) => {
                                 studentFee.parentSchoolFeeRule = schoolFeeRuleListCreated.find(
@@ -214,7 +214,7 @@ export class UpdateViaExcelServiceAdapter {
                             });
 
                             // Creating Student Fees
-                            this.vm.feeService.createList(this.vm.feeService.student_fees, studentFeeListToBeUploaded).then(
+                            this.vm.feeService.createObjectList(this.vm.feeService.student_fees, studentFeeListToBeUploaded).then(
                                 (studentFeeListCreated) => {
                                     // this.initializeData();
                                     this.populateStructuredStudentsFee(studentFeeListCreated);

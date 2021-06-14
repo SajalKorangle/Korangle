@@ -77,17 +77,17 @@ export class SetSchoolFeesServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data), // 0
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, request_fee_type_data), // 0
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 1
             this.vm.classService.getObjectList(this.vm.classService.division, {}),   // 2
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt), // 3
             this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),  // 4
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),  // 5
-            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),    // 6
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),  // 7
-            this.vm.feeService.getList(this.vm.feeService.student_fees, request_student_fee_data),  // 8
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),  // 9
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, request_sub_discount_data),    // 10
+            this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),  // 5
+            this.vm.feeService.getObjectList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),    // 6
+            this.vm.feeService.getObjectList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),  // 7
+            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, request_student_fee_data),  // 8
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),  // 9
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, request_sub_discount_data),    // 10
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),    // 11
         ]).then(value => {
 
@@ -192,24 +192,24 @@ export class SetSchoolFeesServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.create(this.vm.feeService.school_fee_rules, school_fee_rule_data).then(value => {
+        this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, school_fee_rule_data).then(value => {
 
             let service_list = [];
 
             class_filter_fee_list.forEach(class_filter_fee => {
                 class_filter_fee['parentSchoolFeeRule'] = value.id;
             });
-            service_list.push(this.vm.feeService.createList(this.vm.feeService.class_filter_fees, class_filter_fee_list));
+            service_list.push(this.vm.feeService.createObjectList(this.vm.feeService.class_filter_fees, class_filter_fee_list));
 
             bus_stop_filter_fee_list.forEach(bus_stop_filter_fee => {
                 bus_stop_filter_fee['parentSchoolFeeRule'] = value.id;
             });
-            service_list.push(this.vm.feeService.createList(this.vm.feeService.bus_stop_filter_fees, bus_stop_filter_fee_list));
+            service_list.push(this.vm.feeService.createObjectList(this.vm.feeService.bus_stop_filter_fees, bus_stop_filter_fee_list));
 
             student_fee_list.forEach(student_fee => {
                 student_fee['parentSchoolFeeRule'] = value.id;
             });
-            service_list.push(this.vm.feeService.createList(this.vm.feeService.student_fees, student_fee_list));
+            service_list.push(this.vm.feeService.createObjectList(this.vm.feeService.student_fees, student_fee_list));
 
             Promise.all(service_list).then(value2 => {
 
@@ -282,7 +282,7 @@ export class SetSchoolFeesServiceAdapter {
 
         let service_list = [];
 
-        service_list.push(this.vm.feeService.delete(this.vm.feeService.school_fee_rules, school_fee_rule_data));
+        service_list.push(this.vm.feeService.deleteObject(this.vm.feeService.school_fee_rules, school_fee_rule_data));
         /*if (class_filter_fee_list) {
             service_list.push(this.vm.feeService.deleteList(this.vm.feeService.class_filter_fees, class_filter_fee_list));
         }
