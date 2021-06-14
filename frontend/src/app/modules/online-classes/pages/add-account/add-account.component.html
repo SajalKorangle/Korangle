@@ -2,19 +2,10 @@
     <mat-card *ngIf="hasAdminPermission() || backendData.accountInfoList.length == 0">
         <h4>Add Account</h4>
         <div style="margin-left: 12px; width: fit-content;">
-            <mat-form-field>
-                <mat-label>Username</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newUsername">
-            </mat-form-field>
-
-            <mat-form-field>
-                <mat-label>Password</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newPassword">
-            </mat-form-field>
 
             <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput1.focus()">
-                <mat-label>Account Onner</mat-label>
-                <mat-select [(ngModel)]="userInput.parentEmployeeForAccountInfo">
+                <mat-label>Account Owner</mat-label>
+                <mat-select [(ngModel)]="userInput.newAccountInfo.parentEmployee">
 
                     <mat-option style="pointer-events: none;">
                         <!--Search bar-->
@@ -27,11 +18,23 @@
 
                     <ng-container *ngFor="let employee of backendData.employeeList">
                         <mat-option *ngIf="employee.name.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
-                            [value]="employee.id">{{employee.name}}</mat-option>
+                            [value]="employee.id" [disabled]="htmlRenderer.hasAccountInfo(employee)">{{employee.name}}
+                        </mat-option>
                     </ng-container>
                 </mat-select>
             </mat-form-field><br />
 
+            <mat-form-field>
+                <mat-label>Zoom Meeting Id</mat-label>
+                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Zoom Meeting Passcode</mat-label>
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode">
+            </mat-form-field>
+
+            <br />
             <button mat-button (click)="serviceAdapter.addNewAccountInfo()"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}">
                 ADD
@@ -48,31 +51,30 @@
         class="table table-hover table-responsive">
         <thead>
             <tr>
-                <th>Username</th>
-                <th>Password</th>
+                <th *ngIf="hasAdminPermission()">Employee</th>
+                <th>Meeting ID</th>
+                <th>Meeting Passcode</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <ng-container *ngFor="let accountInfo of backendData.accountInfoList">
                 <tr style="cursor: pointer;"
                     (click)="userInput.selectedAccountInfo=htmlRenderer.copyObject(accountInfo)">
-                    <td>{{accountInfo.username}}</td>
-                    <td>{{accountInfo.password}}</td>
+                    <td *ngIf="hasAdminPermission()">{{backendData.getEmployeeById(accountInfo.parentEmployee).name}}
+                    </td>
+                    <td>{{accountInfo.meetingNumber}}</td>
+                    <td>{{accountInfo.passcode}}</td>
+                    <td style="width: 40px;">
+                        <button (click)="serviceAdapter.deleteAccountInfo(accountInfo)" mat-stroked-button>
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
                 </tr>
                 <tr *ngIf="userInput.selectedAccountInfo && userInput.selectedAccountInfo.id == accountInfo.id">
-                    <td colspan="2" class="in-animate">
-                        <mat-form-field>
-                            <mat-label>Username</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.username">
-                        </mat-form-field>
-
-                        <mat-form-field>
-                            <mat-label>Password</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.password">
-                        </mat-form-field>
-
+                    <td [attr.colspan]="hasAdminPermission()?6:5" class="in-animate">
                         <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput2.focus()">
-                            <mat-label>Account Onner</mat-label>
+                            <mat-label>Account Owner</mat-label>
                             <mat-select [(ngModel)]="userInput.selectedAccountInfo.parentEmployee">
 
                                 <mat-option style="pointer-events: none;">
@@ -88,9 +90,20 @@
                                 <ng-container *ngFor="let employee of backendData.employeeList">
                                     <mat-option
                                         *ngIf="employee.name.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
-                                        [value]="employee.id">{{employee.name}}</mat-option>
+                                        [disabled]="htmlRenderer.hasAccountInfo(employee)" [value]="employee.id">
+                                        {{employee.name}}</mat-option>
                                 </ng-container>
                             </mat-select>
+                        </mat-form-field><br />
+
+                        <mat-form-field>
+                            <mat-label>Zoom Meeting Id</mat-label>
+                            <input matInput type="number" [(ngModel)]="userInput.selectedAccountInfo.meetingNumber">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>Zoom Meeting Passcode</mat-label>
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.passcode">
                         </mat-form-field><br />
 
                         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"

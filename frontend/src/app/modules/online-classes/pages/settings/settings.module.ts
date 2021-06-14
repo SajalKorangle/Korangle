@@ -14,7 +14,7 @@ import { NewOnlineClassDialogComponent } from '@modules/online-classes/component
     imports: [
         SettingsRouting,
         ComponentsModule,
-        LocalComponentsModule
+        LocalComponentsModule,
     ],
     entryComponents: [NewOnlineClassDialogComponent],
     exports: [],
