@@ -67,14 +67,14 @@ export function getDefaultTimeSpanList() {
 }
 
 export function TimeComparator(time1: Time, time2: Time) {
-    const timeDiff = time2.diffInMinutes(time1);
-    if (timeDiff < 0) {
+    const timeDiff = time2.diffInMinutes(time1);    // time1 - time2
+    if (timeDiff < 0) { // time1 < time 2
         return -1;
     }
-    else if (timeDiff > 0) {
+    else if (timeDiff > 0) {    // time1 > time 2
         return 1;
     }
-    return 0;
+    return 0;   // both ==
 }
 
 

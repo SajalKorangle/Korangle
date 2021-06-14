@@ -7,7 +7,7 @@
                     <h3>{{htmlRenderer.getTime()}}</h3>
 
                     <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
-                        <h4>Onging Class:</h4>
+                        <h4>Ongoing Class:</h4>
                         <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
 
                             <div style="margin-left: 12px;">
@@ -19,14 +19,16 @@
                             </div>
 
                             <div style="margin-left: 32px;">
-                                <span>Meeting Id: {{activeClass.meetingNumber || '-'}}</span><br />
-                                <span>Pass Code: {{activeClass.password || '-'}}</span><br />
+                                <span>Meeting Id: {{htmlRenderer.getClassAccountInfo(activeClass)?.meetingNumber ||
+                                    '-'}}</span><br />
+                                <span>Pass Code: {{htmlRenderer.getClassAccountInfo(activeClass)?.passcode ||
+                                    '-'}}</span><br />
                             </div>
                         </div>
                         <div style="margin-bottom: 24px;">
-                            <button *ngIf="activeClass.meetingNumber"
+                            <button *ngIf="htmlRenderer.getClassAccountInfo(activeClass)"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="serviceAdapter.initilizeMeetingData(activeClass)">EnterClass</button>
+                                (click)="serviceAdapter.initilizeMeetingData(htmlRenderer.getClassAccountInfo(activeClass))">EnterClass</button>
                         </div>
                     </ng-container>
 
@@ -56,7 +58,7 @@
                                                     [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                                     [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
                                                     <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
-                                                    <span *ngIf="onlineClass.meetingNumber"
+                                                    <span *ngIf="htmlRenderer.getClassAccountInfo(onlineClass)"
                                                         style="position: absolute; bottom: 8px; right: 8px;"
                                                         class="glow-active"></span>
                                                 </td>

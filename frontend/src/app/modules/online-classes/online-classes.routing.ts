@@ -25,6 +25,16 @@ const routes: Routes = [
     data: { moduleName: 'online_classes' },
   },
   {
+    path: 'attendance_report',
+    loadChildren: 'app/modules/online-classes/pages/attendance-report/attendance-report.module#AttendanceReportModule',
+    data: { moduleName: 'online_classes' },
+  },
+  {
+    path: 'join_all',
+    loadChildren: 'app/modules/online-classes/pages/join-all/join-all.module#JoinAllModule',
+    data: {moduleName: 'online_classes'},
+  },
+  {
     path: '',
     component: OnlineClassesComponent,
   },

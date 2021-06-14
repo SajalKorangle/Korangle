@@ -101,4 +101,9 @@ export class ClassroomHtmlRenderer {
         return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
     }
 
+    getClassAccountInfo(onlineClass) {
+        const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+        return this.vm.backendData.getAccountInfoByParentEmployee(classSubject.parentEmployee);
+    }
+
 }

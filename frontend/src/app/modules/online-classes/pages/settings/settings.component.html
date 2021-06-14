@@ -1,27 +1,43 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
     <div>
-        <mat-form-field style="margin-right: 20px;">
-            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
-                (ngModelChange)="htmlRenderer.initilizeTimeTable()">
-                <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
-                    {{ classs.name }}
-                </mat-option>
+        <ng-container *ngIf="view=='class' else EmployeeFilter">
+            <mat-form-field style="margin-right: 20px;">
+                <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
+                    (ngModelChange)="htmlRenderer.initilizeTimeTable()">
+                    <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
+                        {{ classs.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field style="margin-right: 20px;">
+                <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
+                    (ngModelChange)="htmlRenderer.initilizeTimeTable()">
+                    <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
+                        {{ division.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </ng-container>
+
+        <mat-form-field style="float: right">
+            <mat-label>
+                View
+            </mat-label>
+            <mat-select [(ngModel)]="view"
+                (ngModelChange)="htmlRenderer.filteredOnlineClassList.splice(0, htmlRenderer.filteredOnlineClassList.length); htmlRenderer.initilizeTimeTable(); userInput.resetInput();">
+                <mat-option value="class">Class & Section</mat-option>
+                <mat-option value="employee">Employee</mat-option>
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field style="margin-right: 20px;">
-            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
-                (ngModelChange)="htmlRenderer.initilizeTimeTable()">
-                <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
-                    {{ division.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
     </div>
 
-    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection">
 
-        <h4>{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id, userInput.selectedSection.id)}}</h4>
+    <ng-container *ngIf="userInput.selectedClass && userInput.selectedSection || userInput.selectedEmployee">
+
+        <h4>{{userInput.selectedEmployee?.name || htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
+            userInput.selectedSection.id)}}</h4>
 
         <div style="overflow: auto;">
             <table class="mat-elevation-z8 table table-hover">
@@ -46,7 +62,10 @@
                             <ng-container *ngFor="let weekday of getObjetKeys(weekdays), let i = index;">
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
-                                    <td style="position: relative; cursor: pointer;"
+                                    <td style="position: relative; cursor: pointer;" draggable="true"
+                                        (dragover)="$event.preventDefault();"
+                                        (dragstart)="$event.dataTransfer.setData('onlineClassIndex', htmlRenderer.getOnlineClassIndex(onlineClass));"
+                                        (drop)="htmlRenderer.swapOnlineClass($event, onlineClass);"
                                         (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
@@ -54,7 +73,8 @@
                                         <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
                                         <span>({{htmlRenderer.getDisplayData(onlineClass).employee.name}})</span>
 
-                                        <span *ngIf="onlineClass.meetingNumber"
+                                        <span
+                                            *ngIf="backendData.getAccountInfoByParentEmployee(backendData.getClassSubjectById(onlineClass.parentClassSubject).parentEmployee)"
                                             style="position: absolute; bottom: 8px; right: 8px;"
                                             class="glow-active"></span>
 
@@ -66,7 +86,8 @@
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>
-                                    <td>
+                                    <td (drop)="htmlRenderer.moveOnlineClass($event, weekday, timespan);"
+                                        (dragover)="$event.preventDefault();">
                                         <div>
                                             <button mat-stroked-button
                                                 (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)">
@@ -95,6 +116,13 @@
         <mat-divider style="margin-top: 32px;"></mat-divider>
         <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
             (click)="serviceAdapter.updateOnlineClassList();">Update</button>
+
+        <ul>
+            <li>Drag blocks to move to a different time slot</li>
+            <li>Dropping block to an already existing block will swap blocks</li>
+            <li>Shift + Drag to make a copy of the block</li>
+        </ul>
+
     </ng-container>
 
 </div>
@@ -143,4 +171,15 @@
     </button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
         (click)="htmlRenderer.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
+</ng-template>
+
+<ng-template #EmployeeFilter>
+    <mat-form-field>
+        <mat-label>Select Employee</mat-label>
+        <mat-select [(ngModel)]="userInput.selectedEmployee" (ngModelChange)="htmlRenderer.initilizeTimeTable();">
+            <ng-container *ngFor="let employee of backendData.employeeList">
+                <mat-option [value]="employee">{{employee.name}}</mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
 </ng-template>
