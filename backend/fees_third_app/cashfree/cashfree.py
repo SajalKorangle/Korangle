@@ -65,7 +65,7 @@ def addVendor(newVendorData, vendorId):
         'status': 'ACTIVE',
         'id': vendorId,
     })
-
+    print('new Vendor Data: ', newVendorData)
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
         'x-client-secret': CASHFREE_SECRET_KEY,
@@ -77,7 +77,7 @@ def addVendor(newVendorData, vendorId):
         data=newVendorData,
         headers=headers
         )
-    assert response.json()['status'] == 'OK'
+    assert response.json()['status'] == 'OK', 'Adding vendor on cashfree failed, response : {0}'.format(response.json())
     return response.json()['message']
 
 

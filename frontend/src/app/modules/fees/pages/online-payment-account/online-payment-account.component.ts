@@ -69,6 +69,7 @@ export class OnlinePaymentAccountComponent implements OnInit {
     delete requiredOnlyFields.vendorData.balance;
     delete requiredOnlyFields.vendorData.status;
     delete requiredOnlyFields.vendorData.upi;
+    requiredOnlyFields.vendorData.settlementCycleId = parseInt(requiredOnlyFields.vendorData.settlementCycleId.toString());
     return requiredOnlyFields;
   }
 

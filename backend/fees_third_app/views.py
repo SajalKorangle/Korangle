@@ -202,12 +202,15 @@ class OnlinePaymentAccountView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max']
+        maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max'] or 0
         vendorId = str(maxId +1)
-        vendorData = data.vendorData
+        vendorData = data['vendorData']
         addVendor(vendorData, vendorId) 
 
         del data['vendorData']
+        data.update({
+            'vendorId': vendorId
+        })
         responseData = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
         responseData.update({
             'vendorData': getVendor(vendorId)

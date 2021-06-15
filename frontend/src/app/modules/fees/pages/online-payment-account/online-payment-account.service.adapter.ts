@@ -26,7 +26,11 @@ export class OnlinePaymentAccountServiceAdapter {
             this.vm.settelmentCycleList,
         ] = await Promise.all([
             this.vm.feeService.getObject(this.vm.feeService.online_payment_account, {}),
-            this.vm.feeService.getObjectList(this.vm.feeService.settelment_cycle, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.settelment_cycle, {})
+                .then(data => data.map(d => {
+                    return { ...d, id: parseInt(d.id) };
+                })
+                ),
         ]);
 
         if (onlinePaymentAccount) {
@@ -57,9 +61,9 @@ export class OnlinePaymentAccountServiceAdapter {
         this.vm.intermediateUpdateState.registrationLoading = true;
         this.vm.isLoading = true;
 
-        await sleep();
+        // await sleep();
         const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
-
+        console.log('newOnlinePayment Account: ', newOnlinePaymentAccount);
         await this.verifyIFSC();
         if (!this.vm.cache.ifsc) {
             alert('ifsc verification failed');
@@ -67,7 +71,7 @@ export class OnlinePaymentAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
-        await sleep();
+        // await sleep();
         const account_verification_data = {
             accountNumber: this.vm.onlinePaymentAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
@@ -79,7 +83,7 @@ export class OnlinePaymentAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
-        await sleep();
+        // await sleep();
         if (this.vm.onlinePaymentAccount.id) {
             this.vm.onlinePaymentAccount =
                 await this.vm.feeService.updateObject(this.vm.feeService.online_payment_account, newOnlinePaymentAccount);

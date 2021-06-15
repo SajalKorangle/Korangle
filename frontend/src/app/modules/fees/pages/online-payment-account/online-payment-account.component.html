@@ -45,8 +45,8 @@
         <div style="display: flex; flex-wrap: wrap;">
             <mat-form-field>
                 <mat-label>Mobile Number</mat-label>
-                <input name="mobileNumber" required matInput type="number" [pattern]="validators.phoneNumber"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.phone">
+                <input name="mobileNumber" required matInput type="text" maxlength="10"
+                    [pattern]="validators.phoneNumber" [(ngModel)]="onlinePaymentAccount.vendorData.phone">
             </mat-form-field>
 
             <mat-form-field>
