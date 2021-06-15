@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 import json
 
 from common.common_views_3 import CommonView, CommonListView
-from decorators import user_permission, user_permission_new, user_permission_3
+from decorators import user_permission
 from student_app.models import Student, StudentSection, StudentParameter, StudentParameterValue
 from common.common_functions import get_error_response, get_success_response
 
@@ -129,20 +129,6 @@ class StudentSectionOldView(APIView):
     def put(request, student_section_id):
         data = json.loads(request.body.decode('utf-8'))
         return update_student_section(data)
-
-
-'''class StudentSectionListOldView(APIView):
-
-    @user_permission
-    def get(request):
-        return get_student_section_list(request.GET)
-
-    def post(self, request):
-        if request.user.is_authenticated:
-            data = json.loads(request.body.decode('utf-8'))
-            return JsonResponse({'response': get_success_response(create_student_section_list(data))})
-        else:
-            return JsonResponse({'response': get_error_response('User is not authenticated, logout and login again.')})'''
 
 
 ############ Profile Image ########################

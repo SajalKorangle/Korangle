@@ -8,8 +8,6 @@ from student_app.models import Student, StudentSection
 
 class AccountInfo(models.Model):
     parentEmployee = models.ForeignKey(Employee, unique=True, on_delete=models.CASCADE)
-    username = models.CharField(max_length=150)
-    password = models.CharField(max_length=150)
     meetingNumber = models.BigIntegerField()
     passcode = models.CharField(max_length=10)
 

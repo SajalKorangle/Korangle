@@ -59,8 +59,7 @@ export class AddAccountServiceAdapter {
             return;
 
         const account_info_request = {
-            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
-            username: this.vm.userInput.newAccountInfo.username,
+            parentEmployee: this.vm.userInput.newAccountInfo.parentEmployee,
         };
 
         this.vm.isLoading = true;
