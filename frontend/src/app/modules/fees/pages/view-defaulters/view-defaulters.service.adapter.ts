@@ -19,7 +19,7 @@ export class ViewDefaultersServiceAdapter {
         };
         Promise.all
             ([
-                this.vm.feeService.getList(this.vm.feeService.fee_type, feeTypeList),
+                this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),
             ])
             .then((val) => {
                 this.vm.myFeeTypeList = val[0];
