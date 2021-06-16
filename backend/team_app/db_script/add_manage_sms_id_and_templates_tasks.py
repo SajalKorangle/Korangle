@@ -1,5 +1,5 @@
 
-def add_manage_sms_id_task(apps, schema_editor):
+def add_manage_sms_id_and_templates_tasks(apps, schema_editor):
     Module = apps.get_model('team_app', 'Module')
     Task = apps.get_model('team_app', 'Task')
     EmployeePermission = apps.get_model('employee_app', 'EmployeePermission')

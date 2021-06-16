@@ -4,15 +4,15 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-from team_app.db_script.add_manage_sms_id_task import add_manage_sms_id_task
+from team_app.db_script.add_manage_sms_id_and_templates_tasks import add_manage_sms_id_and_templates_tasks
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0028_auto_20210531_1812'),
+        ('team_app', '0029_auto_20210612_1044'),
     ]
 
     operations = [
-        migrations.RunPython(add_manage_sms_id_task)
+        migrations.RunPython(add_manage_sms_id_and_templates_tasks)
     ]

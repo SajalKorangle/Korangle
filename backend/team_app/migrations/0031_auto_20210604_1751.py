@@ -10,7 +10,7 @@ from team_app.db_script.remove_setting_pages import remove_setting_pages
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0029_auto_20210430_0822'),
+        ('team_app', '0030_auto_20210430_0822'),
     ]
 
     operations = [
