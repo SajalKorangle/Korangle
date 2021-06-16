@@ -3,7 +3,7 @@ import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
 export class CancelFeeReceiptServiceAdapter {
     vm: CancelFeeReceiptComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -140,7 +140,7 @@ export class CancelFeeReceiptServiceAdapter {
         }
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list), //0
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list), //0
         ]).then(
             (value) => {
                 console.log(value);
@@ -155,7 +155,7 @@ export class CancelFeeReceiptServiceAdapter {
                     parentFeeReceipt__in: value[0].map((fee) => fee.id).join(),
                 };
 
-                Promise.all([this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, subFee_List)]).then(
+                Promise.all([this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, subFee_List)]).then(
                     (subFeeValue) => {
                         subFeeValue[0].forEach((val) => {
                             this.vm.subFeeReceiptList.push(val);
