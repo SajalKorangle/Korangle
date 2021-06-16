@@ -1,6 +1,8 @@
 import moment = require('moment');
 
 export const NEW_LINE_REGEX = /(\\r)?\\n/g;
+export const FIND_VARIABLE_REGEX = /{#(.*?)#}/g;
+
 export const COMMUNICATION_TYPE = ['SERVICE IMPLICIT', 'SERVICE EXPLICIT', 'TRANSACTIONAL'];
 export const SENT_UPDATE_TYPE = [{id: 1, name: 'NULL'}, {id: 2, name: 'SMS'}, {id: 3, name: 'NOTIFICATION'}, {id: 4, name: 'NOTIF./SMS'}];
 
@@ -17,7 +19,7 @@ class VariableStructure {
 
 class StudentVariableStructure {
     static getStructure(displayVariable: any, backendKey: any, getValFunc: any = (dataObject) => {
-        return dataObject['studentList'].find(stud => stud.id == dataObject['studentId'])[backendKey];
+        return dataObject['student'][backendKey];
     }) {
         return VariableStructure.getStructure(
             displayVariable,
@@ -29,7 +31,7 @@ class StudentVariableStructure {
 
 class EmployeeVariableStructure {
     static getStructure(displayVariable: any, backendKey: any, getValFunc: any = (dataObject) => {
-        return dataObject['employeeList'].find(stud => stud.id == dataObject['employeeId'])[backendKey];
+        return dataObject['employee'][backendKey];
     }) {
         return VariableStructure.getStructure(
             displayVariable,
@@ -69,7 +71,7 @@ export const STUDENT_VARIABLES = COMMON_VARIABLES.concat(
             return dataObject.classList.find(
                 classs => {
                     return classs.id === dataObject.studentSectionList.find(
-                        x => x.parentStudent === dataObject.studentId
+                        x => x.parentStudent === dataObject.student.id
                     ).parentClass;
                 }
                 ).name
@@ -77,7 +79,7 @@ export const STUDENT_VARIABLES = COMMON_VARIABLES.concat(
                 + dataObject.divisionList.find(
                     division => {
                         return division.id === dataObject.studentSectionList.find(
-                            x => x.parentStudent === dataObject.studentId
+                            x => x.parentStudent === dataObject.student.id
                         ).parentDivision;
                     }
                 ).name;
@@ -86,7 +88,7 @@ export const STUDENT_VARIABLES = COMMON_VARIABLES.concat(
             return dataObject.classList.find(
                 classs => {
                     return classs.id === dataObject.studentSectionList.find(
-                        x => x.parentStudent === dataObject.studentId
+                        x => x.parentStudent === dataObject.student.id
                     ).parentClass;
                 }
             ).name;
@@ -95,7 +97,7 @@ export const STUDENT_VARIABLES = COMMON_VARIABLES.concat(
             return dataObject.divisionList.find(
                 division => {
                     return division.id === dataObject.studentSectionList.find(
-                        x => x.parentStudent === dataObject.studentId
+                        x => x.parentStudent === dataObject.student.id
                     ).parentDivision;
                 }
             ).name;
@@ -113,19 +115,19 @@ export const EMPLOYEE_VARIABLES = COMMON_VARIABLES.concat([
 
 export const DEFAULTER_VARIABLES = STUDENT_VARIABLES.concat([
     SettingsStructure.getStructure('feesDueTillMonth', 'fee', 'feesDueTillMonth', (dataObject) => {
-        return dataObject['studentList'].find(stud => stud.id == dataObject['studentId']).feesDueTillMonth;
+        return 'Rs. ' + Number(dataObject['student'].feesDueTillMonth).toLocaleString('en-IN');
     }),
     SettingsStructure.getStructure('feesDueOverall', 'fee', 'feesDueOverall', (dataObject) => {
-        return dataObject['studentList'].find(stud => stud.id == dataObject['studentId']).feesDueOverall;
+        return 'Rs. ' + Number(dataObject['student'].feesDueOverall).toLocaleString('en-IN');
     })
 ]);
 
 export const ATTENDANCE_VARIABLES = STUDENT_VARIABLES.concat([
     SettingsStructure.getStructure('attendanceStatus', 'attendance', 'attendanceStatus', (dataObject) => {
-        return dataObject['studentList'].find(stud => stud.id == dataObject['studentId']).attendance.attendanceStatus;
+        return dataObject['student'].attendance.attendanceStatus;
     }),
     SettingsStructure.getStructure('attendanceDate', 'attendance', 'attendanceDate', (dataObject) => {
-        return dataObject['studentList'].find(stud => stud.id == dataObject['studentId']).attendance.attendanceDate;
+        return dataObject['student'].attendance.attendanceDate;
     })
 ]);
 
@@ -159,6 +161,12 @@ export const TUTORIAL_VARIABLES = STUDENT_VARIABLES.concat([
 ]);
 
 export const EVENT_GALLERY_VARIABLES = COMMON_VARIABLES.concat([
+    SettingsStructure.getStructure('student/EmployeeName', 'studentOrEmployee', 'name', (dataObject) => {
+        return dataObject[dataObject['person']].name;
+    }),
+    SettingsStructure.getStructure('mobileNumber', 'studentOrEmployee', 'mobileNumber', (dataObject) => {
+        return dataObject[dataObject['person']].mobileNumber;
+    }),
     SettingsStructure.getStructure('eventTitle', 'event', 'title'),
     SettingsStructure.getStructure('eventHeldOn', 'event', 'heldOn', (dataObject) => {
         return moment(new Date(dataObject.event.heldOn)).format('DD/MM/YYYY');
@@ -178,8 +186,8 @@ class SettingsPageStructure {
 
 
 export const EVENT_SETTING_PAGES = [
-    SettingsPageStructure.getStructure('General', [], []),
-    SettingsPageStructure.getStructure('Notify Defaulters', [], DEFAULTER_VARIABLES),
+    SettingsPageStructure.getStructure('General SMS', ['General SMS'], []), //student general and employee general
+    SettingsPageStructure.getStructure('Notify Defaulters', ['Notify Defaulters'], DEFAULTER_VARIABLES),
     SettingsPageStructure.getStructure('Attendance',
         ['Attendance Creation', 'Attendance Updation'],
         ATTENDANCE_VARIABLES),

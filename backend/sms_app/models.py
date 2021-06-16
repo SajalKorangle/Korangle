@@ -10,15 +10,6 @@ from information_app.models import MessageType, SentUpdateType
 
 # Create your models here
 
-class SMSEvent(models.Model):
-    eventName = models.TextField(max_length=50, null=False, verbose_name='eventName')
-    defaultSMSContent = models.TextField(null=False, verbose_name='defaultSMSContent')
-    defaultNotificationContent = models.TextField(null=False, verbose_name='defaultNotificationContent')
-
-    class Meta:
-        db_table = 'sms_event'
-
-
 class SMSId(models.Model):
     entityName = models.TextField(null=False, verbose_name='entityName')
     entityRegistrationId = models.TextField(null=False, verbose_name='entityRegistrationId')
@@ -64,7 +55,7 @@ def sms_id_delete_check(sender, instance, **kwargs):
 class SMS(models.Model):
     parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1, null=True)
 
-    parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.PROTECT, null=True)
+    SMSEventFrontEndId = models.IntegerField(null=False, default=0)
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
@@ -217,7 +208,7 @@ class SMSTemplate(models.Model):
 
 
 class SMSEventSettings(models.Model):
-    parentSMSEvent = models.ForeignKey(SMSEvent, on_delete=models.CASCADE, null=False, verbose_name='parentSMSEvent')
+    SMSEventFrontEndId = models.IntegerField(null=False, default=0)
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
     parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, null=True,
                                           verbose_name='parentSMSTemplate')

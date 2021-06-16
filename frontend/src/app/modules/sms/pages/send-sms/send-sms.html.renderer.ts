@@ -1,6 +1,6 @@
 import {SendSmsComponent} from '@modules/sms/pages/send-sms/send-sms.component';
-import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
-import {isMobile} from '@classes/common';
+import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, FIND_VARIABLE_REGEX, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+
 
 export class SendSmsHtmlRenderer {
 
@@ -27,8 +27,7 @@ export class SendSmsHtmlRenderer {
     }
 
     isTemplateModified() {
-        //.replace(/\r\n?|\n/g, '"\n"');
-        let cont1 =  this.vm.message.replace(this.vm.variableRegex, '{#var#}');
+        let cont1 =  this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}');
         let cont2 = this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
         return this.isSMSNeeded() && cont1 != cont2;
     }
@@ -181,7 +180,7 @@ export class SendSmsHtmlRenderer {
         this.vm.getMobileNumberList('sms').forEach(studentOrEmployee => {
             count += this.getSMSCount(
                 this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
-                    this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, studentOrEmployee.id))
+                    this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, studentOrEmployee))
             );
         });
         return count;

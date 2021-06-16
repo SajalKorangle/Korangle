@@ -1,5 +1,6 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
+import {SMS_EVENTS} from '../../../../constants-database/SMSEvent';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
@@ -25,22 +26,21 @@ export class RecordAttendanceServiceAdapter {
         };
 
         const value = await Promise.all([
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {eventName__in: this.attendanceEvents}), //0
             this.vm.attendanceService.getObjectList(
                 this.vm.attendanceService.attendance_permission,
                 request_attendance_permission_list_data
-            ), //1
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
-            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //4
+            ), //0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //3
 
         ]);
-        this.vm.smsBalance = value[4];
-        this.vm.dataForMapping['classList'] = value[2];
-        this.vm.dataForMapping['divisionList'] = value[3];
+        this.vm.smsBalance = value[3].count;
+        this.vm.dataForMapping['classList'] = value[1];
+        this.vm.dataForMapping['divisionList'] = value[2];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
-        this.vm.backendData.eventList = value[0];
+        this.vm.backendData.eventList = SMS_EVENTS.filter(event => this.attendanceEvents.some(e => e == event.eventName));
         let fetch_event_settings_list = {
             parentSMSEvent__in: this.vm.backendData.eventList.map(a => a.id).join(),
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -50,7 +50,7 @@ export class RecordAttendanceServiceAdapter {
         }
         let class_permission_list = [];
         let division_permission_list = [];
-        value[1].forEach((element) => {
+        value[0].forEach((element) => {
             class_permission_list.push(element.parentClass);
             division_permission_list.push(element.parentDivision);
         });
@@ -292,6 +292,7 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.dataForMapping['studentList'] = this.vm.createdStudentList;
                 this.vm.messageService.sendEventNotification(
                    this.vm.dataForMapping,
+                    ['studentList'],
                     'Attendance Creation',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
@@ -302,6 +303,7 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.dataForMapping['studentList'] = this.vm.updatedStudentList;
                 this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
+                    ['studentList'],
                     'Attendance Updation',
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance

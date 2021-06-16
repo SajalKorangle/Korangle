@@ -17,4 +17,4 @@ def get_sms_count(school_id):
     if spent_count is None:
         spent_count = 0
 
-    return {'count': purchase_count - spent_count }
+    return {'count': purchase_count - spent_count}

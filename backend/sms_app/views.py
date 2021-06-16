@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 import json
 
 ############## SMS Old ##############
-from sms_app.models import SMS, SMSEvent, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
+from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
 
 
@@ -89,14 +89,6 @@ class SmsView(CommonView, APIView):
 class SmsListView(CommonListView, APIView):
     Model = SMS
     RelationsToSchool = ['parentSchool__id']
-
-
-class SMSEventView(CommonView, APIView):
-    Model = SMSEvent
-
-
-class SMSEventListView(CommonListView, APIView):
-    Model = SMSEvent
 
 
 class SMSIdView(CommonView, APIView):

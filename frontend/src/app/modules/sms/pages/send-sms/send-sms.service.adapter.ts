@@ -1,4 +1,5 @@
 import {SendSmsComponent} from './send-sms.component';
+import {SMS_EVENTS} from '../../../../constants-database/SMSEvent';
 
 
 export class SendSmsServiceAdapter {
@@ -38,6 +39,7 @@ export class SendSmsServiceAdapter {
         };
 
         this.vm.stateKeeper.isLoading = true;
+        this.vm.backendData.smsEvent = SMS_EVENTS.find(event => event.eventName == 'General SMS');
 
         const value = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
@@ -55,8 +57,7 @@ export class SendSmsServiceAdapter {
                 parentStudentParamter__parameterType: 'FILTER',
             }),
             this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, {parentSchool: this.vm.user.activeSchool.dbId}), //8
-            this.vm.smsService.getObject(this.vm.smsService.sms_event, {eventName: 'General'}), //9
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {parentSMSEvent__eventName: 'General'}) //10
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndId: this.vm.backendData.smsEvent.id}) //19
         ]);
 
         this.vm.backendData.classList = value[0];
@@ -80,8 +81,7 @@ export class SendSmsServiceAdapter {
 
         this.vm.studentParameterValueList = value[7];
         this.vm.backendData.smsIdSchool = value[8];
-        this.vm.backendData.smsEvent = value[9];
-        this.vm.backendData.eventSettingList = value[10];
+        this.vm.backendData.eventSettingList = value[9];
 
         this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
             id__in: this.vm.backendData.smsIdSchool.map(a => a.parentSMSId),
@@ -167,18 +167,20 @@ export class SendSmsServiceAdapter {
         }
         this.vm.stateKeeper.isLoading = true;
 
-        let messageService;
+        let messageService, personList = [];
         if (this.vm.userInput.selectedSendTo == this.vm.sendToList[0]) {
             this.vm.dataForMapping['studentList'] = this.vm.getMobileNumberList('both');
-            messageService = this.vm.employeeMessageService;
-
+            messageService = this.vm.studentMessageService;
+            personList.push('student');
         } else {
             this.vm.dataForMapping['employeeList'] = this.vm.getMobileNumberList('both');
             messageService = this.vm.employeeMessageService;
+            personList.push('employee');
         }
 
         await messageService.smsNotificationSender(
             this.vm.dataForMapping,
+            personList,
             this.vm.backendData.smsEvent,
             this.vm.userInput.selectedSentType.id,
             this.vm.message,

@@ -38,8 +38,11 @@ export class AddEventServiceAdapter {
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
             this.vm.eventGalleryService.getObjectList(this.vm.eventGalleryService.event, event_data), //1
+            this.vm.smsOldService.getSMSCount({ parentSchool: this.vm.user.activeSchool.dbId }, this.vm.user.jwt), //2
         ]).then((value) => {
             this.classList = value[0];
+            this.vm.smsBalance = value[2].count;
+
             value[1].forEach((event) => {
                 this.vm.eventList.push(event);
             });
@@ -97,6 +100,7 @@ export class AddEventServiceAdapter {
             employee['employee'] = true;
             this.notifyPersonData.push(employee);
         });
+        this.vm.messageService.fetchGCMDevicesNew(this.notifyPersonData);
     }
 
     postEvent() {
@@ -129,24 +133,7 @@ export class AddEventServiceAdapter {
                 value2[0].forEach((eachVal) => {
                     this.vm.eventNotifyList.push(eachVal);
                 });
-                this.vm.notifyPersonData = this.notifyPersonData.filter((person) =>
-                    notifyList.some(
-                        (notify) => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)
-                    )
-                );
-                this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
-                    (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
-                );
-                this.vm.dataForMapping['event'] = value1[0];
-                // both the studentList and employee List comes here as only common variables are used in events gallery
-                this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData;
-                this.attachEventTitle(this.vm.notifyPersonData, value1[0]);
-                this.vm.messageService.sendEventNotification(
-                    this.vm.dataForMapping,
-                    'Event Gallery Creation',
-                    this.vm.user.activeSchool.dbId,
-                    0
-                );
+                this.populatePersonListAndNotify('Event Gallery Creation', value1[0]);
                 this.vm.initializeNewEvent();
                 this.vm.eventList = this.vm.eventList.sort((a, b) => {
                     // @ts-ignore
@@ -158,16 +145,11 @@ export class AddEventServiceAdapter {
         });
     }
 
-    attachEventTitle(notifyPersonList: any, event: any): any {
-        notifyPersonList.forEach((person) => {
-            person.eventTitle = event.title;
-        });
-    }
-
     saveChanges() {
         this.vm.isLoading = true;
         let editedNotifyList = this.vm.editingNotificationList.filter((notify) => notify.selected == true && notify.name != 'Employees');
         let actualNotifyList = this.vm.notifySelectionList.filter((notify) => notify.selected == true && notify.name != 'Employees');
+        let actualEvent = this.vm.eventList.find((event) => event.id == this.vm.editingEvent.id);
         let data = { parentEvent: this.vm.editingEvent.id };
 
         let event_data = {
@@ -183,6 +165,12 @@ export class AddEventServiceAdapter {
         Promise.all([
             this.vm.eventGalleryService.updateObject(this.vm.eventGalleryService.event, event_data), //0
         ]).then((value) => {
+
+            if (actualEvent.title != this.vm.editingEvent.title || actualEvent.description != this.vm.editingEvent.description ||
+                actualEvent.heldOn != this.vm.editingEvent.heldOn) {
+                this.populatePersonListAndNotify('Event Gallery Updation', this.vm.editingEvent);
+            }
+
             Object.assign(
                 this.vm.eventList.find((t) => t.id === this.vm.editingEvent.id),
                 JSON.parse(JSON.stringify(value[0]))
@@ -211,33 +199,6 @@ export class AddEventServiceAdapter {
                         value2[0].forEach((eachVal) => {
                             this.vm.eventNotifyList.push(eachVal);
                         });
-
-                        this.vm.notifySelectionList.forEach((notifyTo) => {
-                            notifyTo.selected =
-                                !!this.vm.eventNotifyList.find(
-                                    (eventNotify) => eventNotify.parentEvent === this.vm.editingEvent.id && eventNotify.parentClass === notifyTo.id
-                                ) ||
-                                (notifyTo.name == 'Employees' && this.vm.editingEvent.notifyEmployees);
-                        });
-                        let notifyList = this.vm.notifySelectionList.filter((notify) => notify.selected == true);
-                        this.vm.notifyPersonData = this.notifyPersonData.filter((person) =>
-                            notifyList.some(
-                                (notify) => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)
-                            )
-                        );
-                        this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
-                            (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
-                        );
-
-                        this.vm.dataForMapping['event'] = this.vm.editingEvent;
-                        // both the studentList and employee List comes here as only common variables are used in events gallery
-                        this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData;
-                        this.vm.messageService.sendEventNotification(
-                            this.vm.dataForMapping,
-                            'Event Gallery Updation',
-                            this.vm.user.activeSchool.dbId,
-                            0
-                        );
                     });
                 });
             }
@@ -255,31 +216,7 @@ export class AddEventServiceAdapter {
             ]).then((value) => {
                 this.vm.eventList = this.vm.eventList.filter((event) => event.id != editingEvent.id);
                 this.vm.editing = false;
-                this.vm.notifySelectionList.forEach((notifyTo) => {
-                    notifyTo.selected =
-                        !!this.vm.eventNotifyList.find(
-                            (eventNotify) => eventNotify.parentEvent === editingEvent.id && eventNotify.parentClass === notifyTo.id
-                        ) ||
-                        (notifyTo.name == 'Employees' && editingEvent.notifyEmployees);
-                });
-                let notifyList = this.vm.notifySelectionList.filter((notify) => notify.selected == true);
-                this.vm.notifyPersonData = this.notifyPersonData.filter((person) =>
-                    notifyList.some(
-                        (notify) => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)
-                    )
-                );
-                this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
-                    (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
-                );
-                this.vm.dataForMapping['event'] = editingEvent;
-                // both the studentList and employee List comes here as only common variables are used in events gallery
-                this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData;
-                this.vm.messageService.sendEventNotification(
-                    this.vm.dataForMapping,
-                    'Event Gallery Deletion',
-                    this.vm.user.activeSchool.dbId,
-                    0
-                );
+                this.populatePersonListAndNotify('Event Gallery Deletion', editingEvent);
                 this.vm.initializeNewEvent();
                 this.vm.htmlAdapter.unSelectAll();
                 this.vm.isLoading = false;
@@ -288,8 +225,10 @@ export class AddEventServiceAdapter {
     }
 
     getNotificationPersonData() {
-        let student_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
+
+        let student__section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
         };
 
         let employee_data = {
@@ -297,21 +236,56 @@ export class AddEventServiceAdapter {
             fields__korangle: 'id,name,mobileNumber',
         };
 
-        Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_data)]).then((value1) => {
-            let data = {
+        Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student__section_data)]).then((value1) => {
+            let student_data = {
                 id__in: value1[0].map((section) => section.parentStudent).join(),
                 fields__korangle: 'id,name,mobileNumber',
             };
 
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, data),
+                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
                 this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             ]).then((value2) => {
                 this.populateNotifyPersonData(value2[0], value2[1]);
                 this.populateStudentClassList(this.notifyPersonData, value1[0]);
-                this.vm.messageService.fetchGCMDevicesNew(this.notifyPersonData);
             });
         });
+    }
+
+    populatePersonListAndNotify(eventName: any, eventObject: any) {
+        this.vm.notifySelectionList.forEach((notifyTo) => {
+            notifyTo.selected =
+                !!this.vm.eventNotifyList.find(
+                    (eventNotify) => eventNotify.parentEvent === eventObject.id && eventNotify.parentClass === notifyTo.id
+                ) ||
+                (notifyTo.name == 'Employees' && eventObject.notifyEmployees);
+        });
+        let notifyList = this.vm.notifySelectionList.filter((notify) => notify.selected == true);
+        this.vm.notifyPersonData = this.notifyPersonData.filter((person) =>
+            notifyList.some(
+                (notify) => notify.id === person.parentClass || (notify.name === 'Employee' && person.employee === true)
+            )
+        );
+        this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
+            (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
+        );
+        let personList = [];
+        this.vm.dataForMapping['event'] = eventObject;
+        this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData.filter(x => x.student);
+        this.vm.dataForMapping['employeeList'] = this.vm.notifyPersonData.filter(x => x.employee);
+        if (this.vm.dataForMapping['studentList'].length > 0) {
+            personList.push('student');
+        }
+        if (this.vm.dataForMapping['employeeList'].length > 0) {
+            personList.push('employee');
+        }
+        this.vm.messageService.sendEventNotification(
+            this.vm.dataForMapping,
+            personList,
+            eventName,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance,
+        );
     }
 
     populateStudentClassList(notifyPersonData: any, studentSection: any) {

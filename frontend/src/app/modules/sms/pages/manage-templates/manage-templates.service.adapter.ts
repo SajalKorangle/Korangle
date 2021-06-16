@@ -1,5 +1,6 @@
 import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 import {NEW_LINE_REGEX} from '@modules/sms/classes/constants';
+import {SMS_EVENTS} from '../../../../constants-database/SMSEvent';
 
 export class ManageTemplatesServiceAdapter {
 
@@ -26,7 +27,7 @@ export class ManageTemplatesServiceAdapter {
         };
         this.vm.backendData.SMSIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, smsIdData);
 
-        this.vm.backendData.smsEventList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {'korangle__order': 'id'});
+        this.vm.backendData.smsEventList = SMS_EVENTS;
 
         this.vm.stateKeeper.isLoading = false;
     }
@@ -40,10 +41,10 @@ export class ManageTemplatesServiceAdapter {
             return;
         }
 
-        this.vm.backendData.selectedPageSMSEventList = this.vm.backendData.smsEventList.filter(a => a.eventName.includes(eventPage.name));
+        this.vm.backendData.selectedPageSMSEventList = this.vm.backendData.smsEventList.filter(a => eventPage.orderedEvents.some(e => e == a.eventName));
 
         let eventSettingsData = {
-            'parentSMSEvent__in': this.vm.backendData.selectedPageSMSEventList.map(a => a.id).join(),
+            'SMSEventFrontEndId__in': this.vm.backendData.selectedPageSMSEventList.map(a => a.id).join(),
             'parentSchool': this.vm.user.activeSchool.dbId,
         };
 
@@ -52,10 +53,10 @@ export class ManageTemplatesServiceAdapter {
         if (!this.vm.htmlRenderer.isGeneralOrDefaulters() &&
             this.vm.backendData.selectedPageEventSettingsList.length < this.vm.backendData.selectedPageSMSEventList.length) {
             this.vm.backendData.selectedPageSMSEventList.forEach(smsEvent => {
-                let setting = this.vm.backendData.selectedPageEventSettingsList.find(set => set.parentSMSEvent == smsEvent.id);
+                let setting = this.vm.backendData.selectedPageEventSettingsList.find(set => set.SMSEventFrontEndId == smsEvent.id);
                 if (!setting) {
                     let tempSettings = {
-                        'parentSMSEvent': smsEvent.id,
+                        'SMSEventFrontEndId': smsEvent.id,
                         'parentSchool': this.vm.user.activeSchool.dbId,
                         'parentSentUpdateType': 1, //NULL
                         'parentSMSTemplate': null,
@@ -86,7 +87,7 @@ export class ManageTemplatesServiceAdapter {
         this.vm.userInput.populatedSMSEventSettingsList = [];
         this.vm.userInput.selectedPage.orderedEvents.forEach(eventName => {
             let temp = this.vm.backendData.smsEventList.find(smsEvent => smsEvent.eventName == eventName);
-            temp['eventSettings'] = this.vm.backendData.selectedPageEventSettingsList.find(setting => setting.parentSMSEvent == temp.id);
+            temp['eventSettings'] = this.vm.backendData.selectedPageEventSettingsList.find(setting => setting.SMSEventFrontEndId == temp.id);
             temp['customEventTemplate'] = this.vm.backendData.selectedPageTemplateList.find(template => template.id == temp['eventSettings'].parentSMSTemplate);
             if (temp['customEventTemplate']) {
                 temp['selectedSMSId'] = this.vm.populatedSMSIdList.find(smsId => smsId.id == temp['customEventTemplate'].parentSMSId);
@@ -113,7 +114,7 @@ export class ManageTemplatesServiceAdapter {
             return b.id - a.id;
         });
         let settings_data = {
-            parentSMSEvent: this.vm.backendData.selectedPageSMSEventList[0].id,
+            SMSEventFrontEndId: this.vm.backendData.selectedPageSMSEventList[0].id,
             parentSchool: this.vm.user.activeSchool.dbId,
             parentSMSTemplate: value.id,
         };

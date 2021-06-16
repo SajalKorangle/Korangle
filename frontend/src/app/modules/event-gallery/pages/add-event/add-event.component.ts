@@ -12,12 +12,13 @@ import { NotificationService } from '@services/modules/notification/notification
 import { UserService } from '@services/modules/user/user.service';
 import { SmsService } from '@services/modules/sms/sms.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
+import {SmsOldService} from '@services/modules/sms/sms-old.service';
 
 @Component({
     selector: 'app-add-event',
     templateUrl: './add-event.component.html',
     styleUrls: ['./add-event.component.css'],
-    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService],
+    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService, SmsOldService],
 })
 export class AddEventComponent implements OnInit {
     user: any;
@@ -45,10 +46,8 @@ export class AddEventComponent implements OnInit {
     loadMoreEvents = false;
     isEventListLoading = false;
 
-    dataForMapping: any;
-
-    eventPostedMessage = 'A New Event "<eventTitle>" has been posted , view the event details in Events page ';
-    eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the event list';
+    dataForMapping = {} as any;
+    smsBalance = 0;
 
     constructor(
         public classService: ClassService,
@@ -57,7 +56,8 @@ export class AddEventComponent implements OnInit {
         public notificationService: NotificationService,
         public userService: UserService,
         public smsService: SmsService,
-        public employeeService: EmployeeService
+        public employeeService: EmployeeService,
+        public smsOldService : SmsOldService,
     ) {}
 
     ngOnInit() {

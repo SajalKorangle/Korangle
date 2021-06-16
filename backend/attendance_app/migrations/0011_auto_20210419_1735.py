@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('attendance_app', '0010_attendancesettings'),
-        ('sms_app', '0006_auto_20210503_1446'),
+        ('sms_app', '0006_auto_20210616_1911'),
     ]
 
     operations = [

@@ -1,6 +1,6 @@
 import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 import {isMobile} from '@classes/common';
-import {NEW_LINE_REGEX} from '@modules/sms/classes/constants';
+import {FIND_VARIABLE_REGEX, NEW_LINE_REGEX} from '@modules/sms/classes/constants';
 
 export class ManageTemplatesHtmlRenderer {
 
@@ -160,7 +160,7 @@ export class ManageTemplatesHtmlRenderer {
 
     isTemplateModified(smsEvent: any) {
         return !this.vm.isDefaultSelected(smsEvent) &&
-            smsEvent.customEventTemplate.mappedContent.replace(this.vm.variableRegex, '{#var#}') != smsEvent.customEventTemplate.rawContent;
+            smsEvent.customEventTemplate.mappedContent.replace(FIND_VARIABLE_REGEX, '{#var#}') != smsEvent.customEventTemplate.rawContent;
     }
 
     getVariableList() {

@@ -40,7 +40,6 @@ export class ManageTemplatesComponent implements OnInit {
     populatedSMSIdList = [];
     populatedSMSEventSettingsList = [];
 
-    variableRegex = /\B@([\w+\\#%*(){}.,$!=\-/[\]]?)+/g;
     previousPage = null;
 
     userInput = {

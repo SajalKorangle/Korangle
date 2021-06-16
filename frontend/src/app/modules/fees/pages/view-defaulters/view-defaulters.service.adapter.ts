@@ -1,9 +1,11 @@
-import { ViewDefaultersComponent } from './view-defaulters.component';
+import {ViewDefaultersComponent} from './view-defaulters.component';
+import {SMS_EVENTS} from '../../../../constants-database/SMSEvent';
 
 export class ViewDefaultersServiceAdapter {
     vm: ViewDefaultersComponent;
 
-    constructor() {}
+    constructor() {
+    }
 
     // Data
 
@@ -11,29 +13,28 @@ export class ViewDefaultersServiceAdapter {
         this.vm = vm;
     }
 
-   async initializeData() {
+    async initializeData() {
         this.vm.isLoading = true;
+        this.vm.backendData.defaultersSMSEvent = SMS_EVENTS.find(a => a.eventName == 'Notify Defaulters');
 
-       const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
-           {parentSchool: this.vm.user.activeSchool.dbId}), //0
-           this.vm.smsService.getObject(this.vm.smsService.sms_event, {eventName: 'Notify Defaulters'}), //1
-           this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {parentSMSEvent__eventName: 'Notify Defaulters'})]); //2
+        const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
+            {parentSchool: this.vm.user.activeSchool.dbId}), //0
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndKey: this.vm.backendData.defaultersSMSEvent.id})]); //1
 
-       this.vm.backendData.smsIdSchoolList = firstValue[0];
-       this.vm.backendData.defaultersSMSEvent = firstValue[1];
-       this.vm.backendData.eventSettingsList = firstValue[2];
+        this.vm.backendData.smsIdSchoolList = firstValue[0];
+        this.vm.backendData.eventSettingsList = firstValue[1];
 
-       this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
-           id__in: this.vm.backendData.smsIdSchoolList.map(a => a.parentSMSId),
-           smsIdStatus: 'ACTIVATED'
-       });
-       this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
-           id__in: this.vm.backendData.eventSettingsList.map(a => a.parentSMSTemplate),
-           registrationStatus: 'APPROVED',
-           'korangle__order': '-id',
-       });
+        this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
+            id__in: this.vm.backendData.smsIdSchoolList.map(a => a.parentSMSId),
+            smsIdStatus: 'ACTIVATED'
+        });
+        this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
+            id__in: this.vm.backendData.eventSettingsList.map(a => a.parentSMSTemplate),
+            registrationStatus: 'APPROVED',
+            'korangle__order': '-id',
+        });
 
-       this.populateTemplateList();
+        this.populateTemplateList();
 
         const student_section_list = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
@@ -56,7 +57,7 @@ export class ViewDefaultersServiceAdapter {
             this.vm.sessionList = sessionList;
             this.vm.studentParameterList = val[1].map((x) => ({
                 ...x,
-                filterValues: JSON.parse(x.filterValues).map((x) => ({ name: x, show: false })),
+                filterValues: JSON.parse(x.filterValues).map((x) => ({name: x, show: false})),
                 showNone: false,
                 filterFilterValues: '',
             }));
@@ -181,7 +182,7 @@ export class ViewDefaultersServiceAdapter {
         });
     }
 
-    async sendSMSNotificationDefaulter () {
+    async sendSMSNotificationDefaulter() {
         this.vm.isLoading = true;
         let studentData = [];
         if (this.vm.selectedFilterType == this.vm.filterTypeList[0]) {
@@ -190,18 +191,19 @@ export class ViewDefaultersServiceAdapter {
             this.vm.getFilteredParentList().forEach((parent) => {
                 if (parent.selected && parent.mobileNumber) {
                     parent.studentList.forEach(student => {
-                            studentData.push(student);
+                        studentData.push(student);
                     });
                 }
             });
         }
-        if ( this.vm.getEstimatedSMSCount() > 0 && !confirm('Please confirm that you are sending ' + this.vm.getEstimatedSMSCount() + ' SMS.')) {
+        if (this.vm.getEstimatedSMSCount() > 0 && !confirm('Please confirm that you are sending ' + this.vm.getEstimatedSMSCount() + ' SMS.')) {
             return;
         }
 
         this.vm.dataForMapping['studentList'] = studentData;
         await this.vm.messageService.smsNotificationSender(
             this.vm.dataForMapping,
+            ['student'],
             this.vm.backendData.defaultersSMSEvent,
             this.vm.selectedSentType.id,
             this.vm.message,

@@ -1,6 +1,6 @@
 import {ViewDefaultersComponent} from '@modules/fees/pages/view-defaulters/view-defaulters.component';
 import {isMobile} from '../../../../classes/common.js';
-import {NEW_LINE_REGEX} from '@modules/sms/classes/constants';
+import {FIND_VARIABLE_REGEX, NEW_LINE_REGEX} from '@modules/sms/classes/constants';
 
 export class ViewDefaultersHtmlRenderer {
 
@@ -49,7 +49,7 @@ export class ViewDefaultersHtmlRenderer {
 
     isTemplateModified() {
         return this.vm.selectedSentType.id != this.vm.sentTypeList[1].id &&
-            this.vm.message.replace(this.vm.variableRegex, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
+            this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
     }
 
     getButtonText() {

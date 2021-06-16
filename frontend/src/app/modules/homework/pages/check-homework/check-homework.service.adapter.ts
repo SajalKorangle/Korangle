@@ -1,5 +1,4 @@
 import { CheckHomeworkComponent } from './check-homework.component';
-import moment = require('moment');
 
 export class CheckHomeworkServiceAdapter {
     vm: CheckHomeworkComponent;
@@ -32,7 +31,9 @@ export class CheckHomeworkServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //4
             this.vm.smsOldService.getSMSCount({ parentSchool: this.vm.user.activeSchool.dbId }, this.vm.user.jwt), //5
         ]);
-        this.vm.smsBalance = value[5];
+
+        this.vm.smsBalance = value[5].count;
+        console.log(value[5]);
         this.vm.dataForMapping['subjectList'] = value[0];
         this.vm.dataForMapping['classList'] = value[1];
         this.vm.dataForMapping['divisionList'] = value[2];
@@ -264,26 +265,26 @@ export class CheckHomeworkServiceAdapter {
                homeworkStatus: studentHomework.status,
            };
            const value = await Promise.all([this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData)]);
+
            this.vm.dataForMapping['homework'] = this.vm.selectedHomework;
            this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
+           let eventName;
            if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
-                this.vm.messageService.sendEventNotification(
-                    this.vm.dataForMapping,
-                    'Homework Checked',
-                    this.vm.user.activeSchool.dbId,
-                    this.vm.smsBalance
-                );
+                eventName = 'Homework Checked';
             } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
-               this.vm.messageService.sendEventNotification(
-                    this.vm.dataForMapping,
-                    'Homework Resubmission',
-                    this.vm.user.activeSchool.dbId,
-                    this.vm.smsBalance
-                );
+                eventName = 'Homework Resubmission';
             }
 
+           this.vm.messageService.sendEventNotification(
+               this.vm.dataForMapping,
+               ['student'],
+               eventName,
+               this.vm.user.activeSchool.dbId,
+               this.vm.smsBalance
+           );
+
            this.getHomeworkReport();
-            studentHomework.isStatusLoading = false;
+           studentHomework.isStatusLoading = false;
     }
 
     changeStudentRemark(studentHomework): any {

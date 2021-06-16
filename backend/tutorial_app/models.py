@@ -1,8 +1,6 @@
 from django.db import models
 
 # Create your models here.
-from django.db.models.signals import post_save
-
 from subject_app.models import ClassSubject
 from school_app.model.models import School
 from information_app.models import SentUpdateType

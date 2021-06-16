@@ -36,15 +36,6 @@ urlpatterns += [
 	url(r'^sms-event-settings', SMSEventSettingsView.as_view()),
 ]
 
-########  SMS  Event ###############
-from .views import SMSEventView, SMSEventListView
-
-urlpatterns += [
-	url(r'^sms-event/batch', SMSEventListView.as_view()),
-	url(r'^sms-event', SMSEventView.as_view()),
-]
-
-
 from .views import SMSIdSchoolView, SMSIdSchoolListView
 
 urlpatterns += [

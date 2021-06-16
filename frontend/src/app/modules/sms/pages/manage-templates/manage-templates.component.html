@@ -18,15 +18,17 @@
     </ng-container>
 
     <ng-container *ngIf="userInput.selectedPage">
-
+        <div class="row" style="margin-left: 1px;">
         <button type="submit" class="btn" style="float: left; cursor: pointer; padding: 4px 7px"
                 (click)="previousPage = userInput.selectedPage;userInput.selectedPage = null;">
             Go Back
         </button>
-        <br/>
-        <br/>
+        </div>
+
+        <div class="row" style="padding-left:5px">
         <b style="font-size:16px;margin-left:12px">{{userInput.selectedPage.name}}</b>
-        <br/>
+        </div>
+        
 
         <ng-container *ngIf="htmlRenderer.isGeneralOrDefaulters()">
             <mat-expansion-panel [expanded]="false"

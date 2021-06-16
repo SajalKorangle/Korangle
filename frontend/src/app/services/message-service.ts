@@ -2,6 +2,7 @@ import {UserService} from './modules/user/user.service';
 import {NotificationService} from './modules/notification/notification.service';
 import {SmsService} from './modules/sms/sms.service';
 import {EMPLOYEE_VARIABLES, EVENT_SETTING_PAGES, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {SMS_EVENTS} from '../constants-database/SMSEvent';
 
 /*
 SentUpdateType -
@@ -22,7 +23,6 @@ SentUpdateType -
 export class MessageService {
     STUDENT_LIMITER = 200;
     notif_usernames = [];
-    sentTypeList = ['NULL', 'SMS', 'NOTIFICATION', 'NOTIF./SMS'];
 
     notificationService: any;
     userService: any;
@@ -92,119 +92,21 @@ export class MessageService {
         });
     }
 
-    sendSMSNotificationNew: any = (
-        mobile_list: any,
-        message: any,
-        informationMessageType: any,
-        sentUpdateType: any,
-        schoolId: any,
-        smsBalance: any
-    ) => {
-        let service_list = [];
-        let notification_list = [];
-        let sms_list = [];
-
-        if (sentUpdateType == 2) {
-            sms_list = mobile_list;
-            notification_list = [];
-        } else if (sentUpdateType == 3) {
-            sms_list = [];
-            notification_list = mobile_list.filter((obj) => {
-                return obj.notification;
-            });
-        } else {
-            notification_list = mobile_list.filter((obj) => {
-                return obj.notification;
-            });
-            sms_list = mobile_list.filter((obj) => {
-                return !obj.notification;
-            });
-        }
-        let notif_mobile_string = '';
-        let sms_mobile_string = '';
-        notification_list.forEach((item, index) => {
-            notif_mobile_string += item.mobileNumber + ', ';
-        });
-
-        sms_list.forEach((item, index) => {
-            sms_mobile_string += item.mobileNumber + ', ';
-        });
-        sms_mobile_string = sms_mobile_string.slice(0, -2);
-        notif_mobile_string = notif_mobile_string.slice(0, -2);
-
-        let sms_data = {};
-        const sms_converted_data = sms_list.map((item) => {
-            return {
-                mobileNumber: item.mobileNumber.toString(),
-                isAdvanceSms: this.getMessageFromTemplate(message, item),
-            };
-        });
-        if (sms_list.length != 0) {
-            sms_data = {
-                contentType: 'english',
-                data: sms_converted_data,
-                content: sms_converted_data[0]['isAdvanceSms'],
-                parentMessageType: informationMessageType,
-                count: this.getEstimatedSMSCount(sentUpdateType, mobile_list, message),
-                notificationCount: this.getEstimatedNotificationCount(sentUpdateType, mobile_list),
-                notificationMobileNumberList: notif_mobile_string,
-                mobileNumberList: sms_mobile_string,
-                parentSchool: schoolId,
-            };
-        } else {
-            sms_data = {
-                contentType: 'english',
-                data: sms_converted_data,
-                content: this.getMessageFromTemplate(message, notification_list[0]),
-                parentMessageType: informationMessageType,
-                count: this.getEstimatedSMSCount(sentUpdateType, mobile_list, message),
-                notificationCount: this.getEstimatedNotificationCount(sentUpdateType, mobile_list),
-                notificationMobileNumberList: notif_mobile_string,
-                mobileNumberList: sms_mobile_string,
-                parentSchool: schoolId,
-            };
-        }
-
-        const notification_data = notification_list.map((item) => {
-            return {
-                parentMessageType: informationMessageType,
-                content: this.getMessageFromTemplate(message, item),
-                parentUser: this.notif_usernames.find((user) => {
-                    return user.username == item.mobileNumber.toString();
-                }).id,
-                parentSchool: schoolId,
-            };
-        });
-        service_list = [];
-        service_list.push(this.smsService.createObject(this.smsService.diff_sms, sms_data));
-        if (notification_data.length > 0) {
-            service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
-        }
-
-        Promise.all(service_list).then((value) => {
-            if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
-                if (value[0].status === 'success') {
-                    smsBalance -= value[0].data.count;
-                } else if (value[0].status === 'failure') {
-                    smsBalance = value[0].count;
-                }
-            }
-        });
-    }
-
     async sendEventNotification(
-        Data,
-        eventName,
-        schoolId,
-        smsBalance,
+        Data, // contains all the backend list which are required to populate the variables
+        personsList, // ['student','employee'] either or both of them
+        eventName, // name of the Event like 'Homework Creation' as a string
+        schoolId, // school dbId
+        smsBalance, // school sms balance
     ) {
-        const smsEvent = await this.smsService.getObject(this.smsService.sms_event, {eventName: eventName});
+
+        const smsEvent = SMS_EVENTS.find(event => event.eventName == eventName);
         if (!smsEvent) {
             throw "No Events Found";
         } // if there is not event return
 
         let fetch_event_settings_list = {
-            parentSMSEvent: smsEvent.id,
+            SMSEventFrontEndId: smsEvent.id,
             parentSchool: schoolId,
         };
 
@@ -213,25 +115,27 @@ export class MessageService {
             return;
         } // if there is not event settings or sentUpdateType is null then return
 
-        let customSMSTemplate, smsId = 1, smsRawContent = smsEvent.defaultSMSContent, notificationRawContent;
+        let customSMSTemplate, smsId = 1, smsContent = smsEvent.defaultSMSContent, notificationContent;
 
+        // if there is any templated linked with the settings get that template and populate
         if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
             customSMSTemplate = await this.smsService.getObject(this.smsService.sms_template,
                 {id: eventSettings.parentSMSTemplate, registrationStatus: "APPROVED"});
             if (customSMSTemplate) {
-                smsRawContent = customSMSTemplate.mappedContent;
+                smsContent = customSMSTemplate.mappedContent;
                 smsId = customSMSTemplate.parentSMSId;
             }
         }
 
-        notificationRawContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
+        notificationContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
 
         await this.smsNotificationSender(
             Data,
+            personsList,
             smsEvent,
             eventSettings.parentSentUpdateType,
-            smsRawContent,
-            notificationRawContent,
+            smsContent,
+            notificationContent,
             smsId,
             schoolId,
             smsBalance
@@ -239,95 +143,105 @@ export class MessageService {
     }
 
     async smsNotificationSender(
-        data: any,
-        smsEvent: any,
-        sentUpdateType: any,
-        smsRawContent: any,
-        notificationRawContent: any,
-        smsId: any,
-        schoolId: any,
-        smsBalance: any
+        data: any, // contains all the backend list which are required to populate the variables
+        personsList: any, // ['student','employee'] either or both of them
+        smsEvent: any, // corresponding SMS Event
+        sentUpdateType: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
+        smsContent: any, // This content contains any sms template with mapped variables
+        notificationContent: any, // any notification content with variables
+        smsId: any, // school SMSId dbID or 1 - which is KORNGL smsId dbId
+        schoolId: any, // school dbID
+        smsBalance: any // sms balance for that school
     ) {
-        let service_list = [];
+
         let notification_list = [];
         let sms_list = [];
-        let personDetailsList = [];
-        let eventSettingPage = EVENT_SETTING_PAGES.find(settingPage => smsEvent.eventName.includes(settingPage.name));
+        let personVariablesMappedObjList = [];
+        // finding the corresponding eventSettingsPage to know the variablesList
+        let eventSettingPage = EVENT_SETTING_PAGES.find(settingPage => settingPage.orderedEvents.some(event => event == smsEvent.eventName));
 
-        let person = data.studentList ? 'student' : 'employee';
+        personsList.forEach(person => {
+            if (eventSettingPage.name == 'General SMS') { // because in general we will be using student or employee Variables
+                eventSettingPage.variableList = person == 'student' ? STUDENT_VARIABLES : EMPLOYEE_VARIABLES;
+            }
 
-        if (eventSettingPage.name == 'General') { // because in general we will be using student or employee Variables
-            eventSettingPage.variableList = person == 'student' ? STUDENT_VARIABLES : EMPLOYEE_VARIABLES;
-        }
+            data[person + 'List'].forEach(personData => {
+                if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
+                    let mappedObject = this.getMappingData(eventSettingPage.variableList, data, person, personData);
+                    mappedObject['notification'] = personData.notification;
+                    mappedObject['id'] = personData.id;
+                    personVariablesMappedObjList.push(mappedObject);
+                }
+            });
 
-        console.log(data);
-
-        data[person + 'List'].forEach(personData => {
-            let mappedObject = this.getMappingData(eventSettingPage.variableList, data, person, personData.id);
-            mappedObject['notification'] = personData.notification;
-            mappedObject['id'] = personData.id;
-            personDetailsList.push(mappedObject);
         });
-
-        console.log(personDetailsList);
+        console.log(personVariablesMappedObjList);
 
         if (sentUpdateType == 2) {
-            sms_list = personDetailsList;
+            sms_list = personVariablesMappedObjList;
             notification_list = [];
         } else if (sentUpdateType == 3) {
             sms_list = [];
-            notification_list = personDetailsList.filter((obj) => {
+            notification_list = personVariablesMappedObjList.filter((obj) => {
                 return obj.notification;
             });
         } else {
-            notification_list = personDetailsList.filter((obj) => {
+            notification_list = personVariablesMappedObjList.filter((obj) => {
                 return obj.notification;
             });
-            sms_list = personDetailsList.filter((obj) => {
+            sms_list = personVariablesMappedObjList.filter((obj) => {
                 return !obj.notification;
             });
         }
 
         let notif_mobile_string = '';
         let sms_mobile_string = '';
-        let smsMappedData = [];
-        let notificationMappedData = [];
+        let smsMappedDataList = [];
+        let notificationMappedDataList = [];
 
         notification_list.forEach((item) => {
             let temp = {
                 mobileNumber: item.mobileNumber,
-                content: this.getMessageFromTemplate(notificationRawContent, item)
+                content: this.getMessageFromTemplate(notificationContent, item)
             };
-            let duplicateData = notificationMappedData.some(x => x.mobileNumber == item.mobileNumber && x.content == temp.content);
+            let duplicateData = notificationMappedDataList.some(x => x.mobileNumber == item.mobileNumber && x.content == temp.content);
             if (!duplicateData) {
                 notif_mobile_string += item.mobileNumber + ', ';
-                notificationMappedData.push(temp);
+                notificationMappedDataList.push(temp);
             }
         });
 
         sms_list.forEach((item) => {
             let temp = {
                 mobileNumber: item.mobileNumber,
-                isAdvanceSms: this.getMessageFromTemplate(smsRawContent, item)
+                isAdvanceSms: this.getMessageFromTemplate(smsContent, item)
             };
-            let duplicateData = smsMappedData.some(x => x.mobileNumber == temp.mobileNumber && x.isAdvanceSms == temp.isAdvanceSms);
+            let duplicateData = smsMappedDataList.some(x => x.mobileNumber == temp.mobileNumber && x.isAdvanceSms == temp.isAdvanceSms);
             if (!duplicateData) {
                 sms_mobile_string += item.mobileNumber + ', ';
-                smsMappedData.push(temp);
+                smsMappedDataList.push(temp);
             }
         });
+
+        let smsCount = this.getEstimatedSMSCount(sentUpdateType, smsMappedDataList);
+
+        if (smsCount > smsBalance) {
+            smsMappedDataList = [];
+            smsCount = 0;
+            sms_mobile_string = '';
+        }
 
         sms_mobile_string = sms_mobile_string.slice(0, -2);
         notif_mobile_string = notif_mobile_string.slice(0, -2);
 
         let sms_data = {
-            contentType: this.hasUnicode(smsRawContent) ? 'unicode' : 'english',
-            parentSMSEvent: smsEvent.id,
-            content: smsRawContent,
+            contentType: this.hasUnicode(smsContent) ? 'unicode' : 'english',
+            SMSEventFrontEndId: smsEvent.id,
+            content: smsContent,
             parentMessageType: null,
-            mobileNumberContentJson: JSON.stringify(smsMappedData),
-            count: this.getEstimatedSMSCount(sentUpdateType, smsMappedData, smsRawContent),
-            notificationCount: notificationMappedData.length,
+            mobileNumberContentJson: JSON.stringify(smsMappedDataList),
+            count: smsCount,
+            notificationCount: notificationMappedDataList.length,
             notificationMobileNumberList: notif_mobile_string,
             mobileNumberList: sms_mobile_string,
             parentSchool: schoolId,
@@ -335,10 +249,11 @@ export class MessageService {
         };
 
 
-        const notification_data = notificationMappedData.map((item) => {
+        const notification_data = notificationMappedDataList.map((item) => {
+            console.log(item);
             return {
                 parentMessageType: null,
-                parentSMSEvent: smsEvent.id,
+                SMSEventFrontEndId: smsEvent.id,
                 content: item.content,
                 parentUser: this.notif_usernames.find((user) => {
                     return user.username == item.mobileNumber.toString();
@@ -350,20 +265,20 @@ export class MessageService {
         console.log(sms_data);
         console.log(notification_data);
 
-        service_list = [];
-        service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
-        if (notification_data.length > 0) {
-            service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
-        }
-
-        const value = await Promise.all(service_list);
-        if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
-            if (value[0].status === 'success') {
-                smsBalance -= value[0].data.count;
-            } else if (value[0].status === 'failure') {
-                smsBalance = value[0].count;
-            }
-        }
+        // service_list = [];
+        // service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
+        // if (notification_data.length > 0) {
+        //     service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
+        // }
+        //
+        // const value = await Promise.all(service_list);
+        // if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
+        //     if (value[0].status === 'success') {
+        //         smsBalance -= value[0].data.count;
+        //     } else if (value[0].status === 'failure') {
+        //         smsBalance = value[0].count;
+        //     }
+        // }
     }
 
     getMessageFromTemplate = (message, mappedDataObj) => {
@@ -384,7 +299,7 @@ export class MessageService {
         return false;
     }
 
-    getEstimatedSMSCount = (sentUpdateType: any, student_list: any, message: any) => {
+    getEstimatedSMSCount = (sentUpdateType: any, student_list: any) => {
         let count = 0;
         if (sentUpdateType == 3) {
             return 0;
@@ -392,8 +307,8 @@ export class MessageService {
         student_list
             .filter((item) => item.mobileNumber)
             .forEach((item, i) => {
-                if (sentUpdateType == 2 || item.notification == false) {
-                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
+                if (sentUpdateType == 2 || sentUpdateType == 4) {
+                    count += this.getMessageCount(item.isAdvanceSms);
                 }
             });
 
@@ -421,24 +336,24 @@ export class MessageService {
         }
     }
 
-    getMappingData(eventVariableList: any, data: any, person: any, personId: any) {
+    getMappingData(eventVariableList: any, data: any, person: any, personData: any) {
         let temp = {};
-        data[person + 'Id'] = personId;
-
+        data['person'] = person; // which person? student or employee is stored here
+        data[person] = personData; // person details eg: data['student'] details are stored here
         eventVariableList.forEach(eventVariable => {
                 temp[eventVariable.displayVariable] = eventVariable.getValueFunc(data);
         });
         return temp;
     }
 
-    checkForDuplicate(eventVariables: any, previousList: any, data: any, personId: any, message: any, secondNumber: boolean = false): boolean {
-        let person = data.studentList ? 'student' : 'employee';
-        let currentPerson = data[person + 'List'].find(x => x.id == personId);
+    checkForDuplicate(eventVariables: any, previousList: any, data: any, currentPerson: any, message: any, person: any,
+                      secondNumber: boolean = false): boolean {
+
         let number = secondNumber ? 'secondMobileNumber' : 'mobileNumber';
         return previousList.some(personData => {
                 return personData.mobileNumber == currentPerson[number] &&
-                this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, personData.id)) ==
-                    this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, personId));
+                this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, personData)) ==
+                    this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, currentPerson));
             }
         );
     }

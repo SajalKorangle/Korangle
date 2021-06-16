@@ -22,7 +22,6 @@ import { isMobile } from '../../../../classes/common.js';
     providers: [SubjectService, StudentService, ClassService, HomeworkService, NotificationService, UserService, SmsService, SmsOldService],
 })
 export class CheckHomeworkComponent implements OnInit {
-    // @Input() user;
     user: any;
 
     serviceAdapter: CheckHomeworkServiceAdapter;
@@ -30,8 +29,6 @@ export class CheckHomeworkComponent implements OnInit {
     isLoading: any;
     isChecking: any;
 
-    STUDENT_LIMITER = 200;
-    notif_usernames = [];
     smsBalance = 0;
 
     dataForMapping =  {} as any;

@@ -47,8 +47,6 @@ export class SendSmsComponent implements OnInit {
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
-    variableRegex = /{#(.*?)#}/g;
-
     studentMessageService: any;
     employeeMessageService: any;
 
@@ -171,12 +169,12 @@ export class SendSmsComponent implements OnInit {
                 })
                 .forEach((studentSection) => {
                     if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
-                        studentSection.student.id, this.message)) {
+                        studentSection.student, this.message, 'student')) {
                         tempList.push(studentSection.student);
                     }
                     if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
                         if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
-                            studentSection.student.id, this.message, true)) {
+                            studentSection.student, this.message, 'student', true)) {
                             tempList.push(studentSection.student);
                         }
                     }

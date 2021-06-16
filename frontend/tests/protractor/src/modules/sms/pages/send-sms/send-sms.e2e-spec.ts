@@ -25,9 +25,6 @@ describe('SMS -> Send SMS', () => {
         // Opening Page
         await openModuleAndPage('SMS', 'Send SMS');
 
-        //Show student list
-        (await containsFirst('button', 'Show')).click();
-
         // Type the student name
         await BeforeAfterEach.page.waitForXPath('//input[@testId="nameFilter"]');
         const [inputElement] = await BeforeAfterEach.page.$x('//input[@testId="nameFilter"]');
