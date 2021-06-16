@@ -4,7 +4,7 @@ import { CommonFunctions } from '../../../../classes/common-functions';
 export class GiveDiscountServiceAdapter {
     vm: GiveDiscountComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -32,7 +32,7 @@ export class GiveDiscountServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
@@ -86,11 +86,11 @@ export class GiveDiscountServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
         ]).then(
             (value) => {
@@ -161,7 +161,7 @@ export class GiveDiscountServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.createList(this.vm.feeService.discounts, discount_list),
+            this.vm.feeService.createObjectList(this.vm.feeService.discounts, discount_list),
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]).then(
             (value) => {
@@ -178,7 +178,7 @@ export class GiveDiscountServiceAdapter {
                     });
                 });
 
-                this.vm.feeService.createList(this.vm.feeService.sub_discounts, sub_discount_list).then((value2) => {
+                this.vm.feeService.createObjectList(this.vm.feeService.sub_discounts, sub_discount_list).then((value2) => {
                     this.addToDiscountList(value[0]);
                     this.vm.subDiscountList = this.vm.subDiscountList.concat(value2);
 

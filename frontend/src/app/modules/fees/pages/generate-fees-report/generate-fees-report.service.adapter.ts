@@ -3,7 +3,7 @@ import { GenerateFeesReportComponent } from './generate-fees-report.component';
 export class GenerateFeesReportServiceAdapter {
     vm: GenerateFeesReportComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -105,7 +105,7 @@ export class GenerateFeesReportServiceAdapter {
             let fee_receipt_list = {
                 parentSchool: this.vm.user.activeSchool.dbId,
                 cancelled: 'false__boolean',
-                generationDateTime__gte: this.vm.getSession().startDate + ' 00:00:00%2B05:30',
+                generationDateTime__gte: this.vm.getSession().startDate + ' 00:00:00+05:30',
             };
 
             Promise.all([

@@ -3,7 +3,7 @@ import { CancelDiscountComponent } from './cancel-discount.component';
 export class CancelDiscountServiceAdapter {
     vm: CancelDiscountComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -52,8 +52,8 @@ export class CancelDiscountServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
         ]).then(
             (value) => {
                 console.log(value);

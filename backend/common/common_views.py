@@ -98,5 +98,3 @@ class CommonListView():
     @user_permission_new
     def delete(self, request):
         return delete_list(request.GET, self.Model, self.ModelSerializer)
-
-

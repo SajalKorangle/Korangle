@@ -53,7 +53,7 @@ export class CollectFeeServiceAdapter {
         };
 
         const value = await Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
@@ -112,11 +112,11 @@ export class CollectFeeServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
         ]).then(
             (value) => {
@@ -194,7 +194,7 @@ export class CollectFeeServiceAdapter {
         this.vm.isLoading = true;
 
         const value = await Promise.all([
-            this.vm.feeService.createList(this.vm.feeService.fee_receipts, fee_receipt_list),
+            this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]);
 
@@ -233,7 +233,7 @@ export class CollectFeeServiceAdapter {
                 value[0][index].parentTransaction = transaction.id;
             });
             serviceList.push(
-                this.vm.feeService.partiallyUpdateList(this.vm.feeService.fee_receipts, toUpdateFeeReceipts)
+                this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.fee_receipts, toUpdateFeeReceipts)
             );
 
             value[0].forEach(fee_receipt => {
@@ -286,7 +286,7 @@ export class CollectFeeServiceAdapter {
 
         await Promise.all(serviceList);
 
-        await this.vm.feeService.createList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
+        await this.vm.feeService.createObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
 
             this.addToFeeReceiptList(value[0]);
             this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);
