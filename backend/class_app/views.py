@@ -3,7 +3,6 @@ from decorators import user_permission_3
 from class_app.models import ClassTeacherSignature
 
 
-
 ############ ClassTeacherSignature ###########
 from .business.class_teacher_signature import create_class_teacher_signature_object, partial_update_class_teacher_signature_object
 

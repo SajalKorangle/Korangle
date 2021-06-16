@@ -31,7 +31,7 @@ export class ViewSentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public smsService: SmsOldService, public informationService: InformationService, private cdRef: ChangeDetectorRef) {}
+    constructor(public smsService: SmsOldService, public informationService: InformationService, private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

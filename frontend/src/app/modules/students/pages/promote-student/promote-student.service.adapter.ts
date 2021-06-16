@@ -8,7 +8,7 @@ import { StudentFee } from '../../../../services/modules/fees/models/student-fee
 export class PromoteStudentServiceAdapter {
     vm: PromoteStudentComponent;
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: PromoteStudentComponent): void {
         this.vm = vm;
@@ -72,9 +72,9 @@ export class PromoteStudentServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two), // 3
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list), // 4
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), // 5
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data), // 6
-            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data), // 7
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data), // 8
+            this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data), // 6
+            this.vm.feeService.getObjectList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data), // 7
+            this.vm.feeService.getObjectList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data), // 8
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 9
             this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data), // 10
         ]).then(
