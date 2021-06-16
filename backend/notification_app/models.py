@@ -5,6 +5,10 @@ from school_app.model.models import School
 from django.contrib.auth.models import User
 from information_app.models import MessageType
 
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from .business.send_notification import send_notification
+
 
 class Notification(models.Model):
 
@@ -31,3 +35,7 @@ class Notification(models.Model):
         db_table = 'notification'
 
 
+@receiver(post_save, sender=Notification)
+def sendNotification(sender, instance, created, **kwargs):
+    if(created):
+        send_notification(instance)

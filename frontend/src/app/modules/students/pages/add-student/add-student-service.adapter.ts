@@ -7,7 +7,7 @@ import { StudentFee } from '../../../../services/modules/fees/models/student-fee
 export class AddStudentServiceAdapter {
     vm: AddStudentComponent;
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: AddStudentComponent): void {
         this.vm = vm;
@@ -55,9 +55,9 @@ export class AddStudentServiceAdapter {
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, test_second_list),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
-            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
                 parentSchool: this.vm.user.activeSchool.dbId,

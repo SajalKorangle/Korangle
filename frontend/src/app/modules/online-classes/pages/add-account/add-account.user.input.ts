@@ -27,8 +27,6 @@ export class AddAccountUserInput {
 
 const DEFAULT_ACCOUNT_INFO: AccountInfo = {
     parentEmployee: null,
-    username: null,
-    password: null,
     meetingNumber: null,
     passcode: null,
 };
