@@ -50,14 +50,6 @@ backend/helloworld_project/gunicorn.conf.py
 backend/helloworld_project/prod_conf.py
 backend/helloworld_project/stag_conf.py
 backend/backup_database.sh
-backend/bin
-backend/etc
-backend/lib
-backend/man
-backend/share
-backend/.python-version
-backend/pyvenv.cfg
-
 
 *.DS_Store
 

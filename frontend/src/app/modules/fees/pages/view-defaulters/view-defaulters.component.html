@@ -1,40 +1,54 @@
 <div class="card-content table-responsive">
-
     <ng-container *ngIf="!isLoading">
-
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Min. No. (Fees Due till month)</label>
-                    <input type="number" class="form-control" (keypress)="policeNumberInput($event)"
-                        [ngModel]="minimumNumber" (ngModelChange)="minimumNumber=$event;applyFilters()" />
+                    <input
+                        type="number"
+                        class="form-control"
+                        (keypress)="policeNumberInput($event)"
+                        [ngModel]="minimumNumber"
+                        (ngModelChange)="minimumNumber = $event"
+                    />
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Max. No. (Fees Due till month)</label>
-                    <input type="number" class="form-control" (keypress)="policeNumberInput($event)"
-                        [ngModel]="maximumNumber" (ngModelChange)="maximumNumber=$event;applyFilters()" />
+                    <input
+                        type="number"
+                        class="form-control"
+                        (keypress)="policeNumberInput($event)"
+                        [ngModel]="maximumNumber"
+                        (ngModelChange)="maximumNumber = $event"
+                    />
                 </div>
             </div>
             <div class="col-sm-3">
                 <mat-form-field>
-                    <mat-select placeholder="Select Filter Type" [ngModel]="selectedFilterType"
-                        (ngModelChange)="selectedFilterType=$event;">
-                        <mat-option *ngFor='let filterType of filterTypeList;' [value]="filterType">
-                            {{filterType}}
+                    <mat-select
+                        placeholder="Select Filter Type"
+                        [ngModel]="selectedFilterType"
+                        (ngModelChange)="selectedFilterType = $event"
+                    >
+                        <mat-option *ngFor="let filterType of filterTypeList" [value]="filterType">
+                            {{ filterType }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-sm-3" *ngIf="selectedFilterType==filterTypeList[0]">
+            <div class="col-sm-3" *ngIf="selectedFilterType == filterTypeList[0]">
                 <div>
                     <mat-form-field>
-                        <mat-select placeholder="Select Class" [ngModel]="selectedClassSection"
-                            (ngModelChange)="selectedClassSection=$event;applyFilters()">
+                        <mat-select
+                            placeholder="Select Class"
+                            [ngModel]="selectedClassSection"
+                            (ngModelChange)="selectedClassSection = $event"
+                        >
                             <mat-option [value]="nullValue">All</mat-option>
-                            <mat-option *ngFor='let classSection of filteredClassSectionList;' [value]="classSection">
-                                {{classSection.class.name}}, {{classSection.section.name}}
+                            <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
+                                {{ classSection.class.name }}, {{ classSection.section.name }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -42,24 +56,27 @@
             </div>
         </div>
 
-        <ng-container *ngIf="selectedFilterType==filterTypeList[0] && studentParameterList.length>0">
-            <button class="btn" style="padding: 4px 7px" (click)="showCustomFilters=!showCustomFilters">
+        <ng-container *ngIf="selectedFilterType == filterTypeList[0] && studentParameterList.length > 0">
+            <button class="btn" style="padding: 4px 7px" (click)="showCustomFilters = !showCustomFilters">
                 <ng-container *ngIf="!showCustomFilters">Show Custom Filters</ng-container>
-                <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container>
-            </button><br />
+                <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container></button
+            ><br />
             <ng-container *ngIf="showCustomFilters">
                 <ng-container *ngFor="let parameter of studentParameterList">
                     <mat-form-field>
-                        <mat-label>{{parameter.name}}</mat-label>
-                        <input matInput type="text" style="border: none" [(ngModel)]="parameter.filterFilterValues">
-                    </mat-form-field><br />
-                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px;"
-                        (ngModelChange)="applyFilters()" (click)="$event.stopPropagation();">None
+                        <mat-label>{{ parameter.name }}</mat-label>
+                        <input matInput type="text" style="border: none" [(ngModel)]="parameter.filterFilterValues" /> </mat-form-field
+                    ><br />
+                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                        >None
                     </mat-checkbox>
-                    <mat-checkbox *ngFor="let filter of getFilteredFilterValues(parameter)" [(ngModel)]="filter.show"
-                        (ngModelChange)="applyFilters()" style="margin-right: 5px;" (click)="$event.stopPropagation();">
-                        {{filter.name}}
-                    </mat-checkbox><br />
+                    <mat-checkbox
+                        *ngFor="let filter of getFilteredFilterValues(parameter)"
+                        [(ngModel)]="filter.show"
+                        style="margin-right: 5px"
+                        (click)="$event.stopPropagation()"
+                        >{{ filter.name }} </mat-checkbox
+                    ><br />
                 </ng-container>
             </ng-container>
             <br />
