@@ -235,7 +235,7 @@
                                         <th>Fees Paid<br />({{getCurrentSessionName()}})</th>
                                         <th>Discount<br />({{getCurrentSessionName()}})</th>
                                     </tr>
-                                    <ng-container *ngFor="let parent of getFilteredParentList(); let i=index;">
+                                    <ng-container *ngFor="let parent of getFilteredParentList(); let i = index;">
                                         <tr>
                                             <td>
                                                 <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
@@ -307,9 +307,9 @@
                                                         *ngFor="let session of sessionListWithNoDues;let sessionIndex=index">
                                                         {{getSessionFeesDue(student.id,session.name)+getSessionLateFeesDue(student.id,session.name)}}
                                                     </td>
-                                                    <td>{{student.totalFeesThisSession | indianCurrency}}</td>
-                                                    <td>{{student.feesPaidThisSession | indianCurrency}}</td>
-                                                    <td>{{student.discountThisSession | indianCurrency}}</td>
+                                                    <td>{{ student.totalFeesThisSession | indianCurrency }}</td>
+                                                    <td>{{ student.feesPaidThisSession | indianCurrency }}</td>
+                                                    <td>{{ student.discountThisSession | indianCurrency }}</td>
                                                 </tr>
                                             </ng-container>
                                         </ng-container>
@@ -467,12 +467,8 @@
                                 <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
                             </div>
                             <div class="col-sm-12">
-                                <button class="btn" style="padding: 4px 7px"
-                                    (click)="selectAllHandler(); $event.stopPropagation();">Select All
-                                </button>
-                                <button class="btn" style="padding: 4px 7px"
-                                    (click)="clearAllHandler(); $event.stopPropagation();">Clear All
-                                </button>
+                                <button class="btn" style="padding: 4px 7px" (click)="selectAllHandler(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="clearAllHandler(); $event.stopPropagation()">Clear All</button>
                             </div>
                         </div>
 
