@@ -78,14 +78,6 @@
 i {
   cursor: pointer;
 }
-input {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid lightgrey;
-  width: 90%;
-  margin-left: 5px;
-}
 table {
   width: 100%;
 }
@@ -110,6 +102,14 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-element-detail {
   overflow: hidden;
   /* display: flex; */
+}
+input {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid lightgrey;
+  width: 90%;
+  margin-left: 5px;
 }
 
 
