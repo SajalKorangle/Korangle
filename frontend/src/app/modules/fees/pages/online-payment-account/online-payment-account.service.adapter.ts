@@ -35,6 +35,7 @@ export class OnlinePaymentAccountServiceAdapter {
 
         if (onlinePaymentAccount) {
             this.vm.onlinePaymentAccount = onlinePaymentAccount;
+            this.verifyIFSC();
         }
         this.vm.isLoading = false;
     }

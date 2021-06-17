@@ -65,7 +65,6 @@ def addVendor(newVendorData, vendorId):
         'status': 'ACTIVE',
         'id': vendorId,
     })
-    print('new Vendor Data: ', newVendorData)
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
         'x-client-secret': CASHFREE_SECRET_KEY,
@@ -74,7 +73,7 @@ def addVendor(newVendorData, vendorId):
 
     response = requests.post(
         url=base_url+'/api/v2/easy-split/vendors', 
-        data=newVendorData,
+        json=newVendorData,
         headers=headers
         )
     assert response.json()['status'] == 'OK', 'Adding vendor on cashfree failed, response : {0}'.format(response.json())
@@ -98,7 +97,7 @@ def updateVendor(vendorData):
 
     response = requests.put(
         url=base_url+'/api/v2/easy-split/vendors/{0}'.format(vendorId), 
-        data=toUpdateVendorData,
+        json=toUpdateVendorData,
         headers=headers
         )
     assert response.json()['status'] == 'OK'

@@ -196,13 +196,13 @@ from fees_third_app.cashfree.cashfree import addVendor, getVendor, updateVendor
 
 class OnlinePaymentAccountView(CommonView, APIView):
     Model = OnlinePaymentAccount
-    RelationsToSchool=['parentSchool']
+    RelationsToSchool=['parentSchool__id']
     permittedMethods= ['get', 'post', 'put']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max'] or 0
+        maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max'] or 4
         vendorId = str(maxId +1)
         vendorData = data['vendorData']
         addVendor(vendorData, vendorId) 
@@ -211,7 +211,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
         data.update({
             'vendorId': vendorId
         })
-        responseData = create_object(data, self.Model, self.ModelSerializer, *args, **kwargs)
+        responseData = create_object(data, self.ModelSerializer, *args, **kwargs)
         responseData.update({
             'vendorData': getVendor(vendorId)
         })
@@ -230,10 +230,10 @@ class OnlinePaymentAccountView(CommonView, APIView):
     @user_permission_3
     def put(self, request, *args, **kwargs):
         data = request.data
-        vendorData = data.vendorData
+        vendorData = data['vendorData']
         updateVendor(vendorData)
         data.update({
-            'vendorData': getVendor(data.vendorId)
+            'vendorData': getVendor(data['vendorId'])
         })
         return data
 
