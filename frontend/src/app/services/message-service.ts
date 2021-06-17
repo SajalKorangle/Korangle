@@ -265,20 +265,20 @@ export class MessageService {
         console.log(sms_data);
         console.log(notification_data);
 
-        // service_list = [];
-        // service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
-        // if (notification_data.length > 0) {
-        //     service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
-        // }
-        //
-        // const value = await Promise.all(service_list);
-        // if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
-        //     if (value[0].status === 'success') {
-        //         smsBalance -= value[0].data.count;
-        //     } else if (value[0].status === 'failure') {
-        //         smsBalance = value[0].count;
-        //     }
-        // }
+        let service_list = [];
+        service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
+        if (notification_data.length > 0) {
+            service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
+        }
+
+        const value = await Promise.all(service_list);
+        if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
+            if (value[0].status === 'success') {
+                smsBalance -= value[0].data.count;
+            } else if (value[0].status === 'failure') {
+                smsBalance = value[0].count;
+            }
+        }
     }
 
     getMessageFromTemplate = (message, mappedDataObj) => {

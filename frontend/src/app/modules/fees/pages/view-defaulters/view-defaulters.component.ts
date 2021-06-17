@@ -818,7 +818,8 @@ export class ViewDefaultersComponent implements OnInit {
                 return item.mobileNumber && item.selected;
             }).forEach(parent => {
                 parent.studentList.forEach(student => {
-                    if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList, this.dataForMapping, student, this.message, 'student')) {
+                    if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList,
+                        this.dataForMapping, student, this.message, 'student')) {
                         count++;
                         studentList.push(student);
                     }
