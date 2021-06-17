@@ -1015,7 +1015,6 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push(student.feesPaidThisSession);
                     newRow.push(student.discountThisSession);
                     template.push(newRow);
-
                 });
             }
         });
