@@ -3,28 +3,20 @@ import { ViewDefaultersComponent } from './view-defaulters.component';
 export class ViewDefaultersServiceAdapter {
     vm: ViewDefaultersComponent;
 
-    constructor() { }
+    constructor() {}
 
     // Data
-
 
     initializeAdapter(vm: ViewDefaultersComponent): void {
         this.vm = vm;
     }
 
     initializeData(): void {
+        this.vm.isLoading = true;
 
         const feeTypeList = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
         };
-        Promise.all
-            ([
-                this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),
-            ])
-            .then((val) => {
-                this.vm.myFeeTypeList = val[0];
-            });
-        this.vm.isLoading = true;
 
         const student_section_list = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
@@ -42,6 +34,7 @@ export class ViewDefaultersServiceAdapter {
                 parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
                 parentStudentParamter__parameterType: 'FILTER',
             }),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),
         ]).then((val) => {
             let sessionList = val[0];
             this.vm.sessionList = sessionList;
@@ -59,6 +52,7 @@ export class ViewDefaultersServiceAdapter {
                     new Date(new Date(session.endDate).getTime() + 24 * 60 * 60 * 1000) > todaysDate
                 );
             });
+            this.vm.myFeeTypeList = val[3];
         });
 
         this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list).then(
@@ -138,7 +132,6 @@ export class ViewDefaultersServiceAdapter {
                         while (loopVariable < iterationCount) {
                             this.vm.studentList = this.vm.studentList.concat(remaining_result[loopVariable * 4]);
                             this.vm.studentFeeList = this.vm.studentFeeList.concat(remaining_result[loopVariable * 4 + 1]);
-                            // this.vm.myStudentFeeList=this.vm.studentFeeList;
                             this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(remaining_result[loopVariable * 4 + 2]);
                             this.vm.subDiscountList = this.vm.subDiscountList.concat(remaining_result[loopVariable * 4 + 3]);
                             loopVariable = loopVariable + 1;
