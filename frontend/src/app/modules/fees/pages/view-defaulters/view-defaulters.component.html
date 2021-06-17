@@ -9,7 +9,7 @@
                         class="form-control"
                         (keypress)="policeNumberInput($event)"
                         [ngModel]="minimumNumber"
-                        (ngModelChange)="minimumNumber = $event"
+                        (ngModelChange)="minimumNumber = $event;applyFilters();"
                     />
                 </div>
             </div>
@@ -21,7 +21,7 @@
                         class="form-control"
                         (keypress)="policeNumberInput($event)"
                         [ngModel]="maximumNumber"
-                        (ngModelChange)="maximumNumber = $event"
+                        (ngModelChange)="maximumNumber = $event;applyFilters();"
                     />
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         <mat-select
                             placeholder="Select Class"
                             [ngModel]="selectedClassSection"
-                            (ngModelChange)="selectedClassSection = $event"
+                            (ngModelChange)="selectedClassSection = $event;applyFilters();"
                         >
                             <mat-option [value]="nullValue">All</mat-option>
                             <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
@@ -67,7 +67,7 @@
                         <mat-label>{{ parameter.name }}</mat-label>
                         <input matInput type="text" style="border: none" [(ngModel)]="parameter.filterFilterValues" /> </mat-form-field
                     ><br />
-                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px" (click)="$event.stopPropagation()"
+                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px" (click)="$event.stopPropagation()" (ngModelChange)="applyFilters()"
                         >None
                     </mat-checkbox>
                     <mat-checkbox
@@ -75,6 +75,7 @@
                         [(ngModel)]="filter.show"
                         style="margin-right: 5px"
                         (click)="$event.stopPropagation()"
+                        (ngModelChange)="applyFilters()"
                         >{{ filter.name }} </mat-checkbox
                     ><br />
                 </ng-container>
@@ -87,7 +88,7 @@
 
         <!-- Parent -->
 
-        <ng-container *ngIf="selectedFilterType==filterTypeList[1]">
+        <ng-container *ngIf="selectedFilterType == filterTypeList[1]">
             <mat-tab-group dynamicHeight>
                 <mat-tab label="Summary">
                     <div class="mat-tab-element">
