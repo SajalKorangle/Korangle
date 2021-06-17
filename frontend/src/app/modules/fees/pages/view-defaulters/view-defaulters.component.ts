@@ -491,7 +491,7 @@ export class ViewDefaultersComponent implements OnInit {
                 return orderNumber;
             }
             return a.section.orderNumber - b.section.orderNumber;
-        })
+        });
         this.sessionListWithNoDues = this.getSessionsWithNoDue();
         this.sessionListWithNoDues.forEach(session => {
             this.columnsToDisplay.push(session.name);
@@ -844,7 +844,7 @@ export class ViewDefaultersComponent implements OnInit {
         let template: any;
         template = [tempArray];
         let count = 0;
-        this.getFilteredStudentList().forEach(student => {
+        this.getFilteredStudentList().forEach((student) => {
             let row = [];
             row.push(++count);
             row.push(student.name);
@@ -876,7 +876,7 @@ export class ViewDefaultersComponent implements OnInit {
 
         template = [tempArray];
         let count = 0;
-        this.getFilteredParentList().forEach(parent => {
+        this.getFilteredParentList().forEach((parent) => {
             let row = [];
             row.push(++count);
             row.push(parent.name);
@@ -901,7 +901,7 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(this.getParentDiscount(parent));
             template.push(row);
             if (parent.studentList.length > 1) {
-                parent.studentList.forEach(student => {
+                parent.studentList.forEach((student) => {
                     let newRow = [];
                     newRow.push('');
                     newRow.push('');
@@ -935,7 +935,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [tempArray];
 
         let count = 0;
-        this.getFilteredStudentList().forEach(student => {
+        this.getFilteredStudentList().forEach((student) => {
             let row = [];
             row.push(++count);
             row.push(student.name);
@@ -970,7 +970,7 @@ export class ViewDefaultersComponent implements OnInit {
         template = [tempArray];
 
         let count = 0;
-        this.getFilteredParentList().forEach(parent => {
+        this.getFilteredParentList().forEach((parent) => {
             let row = [];
             row.push(++count);
             row.push(parent.name);
@@ -997,7 +997,7 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(this.getParentDiscount(parent));
             template.push(row);
             if (parent.studentList.length > 1) {
-                parent.studentList.forEach(student => {
+                parent.studentList.forEach((student) => {
                     let newRow = [];
                     newRow.push('');
                     newRow.push('');
