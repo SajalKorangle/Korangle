@@ -9,7 +9,7 @@ from team_app.db_script.add_manage_parameter_page_to_employee_module import add_
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0028_auto_20210531_1812'),
+        ('team_app', '0029_auto_20210612_1044'),
     ]
 
     operations = [
