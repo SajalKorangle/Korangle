@@ -433,15 +433,22 @@ class FeeSettings(models.Model):
         unique_together = ('parentSchool', 'parentSession')
 
 
-class ParentTransaction(models.Model):
+class Transaction(models.Model):
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
-    amount = models.IntegerField(null=True, verbose_name='amount')
-    status = models.TextField(null=False, default=0, verbose_name='status')
-    orderId = models.TextField(null=False, default=-1, verbose_name='orderId')
+    TransactionStatus = (
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+        ('Refund Initiated', 'Refund Initiated'),
+        ('Refunded', 'Refunded'),
+        ('Forwarded to School', 'Forwarded to School')
+    )
 
-    class Meta:
-        db_table = 'parent_transaction'
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL)
+    amount = models.IntegerField()
+    status = models.CharField(max_length=30, choices=TransactionStatus)
+    orderId = models.CharField(max_length=20)
+    feeDetailJSON = models.TextField()
+
 
     
 class OnlinePaymentAccount(models.Model):

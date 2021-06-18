@@ -82,21 +82,6 @@ urlpatterns += [
     url(r'^fee-settings', FeeSettingsView.as_view()),
 ]
 
-
-from fees_third_app.views import OnlinePaymentAccountView
-
-urlpatterns += [
-    url(r'^online-payment-account', OnlinePaymentAccountView.as_view()),
-]
-
-
-from fees_third_app.views import ParentTransactionListView, ParentTransactionView
-
-urlpatterns += [
-    url(r'^parent-transaction/batch', ParentTransactionListView.as_view()),
-    url(r'^parent-transaction', ParentTransactionView.as_view()),
-]
-
 ############### CashFree ####################
 urlpatterns += [
     url(r'^cashfree/', include('fees_third_app.cashfree.urls')),
