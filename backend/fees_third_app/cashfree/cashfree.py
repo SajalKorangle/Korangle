@@ -32,33 +32,30 @@ def verifyCredentials():
     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
 
-def generatePaymentToken(data):
-    # data1 = "appId=" + data['appId'] + "&orderId=" + data['orderId'] + "&orderAmount=" + data['orderAmount'] + "&customerEmail=" + data['customerEmail'] + "&customerPhone=" + data['customerPhone'] + "&orderCurrency=" + data['orderCurrency']
-    # message = bytes(data1.encode('utf-8'))
-    # secret = bytes(secretKey.encode('utf-8'))
-    # paymentToken = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
+def createCashfreeOrder(data, orderId):
 
-    # #get vendor id of school from the database
-    # vendors = [
-    #             {
-    #               "vendorId":"SELF", 
-    #               "commission":50
-    #             },
-    #             {
-    #               "vendorId":"VEN" + str(data['parentSchool']), 
-    #               "commission":50
-    #             }
-    #         ]
-    # json_encoded_list = json.dumps(vendors)
-    # call = bytes(json_encoded_list.encode('utf-8'))
-    # b64_encoded_list = base64.b64encode(call)
-    # response = {
-    #     'vsplit' : b64_encoded_list.decode('utf-8'),
-    #     'paymentToken' : paymentToken.decode('utf-8')
-    # }
-    # return response
-    return None
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
+    orderData = {
+        'appId': CASHFREE_APP_ID,
+        'secretKey': CASHFREE_SECRET_KEY,
+        'orderId': str(orderId),
+        # 'notifyUrl': ''  Update Notify Url later
+    }
+    orderData.update(data)
+
+    response = requests.post(
+        url=base_url+'/api/v1/order/create', 
+        data=orderData,
+        headers=headers
+        )
+        
+    assert response.json()['status'] == 'OK' and 'paymentLink' in response.json(), 'Cashfree Order Creation Failed, response : {0}'.format(response.json())
+    return response.json()
+
+    
 
 def addVendor(newVendorData, vendorId):
     newVendorData.update({

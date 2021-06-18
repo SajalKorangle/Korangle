@@ -47,15 +47,22 @@
                 <td>
                     <h4>Total</h4>
                 </td>
-                <td>{{getOverallTotalPaymntAmount()}}</td>
+                <td align="right">
+                    <h4>{{getOverallTotalPaymntAmount()}}</h4>
+                </td>
             </tr>
         </tbody>
     </table>
 
+    <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
+    </mat-form-field>
+
 </mat-dialog-content>
 <div mat-dialog-actions>
     <button mat-button class="btn" style="background-color: blue; color: white; display: block; margin-left: auto"
-        cdkFocusInitial>
+        cdkFocusInitial (click)="apply()">
         Checkout
     </button>
 </div>

@@ -24,6 +24,7 @@ export class FeeService extends ServiceObject {
     public ifsc_verification = '/cashfree/ifsc-verification';
     public bank_account_verification = '/cashfree/bank-account-verification';
 
+    public online_payment_account = '/cashfree/online-payment-account';
     public transaction = '/cashfree/transaction';
-    public online_payment_account = '/online-payment-account';
+    public order = '/cashfree/order';
 }

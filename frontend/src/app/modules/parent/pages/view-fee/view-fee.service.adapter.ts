@@ -126,4 +126,42 @@ export class ViewFeeServiceAdapter {
             return b.discountNumber - a.discountNumber;
         });
     }
+
+    async initiatePayment(amountMappedByStudntId, newSubFeeReceiptListMappedByStudntId, email) {
+        this.vm.isLoading = true;
+        const totalAmount = Object.values(amountMappedByStudntId).reduce((acc: number, next: number) => acc + next, 0);
+
+        if (totalAmount == 0) {
+            this.vm.isLoading = false;
+            return;
+        }
+
+        const newOrder = {
+            orderAmount: totalAmount,
+            customerName: this.vm.user.activeSchool.studentList[0].fathersName,
+            customerPhone: this.vm.user.username,
+            customerEmail: email,
+            returnUrl: location.href,
+            orderNote: 'payment towards school fee'
+        };
+
+        const newCashfreeOrder = await this.vm.feeService.createObject(this.vm.feeService.order, newOrder);
+
+        const newTransactionList = [];
+
+        Object.keys(amountMappedByStudntId).forEach(studentId => {
+            if (amountMappedByStudntId[studentId] == 0)
+                return; // return from for Each
+            const newTransaction = {
+                parentStudent: studentId,
+                parentOrder: newCashfreeOrder.id,
+                feeDetailJSON: newSubFeeReceiptListMappedByStudntId[studentId],
+            };
+            newTransactionList.push(newTransaction);
+        });
+
+        await this.vm.feeService.createObjectList(this.vm.feeService.transaction, newTransactionList);
+        window.open(newCashfreeOrder.paymentLink, '_self');
+        this.vm.isLoading = false;
+    }
 }

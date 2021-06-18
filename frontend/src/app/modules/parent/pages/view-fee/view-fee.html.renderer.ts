@@ -14,6 +14,12 @@ export class ViewFeeHTMLRenderer {
                 vm: this.vm
             }
         });
+
+        paymentDialog.afterClosed().subscribe((data) => {
+            if (data && data.amountMappedByStudntId && data.newSubFeeReceiptListMappedByStudntId && data.email) {
+                this.vm.serviceAdapter.initiatePayment(data.amountMappedByStudntId, data.newSubFeeReceiptListMappedByStudntId, data.email);
+            }
+        });
     }
 
 }

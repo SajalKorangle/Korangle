@@ -76,11 +76,32 @@ class OnlinePaymentAccountView(CommonView, APIView):
 
 
 ########### Transaction #############
-from fees_third_app.models import Transaction
-class TransactionListView(CommonListView, APIView):
-    Model = Transaction
-
+from fees_third_app.models import Transaction, Order
+from .cashfree import createCashfreeOrder
 class TransactionView(CommonView, APIView):
     Model = Transaction
-
+    RelationsToSchool = ['parentStudent__parentSchool__id'] 
+    RelationsToStudent = ['parentStudent__id']
         
+class TransactionListView(CommonListView, APIView):
+    Model = Transaction
+    RelationsToSchool = ['parentStudent__parentSchool__id'] 
+    RelationsToStudent = ['parentStudent__id']
+
+class OrderView(CommonView, APIView):
+    Model = Order
+    permittedMethods=['post']
+
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        orderData = {
+            'amount': request.data['orderAmount']
+        }
+
+        createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
+
+        newCashfreeOrder = createCashfreeOrder(request.data, createdOrderResponse['id'])
+        createdOrderResponse.update({
+            'paymentLink': newCashfreeOrder['paymentLink']
+        })
+        return createdOrderResponse

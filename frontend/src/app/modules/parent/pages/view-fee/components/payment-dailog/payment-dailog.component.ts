@@ -5,6 +5,7 @@ import { SubFeeReceipt } from '@services/modules/fees/models/sub-fee-receipt';
 import { StudentFee } from '@services/modules/fees/models/student-fee';
 import { Student } from '@services/modules/student/models/student';
 import { Session } from '@services/modules/school/models/session';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
   selector: 'app-payment-dailog',
@@ -13,8 +14,11 @@ import { Session } from '@services/modules/school/models/session';
 })
 export class PaymentDailogComponent implements OnInit {
 
+  email: string = '';
   amountMappedByStudntId: { [key: number]: number; } = {};
   newSubFeeReceiptListMappedByStudntId: { [key: number]: Array<Partial<SubFeeReceipt>>; } = {};
+
+  validatorRegex = VALIDATORS_REGX;
 
   constructor(public dialogRef: MatDialogRef<PaymentDailogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     vm: ViewFeeComponent;
@@ -147,8 +151,19 @@ export class PaymentDailogComponent implements OnInit {
     return this.newSubFeeReceiptListMappedByStudntId[student.id].filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
   }
 
-  // apply() {
-  //   this.dialogRef.close({ data to send });
-  // }
+  apply() {
+
+    // Email Test
+    if (!VALIDATORS_REGX.email.test(this.email)) {
+      alert('Email Validation Failed');
+      return;
+    }
+
+    this.dialogRef.close({
+      amountMappedByStudntId: this.amountMappedByStudntId,
+      newSubFeeReceiptListMappedByStudntId: this.newSubFeeReceiptListMappedByStudntId,
+      email: this.email,
+    });
+  }
 
 }

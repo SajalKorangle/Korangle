@@ -1,5 +1,7 @@
 from django.conf.urls import url
 
+from fees_third_app.models import Order
+
 from .views import SettelmentsCycleListView, IFSCVerification, BankAccountVerification
 
 urlpatterns = [
@@ -20,4 +22,10 @@ from fees_third_app.cashfree.views import TransactionListView, TransactionView
 urlpatterns += [
     url(r'^transaction/batch', TransactionListView.as_view()),
     url(r'^transaction', TransactionView.as_view()),
+]
+
+from fees_third_app.cashfree.views import OrderView
+
+urlpatterns += [
+    url(r'^order', OrderView.as_view()),
 ]

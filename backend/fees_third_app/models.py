@@ -431,10 +431,13 @@ class FeeSettings(models.Model):
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
+    
+class OnlinePaymentAccount(models.Model):
+    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
+    vendorId = models.CharField(max_length=20, blank=True)
 
 
-class Transaction(models.Model):
-
+class Order(models.Model):
     TransactionStatus = (
         ('Pending', 'Pending'),
         ('Completed', 'Completed'),
@@ -442,17 +445,19 @@ class Transaction(models.Model):
         ('Refunded', 'Refunded'),
         ('Forwarded to School', 'Forwarded to School')
     )
+    amount = models.PositiveIntegerField()
+    status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
-    amount = models.IntegerField()
-    status = models.CharField(max_length=30, choices=TransactionStatus)
-    orderId = models.CharField(max_length=20)
-    feeDetailJSON = models.TextField()
-
-
+# @receiver(pre_save, sender=FeeReceipt)
+# def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+#     if instance.id and instance.cancelled:
+#         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
+#         if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
+#             originalFeeReceipt.parentTransaction.delete()
+#     pass
     
-class OnlinePaymentAccount(models.Model):
-    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
-    vendorId = models.CharField(max_length=20, blank=True)
-
+class Transaction(models.Model):
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
+    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
+    feeDetailJSON = models.TextField()
 
