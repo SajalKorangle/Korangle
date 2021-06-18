@@ -55,7 +55,26 @@ def createCashfreeOrder(data, orderId):
     assert response.json()['status'] == 'OK' and 'paymentLink' in response.json(), 'Cashfree Order Creation Failed, response : {0}'.format(response.json())
     return response.json()
 
-    
+
+def isOrderCompleted(orderId):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    orderData = {
+        'appId': CASHFREE_APP_ID,
+        'secretKey': CASHFREE_SECRET_KEY,
+        'orderId': str(orderId),
+    }
+
+    response = requests.post(
+        url=base_url+'/api/v1/order/info/status', 
+        data=orderData,
+        headers=headers
+        )
+      
+    assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json())
+    return response.json()['txStatus'] == 'SUCCESS'
 
 def addVendor(newVendorData, vendorId):
     newVendorData.update({

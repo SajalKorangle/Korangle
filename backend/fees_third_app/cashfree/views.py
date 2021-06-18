@@ -1,7 +1,7 @@
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 from fees_third_app.cashfree.cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
-from common.common_serializer_interface_3 import create_object, get_object
+from common.common_serializer_interface_3 import create_object, get_object, partial_update_object
 from django.db.models import Max
 
 class SettelmentsCycleListView(APIView):
@@ -76,8 +76,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
 
 
 ########### Transaction #############
-from fees_third_app.models import Transaction, Order
-from .cashfree import createCashfreeOrder
+from fees_third_app.models import Transaction
 class TransactionView(CommonView, APIView):
     Model = Transaction
     RelationsToSchool = ['parentStudent__parentSchool__id'] 
@@ -88,9 +87,12 @@ class TransactionListView(CommonListView, APIView):
     RelationsToSchool = ['parentStudent__parentSchool__id'] 
     RelationsToStudent = ['parentStudent__id']
 
+
+from fees_third_app.models import Order
+from .cashfree import createCashfreeOrder, isOrderCompleted
 class OrderView(CommonView, APIView):
     Model = Order
-    permittedMethods=['post']
+    permittedMethods=['post', 'patch']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
@@ -105,3 +107,18 @@ class OrderView(CommonView, APIView):
             'paymentLink': newCashfreeOrder['paymentLink']
         })
         return createdOrderResponse
+
+    @user_permission_3
+    def patch(self, request, *args, **kwargs):
+        orderId = request.data['id']
+        data = {
+            'id': request.data['id']
+        }
+        if isOrderCompleted(orderId):
+            data.update({
+                'status': 'Completed'
+            })
+            response = partial_update_object(data, self.permittedQuerySet(), self.ModelSerializer, *args, **kwargs)
+            return response
+        response = get_object(data, self.permittedQuerySet(), self.ModelSerializer)
+        return response

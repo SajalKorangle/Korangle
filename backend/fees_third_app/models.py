@@ -448,13 +448,13 @@ class Order(models.Model):
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
 
-# @receiver(pre_save, sender=FeeReceipt)
-# def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
-#     if instance.id and instance.cancelled:
-#         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
-#         if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
-#             originalFeeReceipt.parentTransaction.delete()
-#     pass
+@receiver(pre_save, sender=Order)
+def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+    if instance.id and instance.status == 'Completed':
+        preSavedOrder = Order.objects.get(id=instance.id)
+        if preSavedOrder.status=='Pending':
+            pass #Handle Fee Receipt Creation and necessary checks here
+    pass
     
 class Transaction(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
