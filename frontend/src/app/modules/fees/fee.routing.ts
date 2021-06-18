@@ -104,7 +104,7 @@ const routes: Routes = [
     {
         path: 'online_payment_account',
         loadChildren: 'app/modules/fees/pages/online-payment-account/online-payment-account.module#OnlinePaymentAccountModule',
-        data: {moduleName: 'fees'},
+        data: { moduleName: 'fees' },
     },
 
     {

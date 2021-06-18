@@ -27,7 +27,7 @@ import { PrintFeesReportComponent } from './print/print-fees-report/print-fees-r
     ],
 
     imports: [FeeRoutingModule, ComponentsModule, FeesComponentsModule, MatExpansionModule, MatSortModule],
-    exports: [],
+    exports: [PrintFullFeeReceiptListComponent,],
     providers: [ExcelService],
     bootstrap: [FeeComponent],
 })

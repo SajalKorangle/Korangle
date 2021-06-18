@@ -1,9 +1,12 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 
 import { ViewFeeServiceAdapter } from './view-fee.service.adapter';
+import { ViewFeeHTMLRenderer } from './view-fee.html.renderer';
+
 import { EmitterService } from '../../../../services/emitter.service';
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt';
@@ -60,6 +63,7 @@ export class ViewFeeComponent implements OnInit {
 
     lateFeeVisible = true;
 
+    htmlRenderer: ViewFeeHTMLRenderer;
     serviceAdapter: ViewFeeServiceAdapter;
 
     isLoading = false;
@@ -71,8 +75,9 @@ export class ViewFeeComponent implements OnInit {
         public vehicleService: VehicleOldService,
         public employeeService: EmployeeService,
         public classService: ClassService,
-        private cdRef: ChangeDetectorRef
-    ) {}
+        private cdRef: ChangeDetectorRef,
+        public dialog: MatDialog,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -83,9 +88,11 @@ export class ViewFeeComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
+        this.htmlRenderer = new ViewFeeHTMLRenderer(this);
+
         this.receiptColumnFilter.receiptNumber = false;
         this.receiptColumnFilter.scholarNumber = false;
-        this.receiptColumnFilter.printButton = false;
+        this.receiptColumnFilter.printButton = true;
 
         if (CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.employee = false;
