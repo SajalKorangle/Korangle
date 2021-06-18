@@ -15,13 +15,40 @@
                         <mat-form-field>
                             <mat-label>Amount</mat-label>
                             <input matInput type="number" [(ngModel)]="amountMappedByStudntId[student.id]"
+                                (ngModelChange)="handleOverallPaymentChange(student)"
                                 [errorStateMatcher]="{isErrorState: amountError(student)}">
                             <mat-error>Invalid Amount</mat-error>
                         </mat-form-field>
                     </td>
                 </tr>
-            </ng-container>
+                <ng-container *ngFor="let session of data.vm.sessionList">
+                    <ng-container *ngIf="getSessionFilteredSubFeeReceiptList(student, session).length>0">
+                        <tr>
+                            <td colspan="2">Session: {{session.name}}</td>
+                        </tr>
 
+                        <tr *ngFor="let subFeeReceipt of getSessionFilteredSubFeeReceiptList(student, session)">
+                            <td>
+                                {{getFeeTypeFromSubFeeReceipt(subFeeReceipt).name}}
+                            </td>
+                            <td align="right">
+                                {{getTotalInstallmentAmount(subFeeReceipt)}}
+                            </td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+
+                <tr *ngIf="newSubFeeReceiptListMappedByStudntId[student.id].length>0">
+                    <td>Late Fee</td>
+                    <td align="right">{{getNewSubFeeReceiptTotalLateFee(student)}}</td>
+                </tr>
+            </ng-container>
+            <tr>
+                <td>
+                    <h4>Total</h4>
+                </td>
+                <td>{{getOverallTotalPaymntAmount()}}</td>
+            </tr>
         </tbody>
     </table>
 
