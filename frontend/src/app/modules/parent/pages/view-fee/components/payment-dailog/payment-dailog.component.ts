@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-payment-dailog',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentDailogComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<PaymentDailogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }) { }
 
   ngOnInit() {
   }
+
+  // apply() {
+  //   this.dialogRef.close({ data to send });
+  // }
 
 }
