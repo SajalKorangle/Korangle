@@ -3,7 +3,7 @@ from decorators import user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
-    SubFeeReceipt, Discount, SubDiscount,
+    SubFeeReceipt, Discount, SubDiscount
 
 
 

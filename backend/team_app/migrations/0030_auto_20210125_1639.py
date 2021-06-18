@@ -9,7 +9,7 @@ from team_app.db_script.add_online_payment_account_page import add_online_paymen
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0028_auto_20210531_1812'),
+        ('team_app', '0029_auto_20210612_1044'),
     ]
 
     operations = [

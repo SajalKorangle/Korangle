@@ -443,7 +443,7 @@ class Transaction(models.Model):
         ('Forwarded to School', 'Forwarded to School')
     )
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL)
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
     amount = models.IntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus)
     orderId = models.CharField(max_length=20)
