@@ -17,44 +17,6 @@
                 </tbody>
             </table>
 
-            <mat-accordion>
-              <mat-expansion-panel (opened)="panelOpenState = true"
-                                   (closed)="panelOpenState = false"
-                                   style="width: 35vw;">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    Payment panel
-                  </mat-panel-title>
-                  <mat-panel-description>
-                  </mat-panel-description>
-                </mat-expansion-panel-header>
-
-                <mat-form-field appearance="fill">
-                  <mat-label>Card Number:</mat-label>
-                  <input type="text"id="card-num" value ="4111111111111111" matInput>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                  <mat-label>CVV:</mat-label>
-                  <input  type="text"id="card-cvv" value="123" matInput>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                  <mat-label>MM:</mat-label>
-                  <input type="text" id="card-mm" value="09" matInput>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                  <mat-label>YYYY:</mat-label>
-                  <input type="text" id="card-yyyy" value="2018" matInput>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                  <mat-label>Name:</mat-label>
-                  <input id="card-name" value="test" matInput>
-                </mat-form-field>
-                
-                
-                <button  class="btn btn-{{user.activeSchool.secondaryThemeColor}}"(click)="payCard()">Pay with Card</button>
-              </mat-expansion-panel>
-            </mat-accordion>
-
             <table class="table table-hover">
                 <tbody>
                     <tr *ngIf="lateFeeVisible">
@@ -253,4 +215,3 @@
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
 </div>
- 

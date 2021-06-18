@@ -42,7 +42,6 @@
     "bootstrap": "4.3.1",
     "bootstrap-material-design": "^4.1.3",
     "bootstrap-notify": "3.1.3",
-    "cashfree-sdk": "^0.1.1",
     "canvas-txt": "git+https://github.com/kumardot93/Canvas-Txt.git",
     "core-js": "^3.6.5",
     "file-saver": "^2.0.5",

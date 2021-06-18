@@ -15,7 +15,6 @@ export class ViewFeeServiceAdapter {
     //initialize data
     initializeData(): void {
         this.vm.isLoading = true;
-        console.log(this.vm.user)
 
         let schoolId = this.vm.user.activeSchool.dbId;
         let sessionId = this.vm.user.activeSchool.currentSessionDbId;

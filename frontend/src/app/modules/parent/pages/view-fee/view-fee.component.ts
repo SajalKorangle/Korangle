@@ -21,7 +21,6 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 
 declare const $: any;
-declare const CashFree: any;
 
 @Component({
     selector: 'view-fee',
@@ -73,27 +72,10 @@ export class ViewFeeComponent implements OnInit {
         public employeeService: EmployeeService,
         public classService: ClassService,
         private cdRef: ChangeDetectorRef
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
-        var config = {
-            layout: {},
-            checkout: "transparent",
-            mode: "TEST",
-        };
-        var response = CashFree.init(config);
-
-        if (response.status != "OK") {
-            // Handle error in initializing
-            console.log('response from cashfree init ' + '     ' + response.status);
-            console.dir(response);
-        }
-        else {
-            console.log('response from cashfree init' + response);
-            console.dir(response);
-        }
 
         this.selectedStudentList = this.user.section.student.studentList;
 
@@ -117,54 +99,6 @@ export class ViewFeeComponent implements OnInit {
             this.discountColumnFilter.employee = false;
         }
     }
-    payCard = function () {
-        let data = {
-            appId: "50334e5204e60357816fa8e6d43305",
-            orderId: Date.now().toString(),
-            orderAmount: '2',
-            customerName: "Avinash",
-            customerPhone: "7050701850",
-            customerEmail: "avinash7may@gmail.com",
-            returnUrl: "",
-            orderNote: "testing",
-            pc: "no",
-            orderCurrency: "INR",
-            paymentToken: "",
-            paymentOption: "card",
-            card: {
-                number: (<HTMLInputElement>document.getElementById("card-num")).value,
-                expiryMonth: (<HTMLInputElement>document.getElementById("card-mm")).value,
-                expiryYear: (<HTMLInputElement>document.getElementById("card-yyyy")).value,
-                holder: (<HTMLInputElement>document.getElementById("card-name")).value,
-                cvv: (<HTMLInputElement>document.getElementById("card-cvv")).value,
-            },
-            parentSchool: this.user.activeSchool.dbId
-        };
-        this.feeService.createObject(this.feeService.parent_transaction, data).then(value => {
-            console.log('response of payment token ');
-            console.dir(value);
-            data.paymentToken = value.paymentToken;
-            data['vendorSplit'] = value.vsplit;
-        });
-
-
-
-        CashFree.initPopup(); // This is required for the popup to work even in case of callback.
-        $.ajax({
-            url: "https://reqres.in/api/users?page=2", // This is an open endpoint.
-            type: "GET",
-            success: function (response) {
-                console.log('success response is ');
-                console.dir(response);
-
-                console.log(data);
-                CashFree.paySeamless(data);
-                // return false;
-
-            }
-        });
-    };
-
 
     detectChanges(): void {
         this.cdRef.detectChanges();
@@ -710,47 +644,4 @@ export class ViewFeeComponent implements OnInit {
             );
         }, 0);
     }
-
-    // initiatePayment() {
-
-    //     let data = {
-    //         appId : '50334e5204e60357816fa8e6d43305',
-    //         orderId : (Math.floor(Math.random() * 6) + 1).toString() ,
-    //         orderAmount : '1',
-    //         orderCurrency: 'INR',
-    //         customerName : 'Avinash',
-    //         customerPhone : '7050702850',
-    //         customerEmail : 'avinash7may@gmail.com',            
-
-    //     }
-    //     var callback = function (event) {
-    //         var eventName = event.name;
-    //         switch(eventName) {
-    //           case "PAYMENT_REQUEST":
-    //              console.log(event.message);
-    //              break;
-    //           default:
-    //              console.log(event.message);
-    //          };
-    //     }
-
-    //     this.feeService.createObject(this.feeService.parent_transaction,data).then( value => {
-    //         console.log('payment token is ' + value)
-    //         data['paymentToken']=value;
-
-    //         Cashfree.paySeamless(data, callback);
-    //     },
-    //     error => {
-    //         alert('Something went Wrong!!!')
-    //     })
-    // }
-
-    starting(data) {
-        console.log(data);
-    }
-
-    initiatePayment() {
-        console.log("call backend to initiate payment intent");
-    }
-
 }
