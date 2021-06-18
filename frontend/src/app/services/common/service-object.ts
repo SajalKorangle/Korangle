@@ -52,10 +52,11 @@ export class ServiceObject extends RestApiGateway {
         if (object_url in this.constant_list) {
             return Promise.resolve(this.constant_list[object_url]);
         }
-        let url = this.module_url + object_url + '/batch?e=';
-        Object.keys(data).forEach(key => {
-            url += '&' + key + '=' + data[key];
-        });
+        let url = this.module_url + object_url + '/batch?';
+        let searchParams = new URLSearchParams();
+        searchParams.append('e', '');
+        Object.entries(data).forEach(([key, value]: [string, string]) => searchParams.append(key, value));
+        url = url + searchParams.toString();
         return super.getData(url, data).then(JSON_OBJECT_LIST_RESPOSNE_PARSER);
     }
 

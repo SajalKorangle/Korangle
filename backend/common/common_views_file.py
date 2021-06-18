@@ -51,7 +51,7 @@ class CommonView():
         return create_object(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
-    def put(self, request):       
+    def put(self, request):
         return update_object(request.data, self.Model, self.ModelSerializer)
 
     @user_permission_new
@@ -92,5 +92,3 @@ class CommonListView():
     @user_permission_new
     def delete(self, request):
         return delete_list(request.GET, self.Model, self.ModelSerializer)
-
-

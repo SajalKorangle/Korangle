@@ -231,7 +231,6 @@ export class DesignTCServiceAdapter {
 
     uploadImageForCurrentLayout(image, file_name) {
         let formdata = new FormData();
-        formdata.append('parentLayout', this.vm.currentLayout.id);
         formdata.append('image', image, file_name);
         return this.vm.tcService.createObject(this.vm.tcService.tc_image_assets, formdata).then((response) => response.image);
     }

@@ -1,6 +1,3 @@
-
-import json
-
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list

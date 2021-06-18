@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 import json
 
 from common.common_views_3 import CommonView, CommonListView
-from decorators import user_permission, user_permission_new
 from grade_app.models import Grade, SubGrade, StudentSubGrade
 
 class GradeView(CommonView, APIView):
