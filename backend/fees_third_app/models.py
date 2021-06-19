@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework.serializers import ModelSerializer
 
 from school_app.model.models import School, Session, BusStop
 
@@ -14,7 +15,11 @@ from accounts_app.models import Transaction, AccountSession
 
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from django.db.models import Max
 import json
+
+from common.common_serializer_interface_3 import create_object, create_list
+from django.db import transaction as db_transaction
 
 # Create your models here.
 
@@ -448,15 +453,56 @@ class Order(models.Model):
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
 
+
+
+from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
+
 @receiver(pre_save, sender=Order)
 def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
     if instance.id and instance.status == 'Completed':
         preSavedOrder = Order.objects.get(id=instance.id)
-        if preSavedOrder.status=='Pending':
-            pass #Handle Fee Receipt Creation and necessary checks here
-    pass
+        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
+
+            FeeReceiptModelSerializer = FeeReceiptView().ModelSerializer
+
+            transactionList = CashfreeTransaction.objects.filter(parentOrder = instance.id)
+            with db_transaction.atomic():
+                for transaction in transactionList:
+                    activeStudentID = transaction.parentStudent.id
+                    activeSchoolID = transaction.parentStudent.parentSchool.id
+                    feeDetailsList= json.loads(transaction.feeDetailJSON)
+
+                    session_wise_fee_receipt_mapped_by_session_id = {}
+                    for feeDetail in feeDetailsList:
+                        session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']] = None
+                    
+                    for session_id in session_wise_fee_receipt_mapped_by_session_id.keys():
+                        transaction_dict = {}
+
+                        for field in FeeReceipt._meta.concrete_fields: 
+                            transaction_dict[field] = None
+
+                        transaction_dict.update({
+                            'receiptNumber': (FeeReceipt.objects.filter(parentSchool=activeSchoolID)\
+                                .aggregate(Max('receiptNumber'))['receiptNumber__max'] or 0)+1,
+                            'parentSchool': activeSchoolID,
+                            'parentStudent': activeStudentID,
+                            'parentSession': session_id,
+                            'modeOfPayment': 'Online'
+                        })
+
+                        response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+                        session_wise_fee_receipt_mapped_by_session_id[session_id] = FeeReceipt.objects.get(id=response['id'])
+
+                    for feeDetail in feeDetailsList:
+                        feeDetail['parentFeeReceipt'] = session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']].id
+                    SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
+                    create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+
+
+
     
-class Transaction(models.Model):
+class CashfreeTransaction(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
     parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
     feeDetailJSON = models.TextField()

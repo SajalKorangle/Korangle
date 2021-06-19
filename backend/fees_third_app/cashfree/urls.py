@@ -17,11 +17,11 @@ urlpatterns += [
 ]
 
 
-from fees_third_app.cashfree.views import TransactionListView, TransactionView
+from fees_third_app.cashfree.views import CashfreeTransactionView, CashfreeTransactionListView
 
 urlpatterns += [
-    url(r'^transaction/batch', TransactionListView.as_view()),
-    url(r'^transaction', TransactionView.as_view()),
+    url(r'^cashfree-transaction/batch', CashfreeTransactionListView.as_view()),
+    url(r'^cashfree-transaction', CashfreeTransactionView.as_view()),
 ]
 
 

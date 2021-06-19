@@ -1,7 +1,7 @@
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 from fees_third_app.cashfree.cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
-from common.common_serializer_interface_3 import create_object, get_object, partial_update_object
+from common.common_serializer_interface_3 import create_object, get_object
 from django.db.models import Max
 
 class SettelmentsCycleListView(APIView):
@@ -76,14 +76,14 @@ class OnlinePaymentAccountView(CommonView, APIView):
 
 
 ########### Transaction #############
-from fees_third_app.models import Transaction
-class TransactionView(CommonView, APIView):
-    Model = Transaction
+from fees_third_app.models import CashfreeTransaction
+class CashfreeTransactionView(CommonView, APIView):
+    Model = CashfreeTransaction
     RelationsToSchool = ['parentStudent__parentSchool__id'] 
     RelationsToStudent = ['parentStudent__id']
         
-class TransactionListView(CommonListView, APIView):
-    Model = Transaction
+class CashfreeTransactionListView(CommonListView, APIView):
+    Model = CashfreeTransaction
     RelationsToSchool = ['parentStudent__parentSchool__id'] 
     RelationsToStudent = ['parentStudent__id']
 
@@ -115,11 +115,16 @@ class OrderCompletionView(APIView):
     permission_classes = []
 
     def post(self, request):
-        # Check and Create Fee Receipt here 
-        redirectUrl = request.GET['redirect_to']
-        signatureFromData = getResponseSignature(request.POST)
         print(request.POST)
+        signatureFromData = getResponseSignature(request.POST)
         print('generated signature: ', signatureFromData)
         if(not signatureFromData.decode('utf-8') == request.POST['signature']):
             return HttpResponseForbidden()
+
+        orderInstance = Order.objects.get(id=request.POST['orderId'])
+        if(request.POST['txStatus'] == 'SUCCESS'):
+            orderInstance.status = 'Completed'
+            orderInstance.save()
+
+        redirectUrl = request.GET['redirect_to']
         return HttpResponseRedirect(redirectUrl)
