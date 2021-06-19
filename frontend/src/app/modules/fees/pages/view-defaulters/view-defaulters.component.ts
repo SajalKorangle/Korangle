@@ -114,7 +114,7 @@ export class ViewDefaultersComponent implements OnInit {
     isLoading = false;
 
 
-    columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`]; 
+    columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`];
 
     feesDueBySession = [];
 
