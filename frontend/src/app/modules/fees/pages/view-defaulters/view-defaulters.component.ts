@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ViewDefaultersServiceAdapter } from './view-defaulters.service.adapter';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
@@ -16,7 +16,7 @@ import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
 import { isMobile } from '../../../../classes/common.js';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FeeType } from '@services/modules/fees/models/fee-type';
-import { MatTable, MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
 
 @Component({
