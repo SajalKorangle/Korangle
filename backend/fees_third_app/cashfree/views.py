@@ -108,27 +108,18 @@ class OrderView(CommonView, APIView):
         })
         return createdOrderResponse
 
-    @user_permission_3
-    def patch(self, request, *args, **kwargs):
-        orderId = request.data['id']
-        data = {
-            'id': request.data['id']
-        }
-        if isOrderCompleted(orderId):
-            data.update({
-                'status': 'Completed'
-            })
-            response = partial_update_object(data, self.permittedQuerySet(), self.ModelSerializer, *args, **kwargs)
-            return response
-        response = get_object(data, self.permittedQuerySet(), self.ModelSerializer)
-        return response
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from .cashfree import getResponseSignature
 class OrderCompletionView(APIView):
     permission_classes = []
 
     def post(self, request):
         # Check and Create Fee Receipt here 
         redirectUrl = request.GET['redirect_to']
-        print(redirectUrl)
+        signatureFromData = getResponseSignature(request.POST)
+        print(request.POST)
+        print('generated signature: ', signatureFromData)
+        if(not signatureFromData.decode('utf-8') == request.POST['signature']):
+            return HttpResponseForbidden()
         return HttpResponseRedirect(redirectUrl)

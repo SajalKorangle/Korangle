@@ -13,6 +13,16 @@ from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CA
 
 base_url = 'https://test.cashfree.com'
 
+def getResponseSignature(postData):
+    signatureData = postData["orderId"] + postData["orderAmount"] + postData["referenceId"] + postData["txStatus"] + postData["paymentMode"] + postData["txMsg"] + postData["txTime"]
+    message = signatureData.encode('utf-8')
+
+    secret = CASHFREE_SECRET_KEY.encode('utf-8')
+    signature = base64.b64encode(
+        hmac.new(secret, message,digestmod=hashlib.sha256).digest()
+        )
+    return signature
+
 def verifyCredentials():
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
