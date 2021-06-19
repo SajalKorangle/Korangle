@@ -1,4 +1,3 @@
-
 import { AssignTaskComponent } from './assign-task.component';
 
 export class AssignTaskServiceAdapter {
