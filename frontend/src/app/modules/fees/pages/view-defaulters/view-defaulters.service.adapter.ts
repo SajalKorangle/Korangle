@@ -52,7 +52,7 @@ export class ViewDefaultersServiceAdapter {
                     new Date(new Date(session.endDate).getTime() + 24 * 60 * 60 * 1000) > todaysDate
                 );
             });
-            this.vm.myFeeTypeList = val[3];
+            this.vm.feeTypeList = val[3];
         });
 
         this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list).then(
