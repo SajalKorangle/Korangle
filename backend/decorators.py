@@ -109,14 +109,12 @@ def user_permission_3(function):
                 del request.GET['activeStudentID']
                 request.GET._mutable = False
                 activeSchoolID = Student.objects.get(id=activeStudentID[0]).parentSchool.id
-                print('activeStudentId: ', activeStudentID)
                 data = {'response': get_success_response(function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=activeStudentID))}
                 return Response(data)
             else:
                 return Response({'response': get_error_response('Permission Issue')})
 
         else:
-            print('else case: ', request.GET)
             data = {'response': get_success_response(
                 function(*args, **kwargs, activeSchoolID=None, activeStudentID=None))}
             return Response(data)

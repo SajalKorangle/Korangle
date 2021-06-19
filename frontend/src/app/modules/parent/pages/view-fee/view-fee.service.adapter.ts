@@ -1,5 +1,6 @@
 import { ViewFeeComponent } from './view-fee.component';
-import { CommonFunctions } from '../../../../classes/common-functions';
+import { environment } from 'environments/environment';
+import { Constants } from '@classes/constants';
 
 export class ViewFeeServiceAdapter {
     vm: ViewFeeComponent;
@@ -136,12 +137,16 @@ export class ViewFeeServiceAdapter {
             return;
         }
 
+        const returnUrl = new URL(
+            environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.feeService.order_completion);
+        returnUrl.searchParams.append('redirect_to', location.href);
+
         const newOrder = {
             orderAmount: totalAmount,
             customerName: this.vm.user.activeSchool.studentList[0].fathersName,
             customerPhone: this.vm.user.username,
             customerEmail: email,
-            returnUrl: location.href,
+            returnUrl: returnUrl.toString(),
             orderNote: 'payment towards school fee'
         };
 

@@ -4,7 +4,7 @@ import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class FeeService extends ServiceObject {
-    protected module_url = '/fees';
+    public module_url = '/fees';
 
     // objects urls
     public fee_type = '/fee-types';
@@ -27,4 +27,5 @@ export class FeeService extends ServiceObject {
     public online_payment_account = '/cashfree/online-payment-account';
     public transaction = '/cashfree/transaction';
     public order = '/cashfree/order';
+    public order_completion = '/cashfree/order-completion';
 }

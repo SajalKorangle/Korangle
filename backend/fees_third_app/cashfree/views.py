@@ -122,3 +122,13 @@ class OrderView(CommonView, APIView):
             return response
         response = get_object(data, self.permittedQuerySet(), self.ModelSerializer)
         return response
+
+from django.http import HttpResponseRedirect
+class OrderCompletionView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        # Check and Create Fee Receipt here 
+        redirectUrl = request.GET['redirect_to']
+        print(redirectUrl)
+        return HttpResponseRedirect(redirectUrl)

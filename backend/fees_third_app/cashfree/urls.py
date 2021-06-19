@@ -24,6 +24,13 @@ urlpatterns += [
     url(r'^transaction', TransactionView.as_view()),
 ]
 
+
+from fees_third_app.cashfree.views import OrderCompletionView
+
+urlpatterns += [
+    url(r'^order-completion', OrderCompletionView.as_view()),
+]
+
 from fees_third_app.cashfree.views import OrderView
 
 urlpatterns += [
