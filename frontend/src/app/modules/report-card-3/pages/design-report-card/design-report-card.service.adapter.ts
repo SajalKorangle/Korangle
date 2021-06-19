@@ -198,7 +198,7 @@ export class DesignReportCardServiceAdapter {
             parentExamination__in: this.vm.DATA.data.examinationList.map((item) => item.id).join(','),
         };
         const request_attendance_data = {
-            parentStudent: this.vm.selectedStudent,
+            parentStudent: this.vm.selectedStudent.id,
             dateOfAttendance__gte:
                 new Date(
                     this.vm.DATA.data.sessionList.find((session) => {
@@ -213,12 +213,12 @@ export class DesignReportCardServiceAdapter {
                 ).getFullYear() + '-12-31',
         };
         const request_student_sub_grade_data = {
-            parentStudent: this.vm.selectedStudent,
+            parentStudent: this.vm.selectedStudent.id,
         };
         const request_student_examination_remarks_data = {
             parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
             parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent: this.vm.selectedStudent,
+            parentStudent: this.vm.selectedStudent.id,
         };
 
         Promise.all([
