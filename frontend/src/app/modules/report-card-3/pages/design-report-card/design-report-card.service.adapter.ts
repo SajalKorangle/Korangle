@@ -5,7 +5,7 @@ import { values } from 'lodash';
 export class DesignReportCardServiceAdapter {
     vm: DesignReportCardComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -258,7 +258,7 @@ export class DesignReportCardServiceAdapter {
     }
 
     async uploadCurrentLayout() {
-        const layoutToUpload: { [key: string]: any } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
+        const layoutToUpload: { [key: string]: any; } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
         if (this.vm.currentLayout.thumbnail.startsWith('data')) {
             // converting data uri to blob
             layoutToUpload.thumbnail = await fetch(this.vm.currentLayout.thumbnail).then((response) => response.blob());
@@ -303,7 +303,6 @@ export class DesignReportCardServiceAdapter {
 
     uploadImageForCurrentLayout(image, file_name) {
         let formdata = new FormData();
-        formdata.append('parentLayout', this.vm.currentLayout.id);
         formdata.append('image', image, file_name);
         return this.vm.reportCardService.createObject(this.vm.reportCardService.image_assets, formdata).then((response) => response.image);
     }
