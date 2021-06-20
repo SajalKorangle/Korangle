@@ -101,11 +101,13 @@ export class ViewFeeServiceAdapter {
                 this.vm.handleStudentFeeProfile();
 
                 this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
             }
         );
+
+        const urlParams = new URLSearchParams(location.search);
+        if (urlParams.has('orderId')) {
+            this.vm.htmlRenderer.openPaymentResponseDialog();
+        }
     }
 
     populateStudentFeeList(studentFeeList: any): void {
@@ -139,7 +141,11 @@ export class ViewFeeServiceAdapter {
 
         const returnUrl = new URL(
             environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.feeService.order_completion);
-        returnUrl.searchParams.append('redirect_to', location.href);
+
+        const redirectParams = new URLSearchParams(location.search);
+        redirectParams.delete('orderId');
+
+        returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
 
         const newOrder = {
             orderAmount: totalAmount,

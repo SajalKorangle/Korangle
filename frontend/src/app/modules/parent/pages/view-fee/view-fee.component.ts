@@ -84,11 +84,11 @@ export class ViewFeeComponent implements OnInit {
 
         this.selectedStudentList = this.user.section.student.studentList;
 
+        this.htmlRenderer = new ViewFeeHTMLRenderer(this);
+
         this.serviceAdapter = new ViewFeeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        this.htmlRenderer = new ViewFeeHTMLRenderer(this);
 
         this.receiptColumnFilter.receiptNumber = false;
         this.receiptColumnFilter.scholarNumber = false;

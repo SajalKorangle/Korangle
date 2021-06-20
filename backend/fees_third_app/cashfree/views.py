@@ -92,7 +92,7 @@ from fees_third_app.models import Order
 from .cashfree import createCashfreeOrder, isOrderCompleted
 class OrderView(CommonView, APIView):
     Model = Order
-    permittedMethods=['post', 'patch']
+    permittedMethods=['get', 'post',]
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
@@ -126,5 +126,6 @@ class OrderCompletionView(APIView):
             orderInstance.status = 'Completed'
             orderInstance.save()
 
-        redirectUrl = request.GET['redirect_to']
-        return HttpResponseRedirect(redirectUrl)
+        redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(request.POST['orderId'])
+        print('rdeirectUrl = ', redirectUrl)
+        return HttpResponseRedirect(redirectUrl) # Appending orderId to the redirect url
