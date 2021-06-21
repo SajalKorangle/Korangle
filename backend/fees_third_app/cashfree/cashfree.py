@@ -42,19 +42,34 @@ def verifyCredentials():
     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
 
-def createCashfreeOrder(data, orderId):
+def createCashfreeOrder(data, orderId, vendorId):
 
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
 
+    paymentSplit = [
+            {
+                "vendorId" : vendorId,
+                "amount" : data['orderAmount']
+            }
+        ]
+    print('payment Splits: ', paymentSplit)
+    paymentSplitEncoded = base64.b64encode(
+        bytes( 
+            json.dumps(paymentSplit).encode('utf-8')
+        )
+        ).decode('utf-8')
+
     orderData = {
         'appId': CASHFREE_APP_ID,
         'secretKey': CASHFREE_SECRET_KEY,
         'orderId': str(orderId),
+        'paymentSplits': paymentSplitEncoded,
         # 'notifyUrl': ''  Update Notify Url later
     }
     orderData.update(data)
+    print('order data = ', orderData)
 
     response = requests.post(
         url=base_url+'/api/v1/order/create', 

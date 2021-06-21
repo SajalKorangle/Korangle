@@ -96,13 +96,15 @@ class OrderView(CommonView, APIView):
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
+        activeSchoolId = kwargs['activeSchoolID']
+        schoolOnlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool = activeSchoolId)
         orderData = {
             'amount': request.data['orderAmount']
         }
 
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
-        newCashfreeOrder = createCashfreeOrder(request.data, createdOrderResponse['id'])
+        newCashfreeOrder = createCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.vendorId)
         createdOrderResponse.update({
             'paymentLink': newCashfreeOrder['paymentLink']
         })
