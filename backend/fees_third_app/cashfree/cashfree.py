@@ -12,6 +12,8 @@ from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CA
 # prodUrl = 'https://ces-api.cashfree.com'
 
 base_url = 'https://test.cashfree.com'
+checkout_url = 'https://test.cashfree.com/billpay/checkout/post/submit'
+bank_verification_base_url = 'https://payout-gamma.cashfree.com'
 
 def getResponseSignature(postData):
     signatureData = postData["orderId"] + postData["orderAmount"] + postData["referenceId"] + postData["txStatus"] + postData["paymentMode"] + postData["txMsg"] + postData["txTime"]
@@ -42,11 +44,45 @@ def verifyCredentials():
     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
 
-def createCashfreeOrder(data, orderId, vendorId):
+# def createCashfreeOrder(data, orderId, vendorId):
 
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-        }
+#     headers = {
+#         'Content-Type': 'application/x-www-form-urlencoded'
+#         }
+
+#     paymentSplit = [
+#             {
+#                 "vendorId" : vendorId,
+#                 "amount" : data['orderAmount']
+#             }
+#         ]
+#     print('payment Splits: ', paymentSplit)
+#     paymentSplitEncoded = base64.b64encode(
+#         bytes( 
+#             json.dumps(paymentSplit).encode('utf-8')
+#         )
+#         ).decode('utf-8')
+
+#     orderData = {
+#         'appId': CASHFREE_APP_ID,
+#         'secretKey': CASHFREE_SECRET_KEY,
+#         'orderId': str(orderId),
+#         'paymentSplits': paymentSplitEncoded,
+#         # 'notifyUrl': ''  Update Notify Url later
+#     }
+#     orderData.update(data)
+#     print('order data = ', orderData)
+
+#     response = requests.post(
+#         url=base_url+'/api/v1/order/create', 
+#         data=orderData,
+#         headers=headers
+#         )
+        
+#     assert response.json()['status'] == 'OK' and 'paymentLink' in response.json(), 'Cashfree Order Creation Failed, response : {0}'.format(response.json())
+#     return response.json()
+
+def createAndSignCashfreeOrder(data, orderId, vendorId):
 
     paymentSplit = [
             {
@@ -63,7 +99,6 @@ def createCashfreeOrder(data, orderId, vendorId):
 
     orderData = {
         'appId': CASHFREE_APP_ID,
-        'secretKey': CASHFREE_SECRET_KEY,
         'orderId': str(orderId),
         'paymentSplits': paymentSplitEncoded,
         # 'notifyUrl': ''  Update Notify Url later
@@ -71,14 +106,21 @@ def createCashfreeOrder(data, orderId, vendorId):
     orderData.update(data)
     print('order data = ', orderData)
 
-    response = requests.post(
-        url=base_url+'/api/v1/order/create', 
-        data=orderData,
-        headers=headers
-        )
-        
-    assert response.json()['status'] == 'OK' and 'paymentLink' in response.json(), 'Cashfree Order Creation Failed, response : {0}'.format(response.json())
-    return response.json()
+    sortedKeys = sorted(orderData)
+    signatureData = ""
+    for key in sortedKeys:
+      signatureData += key+str(orderData[key])
+
+    message = signatureData.encode('utf-8')
+    #get secret key from your config
+    secret = CASHFREE_SECRET_KEY.encode('utf-8')
+    signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
+    orderData.update({
+        'signature': signature.decode('utf-8')
+    })
+    return orderData
+
+
 
 
 def isOrderCompleted(orderId):
@@ -178,8 +220,6 @@ def getSettelmentsCycleList():
 
 
 
-
-bank_verification_base_url = 'https://payout-gamma.cashfree.com'
 
 AUTH_DATA = {   # Default Auth Data
         "token": "", 

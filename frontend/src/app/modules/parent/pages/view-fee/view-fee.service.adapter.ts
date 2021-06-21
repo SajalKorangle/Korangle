@@ -165,14 +165,33 @@ export class ViewFeeServiceAdapter {
                 return; // return from for Each
             const newTransaction = {
                 parentStudent: studentId,
-                parentOrder: newCashfreeOrder.id,
+                parentOrder: newCashfreeOrder.orderId,
                 feeDetailJSON: newSubFeeReceiptListMappedByStudntId[studentId],
             };
             newTransactionList.push(newTransaction);
         });
 
         await this.vm.feeService.createObjectList(this.vm.feeService.transaction, newTransactionList);
-        window.open(newCashfreeOrder.paymentLink, '_self');
+        // window.open(newCashfreeOrder.paymentLink, '_self');
+
+
+        const form = document.createElement('form');
+
+        form.method = 'post';
+        form.action = 'https://test.cashfree.com/billpay/checkout/post/submit';
+
+        Object.entries(newCashfreeOrder).forEach(([key, value]) => {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = key;
+            hiddenField.value = value.toString();
+
+            form.appendChild(hiddenField);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+
         this.vm.isLoading = false;
     }
 }

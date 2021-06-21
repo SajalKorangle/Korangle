@@ -89,7 +89,28 @@ class CashfreeTransactionListView(CommonListView, APIView):
 
 
 from fees_third_app.models import Order
-from .cashfree import createCashfreeOrder, isOrderCompleted
+
+# class OrderView(CommonView, APIView):
+#     Model = Order
+#     permittedMethods=['get', 'post',]
+
+#     @user_permission_3
+#     def post(self, request, *args, **kwargs):
+#         activeSchoolId = kwargs['activeSchoolID']
+#         schoolOnlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool = activeSchoolId)
+#         orderData = {
+#             'amount': request.data['orderAmount']
+#         }
+
+#         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
+
+#         newCashfreeOrder = createCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.vendorId)
+#         createdOrderResponse.update({
+#             'paymentLink': newCashfreeOrder['paymentLink']
+#         })
+#         return createdOrderResponse
+
+from .cashfree import createAndSignCashfreeOrder
 class OrderView(CommonView, APIView):
     Model = Order
     permittedMethods=['get', 'post',]
@@ -104,14 +125,12 @@ class OrderView(CommonView, APIView):
 
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
-        newCashfreeOrder = createCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.vendorId)
-        createdOrderResponse.update({
-            'paymentLink': newCashfreeOrder['paymentLink']
-        })
-        return createdOrderResponse
+        responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.vendorId)
+        print('createdOrderResponse: ', responseOrderData)
+        return responseOrderData
 
 
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden, response
 from .cashfree import getResponseSignature
 class OrderCompletionView(APIView):
     permission_classes = []
