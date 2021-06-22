@@ -104,7 +104,6 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
         # 'notifyUrl': ''  Update Notify Url later
     }
     orderData.update(data)
-    print('order data = ', orderData)
 
     sortedKeys = sorted(orderData)
     signatureData = ""
@@ -148,6 +147,10 @@ def addVendor(newVendorData, vendorId):
         'status': 'ACTIVE',
         'id': vendorId,
     })
+
+    #Remove special characters from name
+    newVendorData['name'] = ''.join(ch for ch in newVendorData['name'] if ch.isalnum() and not ch.isnumeric())
+    print(newVendorData)
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
         'x-client-secret': CASHFREE_SECRET_KEY,
@@ -196,7 +199,7 @@ def getVendor(vendorId):
         }
 
     response = requests.get(url = base_url + '/api/v2/easy-split/vendors/{0}'.format(vendorId), headers=headers)
-    assert response.json()['status'] == 'OK'
+    assert response.json()['status'] == 'OK', 'error in get vendor, response = {0}'.format(response.json())
     return response.json()['vendorDetails']
 
 

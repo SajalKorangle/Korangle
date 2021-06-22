@@ -439,7 +439,6 @@ class FeeSettings(models.Model):
     
 class OnlinePaymentAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
-    vendorId = models.CharField(max_length=20, blank=True)
 
 
 class Order(models.Model):

@@ -65,23 +65,26 @@ export class ViewFeeServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),   // 0
+            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 3
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 4
 
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),    // 5
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),    // 6
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),    // 7
+            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),  // 8
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),  // 9
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
+            this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
+            this.vm.feeService.getObject(this.vm.feeService.online_payment_account, {}) // 13
         ]).then(
             (value) => {
                 console.log(value);
+
+                this.vm.onlinePaymentAccount = Boolean(value[13]);
 
                 this.vm.feeTypeList = value[0];
                 this.vm.busStopList = value[1];

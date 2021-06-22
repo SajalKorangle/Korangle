@@ -41,12 +41,10 @@ class OnlinePaymentAccountView(CommonView, APIView):
         maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max'] or 4
         vendorId = str(maxId +1)
         vendorData = data['vendorData']
+        print(vendorData)
         addVendor(vendorData, vendorId) 
 
         del data['vendorData']
-        data.update({
-            'vendorId': vendorId
-        })
         responseData = create_object(data, self.ModelSerializer, *args, **kwargs)
         responseData.update({
             'vendorData': getVendor(vendorId)
@@ -59,7 +57,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
         responseData =  get_object(request.GET, self.permittedQuerySet(**kwargs),  self.ModelSerializer)
         if(responseData):
             responseData.update({
-                'vendorData': getVendor(responseData['vendorId'])
+                'vendorData': getVendor(responseData['id'])
             })
         return responseData
 
@@ -125,7 +123,7 @@ class OrderView(CommonView, APIView):
 
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
-        responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.vendorId)
+        responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.id)
         print('createdOrderResponse: ', responseOrderData)
         return responseOrderData
 

@@ -14,7 +14,7 @@
                     <tr style="font-weight: 800 !important; font-size: 22px !important">
                         <td align="left">Total Fees Due: {{ getOverallFeesDue() | indianCurrency }}</td>
                         <td align="right">
-                            <button class="btn" style="background-color: blue;"
+                            <button *ngIf="onlinePaymentAccount" class="btn" style="background-color: blue;"
                                 (click)="htmlRenderer.openPaymentDialog()">Pay Now</button>
                         </td>
                     </tr>

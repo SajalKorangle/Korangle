@@ -63,6 +63,8 @@ export class ViewFeeComponent implements OnInit {
 
     lateFeeVisible = true;
 
+    onlinePaymentAccount: boolean = false;
+
     htmlRenderer: ViewFeeHTMLRenderer;
     serviceAdapter: ViewFeeServiceAdapter;
 
