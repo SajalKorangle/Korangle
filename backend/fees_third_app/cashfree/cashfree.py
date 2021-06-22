@@ -86,7 +86,7 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
 
     paymentSplit = [
             {
-                "vendorId" : vendorId,
+                "vendorId" : str(vendorId),
                 "amount" : data['orderAmount']
             }
         ]
