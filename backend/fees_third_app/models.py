@@ -309,7 +309,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
             feeSettings = FeeSettings.objects.get(parentSchool=instance.parentSchool, parentSession=currentSession)
         except:
             pass
-        if(feeSettings and feeSettings.accountingSettings):
+        if(feeSettings and feeSettings.accountingSettingsJSON):
             instance.parentTransaction = Transaction.objects.create(
                 parentEmployee = instance.parentEmployee,
                 parentSchool = instance.parentSchool,
@@ -490,7 +490,7 @@ class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
-    accountingSettings = models.TextField(null=True) # json data
+    accountingSettingsJSON = models.TextField(null=True) # json data
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')

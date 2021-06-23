@@ -68,7 +68,7 @@ export class CollectFeeServiceAdapter {
         this.vm.boardList = value[3];
         this.vm.sessionList = value[4];
         if (value[5].length == 1)
-            this.vm.feeSettings = { ...value[5][0], accountingSettings: JSON.parse(value[5][0].accountingSettings) };
+            this.vm.feeSettings = { ...value[5][0], accountingSettingsJSON: JSON.parse(value[5][0].accountingSettings) };
         this.vm.accountsList = value[6];
         this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
         this.vm.handlePaymentAccountOnPaymentModeChange();
@@ -177,8 +177,8 @@ export class CollectFeeServiceAdapter {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
 
-        console.log('fee_receipt_list: ', fee_receipt_list);
-        console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
+        // console.log('fee_receipt_list: ', fee_receipt_list);
+        // console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
 
         let student_fee_list = this.vm.studentFeeList
@@ -205,12 +205,12 @@ export class CollectFeeServiceAdapter {
 
         const serviceList = [];
         let transactionFromAccountSession;
-        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON) {
             transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList
-                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettings.parentAccountFrom);
+                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettingsJSON.parentAccountFrom);
         }
 
-        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
             transactionFromAccountId = this.vm.studentFeePaymentAccount;
             transactionToAccountId = transactionFromAccountSession.parentAccount;
 
