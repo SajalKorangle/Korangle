@@ -84,7 +84,11 @@ export class SettingsComponent implements OnInit {
         if (this.backendData.feeSettings.accountingSettingsJSON) {
             if (!this.backendData.feeSettings.accountingSettingsJSON.parentAccountFrom) {
                 dataValid = false;
-                errormsg += '\n• Student fee debit account cannot be empty';
+                errormsg += '\n• Student Fee Debit Account cannot be empty';
+            }
+            else if (!this.backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount) {
+                dataValid = false;
+                errormsg += '\n• Onine Payment Credit Account cannot be empty';
             }
             else {
                 this.getPaymentModeList().every(paymentMode => {
@@ -96,6 +100,12 @@ export class SettingsComponent implements OnInit {
                     }
                     return true;    // return of every
                 });
+                if (dataValid
+                    && this.backendData.feeSettings.accountingSettingsJSON.parentAccountFrom ==
+                    this.backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount) {
+                    dataValid = false;
+                    errormsg += '\n• Onine Payment Credit Account cannot be same as Student Fee Debit Account';
+                }
             }
             if (!dataValid) {
                 alert(errormsg.trim());

@@ -19,5 +19,5 @@ export class AccountingSettings {
             'Cheque': [],
             'Online': [],
         };
-    parentAccountOnlinePay: number = null;
+    parentOnlinePaymentCreditAccount: number = null;
 }
