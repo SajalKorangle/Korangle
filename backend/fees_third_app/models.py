@@ -300,7 +300,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         ## receipt number handling ##
         last_receipt_number = FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
                 .aggregate(Max('receiptNumber'))['receiptNumber__max']
-        instance.receiptNumber = last_receipt_number or 1
+        instance.receiptNumber = (last_receipt_number or 0) +1
 
         ## Transaction Creation ##
         currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())

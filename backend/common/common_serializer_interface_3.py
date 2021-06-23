@@ -96,7 +96,7 @@ def create_list(data_list, ModelSerializer, activeSchoolID, activeStudentID):
 
 def create_object(data, ModelSerializer, activeSchoolID, activeStudentID):
     serializer = ModelSerializer(data=data)
-    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID = activeStudentID), serializer.errors
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID = activeStudentID), str(serializer.errors) + '\ndata: {0}'.format(data)
     serializer.save()
     return serializer.data
 

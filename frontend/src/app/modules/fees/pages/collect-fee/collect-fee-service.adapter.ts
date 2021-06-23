@@ -169,6 +169,7 @@ export class CollectFeeServiceAdapter {
             if (feeReceipt['remark'] == '') {
                 feeReceipt['remark'] = null;
             }
+            delete tempObject.receiptNumber;
             return tempObject;
         });
 
@@ -201,7 +202,6 @@ export class CollectFeeServiceAdapter {
         let transactionFromAccountId;
         let transactionToAccountId;
         const toCreateTransactionAccountDetails = [];
-        let createdTransactionList;
 
         const serviceList = [];
         let transactionFromAccountSession;
