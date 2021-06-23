@@ -145,6 +145,6 @@ class OrderCompletionView(APIView):
             orderInstance.status = 'Completed'
             orderInstance.save()
 
-        redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(request.POST['orderId'])
+        redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(request.POST['orderId']) # Appending orderId to the redirect url
         print('rdeirectUrl = ', redirectUrl)
-        return HttpResponseRedirect(redirectUrl) # Appending orderId to the redirect url
+        return HttpResponseRedirect(redirectUrl)

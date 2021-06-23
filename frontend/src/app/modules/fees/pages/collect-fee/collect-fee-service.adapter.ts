@@ -200,7 +200,6 @@ export class CollectFeeServiceAdapter {
 
         let transactionFromAccountId;
         let transactionToAccountId;
-        const toCreateTransactionList = [];
         const toCreateTransactionAccountDetails = [];
         const toUpdateFeeReceipts = [];
         let createdTransactionList;
@@ -215,18 +214,6 @@ export class CollectFeeServiceAdapter {
         if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
             transactionFromAccountId = this.vm.studentFeePaymentAccount;
             transactionToAccountId = transactionFromAccountSession.parentAccount;
-            value[0].forEach(fee_receipt => {
-                if (this.vm.feeSettings) {
-                    const newTransaction = {
-                        parentEmployee: this.vm.user.activeSchool.employeeId,
-                        parentSchool: this.vm.user.activeSchool.dbId,
-                        remark: `Student Fee, receipt no.: ${fee_receipt.receiptNumber}`,
-                        transactionDate: CommonFunctions.formatDate(new Date().toDateString(), ''),
-                    };
-                    toCreateTransactionList.push(newTransaction);
-                }
-            });
-            createdTransactionList = await this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList);
 
             createdTransactionList.forEach((transaction, index) => {
                 toUpdateFeeReceipts.push({ id: value[0][index].id, parentTransaction: transaction.id });

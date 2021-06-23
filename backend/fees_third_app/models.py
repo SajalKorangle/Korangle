@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from rest_framework.serializers import ModelSerializer
 
 from school_app.model.models import School, Session, BusStop
@@ -13,15 +13,30 @@ from django.contrib.auth.models import User
 
 from accounts_app.models import Transaction, AccountSession
 
+from datetime import datetime
+
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save, pre_save
 from django.db.models import Max
 import json
 
 from common.common_serializer_interface_3 import create_object, create_list
 from django.db import transaction as db_transaction
 
-# Create your models here.
+INSTALLMENT_LIST = [
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'september',
+    'october',
+    'november',
+    'december',
+    'january',
+    'february',
+    'march',
+]
 
 
 class FeeType(models.Model):
@@ -247,7 +262,7 @@ class StudentFee(models.Model):
 
 class FeeReceipt(models.Model):
 
-    receiptNumber = models.IntegerField(null=False, default=0, verbose_name='receiptNumber')
+    receiptNumber = models.IntegerField(blank=True, default=0, verbose_name='receiptNumber')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
@@ -279,7 +294,30 @@ class FeeReceipt(models.Model):
         unique_together = ('receiptNumber', 'parentSchool')
 
 @receiver(pre_save, sender=FeeReceipt)
-def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+def FeeReceiptPreSave(sender, instance, **kwargs):
+    if not instance.id: # before Fee Receipt creation
+
+        ## receipt number handling ##
+        last_receipt_number = FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
+                .aggregate(Max('receiptNumber'))['receiptNumber__max']
+        instance.receiptNumber = last_receipt_number or 1
+
+        ## Transaction Creation ##
+        currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
+        feeSettings = None
+        try:
+            feeSettings = FeeSettings.objects.get(parentSchool=instance.parentSchool, parentSession=currentSession)
+        except:
+            pass
+        if(feeSettings and feeSettings.accountingSettings):
+            instance.parentTransaction = Transaction.objects.create(
+                parentEmployee = instance.parentEmployee,
+                parentSchool = instance.parentSchool,
+                transactionDate = datetime.now(),
+                remark = 'Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
+            )
+
+    ## Fee Receipt Cancellation Handler ##
     if instance.id and instance.cancelled:
         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
         if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
@@ -346,6 +384,26 @@ class SubFeeReceipt(models.Model):
 
     class Meta:
         db_table = 'sub_fee_receipt__new'
+
+@receiver(post_save, sender=SubFeeReceipt)
+def handleAccountsTransaction(sender, instance, created, **kwargs):
+    if(created and instance.parentFeeReceipt.parentTransaction):
+        amount = 0
+        for month in INSTALLMENT_LIST:
+            if(getattr(instance, month+'Amount') is not None):
+                amount += getattr(instance, month+'Amount')
+            if(getattr(instance, month+'LateFee') is not None):
+                amount += getattr(instance, month+'LateFee')
+        creaditAccountDetail =  instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
+            transactionType = 'CREDIT'
+        )
+        debitAccountDetail = instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
+            transactionType = 'DEBIT'
+        )
+        creaditAccountDetail.amount += amount
+        debitAccountDetail.amount += amount
+        creaditAccountDetail.save()
+        debitAccountDetail.save()
 
 
 class Discount(models.Model):
@@ -457,7 +515,7 @@ class Order(models.Model):
 from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
 
 @receiver(pre_save, sender=Order)
-def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+def OrderCompletionHandler(sender, instance, **kwargs):
     if instance.id and instance.status == 'Completed':
         preSavedOrder = Order.objects.get(id=instance.id)
         if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'

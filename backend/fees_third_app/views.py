@@ -79,30 +79,15 @@ class StudentFeeListView(CommonListView, APIView):
 
 
 ########### Fee Receipt #############
-from .business.fee_receipt import create_fee_receipt_list, create_fee_receipt_object
-
-
 class FeeReceiptView(CommonView, APIView):
     Model = FeeReceipt
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_fee_receipt_object(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
-
-
 class FeeReceiptListView(CommonListView, APIView):
     Model = FeeReceipt
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
-
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_fee_receipt_list(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
-
 
 ########### Sub Fee Receipt #############
 
