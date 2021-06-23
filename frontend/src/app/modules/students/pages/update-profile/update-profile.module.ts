@@ -4,7 +4,8 @@ import { UpdateProfileRoutingModule } from './update-profile.routing';
 import { ComponentsModule } from '../../../../components/components.module';
 import { UpdateProfileComponent } from './update-profile.component';
 
-import { MultipleFileDialogModule } from '../../multiple-file-dialog/multiple-file-dialog.module';
+
+import { MultipleFileDialogModule } from '../../../../components/multiple-file-dialog/multiple-file-dialog.module';
 import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
 
 @NgModule({
@@ -16,4 +17,4 @@ import { ViewImageModalComponent } from '@components/view-image-modal/view-image
     bootstrap: [UpdateProfileComponent],
     entryComponents: [ViewImageModalComponent],
 })
-export class UpdateProfileModule {}
+export class UpdateProfileModule { }
