@@ -4,20 +4,20 @@ import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { Student } from '../../../../services/modules/student/models/student';
-import { StudentSection } from '../../../../services/modules/student/models/student-section';
-import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
-import { ExaminationService } from '../../../../services/modules/examination/examination.service';
-import { SubjectService } from '../../../../services/modules/subject/subject.service';
-import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { INSTALLMENT_LIST } from '../../../fees/classes/constants';
-import { DataStorage } from '../../../../classes/data-storage';
-import { SchoolService } from '../../../../services/modules/school/school.service';
+import { StudentService } from "../../../../services/modules/student/student.service";
+import { Student } from "../../../../services/modules/student/models/student";
+import { StudentSection } from "../../../../services/modules/student/models/student-section";
+import { VehicleOldService } from "../../../../services/modules/vehicle/vehicle-old.service";
+import { ExaminationService } from "../../../../services/modules/examination/examination.service";
+import { SubjectService } from "../../../../services/modules/subject/subject.service";
+import { FeeService } from "../../../../services/modules/fees/fee.service";
+import { INSTALLMENT_LIST } from "../../../fees/classes/constants";
+import { DataStorage } from "../../../../classes/data-storage";
+import { SchoolService } from "../../../../services/modules/school/school.service";
 import { BankService } from '../../../../services/bank.service';
 
-import { MultipleFileDialogComponent } from '../../multiple-file-dialog/multiple-file-dialog.component';
-import { ImagePdfPreviewDialogComponent } from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import { MultipleFileDialogComponent } from '../../../../components/multiple-file-dialog/multiple-file-dialog.component';
+import { ImagePdfPreviewDialogComponent } from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import { MatDialog } from '@angular/material';
 
 declare const $: any;
@@ -78,7 +78,7 @@ export class AddStudentComponent implements OnInit {
         public feeService: FeeService,
         public bankService: BankService,
         public dialog: MatDialog
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

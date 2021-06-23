@@ -1,11 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
-
+import { Component, OnInit } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_LIST } from '../../../../print/print-routes.constants';
-import { ExcelService } from '../../../../excel/excel-service';
-import { DataStorage } from '../../../../classes/data-storage';
+import { ExcelService } from "../../../../excel/excel-service";
+import { DataStorage } from "../../../../classes/data-storage";
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import { EmployeeService } from 'app/services/modules/employee/employee.service';
+import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import { MatDialog } from '@angular/material';
+
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver';
+import { toInteger } from 'lodash';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -37,39 +42,100 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
+    providers: [EmployeeService]
 })
 export class ViewAllComponent implements OnInit {
     user;
 
     columnFilter: ColumnFilter;
+    documentFilter: ColumnFilter;
 
     employeeProfileList = [];
 
     isLoading = false;
 
-    constructor(private employeeService: EmployeeOldService, private excelService: ExcelService, private printService: PrintService) {}
+    currentProfileDocumentFilter;
+
+
+    employeeParameterList: any[] = [];
+    employeeParameterOtherList: any[] = [];
+    employeeParameterDocumentList: any[] = [];
+
+    employeeParameterValueList: any[] = [];
+
+    profileDocumentSelectList = [
+        'Profile',
+        'Documents',
+    ];
+
+    percent_download_comlpleted;
+    totalDownloadSize;
+    download;
+    totalFiles;
+    downloadedFiles;
+    totalFailed;
+
+    profileColumns;
+    documentColumns;
+
+    noFileIcon = "/assets/img/nofile.png";
+    pdfIcon = "/assets/img/pdfIcon.png";
+    imageIcon = "/assets/img/imageIcon.png";
+
+    serviceAdapter: ViewAllServiceAdapter;
+    NULL_CONSTANT = null;
+
+    displayEmployeeNumber = 0;
+
+
+    constructor(public employeeService: EmployeeService,
+        private excelService: ExcelService,
+        private printService: PrintService,
+        public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
         this.columnFilter = new ColumnFilter();
+        this.documentFilter = new ColumnFilter();
+        this.serviceAdapter = new ViewAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+        this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
+        this.percent_download_comlpleted = 0;
+        this.totalDownloadSize = 0;
+        this.download = 'NOT';
+        this.downloadedFiles = 0;
+        this.totalFiles = 0;
+        this.totalFailed = 0;
 
-        let data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
+    }
 
-        this.isLoading = true;
-        this.employeeService.getEmployeeProfileList(data, this.user.jwt).then(
-            (employeeProfileList) => {
-                this.isLoading = false;
-                this.employeeProfileList = employeeProfileList.filter((employee) => {
-                    return employee.dateOfLeaving === null;
-                });
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
+
+    initializeEmployeeProfileList(employeeProfileList: any): void {
+        this.employeeProfileList.forEach(employeeProfile => {
+            employeeProfile['show'] = false;
+            employeeProfile['selectProfile'] = false;
+            employeeProfile['selectDocument'] = false;
+        });
+        this.handleEmployeeDisplay();
+    }
+
+    handleEmployeeDisplay(): void {
+        let serialNumber = 0;
+        this.displayEmployeeNumber = 0;
+
+        this.employeeProfileList.forEach(employee => {
+
+
+            ++this.displayEmployeeNumber;
+            employee.show = true;
+            employee.selectDocument = true;
+            employee.selectProfile = true;
+            employee.serialNumber = ++serialNumber;
+
+        });
+
     }
 
     selectAllColumns(): void {
@@ -162,4 +228,290 @@ export class ViewAllComponent implements OnInit {
 
         return employeeDisplay;
     }
+
+    getSelectedEmployees() {
+        let count = 0;
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            count = 0;
+            this.employeeProfileList.forEach(employee => {
+                if (employee.show && employee.selectProfile) {
+                    ++count;
+                }
+            });
+        }
+        else if (this.currentProfileDocumentFilter === 'Documents') {
+            count = 0;
+            this.employeeProfileList.forEach(employee => {
+                if (employee.show && employee.selectDocument) {
+                    ++count;
+                }
+            });
+        }
+        return count;
+    }
+    selectAllDocuments(): void {
+        Object.keys(this.documentFilter).forEach((key) => {
+            this.documentFilter[key] = true;
+        });
+        this.employeeParameterDocumentList.forEach(item => {
+            item.show = true;
+        });
+    }
+
+    unSelectAllDocuments(): void {
+        Object.keys(this.documentFilter).forEach((key) => {
+            this.documentFilter[key] = false;
+        });
+        this.employeeParameterDocumentList.forEach(item => {
+            item.show = false;
+        });
+    }
+
+    getParameterValue(employee, parameter) {
+        try {
+            if (this.currentProfileDocumentFilter === 'Profile') {
+                return this.employeeParameterValueList.find(x =>
+                    x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).value;
+            }
+            else {
+                let value = this.employeeParameterValueList.find(x =>
+                    x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).document_value;
+                if (value) {
+                    if (value === "" || value === undefined) {
+                    }
+                    else {
+                        return value;
+                    }
+                }
+                else {
+                    return this.NULL_CONSTANT;
+                }
+            }
+        } catch {
+            return this.NULL_CONSTANT;
+        }
+    }
+
+    getDownloadSize() {
+        this.totalDownloadSize = 0;
+        this.employeeProfileList.forEach(employee => {
+            if (employee.selectDocument) {
+                this.employeeParameterDocumentList.forEach(parameter => {
+                    if (parameter.show) {
+                        let item = this.employeeParameterValueList.find(x =>
+                            (x.parentemployee === employee.id) && (x.parentEmployeeParameter === parameter.id)
+                        );
+                        if (item) {
+                            this.totalFiles += 1;
+                            if (item.document_size) {
+                                this.totalDownloadSize += toInteger(item.document_size);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    dataURLtoFile(dataurl, filename) {
+        try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, { type: mime });
+        } catch (e) {
+            return null;
+        }
+    }
+
+
+    async download_each_file(document_url) {
+        const response = await fetch(document_url);
+        if (response.status == 403) {
+            ++this.totalFailed;
+        }
+        else {
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get('Content-Length');
+            let receivedLength = 0;
+            let chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    break;
+                }
+                chunks.push(value);
+                receivedLength += value.length;
+                this.percent_download_comlpleted += (value.length * 1.0) / (this.totalDownloadSize * 1.0) * 100;
+                console.log(`Received ${receivedLength} of ${contentLength}`);
+                console.log(`now total received is ${this.percent_download_comlpleted} %`);
+            }
+            let blob = new Blob(chunks);
+            return blob;
+        }
+    }
+
+    downloadDocuments() {
+        this.totalFailed = 0;
+        this.download = "START";
+        this.getDownloadSize();
+        if (this.totalDownloadSize) {
+            alert("Your are about to download " + (this.totalFiles) + " files of size " + (this.totalDownloadSize / 1000000) + " MB");
+            let zip = new JSZip();
+            let check1 = 0;
+            this.downloadedFiles = 0;
+            let flag = 1;
+            this.employeeParameterDocumentList.forEach(parameter => {
+                if (parameter.show) {
+                    var Folder = zip.folder(parameter.name);
+                    this.employeeProfileList.forEach(employee => {
+                        if (employee.selectDocument) {
+                            let document_url = this.getParameterValue(employee, parameter);
+                            if (document_url) {
+                                check1 = check1 + 1;
+                                this.download_each_file(document_url).then(blob => {
+                                    if (blob) {
+                                        let type = document_url.split(".");
+                                        type = type[type.length - 1];
+                                        let file = new Blob([blob], { type: type });
+                                        Folder.file(employee.name + "_" + employee.id + "_" + parameter.name + "." + type, file);
+                                        this.downloadedFiles = this.downloadedFiles + 1;
+                                        console.log(check1, this.downloadedFiles);
+                                    }
+                                    if (check1 === this.downloadedFiles + this.totalFailed) {
+                                        zip.generateAsync({ type: "blob" })
+                                            .then(content => {
+                                                FileSaver.saveAs(content, "Documents.zip");
+                                                this.download = 'NOT';
+                                            });
+                                        this.isLoading = false;
+                                        this.download = 'END';
+                                        this.downloadedFiles = 0;
+                                        this.totalFiles = 0;
+                                        this.percent_download_comlpleted = 0;
+                                        this.totalDownloadSize = 0;
+                                    }
+                                }, error => {
+                                    this.download = "FAIL";
+                                    this.isLoading = false;
+                                    this.downloadedFiles = 0;
+                                    this.totalFiles = 0;
+                                    this.percent_download_comlpleted = 0;
+                                    this.totalDownloadSize = 0;
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            alert("No documents are available for download.");
+            this.download = "NOT";
+        }
+    }
+
+    selectAllEmployees(): void {
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            this.employeeProfileList.forEach(employee => {
+                if (employee.show) {
+                    employee.selectProfile = true;
+                }
+            });
+        }
+        else {
+            this.employeeProfileList.forEach(employee => {
+                if (employee.show) {
+                    employee.selectDocument = true;
+                }
+            });
+        }
+    }
+
+    unselectAllEmployees(): void {
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            this.employeeProfileList.forEach(employee => {
+                if (employee.show) {
+                    employee.selectProfile = false;
+                }
+            });
+        }
+        else {
+            this.employeeProfileList.forEach(employee => {
+                if (employee.show) {
+                    employee.selectDocument = false;
+                }
+            });
+        }
+    }
+
+    openFilePreviewDialog(employee, parameter): void {
+        let file = this.getParameterValue(employee, parameter);
+        if (file) {
+            let urlList = file.split(".");
+            let extension = urlList[urlList.length - 1];
+            let type;
+            if (extension == "pdf") {
+                type = "pdf";
+            } else if (extension == "jpg" || extension == "jpeg" || extension == "png") {
+                type = "img";
+            }
+            const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
+                width: '600px',
+                data: { 'file': file, 'type': type }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('The dialog was closed');
+            });
+        }
+    }
+
+    getDocumentIcon(employee, parameter) {
+        try {
+            let value = this.employeeParameterValueList.find(x => x.parentEmployee === employee.id
+                && x.parentEmployeeParameter === parameter.id).document_value;
+            if (value) {
+                if (value === "" || value === undefined) {
+                    return this.NULL_CONSTANT;
+                } else {
+                    let type = value.split(".");
+                    type = type[type.length - 1];
+                    if (type == "pdf") {
+                        return this.pdfIcon;
+                    }
+                    else if (type == "jpg" || type == "jpeg" || type == "png") {
+                        return this.imageIcon;
+                    }
+                }
+            } else {
+                return this.noFileIcon;
+            }
+        }
+        catch {
+            return this.noFileIcon;
+        }
+    }
+
+    getFilteredEmployeeParameterList = () => this.employeeParameterList.filter(x => x.parameterType === 'FILTER');
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter(x => {
+            return x.name.includes(parameter.filterFilterValues);
+        });
+    }
+
+    fn(event: any) {
+        console.log('changed event');
+        console.log(event);
+    }
+
 }

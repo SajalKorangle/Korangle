@@ -1,0 +1,99 @@
+<div class="card-content">
+
+    <ng-container *ngIf="!isLoading">
+
+        <b>Already Existing Parameters:-</b><br />
+        <span *ngFor="let parameter of globalParametersList; let last=last;">
+            {{parameter}}<ng-container *ngIf="!last">,</ng-container>&nbsp;
+        </span>
+        <br /><br />
+        <b>Custom Parameters:-</b>
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-select placeholder="Choose to add/edit/delete parameter/s" [ngModel]="currentParameter"
+                        (ngModelChange)="chooseParameter($event)">
+                        <mat-option [value]="ADD_PARAMETER_STRING">{{ADD_PARAMETER_STRING}}</mat-option>
+                        <mat-option *ngFor="let parameter of customParameterList;" [value]="parameter">
+                            {{parameter.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6" *ngIf="currentParameter">
+                <mat-card>
+                    <span style="color:red" *ngIf="!isValidParameterName()" class="small">
+                        Parameter name must be unique
+                    </span>
+                    <mat-form-field style="margin-top: 0">
+                        <mat-label>
+                            Parameter Name
+                        </mat-label>
+                        <input matInput placeholder="Parameter Name" [(ngModel)]="currentParameter.name">
+                    </mat-form-field>
+                    <div>
+                        <mat-radio-group *ngIf="!currentParameter.id" [(ngModel)]="currentParameter.parameterType">
+                            <mat-radio-button *ngFor="let parameterType of customParameterTypeList"
+                                [value]="parameterType" style="margin-right: 10px;">{{parameterType}}</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-radio-button *ngIf="currentParameter.id" [checked]="true" style="margin-right: 10px;">
+                            {{currentParameter.parameterType}}</mat-radio-button>
+                    </div>
+                    <ng-container *ngIf="currentParameter.parameterType==='FILTER'">
+
+                        <div style="margin-top: 10px">Add filter value:</div>
+                        <mat-form-field style="margin-top: 0">
+                            <mat-label>
+                                New Value
+                            </mat-label>
+                            <input matInput placeholder="Filter Name" [(ngModel)]="newFilterValue">
+                            <mat-icon matSuffix style="cursor: pointer;" (click)="addFilter(newFilterValue)">add
+                            </mat-icon>
+                        </mat-form-field>
+
+                        <ng-container *ngIf="currentParameter.filterValues.length">
+                            <div style="margin-top: 10px">Current Filters</div>
+                            <div class="row">
+                                <div class="col-sm-6"
+                                    *ngFor="let filter of currentParameter.filterValues; let i = index">
+                                    <mat-form-field style="margin-top: 0">
+                                        <mat-label>
+                                            Value #{{i+1}}
+                                        </mat-label>
+                                        <input matInput placeholder="Filter Name" [(ngModel)]="filter" disabled>
+                                        <mat-icon matSuffix style="cursor: pointer;" (click)="deleteFilter(filter)">
+                                            delete</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                    </ng-container>
+
+                    <div>
+                        <button *ngIf="isValidParameterName()&&currentParameter.name"
+                            style="padding: 12px 15px; margin-right: 17px;" type="button"
+                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.saveParameter()">
+                            <ng-container *ngIf="!this.currentParameter.id">Save</ng-container>
+                            <ng-container *ngIf="this.currentParameter.id">Edit</ng-container>
+                        </button>
+                        <button style="padding: 12px 15px; margin-right: 17px;" type="button"
+                            *ngIf="currentParameter.id" class="btn btn-danger"
+                            (click)="serviceAdapter.deleteParameter()">
+                            Delete
+                        </button>
+                    </div>
+
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
+
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
