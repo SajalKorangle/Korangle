@@ -7,7 +7,7 @@
                 <mat-icon style="font-size: 30px">account_balance</mat-icon>
                 <h3>&nbsp;&nbsp;Accounting</h3>
                 <mat-slide-toggle style="margin-right: 20px; margin-left: auto;"
-                    [checked]="backendData.feeSettings.accountingSettings!=null"
+                    [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
                     (change)="toggleAccounting($event.checked)">Enable</mat-slide-toggle>
             </div>
 

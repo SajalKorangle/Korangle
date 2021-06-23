@@ -96,7 +96,7 @@ def transactionPreSave(sender, instance, **kwargs):
     if instance.id is None:
         instance.voucherNumber = 1
         last_voucher_number = \
-                    Transaction.objects.filter(parentSchool=instance.parentEmployee.parentSchool) \
+                    Transaction.objects.filter(parentSchool=instance.parentSchool) \
                         .aggregate(Max('voucherNumber'))['voucherNumber__max']
         if last_voucher_number is not None:
             instance.voucherNumber = last_voucher_number + 1

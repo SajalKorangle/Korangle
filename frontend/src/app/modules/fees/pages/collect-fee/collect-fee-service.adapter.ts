@@ -68,7 +68,7 @@ export class CollectFeeServiceAdapter {
         this.vm.boardList = value[3];
         this.vm.sessionList = value[4];
         if (value[5].length == 1)
-            this.vm.feeSettings = { ...value[5][0], accountingSettingsJSON: JSON.parse(value[5][0].accountingSettings) };
+            this.vm.feeSettings = value[5][0];
         this.vm.accountsList = value[6];
         this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
         this.vm.handlePaymentAccountOnPaymentModeChange();

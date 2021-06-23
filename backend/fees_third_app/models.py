@@ -11,7 +11,7 @@ from employee_app.models import Employee
 
 from django.contrib.auth.models import User
 
-from accounts_app.models import Transaction, AccountSession
+from accounts_app.models import Accounts, Transaction, AccountSession, TransactionAccountDetails
 
 from datetime import datetime
 
@@ -513,6 +513,7 @@ class Order(models.Model):
 
 
 from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
+from accounts_app.views import TransactionAccountDetailsView
 
 @receiver(pre_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
@@ -520,13 +521,26 @@ def OrderCompletionHandler(sender, instance, **kwargs):
         preSavedOrder = Order.objects.get(id=instance.id)
         if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
 
+            transactionList = CashfreeTransaction.objects.filter(parentOrder = instance.id)
+            activeSchoolID = transactionList[0].parentStudent.parentSchool.id
+
+            currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
+            debitAccount = None
+            creditAccount = None
+            try:
+                feeSettings = FeeSettings.objects.get(parentSchool=activeSchoolID, parentSession=currentSession)
+                if(feeSettings.accountingSettingsJSON):
+                    accountingSessings = json.loads(feeSettings.accountingSettingsJSON)
+                    debitAccount = AccountSession.objects.get(id=accountingSessings['parentAccountFrom']).parentAccount
+                    creditAccount= AccountSession.objects.get(id=accountingSessings['parentOnlinePaymentCreditAccount']).parentAccount
+            except:
+                pass
+
             FeeReceiptModelSerializer = FeeReceiptView().ModelSerializer
 
-            transactionList = CashfreeTransaction.objects.filter(parentOrder = instance.id)
             with db_transaction.atomic():
                 for transaction in transactionList:
                     activeStudentID = transaction.parentStudent.id
-                    activeSchoolID = transaction.parentStudent.parentSchool.id
                     feeDetailsList= json.loads(transaction.feeDetailJSON)
 
                     session_wise_fee_receipt_mapped_by_session_id = {}
@@ -550,6 +564,24 @@ def OrderCompletionHandler(sender, instance, **kwargs):
 
                         response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
                         session_wise_fee_receipt_mapped_by_session_id[session_id] = FeeReceipt.objects.get(id=response['id'])
+
+                        if response['parentTransaction']:
+                            transactionAccountDetailsModelSerializer = TransactionAccountDetailsView().ModelSerializer
+                            create_object({
+                                'parentTransaction': response['parentTransaction'],
+                                'parentAccount': debitAccount.id,
+                                'amount': 0,
+                                'transactionType': 'DEBIT'
+                            }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
+                            )
+
+                            create_object({
+                                'parentTransaction': response['parentTransaction'],
+                                'parentAccount': creditAccount.id,
+                                'amount': 0,
+                                'transactionType': 'CREDIT'
+                            }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
+                            )
 
                     for feeDetail in feeDetailsList:
                         feeDetail['parentFeeReceipt'] = session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']].id
