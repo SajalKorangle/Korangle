@@ -19,7 +19,7 @@ class Job(DailyJob):
                     orderInstance.status = 'Completed'
                     orderInstance.save()
                 except:
-                    orderInstance.status = 'Failed'
+                    orderInstance.status = 'Refund Pending'
                     orderInstance.save()
             else: 
                 orderInstance.status = 'Failed'
