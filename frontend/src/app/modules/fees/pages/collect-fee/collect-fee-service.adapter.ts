@@ -181,22 +181,11 @@ export class CollectFeeServiceAdapter {
         // console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
 
-        // let student_fee_list = this.vm.studentFeeList
-        //     .filter((studentFee) => {
-        //         return tempStudentFeeIdList.includes(studentFee.id);
-        //     })
-        //     .map((studentFee) => {
-        //         if (this.vm.getStudentFeeFeesDue(studentFee) + this.vm.getStudentFeeLateFeesDue(studentFee) == 0) {
-        //             studentFee.cleared = true;
-        //         }
-        //         return CommonFunctions.getInstance().copyObject(studentFee);
-        //     });
 
         this.vm.isLoading = true;
 
         const value = await Promise.all([
             this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            // this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]);
 
         let transactionFromAccountId;

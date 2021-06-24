@@ -388,7 +388,6 @@ class SubFeeReceipt(models.Model):
 @receiver(pre_save, sender=SubFeeReceipt)
 def subFeeReceiptDataCheck(sender, instance, **kwargs):
     studentFee = instance.parentStudentFee
-    print('studentFee Id =', studentFee.id)
     subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled = False)
     monthClearanceFlagDict = {}
     for month in INSTALLMENT_LIST:
@@ -428,17 +427,13 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
                     totalPaidLateFee += getattr(subFeeReceipt, month+'LateFee')
             
             if getattr(instance, month+'LateFee'):
-                print('incoming late fee = ', getattr(instance, month+'LateFee'))
                 totalPaidLateFee += getattr(instance, month+'LateFee')
-            print('month = ', month)
-            print('totalpaidLateFee = ', totalPaidLateFee)
-            print('lateFee = ', lateFee)
 
             if totalPaidLateFee < lateFee:
                 assert amount == 0, "incoming fee amount without clearing late fee"
             elif totalPaidLateFee > lateFee:
                 assert False, "paid late fee exceeds actual late fee"
-    print('procedding for clearance')
+
     cleared = True
     for month in INSTALLMENT_LIST:
         cleared = cleared and monthClearanceFlagDict[month]
