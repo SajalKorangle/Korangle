@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 
 from accounts_app.models import Accounts, Transaction, AccountSession, TransactionAccountDetails
 
-from datetime import datetime
+from datetime import date, datetime
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
@@ -388,7 +388,13 @@ class SubFeeReceipt(models.Model):
 @receiver(pre_save, sender=SubFeeReceipt)
 def subFeeReceiptDataCheck(sender, instance, **kwargs):
     studentFee = instance.parentStudentFee
-    subFeeReceiptSet = studentFee.subfeereceipt_set.all()
+    print('studentFee Id =', studentFee.id)
+    subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled = False)
+    monthClearanceFlagDict = {}
+    for month in INSTALLMENT_LIST:
+        monthClearanceFlagDict[month] = False
+    
+
     for month in INSTALLMENT_LIST:
         amount = 0
         if(getattr(instance, month+'Amount')):
@@ -403,9 +409,12 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
                 studentFeeAmount += getattr(studentFee, month+'Amount')
 
             assert amount <= studentFeeAmount, "Installent amount exceeds actual amount"
-        
+            if(amount == studentFeeAmount):
+                monthClearanceFlagDict[month] = True
+
         if(getattr(studentFee, month+'ClearanceDate')): # month cleared
             assert not getattr(instance, month+'LateFee'), "incoming late fee after month fee is cleared"
+        
         elif getattr(studentFee, month+'Amount') and getattr(studentFee, month+'LastDate')\
                 and getattr(studentFee, month+'LateFee'): # late fee not cleared
             delta = datetime.now().date() - getattr(studentFee, month+'LastDate')
@@ -415,17 +424,30 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
 
             totalPaidLateFee = 0
             for subFeeReceipt in subFeeReceiptSet:
-                if(getattr(subFeeReceipt, month+'Amount') is not None):
-                    totalPaidLateFee += getattr(instance+'LateFee')
+                if getattr(subFeeReceipt, month+'LateFee'):
+                    totalPaidLateFee += getattr(subFeeReceipt, month+'LateFee')
             
             if getattr(instance, month+'LateFee'):
+                print('incoming late fee = ', getattr(instance, month+'LateFee'))
                 totalPaidLateFee += getattr(instance, month+'LateFee')
-            
+            print('month = ', month)
+            print('totalpaidLateFee = ', totalPaidLateFee)
+            print('lateFee = ', lateFee)
+
             if totalPaidLateFee < lateFee:
                 assert amount == 0, "incoming fee amount without clearing late fee"
             elif totalPaidLateFee > lateFee:
-                raise "paid late fee exceeds actual late fee"
-            
+                assert False, "paid late fee exceeds actual late fee"
+    print('procedding for clearance')
+    cleared = True
+    for month in INSTALLMENT_LIST:
+        cleared = cleared and monthClearanceFlagDict[month]
+        if(monthClearanceFlagDict[month]):
+            setattr(studentFee, month+'ClearanceDate', datetime.now())
+    if(cleared):
+        studentFee.cleared = True
+    studentFee.save()
+
 
 
 
