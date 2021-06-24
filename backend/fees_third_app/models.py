@@ -386,28 +386,26 @@ class SubFeeReceipt(models.Model):
         db_table = 'sub_fee_receipt__new'
 
 @receiver(pre_save, sender=SubFeeReceipt)
-def subFeeReceiptDataCheck(sender, instance, created, **kwargs):
+def subFeeReceiptDataCheck(sender, instance, **kwargs):
     studentFee = instance.parentStudentFee
     subFeeReceiptSet = studentFee.subfeereceipt_set.all()
     for month in INSTALLMENT_LIST:
         amount = 0
-        if(not getattr(instance, month+'Amount')):
+        if(getattr(instance, month+'Amount')):
             amount += getattr(instance, month+'Amount')
 
             for subFeeReceipt in subFeeReceiptSet:
-                if(getattr(subFeeReceipt, month+'Amount') is not None):
-                    amount += getattr(instance, month+'Amount')
+                if getattr(subFeeReceipt, month+'Amount'):
+                    amount += getattr(subFeeReceipt, month+'Amount')
 
             studentFeeAmount =0
-            if(getattr(studentFee, month+'Amount') is not None):
-                    studentFeeAmount += getattr(studentFee, month+'Amount')
-            
-            assert amount <= studentFeeAmount
+            if getattr(studentFee, month+'Amount'):
+                studentFeeAmount += getattr(studentFee, month+'Amount')
+
+            assert amount <= studentFeeAmount, "Installent amount exceeds actual amount"
         
         if(getattr(studentFee, month+'ClearanceDate')): # month cleared
-            assert not getattr(instance, month+'LateFee')
-        elif not (getattr(instance, month+'LateFee')): # no incoming late fee
-            assert amount == 0, "incoming fee amount without clearing late fee"
+            assert not getattr(instance, month+'LateFee'), "incoming late fee after month fee is cleared"
         elif getattr(studentFee, month+'Amount') and getattr(studentFee, month+'LastDate')\
                 and getattr(studentFee, month+'LateFee'): # late fee not cleared
             delta = datetime.now().date() - getattr(studentFee, month+'LastDate')
@@ -419,17 +417,15 @@ def subFeeReceiptDataCheck(sender, instance, created, **kwargs):
             for subFeeReceipt in subFeeReceiptSet:
                 if(getattr(subFeeReceipt, month+'Amount') is not None):
                     totalPaidLateFee += getattr(instance+'LateFee')
-              
-            totalPaidLateFee += getattr(instance, month+'LateFee')
+            
+            if getattr(instance, month+'LateFee'):
+                totalPaidLateFee += getattr(instance, month+'LateFee')
             
             if totalPaidLateFee < lateFee:
                 assert amount == 0, "incoming fee amount without clearing late fee"
             elif totalPaidLateFee > lateFee:
                 raise "paid late fee exceeds actual late fee"
             
-
-
-
 
 
 
