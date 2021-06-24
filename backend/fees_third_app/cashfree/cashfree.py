@@ -120,9 +120,7 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
     return orderData
 
 
-
-
-def isOrderCompleted(orderId):
+def getOrderStatus(orderId):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -138,9 +136,36 @@ def isOrderCompleted(orderId):
         data=orderData,
         headers=headers
         )
-      
+
     assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json())
-    return response.json()['txStatus'] == 'SUCCESS'
+    return response.json()
+
+
+def isOrderCompleted(orderId):
+    orderStatusData = getOrderStatus(orderId)
+    return orderStatusData['txStatus'] == 'SUCCESS'
+
+# def initiateRefund(orderId, amount):
+#     orderStatusData = getOrderStatus(orderId)
+
+#     headers = {
+#         'Content-Type': 'application/x-www-form-urlencoded'
+#         }
+
+#     orderData = {
+#         'appId': CASHFREE_APP_ID,
+#         'secretKey': CASHFREE_SECRET_KEY,
+#         'referenceId': orderStatusData['referenceId'],
+#         'refundAmount': str(amount) ,
+#         'refundNote': 'refund towards school fee payment'
+#     }
+
+#     response = requests.post(
+#         url=base_url+'/api/v1/order/refund', 
+#         data=orderData,
+#         headers=headers
+#         )
+
 
 def addVendor(newVendorData, vendorId):
     newVendorData.update({

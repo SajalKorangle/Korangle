@@ -564,12 +564,14 @@ class Order(models.Model):
     TransactionStatus = (
         ('Pending', 'Pending'),
         ('Completed', 'Completed'),
+        ('Failed', 'Failed')
         # ('Refund Initiated', 'Refund Initiated'),
         # ('Refunded', 'Refunded'),
         # ('Forwarded to School', 'Forwarded to School')
     )
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
+    dateTime = models.DateTimeField(auto_now_add=True)
 
 
 
