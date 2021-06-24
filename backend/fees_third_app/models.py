@@ -389,6 +389,7 @@ class SubFeeReceipt(models.Model):
 def subFeeReceiptDataCheck(sender, instance, **kwargs):
     studentFee = instance.parentStudentFee
     subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled = False)
+    subDiscountSet = SubDiscount.objects.filter(parentDiscount__cancelled = False, parentStudentFee=studentFee)
     monthClearanceFlagDict = {}
     for month in INSTALLMENT_LIST:
         monthClearanceFlagDict[month] = False
@@ -402,6 +403,10 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             for subFeeReceipt in subFeeReceiptSet:
                 if getattr(subFeeReceipt, month+'Amount'):
                     amount += getattr(subFeeReceipt, month+'Amount')
+            
+            for subDiscount in subDiscountSet:
+                if getattr(subDiscount, month+'Amount'):
+                    amount -= getattr(subDiscount, month+'Amount')
 
             studentFeeAmount =0
             if getattr(studentFee, month+'Amount'):
@@ -420,6 +425,10 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             lateFee = delta.days * getattr(studentFee, month+'LateFee')
             if(getattr(studentFee, month+'MaximumLateFee')):
                 lateFee = max(lateFee, getattr(studentFee, month+'MaximumLateFee'))
+
+            for subDiscount in subDiscountSet:
+                if getattr(subDiscount, month+'LateFee'):
+                    lateFee -= getattr(subDiscount, month+'LateFee')
 
             totalPaidLateFee = 0
             for subFeeReceipt in subFeeReceiptSet:
