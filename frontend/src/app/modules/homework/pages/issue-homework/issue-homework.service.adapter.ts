@@ -5,12 +5,9 @@ import moment = require('moment');
 
 export class IssueHomeworkServiceAdapter {
     vm: IssueHomeworkComponent;
-
-    constructor() {
-    }
+    constructor() {}
 
     studentNotificationList: any;
-
     // Data
 
     initializeAdapter(vm: IssueHomeworkComponent): void {

@@ -138,6 +138,6 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(null=True),
         ),
         migrations.RunPython(populate_sms_id),
-        migrations.RunPython(populate_sms_event_settings),
         migrations.RunPython(populate_sms_templates),
+        migrations.RunPython(populate_sms_event_settings),
     ]

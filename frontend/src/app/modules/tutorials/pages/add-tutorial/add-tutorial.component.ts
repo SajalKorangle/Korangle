@@ -88,8 +88,7 @@ export class AddTutorialComponent implements OnInit {
         public smsService: SmsService,
         public userService: UserService,
         public smsOldService: SmsOldService
-    ) {
-    }
+    ) {}
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();

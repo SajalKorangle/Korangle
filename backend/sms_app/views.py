@@ -36,15 +36,6 @@ class SMSCountView(APIView):
         return get_sms_count(school_id)
 
 
-############## Send SMS Old ##############
-
-# class SendSMSView(APIView):
-# 
-#     @user_permission
-#     def post(request):
-#         data = json.loads(request.body.decode('utf-8'))
-#         return send_sms_old(data)
-
 
 ############## Msg Club Delivery Report ##############
 from .business.msg_club_delivery_report import handle_msg_club_delivery_report, get_msg_club_delivery_report_list

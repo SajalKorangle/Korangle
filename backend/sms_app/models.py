@@ -169,8 +169,7 @@ class SMSPurchase(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     def __str__(self):
-        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(
-            self.numberOfSMS) + ' -- ' + str(self.price)
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price)
 
     class Meta:
         db_table = 'sms_purchase'

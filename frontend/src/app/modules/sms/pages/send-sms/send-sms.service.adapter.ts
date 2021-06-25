@@ -8,8 +8,7 @@ export class SendSmsServiceAdapter {
     vm: SendSmsComponent;
     generalSMSEventIdList = [1, 2, 3];
 
-    constructor() {
-    }
+    constructor() {}
 
     initializeAdapter(vm: SendSmsComponent): void {
         this.vm = vm;
@@ -203,5 +202,4 @@ export class SendSmsServiceAdapter {
         alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' :  ' Sent') + ' Successfully');
         this.vm.stateKeeper.isLoading = false;
     }
-
 }

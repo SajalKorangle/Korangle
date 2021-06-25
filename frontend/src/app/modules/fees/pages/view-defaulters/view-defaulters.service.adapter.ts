@@ -5,8 +5,7 @@ import moment = require('moment');
 export class ViewDefaultersServiceAdapter {
     vm: ViewDefaultersComponent;
 
-    constructor() {
-    }
+    constructor() {}
 
     // Data
 

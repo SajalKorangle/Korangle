@@ -60,7 +60,6 @@ urlpatterns += [
 	url(r'^sms-template', SMSTemplateView.as_view()),
 ]
 
-
 ######## Msg Club Delivery Report ###############
 from .views import MsgClubDeliveryReportView
 

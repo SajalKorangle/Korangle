@@ -1,6 +1,0 @@
-[
-	{ "model": "information_app.sentupdatetype", "pk": 1, "fields": {"name": "NULL"} },
-	{ "model": "information_app.sentupdatetype", "pk": 2, "fields": {"name": "SMS"} },
-	{ "model": "information_app.sentupdatetype", "pk": 3, "fields": {"name": "NOTIFICATION"}},
-    { "model": "information_app.sentupdatetype", "pk": 4, "fields": {"name": "NOTIF./SMS"}}
-]
