@@ -285,8 +285,9 @@ class FeeReceipt(models.Model):
         ( 'Cash', 'Cash' ),
         ( 'Cheque', 'Cheque' ),
         ( 'Online', 'Online'),
+        ('KORANGLE', 'KORANGLE'),
     )
-    modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
+    modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True), # it should not be null
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
 
     class Meta:
@@ -310,12 +311,16 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         except:
             pass
         if(feeSettings and feeSettings.accountingSettingsJSON):
-            instance.parentTransaction = Transaction.objects.create(
-                parentEmployee = instance.parentEmployee,
-                parentSchool = instance.parentSchool,
-                transactionDate = datetime.now(),
-                remark = 'Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
-            )
+            accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
+            modeOfPayment = instance.modeOfPayment
+            if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount'))\
+                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment)):
+                instance.parentTransaction = Transaction.objects.create(
+                    parentEmployee = instance.parentEmployee,
+                    parentSchool = instance.parentSchool,
+                    transactionDate = datetime.now(),
+                    remark = 'Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
+                )
 
     ## Fee Receipt Cancellation Handler ##
     if instance.id and instance.cancelled:
@@ -635,7 +640,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                             'parentSchool': activeSchoolID,
                             'parentStudent': activeStudentID,
                             'parentSession': session_id,
-                            'modeOfPayment': 'Online'
+                            'modeOfPayment': 'KORANGLE'
                         })
 
                         response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
