@@ -25,10 +25,9 @@ class LayoutSharing(models.Model):
 
 
 def upload_image_assets_to(instance, filename):
-    return '%s/rc_layouts/imageAssets/%s_%s' % (instance.parentLayout.parentSchool.id, now().timestamp(), filename)
+    return 'rc_layouts/imageAssets/%s_%s' % (now().timestamp(), filename)
 
-class ImageAssets(models.Model): # implement image data size
-    parentLayout = models.ForeignKey(ReportCardLayoutNew, on_delete=models.CASCADE, blank=False)
+class ImageAssets(models.Model):
     image = models.ImageField(upload_to=upload_image_assets_to)
 
 

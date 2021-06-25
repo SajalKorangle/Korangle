@@ -10,6 +10,8 @@ def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
     return 'employees/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
 
+def upload_document_to(instance,filename):
+    return 'employee_app/EmployeeParameterValue/document_value/%s_%s' % (now().timestamp(),filename)
 
 class Employee(models.Model):
 
@@ -116,3 +118,36 @@ class EmployeePermission(models.Model):
     class Meta:
         db_table = 'employee_permission'
         unique_together = ('parentTask', 'parentEmployee')
+
+class EmployeeParameter(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
+
+    name = models.CharField(max_length=100)
+
+    PARAMETER_TYPE = (
+        ( 'TEXT', 'TEXT' ),
+        ( 'FILTER', 'FILTER' ),
+        ( 'DOCUMENT','DOCUMENT')
+    )
+    parameterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
+
+    filterValues = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'employee_parameter'
+
+
+class EmployeeParameterValue(models.Model):
+
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0, verbose_name='parentEmployee')
+    parentEmployeeParameter = models.ForeignKey(EmployeeParameter, on_delete=models.CASCADE, default=0, verbose_name='parentEmployeeParameter')
+
+    value = models.TextField(null=True,blank=True)
+    document_value = models.FileField(upload_to=upload_document_to, blank=True, null=True)
+    document_size = models.TextField(null=True,blank=True)
+
+    class Meta:
+        db_table = 'employee_parameter_value'
+        unique_together = ('parentEmployee', 'parentEmployeeParameter')
+

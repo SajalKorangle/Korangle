@@ -5,7 +5,7 @@ import { values } from 'lodash';
 export class DesignReportCardServiceAdapter {
     vm: DesignReportCardComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -98,17 +98,13 @@ export class DesignReportCardServiceAdapter {
                 const request_attendance_data = {
                     parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
                     dateOfAttendance__gte:
-                        new Date(
-                            this.vm.DATA.data.sessionList.find((session) => {
-                                return session.id === this.vm.user.activeSchool.currentSessionDbId;
-                            }).startDate
-                        ).getFullYear() + '-01-01',
+                        this.vm.DATA.data.sessionList.find((session) => {
+                            return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                        }).startDate,
                     dateOfAttendance__lte:
-                        new Date(
-                            this.vm.DATA.data.sessionList.find((session) => {
-                                return session.id === this.vm.user.activeSchool.currentSessionDbId;
-                            }).endDate
-                        ).getFullYear() + '-12-31',
+                        this.vm.DATA.data.sessionList.find((session) => {
+                            return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                        }).endDate,
                 };
                 const request_student_sub_grade_data = {
                     parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
@@ -198,27 +194,23 @@ export class DesignReportCardServiceAdapter {
             parentExamination__in: this.vm.DATA.data.examinationList.map((item) => item.id).join(','),
         };
         const request_attendance_data = {
-            parentStudent: this.vm.selectedStudent,
+            parentStudent: this.vm.selectedStudent.id,
             dateOfAttendance__gte:
-                new Date(
-                    this.vm.DATA.data.sessionList.find((session) => {
-                        return session.id === this.vm.user.activeSchool.currentSessionDbId;
-                    }).startDate
-                ).getFullYear() + '-01-01',
+                this.vm.DATA.data.sessionList.find((session) => {
+                    return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                }).startDate,
             dateOfAttendance__lte:
-                new Date(
-                    this.vm.DATA.data.sessionList.find((session) => {
-                        return session.id === this.vm.user.activeSchool.currentSessionDbId;
-                    }).endDate
-                ).getFullYear() + '-12-31',
+                this.vm.DATA.data.sessionList.find((session) => {
+                    return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                }).endDate,
         };
         const request_student_sub_grade_data = {
-            parentStudent: this.vm.selectedStudent,
+            parentStudent: this.vm.selectedStudent.id,
         };
         const request_student_examination_remarks_data = {
             parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
             parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent: this.vm.selectedStudent,
+            parentStudent: this.vm.selectedStudent.id,
         };
 
         Promise.all([
@@ -258,7 +250,7 @@ export class DesignReportCardServiceAdapter {
     }
 
     async uploadCurrentLayout() {
-        const layoutToUpload: { [key: string]: any } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
+        const layoutToUpload: { [key: string]: any; } = { ...this.vm.currentLayout, content: JSON.stringify(this.vm.currentLayout.content) };
         if (this.vm.currentLayout.thumbnail.startsWith('data')) {
             // converting data uri to blob
             layoutToUpload.thumbnail = await fetch(this.vm.currentLayout.thumbnail).then((response) => response.blob());
@@ -303,7 +295,6 @@ export class DesignReportCardServiceAdapter {
 
     uploadImageForCurrentLayout(image, file_name) {
         let formdata = new FormData();
-        formdata.append('parentLayout', this.vm.currentLayout.id);
         formdata.append('image', image, file_name);
         return this.vm.reportCardService.createObject(this.vm.reportCardService.image_assets, formdata).then((response) => response.image);
     }

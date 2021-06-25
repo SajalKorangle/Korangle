@@ -1,20 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
-import { DataStorage } from '../../../../classes/data-storage';
+import { Component, OnInit } from '@angular/core';
+import { DataStorage } from "../../../../classes/data-storage";
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { BankService } from '../../../../services/bank.service';
+import { MatDialog } from '@angular/material';
+import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import { MultipleFileDialogComponent } from 'app/components/multiple-file-dialog/multiple-file-dialog.component';
+import { AddEmployeeServiceAdapter } from './add-employee-service.adapter';
 
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
 import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
+declare const $: any;
 
 @Component({
     selector: 'add-employee',
     templateUrl: './add-employee.component.html',
     styleUrls: ['./add-employee.component.css'],
-    providers: [MatDialog, BankService, TeamService, EmployeeService, EmployeeOldService],
+    providers: [BankService, TeamService, EmployeeService]
 })
 export class AddEmployeeComponent implements OnInit {
     user;
@@ -25,62 +27,25 @@ export class AddEmployeeComponent implements OnInit {
     employeeList = [];
     moduleList = [];
 
-    isLoading = false;
+    employeeParameterList: any[] = [];
+    currentEmployeeParameterValueList: any[] = [];
 
-    constructor(
-        public dialog: MatDialog,
-        private employeeOldService: EmployeeOldService,
-        private employeeService: EmployeeService,
-        private bankService: BankService,
-        private teamService: TeamService
-    ) { }
+    isLoading = false;
+    profileImage;
+
+    serviceAdapter: AddEmployeeServiceAdapter;
+
+    constructor(public employeeService: EmployeeService,
+        public bankService: BankService,
+        public teamService: TeamService,
+        public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.serviceAdapter = new AddEmployeeServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
 
-        this.isLoading = true;
-        this.newEmployee = {};
-        this.newEmployeeSessionDetail = {};
-        let data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
-        this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt).then((employeeList) => {
-            this.employeeList = employeeList;
-        });
-
-        let module_data = {
-            parentBoard__or: this.user.activeSchool.parentBoard,
-            parentBoard: 'null__korangle',
-        };
-
-        let task_data = {
-            parentBoard__or: this.user.activeSchool.parentBoard,
-            parentBoard: 'null__korangle',
-            parentModule__parentBoard__or: this.user.activeSchool.parentBoard,
-            parentModule__parentBoard: 'null__korangle',
-        };
-
-        Promise.all([
-            this.employeeOldService.getEmployeeMiniProfileList(data, this.user.jwt),
-            this.teamService.getObjectList(this.teamService.module, module_data),
-            this.teamService.getObjectList(this.teamService.task, task_data),
-        ]).then(
-            (value) => {
-                console.log(value[0]);
-                this.employeeList = value[0];
-                this.initializeModuleList(value[1], value[2]);
-                this.isLoading = false;
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
-    }
-
-    isSelected(task: any) {
-        if (task.selected) {
-            return task.id;
-        }
     }
 
     grantAll() {
@@ -160,102 +125,297 @@ export class AddEmployeeComponent implements OnInit {
         });
     }
 
-    createNewEmployee(): void {
-        console.log('CREATE NEW EMPLOYEE CALLED');
 
-        if (this.newEmployee.name === undefined || this.newEmployee.name === '') {
-            alert('Name should be populated');
-            return;
+
+    getParameterValue = (parameter) => {
+        try {
+            return this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).value;
+        } catch {
+            return null;
         }
+    }
 
-        if (this.newEmployee.fatherName === undefined || this.newEmployee.fatherName === '') {
-            alert("Father's Name should be populated");
-            return;
-        }
-
-        if (this.newEmployee.dateOfBirth === undefined || this.newEmployee.dateOfBirth === '') {
-            this.newEmployee.dateOfBirth = null;
-        }
-
-        if (this.newEmployee.dateOfJoining === undefined || this.newEmployee.dateOfJoining === '') {
-            this.newEmployee.dateOfJoining = null;
-        }
-
-        if (this.newEmployee.dateOfLeaving === undefined || this.newEmployee.dateOfLeaving === '') {
-            this.newEmployee.dateOfLeaving = null;
-        }
-
-        if (this.newEmployee.mobileNumber === undefined || this.newEmployee.mobileNumber === null) {
-            this.newEmployee.mobileNumber = null;
-            alert('Mobile number is required');
-            return;
-        } else if (this.newEmployee.mobileNumber.toString().length != 10) {
-            alert('Mobile number should be of 10 digits');
-            return;
+    updateParameterValue = (parameter, value) => {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (!item) {
+            item = { parentEmployeeParameter: parameter.id, value: value };
+            this.currentEmployeeParameterValueList.push(item);
         } else {
-            let selectedEmployee = null;
-            this.employeeList.forEach((employee) => {
-                if (employee.mobileNumber === this.newEmployee.mobileNumber) {
-                    selectedEmployee = employee;
-                }
-            });
-            if (selectedEmployee) {
-                alert('Mobile Number already exists in ' + selectedEmployee.name + "'s profile");
-                return;
+            item.value = value;
+        }
+    }
+
+    deleteDocument(parameter) {
+        if (confirm('Are you sure want to delete this document?')) {
+            let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+            if (item) {
+                this.currentEmployeeParameterValueList = this.currentEmployeeParameterValueList
+                    .filter(para => para.parentEmployeeParameter !== item.parentEmployeeParameter);
             }
         }
+    }
 
-        if (this.newEmployee.aadharNumber != null && this.newEmployee.aadharNumber.toString().length != 12) {
-            alert('Aadhar No. should be 12 digits');
+    getParameterDocumentType(parameter) {
+        try {
+            let document_value = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).document_value;
+            if (document_value) {
+                let document_name = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).document_name;
+                let urlList = document_name.split(".");
+                let type = urlList[urlList.length - 1];
+                if (type == 'pdf') {
+                    return 'pdf';
+                }
+                else {
+                    return 'img';
+                }
+            }
+            else {
+                return 'none';
+            }
+        }
+        catch {
+            return 'none';
+        }
+    }
+
+    getParameterDocumentValue(parameter) {
+        try {
+            let document_value = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id).document_value;
+            if (document_value) {
+                return document_value;
+            }
+            else {
+                return null;
+            }
+        }
+        catch {
+            return null;
+        }
+    }
+
+    check_document(value): boolean {
+        let type = value.type;
+        if (type !== 'image/jpeg' && type !== 'image/jpg' && type !== 'image/png' && type != 'application/pdf') {
+            alert('Uploaded File should be either in jpg,jpeg,png or in pdf format');
+            return false;
+        }
+        else {
+            if (value.size / 1000000.0 > 5) {
+                alert("File size should not exceed 5MB");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+
+    getDocumentName(parameter) {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (item) {
+            if (item.document_name) {
+                return item.document_name;
+            }
+        }
+    }
+
+    cropImage(file: File, aspectRatio: any): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = URL.createObjectURL(file);
+            image.onload = () => {
+
+                let dx = 0;
+                let dy = 0;
+                let dw = image.width;
+                let dh = image.height;
+
+                let sx = 0;
+                let sy = 0;
+                let sw = dw;
+                let sh = dh;
+
+                if (sw > (aspectRatio[1] * sh / aspectRatio[0])) {
+                    sx = (sw - (aspectRatio[1] * sh / aspectRatio[0])) / 2;
+                    sw = (aspectRatio[1] * sh / aspectRatio[0]);
+                    dw = sw;
+                } else if (sh > (aspectRatio[0] * sw / aspectRatio[1])) {
+                    sy = (sh - (aspectRatio[0] * sw / aspectRatio[1])) / 2;
+                    sh = (aspectRatio[0] * sw / aspectRatio[1]);
+                    dh = sh;
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = dw;
+                canvas.height = dh;
+
+                let context = canvas.getContext('2d');
+
+                context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+
+                canvas.toBlob(resolve, file.type);
+            };
+            image.onerror = reject;
+        });
+    }
+
+    async onImageSelect(evt: any) {
+        let image = evt.target.files[0];
+
+        if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+            alert("Image type should be either jpg, jpeg, or png");
             return;
         }
 
-        this.newEmployee.parentSchool = this.user.activeSchool.dbId;
+        image = await this.cropImage(image, [1, 1]);
 
-        this.isLoading = true;
+        while (image.size > 512000) {
+            image = await this.resizeImage(image);
+        }
 
-        console.log(this.newEmployee);
-        this.employeeOldService.createEmployeeProfile(this.newEmployee, this.user.jwt).then(
-            (response) => {
-                let post_data = {
-                    parentEmployee: response.id,
-                    parentSession: this.user.activeSchool.currentSessionDbId,
-                    paidLeaveNumber: this.newEmployeeSessionDetail.paidLeaveNumber,
-                };
-                this.employeeOldService.createEmployeeSessionDetail(post_data, this.user.jwt).then((res) => {
-                    console.log(response);
-                    let data = [];
-                    this.moduleList.forEach((module) => {
-                        module.taskList.forEach((task) => {
-                            if (task.selected) {
-                                data.push({
-                                    parentEmployee: response.id,
-                                    parentTask: task.id,
-                                });
-                                if (task.configJSON) {
-                                    data[data.length - 1].configJSON = task.configJSON;
+        if (image.size > 512000) {
+            alert('Image size should be less than 512kb');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            this.profileImage = reader.result;
+        };
+        reader.readAsDataURL(image);
+    }
+
+    resizeImage(file: File): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = URL.createObjectURL(file);
+            image.onload = () => {
+                let width = image.width;
+                let height = image.height;
+
+                let maxWidth = image.width / 2;
+                let maxHeight = image.height / 2;
+
+                // if (width <= maxWidth && height <= maxHeight) {
+                //     resolve(file);
+                // }
+
+                let newWidth;
+                let newHeight;
+
+                if (width > height) {
+                    newHeight = height * (maxWidth / width);
+                    newWidth = maxWidth;
+                } else {
+                    newWidth = width * (maxHeight / height);
+                    newHeight = maxHeight;
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+
+                let context = canvas.getContext('2d');
+
+                context.drawImage(image, 0, 0, newWidth, newHeight);
+
+                canvas.toBlob(resolve, file.type);
+            };
+            image.onerror = reject;
+        });
+    }
+
+    updateDocuments = (parameter, value, element) => {
+        console.log("yeah");
+        const options = this.employeeParameterList.filter(parameter => (parameter.parameterType == "DOCUMENT"));
+        if (value.target.files.length > 1) {
+            if (value.target.files.length <= options.length) {
+                let files = [];
+                for (let i = 0; i < value.target.files.length; i++) {
+                    if (this.check_document(value.target.files[i])) {
+                        files.push(value.target.files[i]);
+                    }
+                }
+                if (files.length) {
+                    let choiceList = [];
+                    options.forEach(x => (
+                        choiceList.push({ 'name': x.name, 'id': x.id })
+                    ));
+                    console.log(choiceList);
+                    let dialogRef = this.dialog.open(MultipleFileDialogComponent, {
+                        width: '580px',
+                        data: { files: files, options: options, choiceList: choiceList }
+                    });
+                    dialogRef.afterClosed().subscribe(result => {
+                        if (result) {
+                            for (let i = 0; i < result.files.length; i++) {
+                                let item = options.find(x => (x.id === result.list[i].id));
+                                if (item) {
+                                    this.updateDocumentValue(item, result.files[i]);
                                 }
                             }
-                        });
+                        }
                     });
-                    this.employeeService.createObjectList(this.employeeService.employee_permissions, data).then((value) => {
-                        this.moduleList.forEach((module) => {
-                            module.taskList.forEach((task) => {
-                                task.selected = false;
-                            });
-                        });
-                        this.isLoading = false;
-                        alert('Employee Profile Created Successfully');
-                        this.newEmployee = {};
-                        this.newEmployeeSessionDetail = {};
-                    });
-                });
-            },
-            (error) => {
-                this.isLoading = false;
-                alert('Server Error: Contact admin');
+                }
             }
-        );
+            else {
+                console.log("Please select only " + value.target.files.length + " files");
+            }
+        }
+        else {
+            let check = this.check_document(value.target.files[0]);
+            if (check == true) {
+                this.updateDocumentValue(parameter, value.target.files[0]);
+            }
+        }
+        element.value = '';
+    }
+
+    updateDocumentValue = (parameter, file) => {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        let document_value = file;
+        let document_size = document_value.size;
+        let document_name = document_value.name;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document_value = reader.result;
+            if (!item) {
+                item = { parentEmployeeParameter: parameter.id, document_value: document_value, document_name: document_name, document_size: document_size };
+                this.currentEmployeeParameterValueList.push(item);
+            }
+            else {
+                item.document_value = document_value;
+                item.document_name = document_name;
+            }
+        };
+        reader.readAsDataURL(document_value);
+    }
+
+    dragEnter(value) {
+        $(".dropinput").css({ "z-index": "6" });
+        $(value.path[1]).css({ "background": "rgba(182, 224, 184, 0.1)", "border": "1px dashed #7db580" });
+    }
+
+    onDrop(value) {
+        $('.dropinput').css({ "z-index": "-1" });
+        $(value.path[1]).css({ "background": "", "border": "" });
+    }
+
+    dragLeave(value) {
+        $(value.path[1]).css({ "background": "", "border": "" });
+    }
+
+    openFilePreviewDialog(parameter): void {
+        let type = this.getParameterDocumentType(parameter);
+        let file = this.getParameterDocumentValue(parameter);
+        const dialogRef = this.dialog.open(ImagePdfPreviewDialogComponent, {
+            width: '600px',
+            data: { 'file': file, 'type': type }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
     }
 
     hasInPageTaskPermission(module, task): boolean {

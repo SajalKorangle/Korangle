@@ -8,7 +8,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { CommonFunctions } from '../../../../classes/common-functions';
 
 import { MatDialog } from '@angular/material';
-import { MultipleFileDialogComponent } from '../../multiple-file-dialog/multiple-file-dialog.component';
+import { MultipleFileDialogComponent } from '../../../../components/multiple-file-dialog/multiple-file-dialog.component';
 import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
 
 declare const $: any;
@@ -52,7 +52,7 @@ export class UpdateProfileComponent implements OnInit {
 
     commonFunctions: CommonFunctions;
 
-    constructor(public studentService: StudentService, public schoolService: SchoolService, public dialog: MatDialog) {}
+    constructor(public studentService: StudentService, public schoolService: SchoolService, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

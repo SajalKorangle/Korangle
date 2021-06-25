@@ -12,7 +12,7 @@ import { PrintTransferCertificateSecondFormatComponent } from './print/print-tra
 import { PrintStudentListComponent } from './print/print-student-list/print-student-list.component';
 import { ExcelService } from '../../excel/excel-service';
 import { PrintStudentProfileComponent } from './print/print-student-profile/print-student-profile.component';
-import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import { ImagePdfPreviewDialogComponent } from "../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component";
 
 @NgModule({
     declarations: [
@@ -23,7 +23,6 @@ import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintStudentProfileComponent,
-        ImagePdfPreviewDialogComponent,
     ],
 
     imports: [ComponentsModule, StudentRoutingModule, NgxDatatableModule],
@@ -32,4 +31,4 @@ import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image
     providers: [ExcelService],
     bootstrap: [StudentComponent],
 })
-export class StudentModule {}
+export class StudentModule { }
