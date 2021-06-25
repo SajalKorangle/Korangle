@@ -3,7 +3,7 @@ import { AddFeeTypeComponent } from './add-fee-type.component';
 export class AddFeeTypeServiceAdapter {
     vm: AddFeeTypeComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -19,7 +19,7 @@ export class AddFeeTypeServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data).then(
+        this.vm.feeService.getObjectList(this.vm.feeService.fee_type, request_fee_type_data).then(
             (value) => {
                 this.populateFeeTypeList(value);
                 this.vm.isLoading = false;
@@ -75,7 +75,7 @@ export class AddFeeTypeServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-        this.vm.feeService.create(this.vm.feeService.fee_type, data).then(
+        this.vm.feeService.createObject(this.vm.feeService.fee_type, data).then(
             (value) => {
                 this.addToFeeTypeList(value);
                 this.vm.feeTypeNameToBeAdded = null;
@@ -130,7 +130,7 @@ export class AddFeeTypeServiceAdapter {
             parentSchool: feeType.parentSchool,
         };
 
-        this.vm.feeService.update(this.vm.feeService.fee_type, data).then(
+        this.vm.feeService.updateObject(this.vm.feeService.fee_type, data).then(
             (value) => {
                 alert('Fee Type updated successfully');
                 feeType.name = value.name;

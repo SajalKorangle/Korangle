@@ -49,10 +49,10 @@ export class UpdateStudentFeesServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.fee_type, request_fee_type_data),
-            this.vm.feeService.getList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
-            this.vm.feeService.getList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, request_fee_type_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
@@ -97,9 +97,9 @@ export class UpdateStudentFeesServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getList(this.vm.feeService.student_fees, student_fee_data),
-            this.vm.feeService.getList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_data),
-            this.vm.feeService.getList(this.vm.feeService.sub_discounts, sub_discount_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_data),
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_data),
         ]).then(
             (value) => {
                 this.vm.studentFeeList = value[0];
@@ -122,7 +122,7 @@ export class UpdateStudentFeesServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.delete(this.vm.feeService.student_fees, student_fee_data).then(
+        this.vm.feeService.deleteObject(this.vm.feeService.student_fees, student_fee_data).then(
             (value) => {
                 alert('Student Fee deletion successful');
                 this.deleteFromStudentFee(parseInt(value));
@@ -145,7 +145,7 @@ export class UpdateStudentFeesServiceAdapter {
     editStudentFee(): void {
         this.vm.isLoading = true;
 
-        this.vm.feeService.update(this.vm.feeService.student_fees, this.vm.newStudentFee).then(
+        this.vm.feeService.updateObject(this.vm.feeService.student_fees, this.vm.newStudentFee).then(
             (value) => {
                 alert('Student Fee updated successfully');
 
@@ -181,7 +181,7 @@ export class UpdateStudentFeesServiceAdapter {
 
         this.vm.isLoading = true;
 
-        this.vm.feeService.create(this.vm.feeService.student_fees, tempObject).then(
+        this.vm.feeService.createObject(this.vm.feeService.student_fees, tempObject).then(
             (value) => {
                 alert('Group attached to students profile');
                 this.vm.studentFeeList.push(value);
