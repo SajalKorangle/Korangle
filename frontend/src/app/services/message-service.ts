@@ -1,8 +1,8 @@
 import {UserService} from './modules/user/user.service';
 import {NotificationService} from './modules/notification/notification.service';
 import {SmsService} from './modules/sms/sms.service';
-import {EMPLOYEE_VARIABLES, EVENT_SETTING_PAGES, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
-import {SMS_EVENTS} from '../constants-database/SMSEvent';
+import {NEW_LINE_REGEX, VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
+import {SMS_EVENT_LIST} from '../modules/constants-database/SMSEvent';
 
 /*
 SentUpdateType -
@@ -100,7 +100,7 @@ export class MessageService {
         smsBalance, // school sms balance
     ) {
 
-        const smsEvent = SMS_EVENTS.find(event => event.eventName == eventName);
+        const smsEvent = SMS_EVENT_LIST.find(event => event.eventName == eventName);
         if (!smsEvent) {
             throw "No Events Found";
         } // if there is not event return
@@ -111,7 +111,7 @@ export class MessageService {
         };
 
         const eventSettings = await this.smsService.getObject(this.smsService.sms_event_settings, fetch_event_settings_list);
-        if (!eventSettings || eventSettings.parentSentUpdateType == 1) {
+        if (!eventSettings || eventSettings.sendUpdateTypeFrontEndId == 1) {
             return;
         } // if there is not event settings or sentUpdateType is null then return
 
@@ -133,9 +133,10 @@ export class MessageService {
             Data,
             personsList,
             smsEvent,
-            eventSettings.parentSentUpdateType,
+            eventSettings.sendUpdateTypeFrontEndId,
             smsContent,
             notificationContent,
+            null,
             smsId,
             schoolId,
             smsBalance
@@ -146,9 +147,10 @@ export class MessageService {
         data: any, // contains all the backend list which are required to populate the variables
         personsList: any, // ['student','employee'] either or both of them
         smsEvent: any, // corresponding SMS Event
-        sentUpdateType: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
+        sendUpdateTypeId: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
         smsContent: any, // This content contains any sms template with mapped variables
         notificationContent: any, // any notification content with variables
+        scheduledDateTime: any, // scheduled Date and Time
         smsId: any, // school SMSId dbID or 1 - which is KORNGL smsId dbId
         schoolId: any, // school dbID
         smsBalance: any // sms balance for that school
@@ -158,16 +160,12 @@ export class MessageService {
         let sms_list = [];
         let personVariablesMappedObjList = [];
         // finding the corresponding eventSettingsPage to know the variablesList
-        let eventSettingPage = EVENT_SETTING_PAGES.find(settingPage => settingPage.orderedEvents.some(event => event == smsEvent.eventName));
+        let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.event.id == smsEvent.id);
 
         personsList.forEach(person => {
-            if (eventSettingPage.name == 'General SMS') { // because in general we will be using student or employee Variables
-                eventSettingPage.variableList = person == 'student' ? STUDENT_VARIABLES : EMPLOYEE_VARIABLES;
-            }
-
             data[person + 'List'].forEach(personData => {
                 if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
-                    let mappedObject = this.getMappingData(eventSettingPage.variableList, data, person, personData);
+                    let mappedObject = this.getMappingData(variableMappedEvent.variableList, data, person, personData);
                     mappedObject['notification'] = personData.notification;
                     mappedObject['id'] = personData.id;
                     personVariablesMappedObjList.push(mappedObject);
@@ -175,12 +173,11 @@ export class MessageService {
             });
 
         });
-        console.log(personVariablesMappedObjList);
 
-        if (sentUpdateType == 2) {
+        if (sendUpdateTypeId == 2) {
             sms_list = personVariablesMappedObjList;
             notification_list = [];
-        } else if (sentUpdateType == 3) {
+        } else if (sendUpdateTypeId == 3) {
             sms_list = [];
             notification_list = personVariablesMappedObjList.filter((obj) => {
                 return obj.notification;
@@ -223,7 +220,7 @@ export class MessageService {
             }
         });
 
-        let smsCount = this.getEstimatedSMSCount(sentUpdateType, smsMappedDataList);
+        let smsCount = this.getEstimatedSMSCount(sendUpdateTypeId, smsMappedDataList);
 
         if (smsCount > smsBalance) {
             smsMappedDataList = [];
@@ -245,12 +242,12 @@ export class MessageService {
             notificationMobileNumberList: notif_mobile_string,
             mobileNumberList: sms_mobile_string,
             parentSchool: schoolId,
+            scheduledDateTime: scheduledDateTime,
             smsId: smsId,
         };
 
 
         const notification_data = notificationMappedDataList.map((item) => {
-            console.log(item);
             return {
                 parentMessageType: null,
                 SMSEventFrontEndId: smsEvent.id,
@@ -262,9 +259,6 @@ export class MessageService {
             };
         });
 
-        console.log(sms_data);
-        console.log(notification_data);
-
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
         if (notification_data.length > 0) {
@@ -272,7 +266,7 @@ export class MessageService {
         }
 
         const value = await Promise.all(service_list);
-        if ((sentUpdateType == 2 || sentUpdateType == 4) && sms_list.length > 0) {
+        if ((sendUpdateTypeId == 2 || sendUpdateTypeId == 4) && sms_list.length > 0) {
             if (value[0].status === 'success') {
                 smsBalance -= value[0].data.count;
             } else if (value[0].status === 'failure') {
@@ -299,15 +293,15 @@ export class MessageService {
         return false;
     }
 
-    getEstimatedSMSCount = (sentUpdateType: any, student_list: any) => {
+    getEstimatedSMSCount = (sendUpdateTypeId: any, student_list: any) => {
         let count = 0;
-        if (sentUpdateType == 3) {
+        if (sendUpdateTypeId == 3) {
             return 0;
         }
         student_list
             .filter((item) => item.mobileNumber)
             .forEach((item, i) => {
-                if (sentUpdateType == 2 || sentUpdateType == 4) {
+                if (sendUpdateTypeId == 2 || sendUpdateTypeId == 4) {
                     count += this.getMessageCount(item.isAdvanceSms);
                 }
             });
@@ -315,9 +309,9 @@ export class MessageService {
         return count;
     }
 
-    getEstimatedNotificationCount = (sentUpdateType: any, student_list: any) => {
+    getEstimatedNotificationCount = (sendUpdateTypeId: any, student_list: any) => {
         let count = 0;
-        if (sentUpdateType == 2) {
+        if (sendUpdateTypeId == 2) {
             return 0;
         }
 

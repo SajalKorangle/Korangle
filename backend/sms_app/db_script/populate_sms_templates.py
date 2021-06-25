@@ -13,7 +13,7 @@ def populate_sms_templates(apps, schema_editor):
                                                'रजिस्ट्रेशन शुल्क {#var#} है रजिस्ट्रेशन शुल्क {#var#} {#var#} से {'
                                                '#var#} {#var#} तक होगा शासन के निर्देश अनुसार धन्यवाद {#var#}\nसाई '
                                                'नाथ कॉन्वेंट हाई स्कूल आसारेटा ',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='SNCSCH'), templateName='1',
                                     templateId='1007611414244971241',
@@ -21,13 +21,13 @@ def populate_sms_templates(apps, schema_editor):
                                                'बोर्ड परीक्षा 15 अप्रेल से 22 अप्रेल तक निर्धारित की गई है तथा 9 वी '
                                                'की प्रेक्टिकल परीक्षा 12 तारीख को निर्धारित की गई है समय सुबह 8 से 11 '
                                                'साई नाथ कॉन्वेंट हाई स्कूल आसारेटा धन्यवाद ',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='SNCSCH'), templateName='fEE1',
                                     templateId='1007656419087571253',
                                     rawContent='प्रिय पालक आपके बच्चो की बकाया{#var#} फीस जमा करवाएं \nसाईं नाथ '
                                                'कान्वेंट हाई स्कूल ',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='SNCSCH'),
                                     templateName='Class pramot 3',
@@ -38,7 +38,7 @@ def populate_sms_templates(apps, schema_editor):
                                                'विद्यार्थी रजिस्ट्रेशन के लिए रह जाता है वह विद्यार्थी अगली कक्षा में '
                                                'प्रमोट नही होगा इसके लिए विद्यालय जिम्मेदार नही रहेगा शासन के '
                                                'आदेशानुसार \nधन्यवाद\n{#var#} साई नाथ कॉन्वेंट हाई स्कूल आसारेटा ',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='SNCSCH'),
                                     templateName='Class pramot',
@@ -47,7 +47,7 @@ def populate_sms_templates(apps, schema_editor):
                                                'करके अगली कक्षा में प्रवेश कराए अन्यथा विद्यालय की जवाबदारी नही होगी '
                                                'अंतिम तारीख 31 मार्च 2020 है धन्यवाद साई नाथ कॉन्वेंट हाई स्कूल '
                                                'आसारेटा {#var#}',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
 
     # KRISHL Templates
@@ -57,14 +57,14 @@ def populate_sms_templates(apps, schema_editor):
                                     templateId='1007029950687039923',
                                     rawContent='भारी वर्षा के कारण  दिनांक {#var#} तक अवकाश रहेगा l K.R.INTERNATIONAL '
                                                'SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='SINGLE HOLIDAY',
                                     templateId='1007068130451011747',
                                     rawContent='{#var#} के कारण कल दिनांक {#var#} दिन {#var#} को अवकाश रहेगा l '
                                                'K.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='EXAM ADMIT CARD NOTICE',
@@ -72,48 +72,48 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent='सभी विद्यार्थियों  की {#var#} परीक्षा दिनांक {#var#} से शुरू हो रही '
                                                'हे फीस जमा होने पर ही प्रवेश पत्र दिया जायेगा एवं बिना प्रवेश पत्र '
                                                'परीक्षा में शामिल नहीं किया जायेगा l K.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='PRACTICAL EXAM',
                                     templateId='1007364319770069324',
                                     rawContent='{#var#}  के विद्यार्थियों की प्रायोगिक परीक्षा दिनांक {#var#} को '
                                                'रहेगी l  K.R.INTERANTIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='FESTIVAL WISHESH',
                                     templateId='1007377397125750877',
                                     rawContent='सभी देशवासियो को {#var#} की हार्दिक शुभकामनाए l K.R.INTERNATIONAL '
                                                'SCHOOL',
-                                    communicationType='SERVICE EXPLICIT', registrationStatus='APPROVED')
+                                    communicationType=2, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='FESTIVAL HOLIDAY',
                                     templateId='1007443901471376323',
                                     rawContent='{#var#} अवकाश दिनांक {#var#} तक रहेगा l  K.R.INTERANTIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='SCHOOL OPENING NOTICE',
                                     templateId='1007723775029026725',
                                     rawContent='समस्त पालक को सूचित किया जाता हे की दिनांक {#var#} से विद्यालय की '
                                                'नियमित कक्षाए प्रारम्भ हो रही हे l K.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='RAIN HOLIDAY',
                                     templateId='1007756116285795804',
                                     rawContent='भारी बरिश कि वजह से दिनांक {#var#} को विध्यालय मे अवकाश रहेगा '
                                                'K.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='REGULARTY AND DRESS NOTICE',
                                     templateId='1007820247064818055',
                                     rawContent='पालकगण को सूचित किया जाता हे की बच्चो को पूर्ण गणवेश में नियमित '
                                                'विद्यालय भेजे lK.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='FEE NOTICE WITH DATE',
@@ -121,21 +121,21 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent='पालकगण को सूचित किया जाता हे की अभी तक अगर आपने बच्चो की फीस जमा नहीं '
                                                'की हो तो कृपया दिनांक {#var#} तक जमा कराये अन्यथा बच्चो को कक्षा में '
                                                'प्रवेश नहीं दिया जायेगा l K.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='WINTER MULTI HOLIDAY',
                                     templateId='1007976742875501212',
                                     rawContent='शीतलहर के कारण विद्यालय में दिनांक {#var#} तक अवकाश रहेगा l '
                                                'K.R.INTERNATIONAL SCHOOL',
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KRISHL'),
                                     templateName='PROGRAM INVITATION',
                                     templateId='1007991223338761165',
                                     rawContent='सभी पालकगण का विद्यालय में आयोजित {#var#} समारोह में अतिथि के रूप में '
                                                'हार्दिक स्वागत हे l K.R.INTERNATIONAL SCHOOL ',
-                                    communicationType='SERVICE EXPLICIT', registrationStatus='APPROVED')
+                                    communicationType=2, registrationStatus='APPROVED')
     new_sms_template.save()
 
     # MAGADM Templates
@@ -146,7 +146,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Magadham International School Dear parent,{#var#} Your ward's next "
                                                "fee installment is due{#var#}.Kindly pay to avoid late fee. Pls "
                                                "ignore if already paid ",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='MAGADM'),
                                     templateName='due fees',
@@ -154,7 +154,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Magadham International School \nDear parent,{#var#} Your ward's next "
                                                "fee installment is due{#var#}.Kindly pay to avoid late fee. Pls "
                                                "ignore if already paid {#var#}",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
 
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
@@ -162,7 +162,7 @@ def populate_sms_templates(apps, schema_editor):
                                     templateId='1007007354407837911',
                                     rawContent="Dear Parent, There will be PTM on {#var#} for Grade {#var#} from {"
                                                "#var#}.. REGARDS  \n{#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au3',
@@ -170,7 +170,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Dear {#var#},\nकक्षा {#var#} से शुरू हो रही हैं जो की अनिवार्य है "
                                                "अन्यथा बच्चे को अगली कक्षा में प्रमोट करना मुश्किल होगा. तुरंत स्कूल "
                                                "आकर संपर्क करें l  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au24',
@@ -182,14 +182,14 @@ def populate_sms_templates(apps, schema_editor):
                                                "क्लास की सुविधा नही दि जाएगी! इसके जिम्मेदार आप स्वयं होगे! जिन बच्चो "
                                                "का शुल्क जमा है वे इस सूचना को अंन्यथा ना लेवे! व स्कूल में सम्पर्क "
                                                "करे! {#var#} से {#var#}  \nKorangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au23',
                                     templateId='1007080061104837383',
                                     rawContent="यदि आपने कक्षा {#var#} नहीं प्राप्त की हे तो ऑफिस आकर जल्द प्राप्त कर "
                                                "लेवे !  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='korangle1',
@@ -198,21 +198,21 @@ def populate_sms_templates(apps, schema_editor):
                                                "अनुसार\n कोरोना स्पेशल फीचर्स \n*परीक्षा का संचालन मोबाइल व कंप्यूटर "
                                                "से\n*स्वनिर्धारित रीपोर्ड कार्ड व\n*स्कूल मैनेजमेंट के सभी फीचर्स "
                                                "\nअपने स्कूल को जोड़ने के लिए कॉल करें\n{#var#}",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au25',
                                     templateId='1007106653932327778',
                                     rawContent="{#var#} at {#var#} there will be a compulsory PTM & registration "
                                                "process for Grade {#var#} Commerce students..  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au19',
                                     templateId='1007110198246738636',
                                     rawContent="आज एग्जाम फॉर्म हेतु फ़ोटो लेकर आवें या खिंचवाने आवें समय {#var#}  "
                                                "KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au17',
@@ -220,42 +220,42 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="कक्षा {#var#} तक की अर्द्ध वार्षिक परीक्षा शुरू हो चुकी हैI प्रश्न "
                                                "पत्र प्राप्त करने की अंतिम दिनाँक {#var#} है जिसके बाद परीक्षा नहीं "
                                                "ली जाएगीl  {#var#} \nKorangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au2',
                                     templateId='1007131767465682960',
                                     rawContent="कक्षा {#var#} रजिस्ट्रेशन स्टार्ट हो गए है धन्यवाद \nसाई नाथ कॉन्वेंट "
                                                "हाई स्कूल आसारेटा  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au7',
                                     templateId='1007138477124000263',
                                     rawContent="Hi {#var#} Khan {#var#};s fees due till date is Rs. {#var#} |  \n{"
                                                "#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au5',
                                     templateId='1007153112343077746',
                                     rawContent="New Homework is added in Account, Title - {#var#} Last date to submit "
                                                "- null  {#var#}\nKorangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au9',
                                     templateId='1007189643592509538',
                                     rawContent="{#var#} कल दिनांक {#var#} को विद्यालय का अवकाश रहेगा।  \n{#var#} "
                                                "Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au20',
                                     templateId='1007238840414357839',
                                     rawContent="शासकीय आदेश अनुसार {#var#} तक {#var#} रहेगा साई नाथ कॉन्वेंट हाई "
                                                "स्कूल आसारेटा  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='winter break',
@@ -265,7 +265,7 @@ def populate_sms_templates(apps, schema_editor):
                                                "to 31st December and will reopen on 1st of January. It is to be "
                                                "informed that school will remain closed due to winter "
                                                "break.\nKorangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au16',
@@ -273,28 +273,28 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="{#var#} parent, Mid term exam are going on &amp; your ward did {"
                                                "#var#} appear for {#var#} on {#var#} &amp; {#var#} please send him "
                                                "for next exam. {#var#}  Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au18',
                                     templateId='1007281499713023900',
                                     rawContent="There will be Dussehra holidays from {#var#} for grade Nur to {#var#} "
                                                " \n{#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au11',
                                     templateId='1007387468940473354',
                                     rawContent="Dear Parent, Tomorrow {#var#} There is a PTM for Grade {#var#} from {"
                                                "#var#} to {#var#} pm.. REGARDS \n{#var#} Korangle School Software ",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au15',
                                     templateId='1007389736170558078',
                                     rawContent="अभिभावक को सूचित किया जाता हे की अल्पसंख्यक छात्रवृति सम्बंधित "
                                                "दस्तावेज़ स्कूल में {#var#} के पूर्व जमा करे | परफेक्ट स्कूल  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au4',
@@ -302,7 +302,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Dear {#var#},\nआज {#var#} की pre board परीक्षा शुरू हो गई है जो कि "
                                                "अनिवार्य है. बच्चा आज अनुपस्थित था कृपया कल से परीक्षा दिलाएं.  "
                                                "KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au23',
@@ -310,7 +310,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="कक्षा {#var#} के बोर्ड परीक्षा फॉर्म जमा हो रहे है , आपका {#var#} "
                                                "सत्र के शुल्क जमा करके ही इस सत्र के आवेदन किये जायेंगे {#var#}  "
                                                "Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au10',
@@ -320,14 +320,14 @@ def populate_sms_templates(apps, schema_editor):
                                                "होना हे अतः सभी पालक गण दिनांक {#var#} को स्कूल में आकर उनकी सामग्री "
                                                "प्राप्त करें \nजो छात्र असाइमेंट नहीं देंगे उन्हें किसी भी हालत में "
                                                "क्लास प्रमोट नहीं किया जावेगा  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au4',
                                     templateId='1007411403939949292',
                                     rawContent="Your Homework Test - {#var#} of Subject Account has been {#var#}  \n{"
                                                "#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au21',
@@ -335,20 +335,20 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Korangle School Software \nDear {#var#} , As per your request your "
                                                "password updated. New password:- {#var#} You can login here: "
                                                "http://msg.msgclub.net  ",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au13',
                                     templateId='1007454036746737648',
                                     rawContent="{#var#} There is a PTM today {#var#} for Grade {#var#} from {#var#}.. "
                                                "{#var#}  \n{#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au21',
                                     templateId='1007477498527253631',
                                     rawContent="सत्र {#var#} के लिए रजिस्ट्रेशन शुल्क कक्षा {#var#}  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au15',
@@ -356,21 +356,21 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Dear {#var#} Mid term exam are going on &amp; your ward did not {"
                                                "#var#} for {#var#} kindly submit leave application. {#var#}  \n{"
                                                "#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au16',
                                     templateId='1007570700676287376',
                                     rawContent="Dear {#var#}, Your ward's next fee installment is due.Kindly pay to "
                                                "avoid late fee. Pls ignore if already paid.  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='fee demo',
                                     templateId='1007580206539279872',
                                     rawContent="प्रिय पालक आपके बच्चो की बकाया{#var#} फीस जमा करवाएं\nKorangle School "
                                                "Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au14',
@@ -378,7 +378,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="DEAR PARENTS, There will be PTM for grade {#var#} tomorrow {#var#} "
                                                "timings are from {#var#}. lunch time from {#var#} {#var#} PTM "
                                                "restarts from {#var#}. REGARDS {#var#}\nKorangle School Software ",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au22',
@@ -388,7 +388,7 @@ def populate_sms_templates(apps, schema_editor):
                                                "वार्षिक परिणाम के लिए जिन बच्चों का रजिस्ट्रेशन होगा वही बच्चा {"
                                                "#var#} के लिए मान्य होगा अन्यथा वह विधार्थी उसी कक्षा में मान्य रहेगा "
                                                "धन्यवाद साई नाथ कॉन्वेंट हाई स्कूल आसारेटा संपर्क करे {#var#}  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au19',
@@ -397,7 +397,7 @@ def populate_sms_templates(apps, schema_editor):
                                                "शुरू हो रही है. परीक्षा ऑफलाइन ली जाएगी. कृपया {#var#} को स्कूल आकर "
                                                "प्रश्न पत्र का लिफाफा प्राप्त करेंl  \n{#var#} Korangle School "
                                                "Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au1',
@@ -409,7 +409,7 @@ def populate_sms_templates(apps, schema_editor):
                                                "करवाई जाएगी !\nनोट - शासन आदेशानुसार बच्चा बिना परीक्षा दिए बच्चा "
                                                "अगली कक्षा में प्रमोट नही हो पायेगा ।\nधन्यवाद \nआज्ञा से प्राचार्य  "
                                                "KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au18',
@@ -417,21 +417,21 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Dear {#var#},\n{#var#} is the last date to submit answer sheets for "
                                                "grade {#var#}. no answer sheets will be accepted after that.\nRegards"
                                                "  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='model ashta',
                                     templateId='1007646886428616037',
                                     rawContent="{#var#}प्रिय पालक आपके बच्चो की बकाया फीस जमा करवाएं{#var#}\n {#var#} "
                                                "Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='modal school ashta1',
                                     templateId='1007680146454449759',
                                     rawContent="मॉडर्न पब्लिक स्कूल {#var#}\nप्रिय पालक आपके बच्चो की बकाया फीस जमा "
                                                "करवाएं। \nharshal agrawal\n ",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au12',
@@ -439,35 +439,35 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="DEAR PARENTS, Tomorrow {#var#} there will be a PTM for grade {#var#} "
                                                "timings will be from {#var#}. REGARDS  \n{#var#} Korangle School "
                                                "Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='model ashta1',
                                     templateId='1007688298799584794',
                                     rawContent="Korangle School Software{#var#}\nप्रिय पालक आपके बच्चो की बकाया फीस "
                                                "जमा करवाएं",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='model ashta1',
                                     templateId='1007688298799584794',
                                     rawContent="Korangle School Software{#var#}\nप्रिय पालक आपके बच्चो की बकाया फीस "
                                                "जमा करवाएं",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au22',
                                     templateId='1007707150939255583',
                                     rawContent="{#var#} is the OTP requested by you to reset your password for "
                                                "korangle.com  ",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au24',
                                     templateId='1007707642758856947',
                                     rawContent="सूचित किया जाता है कक्षा 8 के बच्चों की {#var#} बदलकर {#var#} से हो "
                                                "गया है साई नाथ कॉन्वेंट हाई स्कूल धन्यवाद  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au6',
@@ -476,20 +476,20 @@ def populate_sms_templates(apps, schema_editor):
                                                "लाइन अनुसार कोरोना स्पेशल फीचर्स *परीक्षा का संचालन मोबाइल व कंप्यूटर "
                                                "से *स्वनिर्धारित रीपोर्ड कार्ड व *स्कूल मैनेजमेंट के सभी फीचर्स अपने "
                                                "स्कूल को जोड़ने के लिए कॉल करें {#var#}  {#var#}",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au9',
                                     templateId='1007745050627836127',
                                     rawContent="Korangle Softwares - Demo\n\nGo to www.korangle.com\n\nLogin Id: {"
                                                "#var#}\nPassword: {#var#}\n\nFor any queries, Call {#var#}  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au6',
                                     templateId='1007763274400768991',
                                     rawContent="साई नाथ परिवार को {#var#} की हार्दिक शुभकामनाएं  KORNGL",
-                                    communicationType='SERVICE EXPLICIT', registrationStatus='APPROVED')
+                                    communicationType=2, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au7',
@@ -499,38 +499,38 @@ def populate_sms_templates(apps, schema_editor):
                                                "#var#} तक होगा तारीख निकल जाने के बाद विद्यालय की जवाबदारी नही होगी "
                                                "आपका अपना साई नाथ कॉन्वेंट हाई स्कूल आसारेटा सभी पेरेंट्स को {#var#} "
                                                "की हार्दिक शुभकामनाएं धन्यवाद  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au20',
                                     templateId='1007795938552396900',
                                     rawContent="{#var#} is the OTP requested by you to sign up for korangle.com",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au5',
                                     templateId='1007804254684323368',
                                     rawContent="{#var#} की हार्दिक शुभकामनाए साई नाथ कॉन्वेंट हाई स्कूल  KORNGL",
-                                    communicationType='SERVICE EXPLICIT', registrationStatus='APPROVED')
+                                    communicationType=2, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au17',
                                     templateId='1007820792379707586',
                                     rawContent="कक्षा {#var#} के लिए कल से विद्यालय प्रारंभ धन्यवाद {#var#}  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au14',
                                     templateId='1007873909851900842',
                                     rawContent="Hi {#var#},\n{#var#} fees due till date is Rs. {#var#}  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au13',
                                     templateId='1007881219096065548',
                                     rawContent="Your {#var#} exam will be start from {#var#} So please submit your {"
                                                "#var#} installment before {#var#} examination.\nAll The Best  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au12',
@@ -538,7 +538,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="अभिभावक को सूचित किया जाता हे की कल दिनांक {#var#} को परीक्षा एवं "
                                                "प्रोजेक्ट सम्बंधित मीटिंग रखी गई हे ,अभिभावक का आना अनिवार्य हे समय {"
                                                "#var#} तक -\nपरफेक्ट पब्लिक स्कूल  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='fee reminder',
@@ -548,14 +548,14 @@ def populate_sms_templates(apps, schema_editor):
                                                "{#var#} is pending against your child, {#var#} of grade {#var#}. We "
                                                "kindly request you to please clear your outstanding dues and pay the "
                                                "school in full by {#var#}",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au8',
                                     templateId='1007931346904054624',
                                     rawContent="Your Homework ASSIGNMENT {#var#} of Subject {#var#} has been asked "
                                                "for resubmission  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='har_m_d_jan_au3',
@@ -563,7 +563,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Dear parents, बच्चों की दूसरी पीरियोडिक परीक्षा 4 जनवरी से शुरू हो "
                                                "रही है जो कि अनिवार्य है. {#var#} परीक्षा {#var#} है. ऑफिस संडे खुला "
                                                "है संपर्क करें {#var#}  \n{#var#} Korangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='fee2',
@@ -571,7 +571,7 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="Dear parent,{#var#} Your ward's next fee installment is due{"
                                                "#var#}.Kindly pay to avoid late fee. Pls ignore if already paid {"
                                                "#var#} \nKorangle School Software",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='ko_m_feb_au11',
@@ -579,65 +579,65 @@ def populate_sms_templates(apps, schema_editor):
                                     rawContent="{#var#} स्पेशल \n\n- परीक्षा का संचालन मोबाइल/कंप्यूटर से \n- "
                                                "स्वनिर्धारित रिपोर्ट कार्ड\n\nअपने स्कूल की id एक्टिवेट करने के लिए "
                                                "कॉल करें {#var#} \n\nKorangle School Softwares  KORNGL",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Homework_updated',
                                     templateId='1007826344593482411',
                                     rawContent="Please note, there are changes in the Homework '{#var#}' of {#var#} "
                                                "korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='new_homework',
                                     templateId='1007473098399059987',
                                     rawContent="New Homework is added in {#var#},\n Title - '{#var#}' \n Last date to "
                                                "submit - {#var#} korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Tutorial_creation',
                                     templateId='1007350055286082984',
                                     rawContent="A new tutorial has been created in the Subject {#var#}; Chapter {"
                                                "#var#}; Topic {#var#} korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Tutorial_updation',
                                     templateId='1007138771911507983',
                                     rawContent="The following tutorial has been edited -\n Topic {#var#}; Subject {"
                                                "#var#}; Chapter {#var#} korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Attendance_creation',
                                     templateId='1007961962586116131',
                                     rawContent="Your ward, {#var#} is marked {#var#} on {#var#} korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Homework_checked',
                                     templateId='1007084014239192894',
                                     rawContent="Your Homework {#var#} of Subject {#var#} has been checked korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Homework_deleted',
                                     templateId='1007391677641232123',
                                     rawContent="Please note, the homework '{#var#}' of subject {#var#} has been "
                                                "removed korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Attendance_updation',
                                     templateId='1007921534138920646',
                                     rawContent="Your ward's attendance has been corrected to {#var#} korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()
     new_sms_template = sms_template(parentSMSId=sms_id.objects.get(smsId='KORNGL'),
                                     templateName='Tutorial_deletion',
                                     templateId='1007686899000290485',
                                     rawContent="The following tutorial has been deleted -\n Topic {#var#}; Subject {"
                                                "#var#}; Chapter {#var#} korngl",
-                                    communicationType='SERVICE IMPLICIT', registrationStatus='APPROVED')
+                                    communicationType=1, registrationStatus='APPROVED')
     new_sms_template.save()

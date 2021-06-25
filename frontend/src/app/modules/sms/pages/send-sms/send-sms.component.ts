@@ -11,7 +11,8 @@ import {NotificationService} from '../../../../services/modules/notification/not
 import {UserService} from '../../../../services/modules/user/user.service';
 import {MessageService} from '@services/message-service';
 import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
-import {SENT_UPDATE_TYPE, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
+import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
 
 @Component({
     selector: 'send-sms',
@@ -33,8 +34,8 @@ export class SendSmsComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    sentTypeList = SENT_UPDATE_TYPE.filter(type => type.name != 'NULL');
-    sendToList = ['Students', 'Employees'];
+    sendUpdateTypeList = SEND_UPDATE_TYPE_LIST.filter(type => type.name != 'NULL');
+    sendToList = [{id: 1, name: 'Students'}, {id: 2, name: 'Employees'}, {id: 3, name: 'Common'}];
 
     dataForMapping = {} as any;
 
@@ -62,7 +63,10 @@ export class SendSmsComponent implements OnInit {
     userInput = {
         selectedSendTo: null,
         selectedTemplate: {} as any,
-        selectedSentType: this.sentTypeList[0],
+        selectedSendUpdateType: this.sendUpdateTypeList[0],
+        scheduleSMS: false,
+        scheduledDate: null,
+        scheduledTime: null,
     };
 
     backendData = {
@@ -73,7 +77,7 @@ export class SendSmsComponent implements OnInit {
         studentList: [],
         classList: [],
         sectionList: [],
-        smsEvent: {} as any,
+        smsEventList: [],
         smsBalance: 0,
     };
 
@@ -108,9 +112,7 @@ export class SendSmsComponent implements OnInit {
         public notificationService: NotificationService,
         public userService: UserService,
         private cdRef: ChangeDetectorRef
-    ) {
-        console.log(this);
-    }
+    ) {}
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -156,8 +158,9 @@ export class SendSmsComponent implements OnInit {
 
     getMobileNumberList(returnType: string): any {
         let tempList = [];
+        let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.event.id == this.userInput.selectedSendTo.id).variableList;
 
-        if (this.userInput.selectedSendTo == this.sendToList[0]) {
+        if (this.userInput.selectedSendTo.id != 2) {
 
             this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((x) => {
                 return x.selected;
@@ -168,33 +171,37 @@ export class SendSmsComponent implements OnInit {
                     return x.selected;
                 })
                 .forEach((studentSection) => {
-                    if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                    if (!this.studentMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                         studentSection.student, this.message, 'student')) {
+                        studentSection.student['student'] = true;
                         tempList.push(studentSection.student);
                     }
                     if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                        if (!this.studentMessageService.checkForDuplicate(STUDENT_VARIABLES, tempList, this.dataForMapping,
+                        if (!this.studentMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                             studentSection.student, this.message, 'student', true)) {
+                            studentSection.student['student'] = true;
                             tempList.push(studentSection.student);
                         }
                     }
                 });
         }
-        if (this.userInput.selectedSendTo == this.sendToList[1]) {
+        if (this.userInput.selectedSendTo.id != 1) {
+            this.dataForMapping['employeeList'] = this.employeeList.filter(x => x.selected);
             this.employeeList.forEach((employee) => {
-                if (employee.selected) {
+                if (employee.selected && !this.employeeMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
+                    employee, this.message, 'employee')) {
+                    employee['employee'] = true;
                     tempList.push(employee);
                 }
             });
-            this.dataForMapping['employeeList'] = tempList;
         }
-        if (this.userInput.selectedSentType == this.sentTypeList[0]) {
+        if (this.userInput.selectedSendUpdateType == this.sendUpdateTypeList[0]) {
             this.smsPersonList = tempList;
             this.notificationPersonList = [];
-        } else if (this.userInput.selectedSentType == this.sentTypeList[1]) {
+        } else if (this.userInput.selectedSendUpdateType == this.sendUpdateTypeList[1]) {
             this.smsPersonList = [];
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
-        } else if (this.userInput.selectedSentType == this.sentTypeList[2]) {
+        } else if (this.userInput.selectedSendUpdateType == this.sendUpdateTypeList[2]) {
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
             this.smsPersonList = tempList.filter((temp1) => {
                 return (

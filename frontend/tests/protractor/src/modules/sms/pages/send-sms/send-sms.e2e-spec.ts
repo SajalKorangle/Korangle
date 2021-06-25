@@ -25,6 +25,25 @@ describe('SMS -> Send SMS', () => {
         // Opening Page
         await openModuleAndPage('SMS', 'Send SMS');
 
+        // checking expansion panels count are correct
+        let nodes  = await containsFirst('mat-expansion-panel', 'Student');
+        expect(nodes.length).toBe(1);
+
+        let matSelect = await containsFirst('mat-select', '');
+        await matSelect.click();
+        let node = await containsFirst('mat-option', 'Employee');
+        await node.click();
+
+        nodes = await containsFirst('mat-expansion-panel', 'Employee');
+        expect(nodes.length).toBe(1);
+
+        await matSelect.click();
+        node = await containsFirst('mat-option', 'Common');
+        await node.click();
+
+        nodes = await containsFirst('mat-expansion-panel', '');
+        expect(nodes.length).toBe(2);
+
         // Type the student name
         await BeforeAfterEach.page.waitForXPath('//input[@testId="nameFilter"]');
         const [inputElement] = await BeforeAfterEach.page.$x('//input[@testId="nameFilter"]');

@@ -1,11 +1,11 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import {SMS_EVENTS} from '../../../../constants-database/SMSEvent';
+import {SMS_EVENT_LIST} from '../../../constants-database/SMSEvent';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
 
-    attendanceEvents = ['Attendance Creation', 'Attendance Updation'];
+    attendanceEvents = [5, 6];
 
     constructor() {}
     // Data
@@ -40,9 +40,9 @@ export class RecordAttendanceServiceAdapter {
         this.vm.dataForMapping['divisionList'] = value[2];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
-        this.vm.backendData.eventList = SMS_EVENTS.filter(event => this.attendanceEvents.some(e => e == event.eventName));
+        this.vm.backendData.eventList = SMS_EVENT_LIST.filter(event => this.attendanceEvents.includes(event.id));
         let fetch_event_settings_list = {
-            parentSMSEvent__in: this.vm.backendData.eventList.map(a => a.id).join(),
+            SMSEventFrontEndId__in: this.vm.backendData.eventList.map(a => a.id).join(),
             parentSchool: this.vm.user.activeSchool.dbId,
         };
         if (this.vm.backendData.eventList.length > 0) {
@@ -252,10 +252,10 @@ export class RecordAttendanceServiceAdapter {
     notifyParents(): void {
         this.vm.createdStudentList = [];
         this.vm.updatedStudentList = [];
-        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.parentSMSEvent == this.vm.backendData.eventList.find
-        (event => event.eventName == 'Attendance Creation').id);
-        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.parentSMSEvent == this.vm.backendData.eventList.find
-        (event => event.eventName == 'Attendance Updation').id);
+        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventFrontEndId == this.vm.backendData.eventList.find
+        (event => event.id == 5).id);
+        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventFrontEndId == this.vm.backendData.eventList.find
+        (event => event.id == 6).id);
         this.vm.studentAttendanceStatusList.forEach((student) => {
             student.attendanceStatusList.forEach((attendanceStatus) => {
                 let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(student, attendanceStatus.date);

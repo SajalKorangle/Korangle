@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='notification',
-            name='SMSEventFrontEndKey',
+            name='SMSEventFrontEndId',
             field=models.IntegerField(default=0),
         ),
         migrations.AlterField(

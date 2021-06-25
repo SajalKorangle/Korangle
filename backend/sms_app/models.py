@@ -1,11 +1,11 @@
 import traceback
 
 from django.db import models
-from django.db.models.signals import post_save, pre_save, post_delete
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from school_app.model.models import School
-from information_app.models import MessageType, SentUpdateType
+from information_app.models import MessageType
 
 
 # Create your models here
@@ -98,6 +98,9 @@ class SMS(models.Model):
     # SMSId
     smsId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')
 
+    # scheduledSMS
+    scheduledDateTime = models.DateTimeField(null=True)
+
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
 
@@ -181,13 +184,10 @@ class SMSTemplate(models.Model):
     templateName = models.TextField(null=False, verbose_name='templateName')
     rawContent = models.TextField(null=False, verbose_name='rawContent')
 
-    SERVICE_IMPLICIT = 'SERVICE IMPLICIT'
-    SERVICE_EXPLICIT = 'SERVICE EXPLICIT'
-    TRANSACTIONAL = 'TRANSACTIONAL'
     SMS_COMMUNICATION_TYPE = (
-        (SERVICE_IMPLICIT, 'SERVICE IMPLICIT'),
-        (SERVICE_EXPLICIT, 'SERVICE EXPLICIT'),
-        (TRANSACTIONAL, 'TRANSACTIONAL')
+        ('1', 'SERVICE IMPLICIT'),
+        ('2', 'SERVICE EXPLICIT'),
+        ('3', 'TRANSACTIONAL')
     )
 
     communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
@@ -212,8 +212,7 @@ class SMSEventSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
     parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, null=True,
                                           verbose_name='parentSMSTemplate')
-    parentSentUpdateType = models.ForeignKey(SentUpdateType, on_delete=models.PROTECT, null=True,
-                                             verbose_name='parentSentUpdateType')
+    sendUpdateTypeFrontEndId = models.IntegerField(null=False, default=0)
     customNotificationContent = models.TextField(null=True, verbose_name='customNotificationContent')
 
     UPDATE_ALL = 'All Students'

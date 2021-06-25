@@ -1,5 +1,6 @@
 import {ViewDefaultersComponent} from './view-defaulters.component';
-import {SMS_EVENTS} from '../../../../constants-database/SMSEvent';
+import {SMS_EVENT_LIST} from '../../../constants-database/SMSEvent';
+import moment = require('moment');
 
 export class ViewDefaultersServiceAdapter {
     vm: ViewDefaultersComponent;
@@ -15,11 +16,11 @@ export class ViewDefaultersServiceAdapter {
 
     async initializeData() {
         this.vm.isLoading = true;
-        this.vm.backendData.defaultersSMSEvent = SMS_EVENTS.find(a => a.eventName == 'Notify Defaulters');
+        this.vm.backendData.defaultersSMSEvent = SMS_EVENT_LIST.find(e => e.id == 4);
 
         const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
             {parentSchool: this.vm.user.activeSchool.dbId}), //0
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndKey: this.vm.backendData.defaultersSMSEvent.id})]); //1
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndId: this.vm.backendData.defaultersSMSEvent.id})]); //1
 
         this.vm.backendData.smsIdSchoolList = firstValue[0];
         this.vm.backendData.eventSettingsList = firstValue[1];
@@ -183,6 +184,10 @@ export class ViewDefaultersServiceAdapter {
     }
 
     async sendSMSNotificationDefaulter() {
+        if (this.vm.getEstimatedSMSCount() > 0 &&
+            !confirm('Please confirm that you are sending ' + (this.vm.userInput.scheduleSMS ? 'Scheduling ' : 'Sending ') + this.vm.getEstimatedSMSCount() + ' SMS.')) {
+            return;
+        }
         this.vm.isLoading = true;
         let studentData = [];
         if (this.vm.selectedFilterType == this.vm.filterTypeList[0]) {
@@ -196,23 +201,25 @@ export class ViewDefaultersServiceAdapter {
                 }
             });
         }
-        if (this.vm.getEstimatedSMSCount() > 0 && !confirm('Please confirm that you are sending ' + this.vm.getEstimatedSMSCount() + ' SMS.')) {
-            return;
-        }
 
+        let scheduledDataTime = null;
+        if (this.vm.userInput.scheduleSMS && this.vm.userInput.scheduledDate && this.vm.userInput.scheduledDate) {
+            scheduledDataTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime).format('YYYY-MM-DD HH:mm');
+        }
         this.vm.dataForMapping['studentList'] = studentData;
         await this.vm.messageService.smsNotificationSender(
             this.vm.dataForMapping,
             ['student'],
             this.vm.backendData.defaultersSMSEvent,
-            this.vm.selectedSentType.id,
+            this.vm.selectedSendUpdateType.id,
             this.vm.message,
             this.vm.message,
+            scheduledDataTime,
             this.vm.userInput.selectedTemplate.parentSMSId,
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
         );
-        alert(this.vm.selectedSentType.name + ' Sent Successfully');
+        alert(this.vm.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Sent Successfully');
         this.vm.isLoading = false;
     }
 }

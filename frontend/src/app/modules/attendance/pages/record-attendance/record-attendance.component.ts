@@ -56,7 +56,6 @@ export class RecordAttendanceComponent implements OnInit {
 
     studentList: any;
 
-    selectedSentType: any;
     smsBalance = 0;
 
     receiverList = RECEIVER_LIST;

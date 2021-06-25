@@ -6,12 +6,8 @@ import { ManageTemplatesServiceAdapter } from './manage-templates.service.adapte
 import { ManageTemplatesHtmlRenderer } from './manage-templates.html.renderer';
 import {SmsService} from '@services/modules/sms/sms.service';
 import {RECEIVER_LIST} from '@modules/attendance/classes/constants';
-import {
-    COMMON_VARIABLES,
-    COMMUNICATION_TYPE,
-    EVENT_SETTING_PAGES,
-    SENT_UPDATE_TYPE,
-} from '@modules/sms/classes/constants';
+import {EVENT_SETTING_PAGES} from '@modules/sms/pages/manage-templates/classes/constants';
+import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
 
 @Component({
     selector: 'manage-templates',
@@ -27,15 +23,12 @@ export class ManageTemplatesComponent implements OnInit {
     serviceAdapter: ManageTemplatesServiceAdapter;
     htmlRenderer: ManageTemplatesHtmlRenderer;
 
-    communicationTypeList = COMMUNICATION_TYPE;
     settingsPagesList = EVENT_SETTING_PAGES;
     sendUpdateToList = RECEIVER_LIST;
 
-    commonVariables = COMMON_VARIABLES;
-
-
     statusChoiceList = ['APPROVED', 'PENDING', 'ALL'];
     panelsList = ['eventPanel', 'notificationPanel', 'smsPanel'];
+    communicationTypeList = [{id: 1, name: 'SERVICE IMPLICIT'}, {id: 2, name: 'SERVICE EXPLICIT'}, {id: 3, name: 'TRANSACTIONAL'}];
 
     populatedSMSIdList = [];
     populatedSMSEventSettingsList = [];
@@ -50,6 +43,7 @@ export class ManageTemplatesComponent implements OnInit {
         startDate: null,
         endDate: null,
         populatedSMSEventSettingsList: [],
+        selectedEvent: null,
     };
 
     columnFilter = {
@@ -60,15 +54,15 @@ export class ManageTemplatesComponent implements OnInit {
         templateStatus: true,
         templateId: false,
     };
+
     backendData = {
         SMSIdSchoolList: [],
         SMSIdList: [],
-        selectedPageSMSEventList: [],
         selectedPageTemplateList: [],
         selectedPageEventSettingsList: [],
-        smsEventList: [],
-        sentUpdateList: SENT_UPDATE_TYPE,
+        sendUpdateTypeList: SEND_UPDATE_TYPE_LIST,
     };
+
     stateKeeper = { isLoading: false };
 
     constructor (public smsService: SmsService) { }
@@ -86,6 +80,6 @@ export class ManageTemplatesComponent implements OnInit {
     }
 
     isDefaultSelected(smsEvent: any): boolean {
-        return smsEvent.selectedSMSId.id == this.populatedSMSIdList.find(smsId => smsId.smsId == 'Default').id;
+        return smsEvent.selectedSMSId.id == 0;
     }
 }

@@ -13,7 +13,7 @@ export class ViewSentHtmlRenderer {
         this.vm.populatedSMSList.forEach(sms => {
             if (sms.parentMessageType && this.vm.populatedMessageTypeList.some(x => x.id == sms.parentMessageType && x.selected)) {
                 tempList.push(sms);
-            } else if (sms.parentSMSEvent && this.vm.populatedSMSEventList.some(x => x.id == sms.parentSMSEvent && x.selected)) {
+            } else if (sms.SMSEventFrontEndId && this.vm.populatedSMSEventList.some(x => x.id == sms.SMSEventFrontEndId && x.selected)) {
                 tempList.push(sms);
             }
         });
@@ -21,8 +21,8 @@ export class ViewSentHtmlRenderer {
     }
 
     getEventName(sms: any): string {
-        if (sms.parentSMSEvent) {
-            return this.vm.backendData.smsEventList.find(x => x.id == sms.parentSMSEvent).eventName;
+        if (sms.SMSEventFrontEndId) {
+            return this.vm.backendData.smsEventList.find(x => x.id == sms.SMSEventFrontEndId).eventName;
         }
         return null;
     }

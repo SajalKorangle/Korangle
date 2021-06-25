@@ -5,11 +5,11 @@
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Min. No. (Fees Due till month)</label>
                     <input
-                        type="number"
-                        class="form-control"
-                        (keypress)="htmlRenderer.policeNumberInput($event)"
-                        [ngModel]="minimumNumber"
-                        (ngModelChange)="minimumNumber = $event"
+                            type="number"
+                            class="form-control"
+                            (keypress)="htmlRenderer.policeNumberInput($event)"
+                            [ngModel]="minimumNumber"
+                            (ngModelChange)="minimumNumber = $event"
                     />
                 </div>
             </div>
@@ -17,20 +17,20 @@
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Max. No. (Fees Due till month)</label>
                     <input
-                        type="number"
-                        class="form-control"
-                        (keypress)="htmlRenderer.policeNumberInput($event)"
-                        [ngModel]="maximumNumber"
-                        (ngModelChange)="maximumNumber = $event"
+                            type="number"
+                            class="form-control"
+                            (keypress)="htmlRenderer.policeNumberInput($event)"
+                            [ngModel]="maximumNumber"
+                            (ngModelChange)="maximumNumber = $event"
                     />
                 </div>
             </div>
             <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select
-                        placeholder="Select Filter Type"
-                        [ngModel]="selectedFilterType"
-                        (ngModelChange)="selectedFilterType = $event"
+                            placeholder="Select Filter Type"
+                            [ngModel]="selectedFilterType"
+                            (ngModelChange)="selectedFilterType = $event"
                     >
                         <mat-option *ngFor="let filterType of filterTypeList" [value]="filterType">
                             {{ filterType }}
@@ -42,9 +42,9 @@
                 <div>
                     <mat-form-field>
                         <mat-select
-                            placeholder="Select Class"
-                            [ngModel]="selectedClassSection"
-                            (ngModelChange)="selectedClassSection = $event"
+                                placeholder="Select Class"
+                                [ngModel]="selectedClassSection"
+                                (ngModelChange)="selectedClassSection = $event"
                         >
                             <mat-option [value]="nullValue">All</mat-option>
                             <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
@@ -59,39 +59,45 @@
         <ng-container *ngIf="selectedFilterType == filterTypeList[0] && studentParameterList.length > 0">
             <button class="btn" style="padding: 4px 7px" (click)="showCustomFilters = !showCustomFilters">
                 <ng-container *ngIf="!showCustomFilters">Show Custom Filters</ng-container>
-                <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container></button
-            ><br />
+                <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container>
+            </button
+            >
+            <br/>
             <ng-container *ngIf="showCustomFilters">
                 <ng-container *ngFor="let parameter of studentParameterList">
                     <mat-form-field>
                         <mat-label>{{ parameter.name }}</mat-label>
-                        <input matInput type="text" style="border: none" [(ngModel)]="parameter.filterFilterValues" /> </mat-form-field
-                    ><br />
-                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px" (click)="$event.stopPropagation()"
-                        >None
+                        <input matInput type="text" style="border: none" [(ngModel)]="parameter.filterFilterValues"/>
+                    </mat-form-field
+                    >
+                    <br/>
+                    <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px"
+                                  (click)="$event.stopPropagation()"
+                    >None
                     </mat-checkbox>
                     <mat-checkbox
-                        *ngFor="let filter of htmlRenderer.getFilteredFilterValues(parameter)"
-                        [(ngModel)]="filter.show"
-                        style="margin-right: 5px"
-                        (click)="$event.stopPropagation()"
-                        >{{ filter.name }} </mat-checkbox
-                    ><br />
+                            *ngFor="let filter of htmlRenderer.getFilteredFilterValues(parameter)"
+                            [(ngModel)]="filter.show"
+                            style="margin-right: 5px"
+                            (click)="$event.stopPropagation()">
+                        {{ filter.name }} 
+                    </mat-checkbox>
+                    <br/>
                 </ng-container>
             </ng-container>
-            <br />
+            <br/>
         </ng-container>
 
         <!-- print , download buttons -->
         <div class="row">
             <div class="col-sm-3">
                 <button
-                    type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                    style="padding: 12px 15px; margin-right: 17px"
-                    matTooltip="Download the following list"
-                    tooltip-position="left"
-                    (click)="htmlRenderer.downloadFeesReport()"
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        style="padding: 12px 15px; margin-right: 17px"
+                        matTooltip="Download the following list"
+                        tooltip-position="left"
+                        (click)="htmlRenderer.downloadFeesReport()"
                 >
                     Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
                 </button>
@@ -99,13 +105,12 @@
 
             <div class="col-sm-3">
                 <button
-                    type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
-                    style="padding: 12px 15px; margin-right: 17px"
-                    matTooltip="Print the following list"
-                    tooltip-position="left"
-                    (click)="printFeesReport()"
-                >
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
+                        style="padding: 12px 15px; margin-right: 17px"
+                        matTooltip="Print the following list"
+                        tooltip-position="left"
+                        (click)="printFeesReport()">
                     Print<i class="material-icons" style="margin-left: 15px">print</i>
                 </button>
             </div>
@@ -120,36 +125,34 @@
             <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
         </button>
         <ng-container *ngIf="showSMSSection">
-              <div class="row">
-            <div class="col-md-6">
-                <mat-form-field style="margin: 20px 5px 5px;">
-                    <mat-select placeholder="Send via" [(ngModel)]="selectedSentType">
-                        <mat-option *ngFor="let sentType of sentTypeList" [value]="sentType">
-                            {{ sentType.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <span style="margin-left:5px;font-size: 16px"
-                      *ngIf="selectedSentType != sentTypeList[1]"
-                >SMS Balance:
-                <b
-                ><i>{{ smsBalance }}</i></b
-                ><br
-                    /></span>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field style="margin: 20px 5px 5px;">
+                        <mat-select placeholder="Send via" [(ngModel)]="selectedSendUpdateType"
+                                    (ngModelChange)="htmlRenderer.sendUpdateTypeChanged()">
+                            <mat-option *ngFor="let sendType of sendUpdateTypeList" [value]="sendType">
+                                {{ sendType.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <span style="margin-left:5px;font-size: 16px"
+                          *ngIf="selectedSendUpdateType != sendUpdateTypeList[1]">
+                        SMS Balance:
+                <b><i>{{ smsBalance }}</i></b><br/></span>
+                </div>
+                <div class="col-md-6" align="end">
+                    <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
+                       target="_blank">
+                        Hindi Typing Extension
+                    </a>
+                </div>
             </div>
-            <div class="col-md-6" align="end">
-                <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
-                   target="_blank">
-                    Hindi Typing Extension
-                </a>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
                 <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
                  word-wrap: break-word;">Use {{"{#variables#}"}} with - {{htmlRenderer.getVariables()}}</span>
-                <mat-form-field appearance="none" class="rowTextArea" style="width: 100%">
+                    <mat-form-field appearance="none" class="rowTextArea" style="width: 100%">
                 <textarea
                         matInput
                         id="messageBox"
@@ -158,63 +161,90 @@
                         [placeholder]="htmlRenderer.getPlaceHolder()"
                         [(ngModel)]="message"
                 ></textarea>
-                </mat-form-field>
-                <br/>
-                <ng-container *ngIf="selectedSentType != sentTypeList[1]">
-                    <span style="font-size: 14px;float:left"># of Characters/SMS: {{htmlRenderer.getMessageLength()}}/{{getMessageCount(message)}}</span>
-                    <span style="font-size: 14px;float:right">Estimated SMS Count: {{ getEstimatedSMSCount() }}</span><br/>
-                </ng-container>
-                <ng-container
-                        *ngIf="selectedSentType != sentTypeList[0]">
-                    <span style="font-size: 14px;float:left"># of Mobile devices: {{ htmlRenderer.getNumberOfMobileDevice() }}</span>
-                    <span
-                        style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
-                </ng-container>
-                <ng-container *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
+                    </mat-form-field>
+                    <br/>
+                    <span style="font-size: 14px;float:left"># of Mobile devices: {{ htmlRenderer.getNumberOfMobileDevice()}}</span>
+                    <span *ngIf="selectedSendUpdateType != sendUpdateTypeList[1]"
+                          style="font-size: 14px;float:right">Estimated SMS Count: {{ getEstimatedSMSCount() }}</span>
+                    <span *ngIf="selectedSendUpdateType == sendUpdateTypeList[1]" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
+                    <br/>
+                    <span *ngIf="selectedSendUpdateType != sendUpdateTypeList[1]" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }}
+                        (Approx) </span>
+                    <span *ngIf="selectedSendUpdateType == sendUpdateTypeList[2]" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
+                    <br/>
+                    <ng-container
+                            *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
            
             <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
                     You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
-                    <span *ngIf="getEstimatedSMSCount() > smsBalance"
-                          style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                        <span *ngIf="getEstimatedSMSCount() > smsBalance"
+                              style="font-size: 15px;color:rgba(255,0,0,0.91)">
                     You are short by <b>{{ getEstimatedSMSCount() - smsBalance }}</b> SMS.
                 </span>
 
-                </ng-container>
-                <button
-                        type="submit"
-                        [disabled]="htmlRenderer.isSendDisabled()"
-                        style="border-radius: 15px"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                        [class.disabledButton]="htmlRenderer.isSendDisabled()"
-                        (click)="serviceAdapter.sendSMSNotificationDefaulter()"
-                >
-                    {{htmlRenderer.getButtonText()}}
-                </button>
-            </div>
-            <div class="col-md-4">
-                <div style="border: 1px solid black;height: 200px;width:100%;overflow: auto">
-                    <div style="background: #c4c4c4;color:black;width:100%;font-weight: 600;padding:10px"
-                         class="text-center">Templates
-                    </div>
-                   <div class="text-center" style="margin-top: 5px">
-                       <span *ngIf="populatedTemplateList.length == 0" >You Have No APPROVED Templates</span>
-                   </div>
-                    <div *ngFor="let template of populatedTemplateList;let i = index;"
-                         style="padding:10px;cursor:pointer" (click)="htmlRenderer.selectTemplate(template)"
-                         class="text-center">
-                        <span style="margin-right:5px;">{{i + 1}}.</span><span>{{htmlRenderer.getSMSIdName(template)}}
-                        - {{template.templateName}}</span>
-                        <mat-icon style="color:green;font-size: 16px;position: relative;top: 2px;margin-left: 6px;"
-                                  *ngIf="template.selected">check
-                        </mat-icon>
-                        <div class="row" style="border-bottom: 1px solid black;margin-left:0;margin-right:0">
-                            <div class="col-xs-12"></div>
+                    </ng-container>
+                    <mat-checkbox *ngIf="selectedSendUpdateType.id == 2" [(ngModel)]="userInput.scheduleSMS">Schedule
+                        SMS
+                    </mat-checkbox>
+                    <br/>
+                    <ng-container *ngIf="selectedSendUpdateType.id == 2 && userInput.scheduleSMS">
+                        <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 150px">
+                            <input
+                                    type="date"
+                                    matInput
+                                    onkeydown="return false"
+                                    [(ngModel)]="userInput.scheduledDate"
+                                    placeholder="Choose Date"
+                            />
+                        </mat-form-field>
+
+                        <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 140px">
+                            <input
+                                    type="time"
+                                    matInput
+                                    onkeydown="return false"
+                                    [(ngModel)]="userInput.scheduledTime"
+                                    placeholder="Choose Time"
+                            />
+                        </mat-form-field>
+                        <span style="color:red" *ngIf="htmlRenderer.checkDateTimeInvalid()">Invalid Date/Time</span>
+                        <br/>
+                    </ng-container>
+                    <button
+                            type="submit"
+                            [disabled]="htmlRenderer.isSendDisabled()"
+                            style="border-radius: 15px"
+                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                            [class.disabledButton]="htmlRenderer.isSendDisabled()"
+                            (click)="serviceAdapter.sendSMSNotificationDefaulter()">
+                        {{htmlRenderer.getButtonText()}}
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <div style="border: 1px solid black;height: 200px;width:100%;overflow: auto">
+                        <div style="background: #c4c4c4;color:black;width:100%;font-weight: 600;padding:10px"
+                             class="text-center">Templates
+                        </div>
+                        <div class="text-center" style="margin-top: 5px">
+                            <span *ngIf="populatedTemplateList.length == 0">You Have No APPROVED Templates</span>
+                        </div>
+                        <div *ngFor="let template of populatedTemplateList;let i = index;"
+                             style="padding:10px;cursor:pointer" (click)="htmlRenderer.selectTemplate(template)"
+                             class="text-center">
+                            <span style="margin-right:5px;">{{i + 1}}
+                                .</span><span>{{htmlRenderer.getSMSIdName(template)}}
+                            - {{template.templateName}}</span>
+                            <mat-icon style="color:green;font-size: 16px;position: relative;top: 2px;margin-left: 6px;"
+                                      *ngIf="htmlRenderer.isTemplateSelected(template)">check
+                            </mat-icon>
+                            <div class="row" style="border-bottom: 1px solid black;margin-left:0;margin-right:0">
+                                <div class="col-xs-12"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </ng-container>
 
         <div class="row" style="margin-bottom: 15px; margin-top: 15px">
@@ -228,7 +258,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         Selected: <b>{{ htmlRenderer.getSelectedParentCount() }}</b
-                        >, Showing: <b>{{ getFilteredParentList().length }}</b> out of {{ parentList.length }} parents
+                    >, Showing: <b>{{ getFilteredParentList().length }}</b> out of {{ parentList.length }} parents
                     </div>
                     <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
                         <div style="float: right; width: 392px">
@@ -242,7 +272,8 @@
                                         <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                     </div>
                                 </div>
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
                                     <div style="width: 59%; background: #ededed">Total Fees Due (overall)</div>
                                     <div style="width: 7%; background: #ededed">
                                         <b>:Rs.</b>
@@ -251,7 +282,8 @@
                                         <b>{{ htmlRenderer.getFilteredParentFeesDueOverall() | indianCurrency }}</b>
                                     </div>
                                 </div>
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
                                     <div style="width: 59%">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                     <div style="width: 7%">
                                         <b>:Rs.</b>
@@ -261,8 +293,11 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
-                                    <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
+                                    <div style="width: 59%; background: #ededed">Total Fees Paid
+                                        ({{ getCurrentSessionName() }})
+                                    </div>
                                     <div style="width: 7%; background: #ededed">
                                         <b>:Rs.</b>
                                     </div>
@@ -271,7 +306,8 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
                                     <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                     <div style="width: 7%">
                                         <b>:Rs.</b>
@@ -339,101 +375,105 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllHandler(); $event.stopPropagation()">Select All</button>
-                    <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.clearAllHandler(); $event.stopPropagation()">Clear All</button>
+                    <button class="btn" style="padding: 4px 7px"
+                            (click)="htmlRenderer.selectAllHandler(); $event.stopPropagation()">Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px"
+                            (click)="htmlRenderer.clearAllHandler(); $event.stopPropagation()">Clear All
+                    </button>
                 </div>
             </div>
 
             <table class="table table-hover">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th></th>
-                        <th>S No.</th>
-                        <th>Parent</th>
-                        <th>Student</th>
-                        <th>Class</th>
-                        <th>Mobile No.</th>
-                        <th>Mobile No. (2)</th>
-                        <th>Fees Due<br />(Till Month)</th>
-                        <th>Fees Due<br />(Overall)</th>
-                        <th>Total Fees<br />({{ getCurrentSessionName() }})</th>
-                        <th>Fees Paid<br />({{ getCurrentSessionName() }})</th>
-                        <th>Discount<br />({{ getCurrentSessionName() }})</th>
-                    </tr>
+                <tr>
+                    <th></th>
+                    <th>S No.</th>
+                    <th>Parent</th>
+                    <th>Student</th>
+                    <th>Class</th>
+                    <th>Mobile No.</th>
+                    <th>Mobile No. (2)</th>
+                    <th>Fees Due<br/>(Till Month)</th>
+                    <th>Fees Due<br/>(Overall)</th>
+                    <th>Total Fees<br/>({{ getCurrentSessionName() }})</th>
+                    <th>Fees Paid<br/>({{ getCurrentSessionName() }})</th>
+                    <th>Discount<br/>({{ getCurrentSessionName() }})</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <ng-container *ngFor="let parent of getFilteredParentList(); let i = index">
-                        <tr>
+                <ng-container *ngFor="let parent of getFilteredParentList(); let i = index">
+                    <tr>
+                        <td>
+                            <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
+                        </td>
+                        <td>{{ i + 1 }}.</td>
+                        <td style="font-weight: 600">{{ parent.name }}</td>
+                        <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">
+                            <td>{{ parent.studentList[0].name }}</td>
+                            <td>{{ parent.studentList[0].class.name }}, {{ parent.studentList[0].section.name }}</td>
                             <td>
-                                <mat-checkbox [(ngModel)]="parent.selected"></mat-checkbox>
-                            </td>
-                            <td>{{ i + 1 }}.</td>
-                            <td style="font-weight: 600">{{ parent.name }}</td>
-                            <ng-container *ngIf="parent.studentList.length == 1; else multipleStudents">
-                                <td>{{ parent.studentList[0].name }}</td>
-                                <td>{{ parent.studentList[0].class.name }}, {{ parent.studentList[0].section.name }}</td>
-                                <td>
-                                    <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
-                                        <span class="hidden-xs hidden-sm">{{ parent.studentList[0].mobileNumber }}</span>
-                                        <span class="visible-xs visible-sm">
+                                <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{ parent.studentList[0].mobileNumber }}</span>
+                                    <span class="visible-xs visible-sm">
                                             <a href="tel:{{ parent.studentList[0].mobileNumber }}">Call Me</a>
                                         </span>
-                                    </ng-container>
-                                </td>
-                                <td>
-                                    <ng-container *ngIf="checkMobileNumber(parent.studentList[0].secondMobileNumber)">
-                                        <span class="hidden-xs hidden-sm">{{ parent.studentList[0].secondMobileNumber }}</span>
-                                        <span class="visible-xs visible-sm">
+                                </ng-container>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="checkMobileNumber(parent.studentList[0].secondMobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{ parent.studentList[0].secondMobileNumber }}</span>
+                                    <span class="visible-xs visible-sm">
                                             <a href="tel:{{ parent.studentList[0].secondMobileNumber }}">Call Me</a>
                                         </span>
-                                    </ng-container>
-                                </td>
-                            </ng-container>
-                            <ng-template #multipleStudents>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
-                                        <span class="hidden-xs hidden-sm">{{ parent.studentList[0].mobileNumber }}</span>
-                                        <span class="visible-xs visible-sm">
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <ng-template #multipleStudents>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <ng-container *ngIf="checkMobileNumber(parent.studentList[0].mobileNumber)">
+                                    <span class="hidden-xs hidden-sm">{{ parent.studentList[0].mobileNumber }}</span>
+                                    <span class="visible-xs visible-sm">
                                             <a href="tel:{{ parent.studentList[0].mobileNumber }}">Call Me</a>
                                         </span>
-                                    </ng-container>
-                                </td>
+                                </ng-container>
+                            </td>
+                            <td></td>
+                        </ng-template>
+                        <td style="font-weight: 600">{{ getParentFeesDueTillMonth(parent) | indianCurrency }}</td>
+                        <td>{{ getParentFeesDueOverall(parent) | indianCurrency }}</td>
+                        <td>{{ getParentTotalFees(parent) | indianCurrency }}</td>
+                        <td>{{ getParentFeesPaid(parent) | indianCurrency }}</td>
+                        <td>{{ getParentDiscount(parent) | indianCurrency }}</td>
+                    </tr>
+                    <ng-container *ngIf="parent.studentList.length > 1">
+                        <ng-container *ngFor="let student of parent.studentList">
+                            <tr>
                                 <td></td>
-                            </ng-template>
-                            <td style="font-weight: 600">{{ getParentFeesDueTillMonth(parent) | indianCurrency }}</td>
-                            <td>{{ getParentFeesDueOverall(parent) | indianCurrency }}</td>
-                            <td>{{ getParentTotalFees(parent) | indianCurrency }}</td>
-                            <td>{{ getParentFeesPaid(parent) | indianCurrency }}</td>
-                            <td>{{ getParentDiscount(parent) | indianCurrency }}</td>
-                        </tr>
-                        <ng-container *ngIf="parent.studentList.length > 1">
-                            <ng-container *ngFor="let student of parent.studentList">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{ student.name }}</td>
-                                    <td>{{ student.class.name }}, {{ student.section.name }}</td>
-                                    <td></td>
-                                    <td>
-                                        <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
-                                            <span class="hidden-xs hidden-sm">{{ student.secondMobileNumber }}</span>
-                                            <span class="visible-xs visible-sm">
+                                <td></td>
+                                <td></td>
+                                <td>{{ student.name }}</td>
+                                <td>{{ student.class.name }}, {{ student.section.name }}</td>
+                                <td></td>
+                                <td>
+                                    <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
+                                        <span class="hidden-xs hidden-sm">{{ student.secondMobileNumber }}</span>
+                                        <span class="visible-xs visible-sm">
                                                 <a href="tel:{{ student.secondMobileNumber }}">Call Me 2</a>
                                             </span>
-                                        </ng-container>
-                                    </td>
-                                    <td>{{ student.feesDueTillMonth | indianCurrency }}</td>
-                                    <td>{{ student.feesDueOverall | indianCurrency }}</td>
-                                    <td>{{ student.totalFeesThisSession | indianCurrency }}</td>
-                                    <td>{{ student.feesPaidThisSession | indianCurrency }}</td>
-                                    <td>{{ student.discountThisSession | indianCurrency }}</td>
-                                </tr>
-                            </ng-container>
+                                    </ng-container>
+                                </td>
+                                <td>{{ student.feesDueTillMonth | indianCurrency }}</td>
+                                <td>{{ student.feesDueOverall | indianCurrency }}</td>
+                                <td>{{ student.totalFeesThisSession | indianCurrency }}</td>
+                                <td>{{ student.feesPaidThisSession | indianCurrency }}</td>
+                                <td>{{ student.discountThisSession | indianCurrency }}</td>
+                            </tr>
                         </ng-container>
                     </ng-container>
+                </ng-container>
                 </tbody>
             </table>
         </ng-container>
@@ -445,7 +485,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         Selected: <b>{{ htmlRenderer.getSelectedChildrenCount() }}</b
-                        >, Showing: <b>{{ getFilteredStudentList().length }}</b> out of {{ studentList.length }} students
+                    >, Showing: <b>{{ getFilteredStudentList().length }}</b> out of {{ studentList.length }} students
                     </div>
 
                     <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
@@ -460,7 +500,8 @@
                                         <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDueTillMonth() | indianCurrency }}</b>
                                     </div>
                                 </div>
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
                                     <div style="width: 59%; background: #ededed">Total Fees Due (overall)</div>
                                     <div style="width: 7%; background: #ededed">
                                         <b>:Rs.</b>
@@ -469,7 +510,8 @@
                                         <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                     </div>
                                 </div>
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
                                     <div style="width: 59%">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                     <div style="width: 7%">
                                         <b>:Rs.</b>
@@ -479,8 +521,11 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
-                                    <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
+                                    <div style="width: 59%; background: #ededed">Total Fees Paid
+                                        ({{ getCurrentSessionName() }})
+                                    </div>
                                     <div style="width: 7%; background: #ededed">
                                         <b>:Rs.</b>
                                     </div>
@@ -489,7 +534,8 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                <div *ngIf="htmlRenderer.hasPermission()" class="row"
+                                     style="display: flex; margin-bottom: 4px">
                                     <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                     <div style="width: 7%">
                                         <b>:Rs.</b>
@@ -558,59 +604,65 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllHandler(); $event.stopPropagation()">Select All</button>
-                    <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.clearAllHandler(); $event.stopPropagation()">Clear All</button>
+                    <button class="btn" style="padding: 4px 7px"
+                            (click)="htmlRenderer.selectAllHandler(); $event.stopPropagation()">Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px"
+                            (click)="htmlRenderer.clearAllHandler(); $event.stopPropagation()">Clear All
+                    </button>
                 </div>
             </div>
 
             <table class="table table-hover">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th></th>
-                        <th>S No.</th>
-                        <th>Student</th>
-                        <th>Father</th>
-                        <th>Class</th>
-                        <th>Mobile No.</th>
-                        <th>Mobile No. (2)</th>
-                        <th>Fees Due<br />(Till Month)</th>
-                        <th>Fees Due<br />(Overall)</th>
-                        <th>Total Fees<br />({{ getCurrentSessionName() }})</th>
-                        <th>Fees Paid<br />({{ getCurrentSessionName() }})</th>
-                        <th>Discount<br />({{ getCurrentSessionName() }})</th>
-                    </tr>
+                <tr>
+                    <th></th>
+                    <th>S No.</th>
+                    <th>Student</th>
+                    <th>Father</th>
+                    <th>Class</th>
+                    <th>Mobile No.</th>
+                    <th>Mobile No. (2)</th>
+                    <th>Fees Due<br/>(Till Month)</th>
+                    <th>Fees Due<br/>(Overall)</th>
+                    <th>Total Fees<br/>({{ getCurrentSessionName() }})</th>
+                    <th>Fees Paid<br/>({{ getCurrentSessionName() }})</th>
+                    <th>Discount<br/>({{ getCurrentSessionName() }})</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <ng-container *ngFor="let student of getFilteredStudentList(); let i = index">
-                        <tr>
-                            <td><mat-checkbox [(ngModel)]="student.selected"></mat-checkbox></td>
-                            <td>{{ i + 1 }}.</td>
-                            <td style="font-weight: 600">{{ student.name }}</td>
-                            <td>{{ student.fathersName }}</td>
-                            <td>{{ student.class.name }}, {{ student.section.name }}</td>
-                            <td>
-                                <ng-container *ngIf="checkMobileNumber(student.mobileNumber)">
-                                    <span class="hidden-xs hidden-sm">{{ student.mobileNumber }}</span>
-                                    <span class="visible-xs visible-sm">
+                <ng-container *ngFor="let student of getFilteredStudentList(); let i = index">
+                    <tr>
+                        <td>
+                            <mat-checkbox [(ngModel)]="student.selected"></mat-checkbox>
+                        </td>
+                        <td>{{ i + 1 }}.</td>
+                        <td style="font-weight: 600">{{ student.name }}</td>
+                        <td>{{ student.fathersName }}</td>
+                        <td>{{ student.class.name }}, {{ student.section.name }}</td>
+                        <td>
+                            <ng-container *ngIf="checkMobileNumber(student.mobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{ student.mobileNumber }}</span>
+                                <span class="visible-xs visible-sm">
                                         <a href="tel:{{ student.mobileNumber }}">Call Me</a>
                                     </span>
-                                </ng-container>
-                            </td>
-                            <td>
-                                <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
-                                    <span class="hidden-xs hidden-sm">{{ student.secondMobileNumber }}</span>
-                                    <span class="visible-xs visible-sm">
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="checkMobileNumber(student.secondMobileNumber)">
+                                <span class="hidden-xs hidden-sm">{{ student.secondMobileNumber }}</span>
+                                <span class="visible-xs visible-sm">
                                         <a href="tel:{{ student.secondMobileNumber }}">Call Me 2</a>
                                     </span>
-                                </ng-container>
-                            </td>
-                            <td style="font-weight: 600">{{ student.feesDueTillMonth | indianCurrency }}</td>
-                            <td>{{ student.feesDueOverall | indianCurrency }}</td>
-                            <td>{{ student.totalFeesThisSession | indianCurrency }}</td>
-                            <td>{{ student.feesPaidThisSession | indianCurrency }}</td>
-                            <td>{{ student.discountThisSession | indianCurrency }}</td>
-                        </tr>
-                    </ng-container>
+                            </ng-container>
+                        </td>
+                        <td style="font-weight: 600">{{ student.feesDueTillMonth | indianCurrency }}</td>
+                        <td>{{ student.feesDueOverall | indianCurrency }}</td>
+                        <td>{{ student.totalFeesThisSession | indianCurrency }}</td>
+                        <td>{{ student.feesPaidThisSession | indianCurrency }}</td>
+                        <td>{{ student.discountThisSession | indianCurrency }}</td>
+                    </tr>
+                </ng-container>
                 </tbody>
             </table>
         </ng-container>

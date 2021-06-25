@@ -1,6 +1,7 @@
 import {ViewDefaultersComponent} from '@modules/fees/pages/view-defaulters/view-defaulters.component';
 import {isMobile} from '../../../../classes/common.js';
-import {FIND_VARIABLE_REGEX, NEW_LINE_REGEX} from '@modules/sms/classes/constants';
+import {FIND_VARIABLE_REGEX, NEW_LINE_REGEX} from '@modules/classes/constants';
+import moment = require('moment');
 
 export class ViewDefaultersHtmlRenderer {
 
@@ -14,7 +15,7 @@ export class ViewDefaultersHtmlRenderer {
     }
 
     getPlaceHolder() {
-        if (this.vm.selectedSentType != this.vm.sentTypeList[1] &&
+        if (this.vm.selectedSendUpdateType != this.vm.sendUpdateTypeList[1] &&
             (!this.vm.userInput.selectedTemplate.id || !this.vm.message || this.vm.message.trim() == '')) {
             return 'Select a template from template List';
         } else {
@@ -38,29 +39,33 @@ export class ViewDefaultersHtmlRenderer {
 
     isSendDisabled() {
         let disabled = this.vm.getEstimatedSMSCount() + this.vm.getEstimatedNotificationCount() == 0 || this.vm.message.length == 0;
-        if (!disabled && this.vm.selectedSentType != this.vm.sentTypeList[1]) {
+        if (!disabled && this.vm.selectedSendUpdateType != this.vm.sendUpdateTypeList[1]) {
             disabled = this.vm.getEstimatedSMSCount() > this.vm.smsBalance;
             if (!disabled) {
                 disabled = this.isTemplateModified();
             }
         }
+        if (!disabled && this.vm.selectedSendUpdateType.id == 2 && this.vm.userInput.scheduleSMS) {
+            disabled = !this.vm.userInput.scheduledDate || !this.vm.userInput.scheduledTime || this.checkDateTimeInvalid();
+        }
         return disabled;
     }
 
     isTemplateModified() {
-        return this.vm.selectedSentType.id != this.vm.sentTypeList[1].id &&
+        return this.vm.selectedSendUpdateType.id != this.vm.sendUpdateTypeList[1].id &&
             this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
     }
 
     getButtonText() {
-        if (this.vm.selectedSentType == this.vm.sentTypeList[0]) {
-            return 'Send ' + this.vm.getEstimatedSMSCount() + ' SMS';
+        let text = this.vm.userInput.scheduleSMS ? 'Schedule ' : 'Send ';
+        if (this.vm.selectedSendUpdateType == this.vm.sendUpdateTypeList[0]) {
+            return text + this.vm.getEstimatedSMSCount() + ' SMS';
         }
-        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {
-            return 'Send ' + this.vm.getEstimatedNotificationCount() + ' notifications';
+        if (this.vm.selectedSendUpdateType == this.vm.sendUpdateTypeList[1]) {
+            return text + this.vm.getEstimatedNotificationCount() + ' notifications';
         }
-        if (this.vm.selectedSentType == this.vm.sentTypeList[2]) {
-            return 'Send ' + this.vm.getEstimatedSMSCount() + ' SMS & '
+        if (this.vm.selectedSendUpdateType == this.vm.sendUpdateTypeList[2]) {
+            return text + this.vm.getEstimatedSMSCount() + ' SMS & '
                 + this.vm.getEstimatedNotificationCount() + ' notifications';
         }
     }
@@ -243,5 +248,43 @@ export class ViewDefaultersHtmlRenderer {
 
     getVariables() {
        return  this.vm.defaultersPageVariables.map(x => x.displayVariable);
+    }
+
+    sendUpdateTypeChanged() {
+        if (this.vm.selectedSendUpdateType.id != 3) {
+            this.vm.message = '';
+        }
+        this.vm.userInput.scheduleSMS = false;
+    }
+
+    checkDateTimeInvalid() {
+        if (this.vm.userInput.scheduledDate && this.vm.userInput.scheduledTime) {
+            let selectedDateTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime);
+            let dateNow = moment();
+            return selectedDateTime < dateNow;
+        }
+        return false;
+    }
+
+    getPerStudentSMSCount() {
+        let personList = [];
+        if (this.vm.selectedFilterType == this.vm.filterTypeList[0]) {
+            personList = this.vm.getFilteredStudentList().filter((item) => item.mobileNumber && item.selected);
+        } else {
+            this.vm.getFilteredParentList().filter((item) => item.mobileNumber && item.selected).forEach(parent =>
+                parent.studentList.forEach(student => personList.push(student)));
+        }
+        let estimatedCount = Number(this.vm.getEstimatedSMSCount());
+        if (this.vm.selectedSendUpdateType.id == 4) {
+            personList = personList.filter(x => !x.notification);
+        }
+        let count2 = Number(personList.length);
+        return isNaN(Math.round( estimatedCount / count2 )) ? 0 : Math.round( estimatedCount / count2 ) ;
+    }
+
+    isTemplateSelected(template: any) {
+        let cont1 = this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}');
+        let cont2 = template.rawContent.replace(NEW_LINE_REGEX, '\n');
+        return template.selected && cont1 == cont2;
     }
 }

@@ -13,7 +13,6 @@ import { SmsService } from 'app/services/modules/sms/sms.service';
 import { UserService } from 'app/services/modules/user/user.service';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
-import {EVENT_SETTING_PAGES} from '@modules/sms/classes/constants';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -41,8 +40,6 @@ export class AddTutorialComponent implements OnInit {
     classSubjectList = [];
     currentClassStudentList = [];
     classSectionSubjectList = [];
-
-    tutorialPageSetting = EVENT_SETTING_PAGES.find(page => page.name == 'Tutorial');
 
     youtubeRegex = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;

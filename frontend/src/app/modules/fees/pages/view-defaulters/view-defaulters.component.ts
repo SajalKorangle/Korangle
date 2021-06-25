@@ -15,7 +15,8 @@ import {PrintService} from '../../../../print/print-service';
 import {PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/view-defaulters.html.renderer';
 import {MessageService} from '@services/message-service';
-import {DEFAULTER_VARIABLES, SENT_UPDATE_TYPE} from '@modules/sms/classes/constants';
+import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
+import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
 
 @Component({
     selector: 'view-defaulters',
@@ -40,10 +41,10 @@ export class ViewDefaultersComponent implements OnInit {
 
     user;
 
-    sentTypeList = SENT_UPDATE_TYPE.filter(type => type.name != 'NULL');
-    defaultersPageVariables = DEFAULTER_VARIABLES;
+    sendUpdateTypeList = SEND_UPDATE_TYPE_LIST.filter(type => type.name != 'NULL');
+    defaultersPageVariables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == 4).variableList;
 
-    selectedSentType = this.sentTypeList[0];
+    selectedSendUpdateType = this.sendUpdateTypeList[0];
     extraDefaulterMessage = '';
 
     smsBalance = 0;
@@ -80,6 +81,9 @@ export class ViewDefaultersComponent implements OnInit {
 
     userInput = {
         selectedTemplate: {} as any,
+        scheduleSMS: false,
+        scheduledDate: null,
+        scheduledTime: null,
     };
 
     backendData = {
@@ -800,7 +804,7 @@ export class ViewDefaultersComponent implements OnInit {
     getEstimatedNotificationCount = () => {
         let count = 0;
         let studentList = [];
-        if (this.selectedSentType == this.sentTypeList[0]) {
+        if (this.selectedSendUpdateType == this.sendUpdateTypeList[0]) {
             return 0;
         }
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -832,7 +836,7 @@ export class ViewDefaultersComponent implements OnInit {
     getEstimatedSMSCount = () => {
         let count = 0;
         let studentList = [];
-        if (this.selectedSentType == this.sentTypeList[1]) {
+        if (this.selectedSendUpdateType == this.sendUpdateTypeList[1]) {
             return 0;
         }
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -840,7 +844,7 @@ export class ViewDefaultersComponent implements OnInit {
             this.getFilteredStudentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
-                    if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
+                    if (this.selectedSendUpdateType == this.sendUpdateTypeList[0] || item.notification == false) {
                         if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList,
                             this.dataForMapping, item, this.message, 'student'))
                         {
@@ -856,7 +860,7 @@ export class ViewDefaultersComponent implements OnInit {
             this.getFilteredParentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
-                    if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
+                    if (this.selectedSendUpdateType == this.sendUpdateTypeList[0] || item.notification == false) {
                         this.dataForMapping['studentList'] = item.studentList;
                         item.studentList.forEach(student => {
                         if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList, this.dataForMapping, student, this.message, 'student'))

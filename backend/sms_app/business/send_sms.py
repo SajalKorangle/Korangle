@@ -1,9 +1,6 @@
 
 import http.client
 
-import requests
-
-from sms_app.business.sms import create_sms
 from sms_app.business.sms_count import get_sms_count
 from school_app.model.models import School
 
@@ -21,15 +18,9 @@ def send_sms(instance_dict):
         if instance_dict['count'] > sms_count['count']:
             return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1}
 
-        print(instance_dict['smsId_id'])
-
-        print('before smsID object')
         sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
-        print('after smsID object')
 
         conn = http.client.HTTPConnection("msg.msgclub.net")
-
-        print(instance_dict['mobileNumberContentJson'])
 
         sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
 
@@ -39,6 +30,9 @@ def send_sms(instance_dict):
             "senderId": sms_id_object.smsId,
             "smsContentType": instance_dict['contentType'],
         }
+
+        if instance_dict['scheduledDateTime'] is not None:
+            anotherPayload["scheduleddate"] = instance_dict['scheduledDateTime'].strftime('%d/%m/%Y %H:%M')
 
         payloadJson = json.dumps(anotherPayload)
 

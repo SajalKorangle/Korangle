@@ -1,5 +1,10 @@
 import {SendSmsComponent} from '@modules/sms/pages/send-sms/send-sms.component';
-import {COMMON_VARIABLES, EMPLOYEE_VARIABLES, FIND_VARIABLE_REGEX, NEW_LINE_REGEX, STUDENT_VARIABLES} from '@modules/sms/classes/constants';
+import {
+    FIND_VARIABLE_REGEX,
+    NEW_LINE_REGEX,
+    VARIABLE_MAPPED_EVENT_LIST
+} from '@modules/classes/constants';
+import moment = require('moment');
 
 
 export class SendSmsHtmlRenderer {
@@ -13,27 +18,17 @@ export class SendSmsHtmlRenderer {
         this.vm = vm;
     }
 
-    changeMessageContent() {
-        if (this.vm.userInput.selectedSendTo == 'Students') {
-            this.vm.message = this.vm.message.replace(/{#employeeName#}/g, '{#studentName#}');
-        } else {
-            STUDENT_VARIABLES.forEach(variable => {
-                if (!COMMON_VARIABLES.some(x => x == variable)) {
-                    let reg = new RegExp('{#' + variable + '#}', 'g');
-                    this.vm.message = this.vm.message.replace(reg, '{#employeeName#}');
-                }
-            });
-        }
-    }
-
     isTemplateModified() {
-        let cont1 =  this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}');
-        let cont2 = this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
-        return this.isSMSNeeded() && cont1 != cont2;
+        if (this.isSMSNeeded() && Object.keys(this.vm.userInput.selectedTemplate).length != 0) {
+            let cont1 = this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}');
+            let cont2 = this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, '\n');
+            return cont1 != cont2;
+        }
+        return false;
     }
 
     isSMSNeeded() {
-        return this.vm.userInput.selectedSentType.id != 3;
+        return this.vm.userInput.selectedSendUpdateType.id != 3;
     }
 
     getSMSIdName(template: any) {
@@ -43,8 +38,11 @@ export class SendSmsHtmlRenderer {
     selectTemplate(template: any) {
         this.vm.populatedTemplateList.forEach(temp => temp.selected = false);
         template.selected = true;
-        let defaultVariable = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? '{#studentName#}' : '{#employeeName#}' ;
-        this.vm.message = template.rawContent.replace(/{#var#}/g, defaultVariable).replace(NEW_LINE_REGEX, "\n");
+        let defaultVariable = this.vm.userInput.selectedSendTo.id == 1 ? '{#studentName#}' : '{#employeeName#}' ;
+        if (this.vm.userInput.selectedSendTo.id == 3) {
+            defaultVariable = '{#name#}';
+        }
+        this.vm.message = template.rawContent.replace(/{#var#}/g, defaultVariable).replace(NEW_LINE_REGEX, '\n');
         this.vm.userInput.selectedTemplate = template;
         let textArea = document.getElementById('messageBox');
         textArea.style.height = '0px';
@@ -54,23 +52,24 @@ export class SendSmsHtmlRenderer {
     isSendDisabled() {
         let disabled = this.vm.getMobileNumberList('both').length == 0 || this.vm.message.length == 0;
         if (!disabled && this.isSMSNeeded()) {
-            disabled = this.vm.backendData.smsBalance < this.getEstimatedSMSCount();
+            disabled = this.vm.backendData.smsBalance < this.getEstimatedSMSCount() || this.isTemplateModified();
         }
-        if (!disabled && this.isSMSNeeded()) {
-            disabled = this.isTemplateModified();
+        if (!disabled && this.vm.userInput.selectedSendUpdateType.id == 2 && this.vm.userInput.scheduleSMS) {
+            disabled = !this.vm.userInput.scheduledDate || !this.vm.userInput.scheduledTime || this.checkDateTimeInvalid();
         }
         return disabled;
     }
 
     getButtonText() {
-        if (this.vm.userInput.selectedSentType.id == 2) {
-            return 'Send ' + this.getEstimatedSMSCount() + ' SMS';
+        let text = this.vm.userInput.scheduleSMS ? 'Schedule ' : 'Send ';
+        if (this.vm.userInput.selectedSendUpdateType.id == 2) {
+            return text + this.getEstimatedSMSCount() + ' SMS';
         }
-        if (this.vm.userInput.selectedSentType.id == 3) {
-            return 'Send ' + this.vm.getMobileNumberList('notification').length + ' notifications';
+        if (this.vm.userInput.selectedSendUpdateType.id == 3) {
+            return text + this.vm.getMobileNumberList('notification').length + ' notifications';
         }
-        if (this.vm.userInput.selectedSentType.id == 4) {
-            return 'Send ' + this.getEstimatedSMSCount() + ' SMS & '
+        if (this.vm.userInput.selectedSendUpdateType.id == 4) {
+            return text + this.getEstimatedSMSCount() + ' SMS & '
                 + this.vm.getMobileNumberList('notification').length + ' notifications';
         }
     }
@@ -84,11 +83,8 @@ export class SendSmsHtmlRenderer {
     }
 
     getVariables() {
-        if (this.vm.userInput.selectedSendTo == 'Students') {
-            return STUDENT_VARIABLES.map(a => a.displayVariable);
-        } else {
-            return EMPLOYEE_VARIABLES.map(a => a.displayVariable);
-        }
+            return VARIABLE_MAPPED_EVENT_LIST.find
+            (vme => vme.event.id == this.vm.userInput.selectedSendTo.id).variableList.map(x => x.displayVariable);
     }
 
     getClassSectionName(classId: number, sectionId: number): string {
@@ -172,17 +168,32 @@ export class SendSmsHtmlRenderer {
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if (this.vm.userInput.selectedSentType == this.vm.sentTypeList[1]) {
+        if (this.vm.userInput.selectedSendUpdateType == this.vm.sendUpdateTypeList[1]) {
             return 0;
         }
-        let person = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? 'student' : 'employee';
-        let variables = this.vm.userInput.selectedSendTo == this.vm.sendToList[0] ? STUDENT_VARIABLES : EMPLOYEE_VARIABLES;
-        this.vm.getMobileNumberList('sms').forEach(studentOrEmployee => {
-            count += this.getSMSCount(
-                this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
-                    this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, studentOrEmployee))
-            );
-        });
+        let variables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == this.vm.userInput.selectedSendTo.id).variableList;
+        this.vm.dataForMapping['studentList'] = this.vm.getFilteredStudentList().filter((x) => {
+            return x.selected;
+        }).map(a => a.student);
+        this.vm.dataForMapping['employeeList'] = this.vm.employeeList.filter(x => x.selected);
+        if (this.vm.userInput.selectedSendTo.id != 2) {
+            this.vm.getMobileNumberList('sms').filter(x => x.student).forEach(student => {
+                let person = 'student';
+                count += this.getSMSCount(
+                    this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
+                        this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, student))
+                );
+            });
+        }
+        if (this.vm.userInput.selectedSendTo.id != 1) {
+            this.vm.getMobileNumberList('sms').filter(x => x.employee).forEach(employee => {
+                let person = 'employee';
+                count += this.getSMSCount(
+                    this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
+                        this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, employee))
+                );
+            });
+        }
         return count;
     }
 
@@ -190,5 +201,32 @@ export class SendSmsHtmlRenderer {
         let estimatedCount = Number(this.getEstimatedSMSCount());
         let count2 = Number(this.vm.getMobileNumberList('sms').length);
         return isNaN(Math.round( estimatedCount / count2 )) ? 0 : Math.round( estimatedCount / count2 ) ;
+    }
+
+    checkDateTimeInvalid() {
+        if (this.vm.userInput.scheduledDate && this.vm.userInput.scheduledTime) {
+            let selectedDateTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime);
+            let dateNow = moment();
+            return selectedDateTime < dateNow;
+        }
+        return false;
+    }
+
+    getTemplateList() {
+        let selectedEventSettingsList = this.vm.backendData.eventSettingList.filter(x => x.SMSEventFrontEndId == this.vm.userInput.selectedSendTo.id);
+        return this.vm.populatedTemplateList.filter(temp => selectedEventSettingsList.some(e => temp.id == e.parentSMSTemplate));
+    }
+
+    sendUpdateTypeChanged() {
+        if (this.isSMSNeeded()) {
+            this.vm.message = '';
+        }
+        this.vm.userInput.scheduleSMS = false;
+    }
+
+    isTemplateSelected(template: any) {
+        let cont1 = this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}');
+        let cont2 = template.rawContent.replace(NEW_LINE_REGEX, '\n');
+        return template.selected && cont1 == cont2;
     }
 }

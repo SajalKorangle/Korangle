@@ -1,10 +1,11 @@
 import {ManageTemplatesComponent} from '@modules/sms/pages/manage-templates/manage-templates.component';
 import {isMobile} from '@classes/common';
-import {FIND_VARIABLE_REGEX, NEW_LINE_REGEX} from '@modules/sms/classes/constants';
+import {FIND_VARIABLE_REGEX, VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
 
 export class ManageTemplatesHtmlRenderer {
 
     vm: ManageTemplatesComponent;
+    generalAndDefaulterEventIdList = [1, 2, 3, 4];
 
     constructor() {
     }
@@ -28,8 +29,7 @@ export class ManageTemplatesHtmlRenderer {
         return !this.vm.userInput.newTemplate.templateId || this.vm.userInput.newTemplate.templateId.trim() == '' ||
             !this.vm.userInput.newTemplate.templateName || this.vm.userInput.newTemplate.templateName.trim() == '' ||
             !this.vm.userInput.newTemplate.rawContent || this.vm.userInput.newTemplate.rawContent.trim() == '' ||
-            !this.vm.userInput.newTemplate.communicationType || this.vm.userInput.newTemplate.communicationType.trim() == '' ||
-            !this.vm.userInput.newTemplate.parentSMSId;
+            !this.vm.userInput.newTemplate.communicationType || !this.vm.userInput.newTemplate.parentSMSId;
     }
 
     getTemplateShortContent(content: any) {
@@ -37,7 +37,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getFilteredTemplateList() {
-        let returnData = this.vm.backendData.selectedPageTemplateList;
+        let returnData = this.getSelectedEventTemplateList();
         if (this.vm.userInput.selectedTemplateStatus && this.vm.userInput.selectedTemplateStatus != 'ALL') {
             returnData = returnData.filter(temp => temp.registrationStatus == this.vm.userInput.selectedTemplateStatus);
         }
@@ -63,7 +63,8 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     isGeneralOrDefaulters(): boolean {
-        return this.vm.backendData.selectedPageSMSEventList[0].id == 1 || this.vm.backendData.selectedPageSMSEventList[0].id == 2;
+        // check from General SMS and Notify Defaulters SMS Event ID's
+        return this.generalAndDefaulterEventIdList.includes(this.vm.userInput.selectedPage.orderedSMSEventList[0].id);
     }
 
     isUpdateDisabled(smsEvent: any) {
@@ -87,11 +88,11 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getUpdateType(smsEvent: any) {
-        return this.vm.backendData.sentUpdateList.find(type => type.id == smsEvent.eventSettings.parentSentUpdateType);
+        return this.vm.backendData.sendUpdateTypeList.find(type => type.id == smsEvent.eventSettings.sendUpdateTypeFrontEndId);
     }
 
     setUpdateType(smsEvent: any, selectedType: any) {
-        smsEvent.eventSettings.parentSentUpdateType = selectedType.id;
+        smsEvent.eventSettings.sendUpdateTypeFrontEndId = selectedType.id;
     }
 
     getNotificationContent(smsEvent: any) {
@@ -103,7 +104,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     setNotificationContent(smsEvent: any, $event: any) {
-        smsEvent.eventSettings.customNotificationContent = $event.replace(NEW_LINE_REGEX, "\n");
+        smsEvent.eventSettings.customNotificationContent = $event.replace(/(\\r)?\\n/g, "\n");
         let textArea = document.getElementById('notificationContent');
         textArea.style.height = '0px';
         textArea.style.height = (textArea.scrollHeight + 30) + 'px';
@@ -127,7 +128,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     rawContentChanged(smsEvent: any, $event: any) {
-        smsEvent.customEventTemplate.rawContent = $event.replace(NEW_LINE_REGEX, "\n");
+        smsEvent.customEventTemplate.rawContent = $event.replace(/(\\r)?\\n/g, "\n");
         smsEvent.customEventTemplate.mappedContent = smsEvent.customEventTemplate.rawContent.replace(/{#var#}/g, '{#studentName#}');
         let textArea = document.getElementById('smsTemplate');
         textArea.style.height = '0px';
@@ -135,8 +136,8 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getExpandedState(panelName: string, smsEvent: any) {
-        let tutorialEvent = this.vm.userInput.populatedSMSEventSettingsList.find(event => event.id == smsEvent.id);
-        return tutorialEvent.expansionPanelState[panelName];
+        let event = this.vm.userInput.populatedSMSEventSettingsList.find(event => event.id == smsEvent.id);
+        return event.expansionPanelState[panelName];
     }
 
     setExpandedState(panelName: string, smsEvent: any, panelEvent: any) {
@@ -163,14 +164,29 @@ export class ManageTemplatesHtmlRenderer {
             smsEvent.customEventTemplate.mappedContent.replace(FIND_VARIABLE_REGEX, '{#var#}') != smsEvent.customEventTemplate.rawContent;
     }
 
-    getVariableList() {
-        return this.vm.userInput.selectedPage.variableList.map(a => a.displayVariable);
+    getVariableList(smsEvent : any) {
+        return VARIABLE_MAPPED_EVENT_LIST.find(e => e.event.id == smsEvent.id).variableList.map(a => a.displayVariable);
     }
 
     newTemplateChanged(event: any) {
-        this.vm.userInput.newTemplate.rawContent = event.replace(NEW_LINE_REGEX, "\n");
+        this.vm.userInput.newTemplate.rawContent = event.replace(/(\\r)?\\n/g, "\n");
         let textArea = document.getElementById('newTemplate');
         textArea.style.height = '0px';
         textArea.style.height = (textArea.scrollHeight + 30) + 'px';
+    }
+
+    getCommunicationType() {
+        return this.vm.communicationTypeList.find(cm => cm.id == this.vm.userInput.newTemplate.communicationType);
+    }
+
+    selectEvent(event: any) {
+        this.vm.userInput.selectedEvent = event;
+    }
+
+    getSelectedEventTemplateList() {
+        let selectedEventSettingsList = this.vm.backendData.selectedPageEventSettingsList.filter
+        (setting => setting.SMSEventFrontEndId == this.vm.userInput.selectedEvent.id);
+        return this.vm.backendData.selectedPageTemplateList.filter
+        (template => selectedEventSettingsList.some(setting => template.id == setting.parentSMSTemplate));
     }
 }

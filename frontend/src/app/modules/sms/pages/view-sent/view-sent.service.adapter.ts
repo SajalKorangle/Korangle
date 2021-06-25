@@ -1,4 +1,5 @@
 import { ViewSentComponent } from './view-sent.component';
+import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 export class ViewSentServiceAdapter {
     vm: ViewSentComponent;
@@ -16,11 +17,11 @@ export class ViewSentServiceAdapter {
         this.vm.stateKeeper.isLoading = true;
         Promise.all([this.vm.informationService.getObjectList(this.vm.informationService.message_type, {})]).then((value) => {
             this.vm.backendData.messageTypeList = value[0];
+            this.vm.backendData.smsEventList = SMS_EVENT_LIST;
+            this.populateMessageTypeAndSMSEventList();
+            this.getSMSList();
+            this.vm.stateKeeper.isLoading = false;
         });
-        this.vm.backendData.smsEventList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {});
-        this.populateMessageTypeAndSMSEventList();
-        this.getSMSList();
-        this.vm.stateKeeper.isLoading = false;
     }
 
     getSMSList(): void {

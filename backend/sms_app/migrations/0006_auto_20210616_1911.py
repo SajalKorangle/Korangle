@@ -11,9 +11,7 @@ from sms_app.db_script.populate_sms_templates import populate_sms_templates
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('information_app', '0005_auto_20210510_1537'),
         ('sms_app', '0005_sms_parentmessagetype'),
     ]
 
@@ -24,7 +22,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('SMSEventFrontEndId', models.IntegerField(default=0)),
                 ('customNotificationContent', models.TextField(null=True, verbose_name='customNotificationContent')),
-                ('receiverType', models.CharField(choices=[('All Students', 'All Students'), ('Only Absent Students', 'Only Absent Students')], max_length=20, null=True, verbose_name='receiverType')),
+                ('receiverType', models.CharField(
+                    choices=[('All Students', 'All Students'), ('Only Absent Students', 'Only Absent Students')],
+                    max_length=20, null=True, verbose_name='receiverType')),
+                ('sendUpdateTypeFrontEndId', models.IntegerField(default=0)),
             ],
             options={
                 'db_table': 'sms_event_settings',
@@ -38,7 +39,9 @@ class Migration(migrations.Migration):
                 ('entityRegistrationId', models.TextField(verbose_name='entityRegistrationId')),
                 ('smsId', models.CharField(max_length=10, verbose_name='smsId')),
                 ('smsIdRegistrationNumber', models.TextField(null=True, verbose_name='SMSIdRegistrationNumber')),
-                ('smsIdStatus', models.CharField(choices=[('ACTIVATED', 'ACTIVATED'), ('PENDING', 'PENDING')], default='PENDING', max_length=15)),
+                ('smsIdStatus',
+                 models.CharField(choices=[('ACTIVATED', 'ACTIVATED'), ('PENDING', 'PENDING')], default='PENDING',
+                                  max_length=15)),
             ],
             options={
                 'db_table': 'sms_id',
@@ -48,8 +51,11 @@ class Migration(migrations.Migration):
             name='SMSIdSchool',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('parentSMSId', models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSId', verbose_name='parentSMSId')),
-                ('parentSchool', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='school_app.School', verbose_name='parentSchool')),
+                ('parentSMSId',
+                 models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSId',
+                                   verbose_name='parentSMSId')),
+                ('parentSchool', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='school_app.School',
+                                                   verbose_name='parentSchool')),
             ],
             options={
                 'db_table': 'smsid_school',
@@ -63,10 +69,16 @@ class Migration(migrations.Migration):
                 ('templateId', models.TextField(verbose_name='templateId')),
                 ('templateName', models.TextField(verbose_name='templateName')),
                 ('rawContent', models.TextField(verbose_name='rawContent')),
-                ('communicationType', models.CharField(choices=[('SERVICE IMPLICIT', 'SERVICE IMPLICIT'), ('SERVICE EXPLICIT', 'SERVICE EXPLICIT'), ('TRANSACTIONAL', 'TRANSACTIONAL')], max_length=20, verbose_name='communicationType')),
+                ('communicationType', models.CharField(choices=[('1', 'SERVICE IMPLICIT'), ('2', 'SERVICE EXPLICIT'),
+                                                                ('3', 'TRANSACTIONAL')], max_length=20,
+                                                       verbose_name='communicationType')),
                 ('mappedContent', models.TextField(blank=True, null=True, verbose_name='mappedContent')),
-                ('registrationStatus', models.CharField(choices=[('APPROVED', 'APPROVED'), ('PENDING', 'PENDING')], default='PENDING', max_length=15)),
-                ('parentSMSId', models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSId', verbose_name='parentSenderId')),
+                ('registrationStatus',
+                 models.CharField(choices=[('APPROVED', 'APPROVED'), ('PENDING', 'PENDING')], default='PENDING',
+                                  max_length=15)),
+                ('parentSMSId',
+                 models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSId',
+                                   verbose_name='parentSenderId')),
             ],
             options={
                 'db_table': 'sms_template',
@@ -95,7 +107,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sms',
             name='parentMessageType',
-            field=models.ForeignKey(default=1, null=True, on_delete=django.db.models.deletion.PROTECT, to='information_app.MessageType'),
+            field=models.ForeignKey(default=1, null=True, on_delete=django.db.models.deletion.PROTECT,
+                                    to='information_app.MessageType'),
         ),
         migrations.AlterUniqueTogether(
             name='smsid',
@@ -104,25 +117,27 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='smseventsettings',
             name='parentSMSTemplate',
-            field=models.ForeignKey(default=0, null=True, on_delete=django.db.models.deletion.CASCADE, to='sms_app.SMSTemplate', verbose_name='parentSMSTemplate'),
+            field=models.ForeignKey(default=0, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='sms_app.SMSTemplate', verbose_name='parentSMSTemplate'),
         ),
         migrations.AddField(
             model_name='smseventsettings',
             name='parentSchool',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='school_app.School', verbose_name='parentSchool'),
-        ),
-        migrations.AddField(
-            model_name='smseventsettings',
-            name='parentSentUpdateType',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='information_app.SentUpdateType', verbose_name='parentSentUpdateType'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='school_app.School',
+                                    verbose_name='parentSchool'),
         ),
         migrations.AddField(
             model_name='sms',
             name='smsId',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.SET_DEFAULT, to='sms_app.SMSId', verbose_name='smsId'),
+            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.SET_DEFAULT, to='sms_app.SMSId',
+                                    verbose_name='smsId'),
+        ),
+        migrations.AddField(
+            model_name='sms',
+            name='scheduledDateTime',
+            field=models.DateTimeField(null=True),
         ),
         migrations.RunPython(populate_sms_id),
         migrations.RunPython(populate_sms_event_settings),
         migrations.RunPython(populate_sms_templates),
     ]
-
