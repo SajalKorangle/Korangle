@@ -13,7 +13,7 @@ import { SchoolService } from '@services/modules/school/school.service';
 import { TCService } from './../../../../services/modules/tc/tc.service';
 
 import { MatDialog } from '@angular/material';
-import { ImagePdfPreviewDialogComponent } from '../../image-pdf-preview-dialog/image-pdf-preview-dialog.component';
+import { ImagePdfPreviewDialogComponent } from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
