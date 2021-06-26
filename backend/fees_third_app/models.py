@@ -313,8 +313,9 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         if(feeSettings and feeSettings.accountingSettingsJSON):
             accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
             modeOfPayment = instance.modeOfPayment
-            if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount'))\
-                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment)):
+            if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
+                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None))\
+                     and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0:
                 instance.parentTransaction = Transaction.objects.create(
                     parentEmployee = instance.parentEmployee,
                     parentSchool = instance.parentSchool,
@@ -327,6 +328,16 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
         if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
             originalFeeReceipt.parentTransaction.delete()
+
+        ## Clearance Date and Cleared ##
+        subFeeReceiptSet = originalFeeReceipt.subfeereceipt_set.all()
+        for subFeeReceipt in subFeeReceiptSet:
+            studentFee = subFeeReceiptSet.parentStudentFee
+            for month in INSTALLMENT_LIST:
+                if(getattr(subFeeReceipt, month+'Amount') or getattr(subFeeReceipt, month+'LateFee')):
+                    setattr(studentFee, month+'ClearanceDate', None)
+            studentFee.cleared = False
+            studentFee.save()
     pass
 
 
