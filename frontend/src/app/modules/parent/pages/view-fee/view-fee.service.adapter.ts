@@ -146,7 +146,6 @@ export class ViewFeeServiceAdapter {
             environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.feeService.order_completion);
 
         const redirectParams = new URLSearchParams(location.search);
-        redirectParams.delete('orderId');
 
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
 

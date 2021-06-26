@@ -1,6 +1,7 @@
 export class OnlinePaymentAccount {
     id?: number;
     parentSchool: number;
+    vendorId: string;
     vendorData: {
         id?: string,
         name: string,

@@ -336,7 +336,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
             for month in INSTALLMENT_LIST:
                 if(getattr(subFeeReceipt, month+'Amount') or getattr(subFeeReceipt, month+'LateFee')):
                     setattr(studentFee, month+'ClearanceDate', None)
-            studentFee.cleared = False
+                    studentFee.cleared = False
             studentFee.save()
     pass
 
@@ -583,6 +583,7 @@ class FeeSettings(models.Model):
     
 class OnlinePaymentAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
+    vendorId = models.CharField(max_length=20, unique=True)
 
 
 class Order(models.Model):
@@ -595,6 +596,8 @@ class Order(models.Model):
         ('Refunded', 'Refunded'),
         ('Forwarded to School', 'Forwarded to School')
     )
+    parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
+    orderId = models.CharField(max_length=20, unique=True, primary_key=True)
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
     dateTime = models.DateTimeField(auto_now_add=True)
@@ -609,11 +612,11 @@ from accounts_app.views import TransactionAccountDetailsView
 
 @receiver(pre_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
-    if instance.id and instance.status == 'Completed':
-        preSavedOrder = Order.objects.get(id=instance.id)
+    if not instance._state.adding and instance.status == 'Completed':
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
         if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
 
-            transactionList = CashfreeTransaction.objects.filter(parentOrder = instance.id)
+            transactionList = CashfreeTransaction.objects.filter(parentOrder = preSavedOrder)
             activeSchoolID = transactionList[0].parentStudent.parentSchool.id
 
             currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())

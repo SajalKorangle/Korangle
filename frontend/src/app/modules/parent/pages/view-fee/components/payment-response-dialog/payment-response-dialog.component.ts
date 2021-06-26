@@ -33,13 +33,14 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     const searchParams = new URLSearchParams(location.search);
+    searchParams.delete('orderId');
     const url = location.pathname + '?' + searchParams.toString();
     window.history.pushState({}, document.title, url);
   }
 
   async initilizeData() {
     const order_request = {
-      id: this.orderId,
+      orderId: this.orderId,
     };
     this.backendData.order = await this.data.vm.feeService.getObject(this.data.vm.feeService.order, order_request);
     this.isLoading = false;

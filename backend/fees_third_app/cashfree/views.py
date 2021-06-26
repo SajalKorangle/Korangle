@@ -2,7 +2,7 @@ from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 from fees_third_app.cashfree.cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
 from common.common_serializer_interface_3 import create_object, get_object
-from django.db.models import Max
+from time import time
 
 class SettelmentsCycleListView(APIView):
 
@@ -38,13 +38,13 @@ class OnlinePaymentAccountView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        maxId = OnlinePaymentAccount.objects.all().aggregate(Max('id'))['id__max'] or 4
-        vendorId = str(maxId +1)
+        vendorId = str(int(time()*1000000))
         vendorData = data['vendorData']
         print(vendorData)
         addVendor(vendorData, vendorId) 
 
         del data['vendorData']
+        data.update({"vendorId": vendorId})
         responseData = create_object(data, self.ModelSerializer, *args, **kwargs)
         responseData.update({
             'vendorData': getVendor(vendorId)
@@ -57,7 +57,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
         responseData =  get_object(request.GET, self.permittedQuerySet(**kwargs),  self.ModelSerializer)
         if(responseData):
             responseData.update({
-                'vendorData': getVendor(responseData['id'])
+                'vendorData': getVendor(responseData['vendorId'])
             })
         return responseData
 
@@ -118,12 +118,14 @@ class OrderView(CommonView, APIView):
         activeSchoolId = kwargs['activeSchoolID']
         schoolOnlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool = activeSchoolId)
         orderData = {
+            'parentSchool': activeSchoolId,
+            'orderId': str(int(time()*1000000)),
             'amount': request.data['orderAmount']
         }
 
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
-        responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.id)
+        responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
         print('createdOrderResponse: ', responseOrderData)
         return responseOrderData
 
@@ -140,7 +142,7 @@ class OrderCompletionView(APIView):
         if(not signatureFromData.decode('utf-8') == request.POST['signature']):
             return HttpResponseForbidden()
 
-        orderInstance = Order.objects.get(id=request.POST['orderId'])
+        orderInstance = Order.objects.get(orderId=request.POST['orderId'])
         if(request.POST['txStatus'] == 'SUCCESS'):
             orderInstance.status = 'Completed'
             orderInstance.save()

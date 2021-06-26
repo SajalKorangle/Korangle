@@ -176,6 +176,7 @@ def addVendor(newVendorData, vendorId):
     #Remove special characters from name
     newVendorData['name'] = ''.join(ch for ch in newVendorData['name'] if ch.isalnum() and not ch.isnumeric())
     print(newVendorData)
+    
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
         'x-client-secret': CASHFREE_SECRET_KEY,
