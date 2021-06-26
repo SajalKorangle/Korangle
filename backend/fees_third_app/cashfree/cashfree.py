@@ -6,13 +6,8 @@ import requests
 import time
 
 
-from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET
+from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url
 
-# testUrl = 'https://ces-gamma.cashfree.com'
-# prodUrl = 'https://ces-api.cashfree.com'
-
-base_url = 'https://test.cashfree.com'
-checkout_url = 'https://test.cashfree.com/billpay/checkout/post/submit'
 bank_verification_base_url = 'https://payout-gamma.cashfree.com'
 
 def getResponseSignature(postData):
