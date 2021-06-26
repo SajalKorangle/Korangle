@@ -1,0 +1,9 @@
+@media only screen and (max-width: 1024px){
+    h3{
+        font-size: medium;
+    }
+
+    .amount{
+        width: 160px;
+    }
+}
