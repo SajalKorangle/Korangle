@@ -112,6 +112,7 @@ from .cashfree import createAndSignCashfreeOrder
 class OrderView(CommonView, APIView):
     Model = Order
     permittedMethods=['get', 'post',]
+    RelationsToSchool=['parentSchool__id']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
