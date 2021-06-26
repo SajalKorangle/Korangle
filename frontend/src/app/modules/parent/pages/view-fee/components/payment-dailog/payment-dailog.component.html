@@ -1,6 +1,5 @@
 <h2 mat-dialog-title>Payment</h2>
-<mat-dialog-content
-    style="min-height: 50vh; max-height: 80vh; min-width: max(65vw, 320px); max-width: 80vw; overflow: auto;">
+<mat-dialog-content style="min-height: 50vh; max-height: 80vh; min-width: 65vw; max-width: 90vw; overflow: auto;">
     <div style="width: 100%; overflow-x: hidden; overflow-y: auto;">
         <table class="table table-hover">
             <thead>
@@ -56,10 +55,12 @@
             </tbody>
         </table>
     </div>
-    <mat-form-field style="float: right;">
+    <mat-form-field style="display: block; max-width: 240px; margin-left: auto;">
         <mat-label>Email</mat-label>
         <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
     </mat-form-field>
+
+
 
     <button mat-button class="btn"
         style="background-color: blue; color: white; display: block; margin-left: auto; margin-top: 16px;"
