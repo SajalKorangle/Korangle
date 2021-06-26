@@ -1,9 +1,5 @@
 import { OnlinePaymentAccountComponent } from './online-payment-account.component';
 
-async function sleep() {
-    await new Promise(resolve => setTimeout(resolve, 4000));
-}
-
 export class OnlinePaymentAccountServiceAdapter {
 
     vm: OnlinePaymentAccountComponent;
@@ -62,7 +58,6 @@ export class OnlinePaymentAccountServiceAdapter {
         this.vm.intermediateUpdateState.registrationLoading = true;
         this.vm.isLoading = true;
 
-        // await sleep();
         const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
         console.log('newOnlinePayment Account: ', newOnlinePaymentAccount);
         await this.verifyIFSC();
@@ -72,7 +67,6 @@ export class OnlinePaymentAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
-        // await sleep();
         const account_verification_data = {
             accountNumber: this.vm.onlinePaymentAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
@@ -84,7 +78,7 @@ export class OnlinePaymentAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
-        // await sleep();
+
         if (this.vm.onlinePaymentAccount.id) {
             this.vm.onlinePaymentAccount =
                 await this.vm.feeService.updateObject(this.vm.feeService.online_payment_account, newOnlinePaymentAccount);

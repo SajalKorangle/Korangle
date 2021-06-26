@@ -314,14 +314,10 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         if(feeSettings and feeSettings.accountingSettingsJSON):
             accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
             modeOfPayment = instance.modeOfPayment
-            print('mode of Payment == Korangle', instance.modeOfPayment == 'KORANGLE')
-
-            print('check 1: ', (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None)))
 
             if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
                 or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)\
                      and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0):
-                print('creaing transaction')
                 instance.parentTransaction = Transaction.objects.create(
                     parentEmployee = instance.parentEmployee,
                     parentSchool = instance.parentSchool,

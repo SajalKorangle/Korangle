@@ -25,8 +25,7 @@ export class PaymentDailogComponent implements OnInit {
   }) { }
 
   ngOnInit() {
-    this.data.vm.selectedStudentList.forEach(student => { // initilizing payment amount to 0
-      this.amountMappedByStudntId[student.id] = 0;
+    this.data.vm.selectedStudentList.forEach(student => { // initilizing
       this.newSubFeeReceiptListMappedByStudntId[student.id] = [];
     });
     console.log('payment Dialog: ', this);
@@ -52,6 +51,9 @@ export class PaymentDailogComponent implements OnInit {
       return;
     let paymentLeft = this.amountMappedByStudntId[student.id];
     this.newSubFeeReceiptListMappedByStudntId[student.id] = []; // start with empty
+
+    if (paymentLeft == 0)
+      return;
 
     this.data.vm.sessionList.forEach((session: Session) => {
       this.data.vm.installmentList.forEach((installment) => {

@@ -14,7 +14,7 @@ class Job(DailyJob):
         fromDateTime = timezone.localize( datetime(now.year, now.month, now.day) - timedelta(days=1))
         toCheckOrderList = Order.objects.filter(dateTime__gte=fromDateTime, status = 'Pending')
         for orderInstance in toCheckOrderList:
-            if(isOrderCompleted(orderInstance.id)):
+            if(isOrderCompleted(orderInstance.orderId)):
                 try:
                     orderInstance.status = 'Completed'
                     orderInstance.save()

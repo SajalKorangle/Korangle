@@ -35,7 +35,7 @@ def verifyCredentials():
         headers = headers,
         data=data
     )
-    print(response.json())
+
     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
 
@@ -47,7 +47,7 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
                 "amount" : data['orderAmount']
             }
         ]
-    print('payment Splits: ', paymentSplit)
+
     paymentSplitEncoded = base64.b64encode(
         bytes( 
             json.dumps(paymentSplit).encode('utf-8')
@@ -92,14 +92,19 @@ def getOrderStatus(orderId):
         data=orderData,
         headers=headers
         )
-
+        
     assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json())
     return response.json()
 
 
 def isOrderCompleted(orderId):
-    orderStatusData = getOrderStatus(orderId)
-    return orderStatusData['txStatus'] == 'SUCCESS'
+    result = False
+    try:
+        orderStatusData = getOrderStatus(orderId)
+        result =  orderStatusData['txStatus'] == 'SUCCESS'
+    except:
+        pass
+    return result
 
 # def initiateRefund(orderId, amount):
 #     orderStatusData = getOrderStatus(orderId)
@@ -131,7 +136,6 @@ def addVendor(newVendorData, vendorId):
 
     #Remove special characters from name
     newVendorData['name'] = ''.join(ch for ch in newVendorData['name'] if ch.isalnum() and not ch.isnumeric())
-    print(newVendorData)
     
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
@@ -235,7 +239,6 @@ def getBearerToken():
 
 
 def ifscVerification(ifsc):
-    print('printing ifsc: ', ifsc)
     headers = {
         'Authorization': getBearerToken(),
         'Content-Type': 'Application/JSON',
@@ -249,7 +252,6 @@ def ifscVerification(ifsc):
     if(response.json()["status"] == "SUCCESS"):
         return response.json()['data']
     else:
-        print(response.json())
         return None
 
 def bankVerification(accountNumber, ifsc):
@@ -261,8 +263,6 @@ def bankVerification(accountNumber, ifsc):
         'bankAccount': accountNumber,
         'ifsc': ifsc
     }
-
-    print('params: ', params)
 
     response = requests.get(
         url= bank_verification_base_url+'/payout/v1.2/validation/bankDetails',

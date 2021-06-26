@@ -107,7 +107,6 @@ class OrderView(CommonView, APIView):
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
         responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
-        print('createdOrderResponse: ', responseOrderData)
         return responseOrderData
 
 
@@ -118,9 +117,7 @@ class OrderCompletionView(APIView):
     permission_classes = []
 
     def post(self, request):
-        print(request.POST)
         signatureFromData = getResponseSignature(request.POST)
-        print('generated signature: ', signatureFromData)
         if(not signatureFromData.decode('utf-8') == request.POST['signature']):
             return HttpResponseForbidden()
 
@@ -130,5 +127,4 @@ class OrderCompletionView(APIView):
             orderInstance.save()
 
         redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(request.POST['orderId']) # Appending orderId to the redirect url
-        print('rdeirectUrl = ', redirectUrl)
         return HttpResponseRedirect(redirectUrl)
