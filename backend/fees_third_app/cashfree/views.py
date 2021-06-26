@@ -40,7 +40,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
         data = request.data
         vendorId = str(int(time()*1000000))
         vendorData = data['vendorData']
-        print(vendorData)
+
         addVendor(vendorData, vendorId) 
 
         del data['vendorData']
@@ -87,28 +87,8 @@ class CashfreeTransactionListView(CommonListView, APIView):
 
 
 from fees_third_app.models import Order
-
-# class OrderView(CommonView, APIView):
-#     Model = Order
-#     permittedMethods=['get', 'post',]
-
-#     @user_permission_3
-#     def post(self, request, *args, **kwargs):
-#         activeSchoolId = kwargs['activeSchoolID']
-#         schoolOnlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool = activeSchoolId)
-#         orderData = {
-#             'amount': request.data['orderAmount']
-#         }
-
-#         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
-
-#         newCashfreeOrder = createCashfreeOrder(request.data, createdOrderResponse['id'], schoolOnlinePaymentAccount.vendorId)
-#         createdOrderResponse.update({
-#             'paymentLink': newCashfreeOrder['paymentLink']
-#         })
-#         return createdOrderResponse
-
 from .cashfree import createAndSignCashfreeOrder
+
 class OrderView(CommonView, APIView):
     Model = Order
     permittedMethods=['get', 'post',]
@@ -133,6 +113,7 @@ class OrderView(CommonView, APIView):
 
 from django.http import HttpResponseRedirect, HttpResponseForbidden, response
 from .cashfree import getResponseSignature
+
 class OrderCompletionView(APIView):
     permission_classes = []
 

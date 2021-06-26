@@ -193,7 +193,5 @@ export class ViewFeeServiceAdapter {
 
         document.body.appendChild(form);
         form.submit();
-
-        this.vm.isLoading = false;
     }
 }

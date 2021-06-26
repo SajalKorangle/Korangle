@@ -287,12 +287,13 @@ class FeeReceipt(models.Model):
         ( 'Online', 'Online'),
         ('KORANGLE', 'KORANGLE'),
     )
-    modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True), # it should not be null
+    modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
-
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
+
+from django.core.serializers import serialize
 
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptPreSave(sender, instance, **kwargs):
@@ -313,9 +314,14 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         if(feeSettings and feeSettings.accountingSettingsJSON):
             accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
             modeOfPayment = instance.modeOfPayment
+            print('mode of Payment == Korangle', instance.modeOfPayment == 'KORANGLE')
+
+            print('check 1: ', (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None)))
+
             if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
-                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None))\
-                     and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0:
+                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)\
+                     and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0):
+                print('creaing transaction')
                 instance.parentTransaction = Transaction.objects.create(
                     parentEmployee = instance.parentEmployee,
                     parentSchool = instance.parentSchool,
@@ -332,7 +338,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         ## Clearance Date and Cleared ##
         subFeeReceiptSet = originalFeeReceipt.subfeereceipt_set.all()
         for subFeeReceipt in subFeeReceiptSet:
-            studentFee = subFeeReceiptSet.parentStudentFee
+            studentFee = subFeeReceipt.parentStudentFee
             for month in INSTALLMENT_LIST:
                 if(getattr(subFeeReceipt, month+'Amount') or getattr(subFeeReceipt, month+'LateFee')):
                     setattr(studentFee, month+'ClearanceDate', None)
@@ -666,7 +672,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                                 'parentTransaction': response['parentTransaction'],
                                 'parentAccount': debitAccount.id,
                                 'amount': 0,
-                                'transactionType': 'DEBIT'
+                                'transactionType': 'CREDIT'
                             }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
                             )
 
@@ -674,7 +680,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                                 'parentTransaction': response['parentTransaction'],
                                 'parentAccount': creditAccount.id,
                                 'amount': 0,
-                                'transactionType': 'CREDIT'
+                                'transactionType': 'DEBIT'
                             }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
                             )
 
