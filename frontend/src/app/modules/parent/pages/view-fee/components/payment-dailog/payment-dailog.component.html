@@ -13,7 +13,7 @@
                             <h3>{{student.name}}</h3>
                         </td>
                         <td style="text-align: right;">
-                            <mat-form-field style="width: 100px;">
+                            <mat-form-field style="width: 80px;">
                                 <mat-label>Amount</mat-label>
                                 <input matInput type="number" [(ngModel)]="amountMappedByStudntId[student.id]"
                                     (ngModelChange)="handleOverallPaymentChange(student)"
@@ -28,7 +28,8 @@
                                 <td colspan="2">Session: {{session.name}}</td>
                             </tr>
 
-                            <tr *ngFor="let subFeeReceipt of getSessionFilteredSubFeeReceiptList(student, session)">
+                            <tr class="sub-fee-content"
+                                *ngFor="let subFeeReceipt of getSessionFilteredSubFeeReceiptList(student, session)">
                                 <td>
                                     {{getFeeTypeFromSubFeeReceipt(subFeeReceipt).name}}
                                 </td>
@@ -39,7 +40,7 @@
                         </ng-container>
                     </ng-container>
 
-                    <tr *ngIf="newSubFeeReceiptListMappedByStudntId[student.id].length>0">
+                    <tr class="sub-fee-content" *ngIf="newSubFeeReceiptListMappedByStudntId[student.id].length>0">
                         <td>Late Fee</td>
                         <td align="right">{{getNewSubFeeReceiptTotalLateFee(student)}}</td>
                     </tr>
