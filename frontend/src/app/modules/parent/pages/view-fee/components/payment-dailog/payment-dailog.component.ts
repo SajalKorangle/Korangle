@@ -28,7 +28,7 @@ export class PaymentDailogComponent implements OnInit {
     this.data.vm.selectedStudentList.forEach(student => { // initilizing
       this.newSubFeeReceiptListMappedByStudntId[student.id] = [];
     });
-    console.log('payment Dialog: ', this);
+    // console.log('payment Dialog: ', this);
   }
 
   amountError(student: Student) {
@@ -154,6 +154,19 @@ export class PaymentDailogComponent implements OnInit {
   }
 
   apply() {
+
+    let errorFlag = false;
+
+    this.data.vm.selectedStudentList.forEach(student => { // initilizing
+      if (this.amountError(student)())
+        errorFlag = true;
+    });
+
+    if (errorFlag) {
+      alert('Validation Error');
+      return;
+    }
+
 
     // Email Test
     if (!VALIDATORS_REGX.email.test(this.email)) {
