@@ -2090,22 +2090,22 @@ export class MarksLayer extends CanvasText implements Layer {
         }
         if (this.parentExamination && this.parentSubject) {
             let gradeValue: string = null;
-      const marksTemp = this.source.getValueFunc(
+            const marksTemp = this.source.getValueFunc(
                 this.ca.DATA,
                 this.parentExamination,
                 this.parentSubject,
                 this.testType,
-        this.marksType
-      );
-      this.marks =
-        marksTemp *
-        (this.outOf /
-          this.source.getValueFunc(
-                    this.ca.DATA,
-                    this.parentExamination,
-                    this.parentSubject,
-                    this.testType,
-                    MARKS_TYPE_LIST[1]));
+                this.marksType
+            );
+            this.marks =
+                marksTemp *
+                (this.outOf /
+                    this.source.getValueFunc(
+                        this.ca.DATA,
+                        this.parentExamination,
+                        this.parentSubject,
+                        this.testType,
+                        MARKS_TYPE_LIST[1]));
             if (this.gradeRuleSet) {
                 this.gradeRuleSet.gradeRules.forEach((gradeRule: GradeRule) => {
                     if (gradeRule.belongsToGrade(this.marks))
@@ -2117,23 +2117,23 @@ export class MarksLayer extends CanvasText implements Layer {
             }
             else {
                 if (this.inWords) {
-          this.text =
-            this.marks >= 0
-              ? getMarksInWords(
-                  Math.round(this.marks * Math.pow(10, this.decimalPlaces)) /
-                    Math.pow(10, this.decimalPlaces),
-                  this.decimalPlaces
-                )
-              : marksTemp == -2
-              ? "Absent"
-                        : this.alternateText;
+                    this.text =
+                        this.marks >= 0
+                            ? getMarksInWords(
+                                Math.round(this.marks * Math.pow(10, this.decimalPlaces)) /
+                                Math.pow(10, this.decimalPlaces),
+                                this.decimalPlaces
+                            )
+                            : marksTemp == -2
+                                ? "Absent"
+                                : this.alternateText;
                 } else {
-          this.text =
-            this.marks >= 0
-              ? this.marks.toFixed(this.decimalPlaces)
-              : marksTemp == -2
-              ? "A"
-              : this.alternateText;
+                    this.text =
+                        this.marks >= 0
+                            ? this.marks.toFixed(this.decimalPlaces)
+                            : marksTemp == -2
+                                ? "A"
+                                : this.alternateText;
                 }
             }
             this.error = false;
@@ -2361,7 +2361,7 @@ export class Result extends CanvasText implements Layer {
 
     layerDataUpdate(): void {
         let numberOfFailedSubjects = 0;
-        this.marksLayers = this.marksLayers.filter(m => m && this.ca.layers.find(l => l.id == m.id));
+        this.marksLayers = this.marksLayers.filter(m => m && this.ca.layers.find(l => l && l.id == m.id));
         this.marksLayers.forEach((layer: MarksLayer | Formula, index: number) => {
             if (!layer.marks || layer.marks < this.rules.passingMarks[index]) {
                 numberOfFailedSubjects++;
@@ -2429,7 +2429,7 @@ export class CurrentSession extends CanvasText implements Layer {
             dateValue2 = dateValue2.replace(dataReplacementKey, dateReplacementvalue);
         });
         this.text = dateValue1 + this.format.seperator + dateValue2;
-    }
+    };
 
     getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
@@ -2669,31 +2669,31 @@ class ExaminationParameterStructure {
         return 'N/A';
     }
 
-  static getMarks(
-    dataObject: any,
-    parentExamination: any,
-    parentSubject: any,
-    testType: string
-  ): number {
-    const student_test_object = dataObject.data.studentTestList.find(
-      (studentTest) => {
-        return (
-          studentTest.parentExamination === parentExamination &&
-          studentTest.parentSubject === parentSubject &&
-          studentTest.testType === testType &&
-          studentTest.parentStudent === dataObject.studentId
+    static getMarks(
+        dataObject: any,
+        parentExamination: any,
+        parentSubject: any,
+        testType: string
+    ): number {
+        const student_test_object = dataObject.data.studentTestList.find(
+            (studentTest) => {
+                return (
+                    studentTest.parentExamination === parentExamination &&
+                    studentTest.parentSubject === parentSubject &&
+                    studentTest.testType === testType &&
+                    studentTest.parentStudent === dataObject.studentId
+                );
+            }
         );
-      }
-    );
-    if (
-      student_test_object !== undefined &&
-      !isNaN(student_test_object.marksObtained)
-    ) {
-      if (student_test_object.absent) {
-        return MARKS_AVAILABLE_BUT_ABSENT_CORROSPONDING_INT;
-      } else {
-            return student_test_object.marksObtained;
-      }
+        if (
+            student_test_object !== undefined &&
+            !isNaN(student_test_object.marksObtained)
+        ) {
+            if (student_test_object.absent) {
+                return MARKS_AVAILABLE_BUT_ABSENT_CORROSPONDING_INT;
+            } else {
+                return student_test_object.marksObtained;
+            }
         } else {
             return MARKS_NOT_AVAILABLE_CORROSPONDING_INT;
         }
