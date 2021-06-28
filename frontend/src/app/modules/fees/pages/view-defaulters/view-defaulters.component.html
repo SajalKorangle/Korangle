@@ -96,7 +96,7 @@
                     <div class="mat-tab-element">
                         <div class="container-fluid">
                             <div class="row">
-                                <div *ngIf="!isMobile()" class="col-sm-6">
+                                <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
                                     <div style="float: right; width: 392px">
                                         <div>
                                             <div class="row" style="display: flex; margin-bottom: 4px">
@@ -105,45 +105,45 @@
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Due (overall)</div>
                                                 <div style="width: 7%; background: #ededed">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredParentFeesDueOverall() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentFeesDueOverall() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredParentTotalFees() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentTotalFees() | indianCurrency }}</b>
                                                 </div>
                                             </div>
             
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%; background: #ededed">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredParentTotalFeesPaid() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentTotalFeesPaid() | indianCurrency }}</b>
                                                 </div>
                                             </div>
             
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredParentTotalDiscount() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentTotalDiscount() | indianCurrency }}</b>
                                                 </div>
                                             </div>
                                         </div>
@@ -152,54 +152,54 @@
                             </div>
                         </div>
             
-                        <div *ngIf="isMobile()" class="container-fluid">
+                        <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-7">Total Fees Due (Till Month)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row" style="background: #ededed">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row" style="background: #ededed">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
                                 </div>
                             </div>
                         </div>
@@ -209,12 +209,12 @@
                     <div class="mat-tab-element">
                         <div class="row">
                             <div class="col-sm-6">
-                                Selected: <b>{{getSelectedParentCount()}}</b>, Showing:
+                                Selected: <b>{{htmlRenderer.getSelectedParentCount()}}</b>, Showing:
                                 <b>{{getFilteredParentList().length}}</b> out of {{parentList.length}} parents
                             </div>
                             <div class="col-sm-12">
-                                <button class="btn" style="padding: 4px 7px" (click)="selectAllHandler(); $event.stopPropagation()">Select All</button>
-                                <button class="btn" style="padding: 4px 7px" (click)="clearAllHandler(); $event.stopPropagation()">Clear All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllHandler(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.clearAllHandler(); $event.stopPropagation()">Clear All</button>
                             </div>
                         </div>
                         <div class="data-table">
@@ -324,7 +324,7 @@
 
                             <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
-                                tooltip-position="left" (click)="downloadFeesReport()">
+                                tooltip-position="left" (click)="htmlRenderer.downloadFeesReport()">
                                 Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
 
 
@@ -351,7 +351,7 @@
                     <div class="mat-tab-element">
                         <div class="container-fluid">
                             <div class="row">
-                                <div *ngIf="!isMobile()" class="col-sm-6">
+                                <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
                                     <div style="float: right; width: 392px">
                                         <div>
                                             <div class="row" style="display: flex">
@@ -360,45 +360,45 @@
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredStudentListTotalFeesDueTillMonth() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDueTillMonth() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Due (overall)</div>
                                                 <div style="width: 7%; background: #ededed">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                                 </div>
                                             </div>
             
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%; background: #ededed">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                                 </div>
                                             </div>
             
-                                            <div *ngIf="hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
                                                 </div>
                                             </div>
                                         </div>
@@ -407,54 +407,54 @@
                             </div>
                         </div>
             
-                        <div *ngIf="isMobile()" class="container-fluid">
+                        <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-7">Total Fees Due (Till Month)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row" style="background: #ededed">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row" style="background: #ededed">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                 </div>
                             </div>
             
-                            <div *ngIf="hasPermission()" class="row">
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
                                     <b>:Rs.</b>
                                 </div>
                                 <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
                                 </div>
                             </div>
                         </div>
@@ -465,12 +465,12 @@
                     <div class="mat-tab-element">
                         <div class="row">
                             <div class="col-sm-6">
-                                Selected: <b>{{getSelectedChildrenCount()}}</b>, Showing:
+                                Selected: <b>{{htmlRenderer.getSelectedChildrenCount()}}</b>, Showing:
                                 <b>{{getFilteredStudentList().length}}</b> out of {{studentList.length}} students
                             </div>
                             <div class="col-sm-12">
-                                <button class="btn" style="padding: 4px 7px" (click)="selectAllHandler(); $event.stopPropagation()">Select All</button>
-                                <button class="btn" style="padding: 4px 7px" (click)="clearAllHandler(); $event.stopPropagation()">Clear All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllHandler(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.clearAllHandler(); $event.stopPropagation()">Clear All</button>
                             </div>
                         </div>
 
@@ -777,7 +777,7 @@
 
                             <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
-                                tooltip-position="left" (click)="downloadFeesReport()">
+                                tooltip-position="left" (click)="htmlRenderer.downloadFeesReport()">
                                 Download<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
 
 

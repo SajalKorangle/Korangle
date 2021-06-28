@@ -23,7 +23,6 @@ import { FeeType } from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
 
-
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
@@ -52,9 +51,6 @@ export class ViewDefaultersComponent implements OnInit {
     studentFeeDetailsVisibleList = [];
     lateFeeVisible = true;
     sessionListWithDues = [];
-
-
-
 
     installmentList = INSTALLMENT_LIST;
 
