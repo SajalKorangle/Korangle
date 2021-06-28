@@ -263,9 +263,6 @@ export class MessageService {
             };
         });
 
-        console.log(sms_data);
-        console.log(notification_data);
-
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
         if (notification_data.length > 0) {
