@@ -1,5 +1,4 @@
 import {ViewDefaultersComponent} from './view-defaulters.component';
-import {SMS_EVENT_LIST} from '../../../constants-database/SMSEvent';
 import moment = require('moment');
 
 export class ViewDefaultersServiceAdapter {
@@ -15,11 +14,10 @@ export class ViewDefaultersServiceAdapter {
 
     async initializeData() {
         this.vm.isLoading = true;
-        this.vm.backendData.defaultersSMSEvent = SMS_EVENT_LIST.find(e => e.id == 4);
 
         const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
             {parentSchool: this.vm.user.activeSchool.dbId}), //0
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndId: this.vm.backendData.defaultersSMSEvent.id})]); //1
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndId: this.vm.NOTIFY_DEFAULTERS_ID})]); //1
 
         this.vm.backendData.smsIdSchoolList = firstValue[0];
         this.vm.backendData.eventSettingsList = firstValue[1];
@@ -57,7 +55,7 @@ export class ViewDefaultersServiceAdapter {
             this.vm.sessionList = sessionList;
             this.vm.studentParameterList = val[1].map((x) => ({
                 ...x,
-                filterValues: JSON.parse(x.filterValues).map((x) => ({name: x, show: false})),
+                filterValues: JSON.parse(x.filterValues).map((x) => ({ name: x, show: false })),
                 showNone: false,
                 filterFilterValues: '',
             }));
@@ -206,18 +204,25 @@ export class ViewDefaultersServiceAdapter {
             scheduledDataTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime).format('YYYY-MM-DD HH:mm');
         }
         this.vm.dataForMapping['studentList'] = studentData;
-        await this.vm.messageService.smsNotificationSender(
-            this.vm.dataForMapping,
-            ['student'],
-            this.vm.backendData.defaultersSMSEvent,
-            this.vm.selectedSendUpdateType.id,
-            this.vm.message,
-            this.vm.message,
-            scheduledDataTime,
-            this.vm.userInput.selectedTemplate.parentSMSId,
-            this.vm.user.activeSchool.dbId,
-            this.vm.smsBalance
-        );
+        try {
+           this.vm.smsBalance = await this.vm.messageService.smsNotificationSender(
+                this.vm.dataForMapping,
+                ['student'],
+                this.vm.defaultersSMSEvent,
+                this.vm.selectedSendUpdateType.id,
+                this.vm.message,
+                this.vm.message,
+                scheduledDataTime,
+                this.vm.userInput.selectedTemplate.parentSMSId,
+                this.vm.user.activeSchool.dbId,
+                this.vm.smsBalance
+            );
+        }catch (exception) {
+            console.error(exception);
+            alert('SMS Failed Try again');
+            this.vm.isLoading = false;
+            return;
+        }
         alert(this.vm.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Sent Successfully');
         this.vm.isLoading = false;
     }

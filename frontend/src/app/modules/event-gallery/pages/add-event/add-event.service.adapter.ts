@@ -1,18 +1,15 @@
 import { AddEventComponent } from '@modules/event-gallery/pages/add-event/add-event.component';
-import { INFORMATION_TYPE_LIST } from '@classes/constants/information-type';
 
 export class AddEventServiceAdapter {
     vm: AddEventComponent;
 
     classList: any;
     notifyPersonData: any;
-    informationMessageType: any;
 
     constructor() {}
 
     initializeAdapter(vm: AddEventComponent): void {
         this.vm = vm;
-        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('General') + 1;
     }
 
     initializeData(): void {
@@ -133,7 +130,7 @@ export class AddEventServiceAdapter {
                 value2[0].forEach((eachVal) => {
                     this.vm.eventNotifyList.push(eachVal);
                 });
-                this.populatePersonListAndNotify('Event Gallery Creation', value1[0]);
+                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_CREATION_ID, value1[0]);
                 this.vm.initializeNewEvent();
                 this.vm.eventList = this.vm.eventList.sort((a, b) => {
                     // @ts-ignore
@@ -168,7 +165,7 @@ export class AddEventServiceAdapter {
 
             if (actualEvent.title != this.vm.editingEvent.title || actualEvent.description != this.vm.editingEvent.description ||
                 actualEvent.heldOn != this.vm.editingEvent.heldOn) {
-                this.populatePersonListAndNotify('Event Gallery Updation', this.vm.editingEvent);
+                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_UPDATION_ID, this.vm.editingEvent);
             }
 
             Object.assign(
@@ -216,7 +213,7 @@ export class AddEventServiceAdapter {
             ]).then((value) => {
                 this.vm.eventList = this.vm.eventList.filter((event) => event.id != editingEvent.id);
                 this.vm.editing = false;
-                this.populatePersonListAndNotify('Event Gallery Deletion', editingEvent);
+                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_DELETION_ID, editingEvent);
                 this.vm.initializeNewEvent();
                 this.vm.htmlAdapter.unSelectAll();
                 this.vm.isLoading = false;
@@ -252,7 +249,7 @@ export class AddEventServiceAdapter {
         });
     }
 
-    populatePersonListAndNotify(eventName: any, eventObject: any) {
+    populatePersonListAndNotify(eventID: any, eventObject: any) {
         this.vm.notifySelectionList.forEach((notifyTo) => {
             notifyTo.selected =
                 !!this.vm.eventNotifyList.find(
@@ -282,7 +279,7 @@ export class AddEventServiceAdapter {
         this.vm.messageService.sendEventNotification(
             this.vm.dataForMapping,
             personList,
-            eventName,
+            eventID,
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance,
         );

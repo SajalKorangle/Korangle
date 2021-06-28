@@ -1,6 +1,15 @@
+class SendUpdateTypeStructure {
+    static getStructure(id: number, name: string) {
+        return {
+            id: id,
+            name: name,
+        };
+    }
+}
+
 export const SEND_UPDATE_TYPE_LIST = [
-    {id: 1, name: 'NULL'},
-    {id: 2, name: 'SMS'},
-    {id: 3, name: 'NOTIFICATION'},
-    {id: 4, name: 'NOTIF./SMS'}
+    SendUpdateTypeStructure.getStructure(1, 'NULL'),
+    SendUpdateTypeStructure.getStructure(2, 'SMS'),
+    SendUpdateTypeStructure.getStructure(3, 'NOTIFICATION'),
+    SendUpdateTypeStructure.getStructure(4, 'NOTIF./SMS')
 ];

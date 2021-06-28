@@ -95,12 +95,12 @@ export class MessageService {
     async sendEventNotification(
         Data, // contains all the backend list which are required to populate the variables
         personsList, // ['student','employee'] either or both of them
-        eventName, // name of the Event like 'Homework Creation' as a string
+        eventId, // id of the Event like 'Homework Creation' = 7 as a number
         schoolId, // school dbId
         smsBalance, // school sms balance
     ) {
 
-        const smsEvent = SMS_EVENT_LIST.find(event => event.eventName == eventName);
+        const smsEvent = SMS_EVENT_LIST.find(event => event.id == eventId);
         if (!smsEvent) {
             throw "No Events Found";
         } // if there is not event return
@@ -129,18 +129,22 @@ export class MessageService {
 
         notificationContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
 
-        await this.smsNotificationSender(
-            Data,
-            personsList,
-            smsEvent,
-            eventSettings.sendUpdateTypeFrontEndId,
-            smsContent,
-            notificationContent,
-            null,
-            smsId,
-            schoolId,
-            smsBalance
-        );
+        try {
+            await this.smsNotificationSender(
+                Data,
+                personsList,
+                smsEvent,
+                eventSettings.sendUpdateTypeFrontEndId,
+                smsContent,
+                notificationContent,
+                null,
+                smsId,
+                schoolId,
+                smsBalance
+            );
+        } catch (exception) {
+            console.error(exception);
+        }
     }
 
     async smsNotificationSender(
@@ -259,6 +263,9 @@ export class MessageService {
             };
         });
 
+        console.log(sms_data);
+        console.log(notification_data);
+
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
         if (notification_data.length > 0) {
@@ -267,12 +274,14 @@ export class MessageService {
 
         const value = await Promise.all(service_list);
         if ((sendUpdateTypeId == 2 || sendUpdateTypeId == 4) && sms_list.length > 0) {
-            if (value[0].status === 'success') {
-                smsBalance -= value[0].data.count;
-            } else if (value[0].status === 'failure') {
-                smsBalance = value[0].count;
+            if (value[0].sentStatus) {
+                smsBalance -= value[0].count;
+            } else {
+                throw "NOT SENT";
             }
         }
+
+        return smsBalance;
     }
 
     getMessageFromTemplate = (message, mappedDataObj) => {

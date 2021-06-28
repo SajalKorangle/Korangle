@@ -16,6 +16,7 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import {MessageService} from '@services/message-service';
+import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 @Component({
     selector: 'record-attendance',
@@ -51,8 +52,6 @@ export class RecordAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     mobileNumberList = [];
-    STUDENT_LIMITER = 200;
-
 
     studentList: any;
 
@@ -60,17 +59,14 @@ export class RecordAttendanceComponent implements OnInit {
 
     receiverList = RECEIVER_LIST;
 
-    selectedReceiver: any;
+    ATTENDANCE_CREATION_ID = 5;
+    ATTENDANCE_UPDATION_ID = 6;
 
-    createdStudentList = [];
-    updatedStudentList = [];
+    attendanceSMSEventList = SMS_EVENT_LIST.filter(event => event.id == this.ATTENDANCE_CREATION_ID || this.ATTENDANCE_UPDATION_ID);
 
     backendData = {
-        eventList: [],
         eventSettingsList: [],
     };
-
-    notif_usernames = [];
 
     serviceAdapter: RecordAttendanceServiceAdapter;
 

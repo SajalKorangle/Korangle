@@ -5,32 +5,32 @@
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Min. No. (Fees Due till month)</label>
                     <input
-                            type="number"
-                            class="form-control"
-                            (keypress)="htmlRenderer.policeNumberInput($event)"
-                            [ngModel]="minimumNumber"
-                            (ngModelChange)="minimumNumber = $event"
+                        type="number"
+                        class="form-control"
+                        (keypress)="htmlRenderer.policeNumberInput($event)"
+                        [ngModel]="minimumNumber"
+                        (ngModelChange)="minimumNumber = $event"
                     />
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
                     <label class="control-label">Max. No. (Fees Due till month)</label>
-                    <input
-                            type="number"
-                            class="form-control"
-                            (keypress)="htmlRenderer.policeNumberInput($event)"
-                            [ngModel]="maximumNumber"
-                            (ngModelChange)="maximumNumber = $event"
-                    />
+                <input
+                        type="number"
+                        class="form-control"
+                        (keypress)="htmlRenderer.policeNumberInput($event)"
+                        [ngModel]="maximumNumber"
+                        (ngModelChange)="maximumNumber = $event"
+                />
                 </div>
             </div>
             <div class="col-sm-3">
                 <mat-form-field>
                     <mat-select
-                            placeholder="Select Filter Type"
-                            [ngModel]="selectedFilterType"
-                            (ngModelChange)="selectedFilterType = $event"
+                        placeholder="Select Filter Type"
+                        [ngModel]="selectedFilterType"
+                        (ngModelChange)="selectedFilterType = $event"
                     >
                         <mat-option *ngFor="let filterType of filterTypeList" [value]="filterType">
                             {{ filterType }}
@@ -42,9 +42,9 @@
                 <div>
                     <mat-form-field>
                         <mat-select
-                                placeholder="Select Class"
-                                [ngModel]="selectedClassSection"
-                                (ngModelChange)="selectedClassSection = $event"
+                            placeholder="Select Class"
+                            [ngModel]="selectedClassSection"
+                            (ngModelChange)="selectedClassSection = $event"
                         >
                             <mat-option [value]="nullValue">All</mat-option>
                             <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
@@ -60,16 +60,14 @@
             <button class="btn" style="padding: 4px 7px" (click)="showCustomFilters = !showCustomFilters">
                 <ng-container *ngIf="!showCustomFilters">Show Custom Filters</ng-container>
                 <ng-container *ngIf="showCustomFilters">Hide Custom Filters</ng-container>
-            </button
-            >
+            </button>
             <br/>
             <ng-container *ngIf="showCustomFilters">
                 <ng-container *ngFor="let parameter of studentParameterList">
                     <mat-form-field>
                         <mat-label>{{ parameter.name }}</mat-label>
                         <input matInput type="text" style="border: none" [(ngModel)]="parameter.filterFilterValues"/>
-                    </mat-form-field
-                    >
+                    </mat-form-field>
                     <br/>
                     <mat-checkbox [(ngModel)]="parameter.showNone" style="margin-right: 5px"
                                   (click)="$event.stopPropagation()"
@@ -92,12 +90,12 @@
         <div class="row">
             <div class="col-sm-3">
                 <button
-                        type="button"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                        style="padding: 12px 15px; margin-right: 17px"
-                        matTooltip="Download the following list"
-                        tooltip-position="left"
-                        (click)="htmlRenderer.downloadFeesReport()"
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-right: 17px"
+                    matTooltip="Download the following list"
+                    tooltip-position="left"
+                    (click)="htmlRenderer.downloadFeesReport()"
                 >
                     Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
                 </button>
@@ -105,12 +103,12 @@
 
             <div class="col-sm-3">
                 <button
-                        type="button"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
-                        style="padding: 12px 15px; margin-right: 17px"
-                        matTooltip="Print the following list"
-                        tooltip-position="left"
-                        (click)="printFeesReport()">
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
+                    style="padding: 12px 15px; margin-right: 17px"
+                    matTooltip="Print the following list"
+                    tooltip-position="left"
+                    (click)="printFeesReport()">
                     Print<i class="material-icons" style="margin-left: 15px">print</i>
                 </button>
             </div>

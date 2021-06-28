@@ -40,6 +40,8 @@ export class CheckHomeworkComponent implements OnInit {
     currentHomework: any;
     studentList: any;
 
+    HOMEWORK_CHECKED_ID = 10;
+    HOMEWORK_RESUBMISSION_ID = 11;
 
     studentHomeworkList: any;
 

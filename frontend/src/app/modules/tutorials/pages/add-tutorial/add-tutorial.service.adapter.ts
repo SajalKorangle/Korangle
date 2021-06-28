@@ -155,7 +155,7 @@ export class AddTutorialServiceAdapter {
         this.vm.tutorialList.push(value[0]);
         this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
         this.vm.initializeNewTutorial();
-        this.sendNotificationToParents(value[0], 'Tutorial Creation');
+        this.sendNotificationToParents(value[0], this.vm.TUTORIAL_CREATION_ID);
         this.vm.stateKeeper.isLoading = false;
     }
 
@@ -187,7 +187,7 @@ export class AddTutorialServiceAdapter {
             this.vm.stateKeeper.tutorialUpdating = false;
             tutorial.editable = false;
 
-            this.sendNotificationToParents(tutorial, 'Tutorial Updation');
+            this.sendNotificationToParents(tutorial, this.vm.TUTORIAL_UPDATION_ID);
             this.vm.htmlRenderer.checkEnableAddButton();
             this.vm.tutorialList.sort((a, b) => parseFloat(a.orderNumber) - parseFloat(b.orderNumber));
 
@@ -249,7 +249,7 @@ export class AddTutorialServiceAdapter {
                     return item.id != tutorial.id;
                 });
                 this.vm.htmlRenderer.checkEnableAddButton();
-                this.sendNotificationToParents(tutorial, 'Tutorial Deletion');
+                this.sendNotificationToParents(tutorial, this.vm.TUTORIAL_DELETION_ID);
                 this.vm.stateKeeper.tutorialUpdating = false;
             }
         }
@@ -279,12 +279,12 @@ export class AddTutorialServiceAdapter {
         this.vm.dataForMapping['studentList'] = this.vm.currentClassStudentList;
     }
 
-    sendNotificationToParents(currentTutorial: any, eventName: string) {
+    sendNotificationToParents(currentTutorial: any, eventId: number) {
         this.vm.dataForMapping['tutorial'] = currentTutorial;
         this.vm.messageService.sendEventNotification(
             this.vm.dataForMapping,
             ['student'],
-            eventName,
+            eventId,
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
         );

@@ -28,7 +28,6 @@ export class ViewSentComponent implements OnInit {
     populatedSMSList = [];
 
     backendData = {
-        smsEventList: [],
         smsList: [],
         messageTypeList: [],
     };

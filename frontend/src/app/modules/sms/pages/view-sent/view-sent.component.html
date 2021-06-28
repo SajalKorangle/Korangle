@@ -3,23 +3,23 @@
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">Start Date</label>
-                <input type="date" class="form-control" [(ngModel)]="startDate"/>
+                <input type="date" class="form-control" [(ngModel)]="startDate" />
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">End Date</label>
-                <input type="date" class="form-control" [(ngModel)]="endDate"/>
+                <input type="date" class="form-control" [(ngModel)]="endDate" />
             </div>
         </div>
         <div class="col-md-3">
             <button
-                    type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                    style="padding: 12px 15px"
-                    matTooltip="Get all the receipts b/w start and end date"
-                    tooltip-position="right"
-                    (click)="serviceAdapter.getSMSList()">
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 12px 15px"
+                matTooltip="Get all the receipts b/w start and end date"
+                tooltip-position="right"
+                (click)="serviceAdapter.getSMSList()">
                 <i class="material-icons">search</i></button>
             <br/>
         </div>
@@ -132,9 +132,9 @@
                 </section>
 
                 <mat-expansion-panel
-                        *ngFor="let sms of htmlRenderer.getFilteredSMSList(); let i = index"
-                        (opened)="sms.isOpen = true; serviceAdapter.getDeliveryReport(sms)"
-                        (closed)="sms.isOpen = false">
+                    *ngFor="let sms of htmlRenderer.getFilteredSMSList(); let i = index"
+                    (opened)="sms.isOpen = true; serviceAdapter.getDeliveryReport(sms)"
+                    (closed)="sms.isOpen = false">
                     <mat-expansion-panel-header class="mat-row">
                         <span class="mat-cell">{{ i + 1 }}.</span>
                         <span class="mat-cell">{{ sms.count }}/{{ sms.notificationCount }}</span>
@@ -156,7 +156,7 @@
                                 <div class="col-sm-3">Message:</div>
                                 <div class="col-sm-9" style="white-space: pre-line">{{ sms.content }}</div>
                             </div>
-                            <br/>
+                            <br />
 
                             <ng-container *ngFor="let status of getStatusList(sms); let last = last">
                                 {{ status }}: {{ htmlRenderer.getMobileNumberListByStatusAndSMS(status, sms).length }},&nbsp;&nbsp;

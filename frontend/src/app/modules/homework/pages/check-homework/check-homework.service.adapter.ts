@@ -1,3 +1,4 @@
+import { CommonFunctions } from '@classes/common-functions';
 import { CheckHomeworkComponent } from './check-homework.component';
 
 export class CheckHomeworkServiceAdapter {
@@ -167,7 +168,9 @@ export class CheckHomeworkServiceAdapter {
                     this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_answer_image, student_homework_image_data), //2
                 ]).then(
                     (value) => {
-                        this.vm.studentList = value[0];
+                        value[0].forEach((element) => {
+                        this.vm.studentList.push(CommonFunctions.getInstance().copyObject(element));
+                        });
                         this.initialiseStudentHomeworkData(value[2], value[1]);
                         if (value[1].length != studentIdList.length) {
                             const createList = [];
@@ -268,17 +271,17 @@ export class CheckHomeworkServiceAdapter {
 
            this.vm.dataForMapping['homework'] = this.vm.selectedHomework;
            this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
-           let eventName;
+           let eventID;
            if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
-                eventName = 'Homework Checked';
+                eventID = this.vm.HOMEWORK_CHECKED_ID;
             } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
-                eventName = 'Homework Resubmission';
+                eventID = this.vm.HOMEWORK_RESUBMISSION_ID;
             }
 
            this.vm.messageService.sendEventNotification(
                this.vm.dataForMapping,
                ['student'],
-               eventName,
+               eventID,
                this.vm.user.activeSchool.dbId,
                this.vm.smsBalance
            );

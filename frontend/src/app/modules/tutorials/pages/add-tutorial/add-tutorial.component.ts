@@ -78,6 +78,10 @@ export class AddTutorialComponent implements OnInit {
         tutorialEditing: false,
     };
 
+    TUTORIAL_CREATION_ID = 12;
+    TUTORIAL_UPDATION_ID = 13;
+    TUTORIAL_DELETION_ID = 14;
+
     constructor(
         public subjectService: SubjectService,
         public classService: ClassService,

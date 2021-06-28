@@ -48,9 +48,6 @@ export class IssueHomeworkComponent implements OnInit {
     // @Input() user;
     user: any;
 
-    STUDENT_LIMITER = 200;
-    notif_usernames = [];
-
     classSectionSubjectList: any;
     selectedClassSection: any;
     selectedSubject: any;
@@ -68,6 +65,10 @@ export class IssueHomeworkComponent implements OnInit {
 
     noPermission: any;
     smsBalance: any;
+
+    HOMEWORK_CREATION_ID = 7;
+    HOMEWORK_UPDATION_ID = 8;
+    HOMEWORK_DELETION_ID = 9;
 
     dataForMapping =  {} as any;
 

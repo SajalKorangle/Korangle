@@ -13,6 +13,7 @@ import {MessageService} from '@services/message-service';
 import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
 import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
 import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
+import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 @Component({
     selector: 'send-sms',
@@ -47,6 +48,9 @@ export class SendSmsComponent implements OnInit {
     notificationPersonList = [];
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
+    generalSMSEventIdList = [1, 2, 3];
+
+    generalSMSEventList = SMS_EVENT_LIST.filter(event => this.generalSMSEventIdList.includes(event.id));
 
     studentMessageService: any;
     employeeMessageService: any;
@@ -77,7 +81,6 @@ export class SendSmsComponent implements OnInit {
         studentList: [],
         classList: [],
         sectionList: [],
-        smsEventList: [],
         smsBalance: 0,
     };
 
@@ -304,74 +307,48 @@ export class SendSmsComponent implements OnInit {
                     !this.studentFilters.category.sc &&
                     !this.studentFilters.category.st &&
                     !this.studentFilters.category.obc
-                ) {
+                )
                     return true;
-                }
                 // If something is checked
-                if (this.studentFilters.category.general && studentSection.student.newCategoryField === 'Gen.') {
-                    return true;
-                }
-                if (this.studentFilters.category.sc && studentSection.student.newCategoryField === 'SC') {
-                    return true;
-                }
-                if (this.studentFilters.category.st && studentSection.student.newCategoryField === 'ST') {
-                    return true;
-                }
-                if (this.studentFilters.category.obc && studentSection.student.newCategoryField === 'OBC') {
-                    return true;
-                }
+                if (this.studentFilters.category.general && studentSection.student.newCategoryField === 'Gen.') return true;
+                if (this.studentFilters.category.sc && studentSection.student.newCategoryField === 'SC') return true;
+                if (this.studentFilters.category.st && studentSection.student.newCategoryField === 'ST') return true;
+                if (this.studentFilters.category.obc && studentSection.student.newCategoryField === 'OBC') return true;
                 // For all other cases
                 return false;
             })
             .filter((studentSection) => {
                 // gender filter
                 // if none selected return all
-                if (!this.studentFilters.gender.male && !this.studentFilters.gender.female && !this.studentFilters.gender.other) {
+                if (!this.studentFilters.gender.male && !this.studentFilters.gender.female && !this.studentFilters.gender.other)
                     return true;
-                }
                 // If something is checked
-                if (this.studentFilters.gender.male && studentSection.student.gender == 'Male') {
-                    return true;
-                }
-                if (this.studentFilters.gender.female && studentSection.student.gender == 'Female') {
-                    return true;
-                }
-                if (this.studentFilters.gender.other && studentSection.student.gender == 'Other') {
-                    return true;
-                }
+                if (this.studentFilters.gender.male && studentSection.student.gender == 'Male') return true;
+                if (this.studentFilters.gender.female && studentSection.student.gender == 'Female') return true;
+                if (this.studentFilters.gender.other && studentSection.student.gender == 'Other') return true;
                 // For all other cases
                 return false;
             })
             .filter((studentSection) => {
-                if (!this.studentFilters.admission.new && !this.studentFilters.admission.old) {
-                    return true;
-                }
+                if (!this.studentFilters.admission.new && !this.studentFilters.admission.old) return true;
                 // admission new or old
                 if (
                     studentSection.student.admissionSession === this.user.activeSchool.currentSessionDbId &&
                     this.studentFilters.admission.new
-                ) {
+                )
                     return true;
-                }
                 if (
                     studentSection.student.admissionSession !== this.user.activeSchool.currentSessionDbId &&
                     this.studentFilters.admission.old
-                ) {
+                )
                     return true;
-                }
                 return false;
             })
             .filter((studentSection) => {
-                if (!this.studentFilters.rte.yes && !this.studentFilters.rte.no) {
-                    return true;
-                }
+                if (!this.studentFilters.rte.yes && !this.studentFilters.rte.no) return true;
                 // rte yes or no
-                if (studentSection.student.rte === 'YES' && this.studentFilters.rte.yes) {
-                    return true;
-                }
-                if (studentSection.student.rte === 'NO' && this.studentFilters.rte.no) {
-                    return true;
-                }
+                if (studentSection.student.rte === 'YES' && this.studentFilters.rte.yes) return true;
+                if (studentSection.student.rte === 'NO' && this.studentFilters.rte.no) return true;
                 return false;
             })
             .filter((studentSection) => {

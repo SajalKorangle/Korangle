@@ -17,6 +17,7 @@ import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/vi
 import {MessageService} from '@services/message-service';
 import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
 import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
+import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 @Component({
     selector: 'view-defaulters',
@@ -36,16 +37,16 @@ export class ViewDefaultersComponent implements OnInit {
     sessionList = [];
 
     STUDENT_LIMITER = 200;
+    NOTIFY_DEFAULTERS_ID = 4;
 
     nullValue = null;
 
     user;
 
     sendUpdateTypeList = SEND_UPDATE_TYPE_LIST.filter(type => type.name != 'NULL');
-    defaultersPageVariables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == 4).variableList;
+    defaultersPageVariables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == this.NOTIFY_DEFAULTERS_ID).variableList;
 
     selectedSendUpdateType = this.sendUpdateTypeList[0];
-    extraDefaulterMessage = '';
 
     smsBalance = 0;
 
@@ -76,6 +77,8 @@ export class ViewDefaultersComponent implements OnInit {
     selectedClassSection = null;
     filteredClassSectionList = [];
     dataForMapping =  {} as any;
+    defaultersSMSEvent = SMS_EVENT_LIST.find(e => e.id == this.NOTIFY_DEFAULTERS_ID);
+
 
     message = '';
 
@@ -91,7 +94,6 @@ export class ViewDefaultersComponent implements OnInit {
         templateList: [],
         eventSettingsList: [],
         smsIdSchoolList: [],
-        defaultersSMSEvent: {}  as any,
     };
 
     populatedTemplateList = [];
@@ -115,8 +117,7 @@ export class ViewDefaultersComponent implements OnInit {
         public smsOldService: SmsOldService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -628,7 +629,7 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(student.discountThisSession);
             template.push(row);
         });
-        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template: template});
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, { user: this.user, template: template });
     }
 
     printParentFeesReport(): void {
@@ -691,7 +692,7 @@ export class ViewDefaultersComponent implements OnInit {
             }
         });
 
-        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, {user: this.user, template: template});
+        this.printService.navigateToPrintRoute(PRINT_FEES_REPORT, { user: this.user, template: template });
     }
 
     downloadStudentFeesReport(): void {

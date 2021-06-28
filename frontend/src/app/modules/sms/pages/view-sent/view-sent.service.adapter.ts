@@ -17,7 +17,6 @@ export class ViewSentServiceAdapter {
         this.vm.stateKeeper.isLoading = true;
         Promise.all([this.vm.informationService.getObjectList(this.vm.informationService.message_type, {})]).then((value) => {
             this.vm.backendData.messageTypeList = value[0];
-            this.vm.backendData.smsEventList = SMS_EVENT_LIST;
             this.populateMessageTypeAndSMSEventList();
             this.getSMSList();
             this.vm.stateKeeper.isLoading = false;
@@ -74,7 +73,7 @@ export class ViewSentServiceAdapter {
     }
 
     populateMessageTypeAndSMSEventList(): void {
-        this.vm.populatedSMSEventList = JSON.parse(JSON.stringify(this.vm.backendData.smsEventList));
+        this.vm.populatedSMSEventList = SMS_EVENT_LIST;
         this.vm.populatedSMSEventList.forEach(event => {
             event['selected'] = true;
         });

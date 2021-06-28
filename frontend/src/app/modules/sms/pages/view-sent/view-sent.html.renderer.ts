@@ -22,7 +22,7 @@ export class ViewSentHtmlRenderer {
 
     getEventName(sms: any): string {
         if (sms.SMSEventFrontEndId) {
-            return this.vm.backendData.smsEventList.find(x => x.id == sms.SMSEventFrontEndId).eventName;
+            return this.vm.populatedSMSEventList.find(x => x.id == sms.SMSEventFrontEndId).eventName;
         }
         return null;
     }

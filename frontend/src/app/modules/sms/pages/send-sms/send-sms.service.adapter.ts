@@ -6,7 +6,6 @@ import moment = require('moment');
 export class SendSmsServiceAdapter {
 
     vm: SendSmsComponent;
-    generalSMSEventIdList = [1, 2, 3];
 
     constructor() {}
 
@@ -40,7 +39,6 @@ export class SendSmsServiceAdapter {
         };
 
         this.vm.stateKeeper.isLoading = true;
-        this.vm.backendData.smsEventList = SMS_EVENT_LIST.filter(event => this.generalSMSEventIdList.includes(event.id));
 
         const value = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
@@ -59,7 +57,7 @@ export class SendSmsServiceAdapter {
             }),
             this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, {parentSchool: this.vm.user.activeSchool.dbId}), //8
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {
-                SMSEventFrontEndId__in: this.vm.backendData.smsEventList.map(x => x.id)
+                SMSEventFrontEndId__in: this.vm.generalSMSEventList.map(x => x.id)
             }) //19
         ]);
 
@@ -187,18 +185,25 @@ export class SendSmsServiceAdapter {
             personList.push('employee');
         }
 
-        await messageService.smsNotificationSender(
-            this.vm.dataForMapping,
-            personList,
-            this.vm.backendData.smsEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
-            this.vm.userInput.selectedSendUpdateType.id,
-            this.vm.message,
-            this.vm.message,
-            scheduledDataTime,
-            this.vm.userInput.selectedTemplate.parentSMSId,
-            this.vm.user.activeSchool.dbId,
-            this.vm.backendData.smsBalance
-        );
+        try {
+            this.vm.backendData.smsBalance = await messageService.smsNotificationSender(
+                this.vm.dataForMapping,
+                personList,
+                this.vm.generalSMSEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
+                this.vm.userInput.selectedSendUpdateType.id,
+                this.vm.message,
+                this.vm.message,
+                scheduledDataTime,
+                this.vm.userInput.selectedTemplate.parentSMSId,
+                this.vm.user.activeSchool.dbId,
+                this.vm.backendData.smsBalance
+            );
+        } catch (exception) {
+            console.error(exception);
+            alert('SMS Failed Try again');
+            this.vm.stateKeeper.isLoading = false;
+            return;
+        }
         alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' :  ' Sent') + ' Successfully');
         this.vm.stateKeeper.isLoading = false;
     }
