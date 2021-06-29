@@ -79,7 +79,7 @@ export class SetBankAccountComponent implements OnInit {
     if (this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
       return false;
     return true;
-  };
+  }
 
   offlineValidation(): boolean {
     if (this.onlinePaymentAccount.vendorData.bank.ifsc.length != 11) {
