@@ -2,18 +2,18 @@ import { NgModule } from '@angular/core';
 
 
 import { ComponentsModule } from "../../../../components/components.module";
-import { OnlinePaymentAccountComponent } from "./online-payment-account.component";
+import { SetBankAccountComponent } from './set-bank-account.component';
 import { FeesComponentsModule } from "../../components/fees-components.module";
-import { OnlinePaymentAccountRoutingModule } from './online-payment-account.routing';
+import { SetBankAccountRoutingModule } from './set-bank.account.routing';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [
-        OnlinePaymentAccountComponent
+        SetBankAccountComponent
     ],
 
     imports: [
-        OnlinePaymentAccountRoutingModule,
+        SetBankAccountRoutingModule,
         ComponentsModule,
         FeesComponentsModule,
         MatProgressSpinnerModule
@@ -21,6 +21,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     exports: [
     ],
     providers: [],
-    bootstrap: [OnlinePaymentAccountComponent]
+    bootstrap: [SetBankAccountComponent]
 })
-export class OnlinePaymentAccountModule { }
+export class SetBankAccountModule { }

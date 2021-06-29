@@ -1,15 +1,15 @@
-import { OnlinePaymentAccountComponent } from './online-payment-account.component';
+import { SetBankAccountComponent } from './set-bank-account.component';
 
-export class OnlinePaymentAccountServiceAdapter {
+export class SetBankAccountServiceAdapter {
 
-    vm: OnlinePaymentAccountComponent;
+    vm: SetBankAccountComponent;
 
     constructor() { }
 
     // Data
     currentSchoolDetails: any;
 
-    initializeAdapter(vm: OnlinePaymentAccountComponent): void {
+    initializeAdapter(vm: SetBankAccountComponent): void {
         this.vm = vm;
 
     }

@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorage } from 'app/classes/data-storage';
 import { FeeService } from '@services/modules/fees/fee.service';
-import { OnlinePaymentAccountServiceAdapter } from './online-payment-account.service.adapter';
+import { SetBankAccountServiceAdapter } from './set-bank.account.service.adapter';
 import { OnlinePaymentAccount } from '@services/modules/fees/models/online-payment-account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
   selector: 'app-online-payment-account',
-  templateUrl: './online-payment-account.component.html',
-  styleUrls: ['./online-payment-account.component.css'],
+  templateUrl: './set-bank-account.component.html',
+  styleUrls: ['./set-bank-account.component.css'],
   providers: [FeeService]
 })
-export class OnlinePaymentAccountComponent implements OnInit {
+export class SetBankAccountComponent implements OnInit {
 
   user;
   validators = VALIDATORS_REGX;
@@ -20,7 +20,7 @@ export class OnlinePaymentAccountComponent implements OnInit {
   onlinePaymentAccount: OnlinePaymentAccount = new OnlinePaymentAccount();
   settelmentCycleList: Array<SettelmentOption> = [];
 
-  serviceAdapter: OnlinePaymentAccountServiceAdapter;
+  serviceAdapter: SetBankAccountServiceAdapter;
 
   cache: {
     ifsc?: {
@@ -46,14 +46,14 @@ export class OnlinePaymentAccountComponent implements OnInit {
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
-    this.serviceAdapter = new OnlinePaymentAccountServiceAdapter();
+    this.serviceAdapter = new SetBankAccountServiceAdapter();
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
 
     // populate data
     this.onlinePaymentAccount.parentSchool = this.user.activeSchool.dbId;
     this.onlinePaymentAccount.vendorData.name = this.user.activeSchool.name;
-    console.log('this: ', this);
+    // console.log('this: ', this);
   }
 
   resetintermediateUpdateState(): void {
@@ -79,7 +79,7 @@ export class OnlinePaymentAccountComponent implements OnInit {
     if (this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
       return false;
     return true;
-  }
+  };
 
   offlineValidation(): boolean {
     if (this.onlinePaymentAccount.vendorData.bank.ifsc.length != 11) {

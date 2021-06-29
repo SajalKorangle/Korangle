@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {OnlinePaymentAccountComponent} from "./online-payment-account.component";
+import { SetBankAccountComponent } from "./set-bank-account.component";
 
 const routes: Routes = [
     {
         path: '',
-        component: OnlinePaymentAccountComponent ,
+        component: SetBankAccountComponent,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class OnlinePaymentAccountRoutingModule { }
+export class SetBankAccountRoutingModule { }

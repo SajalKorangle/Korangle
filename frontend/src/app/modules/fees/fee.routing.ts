@@ -102,8 +102,8 @@ const routes: Routes = [
         data: { moduleName: 'fees' },
     },
     {
-        path: 'online_payment_account',
-        loadChildren: 'app/modules/fees/pages/online-payment-account/online-payment-account.module#OnlinePaymentAccountModule',
+        path: 'set_bank_account',
+        loadChildren: 'app/modules/fees/pages/set-bank-account/set-bank-account.module#SetBankAccountModule',
         data: { moduleName: 'fees' },
     },
 
