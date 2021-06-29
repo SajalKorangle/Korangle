@@ -9,7 +9,7 @@ from team_app.db_script.add_purchase_sms_task import add_purchase_sms_to_sms
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0014_auto_20201120_1940'),
+        ('team_app', '0030_auto_20210213_1210'),
     ]
 
     operations = [
