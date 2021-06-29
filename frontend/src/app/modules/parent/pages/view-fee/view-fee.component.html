@@ -49,8 +49,9 @@
                                 color: blue !important;
                             ">
                             <td align="left">{{ student.name }}
-                                <mat-form-field style="width: 80px; margin-left: 16px;">
-                                    <mat-label>Amount</mat-label>
+                                <mat-form-field style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
+                                    <mat-label *ngIf="isMobile()">Amount</mat-label>
+                                    <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
                                     <input matInput type="number" [(ngModel)]="amountMappedByStudntId[student.id]"
                                         (ngModelChange)="handleOverallPaymentChange(student)"
                                         [errorStateMatcher]="{isErrorState: amountError(student)}">

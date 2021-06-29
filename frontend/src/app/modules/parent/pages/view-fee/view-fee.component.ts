@@ -77,6 +77,8 @@ export class ViewFeeComponent implements OnInit {
 
     onlinePaymentAccount: boolean = false;
 
+    isMobile = CommonFunctions.getInstance().isMobileMenu;
+
     htmlRenderer: ViewFeeHTMLRenderer;
     serviceAdapter: ViewFeeServiceAdapter;
 

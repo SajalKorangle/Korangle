@@ -150,7 +150,7 @@ export class ViewFeeServiceAdapter {
         });
 
         if (errorFlag) {
-            alert('Invalid Validation');
+            alert('Invalid Amount');
             return;
         }
 
