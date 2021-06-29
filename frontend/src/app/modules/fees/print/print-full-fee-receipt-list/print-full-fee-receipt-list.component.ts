@@ -26,7 +26,9 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
 
     checkView = false;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
+    parentView = false;
+
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
         // this.feeReceipt = new TempFee();
@@ -43,6 +45,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         this.boardList = value['boardList'];
         this.sessionList = value['sessionList'];
         this.checkView = true;
+        this.parentView = value['isParent'];
     }
 
     ngAfterViewChecked(): void {

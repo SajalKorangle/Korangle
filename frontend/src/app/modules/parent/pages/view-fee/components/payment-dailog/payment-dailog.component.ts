@@ -6,11 +6,13 @@ import { StudentFee } from '@services/modules/fees/models/student-fee';
 import { Student } from '@services/modules/student/models/student';
 import { Session } from '@services/modules/school/models/session';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
+import { UserService } from '@services/modules/user/user.service';
 
 @Component({
   selector: 'app-payment-dailog',
   templateUrl: './payment-dailog.component.html',
-  styleUrls: ['./payment-dailog.component.css']
+  styleUrls: ['./payment-dailog.component.css'],
+  providers: [UserService]
 })
 export class PaymentDailogComponent implements OnInit {
 
@@ -20,14 +22,18 @@ export class PaymentDailogComponent implements OnInit {
 
   validatorRegex = VALIDATORS_REGX;
 
-  constructor(public dialogRef: MatDialogRef<PaymentDailogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
-    vm: ViewFeeComponent;
-  }) { }
+  constructor(public dialogRef: MatDialogRef<PaymentDailogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { vm: ViewFeeComponent; },
+    userService: UserService,
+  ) { }
 
   ngOnInit() {
     this.data.vm.selectedStudentList.forEach(student => { // initilizing
       this.newSubFeeReceiptListMappedByStudntId[student.id] = [];
     });
+    if (this.data.vm.user.email) {
+      this.email = this.data.vm.user.email;
+    }
     // console.log('payment Dialog: ', this);
   }
 
@@ -167,6 +173,13 @@ export class PaymentDailogComponent implements OnInit {
       return;
     }
 
+    if (!this.data.vm.user.email) {
+      const user_email_update_request = {
+        'id': this.data.vm.user.id,
+        'email': this.email
+      };
+
+    }
 
     // Email Test
     if (!VALIDATORS_REGX.email.test(this.email)) {

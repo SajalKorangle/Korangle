@@ -8,7 +8,7 @@ def add_online_payment_account_page(apps, schema_editor):
 
     module_object = Module.objects.get(path='fees')
 
-    task_object = Task(path='online_payment_account', parentModule=module_object, title='Online Payment Account', orderNumber=16, parentBoard=None)
+    task_object = Task(path='set_bank_account', parentModule=module_object, title='Set Bank Account', orderNumber=16, parentBoard=None)
     task_object.save()
 
     for employee_permission_object in EmployeePermission.objects.filter(parentTask__path='assign_task'):
