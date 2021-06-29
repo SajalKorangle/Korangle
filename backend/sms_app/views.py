@@ -1,5 +1,5 @@
 from common.common_views_3 import CommonView, CommonListView
-from common.common_serializer_interface_3 import create_object
+from common.common_serializer_interface_3 import create_object, update_object
 from decorators import user_permission, user_permission_3, user_permission_new
 from django.http import HttpResponse
 
