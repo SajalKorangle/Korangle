@@ -133,13 +133,41 @@ export class ViewFeeServiceAdapter {
         });
     }
 
-    async initiatePayment(amountMappedByStudntId, newSubFeeReceiptListMappedByStudntId, email) {
+    async initiatePayment() {
         this.vm.isLoading = true;
-        const totalAmount = Object.values(amountMappedByStudntId).reduce((acc: number, next: number) => acc + next, 0);
+        const totalAmount = this.vm.getTotalPaymentAmount();
 
-        if (totalAmount == 0) {
+        if (totalAmount <= 0) {
             this.vm.isLoading = false;
+            alert('Amout is 0');
             return;
+        }
+
+        let errorFlag = false;
+
+        this.vm.selectedStudentList.forEach(student => { // initilizing
+            if (this.vm.amountError(student)())
+                errorFlag = true;
+        });
+
+        if (errorFlag) {
+            alert('Invalid Validation');
+            return;
+        }
+
+
+        // Email Test
+        if (!this.vm.validatorRegex.email.test(this.vm.email)) {
+            alert('Email Validation Failed');
+            return;
+        }
+
+        if (!this.vm.user.email) {
+            const user_email_update_request = {
+                'id': this.vm.user.id,
+                'email': this.vm.email
+            };
+            this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request); // no need to await for response, not critica; task/ utility task
         }
 
         const returnUrl = new URL(
@@ -153,7 +181,7 @@ export class ViewFeeServiceAdapter {
             orderAmount: totalAmount,
             customerName: this.vm.user.activeSchool.studentList[0].fathersName,
             customerPhone: this.vm.user.username,
-            customerEmail: email,
+            customerEmail: this.vm.email,
             returnUrl: returnUrl.toString(),
             orderNote: 'payment towards school fee'
         };
@@ -162,13 +190,13 @@ export class ViewFeeServiceAdapter {
 
         const newTransactionList = [];
 
-        Object.keys(amountMappedByStudntId).forEach(studentId => {
-            if (amountMappedByStudntId[studentId] == 0)
+        Object.keys(this.vm.amountMappedByStudntId).forEach(studentId => {
+            if (this.vm.amountMappedByStudntId[studentId] == 0)
                 return; // return from for Each
             const newTransaction = {
                 parentStudent: studentId,
                 parentOrder: newCashfreeOrder.orderId,
-                feeDetailJSON: newSubFeeReceiptListMappedByStudntId[studentId],
+                feeDetailJSON: this.vm.newSubFeeReceiptListMappedByStudntId[studentId],
             };
             newTransactionList.push(newTransaction);
         });

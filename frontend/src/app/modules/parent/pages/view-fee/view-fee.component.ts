@@ -22,6 +22,10 @@ import { CommonFunctions } from '../../../../classes/common-functions';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
+import { Student } from '@services/modules/student/models/student';
+import { Session } from '@services/modules/school/models/session';
+import { UserService } from '@services/modules/user/user.service';
 
 declare const $: any;
 
@@ -29,7 +33,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService],
+    providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService, UserService],
 })
 export class ViewFeeComponent implements OnInit {
     user;
@@ -51,6 +55,14 @@ export class ViewFeeComponent implements OnInit {
     subDiscountList: SubDiscount[];
     busStopList = [];
     employeeList = [];
+
+    // Fee Payment
+    email: string = '';
+    amountMappedByStudntId: { [key: number]: number; } = {};
+    newSubFeeReceiptListMappedByStudntId: { [key: number]: Array<Partial<SubFeeReceipt>>; } = {};
+
+    // Validator
+    validatorRegex = VALIDATORS_REGX;
 
     // Data from Parent Student Filter
     classList = [];
@@ -77,6 +89,7 @@ export class ViewFeeComponent implements OnInit {
         public vehicleService: VehicleOldService,
         public employeeService: EmployeeService,
         public classService: ClassService,
+        public userService: UserService,
         private cdRef: ChangeDetectorRef,
         public dialog: MatDialog,
     ) { }
@@ -108,10 +121,106 @@ export class ViewFeeComponent implements OnInit {
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
+
+        // fee payment initilizing
+        if (this.user.email) {
+            this.email = this.user.email;
+        }
+
+        this.selectedStudentList.forEach(student => {
+            this.newSubFeeReceiptListMappedByStudntId[student.id] = [];
+        });
     }
 
     detectChanges(): void {
         this.cdRef.detectChanges();
+    }
+
+    amountError(student: Student) {
+        const amountErrorHandler = () => {  // callback error checking function, checkf if fee payment amount exceeds the maximum amount
+            if (this.amountMappedByStudntId[student.id] < 0)
+                return true;
+            if (this.amountMappedByStudntId[student.id] > (this.getStudentFeesDue(student) + this.getStudentLateFeesDue(student)))
+                return true;
+            return false;
+        };
+        return amountErrorHandler;
+    }
+
+    handleOverallPaymentChange(student: Student): void {
+        if (this.amountError(student)())
+            return;
+        let paymentLeft = this.amountMappedByStudntId[student.id];
+        this.newSubFeeReceiptListMappedByStudntId[student.id] = []; // start with empty
+
+        if (paymentLeft == 0)
+            return;
+
+        this.sessionList.forEach((session: Session) => {
+            this.installmentList.forEach((installment) => {
+                this.getFilteredStudentFeeListBySession(student, session).forEach((studentFee: StudentFee) => {
+                    let installmentLateFeesDue = this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
+                    if (installmentLateFeesDue > 0) {
+                        if (paymentLeft > installmentLateFeesDue) {
+                            this.handleStudentFeeInstallmentLateFeePaymentChange(studentFee, installment, installmentLateFeesDue);
+                            paymentLeft -= installmentLateFeesDue;
+                        } else {
+                            this.handleStudentFeeInstallmentLateFeePaymentChange(studentFee, installment, paymentLeft);
+                            paymentLeft = 0;
+                        }
+                    }
+                    let installmentFeesDue = this.getStudentFeeInstallmentFeesDue(studentFee, installment);
+                    if (installmentFeesDue > 0) {
+                        if (paymentLeft > installmentFeesDue) {
+                            this.handleStudentFeeInstallmentPaymentChange(studentFee, installment, installmentFeesDue);
+                            paymentLeft -= installmentFeesDue;
+                        } else {
+                            this.handleStudentFeeInstallmentPaymentChange(studentFee, installment, paymentLeft);
+                            paymentLeft = 0;
+                        }
+                    }
+                });
+            });
+        });
+    }
+
+    handleStudentFeeInstallmentLateFeePaymentChange(studentFee: StudentFee, installment: string, payment: number): void {
+        if (payment == 0)
+            return;
+        let subFeeReceipt = this.newSubFeeReceiptListMappedByStudntId[studentFee.parentStudent].find((subFeeReceipt) => {
+            return subFeeReceipt.parentStudentFee == studentFee.id;
+        });
+
+        if (subFeeReceipt) {
+            subFeeReceipt[installment + 'LateFee'] = payment;
+
+        } else {
+            this.createNewSubFeeReceipt(studentFee, installment + 'LateFee', payment);
+        }
+    }
+
+    createNewSubFeeReceipt(studentFee: StudentFee, installment: any, payment: any): void {
+        let subFeeReceipt = new SubFeeReceipt();
+        subFeeReceipt.parentStudentFee = studentFee.id;
+        subFeeReceipt.parentFeeType = studentFee.parentFeeType;
+        subFeeReceipt.parentSession = studentFee.parentSession;
+        subFeeReceipt.isAnnually = studentFee.isAnnually;
+        subFeeReceipt[installment] = payment;
+        this.newSubFeeReceiptListMappedByStudntId[studentFee.parentStudent].push(subFeeReceipt);
+    }
+
+    handleStudentFeeInstallmentPaymentChange(studentFee: StudentFee, installment: string, payment: number): void {
+        if (payment == 0)
+            return;
+        let subFeeReceipt = this.newSubFeeReceiptListMappedByStudntId[studentFee.parentStudent].find((subFeeReceipt) => {
+            return subFeeReceipt.parentStudentFee == studentFee.id;
+        });
+
+        if (subFeeReceipt) {
+            subFeeReceipt[installment + 'Amount'] = payment;
+        } else if (payment > 0) {
+            this.createNewSubFeeReceipt(studentFee, installment + 'Amount', payment);
+        }
     }
 
     handleStudentFeeProfile(): void {
@@ -133,10 +242,74 @@ export class ViewFeeComponent implements OnInit {
         this.studentFeeDetailsVisibleList = [];
     }
 
+    getSessionFilteredNewSubFeeReceiptList(student, session: Session): Array<Partial<SubFeeReceipt>> {
+        return this.newSubFeeReceiptListMappedByStudntId[student.id].filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
+    }
+
+    getStudentFeeFilteredNewSubFeeReceiptList(student: Student, studentFee: StudentFee): Array<Partial<SubFeeReceipt>> {
+        return this.newSubFeeReceiptListMappedByStudntId[student.id].filter(subFeeReceipt => subFeeReceipt.parentStudentFee == studentFee.id);
+    }
+
+    getSubFeeReceiptTotalFee(subFeeReceiptList: Array<Partial<SubFeeReceipt>>, installmentList: string[] = this.installmentList) {
+        let amount = 0;
+        subFeeReceiptList.forEach(subFeeReceipt => {
+            installmentList.forEach(installment => {
+                if (subFeeReceipt[installment + 'Amount'])
+                    amount += subFeeReceipt[installment + 'Amount'];
+            });
+        });
+        return amount;
+    }
+
+    getSubFeeReceiptTotalLateFee(subFeeReceiptList: Array<Partial<SubFeeReceipt>>, installmentList: string[] = this.installmentList) {
+        let amount = 0;
+        subFeeReceiptList.forEach(subFeeReceipt => {
+            installmentList.forEach(installment => {
+                if (subFeeReceipt[installment + 'LateFee'])
+                    amount += subFeeReceipt[installment + 'LateFee'];
+            });
+        });
+        return amount;
+    }
+
+    getNewSubFeeReceiptTotalFee(student): number {
+        const subFeeReceiptList = this.newSubFeeReceiptListMappedByStudntId[student.id];
+        return this.getSubFeeReceiptTotalFee(subFeeReceiptList);
+    }
+
+    getNewSubFeeReceiptTotalLateFee(student): number {
+        const subFeeReceiptList = this.newSubFeeReceiptListMappedByStudntId[student.id];
+        return this.getSubFeeReceiptTotalLateFee(subFeeReceiptList);
+    }
+
+    getSessionFilteredNewTotalFee(student: Student, session: Session): number {
+        const filteredSubFeeReceiptList = this.getSessionFilteredNewSubFeeReceiptList(student, session);
+        return this.getSubFeeReceiptTotalFee(filteredSubFeeReceiptList);
+    }
+
+    getSessionFilteredNewLateFee(student: Student, session: Session): number {
+        const filteredSubFeeReceiptList = this.getSessionFilteredNewSubFeeReceiptList(student, session);
+        return this.getSubFeeReceiptTotalLateFee(filteredSubFeeReceiptList);
+    }
+
+    getStudentFeeFilteredNewLateFee(student: Student, studentFee: StudentFee, installmentList: string[] = this.installmentList): number {
+        const filteresSubFeeReceiptList = this.getStudentFeeFilteredNewSubFeeReceiptList(student, studentFee);
+        return this.getSubFeeReceiptTotalLateFee(filteresSubFeeReceiptList, installmentList);
+    }
+
+    getStudentFeeFilteredNewTotalFee(student: Student, studentFee: StudentFee, installmentList: string[] = this.installmentList): number {
+        const filteresSubFeeReceiptList = this.getStudentFeeFilteredNewSubFeeReceiptList(student, studentFee);
+        return this.getSubFeeReceiptTotalFee(filteresSubFeeReceiptList, installmentList);
+    }
+
     getFeeTypeByStudentFee(studentFee: any): any {
         return this.feeTypeList.find((feeType) => {
             return feeType.id == studentFee.parentFeeType;
         });
+    }
+
+    getTotalPaymentAmount(): number {
+        return Object.values(this.amountMappedByStudntId).reduce((acc: number, next: number) => acc + next, 0);
     }
 
     formatDate(dateStr: any): any {

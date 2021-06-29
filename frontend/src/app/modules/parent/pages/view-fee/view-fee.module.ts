@@ -8,12 +8,12 @@ import { PaymentDailogComponent } from './components/payment-dailog/payment-dail
 import { PaymentResponseDialogComponent } from './components/payment-response-dialog/payment-response-dialog.component';
 
 @NgModule({
-    declarations: [ViewFeeComponent, PaymentDailogComponent, PaymentResponseDialogComponent],
+    declarations: [ViewFeeComponent, PaymentResponseDialogComponent],
 
     imports: [ViewFeeRoutingModule, ComponentsModule, FeesComponentsModule],
     exports: [],
     providers: [],
-    entryComponents: [PaymentDailogComponent, PaymentResponseDialogComponent],
+    entryComponents: [PaymentResponseDialogComponent],
     bootstrap: [ViewFeeComponent],
 })
 export class ViewFeeModule { }
