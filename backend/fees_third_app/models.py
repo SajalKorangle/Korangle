@@ -602,6 +602,7 @@ class Order(models.Model):
     orderId = models.CharField(max_length=20, unique=True, primary_key=True)
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
+    referenceId = models.CharField(max_length=30, null=True, default=None)
     dateTime = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -656,6 +657,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                             'parentSchool': activeSchoolID,
                             'parentStudent': activeStudentID,
                             'parentSession': session_id,
+                            'remark': 'Reference id: {0}'.format(instance.referenceId),
                             'modeOfPayment': 'KORANGLE'
                         })
 

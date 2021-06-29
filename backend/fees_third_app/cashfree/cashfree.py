@@ -98,10 +98,11 @@ def getOrderStatus(orderId):
 
 
 def isOrderCompleted(orderId):
-    result = False
+    result = False # either false or orderResonseData
     try:
         orderStatusData = getOrderStatus(orderId)
-        result =  orderStatusData['txStatus'] == 'SUCCESS'
+        assert orderStatusData['txStatus'] == 'SUCCESS'
+        return orderStatusData
     except:
         pass
     return result

@@ -14,9 +14,11 @@ class Job(DailyJob):
         fromDateTime = timezone.localize( datetime(now.year, now.month, now.day) - timedelta(days=1))
         toCheckOrderList = Order.objects.filter(dateTime__gte=fromDateTime, status = 'Pending')
         for orderInstance in toCheckOrderList:
-            if(isOrderCompleted(orderInstance.orderId)):
+            orderComplete = isOrderCompleted(orderInstance.orderId)
+            if(orderComplete):
                 try:
                     orderInstance.status = 'Completed'
+                    orderInstance.referenceId = orderComplete['referenceId']
                     orderInstance.save()
                 except:
                     orderInstance.status = 'Refund Pending'
