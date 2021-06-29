@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { BrowserModule  } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { GestureConfig } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app.routing';
-import { BasicComponentsModule } from "./basic-components/basic-components.module";
+import { BasicComponentsModule } from './basic-components/basic-components.module';
 
 import { AppComponent } from './app.component';
 
-import { LoginComponent } from './authentication/login.component';
+import { LoginComponent } from './authentication/login/login.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
+import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
 
 import { PrintService } from './print/print-service';
 import { FrontpageComponent } from './frontpage/frontpage.component';
@@ -18,11 +21,17 @@ import { ContactUsComponent } from './frontpage/contact-us/contact-us.component'
 import { PricingComponent } from './frontpage/pricing/pricing.component';
 import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
 import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SignupComponent } from './authentication/signup/signup.component';
+import { DecimalPipe } from '@angular/common';
 
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
+        ForgotPasswordComponent,
+        SignupComponent,
+        AuthenticationComponent,
         FrontpageComponent,
         AboutUsComponent,
         WhyKorangleComponent,
@@ -37,10 +46,11 @@ import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/wha
         HttpClientModule,
         BrowserModule,
         BrowserAnimationsModule,
+        ReactiveFormsModule,
+        // RecaptchaModule,  // this is the recaptcha main module
     ],
-    exports: [
-    ],
-  providers: [ PrintService ],
-  bootstrap: [ AppComponent ]
+    exports: [],
+    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe],
+    bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

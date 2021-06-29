@@ -72,20 +72,19 @@ class School(models.Model):
 
     primaryThemeColor = models.TextField(null=True)
     secondaryThemeColor = models.TextField(null=True)
-    complexFeeStructure = models.BooleanField(default=False)
 
     # address is now considered as street address
-    address = models.TextField(null=True)
-    pincode = models.IntegerField(null=True, verbose_name='pincode')
-    villageCity = models.TextField(null=True, verbose_name='villageCity')
-    block = models.TextField(null=True, verbose_name='block')
-    district = models.TextField(null=True, verbose_name='district')
-    state = models.TextField(null=True, verbose_name='state')
+    address = models.TextField(null=True, blank=True)
+    pincode = models.IntegerField(null=True, verbose_name='pincode', blank=True)
+    villageCity = models.TextField(null=True, verbose_name='villageCity', blank=True)
+    block = models.TextField(null=True, verbose_name='block', blank=True)
+    district = models.TextField(null=True, verbose_name='district', blank=True)
+    state = models.TextField(null=True, verbose_name='state', blank=True)
 
     diseCode = models.TextField(null=True)
     currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
-    affiliationNumber = models.TextField(null=True)
+    affiliationNumber = models.TextField(null=True, blank=True)
     smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
 
     opacity = models.DecimalField(max_digits=3, decimal_places=2,null=False, verbose_name='opacity', default=0.1)
@@ -123,6 +122,15 @@ class School(models.Model):
 
     class Meta:
         db_table = 'school'
+
+
+class SchoolSummary(models.Model):  # testing code
+    name = models.TextField(null=True)
+    printName = models.TextField(null=True)
+    profileImage = models.ImageField("Avatar", upload_to=upload_avatar_to, blank=True)
+    class Meta:
+        managed = False
+        db_table = "school"
 
 
 class SchoolSession(models.Model):

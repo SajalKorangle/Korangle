@@ -16,6 +16,16 @@
     "lib": [
       "es2016",
       "dom"
-    ]
+    ],
+    "paths": { 
+      "@modules/*": ["app/modules/*"],
+      "@basic-components/*": ["app/basic-components/*"],
+      "@classes/*": ["app/classes/*"],
+      "@components/*": ["app/components/*"],
+      "@services/*": ["app/services/*"],
+      "@urls/*": ["app/urls/*"],
+      "moment": ["../node_modules/moment/min/moment.min.js"],
+      "xlsx": ["../node_modules/xlsx/dist/xlsx.mini.min.js"]
+    }
   }
 }

@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 import json
 
-from common.common_views import CommonView, CommonListView
+from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission
 
 from django.contrib.auth.models import User
@@ -43,5 +43,24 @@ class UserView(CommonView, APIView):
 
 class UserListView(CommonListView, APIView):
     Model = User
+
+
+class NewPasswordView(APIView):
+
+    @user_permission
+    def post(request):
+
+        data = json.loads(request.body.decode('utf-8'))
+        data['id'] = request.user.id
+
+        user = User.objects.get(id=data['id'])
+        if not user.check_password(data['oldPassword']):
+            return 'Old password incorrect'
+
+        user.set_password(data['newPassword'])
+        user.save()
+
+        return 'Password updated successfully'
+
 
 

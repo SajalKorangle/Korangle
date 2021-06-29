@@ -1,0 +1,88 @@
+<div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
+
+    <h3>{{htmlRenderer.getTime()}}</h3>
+    <mat-divider style="margin-bottom: 8px;"></mat-divider>
+    <ng-container *ngIf="isActiveSession else NotActiveSession">
+        <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
+
+            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                <h4>Onging Class:</h4>
+                <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
+
+                    <div style="margin-left: 12px;">
+                        <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span>
+                        <span>({{htmlRenderer.getDisplayData(activeClass).classInstane.name}} &
+                            {{htmlRenderer.getDisplayData(activeClass).division.name}})</span><br />
+                        <span>
+                            {{activeClass.startTimeJSON.getDisplayString()}} -
+                            {{activeClass.endTimeJSON.getDisplayString()}}
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
+                    <button *ngIf="backendData.accountInfo" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                        (click)="redirectToMeeting()">Enter
+                        Class</button>
+                </div>
+            </ng-container>
+            <div style="overflow: auto;">
+                <table class="mat-elevation-z8 table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let weekdayKey of getObjetKeys(weekdays)"
+                                [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
+                                {{weekdays[weekdayKey]}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                            <tr>
+                                <td style="width: 160px"
+                                    [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
+                                    {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
+                                </td>
+                                <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                    <ng-container
+                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                        <td style="position: relative; min-width: 100px;"
+                                            [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
+                                            [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
+                                            <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
+                                            <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
+                                                {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span>
+                                            <span *ngIf="backendData.accountInfo"
+                                                style="position: absolute; bottom: 8px; right: 8px;"
+                                                class="glow-active"></span>
+                                        </td>
+                                    </ng-container>
+                                    <ng-template #NoClass>
+                                        <td></td>
+                                    </ng-template>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+
+        </ng-container>
+    </ng-container>
+
+</div>
+
+<ng-template #Loader>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
+
+<ng-template #NoClassReg>
+    <span>No Registered Class For Today</span>
+</ng-template>
+
+<ng-template #NotActiveSession>
+    <span style="color: red;">This session is closed</span>
+</ng-template>
+
+<ng-template #HiddenPassword>
+    <span style="cursor: pointer;" (click)="isPasswordVisible=true;">*******</span>
+</ng-template>

@@ -1,5 +1,1 @@
-
-export const PARAMETER_TYPE_LIST = [
-    'TEXT',
-    'FILTER',
-];
+export const PARAMETER_TYPE_LIST = ['TEXT', 'FILTER', 'DOCUMENT'];

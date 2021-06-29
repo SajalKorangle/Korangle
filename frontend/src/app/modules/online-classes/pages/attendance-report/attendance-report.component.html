@@ -1,0 +1,99 @@
+<div class="card-content" *ngIf="!stateKeeper.isLoading">
+    <div>
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass">
+                <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
+                    {{ classs.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedDivision">
+                <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
+                    {{ division.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field style="margin-right: 20px;">
+            <mat-select placeholder="Select Subject" [(ngModel)]="userInput.selectedParsedClassSubject"
+                [disabled]="!(userInput.selectedClass && userInput.selectedDivision)">
+                <mat-option *ngFor="let classSubject of getFilteredClassSubjectList()" [value]="classSubject">
+                    {{ classSubject.subjectInstance.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field> <br />
+
+        <mat-form-field style="margin-right: 20px;">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="picker1" [min]="backendData.activeSession.startDate"
+                [max]="backendData.activeSession.endDate" [(ngModel)]="userInput.startDate"
+                (ngModelChange)="handleStartDateSelection()">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field style="margin-right: 20px;">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="picker2" [min]="backendData.activeSession.startDate"
+                [max]="backendData.activeSession.endDate" [(ngModel)]="userInput.endDate">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+
+
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="padding: 6px 4px;"
+            (click)="serviceAdapter.loadAttendance();" [disabled]="!validUserInput()">
+            <mat-icon style="font-size: x-large;">search</mat-icon>
+        </button>
+
+        <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;">Days:
+            {{getDaysDiff()}}</span>
+
+    </div>
+
+    <div *ngIf="backendData.studentAttendance.length>0" style="width: 100%;">
+        <table mat-table class="mat-elevation-z8" [dataSource]="getDisplayData()" style="width: 100%;">
+
+            <ng-container matColumnDef="S.No.">
+                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.index}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="roll">
+                <th mat-header-cell *matHeaderCellDef> Roll No. </th>
+                <td mat-cell *matCellDef="let element"> {{element.rollNumber || '-'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.studentInstance.name}} </td>
+            </ng-container>
+
+            <ng-container *ngIf="getDaysDiff()>1" matColumnDef="attendanceCount">
+                <th mat-header-cell *matHeaderCellDef> Present(Days) </th>
+                <td mat-cell *matCellDef="let element"> {{getAttendanceCount(element)}} </td>
+            </ng-container>
+
+            <ng-container *ngIf="getDaysDiff()==1" matColumnDef="attendanceCount">
+                <th mat-header-cell *matHeaderCellDef> Present </th>
+                <td mat-cell *matCellDef="let element">
+                    <button [class]="getAttendanceCount(element)>0?'btn-success':'btn-danger'"
+                        style="pointer-events: none;">
+                        {{getAttendanceCount(element)>0?'P':'A'}}
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="getDisplayColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: getDisplayColumns();"></tr>
+
+        </table>
+    </div>
+
+</div>
+<ng-container *ngIf="stateKeeper.isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

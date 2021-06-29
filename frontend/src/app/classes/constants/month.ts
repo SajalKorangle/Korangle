@@ -1,4 +1,3 @@
-
 // School Medium
 export const MONTH_LIST = [
     'JANUARY',

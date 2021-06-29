@@ -1,8 +1,7 @@
-from common.common_views import CommonView, CommonListView
-from common.common_serializer_interface import create_object, update_object
-from decorators import user_permission, user_permission_new
+from common.common_views_3 import CommonView, CommonListView
+from common.common_serializer_interface_3 import create_object
+from decorators import user_permission, user_permission_3, user_permission_new
 from django.http import HttpResponse
-from rest_framework.decorators import api_view
 
 from rest_framework.views import APIView
 
@@ -129,20 +128,21 @@ from .business.send_sms import send_sms, send_different_sms
 
 class SmsView(CommonView, APIView):
     Model = SMS
+    RelationsToSchool= ['parentSchool__id']
 
-    @user_permission_new
-    def post(self, request):
-        data = json.loads(request.body.decode('utf-8'))
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        data = request.data
         return_data = { 'status': 'success' }
         if data['mobileNumberList'] != '':
             return_data = send_sms(data)
             print(data)
             if return_data['status'] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
+                return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         else:
             data['requestId'] = 1
-            return_data['data'] = create_object(data, self.Model, self.ModelSerializer)
+            return_data['data'] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         return return_data
 
 
@@ -150,9 +150,10 @@ class SmsView(CommonView, APIView):
 
 class SmsDifferentView(CommonView, APIView):
     Model = SMS
+    RelationsToSchool= ['parentSchool__id']
 
-    @user_permission_new
-    def post(self, request):
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
         # print(request.body)
         data = json.loads(request.body)
         # data = json.loads(request.body.decode('utf-8'))
@@ -161,9 +162,9 @@ class SmsDifferentView(CommonView, APIView):
             return_data = send_different_sms(data)
             if return_data["status"] == 'success':
                 data['requestId'] = return_data['requestId']
-                return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
+                return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
         else:
-            return_data["data"] = create_object(data, self.Model, self.ModelSerializer)
+            return_data["data"] = create_object(data, self.ModelSerializer, activeSchoolID=kwargs['activeSchoolID'], activeStudentID=kwargs['activeStudentID'])
             print(return_data)
         return return_data
 
@@ -171,3 +172,4 @@ class SmsDifferentView(CommonView, APIView):
 
 class SmsListView(CommonListView, APIView):
     Model = SMS
+    RelationsToSchool= ['parentSchool__id']

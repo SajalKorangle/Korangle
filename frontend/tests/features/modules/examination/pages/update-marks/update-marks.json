@@ -1,0 +1,11 @@
+[
+    {
+      "statement": "Update marks",
+      "testType": "protractor",
+      "steps": [
+        "Open update-marks page and get the test list",
+        "Update mark of any one and save it"
+      ],
+      "testName": "Update marks"
+    }
+]

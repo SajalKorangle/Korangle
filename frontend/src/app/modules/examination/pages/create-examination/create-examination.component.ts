@@ -3,17 +3,15 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'create-examination',
     templateUrl: './create-examination.component.html',
     styleUrls: ['./create-examination.component.css'],
-    providers: [ExaminationService ],
+    providers: [ExaminationService],
 })
-
 export class CreateExaminationComponent implements OnInit {
-
     user;
 
     examinationList: any;
@@ -24,7 +22,7 @@ export class CreateExaminationComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public examinationService : ExaminationService) {}
+    constructor(public examinationService: ExaminationService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -35,12 +33,9 @@ export class CreateExaminationComponent implements OnInit {
     }
 
     isExaminationUpdateDisabled(examination: any): boolean {
-        if ((examination.newName == examination.name
-                && examination.newStatus == examination.status)
-            || examination.updating) {
+        if ((examination.newName == examination.name && examination.newStatus == examination.status) || examination.updating) {
             return true;
         }
         return false;
     }
-
 }

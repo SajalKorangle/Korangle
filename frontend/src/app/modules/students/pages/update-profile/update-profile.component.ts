@@ -1,24 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
-import { Student } from '../../../../classes/student';
-import { Classs } from '../../../../classes/classs';
-import { Section } from '../../../../classes/section';
-import {UpdateProfileServiceAdapter} from './update-profile.service.adapter'
+import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
 
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
-import {DataStorage} from "../../../../classes/data-storage";
-import { CommonFunctions } from "../../../../classes/common-functions";
+import { DataStorage } from '../../../../classes/data-storage';
+import { CommonFunctions } from '../../../../classes/common-functions';
+
+import { MatDialog } from '@angular/material';
+import { MultipleFileDialogComponent } from '../../../../components/multiple-file-dialog/multiple-file-dialog.component';
+import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
+
+declare const $: any;
 
 @Component({
-  selector: 'update-profile',
-  templateUrl: './update-profile.component.html',
-  styleUrls: ['./update-profile.component.css'],
-    providers: [ SchoolService, StudentService ],
+    selector: 'update-profile',
+    templateUrl: './update-profile.component.html',
+    styleUrls: ['./update-profile.component.css'],
+    providers: [SchoolService, StudentService],
 })
-
 export class UpdateProfileComponent implements OnInit {
-
     user;
 
     NULL_CONSTANT = null;
@@ -32,8 +33,8 @@ export class UpdateProfileComponent implements OnInit {
     isStudentListLoading = false;
     isLoading = false;
 
-    selectedStudentSection:any;
-    currentStudentSection:any;
+    selectedStudentSection: any;
+    currentStudentSection: any;
 
     classList: any;
     sectionList: any;
@@ -44,29 +45,31 @@ export class UpdateProfileComponent implements OnInit {
     studentParameterValueList: any[] = [];
     currentStudentParameterValueList: any[] = [];
 
-    serviceAdapter: UpdateProfileServiceAdapter
+    deleteList: any[] = [];
+    profileImage = null;
+
+    serviceAdapter: UpdateProfileServiceAdapter;
 
     commonFunctions: CommonFunctions;
 
-    constructor (public studentService: StudentService,
-        public schoolService: SchoolService) { }
-
+    constructor(public studentService: StudentService, public schoolService: SchoolService, public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.commonFunctions = CommonFunctions.getInstance();
-        this.serviceAdapter = new UpdateProfileServiceAdapter()
-        this.serviceAdapter.initializeAdapter(this)
-        this.serviceAdapter.initializeData()
+        this.serviceAdapter = new UpdateProfileServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+        this.deleteList = [];
+        this.profileImage = this.NULL_CONSTANT;
     }
-
 
     handleDetailsFromParentStudentFilter(value): void {
         this.classList = value['classList'];
         this.sectionList = value['sectionList'];
     }
 
-    handleStudentListSelection(value): void{
+    handleStudentListSelection(value): void {
         this.selectedStudent = value[0][0];
         this.selectedStudentSection = value[1][0];
         this.serviceAdapter.getStudentProfile(this.selectedStudent.id);
@@ -74,16 +77,16 @@ export class UpdateProfileComponent implements OnInit {
 
     getParameterValue = (parameter) => {
         try {
-            return this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id).value
+            return this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id).value;
         } catch {
             return this.NULL_CONSTANT;
         }
     }
 
     updateParameterValue = (parameter, value) => {
-        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
         if (!item) {
-            item = {parentStudent: this.currentStudent.id, parentStudentParameter: parameter.id, value: value};
+            item = { parentStudent: this.currentStudent.id, parentStudentParameter: parameter.id, value: value };
             this.currentStudentParameterValueList.push(item);
         } else {
             item.value = value;
@@ -91,15 +94,23 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     checkCustomFieldChanged = (parameter) => {
-        const item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
-        const old_item = this.studentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
-        return item && (!old_item || item.value !== old_item.value);
+        const item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+        const old_item = this.studentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+        if (!item && old_item) {
+            return true;
+        }
+        if (old_item) {
+            if (old_item.value === this.NULL_CONSTANT) {
+                return item && (!old_item || item.document_value != old_item.document_value);
+            }
+        }
+        return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
     }
 
     getBusStopName(busStopDbId: any) {
         let stopName = 'None';
         if (busStopDbId !== null) {
-            this.busStopList.forEach(busStop => {
+            this.busStopList.forEach((busStop) => {
                 if (busStop.id == busStopDbId) {
                     stopName = busStop.stopName;
                     console.log(stopName);
@@ -111,13 +122,13 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     getClassName(): any {
-        return this.classList.find(classs => {
+        return this.classList.find((classs) => {
             return this.selectedStudentSection.parentClass == classs.id;
         }).name;
     }
 
     getSectionName(): any {
-        return this.sectionList.find(section => {
+        return this.sectionList.find((section) => {
             return this.selectedStudentSection.parentDivision == section.id;
         }).name;
     }
@@ -148,7 +159,6 @@ export class UpdateProfileComponent implements OnInit {
             let image = new Image();
             image.src = URL.createObjectURL(file);
             image.onload = () => {
-
                 let dx = 0;
                 let dy = 0;
                 let dw = image.width;
@@ -159,13 +169,13 @@ export class UpdateProfileComponent implements OnInit {
                 let sw = dw;
                 let sh = dh;
 
-                if (sw > (aspectRatio[1]*sh/aspectRatio[0])) {
-                    sx = (sw - (aspectRatio[1]*sh/aspectRatio[0]))/2;
-                    sw = (aspectRatio[1]*sh/aspectRatio[0]);
+                if (sw > (aspectRatio[1] * sh) / aspectRatio[0]) {
+                    sx = (sw - (aspectRatio[1] * sh) / aspectRatio[0]) / 2;
+                    sw = (aspectRatio[1] * sh) / aspectRatio[0];
                     dw = sw;
-                } else if (sh > (aspectRatio[0]*sw/aspectRatio[1])) {
-                    sy = (sh - (aspectRatio[0]*sw/aspectRatio[1]))/2;
-                    sh = (aspectRatio[0]*sw/aspectRatio[1]);
+                } else if (sh > (aspectRatio[0] * sw) / aspectRatio[1]) {
+                    sy = (sh - (aspectRatio[0] * sw) / aspectRatio[1]) / 2;
+                    sh = (aspectRatio[0] * sw) / aspectRatio[1];
                     dh = sh;
                 }
 
@@ -186,12 +196,12 @@ export class UpdateProfileComponent implements OnInit {
     async onImageSelect(evt: any) {
         let image = evt.target.files[0];
 
-        if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-            alert("Image type should be either jpg, jpeg, or png");
+        if (image.type !== 'image/jpeg' && image.type !== 'image/png' && image.type !== 'image/jpg') {
+            alert('Image type should be either jpg, jpeg, or png');
             return;
         }
 
-        image = await this.cropImage(image, [1,1]);
+        image = await this.cropImage(image, [1, 1]);
 
         while (image.size > 512000) {
             image = await this.resizeImage(image);
@@ -202,24 +212,15 @@ export class UpdateProfileComponent implements OnInit {
             return;
         }
 
-        this.isLoading = true;
-        let profile_image_data = new FormData();
-        profile_image_data.append('id', new Blob([this.selectedStudent.id], {
-            type: 'application/json'
-        }));
-        profile_image_data.append('profileImage', image);
-
-        this.studentService.partiallyUpdateObject(this.studentService.student, profile_image_data).then(value => {
-            Object.keys(value).forEach(key => {
-                this.selectedStudent[key] = value[key];
-            });
-            this.isLoading = false;
-        }, error =>{
-            this.isLoading = false;
-        });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.selectedStudent.profileImage = reader.result;
+            this.profileImage = reader.result;
+        };
+        reader.readAsDataURL(image);
     }
 
-    resizeImage(file:File):Promise<Blob> {
+    resizeImage(file: File): Promise<Blob> {
         return new Promise((resolve, reject) => {
             let image = new Image();
             image.src = URL.createObjectURL(file);
@@ -227,8 +228,8 @@ export class UpdateProfileComponent implements OnInit {
                 let width = image.width;
                 let height = image.height;
 
-                let maxWidth = image.width/2;
-                let maxHeight = image.height/2;
+                let maxWidth = image.width / 2;
+                let maxHeight = image.height / 2;
 
                 // if (width <= maxWidth && height <= maxHeight) {
                 //     resolve(file);
@@ -259,4 +260,267 @@ export class UpdateProfileComponent implements OnInit {
         });
     }
 
+    isMobile(): boolean {
+        if (window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
+    getParameterDocumentType(parameter) {
+        try {
+            let document_value = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id)
+                .document_value;
+            if (document_value) {
+                let document_name = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id)
+                    .document_name;
+                let urlList = [];
+                if (document_name) {
+                    urlList = document_name.split('.');
+                } else {
+                    urlList = document_value.split('.');
+                }
+                let type = urlList[urlList.length - 1];
+                if (type == 'pdf') {
+                    return 'pdf';
+                } else {
+                    return 'img';
+                }
+            } else {
+                return 'none';
+            }
+        } catch {
+            return 'none';
+        }
+    }
+
+    getParameterDocumentValue(parameter) {
+        try {
+            let document_value = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id)
+                .document_value;
+            if (document_value) {
+                return document_value;
+            } else {
+                return null;
+            }
+        } catch {
+            return null;
+        }
+    }
+
+    deleteDocument(parameter) {
+        if (confirm('Are you sure want to delete this document?')) {
+            let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+            if (item) {
+                if (item.id) {
+                    this.deleteList.push(item);
+                }
+                this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(
+                    (para) => para.parentStudentParameter !== item.parentStudentParameter
+                );
+            }
+        }
+    }
+
+    resetDocument(parameter) {
+        if (confirm('Are you sure want to reset this document?')) {
+            let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+            let old_item = this.studentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+            if (item) {
+                if (old_item) {
+                    item.id = old_item.id;
+                    item.document_value = old_item.document_value;
+                    item.document_size = old_item.document_size;
+                    item.document_name = old_item.document_name;
+                    this.deleteList = this.deleteList.filter((x) => x.id !== old_item.id);
+                } else {
+                    this.currentStudentParameterValueList = this.currentStudentParameterValueList.filter(
+                        (para) => para.parentStudentParameter !== item.parentStudentParameter
+                    );
+                }
+            } else if (old_item) {
+                item = {
+                    id: old_item.id,
+                    parentStudentParameter: parameter.id,
+                    document_value: old_item.document_value,
+                    document_name: old_item.document_name,
+                    document_size: old_item.document_size,
+                };
+                this.currentStudentParameterValueList.push(item);
+                this.deleteList = this.deleteList.filter((x) => x.id !== old_item.id);
+            }
+        }
+    }
+
+    check_document(value): boolean {
+        let type = value.type;
+        if (type !== 'image/jpeg' && type !== 'image/jpg' && type !== 'image/png' && type != 'application/pdf') {
+            alert('Uploaded File should be either in jpg,jpeg,png or in pdf format');
+            return false;
+        } else {
+            if (value.size / 1000000.0 > 5) {
+                alert('File size should not exceed 5MB');
+                return false;
+            } else if (value.name.length > 100) {
+                alert('File name should not exceed 100 characters');
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    getDocumentName(parameter) {
+        let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+        if (item) {
+            if (item.document_name) {
+                return item.document_name;
+            } else {
+                let document_name = item.document_value.split('/');
+                document_name = document_name[document_name.length - 1];
+                return document_name.substring(document_name.indexOf('_') + 1, document_name.length);
+            }
+        }
+    }
+
+    updateDocuments = (parameter, value, element) => {
+        const options = this.studentParameterList.filter((parameter) => parameter.parameterType == 'DOCUMENT');
+        if (value.target.files.length > 1) {
+            if (value.target.files.length <= options.length) {
+                let files = [];
+                for (let i = 0; i < value.target.files.length; i++) {
+                    if (this.check_document(value.target.files[i])) {
+                        files.push(value.target.files[i]);
+                    }
+                }
+                if (files.length) {
+                    let choiceList = [];
+                    options.forEach((x) => choiceList.push({ name: x.name, id: x.id }));
+                    console.log(choiceList);
+                    let dialogRef = this.dialog.open(MultipleFileDialogComponent, {
+                        width: '580px',
+                        data: { files: files, options: options, choiceList: choiceList },
+                    });
+                    dialogRef.afterClosed().subscribe((result) => {
+                        if (result) {
+                            for (let i = 0; i < result.files.length; i++) {
+                                let item = options.find((x) => x.id === result.list[i].id);
+                                if (item) {
+                                    this.updateDocumentValue(item, result.files[i]);
+                                }
+                            }
+                        }
+                    });
+                }
+            } else {
+                console.log('Please select only ' + value.target.files.length + ' files');
+            }
+        } else {
+            let check = this.check_document(value.target.files[0]);
+            if (check == true) {
+                this.updateDocumentValue(parameter, value.target.files[0]);
+            }
+        }
+        element.value = '';
+    }
+
+    updateDocumentValue = (parameter, file) => {
+        let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
+        let inDeletedList = this.deleteList.find((x) => x.parentStudentParameter === parameter.id);
+        let document_value = file;
+        let document_size = document_value.size;
+        let document_name = document_value.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document_value = reader.result;
+            if (!item && !inDeletedList) {
+                item = {
+                    parentStudentParameter: parameter.id,
+                    document_value: document_value,
+                    document_name: document_name,
+                    document_size: document_size,
+                };
+                this.currentStudentParameterValueList.push(item);
+            } else if (inDeletedList) {
+                this.deleteList = this.deleteList.filter((x) => x.id !== inDeletedList.id);
+                console.log(this.deleteList);
+                let Item = {
+                    id: inDeletedList.id,
+                    parentStudentParameter: inDeletedList.parentStudentParameter,
+                    document_value: document_value,
+                    document_name: document_name,
+                    document_size: document_size,
+                };
+                console.log(Item);
+                this.currentStudentParameterValueList.push(Item);
+            } else {
+                item.document_value = document_value;
+                item.document_name = document_name;
+                item.document_size = document_size;
+            }
+        };
+        reader.readAsDataURL(document_value);
+    }
+
+    dragEnter(value) {
+        $('.dropinput').css({ 'z-index': '6' });
+        $(value.path[1]).css({ background: 'rgba(182, 224, 184, 0.1)', border: '1px dashed #7db580' });
+    }
+
+    onDrop(value) {
+        $('.dropinput').css({ 'z-index': '-1' });
+        $(value.path[1]).css({ background: '', border: '' });
+    }
+
+    dragLeave(value) {
+        $(value.path[1]).css({ background: '', border: '' });
+    }
+
+    openFilePreviewDialog(parameter): void {
+        if (this.getParameterDocumentType(parameter) != 'none') {
+            let type = this.getParameterDocumentType(parameter);
+            let file = this.getParameterDocumentValue(parameter);
+            let dummyImageList = [];
+            if (type == 'img') {
+                let data = { imageUrl: file };
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: { imageList: dummyImageList, file: file, index: 0, type: 1, fileType: type, isMobile: this.isMobile() },
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                console.log('The dialog was closed');
+            });
+        }
+    }
+
+    getIcon(parameter: any) {
+        let src = '/assets/img/';
+        switch (this.getParameterDocumentType(parameter)) {
+            case 'none':
+                return src + 'nofile.png';
+            case 'img':
+                return src + 'img.png';
+            case 'pdf':
+                return src + 'pdf.png';
+        }
+    }
+
+    resizeContainer(element: any): void {
+        let docText = element.parentElement;
+        let docContainer = docText.parentElement.parentElement;
+        if (docContainer && docText) {
+            console.log(docText.clientHeight);
+            let textHeight = docText.clientHeight + 26;
+            if (textHeight > 120) {
+                docContainer.style.height = textHeight + 'px';
+            } else {
+                docContainer.style.height = '120px';
+            }
+        }
+    }
 }

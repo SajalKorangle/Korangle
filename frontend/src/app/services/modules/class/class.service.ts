@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
-import { CLASS_CONSTANT } from "./models/classs";
-import { DIVISION_CONSTANT } from "./models/division";
-import { HttpClient } from "@angular/common/http";
+import { CLASS_CONSTANT } from './models/classs';
+import { DIVISION_CONSTANT } from './models/division';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ClassService extends ServiceObject {
-
     protected module_url = '/class';
 
     // objects urls
@@ -20,7 +19,5 @@ export class ClassService extends ServiceObject {
         super(http_class);
         this.constant_list[this.classs] = CLASS_CONSTANT;
         this.constant_list[this.division] = DIVISION_CONSTANT;
-        this.file_list[this.class_teacher_signature] = this.class_teacher_signature;
     }
-
 }

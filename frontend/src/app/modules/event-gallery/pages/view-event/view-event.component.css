@@ -1,0 +1,377 @@
+.extraImageCount {
+    background: #c4c4c4;
+    width: 130px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    display: inline-block;
+    margin-top: 30px;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 15px;
+    width: 15px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #000000;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #000000;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.tag {
+    background-color: #ababab;
+    height: 28px;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+.selectedTag {
+    background: #3bb847 !important;
+}
+
+.view-image-icon-container {
+    position: absolute;
+    bottom: 5px;
+    right: 7px;
+    cursor: pointer;
+    display: block;
+    z-index: 10;
+    background: black;
+    height: 25px;
+    width: 30px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    border-radius: 5px;
+}
+
+.view-eye {
+    color: white;
+    font-size: 25px;
+}
+
+.btn-inactive {
+    background-color: #ababab;
+}
+
+.loader-custom {
+    margin-left: 5px;
+    display: inline-block;
+    border: 2px solid lightgrey;
+    border-radius: 50%;
+    border-top: 2px solid dimgrey;
+    width: 18px;
+    height: 18px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+.btn-active {
+    background-color: #ff9800;
+}
+
+.active {
+    color: #ff9800;
+    cursor: pointer;
+}
+
+.inactive {
+    color: #ababab;
+    cursor: default;
+}
+
+.editTag {
+    text-decoration: underline;
+}
+
+.image-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.image-row > .image-column {
+}
+
+.image-row:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.image-column {
+    width: 40%;
+    max-width: 252px;
+    height: 170px;
+    margin: 10px;
+}
+
+.image-column-mobile {
+    max-width: 0.525in;
+    height: 0.525in;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.sticky {
+    position: fixed;
+    z-index: 6;
+    right: 10px;
+}
+
+.container {
+    position: relative;
+}
+
+.container img {
+    display: block;
+}
+
+.container .mat-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+}
+
+:host ::ng-deep .mat-checkbox-frame {
+    border-color: #ff9800;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.cursor:hover {
+    background-color: #b9b7b7;
+}
+
+.images {
+    opacity: 0.7;
+}
+
+.active,
+.images:hover {
+    opacity: 1;
+}
+
+img.hover-shadow {
+    transition: 0.3s;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dropinput {
+    position: absolute;
+    left: 22px;
+    opacity: 0;
+    width: 40%;
+    max-width: 252px;
+    height: 170px;
+}
+
+.mat-card.scrollable-content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.mat-card.scrollable-content > .mat-card-title-group {
+    display: block;
+}
+
+.mat-card.scrollable-content > .mat-card-content {
+    overflow-y: auto;
+}
+
+.mat-card ::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+}
+
+@keyframes blink {
+    50% {
+        color: transparent;
+    }
+}
+
+.loader__dot {
+    animation: 1s blink infinite;
+}
+
+.loader__dot:nth-child(2) {
+    animation-delay: 250ms;
+}
+
+.loader__dot:nth-child(3) {
+    animation-delay: 500ms;
+}
+
+@media only screen and (max-width: 992px) {
+    .image-column {
+        max-width: 110px;
+        max-height: 82px;
+    }
+
+    .extraImageCount {
+        margin-left: 20px;
+    }
+
+    .dropinput {
+        max-width: 110px;
+        max-height: 82px;
+    }
+
+    label img {
+        max-height: 82px;
+        width: 100%;
+    }
+
+    .view-image-icon-container {
+        height: 17px;
+        width: 23px;
+    }
+
+    .view-eye {
+        font-size: 17px;
+    }
+
+    .eventDate {
+        float: left;
+        width: 100%;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .eventImage {
+        width: 45%;
+        min-width: 130px;
+        height: 150px;
+    }
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    display: inline-block;
+}
+
+input[type='checkbox'][id^='myCheckbox'] {
+    display: none;
+}
+
+label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+}
+
+label:before {
+    background-color: white;
+    color: white;
+    content: ' ';
+    display: block;
+    border-radius: 50%;
+    border: 1px solid grey;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 28px;
+    transition-duration: 0.4s;
+    transform: scale(0);
+}
+
+label img {
+    height: 170px;
+    width: 100%;
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+}
+
+:checked + label {
+    border-color: #ddd;
+}
+
+:checked + label:before {
+    content: '✓';
+    font-size: 20px;
+    background-color: green;
+    transform: scale(1);
+    z-index: 2;
+}
+
+:checked + label img {
+    transform: scale(0.9);
+    z-index: -1;
+}
+
+.eventDate {
+    float: right;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.eventImage {
+    width: 45.5%;
+    height: 150px;
+    margin-top: 30px;
+    margin-right: 10px;
+}

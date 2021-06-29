@@ -35,10 +35,9 @@ urlpatterns += [
 ]
 
 ######## Msg Club Delivery Report ###############
-from .views import MsgClubDeliveryReportView, handle_msg_club_delivery_report_view
+from .views import MsgClubDeliveryReportView
 
 urlpatterns += [
-	url(r'^handle-msg-club-delivery-report', handle_msg_club_delivery_report_view),
 	url(r'^msg-club-delivery-report', MsgClubDeliveryReportView.as_view()),
 ]
 

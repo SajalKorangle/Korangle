@@ -1,12 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {ClassService} from '../../../../services/modules/class/class.service';
-import {StudentOldService} from '../../../../services/modules/student/student-old.service';
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 
 import { ChangeDetectorRef } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
-import {PRINT_I_CARD, PRINT_MULTIPLE_I_CARDS} from '../../../../print/print-routes.constants';
-import {DataStorage} from "../../../../classes/data-storage";
+import { PRINT_I_CARD, PRINT_MULTIPLE_I_CARDS } from '../../../../print/print-routes.constants';
+import { DataStorage } from '../../../../classes/data-storage';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -31,11 +31,9 @@ class ColumnFilter {
     selector: 'i-cards',
     templateUrl: './i-cards.component.html',
     styleUrls: ['./i-cards.component.css'],
-    providers: [StudentOldService, ClassService ],
+    providers: [StudentOldService, ClassService],
 })
-
 export class ICardsComponent implements OnInit {
-
     user;
 
     columnFilter: ColumnFilter;
@@ -72,10 +70,12 @@ export class ICardsComponent implements OnInit {
     expanded = {};
     timeout: any;
 
-    constructor(private studentService: StudentOldService,
-                private classService: ClassService,
-                private cdRef: ChangeDetectorRef,
-                private printService: PrintService) { }
+    constructor(
+        private studentService: StudentOldService,
+        private classService: ClassService,
+        private cdRef: ChangeDetectorRef,
+        private printService: PrintService
+    ) {}
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -90,7 +90,7 @@ export class ICardsComponent implements OnInit {
 
     getRowClass(row): any {
         return {
-            'hoverRow': true,
+            hoverRow: true,
         };
     }
 
@@ -113,27 +113,29 @@ export class ICardsComponent implements OnInit {
 
         this.isLoading = true;
         Promise.all([
-            this.classService.getObjectList(this.classService.classs,{}),
-            this.classService.getObjectList(this.classService.division,{}),
+            this.classService.getObjectList(this.classService.classs, {}),
+            this.classService.getObjectList(this.classService.division, {}),
             this.studentService.getStudentFullProfileList(student_full_profile_request_data, this.user.jwt),
-        ]).then(value => {
-            console.log(value);
-            this.isLoading = false;
-            value[0].forEach(classs => {
-                classs.sectionList = value[1];
-            });
-            this.initializeClassSectionList(value[0]);
-            this.initializeStudentFullProfileList(value[2]);
-        }, error => {
-            this.isLoading = false;
-        });
-
+        ]).then(
+            (value) => {
+                console.log(value);
+                this.isLoading = false;
+                value[0].forEach((classs) => {
+                    classs.sectionList = JSON.parse(JSON.stringify(value[1]));
+                });
+                this.initializeClassSectionList(value[0]);
+                this.initializeStudentFullProfileList(value[2]);
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     initializeClassSectionList(classSectionList: any): void {
         this.classSectionList = classSectionList;
-        this.classSectionList.forEach(classs => {
-            classs.sectionList.forEach(section => {
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
                 section.selected = false;
                 section.containsStudent = false;
             });
@@ -142,10 +144,10 @@ export class ICardsComponent implements OnInit {
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         // this.studentFullProfileList = studentFullProfileList;
-        this.studentFullProfileList = studentFullProfileList.filter( student => {
+        this.studentFullProfileList = studentFullProfileList.filter((student) => {
             return student.parentTransferCertificate == null;
         });
-        this.studentFullProfileList.forEach(studentFullProfile => {
+        this.studentFullProfileList.forEach((studentFullProfile) => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
             studentFullProfile['show'] = false;
             studentFullProfile['selected'] = false;
@@ -155,8 +157,8 @@ export class ICardsComponent implements OnInit {
 
     getSectionObject(classDbId: number, sectionDbId: number): any {
         let sectionObject = null;
-        this.classSectionList.every(classs => {
-            classs.sectionList.every(section => {
+        this.classSectionList.every((classs) => {
+            classs.sectionList.every((section) => {
                 if (sectionDbId === section.id && classDbId === classs.id) {
                     sectionObject = section;
                     section.containsStudent = true;
@@ -176,54 +178,50 @@ export class ICardsComponent implements OnInit {
     }
 
     unselectAllClasses(): void {
-        this.classSectionList.forEach(
-            classs => {
-                classs.sectionList.forEach(section => {
-                    section.selected = false;
-                });
-            }
-        );
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = false;
+            });
+        });
         this.handleStudentDisplay();
-    };
+    }
 
     selectAllClasses(): void {
-        this.classSectionList.forEach(
-            classs => {
-                classs.sectionList.forEach(section => {
-                    section.selected = true;
-                });
-            }
-        );
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = true;
+            });
+        });
         this.handleStudentDisplay();
-    };
+    }
 
     selectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = true;
         });
-    };
+    }
 
     unSelectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = false;
         });
-    };
+    }
 
     selectAllStudents(): void {
-        this.studentFullProfileList.forEach(student => {
+        this.studentFullProfileList.forEach((student) => {
             student.selected = true;
         });
     }
 
     unSelectAllStudents(): void {
-        this.studentFullProfileList.forEach(student => {
+        this.studentFullProfileList.forEach((student) => {
             student.selected = false;
         });
     }
 
     showSectionName(classs: any): boolean {
         let sectionLength = 0;
-        classs.sectionList.every(section => {
+        classs.sectionList.every((section) => {
             if (section.containsStudent) {
                 ++sectionLength;
             }
@@ -240,8 +238,7 @@ export class ICardsComponent implements OnInit {
         let serialNumber = 0;
         this.displayStudentNumber = 0;
 
-        this.studentFullProfileList.forEach(student => {
-
+        this.studentFullProfileList.forEach((student) => {
             /* Class Section Check */
             if (!student.sectionObject.selected) {
                 student.show = false;
@@ -249,8 +246,10 @@ export class ICardsComponent implements OnInit {
             }
 
             /* Category Check */
-            if (!(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected)
-                && !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)) {
+            if (
+                !(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected) &&
+                !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)
+            ) {
                 if (student.category === null || student.category === '') {
                     student.show = false;
                     return;
@@ -284,8 +283,10 @@ export class ICardsComponent implements OnInit {
             }
 
             /* Gender Check */
-            if (!(this.maleSelected && this.femaleSelected && this.otherGenderSelected)
-                && !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)) {
+            if (
+                !(this.maleSelected && this.femaleSelected && this.otherGenderSelected) &&
+                !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)
+            ) {
                 if (student.gender === null || student.gender === '') {
                     student.show = false;
                     return;
@@ -315,18 +316,16 @@ export class ICardsComponent implements OnInit {
             ++this.displayStudentNumber;
             student.show = true;
             student.serialNumber = ++serialNumber;
-
         });
 
-        this.filteredStudentFullProfileList = this.studentFullProfileList.filter(student => {
+        this.filteredStudentFullProfileList = this.studentFullProfileList.filter((student) => {
             return student.show;
         });
-
-    };
+    }
 
     getSelectedStudentNumber(): number {
         let result = 0;
-        this.studentFullProfileList.forEach(student => {
+        this.studentFullProfileList.forEach((student) => {
             if (student.show && student.selected) {
                 ++result;
             }
@@ -336,17 +335,16 @@ export class ICardsComponent implements OnInit {
 
     printStudentICards(): void {
         const value = {
-            studentProfileList: this.studentFullProfileList.filter(student => {
-                return (student.show && student.selected);
+            studentProfileList: this.studentFullProfileList.filter((student) => {
+                return student.show && student.selected;
             }),
             columnFilter: this.columnFilter,
             showClass: this.showClass,
         };
         if (this.printMultipleIcards) {
-            this.printService.navigateToPrintRoute(PRINT_MULTIPLE_I_CARDS, {user: this.user, value});
+            this.printService.navigateToPrintRoute(PRINT_MULTIPLE_I_CARDS, { user: this.user, value });
         } else {
-            this.printService.navigateToPrintRoute(PRINT_I_CARD, {user: this.user, value});
+            this.printService.navigateToPrintRoute(PRINT_I_CARD, { user: this.user, value });
         }
-    };
-
+    }
 }

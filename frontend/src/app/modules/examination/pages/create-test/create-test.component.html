@@ -1,240 +1,210 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isInitialLoading">
-
         <div class="row">
-            <div class="col-md-9" *ngIf="examinationClassSectionList.length > 0">
-                <mat-form-field>
-                    <mat-select placeholder="Select Examination"
-                                [ngModel]="selectedExamination"
-                                [disabled]="isLoading"
-                                (ngModelChange)="selectedExamination=$event;showTestDetails=false;">
-                        <mat-option *ngFor='let examination of examinationClassSectionList;' [value]="examination">
-                            {{examination.name}}
+            <div class="col-md-9" *ngIf="examinationList.length > 0">
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
+                    <mat-select placeholder="Select Examination" [(ngModel)]="selectedExamination" [disabled]="isLoading" id="selectExam">
+                        <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                            {{ examination.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="margin-top: 23px; margin-left: 20px;">
-                    <mat-select placeholder="Change to -"
-                                #selectClassSection
-                                [ngModel]="selectedExamination.selectedClass"
-                                (ngModelChange)="selectedExamination.selectedClass=$event;showTestDetails=false;">
-                        <mat-option *ngFor='let classs of selectedExamination.classList;' [value]="classs">
-                            {{classs.name}}, {{classs.selectedSection.name}}
-                        </mat-option>
+                <mat-form-field style="margin-top: 23px; margin-left: 20px">
+                    <mat-select placeholder="Select class section" [disabled]="isLoading" id="selectClassSection">
+                        <ng-container *ngFor="let class of classSectionSubjectList">
+                            <mat-option *ngFor="let section of class.sectionList">
+                                <mat-checkbox
+                                    [(ngModel)]="section.selected"
+                                    (ngModelChange)="showTestDetails = false; showSelectedClassAndSection.length = 0"
+                                    (click)="$event.stopPropagation()"
+                                >
+                                    {{ class.className }}, {{ section.sectionName }}
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
                     </mat-select>
                 </mat-form-field>
-                <button class="btn"
-                        style="padding: 2px 11px; background-color: transparent;"
-                        matTooltip="Choose Section (default: Section - A)"
-                        mat-icon-button
-                        [matMenuTriggerFor]="classSectionMenu">
-                    <i class="material-icons" style="color: black;">expand_more</i>
+                <button
+                    type="submit"
+                    style="margin-left: 20px"
+                    id="getTestDetails"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.getTestAndSubjectDetailsNew()"
+                >
+                    GET
                 </button>
-                <mat-menu #classSectionMenu="matMenu">
-                    <button *ngFor="let section of selectedExamination.selectedClass.sectionList"
-                            mat-menu-item
-                            (click)="selectClassSection.open();
-                             selectClassSection.close();
-                             selectedExamination.selectedClass.selectedSection=section;
-                             showTestDetails=false;">
-                        {{section.name}}
-                    </button>
-                </mat-menu>
-
-                <button type="submit"
-                        style="margin-left: 20px;"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.getTestAndSubjectDetails()">GET</button>
             </div>
-            <div class="col-md-9" *ngIf="examinationClassSectionList.length === 0">
-                No Examination created yet!
+            <div class="col-md-9" *ngIf="examinationList.length === 0">No Examination created yet!</div>
+        </div>
+
+        <div class="row" style="margin-top: 25px" *ngIf="showSelectedClassAndSection.length > 0">
+            <div class="col-md-12">
+                <div *ngFor="let item of showSelectedClassAndSection" style="display: inline-block; padding-right: 50px">
+                    <li>
+                        <b>{{ item.className }},{{ item.sectionName }}</b>
+                    </li>
+                </div>
+            </div>
+
+            <div class="col-md-12" *ngIf="!dataCanBeFetched">
+                <h3>Selected Class and Section have different Subjects</h3>
             </div>
         </div>
 
+        <div class="row" style="border-bottom: 1px solid #eae2e2ad; margin-top: 25px; margin-bottom: 35px; border-width: thin">
+            <div class="col-md-12"></div>
+        </div>
+
         <ng-container *ngIf="showTestDetails && !isLoading">
-
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
-            </div>
-
-            <ng-container *ngIf="selectedExamination.selectedClass.selectedSection.testList.length > 0">
-                <table class="table table-hover">
-                    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-                    <tr>
-                        <th>S No.</th>
-                        <th>Subject</th>
-                        <th>Date</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Max. Marks</th>
-                        <th>-</th>
-                        <th>-</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList; let i=index;">
-                        <td>{{(i+1)}}.</td>
-                        <td>{{test.subjectName}}</td>
-                        <td>
-                            <day-date-old [initialValue]="getTestDate(test)"
-                                          (onDateSelected)="onTestDateUpdation(test, $event)">
-
-                            </day-date-old>
-                        </td>
-                        <td>
-                            <input type="time" [(ngModel)]="test.newStartTime"/>
-                        </td>
-                        <td>
-                            <input type="time" [(ngModel)]="test.newEndTime"/>
-                        </td>
-                        <td>
-                            <input type="number" [(ngModel)]="test.newMaximumMarks"/>
-                        </td>
-                        <td>
-                            <button type="submit"
-                                    style="padding: 3px 8px;"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    [disabled]="isTestUpdateDisabled(test)"
-                                    (click)="serviceAdapter.updateTest(test);">Update</button>
-                        </td>
-                        <td>
-                            <button type="submit"
-                                    style="padding: 3px 8px;"
-                                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                    (click)="serviceAdapter.deleteTest(test);">Del</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </ng-container>
-
-            <ng-container *ngIf="selectedExamination.selectedClass.selectedSection.testList.length === 0">
-                <span style="margin-top: 30px">
-                    No Tests added yet!
-                </span>
-            </ng-container>
-
-            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px;">
-                <div class="col-md-12"></div>
-            </div>
-
+            <!--Create specific subject wise test-->
             <table class="table table-hover">
                 <tbody>
-                <tr>
-                    <td>
-                        <mat-form-field>
-                            <mat-select placeholder="Select Subject"
-                                        [ngModel]="selectedSubject"
-                                        (ngModelChange)="selectedSubject=$event">
-                                <mat-option *ngFor='let subject of subjectList;' [value]="subject">
-                                    {{subject.name}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                    <td>
-                        <mat-form-field style="margin-left: 20px;">
-                            <mat-select placeholder="Select Test Type"
-                                        [ngModel]="selectedTestType"
-                                        (ngModelChange)="selectedTestType=$event">
-                                <mat-option [value]=0>None</mat-option>
-                                <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
-                                    {{testType}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                    <td>
-                        <input type="number"
-                               placeholder="Max. Marks"
-                               [(ngModel)]="selectedMaximumMarks"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
-                    </td>
-                    <td>
-                        <span style="margin-left: 20px">
-                            Start Time:
-                            <input type="time" [(ngModel)]="selectedStartTime"/>
-                        </span>
-                    </td>
-                    <td>
-                        <span style="margin-left: 20px">
-                            EndTime:
-                            <input type="time" [(ngModel)]="selectedEndTime"/>
-                        </span>
-                    </td>
-                    <td>
-                        <button type="submit"
-                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="serviceAdapter.createTest();">Create Test</button>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select
+                                    placeholder="Select Subject"
+                                    [ngModel]="selectedSubject"
+                                    id="selectSubject"
+                                    (ngModelChange)="selectedSubject = $event"
+                                >
+                                    <mat-option *ngFor="let subject of subjectList" [value]="subject.id">
+                                        {{ subject.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field style="margin-left: 20px">
+                                <mat-select
+                                    placeholder="Select Test Type"
+                                    [ngModel]="selectedTestType"
+                                    id="selectTestType"
+                                    (ngModelChange)="selectedTestType = $event"
+                                >
+                                    <mat-option [value]="0">None</mat-option>
+                                    <mat-option *ngFor="let testType of testTypeList" [value]="testType">
+                                        {{ testType }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <input type="number" placeholder="Max. Marks" [(ngModel)]="selectedMaximumMarks" />
+                        </td>
+                        <td>
+                            <button type="submit" class="btn" (click)="createSpecificTest()">ADD</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
-            <!-- div class="row">
-                <div class="col-md-12">
+            <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
+                <div class="col-md-12"></div>
+            </div>
 
-                    <mat-form-field>
-                        <mat-select placeholder="Select Subject"
-                                    [ngModel]="selectedSubject"
-                                    (ngModelChange)="selectedSubject=$event">
-                            <mat-option *ngFor='let subject of subjectList;' [value]="subject">
-                                {{subject.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+            <!--Display a message if no test is in the backend-->
+            <ng-container *ngIf="fetchedList === 0">
+                <span style="margin-top: 30px"> No Tests added yet! </span>
+                <span> Test Template Created </span>
+            </ng-container>
 
-                    <mat-form-field style="margin-left: 20px;">
-                        <mat-select placeholder="Select Test Type"
-                                    [ngModel]="selectedTestType"
-                                    (ngModelChange)="selectedTestType=$event">
-                            <mat-option [value]=0>None</mat-option>
-                            <mat-option *ngFor='let testType of testTypeList;' [value]="testType">
-                                {{testType}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+            <!--New Structure of Test List grouped by subject, testType and maximumMarks-->
+            <ng-container *ngIf="newTestList.length > 0">
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>S No.</th>
+                            <th>Subject</th>
+                            <th>Test type</th>
+                            <th>Class Section</th>
+                            <th>Max. Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let test of newTestList; let i = index">
+                            <td testId="count" [class.lowOpacity]="test.deleted">{{ i + 1 }}.</td>
+                            <td [class.lowOpacity]="test.deleted">{{ test.subjectName }}</td>
+                            <td [class.lowOpacity]="test.deleted">
+                                <mat-select
+                                    style="max-width: 75px"
+                                    [(ngModel)]="test.newTestType"
+                                    (selectionChange)="handleTestTypeSelection($event.value, ngModelControl, test)"
+                                    #ngModelControl="ngModel"
+                                    (ngModelChange)="handleUpdate($event, test)"
+                                >
+                                    <mat-option *ngFor="let testType of testTypeList" [value]="testType">
+                                        {{ testType }}
+                                    </mat-option>
+                                </mat-select>
+                            </td>
 
-                    <input type="number"
-                           placeholder="Max. Marks"
-                           [(ngModel)]="selectedMaximumMarks"/>
+                            <td [class.lowOpacity]="test.deleted">
+                                <table>
+                                    <ng-container *ngIf="containsAllClass(test); else showSeperately">
+                                        <tr>
+                                            <td style="text-align: center">ALL</td>
+                                        </tr>
+                                    </ng-container>
+                                    <ng-template #showSeperately>
+                                        <ng-container *ngFor="let class of test.classList">
+                                            <ng-container *ngFor="let section of class.sectionList">
+                                                <tr>
+                                                    <td>{{ class.className }},{{ section.sectionName }}</td>
+                                                </tr>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-template>
+                                </table>
+                            </td>
+                            <td [class.lowOpacity]="test.deleted">
+                                <input
+                                    style="max-width: 30%"
+                                    type="number"
+                                    [(ngModel)]="test.newMaximumMarks"
+                                    (ngModelChange)="handleUpdate($event, test)"
+                                />
+                            </td>
+                            <td>
+                                <button
+                                    type="submit"
+                                    style="padding: 3px 8px"
+                                    class="btn"
+                                    (click)="test.deleted = !test.deleted; handleUpdate(test, test); $event.stopPropagation()"
+                                >
+                                    <span *ngIf="test.deleted; else Delete">UND</span>
+                                    <ng-template #Delete>DEL</ng-template>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                    <br/><br/>
-
-                    <day-date-old (onDateSelected)="onDateSelected($event)"></day-date-old>
-
-                    <span style="margin-left: 20px">
-                        Start Time:
-                        <input type="time" [(ngModel)]="selectedStartTime"/>
-                    </span>
-
-                    <span style="margin-left: 20px">
-                        EndTime:
-                        <input type="time" [(ngModel)]="selectedEndTime"/>
-                    </span>
-
-                    <br/><br/>
-
-                    <button type="submit"
-                            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                            (click)="serviceAdapter.createTest();">Create Test</button>
-
-                </div>
-            </div -->
-
+                <button
+                    type="submit"
+                    style="padding: 13px 15px"
+                    [disabled]="!isUpdated"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.UpdateHelper()"
+                >
+                    <span *ngIf="fetchedList === 0; else Update">Create</span>
+                    <ng-template #Update>Update</ng-template>
+                </button>
+                <button
+                    type="submit"
+                    style="padding: 13px 15px; margin-right: 20px"
+                    [disabled]="!isUpdated"
+                    class="btn"
+                    (click)="resetList()"
+                >
+                    Reset
+                </button>
+            </ng-container>
         </ng-container>
-
-
     </ng-container>
 
     <ng-container *ngIf="isLoading || isInitialLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

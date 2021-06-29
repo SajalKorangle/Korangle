@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class EnquiryService extends ServiceObject {
-
     protected module_url = '/enquiry';
 
     // objects urls

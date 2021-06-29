@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ExaminationComponent } from './examination.component';
@@ -12,32 +12,47 @@ const routes: Routes = [
     {
         path: 'create_examination',
         loadChildren: 'app/modules/examination/pages/create-examination/create-examination.module#CreateExaminationModule',
-        data: {moduleName: 'examinations'},
+        data: { moduleName: 'examinations' },
     },
     {
         path: 'create_test',
         loadChildren: 'app/modules/examination/pages/create-test/create-test.module#CreateTestModule',
-        data: {moduleName: 'examinations'},
+        data: { moduleName: 'examinations' },
+    },
+    {
+        path: 'schedule_test',
+        loadChildren: 'app/modules/examination/pages/schedule-test/schedule-test.module#ScheduleTestModule',
+        data: { moduleName: 'examinations' },
     },
     {
         path: 'generate_hall_ticket',
         loadChildren: 'app/modules/examination/pages/generate-hall-ticket/generate-hall-ticket.module#GenerateHallTicketModule',
-        data: {moduleName: 'examinations'},
+        data: { moduleName: 'examinations' },
     },
     {
         path: 'update_marks',
         loadChildren: 'app/modules/examination/pages/update-marks/update-marks.module#UpdateMarksModule',
-        data: {moduleName: 'examinations'},
+        data: { moduleName: 'examinations' },
     },
     {
         path: 'print_marksheet',
         loadChildren: 'app/modules/examination/pages/print-marksheet/print-marksheet.module#PrintMarksheetModule',
-        data: {moduleName: 'examinations'},
+        data: { moduleName: 'examinations' },
     },
     {
         path: 'view_marks',
         loadChildren: 'app/modules/examination/pages/view-marks/view-marks.module#ViewMarksModule',
-        data: {moduleName: 'examinations'},
+        data: { moduleName: 'examinations' },
+    },
+    {
+        path: 'add_student_remarks',
+        loadChildren: 'app/modules/examination/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
+        data: { moduleName: 'examinations' },
+    },
+    {
+        path: 'view_student_remarks',
+        loadChildren: 'app/modules/examination/pages/view-student-remarks/view-student-remarks.module#ViewStudentRemarksModule',
+        data: { moduleName: 'examinations' },
     },
     {
         path: '',
@@ -54,12 +69,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class ExaminationRoutingModule { }
+export class ExaminationRoutingModule {}

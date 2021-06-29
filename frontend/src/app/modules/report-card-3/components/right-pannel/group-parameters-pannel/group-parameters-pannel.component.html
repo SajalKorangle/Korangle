@@ -1,0 +1,36 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">apps</i>
+    </div>
+    <div style="margin: 4px; padding: 4px">
+        <div style="display: flex; flex-direction: row; justify-content: space-around" class="spaced-button-wrapper">
+            <button mat-stroked-button (click)="alignHorizontalLeft(); canvasRefresh(0)"><mat-icon>align_horizontal_left</mat-icon></button>
+            <button mat-stroked-button (click)="alignHorizontalCenter(); canvasRefresh(0)">
+                <mat-icon>align_horizontal_center</mat-icon>
+            </button>
+            <button mat-stroked-button (click)="alignHorizontalRight(); canvasRefresh(0)">
+                <mat-icon>align_horizontal_right</mat-icon>
+            </button>
+        </div>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-around; margin-top: 16px" class="spaced-button-wrapper">
+            <button mat-stroked-button (click)="alignVerticalBottom(); canvasRefresh(0)"><mat-icon>align_vertical_bottom</mat-icon></button>
+            <button mat-stroked-button (click)="alignVerticalCenter(); canvasRefresh(0)"><mat-icon>align_vertical_center</mat-icon></button>
+            <button mat-stroked-button (click)="alignVerticalTop(); canvasRefresh(0)"><mat-icon>align_vertical_top</mat-icon></button>
+        </div>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-around; margin-top: 16px" class="spaced-button-wrapper">
+            <button mat-stroked-button (click)="verticalAlignAbove(); canvasRefresh(0)"><mat-icon>vertical_align_top</mat-icon></button>
+            <button mat-stroked-button (click)="verticalAlignBelow(); canvasRefresh(0)"><mat-icon>vertical_align_bottom</mat-icon></button>
+        </div>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-around; margin-top: 16px" class="spaced-button-wrapper">
+            <button mat-stroked-button (click)="horizntallyAlignAfter(); canvasRefresh(0)">
+                <mat-icon class="rotate90">vertical_align_top</mat-icon>
+            </button>
+            <button mat-stroked-button (click)="horizntallyAlignBefore(); canvasRefresh(0)">
+                <mat-icon class="rotate90">vertical_align_bottom</mat-icon>
+            </button>
+        </div>
+    </div>
+</mat-card>

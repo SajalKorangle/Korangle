@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { EmployeeComponent } from './employee.component';
@@ -12,41 +12,46 @@ const routes: Routes = [
     {
         path: 'update_profile',
         loadChildren: 'app/modules/employee/pages/update-profile/update-profile.module#UpdateProfileModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'view_all',
         loadChildren: 'app/modules/employee/pages/view-all/view-all.module#ViewAllModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'add_employee',
         loadChildren: 'app/modules/employee/pages/add-employee/add-employee.module#AddEmployeeModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'assign_task',
         loadChildren: 'app/modules/employee/pages/assign-task/assign-task.module#AssignTaskModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'employee_i_card',
         loadChildren: 'app/modules/employee/pages/i-cards/i-cards.module#ICardsModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'delete_employee',
         loadChildren: 'app/modules/employee/pages/delete-employee/delete-employee.module#DeleteEmployeeModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'employee_experience_certi',
         loadChildren: 'app/modules/employee/pages/experience-certi/experience-certi.module#ExperienceCertiModule',
-        data: {moduleName: 'employee'},
+        data: { moduleName: 'employee' },
     },
     {
         path: 'update_all',
         loadChildren: 'app/modules/employee/pages/update-all/update-all.module#UpdateAllModule',
+        data: { moduleName: 'employee' },
+    },
+    {
+        path: 'manage_parameter',
+        loadChildren: 'app/modules/employee/pages/manage-parameter/manage-parameter.module#ManageParameterModule',
         data: {moduleName: 'employee'},
     },
 
@@ -69,12 +74,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class EmployeeRoutingModule { }
+export class EmployeeRoutingModule {}

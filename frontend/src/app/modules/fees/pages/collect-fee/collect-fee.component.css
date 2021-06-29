@@ -8,7 +8,26 @@
         margin-top: 40px;
         margin-left: 40px;
     }
+}
 
+button[disabled] {
+    background-color: #c4c4c4;
+    color: #ffffff;
+}
+button[disabled]:hover {
+    background: #c4c4c4;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
 }
 
 .main-content {
@@ -28,7 +47,6 @@
     min-width: 100px !important;
     max-width: 150px !important;
 }
-
 
 @media only screen and (max-width: 768px) {
     .paymentInput::placeholder {

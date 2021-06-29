@@ -1,0 +1,103 @@
+[
+    { "model": "student_app.studentparametervalue", "pk": 1, "fields": { "parentStudent": 1, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 2, "fields": { "parentStudent": 1, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 3, "fields": { "parentStudent": 1, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 4, "fields": { "parentStudent": 1, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 5, "fields": { "parentStudent": 2, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 6, "fields": { "parentStudent": 2, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 7, "fields": { "parentStudent": 2, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 8, "fields": { "parentStudent": 2, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 9, "fields": { "parentStudent": 3, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 10, "fields": { "parentStudent": 3, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 11, "fields": { "parentStudent": 3, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 12, "fields": { "parentStudent": 3, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 13, "fields": { "parentStudent": 4, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 14, "fields": { "parentStudent": 4, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 15, "fields": { "parentStudent": 4, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 16, "fields": { "parentStudent": 4, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 17, "fields": { "parentStudent": 5, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 18, "fields": { "parentStudent": 5, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 19, "fields": { "parentStudent": 5, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 20, "fields": { "parentStudent": 5, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 21, "fields": { "parentStudent": 6, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 22, "fields": { "parentStudent": 6, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 23, "fields": { "parentStudent": 6, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 24, "fields": { "parentStudent": 6, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 25, "fields": { "parentStudent": 7, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 26, "fields": { "parentStudent": 7, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 27, "fields": { "parentStudent": 7, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 28, "fields": { "parentStudent": 7, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 29, "fields": { "parentStudent": 8, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 30, "fields": { "parentStudent": 8, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 31, "fields": { "parentStudent": 8, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 32, "fields": { "parentStudent": 8, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 33, "fields": { "parentStudent": 9, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 34, "fields": { "parentStudent": 9, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 35, "fields": { "parentStudent": 9, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 36, "fields": { "parentStudent": 9, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 37, "fields": { "parentStudent": 10, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 38, "fields": { "parentStudent": 10, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 39, "fields": { "parentStudent": 10, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 40, "fields": { "parentStudent": 10, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 41, "fields": { "parentStudent": 11, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 42, "fields": { "parentStudent": 11, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 43, "fields": { "parentStudent": 11, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 44, "fields": { "parentStudent": 11, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 45, "fields": { "parentStudent": 12, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 46, "fields": { "parentStudent": 12, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 47, "fields": { "parentStudent": 12, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 48, "fields": { "parentStudent": 12, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 49, "fields": { "parentStudent": 13, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 50, "fields": { "parentStudent": 13, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 51, "fields": { "parentStudent": 13, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 52, "fields": { "parentStudent": 13, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 53, "fields": { "parentStudent": 14, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 54, "fields": { "parentStudent": 14, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 55, "fields": { "parentStudent": 14, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 56, "fields": { "parentStudent": 14, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 57, "fields": { "parentStudent": 15, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 58, "fields": { "parentStudent": 15, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 59, "fields": { "parentStudent": 15, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 60, "fields": { "parentStudent": 15, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 61, "fields": { "parentStudent": 16, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 62, "fields": { "parentStudent": 16, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 63, "fields": { "parentStudent": 16, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 64, "fields": { "parentStudent": 16, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 65, "fields": { "parentStudent": 17, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 66, "fields": { "parentStudent": 17, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 67, "fields": { "parentStudent": 17, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 68, "fields": { "parentStudent": 17, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 69, "fields": { "parentStudent": 18, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 70, "fields": { "parentStudent": 18, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 71, "fields": { "parentStudent": 18, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 72, "fields": { "parentStudent": 18, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+
+    { "model": "student_app.studentparametervalue", "pk": 73, "fields": { "parentStudent": 19, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 74, "fields": { "parentStudent": 19, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 75, "fields": { "parentStudent": 19, "parentStudentParameter": 3 } },
+    { "model": "student_app.studentparametervalue", "pk": 76, "fields": { "parentStudent": 19, "parentStudentParameter": 4 } },
+
+    { "model": "student_app.studentparametervalue", "pk": 77, "fields": { "parentStudent": 20, "parentStudentParameter": 1, "value": "House-wife" } },
+    { "model": "student_app.studentparametervalue", "pk": 78, "fields": { "parentStudent": 20, "parentStudentParameter": 2, "value": "'YES'" } },
+    { "model": "student_app.studentparametervalue", "pk": 79, "fields": { "parentStudent": 20, "parentStudentParameter": 3, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } },
+    { "model": "student_app.studentparametervalue", "pk": 80, "fields": { "parentStudent": 20, "parentStudentParameter": 4, "document_value": "https://korangletesting.s3.amazonaws.com/upload_student_parameter_document_to/AadharCard.jpg", "document_size": "342758" } }
+
+
+]

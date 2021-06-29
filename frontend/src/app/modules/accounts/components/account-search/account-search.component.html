@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-md-12">
+        <form class="example-form" *ngIf="!isLoading">
+            <mat-form-field
+                    class="example-full-width"
+                    floatPlaceholder="never">
+                <input type="text"
+                       placeholder="Account Name"
+                       matInput
+                       [formControl]="accountsForm"
+                       [matAutocomplete]="autoAccount">
+                <mat-autocomplete #autoAccount="matAutocomplete"
+                                  (optionSelected)="handleAccountSelection($event.option.value)"
+                                  [displayWith]="displayAccountFunction">
+                    <mat-option *ngFor="let account of filteredAccountList | async" [value]="account">
+                        {{account.title}}&nbsp;A/c
+                    </mat-option>
+                    <!-- <mat-option *ngFor="let group of groupsList" [value]="group">
+                        {{group.title}}
+                    </mat-option> -->
+                </mat-autocomplete>
+            </mat-form-field>
+            
+        </form>
+    </div>
+    
+</div>

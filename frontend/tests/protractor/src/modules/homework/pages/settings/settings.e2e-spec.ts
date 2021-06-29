@@ -44,7 +44,7 @@ describe('Homework -> Settings', () => {
         });
 
         await (await containsFirst('button', 'Update')).click();
-        
+
         await reClickPage('Settings');
 
 

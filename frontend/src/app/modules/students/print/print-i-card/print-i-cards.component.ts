@@ -8,7 +8,6 @@ import { PrintService } from '../../../../print/print-service';
     styleUrls: ['./print-i-cards.component.css'],
 })
 export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked {
-
     user: any;
 
     viewChecked = true;
@@ -17,23 +16,21 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
 
     showClass = true;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
-
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
 
     ngOnInit(): void {
-        const {user, value}  = this.printService.getData();
+        const { user, value } = this.printService.getData();
         this.user = user;
         this.studentProfileList = value.studentProfileList;
         this.viewChecked = false;
         this.showClass = value.showClass;
-        
     }
 
     ngAfterViewChecked(): void {
         if (this.viewChecked === false) {
             this.viewChecked = true;
             this.printService.print();
-            
+
             this.studentProfileList = null;
             this.cdRef.detectChanges();
         }
@@ -42,5 +39,4 @@ export class PrintICardsComponent implements OnInit, OnDestroy, AfterViewChecked
     ngOnDestroy(): void {
         this.studentProfileList = null;
     }
-
 }

@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import {UpdateMarksComponent} from "./update-marks.component";
+import { UpdateMarksComponent } from './update-marks.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: UpdateMarksComponent ,
-    }
+        component: UpdateMarksComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class UpdateMarksRoutingModule { }
+export class UpdateMarksRoutingModule {}

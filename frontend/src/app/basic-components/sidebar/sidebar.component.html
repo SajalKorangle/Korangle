@@ -1,283 +1,271 @@
 <div class="logo">
-    <span style="margin-left: 10px;">Hi {{user.first_name}}!</span>
-    <br/>
+    <span style="margin-left: 10px">Hi {{ user.first_name }}!</span>
+    <br />
     <a class="simple-text" disabled="true" *ngIf="user.schoolList.length > 0">
         <div class="logo-img" *ngIf="user.activeSchool">
-            <img src="{{user.activeSchool.profileImage}}" style="border-radius: 2px;"/>
+            <img src="{{ user.activeSchool.profileImage }}" style="border-radius: 2px" />
         </div>
 
         <!-- Multiple School List -->
-        <ng-container *ngIf="user.schoolList.length>1">
-            <select [(ngModel)]="user.activeSchool"
-                    (ngModelChange)="handleSchoolChange()"
-                    style="padding: 0px; border: none; background-color: transparent; margin-bottom: 0px !important;">
-                <option *ngFor="let school of user.schoolList;"
-                        [ngValue]="school">
-                    {{school.name}}
+        <ng-container *ngIf="user.schoolList.length > 1">
+            <select
+                [(ngModel)]="user.activeSchool"
+                (ngModelChange)="handleSchoolChange()"
+                style="padding: 0px; border: none; background-color: transparent; margin-bottom: 0px !important"
+            >
+                <option *ngFor="let school of user.schoolList" [ngValue]="school">
+                    {{ school.name }}
                 </option>
             </select>
         </ng-container>
 
         <!-- Single School -->
-        <ng-container *ngIf="user.schoolList.length===1">
-            {{user.activeSchool.name}}
+        <ng-container *ngIf="user.schoolList.length === 1">
+            {{ user.activeSchool.name }}
         </ng-container>
 
-        <div [class.sessionMargin68]="user.schoolList.length>1"
-              [class.sessionMargin60]="user.schoolList.length==1"
-              style="font-size: 14px; padding: 0px !important; margin-bottom: 5px !important; line-height: normal !important;">
-            <i><b>KID: {{user.activeSchool.dbId}}</b></i>
+        <div
+            [class.sessionMargin68]="user.schoolList.length > 1"
+            [class.sessionMargin60]="user.schoolList.length == 1"
+            style="font-size: 14px; padding: 0px !important; margin-bottom: 5px !important; line-height: normal !important"
+        >
+            <i
+                ><b>KID: {{ user.activeSchool.dbId }}</b></i
+            >
         </div>
 
         <!-- Role -->
         <ng-container *ngIf="user.activeSchool">
             <ng-container *ngIf="user.activeSchool.studentList.length > 0 && user.activeSchool.moduleList.length > 0">
-
-                <select [(ngModel)]="user.activeSchool.role"
-                        (ngModelChange)="handleRoleChange()"
-                        [class.sessionMargin60]="user.schoolList.length>1"
-                        [class.sessionMargin52]="user.schoolList.length==1"
-                        style="padding: 0px; border: none; background-color: transparent;">
+                <select
+                    [(ngModel)]="user.activeSchool.role"
+                    (ngModelChange)="handleRoleChange()"
+                    [class.sessionMargin60]="user.schoolList.length > 1"
+                    [class.sessionMargin52]="user.schoolList.length == 1"
+                    style="padding: 0px; border: none; background-color: transparent"
+                >
                     <option value="Employee">Employee</option>
                     <option value="Parent">Parent</option>
                 </select>
 
-                <br/>
-
+                <br />
             </ng-container>
         </ng-container>
 
-        <ng-container *ngIf="checkChangeSession()">
-
-            <select [class.sessionMargin61]="user.schoolList.length>1"
-                    [class.sessionMargin60]="user.schoolList.length==1"
-                    [(ngModel)]="user.activeSchool.currentSessionDbId"
-                    (ngModelChange)="handleSessionChange()"
-                    style="padding: 0px; border: none; background-color: transparent;">
-                <option *ngFor="let session of session_list;"
-                        [ngValue]="session.id">
-                    {{session.name.slice(8)}}
+        <ng-container *ngIf="user.checkChangeSession()">
+            <select
+                [class.sessionMargin61]="user.schoolList.length > 1"
+                [class.sessionMargin60]="user.schoolList.length == 1"
+                [(ngModel)]="user.activeSchool.currentSessionDbId"
+                (ngModelChange)="handleSessionChange()"
+                style="padding: 0px; border: none; background-color: transparent"
+            >
+                <option *ngFor="let session of session_list" [ngValue]="session.id">
+                    {{ session.name.slice(8) }}
                 </option>
             </select>
-
-
         </ng-container>
 
         <!-- Current Session Name -->
-        <div  *ngIf="!checkChangeSession()"
-              [class.sessionMargin68]="user.schoolList.length>1"
-              [class.sessionMargin60]="user.schoolList.length==1">
+        <div
+            *ngIf="!user.checkChangeSession()"
+            [class.sessionMargin68]="user.schoolList.length > 1"
+            [class.sessionMargin60]="user.schoolList.length == 1"
+        >
             <!-- ToDo: Handle more generecally in future -->
-            <span *ngIf="user.activeSchool.currentSessionDbId==1">2017-18</span>
-            <span *ngIf="user.activeSchool.currentSessionDbId==2">2018-19</span>
-            <span *ngIf="user.activeSchool.currentSessionDbId==3">2019-20</span>
-            <span *ngIf="user.activeSchool.currentSessionDbId==4">2020-21</span>
-            <span *ngIf="user.activeSchool.currentSessionDbId==5">2021-22</span>
+            <span *ngIf="user.activeSchool.currentSessionDbId == 1">2017-18</span>
+            <span *ngIf="user.activeSchool.currentSessionDbId == 2">2018-19</span>
+            <span *ngIf="user.activeSchool.currentSessionDbId == 3">2019-20</span>
+            <span *ngIf="user.activeSchool.currentSessionDbId == 4">2020-21</span>
+            <span *ngIf="user.activeSchool.currentSessionDbId == 5">2021-22</span>
         </div>
-
     </a>
     <div>
-
         <!-- No School -->
-        <ng-container *ngIf="user.schoolList.length===0">
-            <h4 style="margin-left: 10px;"><b>No School</b></h4>
+        <ng-container *ngIf="user.schoolList.length === 0">
+            <h4 style="margin-left: 10px"><b>No School</b></h4>
         </ng-container>
-
     </div>
 </div>
 
 <div class="sidebar-wrapper">
-
     <div class="nav-container">
-
-        <ul class="nav" *ngIf="user.activeSchool">
-
+        <ul class="nav" *ngIf="user.section">
             <!-- Notification -->
-            <li [class.active]="notification.path === user.section.route"
-                [attr.data-color]='user.activeSchool.primaryThemeColor'
-                style="border-bottom: 0.1px solid lightgrey;">
-                <a (click)="notification.showTaskList = !notification.showTaskList;">
-                    <i class="material-icons">{{notification.icon}}</i>
+            <li
+                [class.active]="user.notification.path === user.section.route"
+                [attr.data-color]="user.activeSchool ? user.activeSchool.primaryThemeColor : 'green'"
+                style="border-bottom: 0.1px solid lightgrey"
+            >
+                <a (click)="user.notification.showTaskList = !user.notification.showTaskList">
+                    <i class="material-icons">{{ user.notification.icon }}</i>
                     <p>
-                        {{notification.title}}
-                        <i *ngIf="!notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="notification.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        {{ user.notification.title }}
+                        <i *ngIf="!user.notification.showTaskList" class="material-icons" style="float: right">keyboard_arrow_down</i>
+                        <i *ngIf="user.notification.showTaskList" class="material-icons" style="float: right">keyboard_arrow_up</i>
                     </p>
                 </a>
-                <ng-container *ngIf="notification.showTaskList">
-                    <div *ngFor="let task of notification.taskList"
-                         [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                         [class.active]="notification.path===user.section.route && task.title===user.section.subTitle"
-                         class="subsectionDiv"
-                         (click)="changePage(task, notification);">
+                <ng-container *ngIf="user.notification.showTaskList">
+                    <div
+                        *ngFor="let task of user.notification.taskList"
+                        [attr.data-color]="user.activeSchool ? user.activeSchool.secondaryThemeColor : 'warning'"
+                        [class.active]="user.notification.path === user.section.route && task.title === user.section.subTitle"
+                        class="subsectionDiv"
+                        (click)="changePage(task, user.notification)"
+                    >
                         <i class="material-icons">remove</i>
-                        <p>{{task.title}}</p>
+                        <p>{{ task.title }}</p>
                     </div>
                 </ng-container>
             </li>
 
-            <!-- Parent -->
-            <ng-container *ngIf="user.activeSchool.role==='Parent'">
+            <ng-container *ngIf="user.activeSchool">
+                <!-- Parent -->
+                <ng-container *ngIf="user.activeSchool.role === 'Parent'">
+                    <!-- Multiple Students -->
+                    <ng-container *ngIf="user.activeSchool.studentList.length > 1">
+                        <ng-container *ngFor="let student of user.activeSchool.studentList">
+                            <li
+                                [class.active]="student.name === user.section.title"
+                                [attr.data-color]="user.activeSchool.primaryThemeColor"
+                                style="border-bottom: 0.1px solid lightgrey"
+                            >
+                                <a (click)="student.showTaskList = !student.showTaskList">
+                                    <i *ngIf="!student.profileImage" class="material-icons">account_circle</i>
+                                    <i
+                                        ><img
+                                            *ngIf="student.profileImage"
+                                            style="width: 35px; height: 35px"
+                                            src="{{ student.profileImage }}"
+                                    /></i>
+                                    <p>
+                                        {{ getFirstName(student.name) | titlecase }}
+                                        <i *ngIf="!student.showTaskList" class="material-icons" style="float: right">keyboard_arrow_down</i>
+                                        <i *ngIf="student.showTaskList" class="material-icons" style="float: right">keyboard_arrow_up</i>
+                                    </p>
+                                </a>
+                                <ng-container *ngIf="student.showTaskList">
+                                    <div
+                                        *ngFor="let task of student.taskList"
+                                        [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                                        [class.active]="student.name === user.section.title && task.title === user.section.subTitle"
+                                        class="subsectionDiv"
+                                        (click)="changePage(task, student)"
+                                    >
+                                        <i class="material-icons">remove</i>
+                                        <p>{{ task.title | titlecase }}</p>
+                                    </div>
+                                </ng-container>
+                            </li>
+                        </ng-container>
+                    </ng-container>
 
-                <!-- Multiple Students -->
-                <ng-container *ngIf="user.activeSchool.studentList.length > 1">
-                    <ng-container  *ngFor="let student of user.activeSchool.studentList">
-                        <li [class.active]="student.name === user.section.title"
-                            [attr.data-color]='user.activeSchool.primaryThemeColor'
-                            style="border-bottom: 0.1px solid lightgrey;">
-                            <a (click)="student.showTaskList = !student.showTaskList;">
-                                <i *ngIf="!student.profileImage" class="material-icons">account_circle</i>
-                                <i><img *ngIf="student.profileImage"
-                                     style="width: 35px; height: 35px;"
-                                     src="{{student.profileImage}}"></i>
+                    <!-- Single Student -->
+                    <ng-container *ngIf="user.activeSchool.studentList.length === 1">
+                        <ng-container *ngFor="let task of user.activeSchool.studentList[0].taskList">
+                            <li
+                                [class.active]="
+                                    user.activeSchool.studentList[0].name === user.section.title && task.title === user.section.subTitle
+                                "
+                                [attr.data-color]="user.activeSchool.primaryThemeColor"
+                                style="border-bottom: 0.1px solid lightgrey"
+                            >
+                                <a (click)="changePage(task, user.activeSchool.studentList[0])">
+                                    <i class="material-icons">{{ task.icon }}</i>
+                                    <p>
+                                        {{ task.title | titlecase }}
+                                    </p>
+                                </a>
+                            </li>
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- Parent Modules (Fees And Event Gallery) -->
+                    <ng-container *ngFor="let module of user.activeSchool.parentModuleList">
+                        <li
+                            [class.active]="module.name === user.section.title"
+                            [attr.data-color]="user.activeSchool.primaryThemeColor"
+                            style="border-bottom: 0.1px solid lightgrey"
+                        >
+                            <a (click)="changePage(module.taskList[0], module)">
+                                <i class="material-icons">{{ module.taskList[0].icon }}</i>
                                 <p>
-                                    {{getFirstName(student.name) | titlecase}}
-                                    <i *ngIf="!student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                                    <i *ngIf="student.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                                    {{ module.taskList[0].title | titlecase }}
                                 </p>
                             </a>
-                            <ng-container *ngIf="student.showTaskList">
-                                <div *ngFor="let task of student.taskList"
-                                     [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                                     [class.active]="student.name===user.section.title && task.title===user.section.subTitle"
-                                     class="subsectionDiv"
-                                     (click)="changePage(task, student);">
+                        </li>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Employee -->
+                <ng-container *ngIf="user.section && user.activeSchool.role === 'Employee'">
+                    <ng-container *ngFor="let module of user.activeSchool.moduleList">
+                        <li
+                            [class.active]="module.path === user.section.route"
+                            [attr.data-color]="user.activeSchool.primaryThemeColor"
+                            style="border-bottom: 0.1px solid lightgrey"
+                        >
+                            <a [attr.id]="module.path" (click)="module.showTaskList = !module.showTaskList">
+                                <i class="material-icons">{{ module.icon }}</i>
+                                <p>
+                                    {{ module.title }}
+                                    <i *ngIf="!module.showTaskList" class="material-icons" style="float: right">keyboard_arrow_down</i>
+                                    <i *ngIf="module.showTaskList" class="material-icons" style="float: right">keyboard_arrow_up</i>
+                                </p>
+                            </a>
+                            <ng-container *ngIf="module.showTaskList">
+                                <div
+                                    *ngFor="let task of module.taskList"
+                                    [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                                    [class.active]="module.path === user.section.route && task.title === user.section.subTitle"
+                                    class="subsectionDiv"
+                                    (click)="changePage(task, module)"
+                                    [attr.id]="module.path + '-' + task.path"
+                                >
                                     <i class="material-icons">remove</i>
-                                    <p>{{task.title | titlecase}}</p>
+                                    <p>{{ task.title }}</p>
                                 </div>
                             </ng-container>
                         </li>
                     </ng-container>
                 </ng-container>
-
-                <!-- Single Student -->
-                <ng-container *ngIf="user.activeSchool.studentList.length === 1">
-                    <ng-container *ngFor="let task of user.activeSchool.studentList[0].taskList">
-                        <li [class.active]="user.activeSchool.studentList[0].name === user.section.title && task.title===user.section.subTitle"
-                            [attr.data-color]='user.activeSchool.primaryThemeColor'
-                            style="border-bottom: 0.1px solid lightgrey;">
-                            <a (click)="changePage(task, user.activeSchool.studentList[0]);">
-                                <i class="material-icons">{{task.icon}}</i>
-                                <p>
-                                    {{task.title | titlecase}}
-                                </p>
-                            </a>
-                        </li>
-                    </ng-container>
-                </ng-container>
-
-                <!-- Parent Module (Fees) -->
-                <li [class.active]="user.activeSchool.parentModuleList[0].name === user.section.title"
-                    [attr.data-color]='user.activeSchool.primaryThemeColor'
-                    style="border-bottom: 0.1px solid lightgrey;">
-                    <a (click)="changePage(user.activeSchool.parentModuleList[0].taskList[0], user.activeSchool.parentModuleList[0]);">
-                        <i class="material-icons">{{user.activeSchool.parentModuleList[0].taskList[0].icon}}</i>
-                        <p>
-                            {{user.activeSchool.parentModuleList[0].taskList[0].title | titlecase}}
-                        </p>
-                    </a>
-                </li>
-
-            </ng-container>
-
-            <!-- Employee -->
-            <ng-container *ngIf="user.section && user.activeSchool.role==='Employee'">
-                <ng-container *ngFor="let module of user.activeSchool.moduleList">
-                    <li [class.active]="module.path === user.section.route"
-                        [attr.data-color]='user.activeSchool.primaryThemeColor'
-                        style="border-bottom: 0.1px solid lightgrey;">
-                        <a [attr.id]="module.path" (click)="module.showTaskList = !module.showTaskList;">
-                            <i class="material-icons">{{module.icon}}</i>
-                            <p>
-                                {{module.title}}
-                                <i *ngIf="!module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                                <i *ngIf="module.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
-                            </p>
-                        </a>
-                        <ng-container *ngIf="module.showTaskList">
-                            <div *ngFor="let task of module.taskList"
-                                 [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                                 [class.active]="module.path===user.section.route && task.title===user.section.subTitle"
-                                 class="subsectionDiv"
-                                 (click)="changePage(task, module);"
-                                 [attr.id]="module.path+'-'+task.path">
-                                <i class="material-icons">remove</i>
-                                <p>{{task.title}}</p>
-                            </div>
-                        </ng-container>
-                    </li>
-                </ng-container>
             </ng-container>
 
             <!-- User Settings -->
-            <li [class.active]="settings.path === user.section.route"
-                [attr.data-color]='user.activeSchool.primaryThemeColor'
-                style="border-bottom: 0.1px solid lightgrey;">
-                <a (click)="settings.showTaskList = !settings.showTaskList;">
-                    <i class="material-icons">{{settings.icon}}</i>
+            <li
+                [class.active]="user.settings.path === user.section.route"
+                [attr.data-color]="user.activeSchool ? user.activeSchool.primaryThemeColor : 'green'"
+                style="border-bottom: 0.1px solid lightgrey"
+            >
+                <a (click)="user.settings.showTaskList = !user.settings.showTaskList">
+                    <i class="material-icons">{{ user.settings.icon }}</i>
                     <p [attr.id]="'settings'">
-                        {{settings.title}}
-                        <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
+                        {{ user.settings.title }}
+                        <i *ngIf="!user.settings.showTaskList" class="material-icons" style="float: right">keyboard_arrow_down</i>
+                        <i *ngIf="user.settings.showTaskList" class="material-icons" style="float: right">keyboard_arrow_up</i>
                     </p>
                 </a>
-                <ng-container *ngIf="settings.showTaskList">
-                    <div *ngFor="let task of settings.taskList"
-                         [attr.data-color]="user.activeSchool.secondaryThemeColor"
-                         [class.active]="settings.path===user.section.route && task.title===user.section.subTitle"
-                         class="subsectionDiv"
-                         (click)="changePage(task, settings);">
+                <ng-container *ngIf="user.settings.showTaskList">
+                    <div
+                        *ngFor="let task of user.settings.taskList"
+                        [attr.data-color]="user.activeSchool ? user.activeSchool.secondaryThemeColor : 'warning'"
+                        [class.active]="user.settings.path === user.section.route && task.title === user.section.subTitle"
+                        class="subsectionDiv"
+                        (click)="changePage(task, user.settings)"
+                    >
                         <i class="material-icons">remove</i>
-                        <p [attr.id]="'settings-'+task.path">{{task.title}}</p>
+                        <p [attr.id]="'settings-' + task.path">{{ task.title }}</p>
                     </div>
                 </ng-container>
             </li>
 
             <!-- Logout -->
-            <li style="margin-bottom: 80px;">
-                <a (click)="logout()" id="Logout">
-                    <i class="material-icons">exit_to_app</i>
-                    <p>Log out</p>
-                </a>
-            </li>
-
-        </ul>
-
-        <ul class="nav" *ngIf="!user.activeSchool && user.section">
-
-            <!--User Settings-->
-            <li [class.active]="settings.path === user.section.route"
-                [attr.data-color]="green"
-                    style="border-bottom: 0.1px solid lightgrey;">
-                <a (click)="settings.showTaskList = !settings.showTaskList;">
-                    <i class="material-icons">{{settings.icon}}</i>
-                    <p [attr.id]="'settings'">
-                        {{settings.title}}
-                        <i *ngIf="!settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_down</i>
-                        <i *ngIf="settings.showTaskList" class="material-icons" style="float: right;">keyboard_arrow_up</i>
-                    </p>
-                </a>
-                <ng-container *ngIf="settings.showTaskList">
-                    <div *ngFor="let task of settings.taskList"
-                         [attr.data-color]="'warning'"
-                         [class.active]="settings.path===user.section.route && task.title===user.section.subTitle"
-                         class="subsectionDiv"
-                         (click)="changePage(task, settings);">
-                        <i class="material-icons">remove</i>
-                        <p [attr.id]="'settings-'+task.path">{{task.title}}</p>
-                    </div>
-                </ng-container>
-            </li>
-
-            <!-- Logout -->
-            <li style="margin-bottom: 80px;">
+            <li style="margin-bottom: 80px">
                 <a (click)="logout()" id="Logout">
                     <i class="material-icons">exit_to_app</i>
                     <p>Log out</p>
                 </a>
             </li>
         </ul>
-
     </div>
-
 </div>

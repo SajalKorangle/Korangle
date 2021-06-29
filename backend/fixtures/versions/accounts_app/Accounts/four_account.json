@@ -1,0 +1,6 @@
+[
+	{ "model": "accounts_app.accounts", "pk": 1, "fields": {"parentSchool": 1, "accountType": "ACCOUNT","title":"expense"} },
+	{ "model": "accounts_app.accounts", "pk": 2, "fields": {"parentSchool": 1, "accountType": "ACCOUNT","title":"income"} },
+    { "model": "accounts_app.accounts", "pk": 3, "fields": {"parentSchool": 1, "accountType": "ACCOUNT","title":"assests1"} },
+    { "model": "accounts_app.accounts", "pk": 4, "fields": {"parentSchool": 1, "accountType": "GROUP","title":"Liability SubGroup"} }
+]

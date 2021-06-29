@@ -1,12 +1,10 @@
-import {Injectable} from '@angular/core';
-
+import { Injectable } from '@angular/core';
 
 import { CommonServiceRequirements } from '../../common-service-requirements';
 import { DataStorage } from '../../../classes/data-storage';
 
 @Injectable()
 export class SmsOldService extends CommonServiceRequirements {
-
     // SMS
     sendSMS(data: any, token: any): Promise<any> {
         const url = '/sms/send-sms';
@@ -14,8 +12,14 @@ export class SmsOldService extends CommonServiceRequirements {
     }
 
     getSMSList(data: any, token: any): Promise<any> {
-        const url = '/sms/school/' + data['parentSchool'] + '/sms'
-            + '?startDateTime=' + data['startDateTime'] + '&endDateTime=' + data['endDateTime'];
+        const url =
+            '/sms/school/' +
+            data['parentSchool'] +
+            '/sms' +
+            '?startDateTime=' +
+            data['startDateTime'] +
+            '&endDateTime=' +
+            data['endDateTime'];
         return super.getData(token, url);
     }
 
@@ -33,8 +37,7 @@ export class SmsOldService extends CommonServiceRequirements {
 
     // Msg Club Delivery Report
     getMsgClubDeliveryReport(data: any): Promise<any> {
-        const url = '/sms/msg-club-delivery-report?requestId='+data['requestId'];
+        const url = '/sms/msg-club-delivery-report?requestId=' + data['requestId'];
         return super.getData(DataStorage.getInstance().getUser().jwt, url);
     }
-
 }

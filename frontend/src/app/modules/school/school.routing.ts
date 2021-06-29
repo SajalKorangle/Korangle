@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SchoolComponent } from './school.component';
@@ -8,12 +8,12 @@ const routes: Routes = [
     {
         path: 'update_profile',
         loadChildren: 'app/modules/school/pages/update-profile/update-profile.module#UpdateProfileModule',
-        data: {moduleName: 'school'},
+        data: { moduleName: 'school' },
     },
     {
         path: 'change_session',
         loadChildren: 'app/modules/school/pages/change-session/change-session.module#ChangeSessionModule',
-        data: {moduleName: 'school'},
+        data: { moduleName: 'school' },
     },
     {
         path: '',
@@ -22,13 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-
-export class SchoolRoutingModule { }
+export class SchoolRoutingModule {}

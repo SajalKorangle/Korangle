@@ -3,25 +3,23 @@ import { Component, Input, OnInit } from '@angular/core';
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
 import { ClassService } from '../../../../services/modules/class/class.service';
-import {CommonFunctions} from "../../../../classes/common-functions";
-import {SubjectService} from "../../../../services/modules/subject/subject.service";
-import {ExaminationService} from "../../../../services/modules/examination/examination.service";
-import {StudentService} from "../../../../services/modules/student/student.service";
-import {StudentSection} from "../../../../services/modules/student/models/student-section";
-import {FeeService} from "../../../../services/modules/fees/fee.service";
-import {INSTALLMENT_LIST} from "../../../fees/classes/constants";
-import {DataStorage} from "../../../../classes/data-storage";
-import {SchoolService} from "./../../../../services/modules/school/school.service"
-
+import { CommonFunctions } from '../../../../classes/common-functions';
+import { SubjectService } from '../../../../services/modules/subject/subject.service';
+import { ExaminationService } from '../../../../services/modules/examination/examination.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
+import { StudentSection } from '../../../../services/modules/student/models/student-section';
+import { FeeService } from '../../../../services/modules/fees/fee.service';
+import { INSTALLMENT_LIST } from '../../../fees/classes/constants';
+import { DataStorage } from '../../../../classes/data-storage';
+import { SchoolService } from './../../../../services/modules/school/school.service';
+import { TCService } from './../../../../services/modules/tc/tc.service';
 @Component({
-  selector: 'promote-student',
-  templateUrl: './promote-student.component.html',
-  styleUrls: ['./promote-student.component.css'],
-    providers: [ SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService ],
+    selector: 'promote-student',
+    templateUrl: './promote-student.component.html',
+    styleUrls: ['./promote-student.component.css'],
+    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, TCService],
 })
-
 export class PromoteStudentComponent implements OnInit {
-
     sessionList = [];
     installmentList = INSTALLMENT_LIST;
 
@@ -41,7 +39,6 @@ export class PromoteStudentComponent implements OnInit {
     classFilterFeeList = [];
     busStopFilterFeeList = [];
 
-
     fromSelectedClass: any;
     fromSelectedSection: any;
 
@@ -56,26 +53,30 @@ export class PromoteStudentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor (public schoolService : SchoolService,
-                 public studentService: StudentService,
-                 public classService: ClassService,
-                 public subjectService: SubjectService,
-                 public feeService: FeeService,
-                 public examinationService: ExaminationService) { }
+    constructor(
+        public schoolService: SchoolService,
+        public studentService: StudentService,
+        public classService: ClassService,
+        public subjectService: SubjectService,
+        public feeService: FeeService,
+        public examinationService: ExaminationService,
+        public tcService: TCService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        if (this.isMobileMenu()) { return; }
+        if (this.isMobileMenu()) {
+            return;
+        }
 
         this.serviceAdapter = new PromoteStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
     }
 
     getSessionName(sessionId: number): any {
-        return this.sessionList.find(session => {
+        return this.sessionList.find((session) => {
             return session.id == sessionId;
         }).name;
     }
@@ -97,32 +98,34 @@ export class PromoteStudentComponent implements OnInit {
 
     handleToSelectedClassChange(value: any): void {
         this.toSelectedClass = value;
-        this.newPromotedList.forEach(studentSection => {
+        this.newPromotedList.forEach((studentSection) => {
             studentSection.parentClass = this.toSelectedClass.id;
         });
     }
 
     handleToSelectedSectionChange(value: any): void {
         this.toSelectedSection = value;
-        this.newPromotedList.forEach(studentSection => {
+        this.newPromotedList.forEach((studentSection) => {
             studentSection.parentDivision = this.toSelectedSection.id;
         });
     }
 
     getToClassList(): any {
-        return this.classList.filter(classs => {
-            return classs.orderNumber == this.fromSelectedClass.orderNumber
-                || (classs.orderNumber == this.fromSelectedClass.orderNumber-1)
+        return this.classList.filter((classs) => {
+            return classs.orderNumber == this.fromSelectedClass.orderNumber || classs.orderNumber == this.fromSelectedClass.orderNumber - 1;
         });
     }
 
     selectAllStudentsFromList(): void {
-        this.unPromotedStudentList.filter(studentSection => {
-            return studentSection.parentClass == this.fromSelectedClass.id
-                && studentSection.parentDivision == this.fromSelectedSection.id;
-        }).forEach(studentSection => {
-            this.addToNewPromotionList(studentSection);
-        });
+        this.unPromotedStudentList
+            .filter((studentSection) => {
+                return (
+                    studentSection.parentClass == this.fromSelectedClass.id && studentSection.parentDivision == this.fromSelectedSection.id
+                );
+            })
+            .forEach((studentSection) => {
+                this.addToNewPromotionList(studentSection);
+            });
     }
 
     clearAllStudentsFromList(): void {
@@ -130,16 +133,14 @@ export class PromoteStudentComponent implements OnInit {
     }
 
     getFilteredStudentSectionListOne(): any {
-        return this.studentSectionListOne.filter(studentSection => {
-            return studentSection.parentClass == this.fromSelectedClass.id
-                && studentSection.parentDivision == this.fromSelectedSection.id;
+        return this.studentSectionListOne.filter((studentSection) => {
+            return studentSection.parentClass == this.fromSelectedClass.id && studentSection.parentDivision == this.fromSelectedSection.id;
         });
     }
 
     getFilteredStudentSectionListTwo(): any {
-        return this.studentSectionListTwo.filter(studentSection => {
-            return studentSection.parentClass == this.toSelectedClass.id
-                && studentSection.parentDivision == this.toSelectedSection.id;
+        return this.studentSectionListTwo.filter((studentSection) => {
+            return studentSection.parentClass == this.toSelectedClass.id && studentSection.parentDivision == this.toSelectedSection.id;
         });
     }
 
@@ -156,32 +157,35 @@ export class PromoteStudentComponent implements OnInit {
         tempObject.parentClass = this.toSelectedClass.id;
         tempObject.parentDivision = this.toSelectedSection.id;
         tempObject.parentStudent = studentSection.parentStudent;
-        tempObject.parentSession = this.user.activeSchool.currentSessionDbId+1;
+        tempObject.parentSession = this.user.activeSchool.currentSessionDbId + 1;
         this.newPromotedList.push(tempObject);
     }
 
     deleteFromNewPromotionList(studentSection: any): void {
-        this.newPromotedList = this.newPromotedList.filter(item => {
+        this.newPromotedList = this.newPromotedList.filter((item) => {
             return item.parentStudent != studentSection.parentStudent;
         });
     }
 
     inUnPromotedStudentList(studentSection: any): boolean {
-        return this.unPromotedStudentList.find(item => {
-            return studentSection.parentStudent == item.parentStudent;
-        }) != undefined;
+        return (
+            this.unPromotedStudentList.find((item) => {
+                return studentSection.parentStudent == item.parentStudent;
+            }) != undefined
+        );
     }
 
     inNewPromotionList(studentSection: any): boolean {
-        return this.newPromotedList.find(item => {
-            return studentSection.parentStudent == item.parentStudent;
-        }) != undefined;
+        return (
+            this.newPromotedList.find((item) => {
+                return studentSection.parentStudent == item.parentStudent;
+            }) != undefined
+        );
     }
 
     getStudent(studentId: any): any {
-        return this.studentList.find(student => {
+        return this.studentList.find((student) => {
             return student.id == studentId;
         });
     }
-
 }

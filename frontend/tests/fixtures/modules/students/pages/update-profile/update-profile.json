@@ -18,5 +18,10 @@
     "app": "student_app",
     "model": "StudentSection",
     "file": "sixty_eight_students_section.json"
-  }
+  },
+  {
+    "app": "student_app",
+    "model": "StudentParameter",
+    "file": "four_parameter.json"
+	}
 ]

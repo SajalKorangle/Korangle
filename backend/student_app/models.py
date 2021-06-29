@@ -21,7 +21,10 @@ from django.utils.timezone import now
 
 def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
-    return 'students/%s/profile_image/%s%s' % (instance.id, now().timestamp(), filename_ext.lower())
+    return 'students/profile_image/%s%s' % (now().timestamp(), filename_ext.lower())
+
+def upload_document_to(instance,filename):
+    return 'student_app/StudentParameterValue/document_value/%s_%s' % (now().timestamp(),filename)
 
 
 class TransferCertificate(models.Model):
@@ -78,7 +81,7 @@ class Student(models.Model):
     )
     newReligionField = models.CharField(max_length=20, choices=RELIGION, null=True)
 
-    fatherOccupation = models.TextField(null=True)
+    fatherOccupation = models.TextField(null=True,blank=True)
     address = models.TextField(null=True, blank=True)
     familySSMID = models.IntegerField(null=True)
     childSSMID = models.IntegerField(null=True)
@@ -101,10 +104,12 @@ class Student(models.Model):
     rte = models.CharField(max_length=10, choices=RTE, null=True)
 
     admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
+    parentAdmissionClass = models.ForeignKey(Class, blank=True, null=True, on_delete=models.SET_NULL)
     dateOfAdmission = models.DateField(null=True, verbose_name='dateOfAdmission')
 
     parentTransferCertificate = \
         models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate')
+    
 
     def __str__(self):
         """A string representation of the model."""
@@ -167,6 +172,7 @@ class StudentParameter(models.Model):
     PARAMETER_TYPE = (
         ( 'TEXT', 'TEXT' ),
         ( 'FILTER', 'FILTER' ),
+        ( 'DOCUMENT','DOCUMENT')
     )
     parameterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
 
@@ -181,7 +187,9 @@ class StudentParameterValue(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
-    value = models.TextField(null=True)
+    value = models.TextField(null=True,blank=True)
+    document_value = models.FileField(upload_to=upload_document_to, blank=True, null=True)
+    document_size = models.TextField(null=True,blank=True)
 
     class Meta:
         db_table = 'student_parameter_value'

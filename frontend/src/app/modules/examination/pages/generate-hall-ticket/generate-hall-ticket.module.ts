@@ -1,22 +1,15 @@
 import { NgModule } from '@angular/core';
 
-import {GenerateHallTicketRoutingModule} from './generate-hall-ticket.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {GenerateHallTicketComponent} from "./generate-hall-ticket.component";
-
+import { GenerateHallTicketRoutingModule } from './generate-hall-ticket.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { GenerateHallTicketComponent } from './generate-hall-ticket.component';
 
 @NgModule({
-    declarations: [
-        GenerateHallTicketComponent
-    ],
+    declarations: [GenerateHallTicketComponent],
 
-    imports: [
-        GenerateHallTicketRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [GenerateHallTicketRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [GenerateHallTicketComponent]
+    bootstrap: [GenerateHallTicketComponent],
 })
-export class GenerateHallTicketModule { }
+export class GenerateHallTicketModule {}

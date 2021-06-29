@@ -1,23 +1,21 @@
 import { NgModule } from '@angular/core';
 
-import { AssignTaskComponent } from "./assign-task.component";
+import { AssignTaskComponent } from './assign-task.component';
 
-import {AssignTaskRoutingModule } from './assign-task.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-
-
+import { AssignTaskRoutingModule } from './assign-task.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { InPagePermissionDialogComponent } from './../../component/in-page-permission-dialog/in-page-permission-dialog.component';
+import { LocalComponentsModule } from '@modules/employee/component/local-components.module';
 @NgModule({
-    declarations: [
-        AssignTaskComponent
-    ],
-
+    declarations: [AssignTaskComponent],
     imports: [
-        AssignTaskRoutingModule ,
+        AssignTaskRoutingModule,
         ComponentsModule,
+        LocalComponentsModule
     ],
-    exports: [
-    ],
+    entryComponents: [InPagePermissionDialogComponent],
+    exports: [],
     providers: [],
-    bootstrap: [AssignTaskComponent]
+    bootstrap: [AssignTaskComponent],
 })
-export class AssignTaskModule { }
+export class AssignTaskModule {}

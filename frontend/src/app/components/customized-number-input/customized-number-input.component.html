@@ -1,11 +1,14 @@
-<mat-form-field style="width: 100%;">
+<mat-form-field [style.width.%]="width">
     <mat-label>
-        {{placeHolder}}
+        {{ placeHolder }}
     </mat-label>
-    <input matInput
-           #customizedInput
-           type="number"
-           [ngModel]="inputValue"
-           (blur)="onBlur($event)"
-           (ngModelChange)="handleChange($event, customizedInput)">
+    <input
+        matInput
+        #customizedInput
+        type="number"
+        [ngModel]="inputValue"
+        (blur)="onBlur($event)"
+        [disabled]="disabled"
+        (ngModelChange)="handleChange($event, customizedInput)"
+    />
 </mat-form-field>

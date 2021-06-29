@@ -1,429 +1,495 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
-        <div class="row"
-             style="margin-top: 10px; margin-bottom: 10px;">
+        <div class="row" style="margin-top: 10px; margin-bottom: 10px">
             <div class="col-xs-12">
-                <mat-checkbox [(ngModel)]="newReportCardMapping.autoAttendance">Do you want to get attendance data from software?</mat-checkbox>
+                <mat-checkbox [(ngModel)]="newReportCardMapping.autoAttendance"
+                    >Do you want to get attendance data from software?</mat-checkbox
+                >
             </div>
         </div>
 
-        <div class="row"
-             style="font-size: 18px;
-                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
-                For Play Group to 8th
-            </div>
+        <div class="row" style="font-size: 18px; font-weight: 800; margin-top: 10px; margin-bottom: 10px">
+            <div class="col-xs-12">For Play Group to 8th</div>
         </div>
 
         <table class="table">
-            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-            <tr>
-                <td>Examination Name</td>
-                <td>Attendance Start Date</td>
-                <td>Attendance End Date</td>
-            </tr>
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <td>Examination Name</td>
+                    <td>Attendance Start Date</td>
+                    <td>Attendance End Date</td>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test July"
-                                    [ngModel]="reportCardMapping.parentExaminationJuly"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationJuly=$event;detectChanges(); ">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field><br/>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceJulyStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceJulyEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test August"
-                                    [ngModel]="reportCardMapping.parentExaminationAugust"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationAugust=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceAugustStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceAugustEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test September"
-                                    [ngModel]="reportCardMapping.parentExaminationSeptember"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationSeptember=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceSeptemberStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceSeptemberEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test October"
-                                    [ngModel]="reportCardMapping.parentExaminationOctober"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationOctober=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceOctoberStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceOctoberEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Half-Yearly Exam"
-                                    [ngModel]="reportCardMapping.parentExaminationHalfYearly"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationHalfYearly=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceHalfYearlyStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceHalfYearlyEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test December"
-                                    [ngModel]="reportCardMapping.parentExaminationDecember"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationDecember=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceDecemberStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceDecemberEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test January"
-                                    [ngModel]="reportCardMapping.parentExaminationJanuary"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationJanuary=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceJanuaryStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceJanuaryEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Monthly Test February"
-                                    [ngModel]="reportCardMapping.parentExaminationFebruary"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationFebruary=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceFebruaryStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceFebruaryEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Final Exam"
-                                    [ngModel]="reportCardMapping.parentExaminationFinal"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationFinal=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceFinalStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceFinalEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Select Report Card Type"
-                                    [ngModel]="reportCardMapping.reportCardType"
-                                    (ngModelChange)="newReportCardMapping.reportCardType=$event;detectChanges();">
-                            <mat-option *ngFor="let reportCardType of reportCardTypeList;" [value]="reportCardType">
-                                {{reportCardType}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test July"
+                                [ngModel]="reportCardMapping.parentExaminationJuly"
+                                (ngModelChange)="newReportCardMapping.parentExaminationJuly = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select> </mat-form-field
+                        ><br />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceJulyStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceJulyEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test August"
+                                [ngModel]="reportCardMapping.parentExaminationAugust"
+                                (ngModelChange)="newReportCardMapping.parentExaminationAugust = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceAugustStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceAugustEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test September"
+                                [ngModel]="reportCardMapping.parentExaminationSeptember"
+                                (ngModelChange)="newReportCardMapping.parentExaminationSeptember = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceSeptemberStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceSeptemberEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test October"
+                                [ngModel]="reportCardMapping.parentExaminationOctober"
+                                (ngModelChange)="newReportCardMapping.parentExaminationOctober = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceOctoberStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceOctoberEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Half-Yearly Exam"
+                                [ngModel]="reportCardMapping.parentExaminationHalfYearly"
+                                (ngModelChange)="newReportCardMapping.parentExaminationHalfYearly = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceHalfYearlyStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceHalfYearlyEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test December"
+                                [ngModel]="reportCardMapping.parentExaminationDecember"
+                                (ngModelChange)="newReportCardMapping.parentExaminationDecember = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceDecemberStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceDecemberEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test January"
+                                [ngModel]="reportCardMapping.parentExaminationJanuary"
+                                (ngModelChange)="newReportCardMapping.parentExaminationJanuary = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceJanuaryStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceJanuaryEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Monthly Test February"
+                                [ngModel]="reportCardMapping.parentExaminationFebruary"
+                                (ngModelChange)="newReportCardMapping.parentExaminationFebruary = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceFebruaryStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceFebruaryEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Final Exam"
+                                [ngModel]="reportCardMapping.parentExaminationFinal"
+                                (ngModelChange)="newReportCardMapping.parentExaminationFinal = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceFinalStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceFinalEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Select Report Card Type"
+                                [ngModel]="reportCardMapping.reportCardType"
+                                (ngModelChange)="newReportCardMapping.reportCardType = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let reportCardType of reportCardTypeList" [value]="reportCardType">
+                                    {{ reportCardType }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
-        <div class="row"
-             style="font-size: 18px;
-                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
-                For 6th to 8th
-            </div>
+        <div class="row" style="font-size: 18px; font-weight: 800; margin-top: 10px; margin-bottom: 10px">
+            <div class="col-xs-12">For 6th to 8th</div>
         </div>
 
         <mat-form-field>
-            <mat-select placeholder="Map Project"
-                        [ngModel]="reportCardMapping.parentExaminationProject"
-                        (ngModelChange)="newReportCardMapping.parentExaminationProject=$event;detectChanges();">
-                <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                    {{examination.name}}
+            <mat-select
+                placeholder="Map Project"
+                [ngModel]="reportCardMapping.parentExaminationProject"
+                (ngModelChange)="newReportCardMapping.parentExaminationProject = $event; detectChanges()"
+            >
+                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                    {{ examination.name }}
                 </mat-option>
-            </mat-select>
-        </mat-form-field><br/>
+            </mat-select> </mat-form-field
+        ><br />
 
-        <div class="row"
-             style="font-size: 18px;
-                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
-                For 9th to 12th
-            </div>
+        <div class="row" style="font-size: 18px; font-weight: 800; margin-top: 10px; margin-bottom: 10px">
+            <div class="col-xs-12">For 9th to 12th</div>
         </div>
 
         <table class="table">
-            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-            <tr>
-                <td>Examination Name</td>
-                <td>Attendance Start Date</td>
-                <td>Attendance End Date</td>
-            </tr>
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <td>Examination Name</td>
+                    <td>Attendance Start Date</td>
+                    <td>Attendance End Date</td>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Quarterly Exam"
-                                    [ngModel]="reportCardMapping.parentExaminationQuarterlyHigh"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationQuarterlyHigh=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceQuarterlyHighStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceQuarterlyHighEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Half-Yearly Exam"
-                                    [ngModel]="reportCardMapping.parentExaminationHalfYearlyHigh"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationHalfYearlyHigh=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceHalfYearlyHighStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceHalfYearlyHighEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <mat-form-field>
-                        <mat-select placeholder="Map Final Exam"
-                                    [ngModel]="reportCardMapping.parentExaminationFinalHigh"
-                                    (ngModelChange)="newReportCardMapping.parentExaminationFinalHigh=$event;detectChanges();">
-                            <mat-option *ngFor='let examination of examinationList;' [value]="examination.id">
-                                {{examination.name}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceFinalHighStart">
-                </td>
-                <td>
-                    <input type="date"
-                           [disabled]="!newReportCardMapping.autoAttendance"
-                           [(ngModel)]="newReportCardMapping.attendanceFinalHighEnd">
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Quarterly Exam"
+                                [ngModel]="reportCardMapping.parentExaminationQuarterlyHigh"
+                                (ngModelChange)="newReportCardMapping.parentExaminationQuarterlyHigh = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceQuarterlyHighStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceQuarterlyHighEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Half-Yearly Exam"
+                                [ngModel]="reportCardMapping.parentExaminationHalfYearlyHigh"
+                                (ngModelChange)="newReportCardMapping.parentExaminationHalfYearlyHigh = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceHalfYearlyHighStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceHalfYearlyHighEnd"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Map Final Exam"
+                                [ngModel]="reportCardMapping.parentExaminationFinalHigh"
+                                (ngModelChange)="newReportCardMapping.parentExaminationFinalHigh = $event; detectChanges()"
+                            >
+                                <mat-option *ngFor="let examination of examinationList" [value]="examination.id">
+                                    {{ examination.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceFinalHighStart"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="date"
+                            [disabled]="!newReportCardMapping.autoAttendance"
+                            [(ngModel)]="newReportCardMapping.attendanceFinalHighEnd"
+                        />
+                    </td>
+                </tr>
             </tbody>
         </table>
 
-        <div class="row"
-             style="font-size: 18px;
-                    font-weight: 800; margin-top: 10px; margin-bottom: 10px;">
-            <div class="col-xs-12">
-                Decimal Points for Exam Marks
-            </div>
+        <div class="row" style="font-size: 18px; font-weight: 800; margin-top: 10px; margin-bottom: 10px">
+            <div class="col-xs-12">Decimal Points for Exam Marks</div>
         </div>
 
         <div class="row">
             <div class="col-xs-12">
                 <mat-form-field>
                     <mat-label>Min. Decimal Points</mat-label>
-                    <input matInput
-                           style="border: none"
-                           type="number"
-                           [ngModel]="reportCardMapping.minimumDecimalPoints"
-                           (ngModelChange)="newReportCardMapping.minimumDecimalPoints=$event;detectChanges();"/>
+                    <input
+                        matInput
+                        style="border: none"
+                        type="number"
+                        [ngModel]="reportCardMapping.minimumDecimalPoints"
+                        (ngModelChange)="newReportCardMapping.minimumDecimalPoints = $event; detectChanges()"
+                    />
                 </mat-form-field>
-                <mat-form-field style="margin-left: 20px;">
+                <mat-form-field style="margin-left: 20px">
                     <mat-label>Max. Decimal Points</mat-label>
-                    <input matInput
-                           style="border: none"
-                           type="number"
-                           [ngModel]="reportCardMapping.maximumDecimalPoints"
-                           (ngModelChange)="newReportCardMapping.maximumDecimalPoints=$event;detectChanges();"/>
+                    <input
+                        matInput
+                        style="border: none"
+                        type="number"
+                        [ngModel]="reportCardMapping.maximumDecimalPoints"
+                        (ngModelChange)="newReportCardMapping.maximumDecimalPoints = $event; detectChanges()"
+                    />
                 </mat-form-field>
             </div>
         </div>
 
-        <button type="submit"
-                *ngIf="newReportCardMapping.id==null"
-                [disabled]="disableCreateButton()"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="serviceAdapter.createReportCardMapping()">Set Final Report</button>
+        <button
+            type="submit"
+            *ngIf="newReportCardMapping.id == null"
+            [disabled]="disableCreateButton()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="serviceAdapter.createReportCardMapping()"
+        >
+            Set Final Report
+        </button>
 
-        <button type="submit"
-                *ngIf="newReportCardMapping.id!=null"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                (click)="serviceAdapter.updateReportCardMapping()">Update Final Report</button>
+        <button
+            type="submit"
+            *ngIf="newReportCardMapping.id != null"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="serviceAdapter.updateReportCardMapping()"
+        >
+            Update Final Report
+        </button>
 
-        <div class="row" style="font-weight: 800; font-size: 20px; margin-top: 25px;">
-            <div class="col-xs-12" align="center">
-                Marksheet Formats
-            </div>
+        <div class="row" style="font-weight: 800; font-size: 20px; margin-top: 25px">
+            <div class="col-xs-12" align="center">Marksheet Formats</div>
         </div>
 
-        <div class="row" style="font-weight: 800; font-size: 25px;">
+        <div class="row" style="font-weight: 800; font-size: 25px">
             <div class="col-xs-4" align="center">
-                <u>Classic</u><br/><br/>
-                <img src="http://www.anupreetiti.com/korangle_data/One.jpg">
+                <u>Classic</u><br /><br />
+                <img src="http://www.anupreetiti.com/korangle_data/One.jpg" />
             </div>
             <div class="col-xs-4" align="center">
-                <u>Elegant</u><br/><br/>
-                <img src="http://www.anupreetiti.com/korangle_data/Two-001.jpg">
-                <img src="http://www.anupreetiti.com/korangle_data/Two-002.jpg">
+                <u>Elegant</u><br /><br />
+                <img src="http://www.anupreetiti.com/korangle_data/Two-001.jpg" />
+                <img src="http://www.anupreetiti.com/korangle_data/Two-002.jpg" />
             </div>
             <div class="col-xs-4" align="center">
-                <u>Comprehensive</u><br/><br/>
-                <img src="http://www.anupreetiti.com/korangle_data/Three-001.jpg">
-                <img src="http://www.anupreetiti.com/korangle_data/Three-002.jpg">
+                <u>Comprehensive</u><br /><br />
+                <img src="http://www.anupreetiti.com/korangle_data/Three-001.jpg" />
+                <img src="http://www.anupreetiti.com/korangle_data/Three-002.jpg" />
             </div>
         </div>
-
-
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

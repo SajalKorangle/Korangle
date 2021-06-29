@@ -1,8 +1,8 @@
-import {Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
-import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from "@angular/material";
-import { AppDateAdapter, APP_DATE_FORMATS} from '../date.adapter';
+import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../date.adapter';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
@@ -15,25 +15,27 @@ import { Moment } from 'moment';
 
 const moment = _moment;
 
-
 @Component({
     selector: 'day-date',
     templateUrl: './day-date.component.html',
     styleUrls: ['./day-date.component.css'],
     providers: [
         {
-            provide: DateAdapter, useClass: AppDateAdapter
+            provide: DateAdapter,
+            useClass: AppDateAdapter,
         },
         {
-            provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
-        }
+            provide: MAT_DATE_FORMATS,
+            useValue: APP_DATE_FORMATS,
+        },
     ],
 })
 export class DayDateComponent implements OnInit {
-
-    @Input() placeHolder = "Choose a date";
+    @Input() placeHolder = 'Choose a date';
 
     @Input() initialValue = new Date();
+
+    @Input() nullButtonDisabled = false; // used in Design Report Card
 
     // @Input() acceptNull = false;
 
@@ -43,12 +45,11 @@ export class DayDateComponent implements OnInit {
 
     @Output() onDateSelected = new EventEmitter<any>();
 
-
     // date = new FormControl({value: new Date(), disabled: true});
     date: any;
 
     ngOnInit(): void {
-        this.date = new FormControl({value: this.initialValue, disabled: true});
+        this.date = new FormControl({ value: this.initialValue, disabled: true });
         this.onDateChanged(this.date);
         /*if (!this.acceptNull) {
             if (this.initialValue) {
@@ -65,7 +66,7 @@ export class DayDateComponent implements OnInit {
     }
 
     nullDate(): void {
-        this.date = new FormControl({value: null, disabled: true});
+        this.date = new FormControl({ value: null, disabled: true });
         this.onDateChanged(this.date);
     }
 
@@ -78,8 +79,9 @@ export class DayDateComponent implements OnInit {
     }
 
     formatDate(dateStr: any): any {
-
-        if (dateStr == null) { return null; }
+        if (dateStr == null) {
+            return null;
+        }
 
         let d = new Date(dateStr);
 
@@ -92,9 +94,7 @@ export class DayDateComponent implements OnInit {
 
         return [year, month, day].join('-');
     }
-
 }
-
 
 /**  Copyright 2018 Google Inc. All Rights Reserved.
  Use of this source code is governed by an MIT-style license that

@@ -1,0 +1,19 @@
+td {
+    width: 20%;
+}
+input[readonly] {
+    color: black;
+    background-color: white;
+    border: 0;
+}
+.loader-custom {
+    margin-left: 5px;
+    display: inline-block;
+    border: 2px solid lightgrey;
+    border-radius: 50%;
+    border-top: 2px solid dimgrey;
+    width: 18px;
+    height: 18px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}

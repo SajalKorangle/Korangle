@@ -1,0 +1,65 @@
+<div class="card-content" style="margin-top: 20px" *ngIf="!isLoading">
+    <ng-container *ngIf="tcSettings">
+        <h4>Fee settings</h4>
+        <div class="row">
+            <div class="col-md-12" style="display: flex; flex-direction: row; align-items: center">
+                <div class="col-md-3">TC Fee Type</div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-label>Fee Type</mat-label>
+                        <mat-select matInput [(ngModel)]="tcSettings.parentFeeType" [required]="tcSettings.tcFee > 0 ? true : false">
+                            <mat-option [value]="null">NONE</mat-option>
+                            <mat-option *ngFor="let feeType of feeTypeList" [value]="feeType.id">{{ feeType.name }}</mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="tcSettings.tcFee > 0 && tcSettings.parentFeeType == null" style="color: red"
+                            >This field is required</mat-hint
+                        >
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Complete tc fee -->
+            <div class="col-md-12" style="display: flex; flex-direction: row; align-items: center; margin-top: 24px">
+                <div class="col-md-3">TC Fee</div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-label>Amount</mat-label>
+                        <input matInput type="number" min="0" required [(ngModel)]="tcSettings.tcFee" />
+                        <mat-hint *ngIf="tcSettings.tcFee == null || tcSettings.tcFee < 0" style="color: red"
+                            >This field is required and cannot be negative</mat-hint
+                        >
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <h4>Certificate No. settings</h4>
+        <div class="row">
+            <div class="col-md-12" style="display: flex; flex-direction: row; align-items: center">
+                <div class="col-md-3">Next certificate number</div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-label>Next Certificate Number</mat-label>
+                        <input matInput type="number" required [(ngModel)]="tcSettings.nextCertificateNumber" />
+                        <mat-hint
+                            *ngIf="tcSettings.nextCertificateNumber == null || tcSettings.nextCertificateNumber < 1"
+                            style="color: red"
+                            >This field is required and cannot be negative</mat-hint
+                        >
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <button
+            type="button"
+            style="margin-top: 24px"
+            (click)="updateSettings()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        >
+            Update Settings
+        </button>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

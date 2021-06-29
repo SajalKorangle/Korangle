@@ -1,51 +1,42 @@
 <div class="card-content">
-
     <ng-container *ngIf="!isLoading">
-
         <ng-container *ngIf="reportCardMapping && classStudentList.length > 0">
-
-            <mat-form-field style="margin-top: 23px;">
-                <mat-select placeholder="Select Class"
-                            [ngModel]="selectedClass"
-                            (ngModelChange)="selectedClass=$event;">
-                    <mat-option *ngFor='let classs of classStudentList;' [value]="classs">
-                        {{classs.name}}
+            <mat-form-field style="margin-top: 23px">
+                <mat-select placeholder="Select Class" [ngModel]="selectedClass" (ngModelChange)="selectedClass = $event">
+                    <mat-option *ngFor="let classs of classStudentList" [value]="classs">
+                        {{ classs.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
 
+            <button
+                type="submit"
+                style="margin-left: 20px"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.getClassPatrakDetails()"
+            >
+                GET
+            </button>
 
-            <button type="submit"
-                    style="margin-left: 20px;"
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="serviceAdapter.getClassPatrakDetails()">GET</button>
-
-            <br/><br/>
+            <br /><br />
 
             <b>Final Formats :-</b>
 
-            <br/><br/>
+            <br /><br />
 
             <a href="https://korangleplus.s3.amazonaws.com/assets/patrakprimaryclass1And2.xlsx">Patrak Primary (1st & 2nd)</a>
-            <br/><br/>
+            <br /><br />
             <a href="https://korangleplus.s3.amazonaws.com/assets/patrakprimaryclass3to5.xlsx">Patrak Middle (3rd to 5th)</a>
-            <br/><br/>
+            <br /><br />
             <a href="https://korangleplus.s3.amazonaws.com/assets/patrakmiddle6to8.xlsx">Patrak Middle (6th to 8th)</a>
-
         </ng-container>
 
-        <ng-container *ngIf="reportCardMapping == null">
-            Please set the final report card before generating patrak.
-        </ng-container>
+        <ng-container *ngIf="reportCardMapping == null"> Please set the final report card before generating patrak. </ng-container>
 
-        <ng-container *ngIf="classStudentList.length === 0">
-            No students in this session.
-        </ng-container>
-
+        <ng-container *ngIf="classStudentList.length === 0"> No students in this session. </ng-container>
     </ng-container>
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
-
 </div>

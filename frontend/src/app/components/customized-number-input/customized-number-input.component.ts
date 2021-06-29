@@ -1,26 +1,25 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'customized-number-input',
     templateUrl: './customized-number-input.component.html',
     styleUrls: ['./customized-number-input.component.css'],
 })
-
 export class CustomizedNumberInputComponent {
-
     @Input() placeHolder;
 
+    @Input() width = 100;
     @Input() minimum = null;
     @Input() maximum = null;
     @Input() maximumDecimal = null;
 
+    @Input() disabled;
     @Input() inputValue;
 
     @Output() outputValue = new EventEmitter<any>();
 
     isValidNumber(value: any): boolean {
-        if (!value) {
+        if (value === null || value === undefined || value === '') {
             return false;
         }
         if (isNaN(value)) {
@@ -88,5 +87,4 @@ export class CustomizedNumberInputComponent {
             this.outputValue.emit(value);
         }
     }
-
 }

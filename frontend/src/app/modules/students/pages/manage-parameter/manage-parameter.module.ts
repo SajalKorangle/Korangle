@@ -1,24 +1,16 @@
 import { NgModule } from '@angular/core';
 
-import {ManageParameterRouting} from './manage-parameter.routing';
-import {ComponentsModule} from "../../../../components/components.module";
-import {ManageParameterComponent} from "./manage-parameter.component";
-import {MatIconModule} from '@angular/material/icon';
-
+import { ManageParameterRouting } from './manage-parameter.routing';
+import { ComponentsModule } from '../../../../components/components.module';
+import { ManageParameterComponent } from './manage-parameter.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-    declarations: [
-        ManageParameterComponent
-    ],
+    declarations: [ManageParameterComponent],
 
-    imports: [
-        ManageParameterRouting,
-        ComponentsModule,
-        MatIconModule
-    ],
-    exports: [
-    ],
+    imports: [ManageParameterRouting, ComponentsModule, MatIconModule],
+    exports: [],
     providers: [],
-    bootstrap: [ManageParameterComponent]
+    bootstrap: [ManageParameterComponent],
 })
-export class ManageParameterModule { }
+export class ManageParameterModule {}

@@ -11,56 +11,64 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatTabsModule } from '@angular/material';
 
-import { MatInputModule } from '@angular/material/input'
-import { MatTableModule } from '@angular/material';  
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import {MatListModule} from '@angular/material/list';
- 
+import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import 'hammerjs';
 
-
-import { BasicComponentsModule } from "../basic-components/basic-components.module";
+import { BasicComponentsModule } from '../basic-components/basic-components.module';
 
 import { MonthDateComponent } from './month-date/month-date.component';
 import { DayDateOldComponent } from './day-date-old/day-date-old.component';
-import { DayDateComponent } from "./day-date/day-date.component";
+import { DayDateComponent } from './day-date/day-date.component';
 import { EmployeeFilterComponent } from './employee-filter/employee-filter.component';
-import { ParentStudentFilterComponent } from "./parent-student-filter/parent-student-filter.component";
+import { ParentStudentFilterComponent } from './parent-student-filter/parent-student-filter.component';
 import { CustomizedNumberInputComponent } from './customized-number-input/customized-number-input.component';
-import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component'
+import { ImagePreviewDialogComponent } from './modal/image-preview-dialog.component';
+import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
 
 // Pipes
 
 import { AmountInWordsPipe } from '../pipes/amount-in-words.pipe';
 import { DateInWordsPipe } from '../pipes/date-in-words.pipe';
 import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
+import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
+import { LocalDatePipe } from './../pipes/local-date-format.pipe';
+import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
 
 @NgModule({
     declarations: [
-
         ParentStudentFilterComponent,
         MonthDateComponent,
         DayDateOldComponent,
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
+        ViewImageModalComponent,
 
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
+        LocalDatePipe,
+        NumberAndStringPipe,
 
         EmployeeFilterComponent,
+        ImagePdfPreviewDialogComponent,
 
     ],
     imports: [
-
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -75,21 +83,23 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatAutocompleteModule,
         MatProgressBarModule,
         MatDatepickerModule,
+        MatNativeDateModule,
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
+        MatTabsModule,
         MatSliderModule,
+        MatSnackBarModule,
+
         MatInputModule,
         MatTableModule,
         MatDialogModule,
         MatListModule,
-        DragDropModule,
+        MatSlideToggleModule,
 
         BasicComponentsModule,
-
     ],
     exports: [
-
         BasicComponentsModule,
 
         ParentStudentFilterComponent,
@@ -99,10 +109,14 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         DayDateComponent,
         CustomizedNumberInputComponent,
         ImagePreviewDialogComponent,
+        ImagePdfPreviewDialogComponent,
 
+        ViewImageModalComponent,
         AmountInWordsPipe,
         DateInWordsPipe,
         IndianCurrencyPipe,
+        LocalDatePipe,
+        NumberAndStringPipe,
 
         CommonModule,
         FormsModule,
@@ -121,13 +135,12 @@ import { IndianCurrencyPipe } from '../pipes/indian-currency.pipe';
         MatExpansionModule,
         MatSortModule,
         MatCardModule,
+        MatTabsModule,
         MatSliderModule,
-
         MatInputModule,
         MatDialogModule,
         MatListModule,
-        DragDropModule,
-        
-    ]
+        MatSlideToggleModule,
+    ],
 })
 export class ComponentsModule { }

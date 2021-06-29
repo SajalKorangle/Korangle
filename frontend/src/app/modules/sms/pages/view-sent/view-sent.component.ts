@@ -3,16 +3,15 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { InformationService } from '../../../../services/modules/information/information.service';
 import { ViewSentServiceAdapter } from './view-sent.service.adapter';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'view-sent',
-  templateUrl: './view-sent.component.html',
-  styleUrls: ['./view-sent.component.css', './view-sent.component.scss'],
-  providers: [InformationService]
+    selector: 'view-sent',
+    templateUrl: './view-sent.component.html',
+    styleUrls: ['./view-sent.component.css', './view-sent.component.scss'],
+    providers: [InformationService],
 })
 export class ViewSentComponent implements OnInit {
-
     STATUS_UNKNOWN = 'Unknown';
 
     user;
@@ -32,9 +31,7 @@ export class ViewSentComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public smsService: SmsOldService,
-        public informationService: InformationService,
-                private cdRef: ChangeDetectorRef) { }
+    constructor(public smsService: SmsOldService, public informationService: InformationService, private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -52,8 +49,12 @@ export class ViewSentComponent implements OnInit {
         let day = '' + d.getDate();
         const year = d.getFullYear();
 
-        if (month.length < 2) { month = '0' + month; }
-        if (day.length < 2) { day = '0' + day; }
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
 
         return year + '-' + month + '-' + day;
     }
@@ -66,38 +67,41 @@ export class ViewSentComponent implements OnInit {
         };
         this.isLoading = true;
         this.smsList = null;
-        this.smsService.getSMSList(data, this.user.jwt).then(smsList => {
-            this.isLoading = false;
-            this.smsList = smsList;
-        }, error => {
-            this.isLoading = false;
-        });
+        this.smsService.getSMSList(data, this.user.jwt).then(
+            (smsList) => {
+                this.isLoading = false;
+                this.smsList = smsList;
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     getMessageType(sms: any): string {
-        const messageType = this.messageTypeList.find(val => val.id==sms.parentMessageType);
-        if (messageType){
-            return messageType["name"];
-        }else{
-            return "";
+        const messageType = this.messageTypeList.find((val) => val.id == sms.parentMessageType);
+        if (messageType) {
+            return messageType['name'];
+        } else {
+            return '';
         }
     }
 
-    getFilteredSMSList(): any{
+    getFilteredSMSList(): any {
         // console.log(this.selectedMessageType);
-        if (this.selectedMessageType==null){
+        if (this.selectedMessageType == null) {
             return this.smsList;
         }
         // console.log(this.smsList);
         let tempList = [];
-        this.smsList.forEach(sms => {
-            if (sms.parentMessageType==this.selectedMessageType.id){
+        this.smsList.forEach((sms) => {
+            if (sms.parentMessageType == this.selectedMessageType.id) {
                 tempList.push(sms);
             }
         });
         // console.log(this.selectedMessageType);
         // console.log(tempList);
-        return tempList;;
+        return tempList;
     }
 
     getStatusList(sms: any): any {
@@ -105,29 +109,30 @@ export class ViewSentComponent implements OnInit {
         if (sms.count != sms.deliveryReportList.length) {
             statusList.push(this.STATUS_UNKNOWN);
         }
-        statusList = statusList.concat([...new Set(sms.deliveryReportList.map(a => a.status))]);
+        statusList = statusList.concat([...new Set(sms.deliveryReportList.map((a) => a.status))]);
         return statusList;
     }
 
     getMobileNumberListBySMS(sms: any): any {
-        return sms.mobileNumberList.split(',').filter(item => {
-            return item != null && item != "";
+        return sms.mobileNumberList.split(',').filter((item) => {
+            return item != null && item != '';
         });
     }
 
     getMobileNumberListByStatusAndSMS(status: any, sms: any): any {
         let mobileNumberList = [];
         if (status == this.STATUS_UNKNOWN) {
-            let subtractMobileNumberList = sms.deliveryReportList.map(a => a.mobileNumber.toString());
-            mobileNumberList = sms.mobileNumberList.split(',').filter(item => {
-                return item != null && item != "" && !subtractMobileNumberList.includes(item);
+            let subtractMobileNumberList = sms.deliveryReportList.map((a) => a.mobileNumber.toString());
+            mobileNumberList = sms.mobileNumberList.split(',').filter((item) => {
+                return item != null && item != '' && !subtractMobileNumberList.includes(item);
             });
         } else {
-            mobileNumberList = sms.deliveryReportList.filter(item => {
-                return item.status == status;
-            }).map(a => a.mobileNumber);
+            mobileNumberList = sms.deliveryReportList
+                .filter((item) => {
+                    return item.status == status;
+                })
+                .map((a) => a.mobileNumber);
         }
         return mobileNumberList;
     }
-
 }

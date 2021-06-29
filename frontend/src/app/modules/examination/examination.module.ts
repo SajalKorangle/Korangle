@@ -13,24 +13,14 @@ import { ExaminationService } from '../../services/modules/examination/examinati
 import { PrintStudentMarksheetListComponent } from './print/print-student-marksheet-list/print-student-marksheet-list.component';
 import { PrintHallTicketComponent } from './print/print-hall-ticket/print-hall-ticket.component';
 
-import {ExcelService} from "../../excel/excel-service";
+import { ExcelService } from '../../excel/excel-service';
 
 @NgModule({
-    declarations: [
+    declarations: [ExaminationComponent, PrintStudentMarksheetListComponent, PrintHallTicketComponent],
 
-        ExaminationComponent,
-
-        PrintStudentMarksheetListComponent,
-        PrintHallTicketComponent
-    ],
-
-    imports: [
-        ComponentsModule,
-        ExaminationRoutingModule,
-        NgxDatatableModule,
-    ],
+    imports: [ComponentsModule, ExaminationRoutingModule, NgxDatatableModule],
     exports: [],
-    providers: [ExaminationOldService, ExcelService,ExaminationService],
+    providers: [ExaminationOldService, ExcelService, ExaminationService],
     bootstrap: [ExaminationComponent],
 })
-export class ExaminationModule { }
+export class ExaminationModule {}

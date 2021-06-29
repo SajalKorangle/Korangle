@@ -7,25 +7,14 @@ import { EnquiryRoutingModule } from './enquiry.routing';
 
 import { ClassService } from '../../services/modules/class/class.service';
 import { EnquiryOldService } from '../../services/modules/enquiry/enquiry-old.service';
-import { PrintEnquiryListComponent } from "./print/print-enquiry-list/print-enquiry-list.component";
+import { PrintEnquiryListComponent } from './print/print-enquiry-list/print-enquiry-list.component';
 
 @NgModule({
-    declarations: [
+    declarations: [EnquiryComponent, PrintEnquiryListComponent],
 
-        EnquiryComponent,
-        PrintEnquiryListComponent
-
-    ],
-
-    imports: [
-
-        ComponentsModule,
-        EnquiryRoutingModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, EnquiryRoutingModule],
+    exports: [],
     providers: [EnquiryOldService, ClassService],
-    bootstrap: [EnquiryComponent]
+    bootstrap: [EnquiryComponent],
 })
-export class EnquiryModule { }
+export class EnquiryModule {}

@@ -7,21 +7,11 @@ import { UserSettingsComponent } from './user-settings.component';
 import { UserSettingsRoutingModule } from './user-settings.routing';
 
 @NgModule({
-    declarations: [
+    declarations: [UserSettingsComponent],
 
-        UserSettingsComponent,
-
-    ],
-
-    imports: [
-
-        ComponentsModule,
-        UserSettingsRoutingModule,
-
-    ],
-    exports: [
-    ],
+    imports: [ComponentsModule, UserSettingsRoutingModule],
+    exports: [],
     providers: [],
-    bootstrap: [UserSettingsComponent]
+    bootstrap: [UserSettingsComponent],
 })
-export class UserSettingsModule { }
+export class UserSettingsModule {}

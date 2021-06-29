@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
-import {PrintService} from "../../../../print/print-service";
-import {PRINT_ENQUIRY_LIST} from "../../../../print/print-routes.constants";
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_ENQUIRY_LIST } from '../../../../print/print-routes.constants';
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'view-all',
@@ -13,15 +13,13 @@ import {DataStorage} from "../../../../classes/data-storage";
     styleUrls: ['./view-all.component.css'],
     providers: [EmployeeOldService, ClassService],
 })
-
 export class ViewAllComponent implements OnInit {
-
     user: any;
 
     enquiryList = [];
 
     classList = [];
-    employeeList = []; 
+    employeeList = [];
 
     selectedEmployee = null;
     filteredEmployeeList = [];
@@ -34,21 +32,23 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryOldService,
-                private classService: ClassService,
-                private printService: PrintService,
-                private employeeService: EmployeeOldService) { }
+    constructor(
+        private enquiryService: EnquiryOldService,
+        private classService: ClassService,
+        private printService: PrintService,
+        private employeeService: EmployeeOldService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         let data = {
-            parentSchool: this.user.activeSchool.dbId
+            parentSchool: this.user.activeSchool.dbId,
         };
 
         Promise.all([
-            this.classService.getObjectList(this.classService.classs,{}),
-            this.employeeService.getEmployeeProfileList(data, this.user.jwt)
-        ]).then(res => {
+            this.classService.getObjectList(this.classService.classs, {}),
+            this.employeeService.getEmployeeProfileList(data, this.user.jwt),
+        ]).then((res) => {
             this.classList = res[0];
             this.employeeList = res[1];
         });
@@ -60,14 +60,17 @@ export class ViewAllComponent implements OnInit {
         let day = '' + d.getDate();
         const year = d.getFullYear();
 
-        if (month.length < 2) { month = '0' + month; }
-        if (day.length < 2) { day = '0' + day; }
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
 
         return year + '-' + month + '-' + day;
     }
 
     getEnquiryList(): void {
-
         let data = {
             startDate: this.startDate,
             endDate: this.endDate,
@@ -75,17 +78,19 @@ export class ViewAllComponent implements OnInit {
         };
 
         this.isLoading = true;
-        this.enquiryService.getEnquiryList(data, this.user.jwt).then(enquiryList => {
-            this.isLoading = false;
-            this.enquiryList = enquiryList;
-        }, error => {
-            this.isLoading = false;
-        });
-
+        this.enquiryService.getEnquiryList(data, this.user.jwt).then(
+            (enquiryList) => {
+                this.isLoading = false;
+                this.enquiryList = enquiryList;
+            },
+            (error) => {
+                this.isLoading = false;
+            }
+        );
     }
 
     getEmployeeName(employeeId: number): string {
-        let employee = this.employeeList.find(employee => {
+        let employee = this.employeeList.find((employee) => {
             return employeeId == employee.id;
         });
         if (employee) {
@@ -93,41 +98,46 @@ export class ViewAllComponent implements OnInit {
         }
         return '';
     }
-    
+
     getFilteredEmployeeList() {
-        this.filteredEmployeeList = this.employeeList.filter(employee => {
-            return this.enquiryList.map(a => a.parentEmployee).filter((item, index, final) => {
-                return final.indexOf(item) == index;
-            }).includes(employee.id);
+        this.filteredEmployeeList = this.employeeList.filter((employee) => {
+            return this.enquiryList
+                .map((a) => a.parentEmployee)
+                .filter((item, index, final) => {
+                    return final.indexOf(item) == index;
+                })
+                .includes(employee.id);
         });
-    
-        return this.filteredEmployeeList
+
+        return this.filteredEmployeeList;
     }
 
     getFilteredEnquiryList(): any {
         let tempList = this.enquiryList;
         if (this.selectedEmployee) {
-            tempList = tempList.filter(enqList => {
+            tempList = tempList.filter((enqList) => {
                 return enqList.parentEmployee == this.selectedEmployee.id;
             });
         }
 
         if (this.selectedClass) {
-            tempList = tempList.filter(enqList => {
-                return enqList.parentClass == this.selectedClass.id
+            tempList = tempList.filter((enqList) => {
+                return enqList.parentClass == this.selectedClass.id;
             });
         }
         return tempList;
     }
 
-
-    printEnquiryList(){
-        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {user: this.user, value: [this.getFilteredEnquiryList(), this.getFilteredClassList(), this.getFilteredEmployeeList()]});
+    printEnquiryList() {
+        this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {
+            user: this.user,
+            value: [this.getFilteredEnquiryList(), this.getFilteredClassList(), this.getFilteredEmployeeList()],
+        });
     }
 
     getClassName(dbId: number): string {
         let className = '';
-        this.classList.every(classs => {
+        this.classList.every((classs) => {
             if (classs.id === dbId) {
                 className = classs.name;
                 return false;
@@ -138,12 +148,14 @@ export class ViewAllComponent implements OnInit {
     }
 
     getFilteredClassList() {
-        this.filteredClassList = this.classList.filter(className => {
-            return this.enquiryList.map(a => a.parentClass).filter((item, index, final) => {
-                return final.indexOf(item) == index;
-            }).includes(className.id);
+        this.filteredClassList = this.classList.filter((className) => {
+            return this.enquiryList
+                .map((a) => a.parentClass)
+                .filter((item, index, final) => {
+                    return final.indexOf(item) == index;
+                })
+                .includes(className.id);
         });
-        return this.filteredClassList
+        return this.filteredClassList;
     }
-
 }

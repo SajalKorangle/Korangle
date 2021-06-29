@@ -2,17 +2,15 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ExpenseOldService } from '../../../../services/modules/expense/expense-old.service';
 import { Expense } from '../../../../classes/expense';
-import {DataStorage} from "../../../../classes/data-storage";
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'add-expense',
-  templateUrl: './add-expense.component.html',
-  styleUrls: ['./add-expense.component.css'],
-    providers: [ ExpenseOldService ]
+    selector: 'add-expense',
+    templateUrl: './add-expense.component.html',
+    styleUrls: ['./add-expense.component.css'],
+    providers: [ExpenseOldService],
 })
-
 export class AddExpenseComponent implements OnInit {
-
     user;
 
     currentExpenseList: Expense[] = [];
@@ -34,20 +32,26 @@ export class AddExpenseComponent implements OnInit {
         let day = '' + d.getDate();
         const year = d.getFullYear();
 
-        if (month.length < 2) { month = '0' + month; }
-        if (day.length < 2) { day = '0' + day; }
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
 
         return year + '-' + month + '-' + day;
     }
 
-    constructor(private expenseService: ExpenseOldService) { }
+    constructor(private expenseService: ExpenseOldService) {}
 
     submitExpense(): void {
-        if (this.newExpense.amount === undefined || this.newExpense.amount === 0) {
+        if (this.newExpense.amount === undefined || this.newExpense.amount === 0 || this.newExpense.amount === null) {
             alert('Amount should be populated');
             return;
         }
-        if (this.newExpense.remark === undefined) { this.newExpense.remark = ''; }
+        if (this.newExpense.remark === undefined) {
+            this.newExpense.remark = '';
+        }
         this.isLoading = true;
 
         const expenseData = {};
@@ -57,7 +61,7 @@ export class AddExpenseComponent implements OnInit {
         expenseData['schoolDbId'] = this.user.activeSchool.dbId;
 
         this.expenseService.submitExpense(expenseData, this.user.jwt).then(
-            data => {
+            (data) => {
                 this.isLoading = false;
 
                 const tempExpense = new Expense();
@@ -70,12 +74,11 @@ export class AddExpenseComponent implements OnInit {
 
                 this.newExpense = new Expense();
                 this.newExpense.voucherDate = this.todaysDate();
-            }, error => {
+            },
+            (error) => {
                 this.isLoading = false;
                 alert('Server error: Contact Admin');
             }
         );
-
     }
-
 }

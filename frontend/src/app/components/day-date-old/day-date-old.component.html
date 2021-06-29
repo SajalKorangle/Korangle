@@ -1,10 +1,13 @@
-<mat-form-field>
-    <input matInput
-           [matDatepicker]="picker"
-           (dateChange)="onDateChanged($event);"
-           [placeholder]="placeHolder"
-           [formControl]="date"
-           disabled>
+<mat-form-field (click)="picker.open()">
+    <input
+        matInput
+        [matDatepicker]="picker"
+        (dateChange)="onDateChanged($event)"
+        [placeholder]="placeHolder"
+        [formControl]="date"
+        style="cursor: pointer"
+        disabled
+    />
     <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="disableDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #picker disabled="false"></mat-datepicker>
 </mat-form-field>

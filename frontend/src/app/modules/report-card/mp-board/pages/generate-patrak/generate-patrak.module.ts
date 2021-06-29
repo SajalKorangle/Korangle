@@ -1,23 +1,15 @@
 import { NgModule } from '@angular/core';
 
-
-import {GeneratePatrakRoutingModule, } from './generate-patrak.routing';
-import {ComponentsModule} from "../../../../../components/components.module";
-import {GeneratePatrakComponent} from "./generate-patrak.component";
-
+import { GeneratePatrakRoutingModule } from './generate-patrak.routing';
+import { ComponentsModule } from '../../../../../components/components.module';
+import { GeneratePatrakComponent } from './generate-patrak.component';
 
 @NgModule({
-    declarations: [
-        GeneratePatrakComponent
-    ],
+    declarations: [GeneratePatrakComponent],
 
-    imports: [
-        GeneratePatrakRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-    ],
+    imports: [GeneratePatrakRoutingModule, ComponentsModule],
+    exports: [],
     providers: [],
-    bootstrap: [GeneratePatrakComponent]
+    bootstrap: [GeneratePatrakComponent],
 })
-export class GeneratePatrakModule { }
+export class GeneratePatrakModule {}

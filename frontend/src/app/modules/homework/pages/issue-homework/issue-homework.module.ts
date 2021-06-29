@@ -1,31 +1,22 @@
 import { NgModule } from '@angular/core';
 
-import { IssueHomeworkComponent } from "./issue-homework.component";
+import { IssueHomeworkComponent } from './issue-homework.component';
 
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
-import { EditHomeworkDialogComponent } from "./issue-homework.component";
-import {IssueHomeworkRoutingModule } from './issue-homework.routing';
-import {ComponentsModule} from "../../../../components/components.module";
+import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
+import { IssueHomeworkRoutingModule } from './issue-homework.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 import 'hammerjs';
 
-
 @NgModule({
-    declarations: [
-        IssueHomeworkComponent,
-        EditHomeworkDialogComponent,
-    ],
+    declarations: [IssueHomeworkComponent, EditHomeworkDialogComponent],
 
-    imports: [
-        IssueHomeworkRoutingModule ,
-        ComponentsModule,
-    ],
-    exports: [
-        ImagePreviewDialogComponent,
-    ],
+    imports: [IssueHomeworkRoutingModule, ComponentsModule],
+    exports: [EditHomeworkDialogComponent, ImagePreviewDialogComponent],
     providers: [],
-    
-    bootstrap: [IssueHomeworkComponent, EditHomeworkDialogComponent],
-    
-    entryComponents: [IssueHomeworkComponent ,EditHomeworkDialogComponent,ImagePreviewDialogComponent],
+
+    bootstrap: [IssueHomeworkComponent],
+
+    entryComponents: [IssueHomeworkComponent, EditHomeworkDialogComponent, ImagePreviewDialogComponent],
 })
-export class IssueHomeworkModule { }
+export class IssueHomeworkModule {}

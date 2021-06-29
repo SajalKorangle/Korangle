@@ -1,0 +1,10 @@
+[
+    {
+      "statement": "Create test",
+      "testType": "protractor",
+      "steps": [
+        "Open create-test page and get the list"
+      ],
+      "testName": "Create Test"
+    }
+]

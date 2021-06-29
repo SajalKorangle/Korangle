@@ -1,27 +1,26 @@
 <div class="card-content table-responsive hidden-xs hidden-sm">
-
     <ng-container *ngIf="!isLoading">
-
         <div class="row">
             <div class="col-md-3">
-                <input type='file' (change)="onFileChange($event)" multiple="false">
+                <input type="file" (change)="onFileChange($event)" multiple="false" />
             </div>
             <div class="col-md-3">
-                <button type="button"
-                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        style="padding: 12px 15px; margin-right: 17px;"
-                        matTooltip="Download Template"
-                        tooltip-position="left"
-                        (click)="export();">
-                    Template<i class="material-icons" style="margin-left: 15px;">save_alt</i></button>
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-right: 17px"
+                    matTooltip="Download Template"
+                    tooltip-position="left"
+                    (click)="export()"
+                >
+                    Template<i class="material-icons" style="margin-left: 15px">save_alt</i>
+                </button>
             </div>
             <div class="col-md-6" align="end" *ngIf="selectedSession">
                 <mat-form-field>
-                    <mat-select placeholder="Select Session"
-                                [ngModel]="selectedSession"
-                                (ngModelChange)="selectedSession=$event;">
-                        <mat-option *ngFor='let session of sessionList;' [value]="session">
-                            {{session.name}}
+                    <mat-select placeholder="Select Session" [ngModel]="selectedSession" (ngModelChange)="selectedSession = $event">
+                        <mat-option *ngFor="let session of sessionList" [value]="session">
+                            {{ session.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -29,49 +28,51 @@
         </div>
 
         <ng-container *ngIf="studentList">
-            <br>
-            <i>Displaying {{studentList.length}} students</i>
+            <br />
+            <i>Displaying {{ studentList.length }} students</i>
             <ng-container *ngIf="errorList.length > 0">
-                <br>
-                <i>{{getNumberOfErrors()}} cells with errors</i>
-                <span class="redBackground" style="margin-left: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <br />
+                <i>{{ getNumberOfErrors() }} cells with errors</i>
+                <span class="redBackground" style="margin-left: 10px">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </ng-container>
-            <ng-container *ngIf="deletedList.length>0">
-                <br>
-                <i>{{getNumberOfDeletedCells()}} cells deleted</i>
-                <span class="yellowBackground" style="margin-left: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <ng-container *ngIf="deletedList.length > 0">
+                <br />
+                <i>{{ getNumberOfDeletedCells() }} cells deleted</i>
+                <span class="yellowBackground" style="margin-left: 10px">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </ng-container>
         </ng-container>
 
-
         <table class="table table-hover" *ngIf="studentList">
-            <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
-            <tr>
-                <th *ngFor="let header of headers">{{header}}</th>
-            </tr>
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <th *ngFor="let header of headers">{{ header }}</th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let row of studentList; let rowIndex=index;">
-                <td *ngFor="let val of row; let columnIndex=index;"
-                    [class.redBackground]="isErrorCell(rowIndex, columnIndex)"
-                    [class.yellowBackground]="isDeletedCell(rowIndex, columnIndex)">
-                    {{val}}
-                </td>
-            </tr>
+                <tr *ngFor="let row of studentList; let rowIndex = index">
+                    <td
+                        *ngFor="let val of row; let columnIndex = index"
+                        [class.redBackground]="isErrorCell(rowIndex, columnIndex)"
+                        [class.yellowBackground]="isDeletedCell(rowIndex, columnIndex)"
+                    >
+                        {{ val }}
+                    </td>
+                </tr>
             </tbody>
         </table>
 
-        <button type="button"
-                *ngIf="studentList && studentList.length>0 && errorList.length === 0"
-                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                style="padding: 12px 15px; margin-right: 17px;"
-                matTooltip="Upload Student List"
-                tooltip-position="left"
-                (click)="uploadStudentList();">
-            Student List<i class="material-icons" style="margin-left: 15px;">cloud_upload</i></button>
-
+        <button
+            type="button"
+            *ngIf="studentList && studentList.length > 0 && errorList.length === 0"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-right: 17px"
+            matTooltip="Upload Student List"
+            tooltip-position="left"
+            (click)="uploadStudentList()"
+        >
+            Student List<i class="material-icons" style="margin-left: 15px">cloud_upload</i>
+        </button>
     </ng-container>
-
 </div>
 
 <div class="card-content visible-xs visible-sm">
@@ -81,4 +82,3 @@
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
-

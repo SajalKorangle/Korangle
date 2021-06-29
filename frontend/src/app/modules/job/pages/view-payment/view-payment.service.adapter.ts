@@ -1,8 +1,6 @@
-
 import { ViewPaymentComponent } from './view-payment.component';
 
 export class ViewPaymentServiceAdapter {
-
     vm: ViewPaymentComponent;
 
     constructor() {}
@@ -42,22 +40,25 @@ export class ViewPaymentServiceAdapter {
         Promise.all([
             this.vm.salaryService.getEmployeePayslips(request_payslip_data, this.vm.user.jwt),
             this.vm.salaryService.getEmployeePaymentList(request_payment_data, this.vm.user.jwt),
-        ]).then(value => {
-            console.log(value);
-            this.prepareEmployeeRecord(value);
-            this.vm.number = 10;
-            this.vm.isLoading = false;
-        }, error => {
-            this.vm.isLoading = false;
-        });
+        ]).then(
+            (value) => {
+                console.log(value);
+                this.prepareEmployeeRecord(value);
+                this.vm.number = 10;
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 
     prepareEmployeeRecord(value: any): void {
         this.vm.recordList = [];
-        value[0].forEach(record => {
+        value[0].forEach((record) => {
             this.addToEmployeeRecordList(record);
         });
-        value[1].forEach(record => {
+        value[1].forEach((record) => {
             this.addToEmployeeRecordList(record);
         });
         this.sortEmployeeRecordList();
@@ -69,7 +70,7 @@ export class ViewPaymentServiceAdapter {
             object = {
                 id: record.id,
                 date: record.dateOfGeneration,
-                remark: 'Salary of ' + record.month + '-' + record.year + (record.remark?'\n' + record.remark:'') ,
+                remark: 'Salary of ' + record.month + '-' + record.year + (record.remark ? '\n' + record.remark : ''),
                 amount: record.amount,
                 type: 'payslip',
             };
@@ -82,13 +83,12 @@ export class ViewPaymentServiceAdapter {
                 type: 'payment',
             };
         }
-        this.vm.recordList.splice(0,0,object);
+        this.vm.recordList.splice(0, 0, object);
     }
 
     sortEmployeeRecordList(): void {
-        this.vm.recordList.sort((a,b) => {
+        this.vm.recordList.sort((a, b) => {
             return b.date.toString().localeCompare(a.date.toString());
         });
     }
-
 }

@@ -1,21 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {EmployeeOldService} from '../../../../services/modules/employee/employee-old.service';
-import {SalaryOldService} from '../../../../services/modules/salary/salary-old.service';
-import {RecordPaymentServiceAdapter} from './record-payment.service.adapter';
-import {DataStorage} from "../../../../classes/data-storage";
+import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import { SalaryOldService } from '../../../../services/modules/salary/salary-old.service';
+import { RecordPaymentServiceAdapter } from './record-payment.service.adapter';
+import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
-  selector: 'record-payment',
-  templateUrl: './record-payment.component.html',
-  styleUrls: ['./record-payment.component.css'],
-    providers: [
-        EmployeeOldService, SalaryOldService
-    ],
+    selector: 'record-payment',
+    templateUrl: './record-payment.component.html',
+    styleUrls: ['./record-payment.component.css'],
+    providers: [EmployeeOldService, SalaryOldService],
 })
-
 export class RecordPaymentComponent implements OnInit {
-
     user;
 
     employeeList = null;
@@ -33,8 +29,7 @@ export class RecordPaymentComponent implements OnInit {
 
     serviceAdapter = new RecordPaymentServiceAdapter();
 
-    constructor (public employeeService: EmployeeOldService,
-                 public salaryService: SalaryOldService) { }
+    constructor(public employeeService: EmployeeOldService, public salaryService: SalaryOldService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -49,7 +44,7 @@ export class RecordPaymentComponent implements OnInit {
 
     getBalance(): number {
         let balance = 0;
-        this.employeeRecordList.forEach(record => {
+        this.employeeRecordList.forEach((record) => {
             if (record.type === 'payslip') {
                 balance += record.amount;
             } else {
@@ -58,5 +53,4 @@ export class RecordPaymentComponent implements OnInit {
         });
         return balance;
     }
-
 }

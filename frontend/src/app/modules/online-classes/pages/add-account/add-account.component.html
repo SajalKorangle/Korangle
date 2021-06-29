@@ -1,0 +1,125 @@
+<div class="card-content" *ngIf="!isLoading else Loader">
+    <mat-card *ngIf="hasAdminPermission() || backendData.accountInfoList.length == 0">
+        <h4>Add Account</h4>
+        <div style="margin-left: 12px; width: fit-content;">
+
+            <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput1.focus()">
+                <mat-label>Account Owner</mat-label>
+                <mat-select [(ngModel)]="userInput.newAccountInfo.parentEmployee">
+
+                    <mat-option style="pointer-events: none;">
+                        <!--Search bar-->
+                        <mat-form-field style="width: 100%;">
+                            <mat-icon matPrefix>search</mat-icon>
+                            <input style="pointer-events: auto;" #searchInput1 (keydown)="$event.stopPropagation()"
+                                (click)="$event.stopPropagation();" matInput>
+                        </mat-form-field>
+                    </mat-option>
+
+                    <ng-container *ngFor="let employee of backendData.employeeList">
+                        <mat-option *ngIf="employee.name.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                            [value]="employee.id" [disabled]="htmlRenderer.hasAccountInfo(employee)">{{employee.name}}
+                        </mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field><br />
+
+            <mat-form-field>
+                <mat-label>Zoom Meeting Id</mat-label>
+                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Zoom Meeting Passcode</mat-label>
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode">
+            </mat-form-field>
+
+            <br />
+            <button mat-button (click)="serviceAdapter.addNewAccountInfo()"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}">
+                ADD
+            </button>
+        </div>
+    </mat-card>
+
+    <hr />
+    <h3 style="margin-top: 16px;" class="icon-text-wrapper">
+        <mat-icon>history</mat-icon><span> History</span>
+    </h3>
+
+    <table *ngIf="backendData.accountInfoList.length > 0 else EmptyAccountInfo"
+        class="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th *ngIf="hasAdminPermission()">Employee</th>
+                <th>Meeting ID</th>
+                <th>Meeting Passcode</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let accountInfo of backendData.accountInfoList">
+                <tr style="cursor: pointer;"
+                    (click)="userInput.selectedAccountInfo=htmlRenderer.copyObject(accountInfo)">
+                    <td *ngIf="hasAdminPermission()">{{backendData.getEmployeeById(accountInfo.parentEmployee).name}}
+                    </td>
+                    <td>{{accountInfo.meetingNumber}}</td>
+                    <td>{{accountInfo.passcode}}</td>
+                    <td style="width: 40px;">
+                        <button (click)="serviceAdapter.deleteAccountInfo(accountInfo)" mat-stroked-button>
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="userInput.selectedAccountInfo && userInput.selectedAccountInfo.id == accountInfo.id">
+                    <td [attr.colspan]="hasAdminPermission()?6:5" class="in-animate">
+                        <mat-form-field *ngIf="hasAdminPermission()" (click)="searchInput2.focus()">
+                            <mat-label>Account Owner</mat-label>
+                            <mat-select [(ngModel)]="userInput.selectedAccountInfo.parentEmployee">
+
+                                <mat-option style="pointer-events: none;">
+                                    <!--Search bar-->
+                                    <mat-form-field style="width: 100%;">
+                                        <mat-icon matPrefix>search</mat-icon>
+                                        <input style="pointer-events: auto;" #searchInput2
+                                            (keydown)="$event.stopPropagation()" (click)="$event.stopPropagation();"
+                                            matInput>
+                                    </mat-form-field>
+                                </mat-option>
+
+                                <ng-container *ngFor="let employee of backendData.employeeList">
+                                    <mat-option
+                                        *ngIf="employee.name.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
+                                        [disabled]="htmlRenderer.hasAccountInfo(employee)" [value]="employee.id">
+                                        {{employee.name}}</mat-option>
+                                </ng-container>
+                            </mat-select>
+                        </mat-form-field><br />
+
+                        <mat-form-field>
+                            <mat-label>Zoom Meeting Id</mat-label>
+                            <input matInput type="number" [(ngModel)]="userInput.selectedAccountInfo.meetingNumber">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>Zoom Meeting Passcode</mat-label>
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.passcode">
+                        </mat-form-field><br />
+
+                        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            (click)="serviceAdapter.updateAccountInfo(userInput.selectedAccountInfo)"
+                            style="float: right;">Update</button>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+
+</div>
+<ng-template #Loader>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
+
+<ng-template #EmptyAccountInfo>
+    <span>No past records</span>
+</ng-template>

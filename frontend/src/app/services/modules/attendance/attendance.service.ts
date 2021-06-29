@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-
-import {ServiceObject} from "../../common/service-object";
+import { ServiceObject } from '../../common/service-object';
 
 @Injectable()
 export class AttendanceService extends ServiceObject {
-
     protected module_url = '/attendance';
 
     // objects urls
@@ -13,7 +11,5 @@ export class AttendanceService extends ServiceObject {
     public student_attendance = '/student-attendance';
     public employee_applied_leave = '/employee-applied-leave';
     public attendance_permission = '/attendance-permission';
-
-    // public employees = '/employees';
-
+    public attendance_settings = '/attendance-settings';
 }
