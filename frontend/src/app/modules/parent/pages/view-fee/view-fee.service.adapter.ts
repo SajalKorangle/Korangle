@@ -137,9 +137,10 @@ export class ViewFeeServiceAdapter {
         this.vm.isLoading = true;
         const totalAmount = this.vm.getTotalPaymentAmount();
 
+        // ---------------- Data Validation ----------------
         if (totalAmount <= 0) {
             this.vm.isLoading = false;
-            alert('Amout is 0');
+            alert('Invalid amount');
             return;
         }
 
@@ -161,8 +162,9 @@ export class ViewFeeServiceAdapter {
             alert('Email Validation Failed');
             return;
         }
+        // --------------- Data Validation Ends --------------- 
 
-        if (!this.vm.user.email) {
+        if (!this.vm.user.email) {  // updating user email if previouly empty
             const user_email_update_request = {
                 'id': this.vm.user.id,
                 'email': this.vm.email
@@ -170,11 +172,13 @@ export class ViewFeeServiceAdapter {
             this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request); // no need to await for response, not critica; task/ utility task
         }
 
+        // backend url were api will be hit after payment
         const returnUrl = new URL(
             environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.feeService.order_completion);
 
         const redirectParams = new URLSearchParams(location.search);
 
+        // redirect_to params decides the prontend page and state at which the user is redirected after payment
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
 
         const newOrder = {
@@ -210,7 +214,7 @@ export class ViewFeeServiceAdapter {
         form.method = 'post';
         form.action = 'https://test.cashfree.com/billpay/checkout/post/submit';
 
-        Object.entries(newCashfreeOrder).forEach(([key, value]) => {
+        Object.entries(newCashfreeOrder).forEach(([key, value]) => {    // form data to send post req. at cashfree
             const hiddenField = document.createElement('input');
             hiddenField.type = 'hidden';
             hiddenField.name = key;
