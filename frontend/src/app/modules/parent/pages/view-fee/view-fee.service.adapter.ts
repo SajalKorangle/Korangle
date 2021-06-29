@@ -162,14 +162,15 @@ export class ViewFeeServiceAdapter {
             alert('Email Validation Failed');
             return;
         }
-        // --------------- Data Validation Ends --------------- 
+        // --------------- Data Validation Ends ---------------
 
         if (!this.vm.user.email) {  // updating user email if previouly empty
             const user_email_update_request = {
                 'id': this.vm.user.id,
                 'email': this.vm.email
             };
-            this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request); // no need to await for response, not critica; task/ utility task
+            // no need to await for response, not critica; task/ utility task
+            this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request);
         }
 
         // backend url were api will be hit after payment

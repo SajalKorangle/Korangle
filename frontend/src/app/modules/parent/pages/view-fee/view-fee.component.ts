@@ -429,6 +429,12 @@ export class ViewFeeComponent implements OnInit {
         return amount;
     }
 
+    minZeroCorrection(amount: number): number {
+        if (amount < 0)
+            return 0;
+        return amount;
+    }
+
     getStudentClearanceDate(student: any): any {
         let clearanceDate = new Date('1000-01-01');
         let result = null;
