@@ -5,12 +5,14 @@ export class PurchaseSmsServiceAdapter {
 
     vm: PurchaseSmsComponent;
 
-    constructor() {}
+    purchasedSMS: number = 0;
+
+    constructor() { }
 
     initializeAdapter(vm: PurchaseSmsComponent): void {
         this.vm = vm;
     }
-    purchasedSMS: number=0;
+
     initializeData(): void {
 
         this.vm.isInitialLoading = true;
@@ -21,13 +23,13 @@ export class PurchaseSmsServiceAdapter {
 
         Promise.all([
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
-        ]).then(value =>{
+        ]).then(value => {
             this.vm.smsBalance = value[0].count;
             this.vm.isInitialLoading = false;
 
-        },error =>{
+        }, error => {
             this.vm.isInitialLoading = false;
-        })
+        });
     }
 
 

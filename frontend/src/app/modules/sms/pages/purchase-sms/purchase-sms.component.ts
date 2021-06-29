@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {ChangeDetectorRef} from '@angular/core'
-import { PurchaseSmsServiceAdapter} from './purchase-sms.service.adapter'
-import {UserService} from "../../../../services/modules/user/user.service";
+import { ChangeDetectorRef } from '@angular/core';
+import { PurchaseSmsServiceAdapter } from './purchase-sms.service.adapter';
+import { UserService } from "../../../../services/modules/user/user.service";
 import { SmsService } from "../../../../services/modules/sms/sms.service";
-import { WindowRefService } from "../../../../services/modules/sms/window-ref.service"
+import { WindowRefService } from "../../../../services/modules/sms/window-ref.service";
 import { DataStorage } from 'app/classes/data-storage';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
-import {RazorpayServiceAdapter} from  '../razor-pay/razor-pay.service.adapter'
+import { RazorpayServiceAdapter } from '../razor-pay/razor-pay.service.adapter';
 import { isMobile } from '../../../../classes/common.js';
 
 
@@ -14,7 +14,7 @@ import { isMobile } from '../../../../classes/common.js';
   selector: 'app-purchase-sms',
   templateUrl: './purchase-sms.component.html',
   styleUrls: ['./purchase-sms.component.css'],
-  providers: [ UserService, SmsService, WindowRefService],
+  providers: [UserService, SmsService, WindowRefService],
 
 })
 export class PurchaseSmsComponent implements OnInit {
@@ -24,24 +24,24 @@ export class PurchaseSmsComponent implements OnInit {
   serviceAdapter: PurchaseSmsServiceAdapter;
   razorPayServiceAdapter: RazorpayServiceAdapter;
   isLoading = false;
-  isInitialLoading = false
+  isInitialLoading = false;
 
   smsPlan = [
-    { noOfSms: 5000, selected:false },
-    { noOfSms: 20000,selected:false },
-    { noOfSms: 30000,selected:false }
+    { noOfSms: 5000, selected: false },
+    { noOfSms: 20000, selected: false },
+    { noOfSms: 30000, selected: false }
   ];
 
 
-  smsBalance =0;
-  noOfSMS =100;
+  smsBalance = 0;
+  noOfSMS = 100;
 
 
   constructor(public smsService: SmsService,
-              public smsOldService: SmsOldService,
-              public userService: UserService,
-              public winRef: WindowRefService,
-              public cdRef: ChangeDetectorRef) { }
+    public smsOldService: SmsOldService,
+    public userService: UserService,
+    public winRef: WindowRefService,
+    public cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
 
@@ -51,40 +51,37 @@ export class PurchaseSmsComponent implements OnInit {
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
   }
-  
 
 
 
-  callSetBubble(event,value)
-  { 
+
+  callSetBubble(event, value) {
     this.isPlanSelected();
     let range = document.querySelector(".range");
     let bubble = document.querySelector(".bubble");
-    this.setBubble(range,bubble,value);
+    this.setBubble(range, bubble, value);
   }
 
   setBubble(range, bubble, value) {
-    if(value>=100)
-    this.noOfSMS = value;
+    if (value >= 100)
+      this.noOfSMS = value;
     bubble.innerHTML = this.noOfSMS;
-    
+
     const min = range.min ? range.min : 0;
     const max = range.max ? range.max : 100;
     const newVal = Number(((this.noOfSMS - min) * 100) / (max - min));
-  
-    // Sorta magic numbers based on size of the native UI thumb
-    if(!this.isMobile())
-    bubble.style.left = `calc(${this.noOfSMS * (30/30000) +1}vw)`;
-    else
-    bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
-    
-  } 
 
-  isPlanSelected()
-  { 
-    for(let i=0;i<this.smsPlan.length;i++)
-    { 
-      if(this.smsPlan[i].noOfSms === this.noOfSMS)
+    // Sorta magic numbers based on size of the native UI thumb
+    if (!this.isMobile())
+      bubble.style.left = `calc(${this.noOfSMS * (30 / 30000) + 1}vw)`;
+    else
+      bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+
+  }
+
+  isPlanSelected() {
+    for (let i = 0; i < this.smsPlan.length; i++) {
+      if (this.smsPlan[i].noOfSms === this.noOfSMS)
         this.smsPlan[i].selected = true;
       else
         this.smsPlan[i].selected = false;
@@ -97,37 +94,31 @@ export class PurchaseSmsComponent implements OnInit {
   //   return true;
   // }
 
-  CallcreateRzpayOrder()
-  { 
+  CallcreateRzpayOrder() {
     let data = {
-      price : this.getPrice(this.noOfSMS),
-      noOfSMS : this.noOfSMS,
-      user : this.user,
-      smsBalance : this.smsBalance,
-  }
-    this.isLoading =true;
-    this.razorPayServiceAdapter.createRzpayOrder(data,this.smsService,this.winRef).then(value =>{
+      price: this.getPrice(this.noOfSMS),
+      noOfSMS: this.noOfSMS,
+      user: this.user,
+      smsBalance: this.smsBalance,
+    };
+    this.isLoading = true;
+    this.razorPayServiceAdapter.createRzpayOrder(data, this.smsService, this.winRef).then(value => {
       this.smsBalance += this.noOfSMS;
-      this.noOfSMS =100;
-      this.callSetBubble('',0);
+      this.noOfSMS = 100;
+      this.callSetBubble('', 0);
       this.cdRef.detectChanges();
       this.isLoading = false;
 
-    },error =>{
-      console.log('error from RazorPayServiceAdapter '+error);
-      this.isLoading = false;
     });
-    
+
   }
 
-  getPrice(noOfSMS)
-  {
-    return noOfSMS*0.25;
+  getPrice(noOfSMS) {
+    return noOfSMS * 0.25;
   }
 
-  isMobile() :boolean
-  {   
-      return isMobile();
+  isMobile(): boolean {
+    return isMobile();
   }
 
 }

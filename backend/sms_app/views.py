@@ -79,19 +79,18 @@ from .business.sms_purchase import get_sms_purchase_list
 class SMSPurchaseView(CommonView, APIView):
     Model = SMSPurchase
     
-    @user_permission
-    def get(request, school_id):
+    @user_permission_3
+    def get(request, school_id, *args, **kwargs):
         data = {
             'parentSchool': school_id,
         }
         return get_sms_purchase_list(data)
 
-    @user_permission_new
-    def post(self, request):
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
         # create a record in database of this requested data
 
-        data = json.loads(request.body.decode('utf-8'))
-        response =  create_object(data, self.Model, self.ModelSerializer)  
+        response =  create_object(request.data, self.ModelSerializer, *args, **kwargs)  
 
         # call razor pay to create order-id
         rzresp = create_rzpay_order(response)
@@ -99,12 +98,12 @@ class SMSPurchaseView(CommonView, APIView):
         update_data = {}
         update_data['id'] = response['id']
         update_data['orderId'] = rzresp['id']
-        update_response = update_object(update_data, self.Model, self.ModelSerializer)
+        update_response = update_object(update_data, self.permittedQuerySet(**kwargs), self.ModelSerializer, *args, **kwargs)
         return update_response
         
 
-    @user_permission_new
-    def put(self, request):
+    @user_permission_3
+    def put(self, request, *args, **kwargs):
         reqData = json.loads(request.body.decode('utf-8'))
         reqData['response']['amount'] = reqData['amount']*100
         response = verify_txn(reqData['response'])
@@ -112,7 +111,7 @@ class SMSPurchaseView(CommonView, APIView):
             update_data = {}
             update_data['id'] = reqData['id']
             update_data['payment_capture']=1
-            update_response = update_object(update_data,self.Model, self.ModelSerializer)
+            update_response = update_object(update_data, self.permittedQuerySet(**kwargs), self.ModelSerializer, *args, **kwargs)
             return update_response
         else:
             return response
