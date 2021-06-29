@@ -134,12 +134,10 @@ export class ViewFeeServiceAdapter {
     }
 
     async initiatePayment() {
-        this.vm.isLoading = true;
         const totalAmount = this.vm.getTotalPaymentAmount();
 
         // ---------------- Data Validation ----------------
         if (totalAmount <= 0) {
-            this.vm.isLoading = false;
             alert('Invalid amount');
             return;
         }
@@ -163,6 +161,7 @@ export class ViewFeeServiceAdapter {
             return;
         }
         // --------------- Data Validation Ends ---------------
+        this.vm.isLoading = true;
 
         if (!this.vm.user.email) {  // updating user email if previouly empty
             const user_email_update_request = {
