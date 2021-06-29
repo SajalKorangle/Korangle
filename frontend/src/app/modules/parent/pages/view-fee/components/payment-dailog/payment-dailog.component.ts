@@ -178,7 +178,7 @@ export class PaymentDailogComponent implements OnInit {
         'id': this.data.vm.user.id,
         'email': this.email
       };
-
+      // save email to user model in backend here
     }
 
     // Email Test

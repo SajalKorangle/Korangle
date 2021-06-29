@@ -25,14 +25,16 @@
                 <tbody>
                     <tr *ngIf="lateFeeVisible">
                         <td rowspan="2" align="center">Title</td>
-                        <td colspan="2" align="center">Fees</td>
-                        <td colspan="2" align="center">Late Fees</td>
+                        <td colspan="3" align="center">Fees</td>
+                        <td colspan="3" align="center">Late Fees</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td *ngIf="!lateFeeVisible" align="center">Title</td>
+                        <td align="center">Payment</td>
                         <td align="center">Due</td>
                         <td align="center">Total</td>
+                        <td align="center">Payment</td>
                         <td *ngIf="lateFeeVisible" align="center">Due</td>
                         <td *ngIf="lateFeeVisible" align="center">Total</td>
                         <td></td>
@@ -46,9 +48,21 @@
                                 background-color: #f8f5e6 !important;
                                 color: blue !important;
                             ">
-                            <td align="left">{{ student.name }}</td>
+                            <td align="left">{{ student.name }}
+                                <mat-form-field style="width: 80px; margin-left: 16px;">
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput type="number">
+                                    <!-- [(ngModel)]="amountMappedByStudntId[student.id]"
+                                        (ngModelChange)="handleOverallPaymentChange(student)"
+                                        [errorStateMatcher]="{isErrorState: amountError(student)}"
+                                        > -->
+                                    <mat-error>Invalid Amount</mat-error>
+                                </mat-form-field>
+                            </td>
+                            <td align="center">Student Fee Payment</td>
                             <td align="center">{{ getStudentFeesDue(student) }}</td>
                             <td align="center">{{ getStudentTotalFees(student) }}</td>
+                            <td align="center">Student Late Fee Payment</td>
                             <td *ngIf="lateFeeVisible" align="center">{{ getStudentLateFeesDue(student) }}</td>
                             <td *ngIf="lateFeeVisible" align="center">{{ getStudentLateFeeTotal(student) }}</td>
                             <td></td>
@@ -60,8 +74,10 @@
 
                             <tr style="font-weight: 500 !important; font-size: 16px !important">
                                 <td align="left">{{ sessionIndex + 1 }}. Session {{ session.name }}</td>
+                                <td align="center">Session Payment</td>
                                 <td align="center">{{ getSessionFeesDue(student, session) }}</td>
                                 <td align="center">{{ getSessionTotalFees(student, session) }}</td>
+                                <td align="center">Session Late Fee Payment</td>
                                 <td *ngIf="lateFeeVisible" align="center">{{ getSessionLateFeesDue(student, session) }}
                                 </td>
                                 <td *ngIf="lateFeeVisible" align="center">{{ getSessionLateFeeTotal(student, session) }}
@@ -78,10 +94,12 @@
                                         <td align="left" style="padding-left: 50px">
                                             {{ studentFeeIndex + 1 }}. {{ getFeeTypeByStudentFee(studentFee).name }}
                                         </td>
+                                        <td align="center">Fee Type Amount</td>
                                         <td align="center">{{ getStudentFeeInstallmentFeesDue(studentFee, 'april') }}
                                         </td>
                                         <td align="center">{{ getStudentFeeInstallmentTotalFees(studentFee, 'april') }}
                                         </td>
+                                        <td align="center">Late Fee Amount</td>
                                         <td *ngIf="lateFeeVisible" align="center">
                                             {{ getStudentFeeInstallmentLateFeesDue(studentFee, 'april') }}
                                         </td>
@@ -98,8 +116,10 @@
                                         <td align="left" style="padding-left: 50px">
                                             {{ studentFeeIndex + 1 }}. {{ getFeeTypeByStudentFee(studentFee).name }}
                                         </td>
+                                        <td align="center">Fee Amount</td>
                                         <td align="center">{{ getStudentFeeFeesDue(studentFee) }}</td>
                                         <td align="center">{{ getStudentFeeTotalFees(studentFee) }}</td>
+                                        <td align="center">Late Fee Amount</td>
                                         <td *ngIf="lateFeeVisible" align="center">{{
                                             getStudentFeeLateFeesDue(studentFee) }}</td>
                                         <td *ngIf="lateFeeVisible" align="center">{{
@@ -128,10 +148,12 @@
                                                 <td align="left" style="padding-left: 60px">
                                                     {{ installmentIndex + 1 }}. {{ installment | titlecase }}
                                                 </td>
+                                                <td align="center">Fee Amount</td>
                                                 <td align="center">{{ getStudentFeeInstallmentFeesDue(studentFee,
                                                     installment) }}</td>
                                                 <td align="center">{{ getStudentFeeInstallmentTotalFees(studentFee,
                                                     installment) }}</td>
+                                                <td align="center">Late Fee Amount</td>
                                                 <td *ngIf="lateFeeVisible" align="center">
                                                     {{ getStudentFeeInstallmentLateFeesDue(studentFee, installment) }}
                                                 </td>
