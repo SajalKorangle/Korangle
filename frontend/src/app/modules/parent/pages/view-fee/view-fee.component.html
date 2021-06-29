@@ -2,7 +2,6 @@
     <ng-container *ngIf="!isLoading">
         <!-- Student Fee Structures-->
         <ng-container *ngIf="getOverallFeesDue() > 0">
-            <!--Update for payment amount-->
             <table class="table table-hover" style="margin-bottom: 40px">
                 <tbody>
                     <tr style="font-weight: 800 !important; font-size: 22px !important">
@@ -49,7 +48,8 @@
                                 color: blue !important;
                             ">
                             <td align="left">{{ student.name }}
-                                <mat-form-field style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
+                                <mat-form-field *ngIf="onlinePaymentAccount" style="margin-left: 16px;"
+                                    [style.width]="isMobile()?'80px':'auto'">
                                     <mat-label *ngIf="isMobile()">Amount</mat-label>
                                     <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
                                     <input matInput type="number" [(ngModel)]="amountMappedByStudntId[student.id]"
@@ -192,16 +192,18 @@
                     </ng-container>
                 </tbody>
             </table>
-            <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
-                <mat-label>Email</mat-label>
-                <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
-            </mat-form-field>
+            <ng-container *ngIf="onlinePaymentAccount && getOverallFeesDue() > 0">
+                <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
+                </mat-form-field>
 
-            <button class="btn" [disabled]="getTotalPaymentAmount()==0"
-                style="background-color: blue; color: white; display: block; margin-top: 16px;"
-                (click)="serviceAdapter.initiatePayment()">
-                Pay Now
-            </button>
+                <button class="btn" [disabled]="getTotalPaymentAmount()==0"
+                    style="background-color: blue; color: white; display: block; margin-top: 16px;"
+                    (click)="serviceAdapter.initiatePayment()">
+                    Pay Now
+                </button>
+            </ng-container>
 
         </ng-container>
 
