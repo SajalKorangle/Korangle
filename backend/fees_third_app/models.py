@@ -39,6 +39,34 @@ INSTALLMENT_LIST = [
 ]
 
 
+class Order(models.Model):
+    TransactionStatus = (
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+        ('Failed', 'Failed'),
+        ('Refund Pending', 'Refund Pending'),
+        ('Refund Initiated', 'Refund Initiated'),
+        ('Refunded', 'Refunded'),
+        ('Forwarded to School', 'Forwarded to School')
+    )
+    parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
+    orderId = models.CharField(max_length=20, unique=True, primary_key=True)
+    amount = models.PositiveIntegerField()
+    status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
+    referenceId = models.CharField(max_length=30, null=True, default=None)
+    dateTime = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.dateTime) + ' | ' + self.status
+    
+class CashfreeTransaction(models.Model):
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
+    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
+    feeDetailJSON = models.TextField()
+
+
+
+
 class FeeType(models.Model):
 
     name = models.TextField(verbose_name='name')
@@ -289,6 +317,9 @@ class FeeReceipt(models.Model):
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
+   
+    parentCashfreeTransaction = models.ForeignKey(CashfreeTransaction, on_delete=models.PROTECT, null=True, default=None)
+    
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
@@ -588,25 +619,6 @@ class OnlinePaymentAccount(models.Model):
     vendorId = models.CharField(max_length=20, unique=True)
 
 
-class Order(models.Model):
-    TransactionStatus = (
-        ('Pending', 'Pending'),
-        ('Completed', 'Completed'),
-        ('Failed', 'Failed'),
-        ('Refund Pending', 'Refund Pending'),
-        ('Refund Initiated', 'Refund Initiated'),
-        ('Refunded', 'Refunded'),
-        ('Forwarded to School', 'Forwarded to School')
-    )
-    parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
-    orderId = models.CharField(max_length=20, unique=True, primary_key=True)
-    amount = models.PositiveIntegerField()
-    status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
-    referenceId = models.CharField(max_length=30, null=True, default=None)
-    dateTime = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.dateTime) + ' | ' + self.status
 
 
 
@@ -658,11 +670,13 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                             'parentStudent': activeStudentID,
                             'parentSession': session_id,
                             'remark': 'Reference id: {0}'.format(instance.referenceId),
-                            'modeOfPayment': 'KORANGLE'
+                            'modeOfPayment': 'KORANGLE',
+                            'parentCashfreeTransaction': transaction.id,
                         })
 
                         response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
-                        session_wise_fee_receipt_mapped_by_session_id[session_id] = FeeReceipt.objects.get(id=response['id'])
+                        newFeeReceipt = FeeReceipt.objects.get(id=response['id'])
+                        session_wise_fee_receipt_mapped_by_session_id[session_id] = newFeeReceipt
 
                         if response['parentTransaction']:
                             transactionAccountDetailsModelSerializer = TransactionAccountDetailsView().ModelSerializer
@@ -686,12 +700,4 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                         feeDetail['parentFeeReceipt'] = session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']].id
                     SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
                     create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
-
-
-
-    
-class CashfreeTransaction(models.Model):
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
-    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
-    feeDetailJSON = models.TextField()
 
