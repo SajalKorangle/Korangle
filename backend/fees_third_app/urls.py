@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 
 urlpatterns = []
 
@@ -82,7 +82,7 @@ urlpatterns += [
     url(r'^fee-settings', FeeSettingsView.as_view()),
 ]
 
-############### CashFree ####################
+from .views import OnlineFeePaymentTransactionView
 urlpatterns += [
-    url(r'^cashfree/', include('fees_third_app.cashfree.urls')),
+    url(r'^online-fee-payment-transaction/', OnlineFeePaymentTransactionView.as_view()),
 ]

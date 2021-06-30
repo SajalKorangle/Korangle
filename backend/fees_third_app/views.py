@@ -156,3 +156,14 @@ class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
     RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
 
+
+
+########### Transaction #############
+from fees_third_app.models import OnlineFeePaymentTransaction
+class OnlineFeePaymentTransactionView(CommonView, APIView):
+    Model = OnlineFeePaymentTransaction
+    RelationsToSchool = ['parentSchool__id'] 
+        
+class OnlineFeePaymentTransactionView(CommonListView, APIView):
+    Model = OnlineFeePaymentTransaction
+    RelationsToSchool = ['parentSchool__id'] 

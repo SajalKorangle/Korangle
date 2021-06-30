@@ -38,7 +38,7 @@ INSTALLMENT_LIST = [
     'february',
     'march',
 ]   
-class OnlinePaymentTransaction(models.Model):
+class OnlineFeePaymentTransaction(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
     parentOrder = models.ForeignKey(Order, unique=True, on_delete=models.CASCADE)
     feeDetailJSON = models.TextField()
@@ -297,7 +297,7 @@ class FeeReceipt(models.Model):
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
    
-    parentOnlinePaymentTransaction = models.ForeignKey(OnlinePaymentTransaction, on_delete=models.PROTECT, null=True, default=None)
+    parentOnlinePaymentTransaction = models.ForeignKey(OnlineFeePaymentTransaction, on_delete=models.PROTECT, null=True, default=None)
     
     class Meta:
         db_table = 'fee_receipt_new'
@@ -605,7 +605,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
         if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
 
             try:
-                onlinePaymentTransaction = OnlinePaymentTransaction.objects.get(parentOrder = preSavedOrder)
+                onlinePaymentTransaction = OnlineFeePaymentTransaction.objects.get(parentOrder = preSavedOrder)
             except:
                 return
 
