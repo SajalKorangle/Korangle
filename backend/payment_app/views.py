@@ -1,34 +1,12 @@
-from common.common_views_3 import CommonView, CommonListView, APIView
-from decorators import user_permission_3
-from fees_third_app.cashfree.cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
+from common.common_views_3 import CommonView, APIView
 from common.common_serializer_interface_3 import create_object, get_object
+from decorators import user_permission_3
 from time import time
 
-class SettelmentsCycleListView(APIView):
-
-    @user_permission_3
-    def get(self, request, *args, **kwargs):
-        return getSettelmentsCycleList()   
-
-
-class IFSCVerification(APIView):
-
-    @user_permission_3
-    def get(self, request, *args, **kwargs):
-        return ifscVerification(**request.GET.dict())
-
-
-class BankAccountVerification(APIView):
-
-    @user_permission_3
-    def post(self, request, *args, **kwargs):
-        return bankVerification(**request.data)
-
-
-
+# Create your views here.
 ########### Online Payment Account #############   
-from fees_third_app.models import OnlinePaymentAccount
-from fees_third_app.cashfree.cashfree import addVendor, getVendor, updateVendor
+from .models import OnlinePaymentAccount
+from .cashfree.cashfree import addVendor, getVendor, updateVendor
 
 class OnlinePaymentAccountView(CommonView, APIView):
     Model = OnlinePaymentAccount
@@ -73,33 +51,18 @@ class OnlinePaymentAccountView(CommonView, APIView):
 
 
 
-########### Transaction #############
-from fees_third_app.models import OnlinePaymentTransaction
-class CashfreeTransactionView(CommonView, APIView):
-    Model = OnlinePaymentTransaction
-    RelationsToSchool = ['parentStudent__parentSchool__id'] 
-    RelationsToStudent = ['parentStudent__id']
-        
-class CashfreeTransactionListView(CommonListView, APIView):
-    Model = OnlinePaymentTransaction
-    RelationsToSchool = ['parentStudent__parentSchool__id'] 
-    RelationsToStudent = ['parentStudent__id']
-
-
-from fees_third_app.models import Order
-from .cashfree import createAndSignCashfreeOrder
+from .models import Order
+from .cashfree.cashfree import createAndSignCashfreeOrder
 
 class OrderView(CommonView, APIView):
     Model = Order
     permittedMethods=['get', 'post',]
-    RelationsToSchool=['parentSchool__id']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
         activeSchoolId = kwargs['activeSchoolID']
         schoolOnlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool = activeSchoolId)
         orderData = {
-            'parentSchool': activeSchoolId,
             'orderId': str(int(time()*1000000)),
             'amount': request.data['orderAmount']
         }
@@ -110,8 +73,8 @@ class OrderView(CommonView, APIView):
         return responseOrderData
 
 
-from django.http import HttpResponseRedirect, HttpResponseForbidden, response
-from .cashfree import getResponseSignature
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from .cashfree.cashfree import getResponseSignature
 
 class OrderCompletionView(APIView):
     permission_classes = []
@@ -127,5 +90,5 @@ class OrderCompletionView(APIView):
             orderInstance.referenceId = request.POST['referenceId']
             orderInstance.save()
 
-        redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(request.POST['orderId']) # Appending orderId to the redirect url
+        redirectUrl = request.GET['redirect_to']
         return HttpResponseRedirect(redirectUrl)

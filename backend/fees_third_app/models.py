@@ -12,6 +12,7 @@ from employee_app.models import Employee
 from django.contrib.auth.models import User
 
 from accounts_app.models import Accounts, Transaction, AccountSession, TransactionAccountDetails
+from payment_app.models import Order
 
 from datetime import date, datetime
 
@@ -36,32 +37,10 @@ INSTALLMENT_LIST = [
     'january',
     'february',
     'march',
-]
-
-
-class Order(models.Model):
-    TransactionStatus = (
-        ('Pending', 'Pending'),
-        ('Completed', 'Completed'),
-        ('Failed', 'Failed'),
-        ('Refund Pending', 'Refund Pending'),
-        ('Refund Initiated', 'Refund Initiated'),
-        ('Refunded', 'Refunded'),
-        ('Forwarded to School', 'Forwarded to School')
-    )
+]   
+class OnlinePaymentTransaction(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
-    orderId = models.CharField(max_length=20, unique=True, primary_key=True)
-    amount = models.PositiveIntegerField()
-    status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
-    referenceId = models.CharField(max_length=30, null=True, default=None)
-    dateTime = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.dateTime) + ' | ' + self.status
-    
-class CashfreeTransaction(models.Model):
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
-    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
+    parentOrder = models.ForeignKey(Order, unique=True, on_delete=models.CASCADE)
     feeDetailJSON = models.TextField()
 
 
@@ -318,7 +297,7 @@ class FeeReceipt(models.Model):
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
    
-    parentCashfreeTransaction = models.ForeignKey(CashfreeTransaction, on_delete=models.PROTECT, null=True, default=None)
+    parentOnlinePaymentTransaction = models.ForeignKey(OnlinePaymentTransaction, on_delete=models.PROTECT, null=True, default=None)
     
     class Meta:
         db_table = 'fee_receipt_new'
@@ -614,12 +593,6 @@ class FeeSettings(models.Model):
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
     
-class OnlinePaymentAccount(models.Model):
-    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
-    vendorId = models.CharField(max_length=20, unique=True)
-
-
-
 
 
 from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
@@ -631,8 +604,12 @@ def OrderCompletionHandler(sender, instance, **kwargs):
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
         if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
 
-            transactionList = CashfreeTransaction.objects.filter(parentOrder = preSavedOrder)
-            activeSchoolID = transactionList[0].parentStudent.parentSchool.id
+            try:
+                onlinePaymentTransaction = OnlinePaymentTransaction.objects.get(parentOrder = preSavedOrder)
+            except:
+                return
+
+            activeSchoolID = onlinePaymentTransaction.parentSchool.id
 
             currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
             debitAccount = None
@@ -647,34 +624,36 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                 pass
 
             FeeReceiptModelSerializer = FeeReceiptView().ModelSerializer
+            SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
 
             with db_transaction.atomic():
-                for transaction in transactionList:
-                    activeStudentID = transaction.parentStudent.id
-                    feeDetailsList= json.loads(transaction.feeDetailJSON)
+                feeDetailsList= json.loads(onlinePaymentTransaction.feeDetailJSON)
+                studentList = set()
+                for subFeeReceipt in feeDetailsList:
+                    studentList.add(subFeeReceipt.parentStudent)
 
+                for studentId in studentList:                    
+                    filteredSubFeeReceipt = filter(lambda subFeeReceipt: subFeeReceipt.parentStuden==studentId, feeDetailsList)
                     session_wise_fee_receipt_mapped_by_session_id = {}
-                    for feeDetail in feeDetailsList:
-                        session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']] = None
+                    for feeDetail in filteredSubFeeReceipt: #different fee receipts for different sessions
+                        session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']] = None  
                     
                     for session_id in session_wise_fee_receipt_mapped_by_session_id.keys():
                         transaction_dict = {}
 
-                        for field in FeeReceipt._meta.concrete_fields: 
+                        for field in FeeReceipt._meta.concrete_fields:  #all fields filed set to None
                             transaction_dict[field] = None
 
                         transaction_dict.update({
-                            'receiptNumber': (FeeReceipt.objects.filter(parentSchool=activeSchoolID)\
-                                .aggregate(Max('receiptNumber'))['receiptNumber__max'] or 0)+1,
                             'parentSchool': activeSchoolID,
-                            'parentStudent': activeStudentID,
+                            'parentStudent': studentId,
                             'parentSession': session_id,
                             'remark': 'Reference id: {0}'.format(instance.referenceId),
                             'modeOfPayment': 'KORANGLE',
-                            'parentCashfreeTransaction': transaction.id,
+                            'parentOnlinePaymentTransaction': onlinePaymentTransaction.id,
                         })
 
-                        response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+                        response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [studentId])
                         newFeeReceipt = FeeReceipt.objects.get(id=response['id'])
                         session_wise_fee_receipt_mapped_by_session_id[session_id] = newFeeReceipt
 
@@ -685,7 +664,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                                 'parentAccount': debitAccount.id,
                                 'amount': 0,
                                 'transactionType': 'CREDIT'
-                            }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
+                            }, transactionAccountDetailsModelSerializer, activeSchoolID, [studentId]
                             )
 
                             create_object({
@@ -693,11 +672,10 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                                 'parentAccount': creditAccount.id,
                                 'amount': 0,
                                 'transactionType': 'DEBIT'
-                            }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
+                            }, transactionAccountDetailsModelSerializer, activeSchoolID, [studentId]
                             )
 
-                    for feeDetail in feeDetailsList:
-                        feeDetail['parentFeeReceipt'] = session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']].id
-                    SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
-                    create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+                    for subFeeReceipt in filteredSubFeeReceipt: # populaing parentFeeReceipt
+                        subFeeReceipt['parentFeeReceipt'] = session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']].id
+                    create_list(filteredSubFeeReceipt, SubFeeReceiptModelSerializer, activeSchoolID, [studentId])
 
