@@ -84,5 +84,5 @@ urlpatterns += [
 
 from .views import OnlineFeePaymentTransactionView
 urlpatterns += [
-    url(r'^online-fee-payment-transaction/', OnlineFeePaymentTransactionView.as_view()),
+    url(r'^online-fee-payment-transaction', OnlineFeePaymentTransactionView.as_view()),
 ]

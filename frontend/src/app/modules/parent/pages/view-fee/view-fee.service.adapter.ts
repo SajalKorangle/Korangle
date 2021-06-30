@@ -174,7 +174,7 @@ export class ViewFeeServiceAdapter {
 
         // backend url were api will be hit after payment
         const returnUrl = new URL(
-            environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.paymentService.order_completion);
+            environment.DJANGO_SERVER + Constants.api_version + this.vm.paymentService.module_url + this.vm.paymentService.order_completion);
 
         const redirectParams = new URLSearchParams(location.search);
 
@@ -206,7 +206,11 @@ export class ViewFeeServiceAdapter {
             onlineFeePaymentTransaction.feeDetailJSON.push(...this.vm.newSubFeeReceiptListMappedByStudntId[studentId]);
         });
 
-        await this.vm.feeService.createObjectList(this.vm.feeService.online_fee_payment_transaction, onlineFeePaymentTransaction);
+        const onlineFeePaymentTransactionResponse = await this.vm.feeService.createObject(this.vm.feeService.online_fee_payment_transaction, onlineFeePaymentTransaction);
+        if (!onlineFeePaymentTransactionResponse) {
+            this.vm.isLoading = false;
+            return;
+        }
 
         const form = document.createElement('form');
 

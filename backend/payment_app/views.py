@@ -90,5 +90,5 @@ class OrderCompletionView(APIView):
             orderInstance.referenceId = request.POST['referenceId']
             orderInstance.save()
 
-        redirectUrl = request.GET['redirect_to'] +'&orderId={0}'.format()
+        redirectUrl = request.GET['redirect_to'] +'&orderId={0}'.format(orderInstance.orderId)
         return HttpResponseRedirect(redirectUrl)

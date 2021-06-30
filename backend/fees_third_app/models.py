@@ -628,12 +628,15 @@ def OrderCompletionHandler(sender, instance, **kwargs):
 
             with db_transaction.atomic():
                 feeDetailsList= json.loads(onlinePaymentTransaction.feeDetailJSON)
-                studentList = set()
+                sub_fee_receipt_list_mapped_by_student_id = {}
                 for subFeeReceipt in feeDetailsList:
-                    studentList.add(subFeeReceipt.parentStudent)
+                    studentFee = StudentFee.objects.get(id=subFeeReceipt['parentStudentFee'])
+                    if studentFee.parentStudent.id in sub_fee_receipt_list_mapped_by_student_id:
+                        sub_fee_receipt_list_mapped_by_student_id[studentFee.parentStudent.id].append(subFeeReceipt)
+                    else:
+                        sub_fee_receipt_list_mapped_by_student_id[studentFee.parentStudent.id] = [subFeeReceipt]
 
-                for studentId in studentList:                    
-                    filteredSubFeeReceipt = filter(lambda subFeeReceipt: subFeeReceipt.parentStuden==studentId, feeDetailsList)
+                for studentId, filteredSubFeeReceipt in sub_fee_receipt_list_mapped_by_student_id.items():                    
                     session_wise_fee_receipt_mapped_by_session_id = {}
                     for feeDetail in filteredSubFeeReceipt: #different fee receipts for different sessions
                         session_wise_fee_receipt_mapped_by_session_id[feeDetail['parentSession']] = None  
