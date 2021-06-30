@@ -7,7 +7,6 @@ import { StudentService } from '../../../../services/modules/student/student.ser
 import { ViewFeeServiceAdapter } from './view-fee.service.adapter';
 import { ViewFeeHTMLRenderer } from './view-fee.html.renderer';
 
-import { EmitterService } from '../../../../services/emitter.service';
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt';
 import { DiscountColumnFilter, INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST, ReceiptColumnFilter } from '../../../fees/classes/constants';
@@ -26,6 +25,7 @@ import { VALIDATORS_REGX } from '@classes/regx-validators';
 import { Student } from '@services/modules/student/models/student';
 import { Session } from '@services/modules/school/models/session';
 import { UserService } from '@services/modules/user/user.service';
+import { PaymentService } from '@services/modules/payment/payment.service';
 
 declare const $: any;
 
@@ -33,7 +33,7 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './view-fee.component.html',
     styleUrls: ['./view-fee.component.css'],
-    providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService, UserService],
+    providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService, UserService, PaymentService],
 })
 export class ViewFeeComponent implements OnInit {
     user;
@@ -75,7 +75,7 @@ export class ViewFeeComponent implements OnInit {
 
     lateFeeVisible = true;
 
-    onlinePaymentAccount: boolean = false;
+    hasOnlinePaymentAccount: boolean = false;
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
@@ -92,6 +92,7 @@ export class ViewFeeComponent implements OnInit {
         public employeeService: EmployeeService,
         public classService: ClassService,
         public userService: UserService,
+        public paymentService: PaymentService,
         private cdRef: ChangeDetectorRef,
         public dialog: MatDialog,
     ) { }

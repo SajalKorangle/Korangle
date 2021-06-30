@@ -42,7 +42,7 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
     const order_request = {
       orderId: this.orderId,
     };
-    this.backendData.order = await this.data.vm.feeService.getObject(this.data.vm.feeService.order, order_request);
+    this.backendData.order = await this.data.vm.paymentService.getObject(this.data.vm.paymentService.order, order_request);
     this.isLoading = false;
   }
 

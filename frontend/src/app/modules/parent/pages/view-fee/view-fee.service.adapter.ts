@@ -79,12 +79,12 @@ export class ViewFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
-            this.vm.feeService.getObject(this.vm.feeService.online_payment_account, {}) // 13
+            this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}) // 13
         ]).then(
             (value) => {
                 console.log(value);
 
-                this.vm.onlinePaymentAccount = Boolean(value[13]);
+                this.vm.hasOnlinePaymentAccount = Boolean(value[13]);
 
                 this.vm.feeTypeList = value[0];
                 this.vm.busStopList = value[1];
@@ -174,9 +174,10 @@ export class ViewFeeServiceAdapter {
 
         // backend url were api will be hit after payment
         const returnUrl = new URL(
-            environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.feeService.order_completion);
+            environment.DJANGO_SERVER + Constants.api_version + this.vm.feeService.module_url + this.vm.paymentService.order_completion);
 
         const redirectParams = new URLSearchParams(location.search);
+
 
         // redirect_to params decides the prontend page and state at which the user is redirected after payment
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
@@ -187,27 +188,25 @@ export class ViewFeeServiceAdapter {
             customerPhone: this.vm.user.username,
             customerEmail: this.vm.email,
             returnUrl: returnUrl.toString(),
-            orderNote: 'payment towards school fee'
+            orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`
         };
 
-        const newCashfreeOrder = await this.vm.feeService.createObject(this.vm.feeService.order, newOrder);
+        const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order, newOrder);
 
-        const newTransactionList = [];
+
+        const onlineFeePaymentTransaction = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parentOrder: newCashfreeOrder.orderId,
+            feeDetailJSON: [],
+        };
 
         Object.keys(this.vm.amountMappedByStudntId).forEach(studentId => {
             if (this.vm.amountMappedByStudntId[studentId] == 0)
-                return; // return from for Each
-            const newTransaction = {
-                parentStudent: studentId,
-                parentOrder: newCashfreeOrder.orderId,
-                feeDetailJSON: this.vm.newSubFeeReceiptListMappedByStudntId[studentId],
-            };
-            newTransactionList.push(newTransaction);
+                return; // return from forEach
+            onlineFeePaymentTransaction.feeDetailJSON.push(...this.vm.newSubFeeReceiptListMappedByStudntId[studentId]);
         });
 
-        await this.vm.feeService.createObjectList(this.vm.feeService.transaction, newTransactionList);
-        // window.open(newCashfreeOrder.paymentLink, '_self');
-
+        await this.vm.feeService.createObjectList(this.vm.feeService.online_fee_payment_transaction, onlineFeePaymentTransaction);
 
         const form = document.createElement('form');
 

@@ -48,7 +48,7 @@
                                 color: blue !important;
                             ">
                             <td align="left">{{ student.name }}
-                                <mat-form-field *ngIf="onlinePaymentAccount" style="margin-left: 16px;"
+                                <mat-form-field *ngIf="hasOnlinePaymentAccount" style="margin-left: 16px;"
                                     [style.width]="isMobile()?'80px':'auto'">
                                     <mat-label *ngIf="isMobile()">Amount</mat-label>
                                     <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
@@ -192,7 +192,7 @@
                     </ng-container>
                 </tbody>
             </table>
-            <ng-container *ngIf="onlinePaymentAccount && getOverallFeesDue() > 0">
+            <ng-container *ngIf="hasOnlinePaymentAccount && getOverallFeesDue() > 0">
                 <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
                     <mat-label>Email</mat-label>
                     <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
