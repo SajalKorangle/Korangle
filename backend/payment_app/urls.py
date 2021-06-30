@@ -2,7 +2,7 @@
 from django.conf.urls import url, include
 
 urlpatterns = [
-     url(r'^cashfree', include('payment_app.cashfree.urls')),
+     url(r'^cashfree/', include('payment_app.cashfree.urls')),
 ]
 
 

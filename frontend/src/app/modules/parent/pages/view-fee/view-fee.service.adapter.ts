@@ -211,7 +211,7 @@ export class ViewFeeServiceAdapter {
         const form = document.createElement('form');
 
         form.method = 'post';
-        form.action = 'https://test.cashfree.com/billpay/checkout/post/submit';
+        form.action = environment.CASHFREE_CHECKOUT_URL;
 
         Object.entries(newCashfreeOrder).forEach(([key, value]) => {    // form data to send post req. at cashfree
             const hiddenField = document.createElement('input');
