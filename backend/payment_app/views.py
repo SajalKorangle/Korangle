@@ -88,7 +88,11 @@ class OrderCompletionView(APIView):
         if(request.POST['txStatus'] == 'SUCCESS'):
             orderInstance.status = 'Completed'
             orderInstance.referenceId = request.POST['referenceId']
-            orderInstance.save()
+            try:
+                orderInstance.save()
+            except:
+                orderInstance.status = 'Refund Pending'
+                orderInstance.save()
 
         redirectUrl = request.GET['redirect_to'] +'&orderId={0}'.format(orderInstance.orderId)
         return HttpResponseRedirect(redirectUrl)

@@ -21,3 +21,6 @@ class Order(models.Model):
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
     referenceId = models.CharField(max_length=30, null=True, default=None)
     dateTime = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.status+ ' | ' + self.orderId + ' | ' + str(self.dateTime)
