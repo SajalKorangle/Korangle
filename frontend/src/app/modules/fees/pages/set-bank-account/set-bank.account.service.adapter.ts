@@ -21,8 +21,8 @@ export class SetBankAccountServiceAdapter {
             onlinePaymentAccount,
             this.vm.settelmentCycleList,
         ] = await Promise.all([
-            this.vm.feeService.getObject(this.vm.feeService.online_payment_account, {}),
-            this.vm.feeService.getObjectList(this.vm.feeService.settelment_cycle, {})
+            this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}),
+            this.vm.paymentService.getObjectList(this.vm.paymentService.settelment_cycle, {})
                 .then(data => data.map(d => {
                     return { ...d, id: parseInt(d.id) };
                 })
@@ -44,7 +44,7 @@ export class SetBankAccountServiceAdapter {
             const request_data = {
                 ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
             };
-            this.vm.cache.ifsc = await this.vm.feeService.getObject(this.vm.feeService.ifsc_verification, request_data);
+            this.vm.cache.ifsc = await this.vm.paymentService.getObject(this.vm.paymentService.ifsc_verification, request_data);
         }
         this.vm.isIFSCLoading = false;
     }
@@ -71,7 +71,7 @@ export class SetBankAccountServiceAdapter {
             accountNumber: this.vm.onlinePaymentAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
         };
-        const accountVerificationData = await this.vm.feeService.createObject(this.vm.feeService.bank_account_verification, account_verification_data);
+        const accountVerificationData = await this.vm.paymentService.createObject(this.vm.paymentService.bank_account_verification, account_verification_data);
         if (accountVerificationData.accountStatusCode != "ACCOUNT_IS_VALID") {
             alert(`Account verification failed\n message: ${accountVerificationData.message}`);
             this.vm.resetintermediateUpdateState();
@@ -81,12 +81,12 @@ export class SetBankAccountServiceAdapter {
 
         if (this.vm.onlinePaymentAccount.id) {
             this.vm.onlinePaymentAccount =
-                await this.vm.feeService.updateObject(this.vm.feeService.online_payment_account, newOnlinePaymentAccount);
+                await this.vm.paymentService.updateObject(this.vm.paymentService.online_payment_account, newOnlinePaymentAccount);
             this.vm.snackBar.open('Payment Account Updated Successfully', undefined, { duration: 5000 });
         }
         else {
             this.vm.onlinePaymentAccount =
-                await this.vm.feeService.createObject(this.vm.feeService.online_payment_account, newOnlinePaymentAccount);
+                await this.vm.paymentService.createObject(this.vm.paymentService.online_payment_account, newOnlinePaymentAccount);
             this.vm.snackBar.open('Payment Account Created Successfully', undefined, { duration: 5000 });
         }
         this.vm.resetintermediateUpdateState();

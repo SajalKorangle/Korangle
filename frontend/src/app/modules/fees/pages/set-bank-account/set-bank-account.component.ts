@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorage } from 'app/classes/data-storage';
-import { FeeService } from '@services/modules/fees/fee.service';
+import { PaymentService } from '@services/modules/payment/payment.service';
 import { SetBankAccountServiceAdapter } from './set-bank.account.service.adapter';
-import { OnlinePaymentAccount } from '@services/modules/fees/models/online-payment-account';
+import { OnlinePaymentAccount } from '@services/modules/payment/models/online-payment-account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
@@ -10,7 +10,7 @@ import { VALIDATORS_REGX } from '@classes/regx-validators';
   selector: 'app-online-payment-account',
   templateUrl: './set-bank-account.component.html',
   styleUrls: ['./set-bank-account.component.css'],
-  providers: [FeeService]
+  providers: [PaymentService]
 })
 export class SetBankAccountComponent implements OnInit {
 
@@ -42,7 +42,7 @@ export class SetBankAccountComponent implements OnInit {
   };
   isLoading: boolean = true;
 
-  constructor(public feeService: FeeService, public snackBar: MatSnackBar) { }
+  constructor(public paymentService: PaymentService, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
@@ -79,7 +79,7 @@ export class SetBankAccountComponent implements OnInit {
     if (this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
       return false;
     return true;
-  }
+  };
 
   offlineValidation(): boolean {
     if (this.onlinePaymentAccount.vendorData.bank.ifsc.length != 11) {

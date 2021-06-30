@@ -19,13 +19,5 @@ export class FeeService extends ServiceObject {
     public fee_features = '/fee-features';
     public fee_settings = '/fee-settings';
 
-    //Cashfree
-    public settelment_cycle = '/cashfree/settelment-cycle';
-    public ifsc_verification = '/cashfree/ifsc-verification';
-    public bank_account_verification = '/cashfree/bank-account-verification';
-
-    public online_payment_account = '/cashfree/online-payment-account';
-    public transaction = '/cashfree/cashfree-transaction';
-    public order = '/cashfree/order';
-    public order_completion = '/cashfree/order-completion';
+    public online_fee_payment_transaction = '/online-fee-payment-transaction';
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ViewFeeComponent } from './../../view-fee.component';
-import { Order, STATUS_CHOICES } from '@services/modules/fees/models/order';
+import { Order, STATUS_CHOICES } from '@services/modules/payment/models/order';
 
 @Component({
   selector: 'app-payment-response-dialog',
