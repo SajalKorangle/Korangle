@@ -36,6 +36,9 @@ describe('SMS -> Manage Templates', () => {
         node = await containsFirst('mat-nav-list', 'General');
         await node.click();
 
+        node = await containsFirst('mat-nav-list', 'Student');
+        await node.click();
+
         nodes = await containsAll('mat-expansion-panel', '');
         expect(nodes.length).toBe(1);
 
@@ -84,6 +87,9 @@ describe('SMS -> Manage Templates', () => {
 
         nodes = await containsAll('mat-expansion-panel', '');
         expect(nodes.length).toBe(1);
+
+        node = await containsFirst('button', 'Go Back');
+        await node.click();
 
         node = await containsFirst('button', 'Go Back');
         await node.click();

@@ -77,7 +77,6 @@
 	{ "model": "employee_app.employeepermission", "pk": 76, "fields": { "parentEmployee": 1, "parentTask": 96 } },
 	{ "model": "employee_app.employeepermission", "pk": 77, "fields": { "parentEmployee": 1, "parentTask": 97 } },
 	{ "model": "employee_app.employeepermission", "pk": 78, "fields": { "parentEmployee": 1, "parentTask": 98 } },
-	{ "model": "employee_app.employeepermission", "pk": 79, "fields": { "parentEmployee": 1, "parentTask": 99 } },
 	{ "model": "employee_app.employeepermission", "pk": 80, "fields": { "parentEmployee": 1, "parentTask": 100 } },
 	{ "model": "employee_app.employeepermission", "pk": 82, "fields": { "parentEmployee": 1, "parentTask": 102 } },
 	{ "model": "employee_app.employeepermission", "pk": 84, "fields": { "parentEmployee": 1, "parentTask": 104 } },

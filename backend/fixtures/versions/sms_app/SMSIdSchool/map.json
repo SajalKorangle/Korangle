@@ -1,17 +1,17 @@
 [
-    {
-      "file": "single-sms-id-school.json",
-      "file_object_list": [
-        {
-          "app": "school_app",
-          "model": "School",
-          "file": "1.json"
-        },
-        {
-          "app": "sms_app",
-          "model": "SMSId",
-          "file": "single-sms-id.json"
-        }
-      ]
-    }
+  {
+    "file": "single-sms-id-school.json",
+    "file_object_list": [
+      {
+        "app": "sms_app",
+        "model": "SMSId",
+        "file": "single-sms-id.json"
+      },
+      {
+        "app": "school_app",
+        "model": "School",
+        "file": "1.json"
+      }
+    ]
+  }
 ]
