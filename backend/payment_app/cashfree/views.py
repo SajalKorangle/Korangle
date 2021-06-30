@@ -1,6 +1,6 @@
 from common.common_views_3 import APIView
 from decorators import user_permission_3
-from fees_third_app.cashfree.cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
+from .cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
 
 class SettelmentsCycleListView(APIView):
 

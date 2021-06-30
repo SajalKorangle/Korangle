@@ -14,14 +14,14 @@ urlpatterns += [
     url(r'^online-payment-account', OnlinePaymentAccountView.as_view()),
 ]
 
-from fees_third_app.cashfree.views import OrderView
+from .views import OrderView
 
 urlpatterns += [
     url(r'^order', OrderView.as_view()),
 ]
 
 
-from fees_third_app.cashfree.views import OrderCompletionView
+from .views import OrderCompletionView
 
 urlpatterns += [
     url(r'^order-completion', OrderCompletionView.as_view()),
