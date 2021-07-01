@@ -1,4 +1,3 @@
-
 from django.conf.urls import url
 
 urlpatterns = []
@@ -81,4 +80,10 @@ from .views import FeeSettingsView, FeeSettingsListView
 urlpatterns += [
     url(r'^fee-settings/batch', FeeSettingsListView.as_view()),
     url(r'^fee-settings', FeeSettingsView.as_view()),
+]
+
+from .views import OnlineFeePaymentTransactionView, OnlineFeePaymentTransactionListView
+urlpatterns += [
+    url(r'^online-fee-payment-transaction/batch', OnlineFeePaymentTransactionListView.as_view()),
+    url(r'^online-fee-payment-transaction', OnlineFeePaymentTransactionView.as_view()),
 ]

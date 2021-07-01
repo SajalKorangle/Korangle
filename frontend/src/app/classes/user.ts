@@ -154,7 +154,7 @@ export class User {
         } else if (this.checkUserSchoolSessionPermission(urlParams)) {
             // checking the school id  and session id in the url is valid for this user
             switch (
-                modulePath // from here we are populating module
+            modulePath // from here we are populating module
             ) {
                 // if the user refreshes the notification or user - settings
                 // (i.e) we dont have these two in our user's active school module list
@@ -271,6 +271,12 @@ export class User {
                 this.section['videoUrl'] = task.videoUrl;
             }
         }
+        let urlParams = new URLSearchParams(window.location.search);
+        urlParams.forEach((value, key) => {
+            if (['school_id', 'session', 'student_id'].includes(key))
+                return;
+            queryParams[key] = value;
+        });
         EmitterService.get('initialize-router').emit({ queryParams: queryParams });
     }
 }

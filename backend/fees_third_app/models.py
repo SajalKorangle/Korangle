@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import models, transaction
+from rest_framework.serializers import ModelSerializer
 
 from school_app.model.models import School, Session, BusStop
 
@@ -10,12 +11,34 @@ from employee_app.models import Employee
 
 from django.contrib.auth.models import User
 
-from accounts_app.models import Transaction, AccountSession
+from accounts_app.models import Accounts, Transaction, AccountSession, TransactionAccountDetails
+from payment_app.models import Order
+
+from datetime import date, datetime
 
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save, pre_save
+from django.db.models import Max
+import json
 
-# Create your models here.
+from common.common_serializer_interface_3 import create_object, create_list
+from django.db import transaction as db_transaction
+
+INSTALLMENT_LIST = [
+    'april',
+    'may',
+    'june',
+    'july',
+    'august',
+    'september',
+    'october',
+    'november',
+    'december',
+    'january',
+    'february',
+    'march',
+]   
+
 
 
 class FeeType(models.Model):
@@ -241,7 +264,7 @@ class StudentFee(models.Model):
 
 class FeeReceipt(models.Model):
 
-    receiptNumber = models.IntegerField(null=False, default=0, verbose_name='receiptNumber')
+    receiptNumber = models.IntegerField(blank=True, default=0, verbose_name='receiptNumber')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
@@ -264,20 +287,62 @@ class FeeReceipt(models.Model):
         ( 'Cash', 'Cash' ),
         ( 'Cheque', 'Cheque' ),
         ( 'Online', 'Online'),
+        ('KORANGLE', 'KORANGLE'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
-
+     
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
+from django.core.serializers import serialize
+
 @receiver(pre_save, sender=FeeReceipt)
-def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+def FeeReceiptPreSave(sender, instance, **kwargs):
+    if not instance.id: # before Fee Receipt creation
+
+        ## receipt number handling ##
+        last_receipt_number = FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
+                .aggregate(Max('receiptNumber'))['receiptNumber__max']
+        instance.receiptNumber = (last_receipt_number or 0) +1
+
+        ## Transaction Creation ##
+        currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
+        feeSettings = None
+        try:
+            feeSettings = FeeSettings.objects.get(parentSchool=instance.parentSchool, parentSession=currentSession)
+        except:
+            pass
+        if(feeSettings and feeSettings.accountingSettingsJSON):
+            accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
+            modeOfPayment = instance.modeOfPayment
+
+            if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
+                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)\
+                     and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0):
+                instance.parentTransaction = Transaction.objects.create(
+                    parentEmployee = instance.parentEmployee,
+                    parentSchool = instance.parentSchool,
+                    transactionDate = datetime.now(),
+                    remark = 'Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
+                )
+
+    ## Fee Receipt Cancellation Handler ##
     if instance.id and instance.cancelled:
         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
         if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
             originalFeeReceipt.parentTransaction.delete()
+
+        ## Clearance Date and Cleared ##
+        subFeeReceiptSet = originalFeeReceipt.subfeereceipt_set.all()
+        for subFeeReceipt in subFeeReceiptSet:
+            studentFee = subFeeReceipt.parentStudentFee
+            for month in INSTALLMENT_LIST:
+                if(getattr(subFeeReceipt, month+'Amount') or getattr(subFeeReceipt, month+'LateFee')):
+                    setattr(studentFee, month+'ClearanceDate', None)
+                    studentFee.cleared = False
+            studentFee.save()
     pass
 
 
@@ -340,6 +405,96 @@ class SubFeeReceipt(models.Model):
 
     class Meta:
         db_table = 'sub_fee_receipt__new'
+
+@receiver(pre_save, sender=SubFeeReceipt)
+def subFeeReceiptDataCheck(sender, instance, **kwargs):
+    studentFee = instance.parentStudentFee
+    subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled = False)
+    subDiscountSet = SubDiscount.objects.filter(parentDiscount__cancelled = False, parentStudentFee=studentFee)
+    monthClearanceFlagDict = {}
+    for month in INSTALLMENT_LIST:
+        monthClearanceFlagDict[month] = False
+    
+
+    for month in INSTALLMENT_LIST:
+        amount = 0
+        if(getattr(instance, month+'Amount')):
+            amount += getattr(instance, month+'Amount')
+
+            for subFeeReceipt in subFeeReceiptSet:
+                if getattr(subFeeReceipt, month+'Amount'):
+                    amount += getattr(subFeeReceipt, month+'Amount')
+            
+            for subDiscount in subDiscountSet:
+                if getattr(subDiscount, month+'Amount'):
+                    amount -= getattr(subDiscount, month+'Amount')
+
+            studentFeeAmount =0
+            if getattr(studentFee, month+'Amount'):
+                studentFeeAmount += getattr(studentFee, month+'Amount')
+
+            assert amount <= studentFeeAmount, "Installent amount exceeds actual amount"
+            if(amount == studentFeeAmount):
+                monthClearanceFlagDict[month] = True
+
+        if(getattr(studentFee, month+'ClearanceDate')): # month cleared
+            assert not getattr(instance, month+'LateFee'), "incoming late fee after month fee is cleared"
+        
+        elif getattr(studentFee, month+'Amount') and getattr(studentFee, month+'LastDate')\
+                and getattr(studentFee, month+'LateFee'): # late fee not cleared
+            delta = datetime.now().date() - getattr(studentFee, month+'LastDate')
+            lateFee = delta.days * getattr(studentFee, month+'LateFee')
+            if(getattr(studentFee, month+'MaximumLateFee')):
+                lateFee = max(lateFee, getattr(studentFee, month+'MaximumLateFee'))
+
+            for subDiscount in subDiscountSet:
+                if getattr(subDiscount, month+'LateFee'):
+                    lateFee -= getattr(subDiscount, month+'LateFee')
+
+            totalPaidLateFee = 0
+            for subFeeReceipt in subFeeReceiptSet:
+                if getattr(subFeeReceipt, month+'LateFee'):
+                    totalPaidLateFee += getattr(subFeeReceipt, month+'LateFee')
+            
+            if getattr(instance, month+'LateFee'):
+                totalPaidLateFee += getattr(instance, month+'LateFee')
+
+            if totalPaidLateFee < lateFee:
+                assert amount == 0, "incoming fee amount without clearing late fee"
+            elif totalPaidLateFee > lateFee:
+                assert False, "paid late fee exceeds actual late fee"
+
+    cleared = True
+    for month in INSTALLMENT_LIST:
+        cleared = cleared and monthClearanceFlagDict[month]
+        if(monthClearanceFlagDict[month]):
+            setattr(studentFee, month+'ClearanceDate', datetime.now())
+    if(cleared):
+        studentFee.cleared = True
+    studentFee.save()
+
+
+
+
+@receiver(post_save, sender=SubFeeReceipt)
+def handleAccountsTransaction(sender, instance, created, **kwargs):
+    if(created and instance.parentFeeReceipt.parentTransaction):
+        amount = 0
+        for month in INSTALLMENT_LIST:
+            if(getattr(instance, month+'Amount') is not None):
+                amount += getattr(instance, month+'Amount')
+            if(getattr(instance, month+'LateFee') is not None):
+                amount += getattr(instance, month+'LateFee')
+        creaditAccountDetail =  instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
+            transactionType = 'CREDIT'
+        )
+        debitAccountDetail = instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
+            transactionType = 'DEBIT'
+        )
+        creaditAccountDetail.amount += amount
+        debitAccountDetail.amount += amount
+        creaditAccountDetail.save()
+        debitAccountDetail.save()
 
 
 class Discount(models.Model):
@@ -426,8 +581,90 @@ class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
-    accountingSettings = models.TextField(null=True) # json data
+    accountingSettingsJSON = models.TextField(null=True) # json data
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
-        
+    
+
+class OnlineFeePaymentTransaction(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
+    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
+    feeDetailJSON = models.TextField()
+    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, null=True, blank=True)
+    
+
+
+from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
+from accounts_app.views import TransactionAccountDetailsView
+
+@receiver(pre_save, sender=Order)
+def OrderCompletionHandler(sender, instance, **kwargs):
+    if not instance._state.adding and instance.status == 'Completed':
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
+        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
+
+            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder = preSavedOrder)
+            if len(onlinePaymentTransactionList) == 0: # Order is made for some other purpose
+                return
+
+            activeSchoolID = onlinePaymentTransactionList[0].parentSchool.id
+
+            currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
+            debitAccount = None
+            creditAccount = None
+            try:
+                feeSettings = FeeSettings.objects.get(parentSchool=activeSchoolID, parentSession=currentSession)
+                if(feeSettings.accountingSettingsJSON):
+                    accountingSessings = json.loads(feeSettings.accountingSettingsJSON)
+                    debitAccount = AccountSession.objects.get(id=accountingSessings['parentAccountFrom']).parentAccount
+                    creditAccount= AccountSession.objects.get(id=accountingSessings['parentOnlinePaymentCreditAccount']).parentAccount
+            except:
+                pass
+
+            FeeReceiptModelSerializer = FeeReceiptView().ModelSerializer
+            SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
+
+            with db_transaction.atomic():
+                for onlinePaymentTransaction in onlinePaymentTransactionList:
+                    feeDetailsList= json.loads(onlinePaymentTransaction.feeDetailJSON)
+                    activeStudentID = StudentFee.objects.get(id=feeDetailsList[0]['parentStudentFee']).parentStudent.id
+                    transaction_dict = {}
+                    for field in FeeReceipt._meta.concrete_fields:  #all fields filed set to None
+                        transaction_dict[field] = None
+
+                    transaction_dict.update({
+                            'parentSchool': activeSchoolID,
+                            'parentStudent': activeStudentID,
+                            'parentSession': feeDetailsList[0]['parentSession'],
+                            'remark': 'Reference id: {0}'.format(instance.referenceId),
+                            'modeOfPayment': 'KORANGLE',
+                        })
+
+                    response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+                    newFeeReceipt = FeeReceipt.objects.get(id=response['id'])
+                    onlinePaymentTransaction.parentFeereceipt = newFeeReceipt
+                    onlinePaymentTransaction.save()
+
+                    if response['parentTransaction']:
+                        transactionAccountDetailsModelSerializer = TransactionAccountDetailsView().ModelSerializer
+                        create_object({
+                            'parentTransaction': response['parentTransaction'],
+                            'parentAccount': debitAccount.id,
+                            'amount': 0,
+                            'transactionType': 'CREDIT'
+                        }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
+                        )
+
+                        create_object({
+                            'parentTransaction': response['parentTransaction'],
+                            'parentAccount': creditAccount.id,
+                            'amount': 0,
+                            'transactionType': 'DEBIT'
+                        }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
+                        )
+
+                    for subFeeReceipt in feeDetailsList: # populaing parentFeeReceipt
+                        subFeeReceipt['parentFeeReceipt'] = newFeeReceipt.id
+                    create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+

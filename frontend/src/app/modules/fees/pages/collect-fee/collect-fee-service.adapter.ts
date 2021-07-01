@@ -68,7 +68,7 @@ export class CollectFeeServiceAdapter {
         this.vm.boardList = value[3];
         this.vm.sessionList = value[4];
         if (value[5].length == 1)
-            this.vm.feeSettings = { ...value[5][0], accountingSettings: JSON.parse(value[5][0].accountingSettings) };
+            this.vm.feeSettings = value[5][0];
         this.vm.accountsList = value[6];
         this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
         this.vm.handlePaymentAccountOnPaymentModeChange();
@@ -169,6 +169,7 @@ export class CollectFeeServiceAdapter {
             if (feeReceipt['remark'] == '') {
                 feeReceipt['remark'] = null;
             }
+            delete tempObject.receiptNumber;
             return tempObject;
         });
 
@@ -176,92 +177,44 @@ export class CollectFeeServiceAdapter {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
 
-        console.log('fee_receipt_list: ', fee_receipt_list);
-        console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
+        // console.log('fee_receipt_list: ', fee_receipt_list);
+        // console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
 
-        let student_fee_list = this.vm.studentFeeList
-            .filter((studentFee) => {
-                return tempStudentFeeIdList.includes(studentFee.id);
-            })
-            .map((studentFee) => {
-                if (this.vm.getStudentFeeFeesDue(studentFee) + this.vm.getStudentFeeLateFeesDue(studentFee) == 0) {
-                    studentFee.cleared = true;
-                }
-                return CommonFunctions.getInstance().copyObject(studentFee);
-            });
 
         this.vm.isLoading = true;
 
         const value = await Promise.all([
             this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]);
 
         let transactionFromAccountId;
         let transactionToAccountId;
-        const toCreateTransactionList = [];
         const toCreateTransactionAccountDetails = [];
-        const toUpdateFeeReceipts = [];
-        let createdTransactionList;
 
         const serviceList = [];
         let transactionFromAccountSession;
-        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON) {
             transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList
-                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettings.parentAccountFrom);
+                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettingsJSON.parentAccountFrom);
         }
 
-        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
             transactionFromAccountId = this.vm.studentFeePaymentAccount;
             transactionToAccountId = transactionFromAccountSession.parentAccount;
-            value[0].forEach(fee_receipt => {
-                if (this.vm.feeSettings) {
-                    const newTransaction = {
-                        parentEmployee: this.vm.user.activeSchool.employeeId,
-                        parentSchool: this.vm.user.activeSchool.dbId,
-                        remark: `Student Fee, receipt no.: ${fee_receipt.receiptNumber}`,
-                        transactionDate: CommonFunctions.formatDate(new Date().toDateString(), ''),
-                    };
-                    toCreateTransactionList.push(newTransaction);
-                }
-            });
-            createdTransactionList = await this.vm.accountsService.createObjectList(this.vm.accountsService.transaction, toCreateTransactionList);
-
-            createdTransactionList.forEach((transaction, index) => {
-                toUpdateFeeReceipts.push({ id: value[0][index].id, parentTransaction: transaction.id });
-                value[0][index].parentTransaction = transaction.id;
-            });
-            serviceList.push(
-                this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.fee_receipts, toUpdateFeeReceipts)
-            );
 
             value[0].forEach(fee_receipt => {
-                let totalAmount = 0;
-                sub_fee_receipt_list.forEach(subFeeReceipt => {
-                    if (subFeeReceipt.parentSession == fee_receipt.parentSession
-                        && this.vm.studentFeeList.find(item => {
-                            return item.id == subFeeReceipt.parentStudentFee;
-                        }).parentStudent == fee_receipt.parentStudent) {
-                        subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
-                        totalAmount += this.vm.installmentList.reduce((totalInstallment, installment) => {
-                            return totalInstallment
-                                + (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0)
-                                + (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0);
-                        }, 0);
-                    }
-                });
                 const newCreditTransactionAccountDetails = {
                     parentTransaction: fee_receipt.parentTransaction,
                     parentAccount: transactionToAccountId,
-                    amount: totalAmount,
+                    amount: 0,
                     transactionType: 'CREDIT',
                 };
                 toCreateTransactionAccountDetails.push(newCreditTransactionAccountDetails);
                 const newDebitTransactionAccountDetails = {
                     parentTransaction: fee_receipt.parentTransaction,
                     parentAccount: transactionFromAccountId,
-                    amount: totalAmount,
+                    amount: 0,
                     transactionType: 'DEBIT',
                 };
                 toCreateTransactionAccountDetails.push(newDebitTransactionAccountDetails);
@@ -271,18 +224,17 @@ export class CollectFeeServiceAdapter {
             );
 
         }
-        else {
-            value[0].forEach(fee_receipt => {
-                sub_fee_receipt_list.forEach(subFeeReceipt => {
-                    if (subFeeReceipt.parentSession == fee_receipt.parentSession
-                        && this.vm.studentFeeList.find(item => {
-                            return item.id == subFeeReceipt.parentStudentFee;
-                        }).parentStudent == fee_receipt.parentStudent) {
-                        subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
-                    }
-                });
+
+        value[0].forEach(fee_receipt => {
+            sub_fee_receipt_list.forEach(subFeeReceipt => {
+                if (subFeeReceipt.parentSession == fee_receipt.parentSession
+                    && this.vm.studentFeeList.find(item => {
+                        return item.id == subFeeReceipt.parentStudentFee;
+                    }).parentStudent == fee_receipt.parentStudent) {
+                    subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
+                }
             });
-        }
+        });
 
         await Promise.all(serviceList);
 

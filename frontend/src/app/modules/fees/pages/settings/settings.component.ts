@@ -58,7 +58,7 @@ export class SettingsComponent implements OnInit {
         if (checked) {
             this.backendData.initilizeAccouting();
         } else {
-            this.backendData.feeSettings.accountingSettings = null;
+            this.backendData.feeSettings.accountingSettingsJSON = null;
         }
     }
 
@@ -71,31 +71,41 @@ export class SettingsComponent implements OnInit {
     }
 
     addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode): void {
-        const alreadyExists = this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode]
+        const alreadyExists = this.backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode]
             .find(accountSessionId => accountSessionId == customAccountSession.id) != undefined;
         if (alreadyExists)
             return;
-        this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].push(customAccountSession.id);
+        this.backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode].push(customAccountSession.id);
     }
 
     settingsValidityCheck(): boolean {
         let errormsg = '';
         let dataValid = true;
-        if (this.backendData.feeSettings.accountingSettings) {
-            if (!this.backendData.feeSettings.accountingSettings.parentAccountFrom) {
+        if (this.backendData.feeSettings.accountingSettingsJSON) {
+            if (!this.backendData.feeSettings.accountingSettingsJSON.parentAccountFrom) {
                 dataValid = false;
-                errormsg += '\n• Student fee debit account cannot be empty';
+                errormsg += '\n• Student Fee Debit Account cannot be empty';
+            }
+            else if (!this.backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount) {
+                dataValid = false;
+                errormsg += '\n• Onine Payment Credit Account cannot be empty';
             }
             else {
                 this.getPaymentModeList().every(paymentMode => {
-                    if (this.backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].find(
-                        accountSessionId => accountSessionId == this.backendData.feeSettings.accountingSettings.parentAccountFrom) != undefined) {
+                    if (this.backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode].find(
+                        accountSessionId => accountSessionId == this.backendData.feeSettings.accountingSettingsJSON.parentAccountFrom) != undefined) {
                         dataValid = false;
                         errormsg += '\n• Student fee debit account cannot be included in any accounts under payment mode';
                         return false;   // return of every
                     }
                     return true;    // return of every
                 });
+                if (dataValid
+                    && this.backendData.feeSettings.accountingSettingsJSON.parentAccountFrom ==
+                    this.backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount) {
+                    dataValid = false;
+                    errormsg += '\n• Onine Payment Credit Account cannot be same as Student Fee Debit Account';
+                }
             }
             if (!dataValid) {
                 alert(errormsg.trim());

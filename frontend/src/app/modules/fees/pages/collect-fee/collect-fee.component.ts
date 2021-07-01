@@ -1256,7 +1256,7 @@ export class CollectFeeComponent implements OnInit {
     }
 
     handlePaymentAccountOnPaymentModeChange(): void {
-        if (this.feeSettings && this.feeSettings.accountingSettings) {
+        if (this.feeSettings && this.feeSettings.accountingSettingsJSON) {
             this.studentFeePaymentAccount = null;
             const filteredAccounts = this.htmlRenderer.getFilteredPaymentAccounts();
             if (filteredAccounts.length > 0) {
