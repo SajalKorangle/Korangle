@@ -2,7 +2,7 @@ from django_extensions.management.jobs import DailyJob
 from datetime import datetime, timedelta
 import pytz
 from payment_app.models import Order
-from payment_app.cashfree.cashfree import isOrderCompleted
+from payment_app.cashfree.cashfree import getOrderStatus
 
 class Job(DailyJob): # Should be run between 3am to 5am
     help = "Cashfree Refund job."
@@ -15,11 +15,15 @@ class Job(DailyJob): # Should be run between 3am to 5am
         toDateTime = timezone.localize(now - timedelta(hours=1))
         toCheckOrderList = Order.objects.filter(dateTime__gte=fromDateTime, datetime__lte=toDateTime, status = 'Pending')
         for orderInstance in toCheckOrderList:
-            orderComplete = isOrderCompleted(orderInstance.orderId)
-            if(orderComplete):
+            try:
+                cashfreeOrder = getOrderStatus(orderInstance.orderId)
+                assert cashfreeOrder['orderStatus'] != "ACTIVE"
+            except:
+                continue
+            if(cashfreeOrder['txStatus']=='SUCCESS'):
                 try:
                     orderInstance.status = 'Completed'
-                    orderInstance.referenceId = orderComplete['referenceId']
+                    orderInstance.referenceId = cashfreeOrder['referenceId']
                     orderInstance.save()
                 except:
                     orderInstance.status = 'Refund Pending'

@@ -97,15 +97,15 @@ def getOrderStatus(orderId):
     return response.json()
 
 
-def isOrderCompleted(orderId):
-    result = False # either false or orderResonseData
-    try:
-        orderStatusData = getOrderStatus(orderId)
-        assert orderStatusData['txStatus'] == 'SUCCESS'
-        return orderStatusData
-    except:
-        pass
-    return result
+# def isOrderCompleted(orderId):
+#     result = False # either false or orderResonseData
+#     try:
+#         orderStatusData = getOrderStatus(orderId)
+#         assert orderStatusData['txStatus'] == 'SUCCESS'
+#         return orderStatusData
+#     except:
+#         pass
+#     return result
 
 # def initiateRefund(orderId, amount):
 #     orderStatusData = getOrderStatus(orderId)
