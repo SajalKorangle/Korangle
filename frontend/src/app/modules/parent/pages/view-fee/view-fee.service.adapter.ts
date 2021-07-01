@@ -193,20 +193,28 @@ export class ViewFeeServiceAdapter {
 
         const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order, newOrder);
 
+        const onlineFeePaymentTransactionList = [];
 
-        const onlineFeePaymentTransaction = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            parentOrder: newCashfreeOrder.orderId,
-            feeDetailJSON: [],
-        };
 
         Object.keys(this.vm.amountMappedByStudntId).forEach(studentId => {
             if (this.vm.amountMappedByStudntId[studentId] == 0)
                 return; // return from forEach
-            onlineFeePaymentTransaction.feeDetailJSON.push(...this.vm.newSubFeeReceiptListMappedByStudntId[studentId]);
+            this.vm.sessionList.forEach(session => {
+                const filteredSubFeeReceiptList
+                    = this.vm.newSubFeeReceiptListMappedByStudntId[studentId]
+                        .filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
+                if (filteredSubFeeReceiptList.length > 0) {
+                    const onlineFeePaymentTransaction = {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                        parentOrder: newCashfreeOrder.orderId,
+                        feeDetailJSON: filteredSubFeeReceiptList,
+                    };
+                    onlineFeePaymentTransactionList.push(onlineFeePaymentTransaction);
+                }
+            });
         });
 
-        const onlineFeePaymentTransactionResponse = await this.vm.feeService.createObject(this.vm.feeService.online_fee_payment_transaction, onlineFeePaymentTransaction);
+        const onlineFeePaymentTransactionResponse = await this.vm.feeService.createObjectList(this.vm.feeService.online_fee_payment_transaction, onlineFeePaymentTransactionList);
         if (!onlineFeePaymentTransactionResponse) {
             this.vm.isLoading = false;
             return;
