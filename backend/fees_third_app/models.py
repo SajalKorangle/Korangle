@@ -643,6 +643,8 @@ def OrderCompletionHandler(sender, instance, **kwargs):
 
                     response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
                     newFeeReceipt = FeeReceipt.objects.get(id=response['id'])
+                    onlinePaymentTransaction.parentFeereceipt = newFeeReceipt
+                    onlinePaymentTransaction.save()
 
                     if response['parentTransaction']:
                         transactionAccountDetailsModelSerializer = TransactionAccountDetailsView().ModelSerializer

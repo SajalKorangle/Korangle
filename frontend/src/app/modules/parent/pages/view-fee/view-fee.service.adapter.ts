@@ -214,7 +214,10 @@ export class ViewFeeServiceAdapter {
             });
         });
 
-        const onlineFeePaymentTransactionResponse = await this.vm.feeService.createObjectList(this.vm.feeService.online_fee_payment_transaction, onlineFeePaymentTransactionList);
+        const onlineFeePaymentTransactionResponse = await this.vm.feeService.createObjectList(
+            this.vm.feeService.online_fee_payment_transaction,
+            onlineFeePaymentTransactionList
+        );
         if (!onlineFeePaymentTransactionResponse) {
             this.vm.isLoading = false;
             return;
