@@ -12,14 +12,15 @@ class Job(DailyJob): # Should be run between 3am to 5am
         now =datetime.now()
         timezone = pytz.timezone("Asia/Kolkata")
         fromDateTime = timezone.localize( datetime(now.year, now.month, now.day) - timedelta(days=1))
-        toDateTime = timezone.localize(now - timedelta(hours=1))
-        toCheckOrderList = Order.objects.filter(dateTime__gte=fromDateTime, datetime__lte=toDateTime, status = 'Pending')
+        toCheckOrderList = Order.objects.filter(dateTime__gte=fromDateTime, status = 'Pending')
         for orderInstance in toCheckOrderList:
             try:
                 cashfreeOrder = getOrderStatus(orderInstance.orderId)
+                print(cashfreeOrder)
                 assert cashfreeOrder['orderStatus'] != "ACTIVE"
             except:
                 continue
+            print(cashfreeOrder)
             if(cashfreeOrder['txStatus']=='SUCCESS'):
                 try:
                     orderInstance.status = 'Completed'

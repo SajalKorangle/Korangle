@@ -1,5 +1,7 @@
 from django.db import models
 from school_app.model.models import School
+from django.utils.timezone import make_aware, make_naive
+
 
 
 class OnlinePaymentAccount(models.Model):
@@ -23,4 +25,4 @@ class Order(models.Model):
     dateTime = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.status+ ' | ' + self.orderId + ' | ' + str(self.dateTime)
+        return self.status+ ' | ' + self.orderId + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
