@@ -7,7 +7,19 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 var retry = require('protractor-retry').retry;
+const { exec } = require('child_process');
 
+const command1 = puppeteer.executablePath() +  ' --version'
+const command2 = 'node ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update --versions.chrome='
+
+exec(command1,
+    (err, stdout, stderr) => {
+        console.log(command2 + stdout.split(' ')[1]);
+        exec(command2 + stdout.split(' ')[1],
+            (err, stdout, stderr) => {
+                console.log('Driver Updated')
+            });
+    });
 /**
  * @type { import("protractor").Config }
  */
