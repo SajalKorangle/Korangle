@@ -7,7 +7,8 @@ mkdir -p tmp
 npm start &
 while ! echo exit | nc localhost 4200; do sleep 10; done
 
-node ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update
+node ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update --versions.chrome 88.0.4324.96
+node ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager start --versions.chrome 88.0.4324.96
 ./node_modules/.bin/protractor tests/protractor/protractor.conf.js
 if [ "$?" -ne 0 ];
 then
