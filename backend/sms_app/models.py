@@ -123,13 +123,12 @@ def SMSOrderCompletionhandler(sender, instance, **kwargs):
                 onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder = preSavedOrder)
             except: # Order was not mabe for SMS
                 return
-            
-            activeSchoolID = onlineSmsPaymentTransaction.parentSchool
+            activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
             smsPurchaseData = json.loads(onlineSmsPaymentTransaction.smsPurchaseJSON)
             with db_transaction.atomic():
-                response = create_object(smsPurchaseData, SMSPurchaseView, activeSchoolID, None)
+                response = create_object(smsPurchaseData, SMSPurchaseModelSerializer, activeSchoolID, None)
                 smsPurchase = SMSPurchase.objects.get(id=response['id'])
-                onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchaseData
+                onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchase
                 smsPurchase.save()
                 
             

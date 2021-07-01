@@ -10,6 +10,10 @@ import { isMobile } from '../../../../classes/common.js';
 import { GeneralSMSPurchaseServiceAdapter } from '@modules/sms/class/sms-purchase.service.adapter';
 import { PaymentService } from '@services/modules/payment/payment.service';
 import { SMS_PLAN } from '@modules/sms/class/constants';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
+import { PaymentResponseDialogComponent } from './../../components/payment-response-dialog/payment-response-dialog.component';
+import { MatDialog } from '@angular/material';
+
 
 @Component({
   selector: 'app-purchase-sms',
@@ -35,13 +39,16 @@ export class PurchaseSmsComponent implements OnInit {
 
   email: string = '';
 
+  validatorRegex = VALIDATORS_REGX;
+
 
   constructor(public smsService: SmsService,
     public paymentService: PaymentService,
     public smsOldService: SmsOldService,
     public userService: UserService,
     public winRef: WindowRefService,
-    public cdRef: ChangeDetectorRef) { }
+    public cdRef: ChangeDetectorRef,
+    public dialog: MatDialog,) { }
 
   ngOnInit() {
 
@@ -53,6 +60,11 @@ export class PurchaseSmsComponent implements OnInit {
 
     if (this.user.email)
       this.email = this.user.email;
+
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.has('orderId')) {
+      this.openPaymentResponseDialog();
+    }
   }
 
 
@@ -98,12 +110,28 @@ export class PurchaseSmsComponent implements OnInit {
   // }
 
   makeSmsPurchase() {
+    if (!this.email) {
+      alert("Email is required");
+      return;
+    }
+    if (!VALIDATORS_REGX.email.test(this.email)) {
+      alert("Invalid Email");
+      return;
+    }
     this.isLoading = true;
-    this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.user, this.email);
+    this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.email);
   }
 
   isMobile(): boolean {
     return isMobile();
+  }
+
+  openPaymentResponseDialog() {
+    this.dialog.open(PaymentResponseDialogComponent, {
+      data: {
+        vm: this
+      }
+    });
   }
 
 }

@@ -16,7 +16,7 @@ import { WindowRefService } from "../../../../services/modules/sms/window-ref.se
 import { MatDialog } from '@angular/material';
 
 import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
-
+import { PaymentResponseDialogComponent } from './../../components/payment-response-dialog/payment-response-dialog.component';
 
 @Component({
     selector: 'send-sms',
@@ -143,6 +143,11 @@ export class SendSmsComponent implements OnInit {
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        const urlParams = new URLSearchParams(location.search);
+        if (urlParams.has('orderId')) {
+            this.openPaymentResponseDialog();
+        }
     }
 
     getMobileNumberList(returnType: string): any {
@@ -452,6 +457,14 @@ export class SendSmsComponent implements OnInit {
         this.dialog.open(PurchaseSmsDialogComponent, {
             data: {
                 vm: this,
+            }
+        });
+    }
+
+    openPaymentResponseDialog() {
+        this.dialog.open(PaymentResponseDialogComponent, {
+            data: {
+                vm: this
             }
         });
     }

@@ -60,7 +60,12 @@
 
         <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
         </div>
-
+        <div class="row" style="margin-top: 20px;">
+            <mat-form-field style="float: right; margin-right: 1vw;">
+                <mat-label>Email</mat-label>
+                <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email">
+            </mat-form-field>
+        </div>
         <div class="row" style="margin-top: 20px;">
 
             <div style="float: right;margin-right: 1vw;">
@@ -129,6 +134,13 @@
         </div>
 
         <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <mat-form-field style="float: right; margin-right: 1vw;">
+                <mat-label>Email</mat-label>
+                <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email">
+            </mat-form-field>
         </div>
 
         <div class="row" style="margin-top: 20px; text-align:center;">

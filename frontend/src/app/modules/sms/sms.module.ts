@@ -13,18 +13,20 @@ import { SmsRoutingModule } from './sms.routing';
 
 import { SmsOldService } from '../../services/modules/sms/sms-old.service';
 
+import { PaymentResponseDialogComponent } from './components/payment-response-dialog/payment-response-dialog.component';
+
 @NgModule({
     declarations: [
         SmsComponent,
-
+        PaymentResponseDialogComponent,
         // SendSmsComponent,
         // ViewSentComponent,
         // ViewPurchasesComponent,
     ],
-
+    entryComponents: [PaymentResponseDialogComponent],
     imports: [ComponentsModule, SmsRoutingModule, NgxDatatableModule],
     exports: [],
     providers: [SmsOldService],
     bootstrap: [SmsComponent],
 })
-export class SmsModule {}
+export class SmsModule { }
