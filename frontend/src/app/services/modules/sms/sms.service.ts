@@ -9,6 +9,5 @@ export class SmsService extends ServiceObject {
     // objects urls
     public sms = '/sms';
     public diff_sms = '/send-diff-sms';
-    public sms_purchase = '/sms-purchase';
     // public msg_club_delivery_report = '/msg-club-delivery-report';
 }

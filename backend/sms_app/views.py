@@ -11,7 +11,6 @@ import json
 ############## SMS Old ##############
 from sms_app.models import SMS, SMSPurchase
 from .business.sms import get_sms_list
-from .business.razorpay_payment import create_rzpay_order, verify_txn
 
 
 class SMSOldListView(APIView):
@@ -73,49 +72,11 @@ def handle_msg_club_delivery_report_view(request):
 
 
 ############## SMS Purchase ##############
-from .business.sms_purchase import get_sms_purchase_list
-
-
 class SMSPurchaseView(CommonView, APIView):
     Model = SMSPurchase
-    
-    @user_permission_3
-    def get(request, school_id, *args, **kwargs):
-        data = {
-            'parentSchool': school_id,
-        }
-        return get_sms_purchase_list(data)
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['get']
 
-    @user_permission_3
-    def post(self, request, *args, **kwargs):
-        # create a record in database of this requested data
-
-        response =  create_object(request.data, self.ModelSerializer, *args, **kwargs)  
-
-        # call razor pay to create order-id
-        rzresp = create_rzpay_order(response)
-        # update that record with order-id and send order id to front-end
-        update_data = {}
-        update_data['id'] = response['id']
-        update_data['orderId'] = rzresp['id']
-        update_response = update_object(update_data, self.permittedQuerySet(**kwargs), self.ModelSerializer, *args, **kwargs)
-        return update_response
-        
-
-    @user_permission_3
-    def put(self, request, *args, **kwargs):
-        reqData = json.loads(request.body.decode('utf-8'))
-        reqData['response']['amount'] = reqData['amount']*100
-        response = verify_txn(reqData['response'])
-        if (response):
-            update_data = {}
-            update_data['id'] = reqData['id']
-            update_data['payment_capture']=1
-            update_response = update_object(update_data, self.permittedQuerySet(**kwargs), self.ModelSerializer, *args, **kwargs)
-            return update_response
-        else:
-            return response
-            
 
 
 

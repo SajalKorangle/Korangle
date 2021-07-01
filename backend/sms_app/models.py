@@ -1,7 +1,15 @@
+import json
 from django.db import models
+from django.db import transaction as db_transaction
 
 from school_app.model.models import School
 from information_app.models import MessageType
+from payment_app.models import Order
+
+
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from common.common_serializer_interface_3 import create_object
 
 
 # Create your models here.
@@ -88,14 +96,41 @@ class SMSPurchase(models.Model):
     # School
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
-    # SMS No.
-    orderId = models.CharField(max_length = 200, null=True, verbose_name='orderId')
-
-    # SMS No.
-    payment_capture = models.BooleanField(null=False, default=False, verbose_name='payment_capture')
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price) + ' -- ' + str(self.orderId)
 
     class Meta:
         db_table = 'sms_purchase'
+
+
+class OnlineSmsPaymentTransaction(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT)
+    parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, unique=True)
+    smsPurchaseJSON = models.TextField()
+    parentSmsPurchase = models.ForeignKey(SMSPurchase, on_delete=models.PROTECT, null=True, blank=True)
+
+
+from .views import SMSPurchaseView
+SMSPurchaseModelSerializer = SMSPurchaseView().ModelSerializer
+
+@receiver(pre_save, sender=Order)
+def SMSOrderCompletionhandler(sender, instance, **kwargs):
+    if not instance._state.adding and instance.status == 'Completed':
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
+        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
+            try:
+                onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder = preSavedOrder)
+            except: # Order was not mabe for SMS
+                return
+            
+            activeSchoolID = onlineSmsPaymentTransaction.parentSchool
+            smsPurchaseData = json.loads(onlineSmsPaymentTransaction.smsPurchaseJSON)
+            with db_transaction.atomic():
+                response = create_object(smsPurchaseData, SMSPurchaseView, activeSchoolID, None)
+                smsPurchase = SMSPurchase.objects.get(id=response['id'])
+                onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchaseData
+                smsPurchase.save()
+                
+            
+
