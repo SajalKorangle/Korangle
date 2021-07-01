@@ -48,7 +48,7 @@ export class PurchaseSmsComponent implements OnInit {
     public userService: UserService,
     public winRef: WindowRefService,
     public cdRef: ChangeDetectorRef,
-    public dialog: MatDialog,) { }
+    public dialog: MatDialog, ) { }
 
   ngOnInit() {
 
