@@ -72,14 +72,17 @@ def handle_msg_club_delivery_report_view(request):
 
 
 ############## SMS Purchase ##############
-class SMSPurchaseView(CommonView, APIView):
-    Model = SMSPurchase
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get']
+from .business.sms_purchase import get_sms_purchase_list
 
 
+class SMSPurchaseOldView(APIView):
 
-
+    @user_permission
+    def get(request, school_id):
+        data = {
+            'parentSchool': school_id,
+        }
+        return get_sms_purchase_list(data)
 
 
 ############## SMS ##############
@@ -142,3 +145,9 @@ class OnlineSmsPaymentTransactionView(CommonView, APIView):
     RelationsToSchool = ['parentSchool__id']
     permittedMethods = ['post']
     
+
+
+class SMSPurchaseView(CommonView, APIView):
+    Model = SMSPurchase
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['get']

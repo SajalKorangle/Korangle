@@ -4,10 +4,10 @@ urlpatterns = []
 
 
 ######## SMS Purchase ###############
-from .views import SMSPurchaseView
+from .views import SMSPurchaseOldView
 
 urlpatterns += [
-	url(r'^school/(?P<school_id>[0-9]+)/sms-purchases', SMSPurchaseView.as_view()),
+	url(r'^school/(?P<school_id>[0-9]+)/sms-purchases', SMSPurchaseOldView.as_view()),
 ]
 
 
@@ -42,10 +42,10 @@ urlpatterns += [
 ]
 
 ######## SMS PURCHASE ##############
-from .views import SMSPurchaseView
+from .views import SMSPurchaseOldView
 
 urlpatterns += [
-	url(r'^sms-purchase', SMSPurchaseView.as_view()),
+	url(r'^sms-purchase', SMSPurchaseOldView.as_view()),
 ]
 
 ######## SMS ##############

@@ -8,6 +8,7 @@ import { SmsService } from '@services/modules/sms/sms.service';
 import { UserService } from '@services/modules/user/user.service';
 import { SendSmsComponent } from '@modules/sms/pages/send-sms/send-sms.component';
 import { SMS_PLAN } from '@modules/sms/class/constants';
+import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
   selector: 'app-purchase-sms-dialog',
@@ -17,6 +18,8 @@ import { SMS_PLAN } from '@modules/sms/class/constants';
 })
 export class PurchaseSmsDialogComponent implements OnInit {
 
+  user: any;
+
   email: string = '';
 
   generalSMSPurchaseServiceAdapter: GeneralSMSPurchaseServiceAdapter;
@@ -24,6 +27,8 @@ export class PurchaseSmsDialogComponent implements OnInit {
   smsPlan = SMS_PLAN;
 
   noOfSMS = 100;
+
+  validatorRegex = VALIDATORS_REGX;
 
   constructor(
     public smsService: SmsService,
@@ -33,6 +38,7 @@ export class PurchaseSmsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { vm: SendSmsComponent; }) { }
 
   ngOnInit() {
+    this.user = this.data.vm.user;
     this.generalSMSPurchaseServiceAdapter = new GeneralSMSPurchaseServiceAdapter(this);
     if (this.data.vm.user.email)
       this.email = this.data.vm.user.email;
@@ -70,8 +76,17 @@ export class PurchaseSmsDialogComponent implements OnInit {
     }
   }
 
-  startPayment() {
-    this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.email);
+  async startPayment() {
+    if (!this.email) {
+      alert("Email is required");
+      return;
+    }
+    if (!VALIDATORS_REGX.email.test(this.email)) {
+      alert("Invalid Email");
+      return;
+    }
+    this.data.vm.isLoading = true;
+    await this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.email);
     this.dialogRef.close();
   }
 

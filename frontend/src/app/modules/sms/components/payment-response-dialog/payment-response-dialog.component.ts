@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Order, STATUS_CHOICES } from '@services/modules/payment/models/order';
+import { PaymentService } from '@services/modules/payment/payment.service';
 
 @Component({
   selector: 'app-payment-response-dialog',
   templateUrl: './payment-response-dialog.component.html',
-  styleUrls: ['./payment-response-dialog.component.css']
+  styleUrls: ['./payment-response-dialog.component.css'],
+  providers: [PaymentService]
 })
 export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
 
@@ -21,9 +23,12 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
 
-  constructor(public dialogRef: MatDialogRef<PaymentResponseDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
-    vm: any;
-  }) { }
+  constructor(
+    public paymentService: PaymentService,
+    public dialogRef: MatDialogRef<PaymentResponseDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      vm: any;
+    }) { }
 
   ngOnInit() {
     this.orderId = parseInt(new URLSearchParams(location.search).get('orderId'));
@@ -41,7 +46,7 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
     const order_request = {
       orderId: this.orderId,
     };
-    this.backendData.order = await this.data.vm.paymentService.getObject(this.data.vm.paymentService.order, order_request);
+    this.backendData.order = await this.paymentService.getObject(this.paymentService.order, order_request);
     this.isLoading = false;
   }
 

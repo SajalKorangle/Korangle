@@ -98,7 +98,7 @@ class SMSPurchase(models.Model):
 
 
     def __str__(self):
-        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price) + ' -- ' + str(self.orderId)
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price)
 
     class Meta:
         db_table = 'sms_purchase'

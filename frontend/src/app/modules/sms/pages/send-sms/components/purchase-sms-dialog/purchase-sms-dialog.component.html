@@ -35,7 +35,7 @@
             border-radius: 4px;
             color: white;" [class.mobileStyle]="!isMobile()">
 
-                {{noOfSMS}} SMS for Rs. {{getPrice(noOfSMS)}}
+                {{noOfSMS}} SMS for Rs. {{generalSMSPurchaseServiceAdapter.getPrice(noOfSMS)}}
 
             </div>
         </div>
@@ -81,7 +81,7 @@
         <div *ngFor="let plan of smsPlan" style="display: inline-block;">
             <div (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS);"
                 [ngClass]="plan.selected ? 'selected' : 'unselected'">
-                <span>{{plan.noOfSms}} SMS for Rs {{getPrice(plan.noOfSms)}}</span>
+                <span>{{plan.noOfSms}} SMS for Rs {{generalSMSPurchaseServiceAdapter.getPrice(plan.noOfSms)}}</span>
             </div>
         </div>
 
@@ -92,7 +92,7 @@
         <div *ngFor="let plan of smsPlan" style="width: 80%;">
             <div (click)="noOfSMS = plan.noOfSms; callSetBubble('',noOfSMS);"
                 [ngClass]="plan.selected ? 'selectedMobile' : 'unselectedMobile'">
-                <span>{{plan.noOfSms}} SMS for Rs {{getPrice(plan.noOfSms)}}</span>
+                <span>{{plan.noOfSms}} SMS for Rs {{generalSMSPurchaseServiceAdapter.getPrice(plan.noOfSms)}}</span>
             </div>
         </div>
 
@@ -101,7 +101,10 @@
     <div *ngIf="!isMobile()" class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
     </div>
 
-
+    <mat-form-field style="display: block; margin: auto;">
+        <mat-label>Email</mat-label>
+        <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email">
+    </mat-form-field>
 
 
 </mat-dialog-content>
