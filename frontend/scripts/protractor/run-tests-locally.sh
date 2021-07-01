@@ -27,6 +27,11 @@ start=$SECONDS
 source $KORANGLE_VIRTUAL_ENVIRONMENT_PATH
 
 # Running tests
+chrome_version=`./node_modules/puppeteer/.local-chromium/linux-818858/chrome-linux/chrome --version`
+string_array=($chrome_version)
+echo ${string_array[1]}
+node ./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update --versions.chrome=${string_array[1]}
+
 protractor tests/protractor/protractor.conf.js
 if [ "$?" -ne 0 ];
 then
