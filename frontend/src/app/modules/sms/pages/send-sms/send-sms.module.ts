@@ -4,12 +4,12 @@ import { SendSmsRoutingModule } from './send-sms.routing';
 import { ComponentsModule } from '../../../../components/components.module';
 import { SendSmsComponent } from './send-sms.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { PurchaseSMSDialogComponent } from "./send-sms.component";
+import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
 
 @NgModule({
     declarations: [
         SendSmsComponent,
-        PurchaseSMSDialogComponent,
+        PurchaseSmsDialogComponent,
     ],
 
     imports: [
@@ -19,8 +19,7 @@ import { PurchaseSMSDialogComponent } from "./send-sms.component";
     ],
     exports: [],
     providers: [],
-    bootstrap: [SendSmsComponent, PurchaseSMSDialogComponent],
-    entryComponents: [SendSmsComponent, PurchaseSMSDialogComponent]
-
+    entryComponents: [PurchaseSmsDialogComponent],
+    bootstrap: [SendSmsComponent],
 })
 export class SendSmsModule { }

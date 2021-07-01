@@ -62,3 +62,10 @@ from .views import SmsDifferentView
 urlpatterns += [
 	url(r'^send-diff-sms', SmsDifferentView.as_view()),
 ]
+
+#########  OnlineSmsPaymentTransaction ############
+from .views import OnlineSmsPaymentTransactionView
+
+urlpatterns +=[
+	url(r'^online-sms-payment-transaction', OnlineSmsPaymentTransactionView.as_view()),
+]

@@ -133,3 +133,12 @@ class SmsDifferentView(CommonView, APIView):
 class SmsListView(CommonListView, APIView):
     Model = SMS
     RelationsToSchool= ['parentSchool__id']
+
+
+from .models import OnlineSmsPaymentTransaction
+
+class OnlineSmsPaymentTransactionView(CommonView, APIView):
+    Model = OnlineSmsPaymentTransaction
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['post']
+    

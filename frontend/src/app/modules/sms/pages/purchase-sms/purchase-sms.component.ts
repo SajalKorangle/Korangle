@@ -6,15 +6,16 @@ import { SmsService } from "../../../../services/modules/sms/sms.service";
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service";
 import { DataStorage } from 'app/classes/data-storage';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
-import { RazorpayServiceAdapter } from '../razor-pay/razor-pay.service.adapter';
 import { isMobile } from '../../../../classes/common.js';
-
+import { GeneralSMSPurchaseServiceAdapter } from '@modules/sms/class/sms-purchase.service.adapter';
+import { PaymentService } from '@services/modules/payment/payment.service';
+import { SMS_PLAN } from '@modules/sms/class/constants';
 
 @Component({
   selector: 'app-purchase-sms',
   templateUrl: './purchase-sms.component.html',
   styleUrls: ['./purchase-sms.component.css'],
-  providers: [UserService, SmsService, WindowRefService],
+  providers: [UserService, SmsService, PaymentService, WindowRefService],
 
 })
 export class PurchaseSmsComponent implements OnInit {
@@ -22,22 +23,21 @@ export class PurchaseSmsComponent implements OnInit {
 
   user;
   serviceAdapter: PurchaseSmsServiceAdapter;
-  razorPayServiceAdapter: RazorpayServiceAdapter;
+  generalSMSPurchaseServiceAdapter: GeneralSMSPurchaseServiceAdapter;
   isLoading = false;
   isInitialLoading = false;
 
-  smsPlan = [
-    { noOfSms: 5000, selected: false },
-    { noOfSms: 20000, selected: false },
-    { noOfSms: 30000, selected: false }
-  ];
+  smsPlan = SMS_PLAN;
 
 
   smsBalance = 0;
   noOfSMS = 100;
 
+  email: string = '';
+
 
   constructor(public smsService: SmsService,
+    public paymentService: PaymentService,
     public smsOldService: SmsOldService,
     public userService: UserService,
     public winRef: WindowRefService,
@@ -47,9 +47,12 @@ export class PurchaseSmsComponent implements OnInit {
 
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new PurchaseSmsServiceAdapter();
-    this.razorPayServiceAdapter = new RazorpayServiceAdapter();
+    this.generalSMSPurchaseServiceAdapter = new GeneralSMSPurchaseServiceAdapter(this);
     this.serviceAdapter.initializeAdapter(this);
     this.serviceAdapter.initializeData();
+
+    if (this.user.email)
+      this.email = this.user.email;
   }
 
 
@@ -94,27 +97,9 @@ export class PurchaseSmsComponent implements OnInit {
   //   return true;
   // }
 
-  CallcreateRzpayOrder() {
-    let data = {
-      price: this.getPrice(this.noOfSMS),
-      noOfSMS: this.noOfSMS,
-      user: this.user,
-      smsBalance: this.smsBalance,
-    };
+  makeSmsPurchase() {
     this.isLoading = true;
-    this.razorPayServiceAdapter.createRzpayOrder(data, this.smsService, this.winRef).then(value => {
-      this.smsBalance += this.noOfSMS;
-      this.noOfSMS = 100;
-      this.callSetBubble('', 0);
-      this.cdRef.detectChanges();
-      this.isLoading = false;
-
-    });
-
-  }
-
-  getPrice(noOfSMS) {
-    return noOfSMS * 0.25;
+    this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.user, this.email);
   }
 
   isMobile(): boolean {

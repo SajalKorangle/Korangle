@@ -20,9 +20,10 @@ urlpatterns += [
     url(r'^order-completion', OrderCompletionView.as_view()),
 ]
 
-from .views import OrderView
+from .views import OrderView, OrderSelfView
 
 urlpatterns += [
+    url(r'^order-self', OrderSelfView.as_view()),
     url(r'^order', OrderView.as_view()),
 ]
 

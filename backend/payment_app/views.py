@@ -73,6 +73,24 @@ class OrderView(CommonView, APIView):
         return responseOrderData
 
 
+from .cashfree.cashfree import createAndSignSelfCashfreeOrder
+class OrderSelfView(CommonView, APIView):
+    Model = Order
+    permittedMethods=['get', 'post',]
+
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        orderData = {
+            'orderId': str(int(time()*1000000)),
+            'amount': request.data['orderAmount']
+        }
+
+        createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
+
+        responseOrderData = createAndSignSelfCashfreeOrder(request.data, createdOrderResponse['orderId'])
+        return responseOrderData
+
+
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from .cashfree.cashfree import getResponseSignature
 

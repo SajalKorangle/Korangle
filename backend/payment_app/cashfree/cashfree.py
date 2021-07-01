@@ -38,6 +38,17 @@ def verifyCredentials():
 
     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
+def getSignature(orderData):
+    sortedKeys = sorted(orderData)
+    signatureData = ""
+    for key in sortedKeys:
+      signatureData += key+str(orderData[key])
+
+    message = signatureData.encode('utf-8')
+    #get secret key from your config
+    secret = CASHFREE_SECRET_KEY.encode('utf-8')
+    signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
+    return signature.decode('utf-8')
 
 def createAndSignCashfreeOrder(data, orderId, vendorId):
 
@@ -61,17 +72,22 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
     }
     orderData.update(data)
 
-    sortedKeys = sorted(orderData)
-    signatureData = ""
-    for key in sortedKeys:
-      signatureData += key+str(orderData[key])
-
-    message = signatureData.encode('utf-8')
-    #get secret key from your config
-    secret = CASHFREE_SECRET_KEY.encode('utf-8')
-    signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
     orderData.update({
-        'signature': signature.decode('utf-8')
+        'signature': getSignature(orderData)
+    })
+    return orderData
+
+
+def createAndSignSelfCashfreeOrder(data, orderId):
+
+    orderData = {
+        'appId': CASHFREE_APP_ID,
+        'orderId': str(orderId),
+    }
+    orderData.update(data)
+
+    orderData.update({
+        'signature': getSignature(orderData)
     })
     return orderData
 

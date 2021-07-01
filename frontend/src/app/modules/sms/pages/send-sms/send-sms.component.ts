@@ -13,10 +13,10 @@ import { NotificationService } from '../../../../services/modules/notification/n
 import { UserService } from '../../../../services/modules/user/user.service';
 
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Inject } from '@angular/core';
-import { RazorpayServiceAdapter } from '../razor-pay/razor-pay.service.adapter';
-import { isMobile } from '../../../../classes/common.js';
+import { MatDialog } from '@angular/material';
+
+import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
+
 
 @Component({
     selector: 'send-sms',
@@ -96,7 +96,6 @@ export class SendSmsComponent implements OnInit {
         }
     };
     purchase: any;
-    razorPayServiceAdapter: RazorpayServiceAdapter;
 
 
     constructor(public studentService: StudentService,
@@ -142,7 +141,6 @@ export class SendSmsComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
 
         this.serviceAdapter = new SendSmsServiceAdapter();
-        this.razorPayServiceAdapter = new RazorpayServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
@@ -451,114 +449,11 @@ export class SendSmsComponent implements OnInit {
 
 
     openPurchaseSMSDialog(): void {
-        const dialogRef = this.dialog.open(PurchaseSMSDialogComponent, {
-            maxWidth: '80vw',
-            maxHeight: '80vh',
-            width: '1000px',
-            disableClose: true,
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result.payment) {
-                let data = {
-                    price: result.price,
-                    noOfSMS: result.noOfSMS,
-                    user: this.user,
-                    loader: this.isLoading,
-                    smsBalance: this.smsBalance,
-                };
-                this.isLoading = true;
-                this.razorPayServiceAdapter.createRzpayOrder(data, this.smsService, this.winRef).then(value => {
-                    this.smsBalance += result.noOfSMS;
-                    this.cdRef.detectChanges();
-                    this.isLoading = false;
-                }, error => {
-                    console.log('error from RazorPayServiceAdapter ' + error);
-                    this.isLoading = false;
-                });
-            }
-            else {
-                alert('Purchase has been cancelled');
+        this.dialog.open(PurchaseSmsDialogComponent, {
+            data: {
+                vm: this,
             }
         });
     }
-
-}
-
-
-
-
-@Component({
-    selector: 'purchase-sms-dialog',
-    templateUrl: 'purchase-sms-dialog.html',
-    styleUrls: ['./send-sms.component.css'],
-})
-export class PurchaseSMSDialogComponent {
-
-    constructor(
-        public dialogRef: MatDialogRef<PurchaseSMSDialogComponent>,
-        @Inject(MAT_DIALOG_DATA)
-        public dialog: MatDialog,) {
-    }
-
-    closeDialog(): void {
-        this.dialogRef.close({ payment: false });
-    }
-
-    smsPlan = [
-        { noOfSms: 5000, selected: false },
-        { noOfSms: 20000, selected: false },
-        { noOfSms: 30000, selected: false }
-    ];
-
-    noOfSMS = 100;
-
-
-    callSetBubble(event, value) {
-        this.isPlanSelected();
-        let range = document.querySelector(".range");
-        let bubble = document.querySelector(".bubble");
-        this.setBubble(range, bubble, value);
-    }
-
-    setBubble(range, bubble, value) {
-        if (value >= 100)
-            this.noOfSMS = value;
-        bubble.innerHTML = this.noOfSMS;
-        const min = range.min ? range.min : 0;
-        const max = range.max ? range.max : 100;
-        const newVal = Number(((this.noOfSMS - min) * 100) / (max - min));
-
-        // Sorta magic numbers based on size of the native UI thumb
-        bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
-    }
-
-    isPlanSelected() {
-        for (let i = 0; i < this.smsPlan.length; i++) {
-            if (this.smsPlan[i].noOfSms === this.noOfSMS)
-                this.smsPlan[i].selected = true;
-            else
-                this.smsPlan[i].selected = false;
-        }
-    }
-
-    // isPayButtonDisabled()
-    // {
-    //   if(this.noOfSMS >0)return false;
-    //   return true;
-    // }
-
-    getPrice(noOfSMS) {
-        return noOfSMS * 0.25;
-    }
-
-    startPayment() {
-        this.dialogRef.close({ payment: true, noOfSMS: this.noOfSMS, price: this.getPrice(this.noOfSMS) });
-    }
-
-    isMobile(): boolean {
-        return isMobile();
-    }
-
 
 }

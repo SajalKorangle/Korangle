@@ -14,5 +14,6 @@ export class PaymentService extends ServiceObject {
 
     public online_payment_account = '/online-payment-account';
     public order = '/order';
+    public order_self = '/order-self';
     public order_completion = '/order-completion';
 }
