@@ -165,3 +165,8 @@ class OnlineFeePaymentTransactionView(CommonView, APIView):
     RelationsToSchool = ['parentSchool__id'] 
     permittedMethods = ['post']
         
+
+class OnlineFeePaymentTransactionListView(CommonListView, APIView):
+    Model = OnlineFeePaymentTransaction
+    RelationsToSchool = ['parentSchool__id'] 
+    permittedMethods = ['post']

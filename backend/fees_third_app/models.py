@@ -589,7 +589,7 @@ class FeeSettings(models.Model):
 
 class OnlineFeePaymentTransaction(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
-    parentOrder = models.ForeignKey(Order, unique=True, on_delete=models.CASCADE)
+    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
     feeDetailJSON = models.TextField()
     parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, null=True, blank=True)
     
