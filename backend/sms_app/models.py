@@ -129,7 +129,7 @@ def SMSOrderCompletionhandler(sender, instance, **kwargs):
                 response = create_object(smsPurchaseData, SMSPurchaseModelSerializer, activeSchoolID, None)
                 smsPurchase = SMSPurchase.objects.get(id=response['id'])
                 onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchase
-                smsPurchase.save()
+                onlineSmsPaymentTransaction.save()
                 
             
 

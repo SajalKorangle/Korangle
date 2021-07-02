@@ -29,12 +29,6 @@ export class SmsOldService extends CommonServiceRequirements {
         return super.getData(token, url);
     }
 
-    // SMS Purchase
-    getSMSPurchaseList(data: any, token: any): Promise<any> {
-        const url = '/sms/school/' + data['parentSchool'] + '/sms-purchases';
-        return super.getData(token, url);
-    }
-
     // Msg Club Delivery Report
     getMsgClubDeliveryReport(data: any): Promise<any> {
         const url = '/sms/msg-club-delivery-report?requestId=' + data['requestId'];

@@ -143,11 +143,21 @@ from .models import OnlineSmsPaymentTransaction
 class OnlineSmsPaymentTransactionView(CommonView, APIView):
     Model = OnlineSmsPaymentTransaction
     RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['post']
+    permittedMethods = ['post', 'get']
+
+class OnlineSmsPaymentTransactionListView(CommonListView, APIView):
+    Model = OnlineSmsPaymentTransaction
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['post', 'get']
+    
     
 
-
 class SMSPurchaseView(CommonView, APIView):
+    Model = SMSPurchase
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['get']
+
+class SMSPurchaseListView(CommonListView, APIView):
     Model = SMSPurchase
     RelationsToSchool = ['parentSchool__id']
     permittedMethods = ['get']

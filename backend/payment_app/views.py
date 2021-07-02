@@ -1,4 +1,4 @@
-from common.common_views_3 import CommonView, APIView
+from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import create_object, get_object
 from decorators import user_permission_3
 from time import time
@@ -89,6 +89,10 @@ class OrderSelfView(CommonView, APIView):
 
         responseOrderData = createAndSignSelfCashfreeOrder(request.data, createdOrderResponse['orderId'])
         return responseOrderData
+
+class OrderListView(CommonListView, APIView):
+    Model = Order
+    permittedMethods=['get']
 
 
 from django.http import HttpResponseRedirect, HttpResponseForbidden
