@@ -54,7 +54,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
 from .models import Order
 from .cashfree.cashfree import createAndSignCashfreeOrder
 
-class OrderView(CommonView, APIView):
+class OrderSchoolView(CommonView, APIView):
     Model = Order
     permittedMethods=['get', 'post',]
 

@@ -1,7 +1,7 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading && backendData.smsPurchaseList">
         <ng-container *ngIf="backendData.smsPurchaseList.length > 0">
-            <h2>SMS Purchases</h2>
+            <h3>SMS Purchases</h3>
             <div class="row">
                 <div class="col-md-12">
                     <table class="table table-hover">
@@ -30,7 +30,7 @@
         <ng-container *ngIf="backendData.smsPurchaseList.length === 0"> No SMS purchased yet </ng-container>
 
         <ng-container *ngIf="backendData.incompleteOnlineSmsPaymentTransactionList.length > 0">
-            <h2>In Complete Orders</h2>
+            <h3>Incomplete Orders</h3>
             <div class="row">
                 <div class="col-md-12">
                     <table class="table table-hover">
@@ -38,7 +38,7 @@
                             <tr>
                                 <th>S No.</th>
                                 <th class="text-center">Date</th>
-                                <th class="text-right">Count</th>
+                                <th class="text-center">Count</th>
                                 <th class="text-center">Price</th>
                                 <th class="text-center">Order Status</th>
                             </tr>

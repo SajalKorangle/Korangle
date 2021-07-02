@@ -191,7 +191,7 @@ export class ViewFeeServiceAdapter {
             orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`
         };
 
-        const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order, newOrder);
+        const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order_school, newOrder);
 
         const onlineFeePaymentTransactionList = [];
 

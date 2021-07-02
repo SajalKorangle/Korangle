@@ -13,7 +13,7 @@ export class PaymentService extends ServiceObject {
     public bank_account_verification = '/cashfree/bank-account-verification';
 
     public online_payment_account = '/online-payment-account';
-    public order = '/order';
+    public order_school = '/order-school';
     public order_self = '/order-self';
     public order_completion = '/order-completion';
 }

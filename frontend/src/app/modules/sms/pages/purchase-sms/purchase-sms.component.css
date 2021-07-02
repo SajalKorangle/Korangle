@@ -45,6 +45,7 @@ body {
   cursor: pointer; 
   height: 81px;
   width: 144px;
+  text-align: center;
 }
 .unselected {
   border: 2px dashed #ACACAC;
@@ -58,6 +59,7 @@ body {
   cursor: pointer; 
   height: 81px;
   width: 144px;
+  text-align: center;
 }
 
 .selectedMobile {
@@ -71,6 +73,7 @@ body {
   margin-bottom: 1vw; 
   cursor: pointer; 
   width: 230px;
+  text-align: center;
 }
 .unselectedMobile{
   border: 2px dashed #ACACAC;
@@ -83,5 +86,6 @@ body {
   margin-bottom: 1vw; 
   cursor: pointer; 
   width: 230px;
+  text-align: center;
 }
 

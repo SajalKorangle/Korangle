@@ -23,7 +23,7 @@ export class ViewPurchasesServiceAdapter {
         const orderRequest = {
             orderId__in: this.vm.backendData.incompleteOnlineSmsPaymentTransactionList.map(t => t.parentOrder)
         };
-        this.vm.backendData.orderList = await this.vm.paymentService.getObjectList(this.vm.paymentService.order, orderRequest);
+        this.vm.backendData.orderList = await this.vm.paymentService.getObjectList(this.vm.paymentService.order_school, orderRequest);
         this.vm.formStructureFromBackendData();
         this.vm.isLoading = false;
     }

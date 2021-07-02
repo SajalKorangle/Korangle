@@ -15,7 +15,7 @@
         <div class="row" style="margin-top: 40px;">
             <div class="col-xs-12 col-sm-6">
                 <div
-                    style="padding: 8px; width: 170px;height: 32px;background: #4CA750;border-radius: 4px; color: white;font-weight: bold;text-align: center;">
+                    style="padding: 8px; width: 170px;height: 32px;background: #4CA750;border-radius: 4px; color: white;font-weight: bold;text-align: center; display: table-cell;">
                     {{noOfSMS}} SMS for Rs. {{generalSMSPurchaseServiceAdapter.getPrice(noOfSMS)}}
                 </div>
             </div>
@@ -38,9 +38,22 @@
             </div>
         </div>
 
+        <div class="row">
+            <mat-form-field style="float: right; margin-right: 1vw;">
+                <mat-label>Email</mat-label>
+                <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email">
+            </mat-form-field>
+        </div>
+        <div class="row">
 
+            <div style="float: right;margin-right: 1vw;">
+                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="makeSmsPurchase()">Pay</button>
+            </div>
 
-        <div class="row" style="margin-top: 75px; margin-bottom: 40px; border-bottom: 1px solid#BFBFBF;">
+        </div>
+
+        <div class="row" style="margin-top: 24px; margin-bottom: 40px; border-bottom: 1px solid#BFBFBF;">
         </div>
 
         <div class="row">
@@ -59,20 +72,6 @@
         </div>
 
         <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
-        </div>
-        <div class="row" style="margin-top: 20px;">
-            <mat-form-field style="float: right; margin-right: 1vw;">
-                <mat-label>Email</mat-label>
-                <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email">
-            </mat-form-field>
-        </div>
-        <div class="row" style="margin-top: 20px;">
-
-            <div style="float: right;margin-right: 1vw;">
-                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                    (click)="makeSmsPurchase()">Pay</button>
-            </div>
-
         </div>
     </ng-container>
 

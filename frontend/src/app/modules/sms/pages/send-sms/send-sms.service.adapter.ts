@@ -90,7 +90,13 @@ export class SendSmsServiceAdapter {
             this.populateStudentList(value[3]);
             this.populateEmployeeList(value[4]);
             this.vm.smsBalance = value[5].count;
-            this.vm.studentParameterList = value[6].map(x => ({ ...x, filterValues: JSON.parse(x.filterValues).map(x => ({ name: x, show: false })), showNone: false, filterFilterValues: '' }));
+            this.vm.studentParameterList = value[6]
+                .map(x => ({
+                    ...x,
+                    filterValues: JSON.parse(x.filterValues).map(x => ({ name: x, show: false })),
+                    showNone: false,
+                    filterFilterValues: ''
+                }));
             this.vm.studentParameterValueList = value[7];
 
             this.populateClassSectionList();
