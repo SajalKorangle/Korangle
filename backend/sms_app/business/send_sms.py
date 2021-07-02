@@ -11,41 +11,54 @@ from sms_app.models import SMSId
 
 def send_sms(instance_dict):
 
-        school_object = School.objects.get(id=instance_dict['parentSchool_id'])
+    school_object = School.objects.get(id=instance_dict['parentSchool_id'])
 
-        sms_count = get_sms_count(school_object.id)
+    sms_count = get_sms_count(school_object.id)
 
-        if instance_dict['count'] > sms_count['count']:
-            return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1}
+    print(sms_count)
 
-        sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
+    if instance_dict['count'] > sms_count['count']:
+        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1}
 
-        conn = http.client.HTTPConnection("msg.msgclub.net")
+    sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
 
-        sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
+    conn = http.client.HTTPSConnection("www.smsgatewayhub.com")
 
-        anotherPayload = {
-            "routeId": "1",
-            "sentSmsNumList": sent_sms_num_list,
-            "senderId": sms_id_object.smsId,
-            "smsContentType": instance_dict['contentType'],
-        }
+    print(instance_dict['mobileNumberContentJson'])
 
-        if instance_dict['scheduledDateTime'] is not None:
-            anotherPayload["scheduleddate"] = instance_dict['scheduledDateTime'].strftime('%d/%m/%Y %H:%M')
+    sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
 
-        payloadJson = json.dumps(anotherPayload)
+    configurations = {
+        "APIkey": "pZD3d2b620aBWzVP5XqD9g",
+        "SenderId": sms_id_object.smsId,
+        "Channel": "2",
+        "DCS": instance_dict['contentType'],
+        "SchedTime": None,
+        "GroupId": None,
+        "EntityId": sms_id_object.entityRegistrationId
+    }
 
-        headers = {
-            'Content-Type': "application/json",
-            'Cache-Control': "no-cache"
-        }
+    if instance_dict['scheduledDateTime'] is not None:
+        configurations["SchedTime"] = instance_dict['scheduledDateTime'].strftime('%d/%m/%Y %H:%M')
 
-        conn.request("POST", "/rest/services/sendSMS/sendCustomGroupSms?AUTH_KEY=fbe5746e5505757b176a1cf914110c3",
-                     payloadJson, headers)
+    pay_load = {
+       "Account": configurations,
+       "Messages": sent_sms_num_list
+    }
 
-        response = conn.getresponse().read()
+    pay_load_json = json.dumps(pay_load)
 
-        requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
+    headers = {
+        'Content-Type': "application/json",
+        'Cache-Control': "no-cache"
+    }
 
-        return {'remark': 'SUCCESS', 'requestId': requestIdFromMsgClub}
+    conn.request("POST", "/api/mt/SendSms",
+                 pay_load_json, headers)
+
+    response = conn.getresponse().read()
+    print(response)
+
+    job_id = str(json.loads(response.decode("utf-8"))['JobId'])
+
+    return {'remark': 'SUCCESS', 'requestId': job_id}

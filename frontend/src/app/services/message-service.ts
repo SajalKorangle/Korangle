@@ -115,19 +115,25 @@ export class MessageService {
             return;
         } // if there is not event settings or sentUpdateType is null then return
 
-        let customSMSTemplate, smsId = 1, smsContent = smsEvent.defaultSMSContent, notificationContent;
+        let customSMSTemplate, smsTemplate, messageContent;
 
-        // if there is any templated linked with the settings get that template and populate
-        if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
-            customSMSTemplate = await this.smsService.getObject(this.smsService.sms_template,
-                {id: eventSettings.parentSMSTemplate, registrationStatus: "APPROVED"});
-            if (customSMSTemplate) {
-                smsContent = customSMSTemplate.mappedContent;
-                smsId = customSMSTemplate.parentSMSId;
+        if (eventSettings.sendUpdateTypeFrontEndId == 3) {
+            messageContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
+        } else {
+            // if there is any templated linked with the settings get that template and populate
+            if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
+                customSMSTemplate = await this.smsService.getObject(this.smsService.sms_template,
+                    {id: eventSettings.parentSMSTemplate});
             }
+            if (customSMSTemplate) {
+                smsTemplate = customSMSTemplate;
+            } else {
+                smsTemplate = await this.smsService.getObject(this.smsService.sms_template,
+                    {id: smsEvent.defaultSMSTemplateDbId});
+            }
+            messageContent = smsTemplate.mappedContent;
         }
 
-        notificationContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
 
         try {
             await this.smsNotificationSender(
@@ -135,10 +141,9 @@ export class MessageService {
                 personsList,
                 smsEvent,
                 eventSettings.sendUpdateTypeFrontEndId,
-                smsContent,
-                notificationContent,
+                smsTemplate,
+                messageContent,
                 null,
-                smsId,
                 schoolId,
                 smsBalance
             );
@@ -152,10 +157,9 @@ export class MessageService {
         personsList: any, // ['student','employee'] either or both of them
         smsEvent: any, // corresponding SMS Event
         sendUpdateTypeId: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
-        smsContent: any, // This content contains any sms template with mapped variables
-        notificationContent: any, // any notification content with variables
+        smsTemplate: any, // This contains any sms template that is used ( if not null )
+        messageContent: any, // message content with mapped variables
         scheduledDateTime: any, // scheduled Date and Time
-        smsId: any, // school SMSId dbID or 1 - which is KORNGL smsId dbId
         schoolId: any, // school dbID
         smsBalance: any // sms balance for that school
     ) {
@@ -163,6 +167,9 @@ export class MessageService {
         let notification_list = [];
         let sms_list = [];
         let personVariablesMappedObjList = [];
+
+        let smsId = smsTemplate ? smsTemplate.parentSMSId : null;
+
         // finding the corresponding eventSettingsPage to know the variablesList
         let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.event.id == smsEvent.id);
 
@@ -203,7 +210,7 @@ export class MessageService {
         notification_list.forEach((item) => {
             let temp = {
                 mobileNumber: item.mobileNumber,
-                content: this.getMessageFromTemplate(notificationContent, item)
+                content: this.getMessageFromTemplate(messageContent, item)
             };
             let duplicateData = notificationMappedDataList.some(x => x.mobileNumber == item.mobileNumber && x.content == temp.content);
             if (!duplicateData) {
@@ -214,10 +221,11 @@ export class MessageService {
 
         sms_list.forEach((item) => {
             let temp = {
-                mobileNumber: item.mobileNumber,
-                isAdvanceSms: this.getMessageFromTemplate(smsContent, item)
+                Number: item.mobileNumber,
+                Text: this.getMessageFromTemplate(messageContent, item),
+                DLTTemplateId: smsTemplate.templateId
             };
-            let duplicateData = smsMappedDataList.some(x => x.mobileNumber == temp.mobileNumber && x.isAdvanceSms == temp.isAdvanceSms);
+            let duplicateData = smsMappedDataList.some(x => x.mobileNumber == temp.Number && x.Text == temp.Text);
             if (!duplicateData) {
                 sms_mobile_string += item.mobileNumber + ', ';
                 smsMappedDataList.push(temp);
@@ -236,9 +244,9 @@ export class MessageService {
         notif_mobile_string = notif_mobile_string.slice(0, -2);
 
         let sms_data = {
-            contentType: this.hasUnicode(smsContent) ? 'unicode' : 'english',
+            contentType: this.hasUnicode(messageContent) ? '1' : '0',
             SMSEventFrontEndId: smsEvent.id,
-            content: smsContent,
+            content: messageContent,
             parentMessageType: null,
             mobileNumberContentJson: JSON.stringify(smsMappedDataList),
             count: smsCount,
@@ -249,7 +257,6 @@ export class MessageService {
             scheduledDateTime: scheduledDateTime,
             smsId: smsId,
         };
-
 
         const notification_data = notificationMappedDataList.map((item) => {
             return {
@@ -262,6 +269,9 @@ export class MessageService {
                 parentSchool: schoolId,
             };
         });
+
+        console.log(sms_data);
+        console.log(notification_data);
 
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
@@ -305,10 +315,10 @@ export class MessageService {
             return 0;
         }
         student_list
-            .filter((item) => item.mobileNumber)
+            .filter((item) => item.Number)
             .forEach((item, i) => {
                 if (sendUpdateTypeId == 2 || sendUpdateTypeId == 4) {
-                    count += this.getMessageCount(item.isAdvanceSms);
+                    count += this.getMessageCount(item.Text);
                 }
             });
 

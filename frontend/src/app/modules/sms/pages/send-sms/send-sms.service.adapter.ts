@@ -90,7 +90,6 @@ export class SendSmsServiceAdapter {
         });
         this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
             id__in: this.vm.backendData.eventSettingList.map(a => a.parentSMSTemplate),
-            registrationStatus: 'APPROVED',
             'korangle__order': '-id',
         });
 
@@ -191,10 +190,9 @@ export class SendSmsServiceAdapter {
                 personList,
                 this.vm.generalSMSEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
                 this.vm.userInput.selectedSendUpdateType.id,
-                this.vm.message,
+                this.vm.userInput.selectedTemplate,
                 this.vm.message,
                 scheduledDataTime,
-                this.vm.userInput.selectedTemplate.parentSMSId,
                 this.vm.user.activeSchool.dbId,
                 this.vm.backendData.smsBalance
             );

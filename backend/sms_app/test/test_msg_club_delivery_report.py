@@ -8,7 +8,7 @@ from sms_app.factory.msg_club_delivery_report import MsgClubDeliveryReportFactor
 
 # Business
 from sms_app.business.msg_club_delivery_report \
-    import create_msg_club_delivery_report, handle_msg_club_delivery_report, get_msg_club_delivery_report_list
+    import create_msg_club_delivery_report, handle_msg_club_delivery_report, get_sms_delivery_report_list
 
 # Model
 from sms_app.models import MsgClubDeliveryReport
@@ -26,7 +26,7 @@ class MsgClubDeliveryReportTestCase(ParentTestCase):
             'requestId': 'okay',
         }
 
-        response = get_msg_club_delivery_report_list(data)
+        response = get_sms_delivery_report_list(data)
 
         self.assertEqual(len(response), 3)
 

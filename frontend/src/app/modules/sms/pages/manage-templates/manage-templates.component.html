@@ -166,16 +166,6 @@
 
                 <div class="row">
                     <div class="col-md-3">
-                        <mat-form-field style="margin-top:20px;margin-bottom:5px;margin-left:5px">
-                            <mat-select placeholder="Filter By Status" [(ngModel)]="userInput.selectedTemplateStatus">
-                                <mat-option *ngFor="let status of statusChoiceList" [value]="status">
-                                    {{status}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="col-md-3">
                         <mat-form-field style="margin-top:20px;margin-bottom:5px;">
                             <mat-select placeholder="Select Columns">
                                 <ng-container *ngFor="let key of htmlRenderer.getReceiptColumnFilterKeys()">
@@ -189,7 +179,6 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-
                 </div>
 
                 <table class="table table-hover visible-sm visible-xs">
@@ -199,7 +188,6 @@
                         <th>SMS ID</th>
                         <th class="text-center">Template Name</th>
                         <th class="text-center">Template Content</th>
-                        <th class="text-center">Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -209,7 +197,6 @@
                         <td class="text-center">{{htmlRenderer.getTemplateSMSId(template)}}</td>
                         <td class="text-center">{{template.templateName}}</td>
                         <td class="text-left">{{template.rawContent}}</td>
-                        <td class="text-center">{{template.registrationStatus}}</td>
                         <td class="text-center">
                             <button class="custom-button"
                                     style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px"
@@ -229,7 +216,6 @@
                             <span class="mat-header-cell" *ngIf="columnFilter.SMSId">SMS ID</span>
                             <span class="mat-header-cell" *ngIf="columnFilter.templateName">Template Name</span>
                             <span class="mat-header-cell" *ngIf="columnFilter.templateContent">Template Content</span>
-                            <span class="mat-header-cell" *ngIf="columnFilter.templateStatus">Status</span>
                             <span class="mat-header-cell" *ngIf="columnFilter.templateId">Registration ID</span>
                         </section>
 
@@ -245,9 +231,6 @@
                                       *ngIf="columnFilter.templateName">{{template.templateName}}</span>
                                 <span class="mat-cell"
                                       *ngIf="columnFilter.templateContent">{{htmlRenderer.getTemplateShortContent(template.rawContent)}} </span>
-                                <span class="mat-cell" *ngIf="columnFilter.templateStatus"
-                                      [style.color]="template.registrationStatus=='APPROVED'?'#4CAF50':'#C4C4C4'"
-                                      style="font-weight: 600">{{template.registrationStatus}}</span>
                                 <span class="mat-cell" *ngIf="columnFilter.templateId">{{template.templateId}}</span>
                             </mat-expansion-panel-header>
                             <ng-container>
@@ -365,14 +348,6 @@
 
                     <div class="row">
                         <div class="col-md-5" *ngIf="!isDefaultSelected(smsEvent)">
-                            <div class="row">
-                                <b style="font-size: 15px;margin-left: 13px;float:left">Template Content<span
-                                        style="font-size: 10px;margin-left: 13px"
-                                        *ngIf="smsEvent.customEventTemplate.registrationStatus"
-                                        [style.color]="smsEvent.customEventTemplate.registrationStatus=='PENDING'?'darkorange':'green'"
-                                >( {{smsEvent.customEventTemplate.registrationStatus}}
-                                    )</span></b>
-                            </div>
                             <div class="row" style="margin-bottom: 22px">
                                 <span style="font-size: 10px;color:#c4c4c4;font-weight: 600;margin-left: 13px">(Make sure your template is registered in DLT)</span>
                             </div>

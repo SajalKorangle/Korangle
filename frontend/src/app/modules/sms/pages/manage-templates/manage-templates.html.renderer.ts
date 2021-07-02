@@ -38,9 +38,6 @@ export class ManageTemplatesHtmlRenderer {
 
     getFilteredTemplateList() {
         let returnData = this.getSelectedEventTemplateList();
-        if (this.vm.userInput.selectedTemplateStatus && this.vm.userInput.selectedTemplateStatus != 'ALL') {
-            returnData = returnData.filter(temp => temp.registrationStatus == this.vm.userInput.selectedTemplateStatus);
-        }
         if (this.vm.userInput.startDate) {
             returnData = returnData.filter(temp => new Date(temp.createdDate) >= new Date(this.vm.userInput.startDate));
         }

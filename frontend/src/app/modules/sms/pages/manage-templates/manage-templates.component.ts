@@ -26,7 +26,6 @@ export class ManageTemplatesComponent implements OnInit {
     settingsPagesList = EVENT_SETTING_PAGES;
     sendUpdateToList = RECEIVER_LIST;
 
-    statusChoiceList = ['APPROVED', 'PENDING', 'ALL'];
     panelsList = ['eventPanel', 'notificationPanel', 'smsPanel'];
     communicationTypeList = [{id: 1, name: 'SERVICE IMPLICIT'}, {id: 2, name: 'SERVICE EXPLICIT'}, {id: 3, name: 'TRANSACTIONAL'}];
 
@@ -39,7 +38,6 @@ export class ManageTemplatesComponent implements OnInit {
         selectedPage: null,
         newTemplate: {} as any,
         selectedSMSId: {} as any,
-        selectedTemplateStatus: 'ALL',
         startDate: null,
         endDate: null,
         populatedSMSEventSettingsList: [],
@@ -51,7 +49,6 @@ export class ManageTemplatesComponent implements OnInit {
         creationDate: true,
         templateName: true,
         templateContent: true,
-        templateStatus: true,
         templateId: false,
     };
 

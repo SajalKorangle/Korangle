@@ -1,8 +1,6 @@
 from common.common_views_3 import CommonView, CommonListView
-from common.common_serializer_interface_3 import create_object
-from decorators import user_permission, user_permission_3
+from decorators import user_permission
 from django.http import HttpResponse
-from rest_framework.decorators import api_view
 
 from rest_framework.views import APIView
 
@@ -38,22 +36,22 @@ class SMSCountView(APIView):
 
 
 ############## Msg Club Delivery Report ##############
-from .business.msg_club_delivery_report import handle_msg_club_delivery_report, get_msg_club_delivery_report_list
+from .business.sms_delivery_report import handle_sms_delivery_report, get_sms_delivery_report_list
 
 
-class MsgClubDeliveryReportView(APIView):
+class SMSDeliveryReportView(APIView):
 
     @user_permission
     def get(request):
         data = {
-            'requestId': request.GET['requestId'],
+            'requestId': request.GET['jobId'],
         }
-        return get_msg_club_delivery_report_list(data)
+        return get_sms_delivery_report_list(data)
 
 
 def handle_msg_club_delivery_report_view(request):
     data = json.loads(request.body.decode('utf-8'))
-    handle_msg_club_delivery_report(data)
+    handle_sms_delivery_report(data)
     return HttpResponse(status=201)
 
 

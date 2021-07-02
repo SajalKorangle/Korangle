@@ -28,8 +28,7 @@
                 >SMS Balance:
                 <b
                 ><i>{{ backendData.smsBalance }}</i></b
-                ><br
-                    /></span>
+                ><br/></span>
             </div>
             <div class="col-md-6" align="end">
                 <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
@@ -118,7 +117,7 @@
                          class="text-center">Templates
                     </div>
                     <div class="text-center" style="margin-top: 5px">
-                        <span *ngIf="htmlRenderer.getTemplateList().length == 0">You Have No APPROVED Templates</span>
+                        <span *ngIf="htmlRenderer.getTemplateList().length == 0">You Have No Registered Templates</span>
                     </div>
                     <div *ngFor="let template of htmlRenderer.getTemplateList();let i = index;"
                          style="padding:10px;cursor:pointer" (click)="htmlRenderer.selectTemplate(template)"

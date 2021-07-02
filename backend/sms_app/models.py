@@ -128,7 +128,7 @@ def sms_sender(sender, created, instance, **kwargs):
         instance.save()
 
 
-class MsgClubDeliveryReport(models.Model):
+class SMSDeliveryReport(models.Model):
     # Request Id
     requestId = models.TextField(null=False, verbose_name='requestId')
 
@@ -151,7 +151,7 @@ class MsgClubDeliveryReport(models.Model):
         return self.requestId
 
     class Meta:
-        db_table = 'msg_club_delivery_report'
+        db_table = 'sms_delivery_report'
         unique_together = ('requestId', 'mobileNumber')
 
 
@@ -192,15 +192,6 @@ class SMSTemplate(models.Model):
     communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
                                          verbose_name='communicationType')
     mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
-
-    APPROVED = 'APPROVED'
-    PENDING = 'PENDING'
-    STATUS = (
-        (APPROVED, 'APPROVED'),
-        (PENDING, 'PENDING'),
-    )
-
-    registrationStatus = models.CharField(max_length=15, null=False, choices=STATUS, default=PENDING)
 
     class Meta:
         db_table = 'sms_template'

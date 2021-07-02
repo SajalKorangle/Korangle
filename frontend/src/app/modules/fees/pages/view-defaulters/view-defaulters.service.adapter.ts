@@ -28,7 +28,6 @@ export class ViewDefaultersServiceAdapter {
         });
         this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
             id__in: this.vm.backendData.eventSettingsList.map(a => a.parentSMSTemplate),
-            registrationStatus: 'APPROVED',
             'korangle__order': '-id',
         });
 
@@ -216,10 +215,9 @@ export class ViewDefaultersServiceAdapter {
                 ['student'],
                 this.vm.defaultersSMSEvent,
                 this.vm.selectedSendUpdateType.id,
-                this.vm.message,
+                this.vm.userInput.selectedTemplate,
                 this.vm.message,
                 scheduledDataTime,
-                this.vm.userInput.selectedTemplate.parentSMSId,
                 this.vm.user.activeSchool.dbId,
                 this.vm.smsBalance
             );

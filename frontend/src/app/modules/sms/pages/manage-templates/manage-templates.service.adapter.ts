@@ -137,7 +137,6 @@ export class ManageTemplatesServiceAdapter {
                 smsEvent.customEventTemplate.rawContent =  smsEvent.customEventTemplate.rawContent.replace(/(\\r)?\\n/g, "\n");
                 templateValue = await this.vm.smsService.createObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
             } else if (JSON.stringify(smsEvent.customEventTemplate) != JSON.stringify(originalTemplateData.customEventTemplate)) {
-                smsEvent.customEventTemplate.registrationStatus = "PENDING";
                 templateValue = await this.vm.smsService.updateObject(this.vm.smsService.sms_template, smsEvent.customEventTemplate);
             }
             if (templateValue) {

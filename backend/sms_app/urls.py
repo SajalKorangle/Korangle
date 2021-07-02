@@ -61,10 +61,10 @@ urlpatterns += [
 ]
 
 ######## Msg Club Delivery Report ###############
-from .views import MsgClubDeliveryReportView
+from .views import SMSDeliveryReportView
 
 urlpatterns += [
-	url(r'^msg-club-delivery-report', MsgClubDeliveryReportView.as_view()),
+	url(r'^sms-delivery-report', SMSDeliveryReportView.as_view()),
 ]
 
 
