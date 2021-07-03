@@ -2,6 +2,7 @@
     <input
         matInput
         [matDatepicker]="picker"
+        [matDatepickerFilter]="dateFilter"
         (dateChange)="onDateChanged($event)"
         [placeholder]="placeHolder"
         [formControl]="date"
