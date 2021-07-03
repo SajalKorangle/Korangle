@@ -163,10 +163,10 @@ from fees_third_app.models import OnlineFeePaymentTransaction
 class OnlineFeePaymentTransactionView(CommonView, APIView):
     Model = OnlineFeePaymentTransaction
     RelationsToSchool = ['parentSchool__id'] 
-    permittedMethods = ['post']
+    permittedMethods = ['get', 'post']
         
-
 class OnlineFeePaymentTransactionListView(CommonListView, APIView):
     Model = OnlineFeePaymentTransaction
     RelationsToSchool = ['parentSchool__id'] 
-    permittedMethods = ['post']
+    permittedMethods = ['get', 'post']
+

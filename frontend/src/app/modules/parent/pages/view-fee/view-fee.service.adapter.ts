@@ -14,8 +14,7 @@ export class ViewFeeServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
-        this.vm.isLoading = true;
+    async initializeData() {
 
         let schoolId = this.vm.user.activeSchool.dbId;
         let sessionId = this.vm.user.activeSchool.currentSessionDbId;
@@ -60,11 +59,7 @@ export class ViewFeeServiceAdapter {
             parentDiscount__cancelled: 'false__boolean',
         };
 
-        let student_section_list = {
-            parentStudent__in: studentListId,
-        };
-
-        Promise.all([
+        await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),   // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
@@ -79,7 +74,8 @@ export class ViewFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
-            this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}) // 13
+            this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}), // 13
+            this.vm.feeService.getObjectList(this.vm.feeService.online_fee_payment_transaction, {}), //14
         ]).then(
             (value) => {
                 console.log(value);
@@ -101,16 +97,23 @@ export class ViewFeeServiceAdapter {
                 this.vm.selectedStudentSectionList = value[10];
                 this.vm.sessionList = value[11];
                 this.vm.boardList = value[12];
+                this.vm.paymentTransactionList = value[14];
                 this.vm.handleStudentFeeProfile();
-
-                this.vm.isLoading = false;
             }
         );
+
+        const order_request = {
+            orderId__in: this.vm.paymentTransactionList.map(transaction => transaction.parentOrder)
+        };
+        this.vm.orderList = await this.vm.paymentService.getObjectList(this.vm.paymentService.order_school, order_request);
+        this.vm.parseOrder();
 
         const urlParams = new URLSearchParams(location.search);
         if (urlParams.has('orderId')) {
             this.vm.htmlRenderer.openPaymentResponseDialog();
         }
+
+        this.vm.isLoading = false;
     }
 
     populateStudentFeeList(studentFeeList: any): void {

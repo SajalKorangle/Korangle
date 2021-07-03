@@ -27,6 +27,9 @@ import { Session } from '@services/modules/school/models/session';
 import { UserService } from '@services/modules/user/user.service';
 import { PaymentService } from '@services/modules/payment/payment.service';
 
+import { Order } from '@services/modules/payment/models/order';
+import { OnlineFeePaymentTransaction } from '@services/modules/fees/models/online-fee-payment-transaction';
+
 declare const $: any;
 
 @Component({
@@ -75,6 +78,10 @@ export class ViewFeeComponent implements OnInit {
 
     lateFeeVisible = true;
 
+    paymentTransactionList: Array<OnlineFeePaymentTransaction>;
+    orderList: Array<Order>;
+    parsedOrder: Array<ParsedOrder>;
+
     hasOnlinePaymentAccount: boolean = false;
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
@@ -82,7 +89,7 @@ export class ViewFeeComponent implements OnInit {
     htmlRenderer: ViewFeeHTMLRenderer;
     serviceAdapter: ViewFeeServiceAdapter;
 
-    isLoading = false;
+    isLoading = true;
 
     constructor(
         public schoolService: SchoolService,
@@ -137,6 +144,15 @@ export class ViewFeeComponent implements OnInit {
 
     detectChanges(): void {
         this.cdRef.detectChanges();
+    }
+
+    parseOrder() {
+        this.parsedOrder = this.orderList.map(order => {
+            return {
+                ...order,
+                feeTranactionList: this.paymentTransactionList.filter(transaction => transaction.parentOrder == order.orderId),
+            };
+        });
     }
 
     amountError(student: Student) {
@@ -836,4 +852,9 @@ export class ViewFeeComponent implements OnInit {
             );
         }, 0);
     }
+}
+
+
+interface ParsedOrder extends Order {
+    feeTranactionList: Array<OnlineFeePaymentTransaction>;
 }
