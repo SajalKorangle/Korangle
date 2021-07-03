@@ -39,6 +39,8 @@ export class DayDateComponent implements OnInit {
 
     // @Input() acceptNull = false;
 
+    @Input() minDate;
+
     @Input() formattedDateOutput = true;
 
     @Input() disableDatePicker = false;
@@ -48,21 +50,19 @@ export class DayDateComponent implements OnInit {
     // date = new FormControl({value: new Date(), disabled: true});
     date: any;
 
+    dateFilter = (d: Date | null): boolean => {
+        let valid = true;
+        if (this.minDate) {
+            if ( d.getTime() < this.minDate.getTime()) {
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
     ngOnInit(): void {
         this.date = new FormControl({ value: this.initialValue, disabled: true });
         this.onDateChanged(this.date);
-        /*if (!this.acceptNull) {
-            if (this.initialValue) {
-                this.date = new FormControl({value: this.initialValue, disabled: true});
-            }
-        } else {
-            this.date = new FormControl({value: this.initialValue, disabled: true});
-        }
-        if (this.formattedDateOutput) {
-            this.onDateSelected.emit(this.formatDate(this.date.value));
-        } else {
-            this.onDateSelected.emit(this.date.value);
-        }*/
     }
 
     nullDate(): void {
