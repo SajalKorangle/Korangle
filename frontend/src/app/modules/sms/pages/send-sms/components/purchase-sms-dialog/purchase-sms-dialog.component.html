@@ -101,7 +101,7 @@
     <div *ngIf="!isMobile()" class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
     </div>
 
-    <mat-form-field style="display: block; margin: auto;">
+    <mat-form-field style="display: block; margin: auto; margin-top: 16px;">
         <mat-label>Email</mat-label>
         <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email">
     </mat-form-field>
