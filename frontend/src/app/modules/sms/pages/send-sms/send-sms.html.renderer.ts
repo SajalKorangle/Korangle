@@ -168,7 +168,7 @@ export class SendSmsHtmlRenderer {
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if (this.vm.userInput.selectedSendUpdateType == this.vm.sendUpdateTypeList[1]) {
+        if (this.vm.userInput.selectedSendUpdateType == this.vm.backendData.sendUpdateTypeList[2]) {
             return 0;
         }
         let variables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == this.vm.userInput.selectedSendTo.id).variableList;

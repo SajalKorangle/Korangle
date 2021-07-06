@@ -1,12 +1,9 @@
-import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 class SettingsPageStructure {
     static getStructure(pageName: any, eventsIdInOrder: any) {
-        let orderedEventList = [];
-        eventsIdInOrder.forEach(e => orderedEventList.push(SMS_EVENT_LIST.find(x => x.id == e)));
         return {
             name: pageName,
-            orderedSMSEventList: orderedEventList,
+            orderedSMSEventList: eventsIdInOrder,
         };
     }
 }

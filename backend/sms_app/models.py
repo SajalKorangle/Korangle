@@ -182,15 +182,6 @@ class SMSTemplate(models.Model):
     templateId = models.TextField(null=False, verbose_name='templateId')
     templateName = models.TextField(null=False, verbose_name='templateName')
     rawContent = models.TextField(null=False, verbose_name='rawContent')
-
-    SMS_COMMUNICATION_TYPE = (
-        ('1', 'SERVICE IMPLICIT'),
-        ('2', 'SERVICE EXPLICIT'),
-        ('3', 'TRANSACTIONAL')
-    )
-
-    communicationType = models.CharField(max_length=20, choices=SMS_COMMUNICATION_TYPE, null=False,
-                                         verbose_name='communicationType')
     mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
 
     class Meta:

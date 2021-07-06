@@ -12,14 +12,14 @@ import {UserService} from '../../../../services/modules/user/user.service';
 import {MessageService} from '@services/message-service';
 import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
 import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
-import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
-import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
+import {InformationService} from '@services/modules/information/information.service';
+
 
 @Component({
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService],
+    providers: [StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService, InformationService],
 })
 export class SendSmsComponent implements OnInit {
     user;
@@ -35,7 +35,6 @@ export class SendSmsComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    sendUpdateTypeList = SEND_UPDATE_TYPE_LIST.filter(type => type.name != 'NULL');
     sendToList = [{id: 1, name: 'Students'}, {id: 2, name: 'Employees'}, {id: 3, name: 'Common'}];
 
     dataForMapping = {} as any;
@@ -48,9 +47,6 @@ export class SendSmsComponent implements OnInit {
     notificationPersonList = [];
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
-    generalSMSEventIdList = [1, 2, 3];
-
-    generalSMSEventList = SMS_EVENT_LIST.filter(event => this.generalSMSEventIdList.includes(event.id));
 
     studentMessageService: any;
     employeeMessageService: any;
@@ -67,7 +63,7 @@ export class SendSmsComponent implements OnInit {
     userInput = {
         selectedSendTo: null,
         selectedTemplate: {} as any,
-        selectedSendUpdateType: this.sendUpdateTypeList[0],
+        selectedSendUpdateType: {} as any,
         scheduleSMS: false,
         scheduledDate: null,
         scheduledTime: null,
@@ -81,6 +77,8 @@ export class SendSmsComponent implements OnInit {
         studentList: [],
         classList: [],
         sectionList: [],
+        sendUpdateTypeList: [],
+        generalSMSEventList: [],
         smsBalance: 0,
     };
 
@@ -113,6 +111,7 @@ export class SendSmsComponent implements OnInit {
         public smsOldService: SmsOldService,
         public smsService: SmsService,
         public notificationService: NotificationService,
+        public informationService: InformationService,
         public userService: UserService,
         private cdRef: ChangeDetectorRef
     ) {}
@@ -198,13 +197,13 @@ export class SendSmsComponent implements OnInit {
                 }
             });
         }
-        if (this.userInput.selectedSendUpdateType == this.sendUpdateTypeList[0]) {
+        if (this.userInput.selectedSendUpdateType == this.backendData.sendUpdateTypeList[1]) {
             this.smsPersonList = tempList;
             this.notificationPersonList = [];
-        } else if (this.userInput.selectedSendUpdateType == this.sendUpdateTypeList[1]) {
+        } else if (this.userInput.selectedSendUpdateType == this.backendData.sendUpdateTypeList[2]) {
             this.smsPersonList = [];
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
-        } else if (this.userInput.selectedSendUpdateType == this.sendUpdateTypeList[2]) {
+        } else if (this.userInput.selectedSendUpdateType == this.backendData.sendUpdateTypeList[3]) {
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
             this.smsPersonList = tempList.filter((temp1) => {
                 return (

@@ -10,6 +10,7 @@ import json
 from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
 
+CONSTANT_DATABASE_PATH = '/constant_database/'
 
 class SMSOldListView(APIView):
 
@@ -32,7 +33,6 @@ class SMSCountView(APIView):
     @user_permission
     def get(request, school_id):
         return get_sms_count(school_id)
-
 
 
 ############## Msg Club Delivery Report ##############
@@ -114,3 +114,54 @@ class SMSIdSchoolView(CommonView, APIView):
 class SMSIdSchoolListView(CommonListView, APIView):
     Model = SMSIdSchool
     RelationsToSchool = ['parentSchool__id']
+
+
+def filter_func(db_content, request_json):
+    for key in request_json:
+        if key.endswith('__in'):
+            array = request_json[key].split(",")
+            if db_content[key[:-4]] not in array:
+                return False
+        elif db_content[key] != request_json[key]:
+            return False
+    return True
+
+
+class SMSEventView(APIView):
+    @user_permission
+    def get(request):
+        request_json = json.loads(request.data)
+        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
+        content = json.load(json_data)
+        result = [x for x in content if filter_func(x, request_json)]
+        return result
+
+
+class SMSEventListView(APIView):
+    @user_permission
+    def get(request):
+        request_json = json.loads(request.data)
+        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
+        content = json.load(json_data)
+        result = [x for x in content if filter_func(x, request_json)]
+        return result
+
+
+class SMSDefaultTemplateView(APIView):
+    @user_permission
+    def get(request):
+        request_json = json.loads(request.data)
+        json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
+        content = json.load(json_data)
+        result = [x for x in content if filter_func(x, request_json)]
+        return result
+
+
+class SMSDefaultTemplateListView(APIView):
+    @user_permission
+    def get(request):
+        request_json = json.loads(request.data)
+        json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
+        content = json.load(json_data)
+        result = [x for x in content if filter_func(x, request_json)]
+        return result

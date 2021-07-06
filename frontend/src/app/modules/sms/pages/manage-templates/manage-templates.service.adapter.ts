@@ -85,7 +85,7 @@ export class ManageTemplatesServiceAdapter {
                 temp['selectedSMSId'] = this.vm.populatedSMSIdList.find(smsId => smsId.id == temp['customEventTemplate'].parentSMSId);
             } else {
                 temp['selectedSMSId'] = this.vm.populatedSMSIdList.find(smsId => smsId.id == 0);
-                temp['customEventTemplate'] = {templateId: '', templateName: '', communicationType: '', rawContent: '', mappedContent: '', parentSMSId: 0};
+                temp['customEventTemplate'] = {templateId: '', templateName: '', rawContent: '', mappedContent: '', parentSMSId: 0};
             }
             temp['expansionPanelState'] = {  // for saving expansion panel closed or open state  after load
                 eventPanel: false,

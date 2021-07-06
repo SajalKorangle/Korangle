@@ -1,5 +1,4 @@
 import moment = require('moment');
-import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 export const NEW_LINE_REGEX = /(\r)?\n/g;
 export const FIND_VARIABLE_REGEX = /{#(.*?)#}/g;

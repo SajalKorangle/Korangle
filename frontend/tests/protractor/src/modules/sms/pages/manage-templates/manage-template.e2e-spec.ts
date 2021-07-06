@@ -56,11 +56,6 @@ describe('SMS -> Manage Templates', () => {
         node = await containsFirst('input[@placeholder="Template Name"]', '');
         await node.type('New Template');
 
-        node = await containsFirst('mat-select', 'Communication Type');
-        await node.click();
-        node = await containsFirst('mat-option', 'SERVICE IMPLICIT');
-        await node.click();
-
         node = await containsFirst('textarea', '');
         await node.type('Hello {#var#} this is a template2');
 

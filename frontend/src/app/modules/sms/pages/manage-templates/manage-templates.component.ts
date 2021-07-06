@@ -27,7 +27,6 @@ export class ManageTemplatesComponent implements OnInit {
     sendUpdateToList = RECEIVER_LIST;
 
     panelsList = ['eventPanel', 'notificationPanel', 'smsPanel'];
-    communicationTypeList = [{id: 1, name: 'SERVICE IMPLICIT'}, {id: 2, name: 'SERVICE EXPLICIT'}, {id: 3, name: 'TRANSACTIONAL'}];
 
     populatedSMSIdList = [];
     populatedSMSEventSettingsList = [];

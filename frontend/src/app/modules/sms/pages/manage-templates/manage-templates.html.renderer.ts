@@ -20,7 +20,6 @@ export class ManageTemplatesHtmlRenderer {
             templateId: null,
             templateName: null,
             rawContent: null,
-            communicationType: null,
             mappedContent: null,
         };
     }
@@ -29,7 +28,7 @@ export class ManageTemplatesHtmlRenderer {
         return !this.vm.userInput.newTemplate.templateId || this.vm.userInput.newTemplate.templateId.trim() == '' ||
             !this.vm.userInput.newTemplate.templateName || this.vm.userInput.newTemplate.templateName.trim() == '' ||
             !this.vm.userInput.newTemplate.rawContent || this.vm.userInput.newTemplate.rawContent.trim() == '' ||
-            !this.vm.userInput.newTemplate.communicationType || !this.vm.userInput.newTemplate.parentSMSId;
+            !this.vm.userInput.newTemplate.parentSMSId;
     }
 
     getTemplateShortContent(content: any) {
@@ -75,8 +74,8 @@ export class ManageTemplatesHtmlRenderer {
             if (!smsEvent.customEventTemplate.rawContent || smsEvent.customEventTemplate.rawContent.trim() == '' ||
                 !smsEvent.customEventTemplate.templateId || smsEvent.customEventTemplate.templateId.trim() == '' ||
                 !smsEvent.customEventTemplate.templateName || smsEvent.customEventTemplate.templateName.trim() == '' ||
-                !smsEvent.customEventTemplate.mappedContent || smsEvent.customEventTemplate.mappedContent.trim() == '' ||
-                !smsEvent.customEventTemplate.communicationType || smsEvent.customEventTemplate.communicationType.trim() == '') {
+                !smsEvent.customEventTemplate.mappedContent || smsEvent.customEventTemplate.mappedContent.trim() == ''
+                || smsEvent.customEventTemplate.communicationType.trim() == '') {
                 return true;
             }
             return this.isTemplateModified(smsEvent);
@@ -170,10 +169,6 @@ export class ManageTemplatesHtmlRenderer {
         let textArea = document.getElementById('newTemplate');
         textArea.style.height = '0px';
         textArea.style.height = (textArea.scrollHeight + 30) + 'px';
-    }
-
-    getCommunicationType() {
-        return this.vm.communicationTypeList.find(cm => cm.id == this.vm.userInput.newTemplate.communicationType);
     }
 
     selectEvent(event: any) {

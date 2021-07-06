@@ -1,11 +1,11 @@
 import {SendSmsComponent} from './send-sms.component';
-import {SMS_EVENT_LIST} from '../../../constants-database/SMSEvent';
 import moment = require('moment');
 
 
 export class SendSmsServiceAdapter {
 
     vm: SendSmsComponent;
+    generalSMSEventIdList = [1, 2, 3];
 
     constructor() {}
 
@@ -56,9 +56,13 @@ export class SendSmsServiceAdapter {
                 parentStudentParamter__parameterType: 'FILTER',
             }),
             this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, {parentSchool: this.vm.user.activeSchool.dbId}), //8
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {
+                id__in: this.generalSMSEventIdList.join(',')
+            }), //9
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {
-                SMSEventFrontEndId__in: this.vm.generalSMSEventList.map(x => x.id)
-            }) //19
+                SMSEventFrontEndId__in: this.generalSMSEventIdList.join(",")
+            }), //10
+            this.vm.informationService.getObjectList(this.vm.informationService, {}) //11
         ]);
 
         this.vm.backendData.classList = value[0];
@@ -82,7 +86,9 @@ export class SendSmsServiceAdapter {
 
         this.vm.studentParameterValueList = value[7];
         this.vm.backendData.smsIdSchool = value[8];
-        this.vm.backendData.eventSettingList = value[9];
+        this.vm.backendData.generalSMSEventList = value[9];
+        this.vm.backendData.eventSettingList = value[10];
+        this.vm.backendData.sendUpdateTypeList = value[11];
 
         this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
             id__in: this.vm.backendData.smsIdSchool.map(a => a.parentSMSId),
@@ -188,7 +194,7 @@ export class SendSmsServiceAdapter {
             this.vm.backendData.smsBalance = await messageService.smsNotificationSender(
                 this.vm.dataForMapping,
                 personList,
-                this.vm.generalSMSEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
+                this.vm.backendData.generalSMSEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
                 this.vm.userInput.selectedSendUpdateType.id,
                 this.vm.userInput.selectedTemplate,
                 this.vm.message,

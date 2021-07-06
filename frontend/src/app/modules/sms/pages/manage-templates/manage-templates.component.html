@@ -115,17 +115,6 @@
                                            placeholder="Template Name">
                                 </mat-form-field>
                             </div>
-                            <div class="row">
-                                <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                                    <mat-select placeholder="Communication Type"
-                                                [ngModel]="htmlRenderer.getCommunicationType()"
-                                                (ngModelChange)="userInput.newTemplate.communicationType = $event.id">
-                                        <mat-option *ngFor="let comType of communicationTypeList" [value]="comType">
-                                            {{ comType.name }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
                         </div>
                     </div>
 
@@ -144,116 +133,118 @@
                 </ng-container>
 
                 <ng-container *ngIf="htmlRenderer.getSelectedEventTemplateList().length > 0">
-                <div class="row" style="margin-top: 10px">
-                    <div class="col-sm-2" style="padding-top: 18px;font-weight: 500;">Filter By Created Date:</div>
-                    <div class="col-sm-3">
-                        <day-date
-                                [placeHolder]="'Start Date'"
-                                (onDateSelected)="userInput.startDate = $event"
-                                [formattedDateOutput]="true"
-                                [initialValue]="null"
-                        ></day-date>
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm-2" style="padding-top: 18px;font-weight: 500;">Filter By Created Date:</div>
+                        <div class="col-sm-3">
+                            <day-date
+                                    [placeHolder]="'Start Date'"
+                                    (onDateSelected)="userInput.startDate = $event"
+                                    [formattedDateOutput]="true"
+                                    [initialValue]="null"
+                            ></day-date>
+                        </div>
+                        <div class="col-sm-3">
+                            <day-date
+                                    [placeHolder]="'End Date'"
+                                    (onDateSelected)="userInput.endDate = $event"
+                                    [formattedDateOutput]="true"
+                                    [initialValue]="null"
+                            ></day-date>
+                        </div>
                     </div>
-                    <div class="col-sm-3">
-                        <day-date
-                                [placeHolder]="'End Date'"
-                                (onDateSelected)="userInput.endDate = $event"
-                                [formattedDateOutput]="true"
-                                [initialValue]="null"
-                        ></day-date>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <mat-form-field style="margin-top:20px;margin-bottom:5px;">
+                                <mat-select placeholder="Select Columns">
+                                    <ng-container *ngFor="let key of htmlRenderer.getReceiptColumnFilterKeys()">
+                                        <mat-option>
+                                            <mat-checkbox [(ngModel)]="columnFilter[key]"
+                                                          (click)="$event.stopPropagation()">
+                                                {{ key | titlecase }}
+                                            </mat-checkbox>
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-3">
-                        <mat-form-field style="margin-top:20px;margin-bottom:5px;">
-                            <mat-select placeholder="Select Columns">
-                                <ng-container *ngFor="let key of htmlRenderer.getReceiptColumnFilterKeys()">
-                                    <mat-option>
-                                        <mat-checkbox [(ngModel)]="columnFilter[key]"
-                                                      (click)="$event.stopPropagation()">
-                                            {{ key | titlecase }}
-                                        </mat-checkbox>
-                                    </mat-option>
-                                </ng-container>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
+                    <table class="table table-hover visible-sm visible-xs">
+                        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>S No.</th>
+                            <th>SMS ID</th>
+                            <th class="text-center">Template Name</th>
+                            <th class="text-center">Template Content</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let template of htmlRenderer.getFilteredTemplateList(); let i = index;"
+                            style="padding: 0">
+                            <td class="text-center">{{i + 1}}</td>
+                            <td class="text-center">{{htmlRenderer.getTemplateSMSId(template)}}</td>
+                            <td class="text-center">{{template.templateName}}</td>
+                            <td class="text-left">{{template.rawContent}}</td>
+                            <td class="text-center">
+                                <button class="custom-button"
+                                        style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px"
+                                        (click)="serviceAdapter.deleteTemplate(template)"><i
+                                        class="material-icons">delete</i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                <table class="table table-hover visible-sm visible-xs">
-                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th>S No.</th>
-                        <th>SMS ID</th>
-                        <th class="text-center">Template Name</th>
-                        <th class="text-center">Template Content</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let template of htmlRenderer.getFilteredTemplateList(); let i = index;"
-                        style="padding: 0">
-                        <td class="text-center">{{i + 1}}</td>
-                        <td class="text-center">{{htmlRenderer.getTemplateSMSId(template)}}</td>
-                        <td class="text-center">{{template.templateName}}</td>
-                        <td class="text-left">{{template.rawContent}}</td>
-                        <td class="text-center">
-                            <button class="custom-button"
-                                    style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px"
-                                    (click)="serviceAdapter.deleteTemplate(template)"><i
-                                    class="material-icons">delete</i>
-                            </button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                    <ng-container *ngIf="!htmlRenderer.isMobile()">
+                        <mat-accordion displayMode="flat" class="mat-table hidden-sm hidden-xs">
+                            <section class="mat-elevation-z2 mat-header-row">
+                                <span class="mat-header-cell">S No.</span>
+                                <span class="mat-header-cell" *ngIf="columnFilter.creationDate">Created Date</span>
+                                <span class="mat-header-cell" *ngIf="columnFilter.SMSId">SMS ID</span>
+                                <span class="mat-header-cell" *ngIf="columnFilter.templateName">Template Name</span>
+                                <span class="mat-header-cell"
+                                      *ngIf="columnFilter.templateContent">Template Content</span>
+                                <span class="mat-header-cell" *ngIf="columnFilter.templateId">Registration ID</span>
+                            </section>
 
-                <ng-container *ngIf="!htmlRenderer.isMobile()">
-                    <mat-accordion displayMode="flat" class="mat-table hidden-sm hidden-xs">
-                        <section class="mat-elevation-z2 mat-header-row">
-                            <span class="mat-header-cell">S No.</span>
-                            <span class="mat-header-cell" *ngIf="columnFilter.creationDate">Created Date</span>
-                            <span class="mat-header-cell" *ngIf="columnFilter.SMSId">SMS ID</span>
-                            <span class="mat-header-cell" *ngIf="columnFilter.templateName">Template Name</span>
-                            <span class="mat-header-cell" *ngIf="columnFilter.templateContent">Template Content</span>
-                            <span class="mat-header-cell" *ngIf="columnFilter.templateId">Registration ID</span>
-                        </section>
-
-                        <mat-expansion-panel
-                                *ngFor="let template of htmlRenderer.getFilteredTemplateList(); let i = index;">
-                            <mat-expansion-panel-header class="mat-row" style="min-height:100px">
-                                <span class="mat-cell">{{i + 1}}</span>
-                                <span class="mat-cell"
-                                      *ngIf="columnFilter.creationDate">{{template.createdDate | date: 'dd - MMM - yyyy' }}</span>
-                                <span class="mat-cell"
-                                      *ngIf="columnFilter.SMSId">{{htmlRenderer.getTemplateSMSId(template)}}</span>
-                                <span class="mat-cell"
-                                      *ngIf="columnFilter.templateName">{{template.templateName}}</span>
-                                <span class="mat-cell"
-                                      *ngIf="columnFilter.templateContent">{{htmlRenderer.getTemplateShortContent(template.rawContent)}} </span>
-                                <span class="mat-cell" *ngIf="columnFilter.templateId">{{template.templateId}}</span>
-                            </mat-expansion-panel-header>
-                            <ng-container>
+                            <mat-expansion-panel
+                                    *ngFor="let template of htmlRenderer.getFilteredTemplateList(); let i = index;">
+                                <mat-expansion-panel-header class="mat-row" style="min-height:100px">
+                                    <span class="mat-cell">{{i + 1}}</span>
+                                    <span class="mat-cell"
+                                          *ngIf="columnFilter.creationDate">{{template.createdDate | date: 'dd - MMM - yyyy' }}</span>
+                                    <span class="mat-cell"
+                                          *ngIf="columnFilter.SMSId">{{htmlRenderer.getTemplateSMSId(template)}}</span>
+                                    <span class="mat-cell"
+                                          *ngIf="columnFilter.templateName">{{template.templateName}}</span>
+                                    <span class="mat-cell"
+                                          *ngIf="columnFilter.templateContent">{{htmlRenderer.getTemplateShortContent(template.rawContent)}} </span>
+                                    <span class="mat-cell"
+                                          *ngIf="columnFilter.templateId">{{template.templateId}}</span>
+                                </mat-expansion-panel-header>
                                 <ng-container>
-                                    <div class="row">
-                                        <div class="col-sm-3" style="font-weight: 600"><span
-                                                style="float:right;">Content:</span></div>
-                                        <div class="col-sm-9"
-                                             style="white-space: pre-line">{{template.rawContent}}</div>
-                                    </div>
-                                    <div class="row">
-                                        <button class="custom-button"
-                                                style="padding: 6px 4px 2px 5px; float: right; margin-right: 10px"
-                                                (click)="serviceAdapter.deleteTemplate(template)"><i
-                                                class="material-icons">delete</i>
-                                        </button>
-                                    </div>
-                                    <br/>
+                                    <ng-container>
+                                        <div class="row">
+                                            <div class="col-sm-3" style="font-weight: 600"><span
+                                                    style="float:right;">Content:</span></div>
+                                            <div class="col-sm-9"
+                                                 style="white-space: pre-line">{{template.rawContent}}</div>
+                                        </div>
+                                        <div class="row">
+                                            <button class="custom-button"
+                                                    style="padding: 6px 4px 2px 5px; float: right; margin-right: 10px"
+                                                    (click)="serviceAdapter.deleteTemplate(template)"><i
+                                                    class="material-icons">delete</i>
+                                            </button>
+                                        </div>
+                                        <br/>
+                                    </ng-container>
                                 </ng-container>
-                            </ng-container>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </ng-container>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </ng-container>
                 </ng-container>
             </ng-container>
         </ng-container>
@@ -379,14 +370,13 @@
                             </div>
                             <div class="row">
                                 <mat-form-field style="width: 100%;" appearance="none">
-                    <textarea matInput
-                              type="text"
-                              id="mappedContent"
-                              [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
-                              (ngModelChange)="htmlRenderer.setMappedContent(smsEvent,$event)"
-                              [readonly]="isDefaultSelected(smsEvent)"
-                              style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px;max-height: 300px"
-                    ></textarea>
+                            <textarea matInput
+                                      type="text"
+                                      id="mappedContent"
+                                      [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
+                                      (ngModelChange)="htmlRenderer.setMappedContent(smsEvent,$event)"
+                                      [readonly]="isDefaultSelected(smsEvent)"
+                                      style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px;max-height: 300px"></textarea>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -402,17 +392,6 @@
                             <mat-form-field style="width: 100%;">
                                 <input type="text" matInput [(ngModel)]="smsEvent.customEventTemplate.templateName"
                                        placeholder="Template Name">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                                <mat-select placeholder="Communication Type"
-                                            [ngModel]="htmlRenderer.getCommunicationType()"
-                                            (ngModelChange)="userInput.newTemplate.communicationType = $event.id">
-                                    <mat-option *ngFor="let comType of communicationTypeList" [value]="comType">
-                                        {{ comType.name }}
-                                    </mat-option>
-                                </mat-select>
                             </mat-form-field>
                         </div>
                     </div>
