@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -17,7 +17,7 @@ import { EmployeeService } from '@services/modules/employee/employee.service';
 
 import { Time, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import { WEEKDAYS, ZOOM_BASE_URL } from '@modules/online-classes/class/constants';
-import { isMobile, openUrlInChrome } from '@classes/common.js';
+import { isMobile, openUrlInChrome, openUrlInBrowser } from '@classes/common.js';
 import { Constants } from 'app/classes/constants';
 import { environment } from 'environments/environment';
 import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
@@ -136,38 +136,50 @@ export class JoinAllComponent implements OnInit {
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
-        // clearInterval(this.attendanceMarkerInterval);
-        this.userEmployee = this.employeeList.find((employee) => {
-            return employee.id == this.user.activeSchool.employeeId;
-        });
-        // console.log(this.userEmployee.name);
-        this.meetingParameters = {
-            signature,
-            api_key: apiKey,
-            meeting_number: accountInfo.meetingNumber,
-            password: accountInfo.passcode,
-            role: 0,
-            username: this.userEmployee.name,
-            leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
-            error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
-        };
-        this.meetingEntered = true;
-        setTimeout(() => {
-            let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
-            while (!zoomIFrame && this.meetingEntered) {
-                zoomIFrame = document.getElementById('zoomIFrame');
-            }
-            if (this.meetingEntered) {
-                const searchParams = new URLSearchParams();
-                Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                if (isMobile()) {
-                    openUrlInChrome(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
-                    this.meetingEntered = false;
+        if(accountInfo.meetingNumber){
+            // clearInterval(this.attendanceMarkerInterval);
+            this.userEmployee = this.employeeList.find((employee) => {
+                return employee.id == this.user.activeSchool.employeeId;
+            });
+            // console.log(this.userEmployee.name);
+            this.meetingParameters = {
+                signature,
+                api_key: apiKey,
+                meeting_number: accountInfo.meetingNumber,
+                password: accountInfo.passcode,
+                role: 0,
+                username: this.userEmployee.name,
+                leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
+                error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
+            };
+            this.meetingEntered = true;
+            setTimeout(() => {
+                let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
+                while (!zoomIFrame && this.meetingEntered) {
+                    zoomIFrame = document.getElementById('zoomIFrame');
                 }
-                else {
-                    zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                if (this.meetingEntered) {
+                    const searchParams = new URLSearchParams();
+                    Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
+                    const encodSearchParams = window.btoa(searchParams.toString());
+                    if (isMobile()) {
+                        openUrlInChrome(location.origin + '/assets/zoom/index.html?' , encodSearchParams);
+                        this.meetingEntered = false;
+                    }
+                    else {
+                        zoomIFrame.src = '/assets/zoom/index.html?' + encodSearchParams;
+                        
+                    }
                 }
+            });
+        }
+        else{
+            if (isMobile()) {
+                openUrlInBrowser(accountInfo.meetingUrl);
+                return;
             }
-        });
+            window.open(accountInfo.meetingUrl, '_blank');
+            console.log(accountInfo.meetingUrl);
+        }
     }
 }

@@ -10,9 +10,16 @@ export function openUrlInBrowser( url ) {
     }
 }
 
-export function openUrlInChrome( url ) {
+export function openUrlInChrome( fir ,url ) {
+    var coUrl = atob(url);
+    try {
+        var decoUrl = atob(coUrl);
+    }
+    catch(err){
+        var decoUrl = coUrl;
+    }
     if ( navigator.userAgent == 'Mobile' ) {
-        Android.openInChrome( url );
+        Android.openInChrome( fir+decoUrl );
     }
 }
 

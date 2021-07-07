@@ -55,9 +55,53 @@ export class AddAccountServiceAdapter {
     }
 
     async addNewAccountInfo() {
-        if (!this.vm.newAccountInfoSanatyCheck())
+        if(this.vm.userInput.newAccountInfo.meetingNumber){
+            if (!this.vm.newAccountInfoSanatyCheck())
+            return;
+        
+        
+            this.vm.userInput.newAccountInfo.meetingUrl = "N/A";
+        
+            const account_info_request = {
+                parentEmployee: this.vm.userInput.newAccountInfo.parentEmployee,
+            };
+
+            this.vm.isLoading = true;
+            const preExistingAccountInfo = await this.vm.onlineClassService.getObject(this.vm.onlineClassService.account_info, account_info_request);
+            if (preExistingAccountInfo) { // account with this username aready exists
+                alert("Account with the provided username already exists");
+                this.vm.isLoading = false;
+                return;
+            }
+            const createdAccountInfo = await this.vm.onlineClassService.createObject(
+                this.vm.onlineClassService.account_info,
+                { ...this.vm.userInput.newAccountInfo }
+            );
+            this.vm.backendData.accountInfoList.push(createdAccountInfo);
+            this.vm.userInput.resetNewAccountInfo();
+            this.vm.isLoading = false;
+        }
+        else{
+            this.addNewAccountInfoURL();
+        }
+        
+        
+    }
+
+    async addNewAccountInfoURL() {
+        if (!this.vm.newAccountInfoSanatyCheckURL())
             return;
 
+        if (!this.vm.validURL(this.vm.userInput.newAccountInfo.meetingUrl))
+            return;
+
+        
+        this.vm.isURL=true;
+
+        this.vm.userInput.newAccountInfo.meetingNumber = 0;
+        this.vm.userInput.newAccountInfo.passcode = "N/A";
+            
+        
         const account_info_request = {
             parentEmployee: this.vm.userInput.newAccountInfo.parentEmployee,
         };

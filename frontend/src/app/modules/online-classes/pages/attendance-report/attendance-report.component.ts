@@ -107,12 +107,9 @@ export class AttendanceReportComponent implements OnInit {
 
     validUserInput(): boolean {
         if (!(this.userInput.selectedClass && this.userInput.selectedDivision
-            && this.userInput.startDate && this.userInput.endDate
-            && this.userInput.selectedParsedClassSubject)) {
+            && this.userInput.startDate && this.userInput.endDate)) {
             return false;
         }
-        if (!this.getFilteredClassSubjectList().find(cs => cs == this.userInput.selectedParsedClassSubject))
-            return false;
         const startDate = new Date(this.userInput.startDate);
         const endDate = new Date(this.userInput.endDate);
         if (startDate > endDate)
@@ -144,13 +141,16 @@ export class AttendanceReportComponent implements OnInit {
     }
 
     getDisplayColumns(): Array<string> {
-        const dislayColumns = ['S.No.', 'roll', 'name', 'attendanceCount'];
+        let dislayColumns = ['S.No.', 'roll', 'name'];
+        this.getFilteredClassSubjectList().forEach(classSubject => {
+            dislayColumns.push(classSubject.subjectInstance.name);
+        });
         return dislayColumns;
     }
 
-    getAttendanceCount(studentSection: ParsedStudentSection): number {
+    getAttendanceCount(studentSection: ParsedStudentSection, classSubject: any): number {
         const filteredAttendanceList = this.backendData.studentAttendance.filter(studentAttendance =>
-            studentAttendance.parentStudentSection == studentSection.id);
+            (studentAttendance.parentStudentSection == studentSection.id)&&(studentAttendance.parentClassSubject == classSubject.id));
         return filteredAttendanceList.length;
     }
 

@@ -10,6 +10,7 @@ class AccountInfo(models.Model):
     parentEmployee = models.ForeignKey(Employee, unique=True, on_delete=models.CASCADE)
     meetingNumber = models.BigIntegerField()
     passcode = models.CharField(max_length=10)
+    meetingUrl = models.CharField(max_length=200, default="")
 
 
 

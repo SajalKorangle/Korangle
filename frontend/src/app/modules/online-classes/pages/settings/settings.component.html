@@ -71,7 +71,8 @@
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
 
                                         <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
-                                        <span>({{htmlRenderer.getDisplayData(onlineClass).employee.name}})</span>
+                                        <span>({{htmlRenderer.getDisplayData(onlineClass).classs.name}})</span><br/>
+                                        <span>({{htmlRenderer.getDisplayData(onlineClass).section.name}})</span>
 
                                         <span
                                             *ngIf="backendData.getAccountInfoByParentEmployee(backendData.getClassSubjectById(onlineClass.parentClassSubject).parentEmployee)"

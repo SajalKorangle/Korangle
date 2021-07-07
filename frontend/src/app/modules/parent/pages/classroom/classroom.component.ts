@@ -17,7 +17,7 @@ import { Constants } from 'app/classes/constants';
 
 import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
 
-import { openUrlInChrome, isMobile } from '@classes/common.js';
+import { openUrlInChrome, isMobile, openUrlInBrowser } from '@classes/common.js';
 
 @Component({
     selector: 'classroom',
@@ -93,37 +93,47 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
-        // clearInterval(this.attendanceMarkerInterval);
-        this.meetingParameters = {
-            signature,
-            api_key: apiKey,
-            meeting_number: accountInfo.meetingNumber,
-            password: accountInfo.passcode,
-            role: 0,
-            username: this.activeStudent.name,
-            leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
-            error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
-        };
-        this.htmlRenderer.meetingEntered = true;
-        setTimeout(() => {
-            let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
-            while (!zoomIFrame && this.htmlRenderer.meetingEntered) {
-                zoomIFrame = document.getElementById('zoomIFrame');
-            }
-            if (this.htmlRenderer.meetingEntered) {
-                const searchParams = new URLSearchParams();
-                Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                if (isMobile()) {
-                    openUrlInChrome(location.origin + '/assets/zoom/index.html?' + searchParams.toString());
-                    this.htmlRenderer.meetingEntered = false;
+        if(accountInfo.meetingNumber){
+            // clearInterval(this.attendanceMarkerInterval);
+            this.meetingParameters = {
+                signature,
+                api_key: apiKey,
+                meeting_number: accountInfo.meetingNumber,
+                password: accountInfo.passcode,
+                role: 0,
+                username: this.activeStudent.name,
+                leaveUrl: location.protocol + "//" + location.host + '/assets/zoom/feedback.html',
+                error_logging_endpoint: environment.DJANGO_SERVER + Constants.api_version + ERROR_REPORTING_URL,
+            };
+            this.htmlRenderer.meetingEntered = true;
+            setTimeout(() => {
+                let zoomIFrame: Partial<HTMLIFrameElement> = document.getElementById('zoomIFrame');
+                while (!zoomIFrame && this.htmlRenderer.meetingEntered) {
+                    zoomIFrame = document.getElementById('zoomIFrame');
                 }
-                else {
-                    zoomIFrame.src = '/assets/zoom/index.html?' + searchParams.toString();
+                if (this.htmlRenderer.meetingEntered) {
+                    const searchParams = new URLSearchParams();
+                    Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
+                    const encodSearchParams = btoa(btoa(searchParams.toString()));
+                    if (isMobile()) {
+                        openUrlInChrome(location.origin + '/assets/zoom/index.html?' , encodSearchParams);
+                        this.htmlRenderer.meetingEntered = false;
+                    }
+                    else {
+                        zoomIFrame.src = '/assets/zoom/index.html?' + encodSearchParams;
+                    }
                 }
+                // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
+                this.serviceAdapter.markAttendance();
+            });
+        }
+        else{
+            if (isMobile()) {
+                openUrlInBrowser(accountInfo.meetingUrl);
+                return;
             }
-            // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
-            this.serviceAdapter.markAttendance();
-        });
+            window.open(accountInfo.meetingUrl, '_blank');
+        }
     }
 
 }
