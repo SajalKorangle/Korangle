@@ -51,6 +51,10 @@ export class SendSmsComponent implements OnInit {
     studentMessageService: any;
     employeeMessageService: any;
 
+    SMS_TYPE_ID = 2;
+    NOTIFICATION_TYPE_ID = 3;
+    SMS_AND_NOTIFICATION_TYPE_ID = 4;
+
     rows;
     timeout: any;
     nameFilter = '';
@@ -160,7 +164,7 @@ export class SendSmsComponent implements OnInit {
 
     getMobileNumberList(returnType: string): any {
         let tempList = [];
-        let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.event.id == this.userInput.selectedSendTo.id).variableList;
+        let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.eventId == this.userInput.selectedSendTo.id).variableList;
 
         if (this.userInput.selectedSendTo.id != 2) {
 
@@ -197,13 +201,13 @@ export class SendSmsComponent implements OnInit {
                 }
             });
         }
-        if (this.userInput.selectedSendUpdateType == this.backendData.sendUpdateTypeList[1]) {
+        if (this.userInput.selectedSendUpdateType.id == this.SMS_TYPE_ID) {
             this.smsPersonList = tempList;
             this.notificationPersonList = [];
-        } else if (this.userInput.selectedSendUpdateType == this.backendData.sendUpdateTypeList[2]) {
+        } else if (this.userInput.selectedSendUpdateType.id == this.NOTIFICATION_TYPE_ID) {
             this.smsPersonList = [];
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
-        } else if (this.userInput.selectedSendUpdateType == this.backendData.sendUpdateTypeList[3]) {
+        } else if (this.userInput.selectedSendUpdateType == this.SMS_AND_NOTIFICATION_TYPE_ID) {
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
             this.smsPersonList = tempList.filter((temp1) => {
                 return (

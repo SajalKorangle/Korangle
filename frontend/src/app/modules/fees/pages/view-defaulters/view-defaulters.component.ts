@@ -16,18 +16,17 @@ import {PRINT_FEES_REPORT} from '../../print/print-routes.constants';
 import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/view-defaulters.html.renderer';
 import {MessageService} from '@services/message-service';
 import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
-import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
-import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FeeType } from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
+import {InformationService} from '@services/modules/information/information.service';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService],
+    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService, InformationService],
     //animation for row expansion on clicking row on mat table
     animations: [
         trigger('detailExpand', [
@@ -69,10 +68,7 @@ export class ViewDefaultersComponent implements OnInit {
 
     user;
 
-    sendUpdateTypeList = SEND_UPDATE_TYPE_LIST.filter(type => type.name != 'NULL');
-    defaultersPageVariables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == this.NOTIFY_DEFAULTERS_ID).variableList;
-
-    selectedSendUpdateType = this.sendUpdateTypeList[0];
+    defaultersPageVariables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.eventId == this.NOTIFY_DEFAULTERS_ID).variableList;
 
     smsBalance = 0;
 
@@ -103,13 +99,16 @@ export class ViewDefaultersComponent implements OnInit {
     selectedClassSection = null;
     filteredClassSectionList = [];
     dataForMapping =  {} as any;
-    defaultersSMSEvent = SMS_EVENT_LIST.find(e => e.id == this.NOTIFY_DEFAULTERS_ID);
 
+    SMS_TYPE_ID = 2;
+    NOTIFICATION_TYPE_ID = 3;
+    SMS_AND_NOTIFICATION_TYPE_ID = 4;
 
     message = '';
 
     userInput = {
         selectedTemplate: {} as any,
+        selectedSendUpdateType: {} as any,
         scheduleSMS: false,
         scheduledDate: null,
         scheduledTime: null,
@@ -120,6 +119,8 @@ export class ViewDefaultersComponent implements OnInit {
         templateList: [],
         eventSettingsList: [],
         smsIdSchoolList: [],
+        sendUpdateTypeList: [],
+        defaultersSMSEvent: {} as any
     };
 
     populatedTemplateList = [];
@@ -146,6 +147,7 @@ export class ViewDefaultersComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
+        public informationService: InformationService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) {}
@@ -829,7 +831,7 @@ export class ViewDefaultersComponent implements OnInit {
     getEstimatedNotificationCount = () => {
         let count = 0;
         let studentList = [];
-        if (this.selectedSendUpdateType == this.sendUpdateTypeList[0]) {
+        if (this.userInput.selectedSendUpdateType.id == this.SMS_TYPE_ID) {
             return 0;
         }
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -861,7 +863,7 @@ export class ViewDefaultersComponent implements OnInit {
     getEstimatedSMSCount = () => {
         let count = 0;
         let studentList = [];
-        if (this.selectedSendUpdateType == this.sendUpdateTypeList[1]) {
+        if (this.userInput.selectedSendUpdateType.id == this.NOTIFICATION_TYPE_ID) {
             return 0;
         }
         if (this.selectedFilterType == this.filterTypeList[0]) {
@@ -869,7 +871,7 @@ export class ViewDefaultersComponent implements OnInit {
             this.getFilteredStudentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
-                    if (this.selectedSendUpdateType == this.sendUpdateTypeList[0] || item.notification == false) {
+                    if (this.userInput.selectedSendUpdateType.id == this.SMS_TYPE_ID || item.notification == false) {
                         if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList,
                             this.dataForMapping, item, this.message, 'student'))
                         {
@@ -885,7 +887,7 @@ export class ViewDefaultersComponent implements OnInit {
             this.getFilteredParentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
-                    if (this.selectedSendUpdateType == this.sendUpdateTypeList[0] || item.notification == false) {
+                    if (this.userInput.selectedSendUpdateType.id == this.SMS_TYPE_ID || item.notification == false) {
                         this.dataForMapping['studentList'] = item.studentList;
                         item.studentList.forEach(student => {
                         if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList, this.dataForMapping, student, this.message, 'student'))

@@ -15,7 +15,7 @@ export class ViewDefaultersHtmlRenderer {
     }
 
     getPlaceHolder() {
-        if (this.vm.selectedSendUpdateType != this.vm.sendUpdateTypeList[1] &&
+        if (this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID &&
             (!this.vm.userInput.selectedTemplate.id || !this.vm.message || this.vm.message.trim() == '')) {
             return 'Select a template from template List';
         } else {
@@ -39,32 +39,32 @@ export class ViewDefaultersHtmlRenderer {
 
     isSendDisabled() {
         let disabled = this.vm.getEstimatedSMSCount() + this.vm.getEstimatedNotificationCount() == 0 || this.vm.message.length == 0;
-        if (!disabled && this.vm.selectedSendUpdateType != this.vm.sendUpdateTypeList[1]) {
+        if (!disabled && this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID) {
             disabled = this.vm.getEstimatedSMSCount() > this.vm.smsBalance;
             if (!disabled) {
                 disabled = this.isTemplateModified();
             }
         }
-        if (!disabled && this.vm.selectedSendUpdateType.id == 2 && this.vm.userInput.scheduleSMS) {
+        if (!disabled && this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_TYPE_ID && this.vm.userInput.scheduleSMS) {
             disabled = !this.vm.userInput.scheduledDate || !this.vm.userInput.scheduledTime || this.checkDateTimeInvalid();
         }
         return disabled;
     }
 
     isTemplateModified() {
-        return this.vm.selectedSendUpdateType.id != this.vm.sendUpdateTypeList[1].id &&
+        return this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID &&
             this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
     }
 
     getButtonText() {
         let text = this.vm.userInput.scheduleSMS ? 'Schedule ' : 'Send ';
-        if (this.vm.selectedSendUpdateType == this.vm.sendUpdateTypeList[0]) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_TYPE_ID) {
             return text + this.vm.getEstimatedSMSCount() + ' SMS';
         }
-        if (this.vm.selectedSendUpdateType == this.vm.sendUpdateTypeList[1]) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.NOTIFICATION_TYPE_ID) {
             return text + this.vm.getEstimatedNotificationCount() + ' notifications';
         }
-        if (this.vm.selectedSendUpdateType == this.vm.sendUpdateTypeList[2]) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_AND_NOTIFICATION_TYPE_ID) {
             return text + this.vm.getEstimatedSMSCount() + ' SMS & '
                 + this.vm.getEstimatedNotificationCount() + ' notifications';
         }
@@ -251,7 +251,7 @@ export class ViewDefaultersHtmlRenderer {
     }
 
     sendUpdateTypeChanged() {
-        if (this.vm.selectedSendUpdateType.id != 3) {
+        if (this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID) {
             this.vm.message = '';
         }
         this.vm.userInput.scheduleSMS = false;
@@ -275,7 +275,7 @@ export class ViewDefaultersHtmlRenderer {
                 parent.studentList.forEach(student => personList.push(student)));
         }
         let estimatedCount = Number(this.vm.getEstimatedSMSCount());
-        if (this.vm.selectedSendUpdateType.id == 4) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_AND_NOTIFICATION_TYPE_ID) {
             personList = personList.filter(x => !x.notification);
         }
         let count2 = Number(personList.length);

@@ -804,7 +804,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <mat-form-field style="margin: 20px 5px 5px;">
-                        <mat-select placeholder="Send via" [(ngModel)]="selectedSendUpdateType"
+                        <mat-select placeholder="Send via" [(ngModel)]="userInput.selectedSendUpdateType"
                                     (ngModelChange)="htmlRenderer.sendUpdateTypeChanged()">
                             <mat-option *ngFor="let sendType of sendUpdateTypeList" [value]="sendType">
                                 {{ sendType.name }}
@@ -812,7 +812,7 @@
                         </mat-select>
                     </mat-form-field>
                     <span style="margin-left:5px;font-size: 16px"
-                          *ngIf="selectedSendUpdateType != sendUpdateTypeList[1]">
+                          *ngIf="userInput.selectedSendUpdateType.id != NOTIFICATION_TYPE_ID">
                         SMS Balance:
                 <b><i>{{ smsBalance }}</i></b><br/></span>
                 </div>
@@ -840,13 +840,13 @@
                     </mat-form-field>
                     <br/>
                     <span style="font-size: 14px;float:left"># of Mobile devices: {{ htmlRenderer.getNumberOfMobileDevice()}}</span>
-                    <span *ngIf="selectedSendUpdateType != sendUpdateTypeList[1]"
+                    <span *ngIf="userInput.selectedSendUpdateType.id != NOTIFICATION_TYPE_ID"
                           style="font-size: 14px;float:right">Estimated SMS Count: {{ getEstimatedSMSCount() }}</span>
-                    <span *ngIf="selectedSendUpdateType == sendUpdateTypeList[1]" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
+                    <span *ngIf="userInput.selectedSendUpdateType.id == NOTIFICATION_TYPE_ID" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
                     <br/>
-                    <span *ngIf="selectedSendUpdateType != sendUpdateTypeList[1]" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }}
+                    <span *ngIf="userInput.selectedSendUpdateType.id != NOTIFICATION_TYPE_ID" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }}
                         (Approx) </span>
-                    <span *ngIf="selectedSendUpdateType == sendUpdateTypeList[2]" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
+                    <span *ngIf="userInput.selectedSendUpdateType.id == SMS_AND_NOTIFICATION_TYPE_ID" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
                     <br/>
                     <ng-container
                             *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
@@ -860,11 +860,11 @@
                 </span>
 
                     </ng-container>
-                    <mat-checkbox *ngIf="selectedSendUpdateType.id == 2" [(ngModel)]="userInput.scheduleSMS">Schedule
+                    <mat-checkbox *ngIf="userInput.selectedSendUpdateType.id == SMS_TYPE_ID" [(ngModel)]="userInput.scheduleSMS">Schedule
                         SMS
                     </mat-checkbox>
                     <br/>
-                    <ng-container *ngIf="selectedSendUpdateType.id == 2 && userInput.scheduleSMS">
+                    <ng-container *ngIf="userInput.selectedSendUpdateType.id == SMS_TYPE_ID && userInput.scheduleSMS">
                         <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 150px">
                             <input
                                     type="date"

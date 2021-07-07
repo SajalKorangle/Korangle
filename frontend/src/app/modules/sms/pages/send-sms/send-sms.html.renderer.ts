@@ -28,7 +28,7 @@ export class SendSmsHtmlRenderer {
     }
 
     isSMSNeeded() {
-        return this.vm.userInput.selectedSendUpdateType.id != 3;
+        return this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID;
     }
 
     getSMSIdName(template: any) {
@@ -54,7 +54,7 @@ export class SendSmsHtmlRenderer {
         if (!disabled && this.isSMSNeeded()) {
             disabled = this.vm.backendData.smsBalance < this.getEstimatedSMSCount() || this.isTemplateModified();
         }
-        if (!disabled && this.vm.userInput.selectedSendUpdateType.id == 2 && this.vm.userInput.scheduleSMS) {
+        if (!disabled && this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_TYPE_ID && this.vm.userInput.scheduleSMS) {
             disabled = !this.vm.userInput.scheduledDate || !this.vm.userInput.scheduledTime || this.checkDateTimeInvalid();
         }
         return disabled;
@@ -62,13 +62,13 @@ export class SendSmsHtmlRenderer {
 
     getButtonText() {
         let text = this.vm.userInput.scheduleSMS ? 'Schedule ' : 'Send ';
-        if (this.vm.userInput.selectedSendUpdateType.id == 2) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_TYPE_ID) {
             return text + this.getEstimatedSMSCount() + ' SMS';
         }
-        if (this.vm.userInput.selectedSendUpdateType.id == 3) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.NOTIFICATION_TYPE_ID) {
             return text + this.vm.getMobileNumberList('notification').length + ' notifications';
         }
-        if (this.vm.userInput.selectedSendUpdateType.id == 4) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_AND_NOTIFICATION_TYPE_ID) {
             return text + this.getEstimatedSMSCount() + ' SMS & '
                 + this.vm.getMobileNumberList('notification').length + ' notifications';
         }
@@ -84,7 +84,7 @@ export class SendSmsHtmlRenderer {
 
     getVariables() {
             return VARIABLE_MAPPED_EVENT_LIST.find
-            (vme => vme.event.id == this.vm.userInput.selectedSendTo.id).variableList.map(x => x.displayVariable);
+            (vme => vme.eventId == this.vm.userInput.selectedSendTo.id).variableList.map(x => x.displayVariable);
     }
 
     getClassSectionName(classId: number, sectionId: number): string {
@@ -168,10 +168,10 @@ export class SendSmsHtmlRenderer {
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if (this.vm.userInput.selectedSendUpdateType == this.vm.backendData.sendUpdateTypeList[2]) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.NOTIFICATION_TYPE_ID) {
             return 0;
         }
-        let variables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.event.id == this.vm.userInput.selectedSendTo.id).variableList;
+        let variables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.eventId == this.vm.userInput.selectedSendTo.id).variableList;
         this.vm.dataForMapping['studentList'] = this.vm.getFilteredStudentList().filter((x) => {
             return x.selected;
         }).map(a => a.student);
@@ -213,7 +213,7 @@ export class SendSmsHtmlRenderer {
     }
 
     getTemplateList() {
-        let selectedEventSettingsList = this.vm.backendData.eventSettingList.filter(x => x.SMSEventFrontEndId == this.vm.userInput.selectedSendTo.id);
+        let selectedEventSettingsList = this.vm.backendData.eventSettingList.filter(x => x.SMSEventId == this.vm.userInput.selectedSendTo.id);
         return this.vm.populatedTemplateList.filter(temp => selectedEventSettingsList.some(e => temp.id == e.parentSMSTemplate));
     }
 

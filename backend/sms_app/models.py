@@ -55,7 +55,7 @@ def sms_id_delete_check(sender, instance, **kwargs):
 class SMS(models.Model):
     parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1, null=True)
 
-    SMSEventFrontEndId = models.IntegerField(null=False, default=0)
+    SMSEventId = models.IntegerField(null=False, default=0)
 
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType')
@@ -189,7 +189,7 @@ class SMSTemplate(models.Model):
 
 
 class SMSEventSettings(models.Model):
-    SMSEventFrontEndId = models.IntegerField(null=False, default=0)
+    SMSEventId = models.IntegerField(null=False, default=0)
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
     parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, null=True,
                                           verbose_name='parentSMSTemplate')

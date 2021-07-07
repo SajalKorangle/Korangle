@@ -179,7 +179,7 @@ export const EVENT_GALLERY_VARIABLE_LIST = [
 class MappingEventWithVariableStructure{
     static getStructure(SMSEventId, variableList) {
         return {
-            event: SMS_EVENT_LIST.find(e => e.id == SMSEventId),
+            eventId: SMSEventId,
             variableList: COMMON_VARIABLE_LIST.concat(variableList),
         };
     }

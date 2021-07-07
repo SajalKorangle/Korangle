@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             name='SMSEventSettings',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('SMSEventFrontEndId', models.IntegerField(default=0)),
+                ('SMSEventId', models.IntegerField(default=0)),
                 ('customNotificationContent', models.TextField(null=True, verbose_name='customNotificationContent')),
                 ('receiverType', models.CharField(
                     choices=[('All Students', 'All Students'), ('Only Absent Students', 'Only Absent Students')],
@@ -80,7 +80,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='sms',
-            name='SMSEventFrontEndId',
+            name='SMSEventId',
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(

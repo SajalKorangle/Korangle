@@ -59,8 +59,8 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     isGeneralOrDefaulters(): boolean {
-        // check from General SMS and Notify Defaulters SMS Event ID's
-        return this.generalAndDefaulterEventIdList.includes(this.vm.userInput.selectedPage.orderedSMSEventList[0].id);
+        // check General SMS and Notify Defaulters SMS Event ID's are present in the selectedPage
+        return this.generalAndDefaulterEventIdList.includes(this.vm.userInput.selectedPage.orderedSMSEventIdList[0]);
     }
 
     isUpdateDisabled(smsEvent: any) {
@@ -84,11 +84,11 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getUpdateType(smsEvent: any) {
-        return this.vm.backendData.sendUpdateTypeList.find(type => type.id == smsEvent.eventSettings.sendUpdateTypeFrontEndId);
+        return this.vm.backendData.sendUpdateTypeList.find(type => type.id == smsEvent.eventSettings.sendUpdateTypeId);
     }
 
     setUpdateType(smsEvent: any, selectedType: any) {
-        smsEvent.eventSettings.sendUpdateTypeFrontEndId = selectedType.id;
+        smsEvent.eventSettings.sendUpdateTypeId = selectedType.id;
     }
 
     getNotificationContent(smsEvent: any) {
@@ -161,7 +161,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getVariableList(smsEvent : any) {
-        return VARIABLE_MAPPED_EVENT_LIST.find(e => e.event.id == smsEvent.id).variableList.map(a => a.displayVariable);
+        return VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id).variableList.map(a => a.displayVariable);
     }
 
     newTemplateChanged(event: any) {
@@ -171,14 +171,18 @@ export class ManageTemplatesHtmlRenderer {
         textArea.style.height = (textArea.scrollHeight + 30) + 'px';
     }
 
-    selectEvent(event: any) {
-        this.vm.userInput.selectedEvent = event;
+    selectEvent(eventId: any) {
+        this.vm.userInput.selectedEvent = this.vm.backendData.SMSEventList.find(x => x.id == eventId);
     }
 
     getSelectedEventTemplateList() {
         let selectedEventSettingsList = this.vm.backendData.selectedPageEventSettingsList.filter
-        (setting => setting.SMSEventFrontEndId == this.vm.userInput.selectedEvent.id);
+        (setting => setting.SMSEventId == this.vm.userInput.selectedEvent.id);
         return this.vm.backendData.selectedPageTemplateList.filter
         (template => selectedEventSettingsList.some(setting => template.id == setting.parentSMSTemplate));
+    }
+
+    getEventName(eventId: any) {
+        return this.vm.backendData.SMSEventList.find(x => x.id == eventId).eventName;
     }
 }

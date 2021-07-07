@@ -3,7 +3,7 @@ class SettingsPageStructure {
     static getStructure(pageName: any, eventsIdInOrder: any) {
         return {
             name: pageName,
-            orderedSMSEventList: eventsIdInOrder,
+            orderedSMSEventIdList: eventsIdInOrder,
         };
     }
 }

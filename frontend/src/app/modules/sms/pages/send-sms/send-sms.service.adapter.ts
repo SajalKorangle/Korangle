@@ -60,7 +60,7 @@ export class SendSmsServiceAdapter {
                 id__in: this.generalSMSEventIdList.join(',')
             }), //9
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {
-                SMSEventFrontEndId__in: this.generalSMSEventIdList.join(",")
+                SMSEventId__in: this.generalSMSEventIdList.join(",")
             }), //10
             this.vm.informationService.getObjectList(this.vm.informationService, {}) //11
         ]);
@@ -88,7 +88,7 @@ export class SendSmsServiceAdapter {
         this.vm.backendData.smsIdSchool = value[8];
         this.vm.backendData.generalSMSEventList = value[9];
         this.vm.backendData.eventSettingList = value[10];
-        this.vm.backendData.sendUpdateTypeList = value[11];
+        this.vm.backendData.sendUpdateTypeList = value[11].filter(x => x.name != "NULL");
 
         this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
             id__in: this.vm.backendData.smsIdSchool.map(a => a.parentSMSId),

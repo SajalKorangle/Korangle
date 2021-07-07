@@ -16,7 +16,6 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import {MessageService} from '@services/message-service';
-import {SMS_EVENT_LIST} from '@modules/constants-database/SMSEvent';
 
 @Component({
     selector: 'record-attendance',
@@ -62,10 +61,9 @@ export class RecordAttendanceComponent implements OnInit {
     ATTENDANCE_CREATION_ID = 5;
     ATTENDANCE_UPDATION_ID = 6;
 
-    attendanceSMSEventList = SMS_EVENT_LIST.filter(event => event.id == this.ATTENDANCE_CREATION_ID || this.ATTENDANCE_UPDATION_ID);
-
     backendData = {
         eventSettingsList: [],
+        attendanceSMSEventList: []
     };
 
     serviceAdapter: RecordAttendanceServiceAdapter;

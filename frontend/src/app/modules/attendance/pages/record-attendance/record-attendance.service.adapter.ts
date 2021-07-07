@@ -32,18 +32,22 @@ export class RecordAttendanceServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //3
-
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
+                { id__in: this.vm.ATTENDANCE_UPDATION_ID + ',' + this.vm.ATTENDANCE_CREATION_ID }) //4
         ]);
+
         this.vm.smsBalance = value[3].count;
+        this.vm.backendData.attendanceSMSEventList = value[4];
+
         this.vm.dataForMapping['classList'] = value[1];
         this.vm.dataForMapping['divisionList'] = value[2];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
         let fetch_event_settings_list = {
-            SMSEventFrontEndId__in: this.vm.attendanceSMSEventList.map(a => a.id).join(),
+            SMSEventId__in: this.vm.backendData.attendanceSMSEventList.map(a => a.id).join(),
             parentSchool: this.vm.user.activeSchool.dbId,
         };
-        if (this.vm.attendanceSMSEventList.length > 0) {
+        if (this.vm.backendData.attendanceSMSEventList.length > 0) {
             this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, fetch_event_settings_list);
         }
         let class_permission_list = [];
@@ -252,8 +256,8 @@ export class RecordAttendanceServiceAdapter {
     notifyParents(): void {
         let createdStudentList = [];
         let updatedStudentList = [];
-        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventFrontEndId == this.vm.ATTENDANCE_CREATION_ID);
-        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventFrontEndId == this.vm.ATTENDANCE_UPDATION_ID);
+        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_CREATION_ID);
+        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_UPDATION_ID);
         this.vm.studentAttendanceStatusList.forEach((student) => {
             student.attendanceStatusList.forEach((attendanceStatus) => {
                 let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(student, attendanceStatus.date);

@@ -17,10 +17,15 @@ export class ViewDefaultersServiceAdapter {
 
         const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
             {parentSchool: this.vm.user.activeSchool.dbId}), //0
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventFrontEndId: this.vm.NOTIFY_DEFAULTERS_ID})]); //1
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventId: this.vm.NOTIFY_DEFAULTERS_ID}), //1
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {id: this.vm.NOTIFY_DEFAULTERS_ID}), //2
+            this.vm.informationService.getObjectList(this.vm.informationService.send_update_type, {})]); //3
 
         this.vm.backendData.smsIdSchoolList = firstValue[0];
         this.vm.backendData.eventSettingsList = firstValue[1];
+        this.vm.backendData.defaultersSMSEvent = firstValue[2];
+        this.vm.backendData.sendUpdateTypeList = firstValue[3].filter(x => x.name != "NULL");
+        this.vm.userInput.selectedSendUpdateType = this.vm.backendData.sendUpdateTypeList[0];
 
         this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
             id__in: this.vm.backendData.smsIdSchoolList.map(a => a.parentSMSId),
@@ -213,8 +218,8 @@ export class ViewDefaultersServiceAdapter {
            this.vm.smsBalance = await this.vm.messageService.smsNotificationSender(
                 this.vm.dataForMapping,
                 ['student'],
-                this.vm.defaultersSMSEvent,
-                this.vm.selectedSendUpdateType.id,
+                this.vm.backendData.defaultersSMSEvent,
+                this.vm.userInput.selectedSendUpdateType.id,
                 this.vm.userInput.selectedTemplate,
                 this.vm.message,
                 scheduledDataTime,
@@ -227,7 +232,7 @@ export class ViewDefaultersServiceAdapter {
             this.vm.isLoading = false;
             return;
         }
-        alert(this.vm.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Sent Successfully');
+        alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Sent Successfully');
         this.vm.isLoading = false;
     }
 }

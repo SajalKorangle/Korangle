@@ -2,7 +2,6 @@ import {UserService} from './modules/user/user.service';
 import {NotificationService} from './modules/notification/notification.service';
 import {SmsService} from './modules/sms/sms.service';
 import {NEW_LINE_REGEX, VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
-import {SMS_EVENT_LIST} from '../modules/constants-database/SMSEvent';
 
 /*
 SentUpdateType -
@@ -100,24 +99,24 @@ export class MessageService {
         smsBalance, // school sms balance
     ) {
 
-        const smsEvent = SMS_EVENT_LIST.find(event => event.id == eventId);
+        const smsEvent = await this.smsService.getObject(this.smsService.sms_event, {id: eventId});
         if (!smsEvent) {
             throw "No Events Found";
         } // if there is not event return
 
         let fetch_event_settings_list = {
-            SMSEventFrontEndId: smsEvent.id,
+            SMSEventId: smsEvent.id,
             parentSchool: schoolId,
         };
 
         const eventSettings = await this.smsService.getObject(this.smsService.sms_event_settings, fetch_event_settings_list);
-        if (!eventSettings || eventSettings.sendUpdateTypeFrontEndId == 1) {
+        if (!eventSettings || eventSettings.sendUpdateTypeId == 1) {
             return;
         } // if there is not event settings or sentUpdateType is null then return
 
         let customSMSTemplate, smsTemplate, messageContent;
 
-        if (eventSettings.sendUpdateTypeFrontEndId == 3) {
+        if (eventSettings.sendUpdateTypeId == 3) { //if the type is Notification
             messageContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
         } else {
             // if there is any templated linked with the settings get that template and populate
@@ -140,7 +139,7 @@ export class MessageService {
                 Data,
                 personsList,
                 smsEvent,
-                eventSettings.sendUpdateTypeFrontEndId,
+                eventSettings.sendUpdateTypeId,
                 smsTemplate,
                 messageContent,
                 null,
@@ -171,7 +170,7 @@ export class MessageService {
         let smsId = smsTemplate ? smsTemplate.parentSMSId : null;
 
         // finding the corresponding eventSettingsPage to know the variablesList
-        let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.event.id == smsEvent.id);
+        let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id);
 
         personsList.forEach(person => {
             data[person + 'List'].forEach(personData => {
@@ -245,7 +244,7 @@ export class MessageService {
 
         let sms_data = {
             contentType: this.hasUnicode(messageContent) ? '1' : '0',
-            SMSEventFrontEndId: smsEvent.id,
+            SMSEventId: smsEvent.id,
             content: messageContent,
             parentMessageType: null,
             mobileNumberContentJson: JSON.stringify(smsMappedDataList),
@@ -261,7 +260,7 @@ export class MessageService {
         const notification_data = notificationMappedDataList.map((item) => {
             return {
                 parentMessageType: null,
-                SMSEventFrontEndId: smsEvent.id,
+                SMSEventId: smsEvent.id,
                 content: item.content,
                 parentUser: this.notif_usernames.find((user) => {
                     return user.username == item.mobileNumber.toString();

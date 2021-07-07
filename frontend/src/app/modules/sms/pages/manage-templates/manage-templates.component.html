@@ -33,10 +33,10 @@
         <ng-container *ngIf="htmlRenderer.isGeneralOrDefaulters()">
 
             <ng-container *ngIf="!userInput.selectedEvent">
-                <mat-nav-list *ngFor="let event of userInput.selectedPage.orderedSMSEventList" style="width: 100%">
-                    <a mat-list-item class="list-item" (click)="htmlRenderer.selectEvent(event)">
+                <mat-nav-list *ngFor="let eventId of userInput.selectedPage.orderedSMSEventIdList" style="width: 100%">
+                    <a mat-list-item class="list-item" (click)="htmlRenderer.selectEvent(eventId)">
                         <div style="width: 100%">
-                            <strong>{{ event.eventName }}</strong>
+                            <strong>{{ htmlRenderer.getEventName(eventId) }}</strong>
                             <div style="float: right">
                         <span class="material-icons"
                               style="font-size: 25px; margin-left: 15px">keyboard_arrow_right</span>

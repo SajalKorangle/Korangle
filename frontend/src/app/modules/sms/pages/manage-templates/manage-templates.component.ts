@@ -7,7 +7,7 @@ import { ManageTemplatesHtmlRenderer } from './manage-templates.html.renderer';
 import {SmsService} from '@services/modules/sms/sms.service';
 import {RECEIVER_LIST} from '@modules/attendance/classes/constants';
 import {EVENT_SETTING_PAGES} from '@modules/sms/pages/manage-templates/classes/constants';
-import {SEND_UPDATE_TYPE_LIST} from '@modules/constants-database/SendUpdateType';
+import {InformationService} from '@services/modules/information/information.service';
 
 @Component({
     selector: 'manage-templates',
@@ -56,12 +56,14 @@ export class ManageTemplatesComponent implements OnInit {
         SMSIdList: [],
         selectedPageTemplateList: [],
         selectedPageEventSettingsList: [],
-        sendUpdateTypeList: SEND_UPDATE_TYPE_LIST,
+        sendUpdateTypeList: [],
+        SMSEventList: [],
     };
 
     stateKeeper = { isLoading: false };
 
-    constructor (public smsService: SmsService) { }
+    constructor (public smsService: SmsService,
+                 public informationService: InformationService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
