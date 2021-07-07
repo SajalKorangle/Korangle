@@ -11,6 +11,11 @@
           "app": "student_app",
           "model": "Student",
           "file": "sixty_eight_students.json"
+        },
+        {
+          "app": "accounts_app",
+          "model": "Accounts",
+          "file": "four_account.json"
         }
       ]
     }
