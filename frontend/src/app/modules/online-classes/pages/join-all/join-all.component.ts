@@ -136,7 +136,7 @@ export class JoinAllComponent implements OnInit {
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
-        if(accountInfo.meetingNumber){
+        if (accountInfo.meetingNumber) {
             // clearInterval(this.attendanceMarkerInterval);
             this.userEmployee = this.employeeList.find((employee) => {
                 return employee.id == this.user.activeSchool.employeeId;
@@ -168,12 +168,12 @@ export class JoinAllComponent implements OnInit {
                     }
                     else {
                         zoomIFrame.src = '/assets/zoom/index.html?' + encodSearchParams;
-                        
+
                     }
                 }
             });
         }
-        else{
+        else {
             if (isMobile()) {
                 openUrlInBrowser(accountInfo.meetingUrl);
                 return;

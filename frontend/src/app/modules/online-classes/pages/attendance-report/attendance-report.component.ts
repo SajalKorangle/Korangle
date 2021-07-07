@@ -150,7 +150,7 @@ export class AttendanceReportComponent implements OnInit {
 
     getAttendanceCount(studentSection: ParsedStudentSection, classSubject: any): number {
         const filteredAttendanceList = this.backendData.studentAttendance.filter(studentAttendance =>
-            (studentAttendance.parentStudentSection == studentSection.id)&&(studentAttendance.parentClassSubject == classSubject.id));
+            (studentAttendance.parentStudentSection == studentSection.id) && (studentAttendance.parentClassSubject == classSubject.id));
         return filteredAttendanceList.length;
     }
 

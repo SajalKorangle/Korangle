@@ -92,14 +92,14 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     redirectToMeeting(): void {
-        if(this.backendData.accountInfo.meetingNumber){
+        if (this.backendData.accountInfo.meetingNumber) {
             if (isMobile()) {
                 openUrlInBrowser(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber);
                 return;
             }
             window.open(ZOOM_BASE_URL + '/' + this.backendData.accountInfo.meetingNumber, '_blank');
         }
-        else{
+        else {
             if (isMobile()) {
                 openUrlInBrowser(this.backendData.accountInfo.meetingUrl);
                 return;

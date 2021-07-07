@@ -36,7 +36,7 @@ export class AttendanceReportServiceAdapter {
     async loadAttendance() {
         this.vm.stateKeeper.isLoading = true;
         this.vm.userInput.endDate.setHours(23, 59, 59);
-        const filterSubjectList ={
+        const filterSubjectList = {
             id__in: this.vm.getFilteredClassSubjectList()
         };
         const student_attendance_request = {

@@ -41,7 +41,7 @@ export class SettingsComponent implements OnInit {
     htmlRenderer: SettingsHtmlRenderer;
     userInput: SettingsUserInput;
     backendData: SettingsBackendData;
-    filteredSubjectList:any;
+    filteredSubjectList: any;
 
     view: 'class' | 'employee' = 'class';
 

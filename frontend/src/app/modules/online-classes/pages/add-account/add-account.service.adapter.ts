@@ -55,13 +55,13 @@ export class AddAccountServiceAdapter {
     }
 
     async addNewAccountInfo() {
-        if(this.vm.userInput.newAccountInfo.meetingNumber){
+        if (this.vm.userInput.newAccountInfo.meetingNumber) {
             if (!this.vm.newAccountInfoSanatyCheck())
             return;
-        
-        
+
+
             this.vm.userInput.newAccountInfo.meetingUrl = "N/A";
-        
+
             const account_info_request = {
                 parentEmployee: this.vm.userInput.newAccountInfo.parentEmployee,
             };
@@ -81,11 +81,11 @@ export class AddAccountServiceAdapter {
             this.vm.userInput.resetNewAccountInfo();
             this.vm.isLoading = false;
         }
-        else{
+        else {
             this.addNewAccountInfoURL();
         }
-        
-        
+
+
     }
 
     async addNewAccountInfoURL() {
@@ -95,13 +95,13 @@ export class AddAccountServiceAdapter {
         if (!this.vm.validURL(this.vm.userInput.newAccountInfo.meetingUrl))
             return;
 
-        
-        this.vm.isURL=true;
+
+        this.vm.isURL = true;
 
         this.vm.userInput.newAccountInfo.meetingNumber = 0;
         this.vm.userInput.newAccountInfo.passcode = "N/A";
-            
-        
+
+
         const account_info_request = {
             parentEmployee: this.vm.userInput.newAccountInfo.parentEmployee,
         };

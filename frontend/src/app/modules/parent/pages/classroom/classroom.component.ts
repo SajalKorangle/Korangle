@@ -93,7 +93,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
-        if(accountInfo.meetingNumber){
+        if (accountInfo.meetingNumber) {
             // clearInterval(this.attendanceMarkerInterval);
             this.meetingParameters = {
                 signature,
@@ -127,7 +127,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                 this.serviceAdapter.markAttendance();
             });
         }
-        else{
+        else {
             if (isMobile()) {
                 openUrlInBrowser(accountInfo.meetingUrl);
                 return;
