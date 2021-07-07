@@ -1,22 +1,17 @@
 [
-    {
-      "file": "four_fee_receipts.json",
-      "file_object_list": [
-        {
-          "app": "school_app",
-          "model": "School",
-          "file": "1.json"
-        },
-          {
-          "app": "student_app",
-          "model": "Student",
-          "file": "sixty_eight_students.json"
-        },
-        {
-          "app": "accounts_app",
-          "model": "Accounts",
-          "file": "four_account.json"
-        }
-      ]
-    }
-  ]
+  {
+    "file": "four_fee_receipts.json",
+    "file_object_list": [
+      {
+        "app": "school_app",
+        "model": "School",
+        "file": "1.json"
+      },
+      {
+        "app": "student_app",
+        "model": "Student",
+        "file": "sixty_eight_students.json"
+      }
+    ]
+  }
+]
