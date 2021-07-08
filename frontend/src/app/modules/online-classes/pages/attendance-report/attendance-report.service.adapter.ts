@@ -55,9 +55,6 @@ export class AttendanceReportServiceAdapter {
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.student_attendance, student_attendance_request),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_request),
         ]);
-
-        console.log(this.vm.backendData.studentAttendance);
-
         const student_request = {
             id__in: this.vm.backendData.studentSectionList.map(ss => ss.parentStudent),
         };
