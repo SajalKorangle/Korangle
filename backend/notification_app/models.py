@@ -17,7 +17,7 @@ class Notification(models.Model):
 
     parentMessageType = models.ForeignKey(MessageType, on_delete=models.SET_NULL, default=1, null=True)
 
-    SMSEventFrontEndId = models.IntegerField(null=False, default=0)
+    SMSEventId = models.IntegerField(null=False, default=0)
 
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')

@@ -339,6 +339,9 @@
 
                     <div class="row">
                         <div class="col-md-5" *ngIf="!isDefaultSelected(smsEvent)">
+                            <div class="row">
+                                <b style="font-size: 15px;margin-left: 13px;float:left">Template Content</b>
+                            </div>
                             <div class="row" style="margin-bottom: 22px">
                                 <span style="font-size: 10px;color:#c4c4c4;font-weight: 600;margin-left: 13px">(Make sure your template is registered in DLT)</span>
                             </div>
@@ -365,7 +368,7 @@
                                     Content</b>
                             </div>
                             <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
-                                <span style="font-size: 10px;color:rebeccapurple;">Change {{"{#varialbeName#}"}}
+                                <span style="font-size: 10px;color:rebeccapurple;word-break: break-all">Change {{"{#varialbeName#}"}}
                                     with - {{htmlRenderer.getVariableList(smsEvent)}}</span>
                             </div>
                             <div class="row">

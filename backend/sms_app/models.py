@@ -193,7 +193,7 @@ class SMSEventSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
     parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, null=True,
                                           verbose_name='parentSMSTemplate')
-    sendUpdateTypeFrontEndId = models.IntegerField(null=False, default=0)
+    sendUpdateTypeId = models.IntegerField(null=False, default=0)
     customNotificationContent = models.TextField(null=True, verbose_name='customNotificationContent')
 
     UPDATE_ALL = 'All Students'

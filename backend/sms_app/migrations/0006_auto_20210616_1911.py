@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('receiverType', models.CharField(
                     choices=[('All Students', 'All Students'), ('Only Absent Students', 'Only Absent Students')],
                     max_length=20, null=True, verbose_name='receiverType')),
-                ('sendUpdateTypeFrontEndId', models.IntegerField(default=0)),
+                ('sendUpdateTypeId', models.IntegerField(default=0)),
             ],
             options={
                 'db_table': 'sms_event_settings',

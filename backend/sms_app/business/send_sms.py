@@ -1,21 +1,21 @@
-
 import http.client
 
 from sms_app.business.sms_count import get_sms_count
 from school_app.model.models import School
-
+from sms_app.models import SMSId
 import json
 
-from sms_app.models import SMSId
+
+def chunks(array_list, n):
+    """Yield successive n-sized chunks from list."""
+    for i in range(0, len(array_list), n):
+        yield array_list[i:i + n]
 
 
 def send_sms(instance_dict):
-
     school_object = School.objects.get(id=instance_dict['parentSchool_id'])
 
     sms_count = get_sms_count(school_object.id)
-
-    print(sms_count)
 
     if instance_dict['count'] > sms_count['count']:
         return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1}
@@ -28,6 +28,7 @@ def send_sms(instance_dict):
 
     sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
 
+
     configurations = {
         "APIkey": "pZD3d2b620aBWzVP5XqD9g",
         "SenderId": sms_id_object.smsId,
@@ -38,27 +39,29 @@ def send_sms(instance_dict):
         "EntityId": sms_id_object.entityRegistrationId
     }
 
-    if instance_dict['scheduledDateTime'] is not None:
-        configurations["SchedTime"] = instance_dict['scheduledDateTime'].strftime('%d/%m/%Y %H:%M')
-
-    pay_load = {
-       "Account": configurations,
-       "Messages": sent_sms_num_list
-    }
-
-    pay_load_json = json.dumps(pay_load)
-
     headers = {
         'Content-Type': "application/json",
         'Cache-Control': "no-cache"
     }
 
-    conn.request("POST", "/api/mt/SendSms",
-                 pay_load_json, headers)
+    if instance_dict['scheduledDateTime'] is not None:
+        configurations["SchedTime"] = instance_dict['scheduledDateTime'].strftime('%d/%m/%Y %H:%M')
 
-    response = conn.getresponse().read()
-    print(response)
+    pay_load = {
+        "Account": configurations,
+        "Messages": sent_sms_num_list
+    }
 
-    job_id = str(json.loads(response.decode("utf-8"))['JobId'])
+    pay_load_json = json.dumps(pay_load)
 
-    return {'remark': 'SUCCESS', 'requestId': job_id}
+    print(pay_load_json)
+
+    # conn.request("POST", "/api/mt/SendSms",
+    #              pay_load_json, headers)
+    # 
+    # response = conn.getresponse().read()
+    # print(response)
+    # 
+    # job_id = str(json.loads(response.decode("utf-8"))['JobId'])
+
+    return {'remark': 'SUCCESS', 'requestId': 1}

@@ -17,13 +17,13 @@ def populate_sms_event_settings(apps, schema_editor):
     for settings in attendance_settings.objects.all():
         sms_event_settings.objects.create(SMSEventId=5,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType],
                                           receiverType=settings.receiverType)
 
         sms_event_settings.objects.create(SMSEventId=6,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType],
                                           receiverType=settings.receiverType)
 
@@ -33,17 +33,17 @@ def populate_sms_event_settings(apps, schema_editor):
     for settings in tutorial_settings.objects.all():
         sms_event_settings.objects.create(SMSEventId=12,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType.name.upper()])
 
         sms_event_settings.objects.create(SMSEventId=13,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType.name.upper()])
 
         sms_event_settings.objects.create(SMSEventId=14,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType.name.upper()])
 
     # HomeWork Settings:
@@ -52,25 +52,25 @@ def populate_sms_event_settings(apps, schema_editor):
     for settings in homework_settings.objects.all():
         sms_event_settings.objects.create(SMSEventId=7,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType])
 
         sms_event_settings.objects.create(SMSEventId=8,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType])
 
         sms_event_settings.objects.create(SMSEventId=9,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType])
 
         sms_event_settings.objects.create(SMSEventId=10,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType])
 
         sms_event_settings.objects.create(SMSEventId=11,
                                           parentSchool=settings.parentSchool,
-                                          sendUpdateTypeFrontEndId=sent_update_type_list[
+                                          sendUpdateTypeId=sent_update_type_list[
                                               settings.sentUpdateType])

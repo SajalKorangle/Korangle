@@ -13,7 +13,7 @@ import json
 from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
 
-CONSTANT_DATABASE_PATH = './constant_database/'
+CONSTANT_DATABASE_PATH = './sms_app/constant_database/'
 
 class SMSOldListView(APIView):
 
@@ -123,17 +123,36 @@ class SMSEventView(APIView):
     @user_permission
     def get(request):
         request_json = request.GET
-        json_data = open('./sms_app/constant_database/sms_event.json',)
+        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json',)
         content = json.load(json_data)
         result = [x for x in content if filter_json_func(x, request_json)]
-        print(result)
+        return result[0]
+
+
+class SMSEventListView(APIView):
+    @user_permission
+    def get(request):
+        request_json = request.GET
+        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json',)
+        content = json.load(json_data)
+        result = [x for x in content if filter_json_func(x, request_json)]
         return result
 
 
 class SMSDefaultTemplateView(APIView):
     @user_permission
     def get(request):
-        request_json = json.loads(request.data)
+        request_json = request.GET
+        json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
+        content = json.load(json_data)
+        result = [x for x in content if filter_json_func(x, request_json)]
+        return result[0]
+
+
+class SMSDefaultTemplateListView(APIView):
+    @user_permission
+    def get(request):
+        request_json = request.GET
         json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
         content = json.load(json_data)
         result = [x for x in content if filter_json_func(x, request_json)]

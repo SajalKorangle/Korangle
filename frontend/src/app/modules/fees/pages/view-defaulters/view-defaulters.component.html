@@ -806,7 +806,7 @@
                     <mat-form-field style="margin: 20px 5px 5px;">
                         <mat-select placeholder="Send via" [(ngModel)]="userInput.selectedSendUpdateType"
                                     (ngModelChange)="htmlRenderer.sendUpdateTypeChanged()">
-                            <mat-option *ngFor="let sendType of sendUpdateTypeList" [value]="sendType">
+                            <mat-option *ngFor="let sendType of backendData.sendUpdateTypeList" [value]="sendType">
                                 {{ sendType.name }}
                             </mat-option>
                         </mat-select>

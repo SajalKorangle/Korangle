@@ -13,7 +13,7 @@ import {InformationService} from '@services/modules/information/information.serv
     selector: 'manage-templates',
     templateUrl: './manage-templates.component.html',
     styleUrls: ['./manage-templates.component.css' , 'manage-templates.component.scss'],
-    providers: [ SmsService ],
+    providers: [ SmsService, InformationService ],
 })
 
 export class ManageTemplatesComponent implements OnInit {
@@ -55,6 +55,7 @@ export class ManageTemplatesComponent implements OnInit {
         SMSIdSchoolList: [],
         SMSIdList: [],
         selectedPageTemplateList: [],
+        selectedPageDefaultTemplateList: [],
         selectedPageEventSettingsList: [],
         sendUpdateTypeList: [],
         SMSEventList: [],

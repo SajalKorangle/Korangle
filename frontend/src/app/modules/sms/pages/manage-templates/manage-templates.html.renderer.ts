@@ -74,8 +74,7 @@ export class ManageTemplatesHtmlRenderer {
             if (!smsEvent.customEventTemplate.rawContent || smsEvent.customEventTemplate.rawContent.trim() == '' ||
                 !smsEvent.customEventTemplate.templateId || smsEvent.customEventTemplate.templateId.trim() == '' ||
                 !smsEvent.customEventTemplate.templateName || smsEvent.customEventTemplate.templateName.trim() == '' ||
-                !smsEvent.customEventTemplate.mappedContent || smsEvent.customEventTemplate.mappedContent.trim() == ''
-                || smsEvent.customEventTemplate.communicationType.trim() == '') {
+                !smsEvent.customEventTemplate.mappedContent || smsEvent.customEventTemplate.mappedContent.trim() == '') {
                 return true;
             }
             return this.isTemplateModified(smsEvent);
@@ -118,7 +117,7 @@ export class ManageTemplatesHtmlRenderer {
 
     getMappedContent(smsEvent) {
         if (this.vm.isDefaultSelected(smsEvent)) {
-            return smsEvent.defaultSMSContent;
+            return this.vm.backendData.selectedPageDefaultTemplateList.find(x => x.id == smsEvent.defaultSMSTemplateId).mappedContent;
         }
         return smsEvent.customEventTemplate.mappedContent;
     }

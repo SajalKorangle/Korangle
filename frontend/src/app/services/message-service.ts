@@ -127,8 +127,8 @@ export class MessageService {
             if (customSMSTemplate) {
                 smsTemplate = customSMSTemplate;
             } else {
-                smsTemplate = await this.smsService.getObject(this.smsService.sms_template,
-                    {id: smsEvent.defaultSMSTemplateDbId});
+                smsTemplate = await this.smsService.getObject(this.smsService.sms_default_template,
+                    {id: smsEvent.defaultSMSTemplateId});
             }
             messageContent = smsTemplate.mappedContent;
         }

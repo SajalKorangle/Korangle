@@ -70,17 +70,16 @@ urlpatterns += [
 ]
 
 ######## CONSTANT DATABASE ##############
-from .views import  SMSEventView
-
+from .views import SMSEventView, SMSEventListView
 
 urlpatterns += [
-    url(r'^sms-event/batch', SMSEventView.as_view()),
+    url(r'^sms-event/batch', SMSEventListView.as_view()),
     url(r'^sms-event', SMSEventView.as_view()),
 ]
 
-from .views import SMSDefaultTemplateView
+from .views import SMSDefaultTemplateView, SMSDefaultTemplateListView
 
 urlpatterns += [
-    url(r'^sms-default-template/batch', SMSDefaultTemplateView.as_view()),
+    url(r'^sms-default-template/batch', SMSDefaultTemplateListView.as_view()),
     url(r'^sms-default-template', SMSDefaultTemplateView.as_view()),
 ]

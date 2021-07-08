@@ -207,7 +207,7 @@ export class SendSmsComponent implements OnInit {
         } else if (this.userInput.selectedSendUpdateType.id == this.NOTIFICATION_TYPE_ID) {
             this.smsPersonList = [];
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
-        } else if (this.userInput.selectedSendUpdateType == this.SMS_AND_NOTIFICATION_TYPE_ID) {
+        } else if (this.userInput.selectedSendUpdateType.id == this.SMS_AND_NOTIFICATION_TYPE_ID) {
             this.notificationPersonList = tempList.filter((temp) => temp.notification);
             this.smsPersonList = tempList.filter((temp1) => {
                 return (
@@ -217,7 +217,8 @@ export class SendSmsComponent implements OnInit {
                 );
             });
         } else {
-            alert('Error');
+            console.error("error Selected Send Update Type");
+            // alert('Error');
         }
         if (returnType == 'sms') {
             return this.smsPersonList;
@@ -226,7 +227,7 @@ export class SendSmsComponent implements OnInit {
         } else if (returnType == 'both') {
             return this.smsPersonList.concat(this.notificationPersonList);
         } else {
-            alert('error');
+            console.error("error in return Type");
             return null;
         }
     }
