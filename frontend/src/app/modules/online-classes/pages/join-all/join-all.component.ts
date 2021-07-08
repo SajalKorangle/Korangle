@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -16,7 +16,7 @@ import { SchoolService } from '@services/modules/school/school.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 
 import { Time, ParsedOnlineClass } from '@modules/online-classes/class/constants';
-import { WEEKDAYS, ZOOM_BASE_URL } from '@modules/online-classes/class/constants';
+import { WEEKDAYS } from '@modules/online-classes/class/constants';
 import { isMobile, openUrlInChrome, openUrlInBrowser } from '@classes/common.js';
 import { Constants } from 'app/classes/constants';
 import { environment } from 'environments/environment';

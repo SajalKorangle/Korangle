@@ -97,7 +97,8 @@ export class SettingsHtmlRenderer {
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
         const classs = this.vm.backendData.getClassById(classSubject.parentClass);
         const section = this.vm.backendData.getDivisionById(classSubject.parentDivision);
-        return { classSubject, subject, classs, section };
+        const employee = this.vm.backendData.getEmployeeById(classSubject.parentEmployee);
+        return { classSubject, subject, classs, section, employee };
     }
 
     openNewOnlineClassDalog(weekdayKey, timespan) { // check here

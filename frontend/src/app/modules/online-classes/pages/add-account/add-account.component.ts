@@ -66,18 +66,14 @@ export class AddAccountComponent implements OnInit {
     }
 
     newAccountInfoSanatyCheckURL(): boolean {
+        var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((meet\\.google\\.)+[a-z]{2,})' + // domain name
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*') ; // port and path
         if (!this.userInput.newAccountInfo.meetingUrl) {  // check for all the fields
             alert("All fields are required");
             return false;
         }
-        return true;
-    }
-
-    validURL(str): boolean {
-        var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-            '((meet\\.google\\.)+[a-z]{2,})' + // domain name
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*') ; // port and path
-        if (!pattern.test(str)) {
+        else if (!pattern.test(this.userInput.newAccountInfo.meetingUrl)) {
             alert("URL is not valid");
             return false;
         }

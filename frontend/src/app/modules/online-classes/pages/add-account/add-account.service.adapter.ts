@@ -64,9 +64,6 @@ export class AddAccountServiceAdapter {
             if (!this.vm.newAccountInfoSanatyCheckURL())
                 return;
 
-            if (!this.vm.validURL(this.vm.userInput.newAccountInfo.meetingUrl))
-                return;
-
             this.vm.userInput.newAccountInfo.meetingNumber = 0;
             this.vm.userInput.newAccountInfo.passcode = null;
 

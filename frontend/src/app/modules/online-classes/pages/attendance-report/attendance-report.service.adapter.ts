@@ -33,13 +33,17 @@ export class AttendanceReportServiceAdapter {
         this.vm.stateKeeper.isLoading = false;
     }
 
+
     async loadAttendance() {
         this.vm.stateKeeper.isLoading = true;
+        const endDate = this.vm.userInput.startDate;     //endDate denotes startDate only, but with time 11:59 PM
+        endDate.setHours(23, 59, 59);
         const student_attendance_request = {
             parentStudentSection__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudentSection__parentClass: this.vm.userInput.selectedClass.id,
             parentStudentSection__parentDivision: this.vm.userInput.selectedDivision.id,
-            dateTime__gte: this.vm.userInput.startDate.toJSON()
+            dateTime__gte: this.vm.userInput.startDate.toJSON(),
+            dateTime__lte: endDate.toJSON()
         };
 
         const student_section_request = {
