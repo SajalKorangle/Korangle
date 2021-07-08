@@ -26,6 +26,9 @@ start=$SECONDS
 # Initiate virtual environment for backend server
 source $KORANGLE_VIRTUAL_ENVIRONMENT_PATH
 
+# updating chromedriver version
+./node_modules/protractor/node_modules/webdriver-manager/bin/webdriver-manager update --versions.chrome 88.0.4324.96
+
 # Running tests
 protractor tests/protractor/protractor.conf.js
 if [ "$?" -ne 0 ];
