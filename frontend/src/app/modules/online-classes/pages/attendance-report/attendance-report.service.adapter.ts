@@ -35,17 +35,11 @@ export class AttendanceReportServiceAdapter {
 
     async loadAttendance() {
         this.vm.stateKeeper.isLoading = true;
-        this.vm.userInput.endDate.setHours(23, 59, 59);
-        const filterSubjectList = {
-            id__in: this.vm.getFilteredClassSubjectList()
-        };
         const student_attendance_request = {
             parentStudentSection__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudentSection__parentClass: this.vm.userInput.selectedClass.id,
             parentStudentSection__parentDivision: this.vm.userInput.selectedDivision.id,
-            parentClassSubject: filterSubjectList,
-            dateTime__gte: this.vm.userInput.startDate.toJSON(),
-            dateTime__lte: this.vm.userInput.endDate.toJSON()
+            dateTime__gte: this.vm.userInput.startDate.toJSON()
         };
 
         const student_section_request = {
@@ -61,6 +55,8 @@ export class AttendanceReportServiceAdapter {
             this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.student_attendance, student_attendance_request),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_request),
         ]);
+
+        console.log(this.vm.backendData.studentAttendance);
 
         const student_request = {
             id__in: this.vm.backendData.studentSectionList.map(ss => ss.parentStudent),

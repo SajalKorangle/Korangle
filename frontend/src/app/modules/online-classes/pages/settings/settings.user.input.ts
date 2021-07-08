@@ -8,7 +8,6 @@ export class SettingsUserInput {
 
     selectedEmployee: any;
 
-    selectedSubject: any;
     newTimeSpan: { startTime: string, endTime: string; };
 
     vm: SettingsComponent;
@@ -29,7 +28,6 @@ export class SettingsUserInput {
         this.selectedEmployee = null;
         this.selectedClass = null;
         this.selectedSection = null;
-        this.selectedSubject = null;
     }
 
 }

@@ -71,10 +71,9 @@
                     (click)="userInput.selectedAccountInfo=htmlRenderer.copyObject(accountInfo)">
                     <td *ngIf="hasAdminPermission()">{{backendData.getEmployeeById(accountInfo.parentEmployee).name}}
                     </td>
-                    <td *ngIf="accountInfo.meetingNumber">{{accountInfo.meetingNumber}}</td>
-                    <td *ngIf="!accountInfo.meetingNumber">N/A</td>
-                    <td>{{accountInfo.passcode}}</td>
-                    <td>{{accountInfo.meetingUrl}}</td>
+                    <td >{{accountInfo.meetingNumber?accountInfo.meetingNumber:"N/A"}}</td>
+                    <td>{{accountInfo.passcode?accountInfo.passcode:"N/A"}}</td>
+                    <td>{{accountInfo.meetingUrl?accountInfo.meetingUrl:"N/A"}}</td>
                     <td style="width: 40px;">
                         <button (click)="serviceAdapter.deleteAccountInfo(accountInfo)" mat-stroked-button>
                             <mat-icon>delete</mat-icon>

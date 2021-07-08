@@ -1,14 +1,9 @@
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk();
 
-var ddesearchParams = new URLSearchParams(location.search);
-var desearchParams = atob(ddesearchParams.toString());
-try {
-    var searchParams = new URLSearchParams(atob(desearchParams));
-}
-catch(err){
-    var searchParams = new URLSearchParams(desearchParams);
-}
+
+var searchParams = new URLSearchParams(atob(location.search.substring(1))); //atob function decodes. used substring to remove an extra character in the starting
+
 
 
 var errorLoggingEndoint = searchParams.get('error_logging_endpoint');

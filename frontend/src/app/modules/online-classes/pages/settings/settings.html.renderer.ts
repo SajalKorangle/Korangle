@@ -101,7 +101,7 @@ export class SettingsHtmlRenderer {
     }
 
     openNewOnlineClassDalog(weekdayKey, timespan) { // check here
-        console.log(this.vm.backendData);
+        // console.log(this.vm.backendData);
         let onlineClass: ParsedOnlineClass = this.getOnlineClassByWeekDayAndTime(weekdayKey, timespan);
         const data = {
             vm: this.vm,

@@ -163,7 +163,7 @@ export class JoinAllComponent implements OnInit {
                     Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
                     const encodSearchParams = window.btoa(searchParams.toString());
                     if (isMobile()) {
-                        openUrlInChrome(location.origin + '/assets/zoom/index.html?' , encodSearchParams);
+                        openUrlInChrome(location.origin + '/assets/zoom/index.html?' + encodSearchParams);
                         this.meetingEntered = false;
                     }
                     else {

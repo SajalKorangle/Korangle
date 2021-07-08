@@ -30,8 +30,6 @@ export class AddAccountComponent implements OnInit {
 
     isLoading: boolean = true;
 
-    isURL: boolean = false;
-
     constructor(public onlineClassService: OnlineClassService, public employeeService: EmployeeService) {
         console.log('this', this);
     }
@@ -77,11 +75,8 @@ export class AddAccountComponent implements OnInit {
 
     validURL(str): boolean {
         var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-            '((meet\\.google\\.)+[a-z]{2,}|' + // domain name
-            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+            '((meet\\.google\\.)+[a-z]{2,})' + // domain name
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*') ; // port and path
         if (!pattern.test(str)) {
             alert("URL is not valid");
             return false;
