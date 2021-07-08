@@ -6,12 +6,6 @@ from sms_app.models import SMSId
 import json
 
 
-def chunks(array_list, n):
-    """Yield successive n-sized chunks from list."""
-    for i in range(0, len(array_list), n):
-        yield array_list[i:i + n]
-
-
 def send_sms(instance_dict):
     school_object = School.objects.get(id=instance_dict['parentSchool_id'])
 
@@ -27,7 +21,6 @@ def send_sms(instance_dict):
     print(instance_dict['mobileNumberContentJson'])
 
     sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
-
 
     configurations = {
         "APIkey": "pZD3d2b620aBWzVP5XqD9g",
