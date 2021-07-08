@@ -12,9 +12,9 @@ import { LocalComponentsModule } from '@modules/employee/component/local-compone
     declarations: [AddEmployeeComponent],
 
     imports: [
-                AddEmployeeRoutingModule,
-                ComponentsModule,
-                LocalComponentsModule
+        AddEmployeeRoutingModule,
+        ComponentsModule,
+        LocalComponentsModule
     ],
     entryComponents: [InPagePermissionDialogComponent],
     exports: [],

@@ -2,14 +2,20 @@
     <ng-container *ngIf="!isInitialLoading">
         <div class="row" style="margin-top: 15px">
             <div class="col-sm-3">
-                <day-date-old
+                <day-date
                     [formattedDateOutput]="true"
                     [placeHolder]="'Start Date'"
-                    (onDateSelected)="startDate = $event"
-                ></day-date-old>
+                    [minDate]="minDate"
+                    (onDateSelected)="startDate = $event">
+                </day-date>
             </div>
             <div class="col-sm-3">
-                <day-date-old [formattedDateOutput]="true" [placeHolder]="'End Date'" (onDateSelected)="endDate = $event"></day-date-old>
+                <day-date
+                    [formattedDateOutput]="true"
+                    [placeHolder]="'End Date'" 
+                    [minDate]="minDate"
+                    (onDateSelected)="endDate = $event">
+                </day-date>
             </div>
             <div class="col-sm-3">
                 <button
