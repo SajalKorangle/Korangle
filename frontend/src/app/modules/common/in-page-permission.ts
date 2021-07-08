@@ -35,4 +35,9 @@ export class TaskPermissionStructure {
 
 export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All instance of SettingsStructure will be registered here
 
+// Fees -> Total Collection
+const feesTotalCollection = new TaskPermissionStructure('fees', 'total_collection');
+feesTotalCollection.inPagePermissionMappedByKey['numberOfDays'] = new InPagePermission('No. of Days', 'number');
+
+// Online Classes
 import '@modules/online-classes/pages/add-account/add-account.permissions';
