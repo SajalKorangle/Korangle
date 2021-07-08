@@ -56,12 +56,12 @@ def send_sms(instance_dict):
 
     print(pay_load_json)
 
-    # conn.request("POST", "/api/mt/SendSms",
-    #              pay_load_json, headers)
-    # 
-    # response = conn.getresponse().read()
-    # print(response)
-    # 
-    # job_id = str(json.loads(response.decode("utf-8"))['JobId'])
+    conn.request("POST", "/api/mt/SendSms",
+                 pay_load_json, headers)
 
-    return {'remark': 'SUCCESS', 'requestId': 1}
+    response = conn.getresponse().read()
+    print(response)
+
+    job_id = str(json.loads(response.decode("utf-8"))['JobId'])
+
+    return {'remark': 'SUCCESS', 'requestId': job_id}
