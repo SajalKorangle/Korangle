@@ -93,6 +93,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
+        this.serviceAdapter.markAttendance();
         if (accountInfo.meetingNumber) {
             // clearInterval(this.attendanceMarkerInterval);
             this.meetingParameters = {
@@ -125,7 +126,6 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                     }
                 }
                 // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);
-                this.serviceAdapter.markAttendance();
             });
         }
         else {
