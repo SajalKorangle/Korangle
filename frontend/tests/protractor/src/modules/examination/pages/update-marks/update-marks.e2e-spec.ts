@@ -37,7 +37,8 @@ describe('Examination -> Update Marks', () => {
         const [marks] = await page.$x('//input[1]');
         await marks.type('75');
 
-        (await containsFirst('button', 'Update')).click();
+        // clicking somewhere else on the page to update
+        (await containsFirst('span', 'Max. Marks')).click();
 
         await page.waitForTimeout(3000);
 
