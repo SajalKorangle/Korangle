@@ -95,11 +95,14 @@ export class SettingsHtmlRenderer {
     getDisplayData(onlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
+        const classs = this.vm.backendData.getClassById(classSubject.parentClass);
+        const section = this.vm.backendData.getDivisionById(classSubject.parentDivision);
         const employee = this.vm.backendData.getEmployeeById(classSubject.parentEmployee);
-        return { classSubject, subject, employee };
+        return { classSubject, subject, classs, section, employee };
     }
 
     openNewOnlineClassDalog(weekdayKey, timespan) { // check here
+        // console.log(this.vm.backendData);
         let onlineClass: ParsedOnlineClass = this.getOnlineClassByWeekDayAndTime(weekdayKey, timespan);
         const data = {
             vm: this.vm,

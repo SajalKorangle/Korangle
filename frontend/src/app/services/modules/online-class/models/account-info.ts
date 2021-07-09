@@ -3,4 +3,5 @@ export class AccountInfo {
     parentEmployee: number;
     meetingNumber: number;
     passcode: string;
+    meetingUrl: string;
 }
