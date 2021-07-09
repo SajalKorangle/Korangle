@@ -4,7 +4,7 @@ export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
 
-    timeSpanList: Array<TimeSpan>;
+    timeSpanList: Array<Time>;
 
     colorPaletteHandle = ColorPaletteHandle;
 
@@ -19,24 +19,24 @@ export class ClassroomHtmlRenderer {
 
         this.timeSpanList = [];
         this.vm.backendData.onlineClassList.forEach(onlineClass => {
-            let result: boolean = false;
-            this.timeSpanList.every(timeSpan => {
-                if (TimeComparator(onlineClass.startTimeJSON, timeSpan.endTime) == -1
-                    && TimeComparator(timeSpan.startTime, onlineClass.endTimeJSON) == -1) {
-                    result = true;
-                    return false;
+            let startTimeAlreadyPresent: boolean = false;
+            let endTimeAlreadyPresent: boolean = false;
+            this.timeSpanList.forEach(timeSpan => {
+                if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
+                    startTimeAlreadyPresent = true;
                 }
-                return true;
+                if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
+                    endTimeAlreadyPresent = true;
+                }
             });
-            if (!result) {
-                this.timeSpanList.push(new TimeSpan(
-                    {
-                        startTime: new Time({ ...onlineClass.startTimeJSON }),
-                        endTime: new Time({ ...onlineClass.endTimeJSON })
-                    }));
+            if (!startTimeAlreadyPresent) {
+                this.timeSpanList.push(new Time({ ...onlineClass.startTimeJSON }));
+            }
+            if (!endTimeAlreadyPresent) {
+                this.timeSpanList.push(new Time({ ...onlineClass.endTimeJSON }));
             }
         });
-        this.timeSpanList.sort(TimeSpanComparator);
+        this.timeSpanList.sort(TimeComparator);
     }
 
     getTime() {
@@ -49,13 +49,23 @@ export class ClassroomHtmlRenderer {
         return customTime.getDisplayString();
     }
 
-    getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {
+    getOnlineClassByWeekDayAndStartTime(weekdayKey, time: Time) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
             if (onlineClass.day == this.vm.weekdays[weekdayKey]
-                && TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
+                && TimeComparator(time, onlineClass.startTimeJSON) == 0)
                 return true;
             return false;
         });
+    }
+
+    getOnlineClassRowSpan(onlineClass: ParsedOnlineClass): number {
+        const startTimeIndex = this.timeSpanList.findIndex(time => {
+            return TimeComparator(time, onlineClass.startTimeJSON) == 0;
+        });
+        const endTimeIndex = this.timeSpanList.findIndex(time => {
+            return TimeComparator(time, onlineClass.endTimeJSON) == 0;
+        });
+        return endTimeIndex - startTimeIndex;
     }
 
     getDisplayData(onlineClass: ParsedOnlineClass) {
@@ -66,18 +76,26 @@ export class ClassroomHtmlRenderer {
         return { classSubject, subject, classInstane, division };
     }
 
-    isActiveTimeSpan(timespan: TimeSpan): boolean {
-        const currentTime = this.vm.currentTime;
-        const customTime = new Time({
-            hour: currentTime.getHours() % 12,
-            minute: currentTime.getMinutes(),
-            ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
-        });
-        if (TimeComparator(timespan.startTime, customTime) == -1
-            && TimeComparator(customTime, timespan.endTime) == -1) {
+    isActiveTime(time: Time): boolean {
+        const activeClass = this.getActiveClass();
+        if (!activeClass)
+            return false;
+
+        if (TimeComparator(activeClass.startTimeJSON, time) <= 0
+            && TimeComparator(time, activeClass.endTimeJSON) < 0) {
             return true;
         }
         return false;
+    }
+
+    shouldRenderEmptyTd(weekdayKey, time: Time) {
+        return this.vm.backendData.onlineClassList.find(onlineClass => {
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeComparator(time, onlineClass.startTimeJSON) >= 0
+                && TimeComparator(time, onlineClass.endTimeJSON) < 0)
+                return true;
+            return false;
+        }) == undefined;
     }
 
     isActive(onlineClass: ParsedOnlineClass): boolean {

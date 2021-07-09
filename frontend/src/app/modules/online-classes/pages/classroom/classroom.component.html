@@ -36,18 +36,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                        <ng-container *ngFor="let time of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
                             <tr>
-                                <td style="width: 160px"
-                                    [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
-                                    {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
+                                <td style="width: 160px; vertical-align: top;"
+                                    [style.color]="htmlRenderer.isActiveTime(time)?'#ff9800':'unset'">
+                                    <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
                                 </td>
                                 <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
                                     <ng-container
-                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                         <td style="position: relative; min-width: 100px;"
+                                            [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
+                                            [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                             [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
-                                            [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
+                                            [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
                                             <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
                                             <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
                                                 {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span>
@@ -57,7 +59,7 @@
                                         </td>
                                     </ng-container>
                                     <ng-template #NoClass>
-                                        <td></td>
+                                        <td *ngIf="htmlRenderer.shouldRenderEmptyTd(weekday, time)"></td>
                                     </ng-template>
                                 </ng-container>
                             </tr>
