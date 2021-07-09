@@ -36,7 +36,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let time of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                        <ng-container
+                            *ngFor="let time of htmlRenderer.timeSpanList.slice(0, htmlRenderer.timeSpanList.length-1), let timeSpanIndex = index;">
                             <tr>
                                 <td style="width: 160px; vertical-align: top;"
                                     [style.color]="htmlRenderer.isActiveTime(time)?'#ff9800':'unset'">
@@ -48,7 +49,7 @@
                                         <td style="position: relative; min-width: 100px;"
                                             [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                             [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
-                                            [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
+                                            [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
                                             [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
                                             <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
                                             <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
@@ -64,6 +65,13 @@
                                 </ng-container>
                             </tr>
                         </ng-container>
+                        <tr style="border: none;">
+                            <td style="width: 160px; vertical-align: top;">
+                                <span style="position: relative; top: -12px;">
+                                    {{htmlRenderer.timeSpanList.slice(-1)[0].getDisplayString()}}
+                                </span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

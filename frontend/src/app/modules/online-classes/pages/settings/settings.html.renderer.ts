@@ -174,6 +174,16 @@ export class SettingsHtmlRenderer {
         return result;
     }
 
+    teacherSlotOverlapping() {
+        if (this.vm.view == 'employee')
+            return false;
+        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const newStartTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
+        const newEndTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
+        // this.editTimeSpanFormIndex
+    }
+
     nonEditingTimeSpanList(): Array<TimeSpan> {
         return this.timeSpanList.filter((timeSpan, timeSpanIndex) => timeSpanIndex != this.editTimeSpanFormIndex);
     }
@@ -182,13 +192,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
