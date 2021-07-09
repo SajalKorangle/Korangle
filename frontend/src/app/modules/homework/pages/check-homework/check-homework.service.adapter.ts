@@ -269,22 +269,24 @@ export class CheckHomeworkServiceAdapter {
            };
            const value = await Promise.all([this.vm.homeworkService.partiallyUpdateObject(this.vm.homeworkService.homework_answer, tempData)]);
 
-           this.vm.dataForMapping['homework'] = this.vm.selectedHomework;
-           this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
-           let eventID;
-           if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
-                eventID = this.vm.HOMEWORK_CHECKED_ID;
-            } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
-                eventID = this.vm.HOMEWORK_RESUBMISSION_ID;
-            }
+           if (studentHomework.status == this.vm.HOMEWORK_STATUS[2] || studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
+               this.vm.dataForMapping['homework'] = this.vm.selectedHomework;
+               this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
+               let eventID;
+               if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
+                   eventID = this.vm.HOMEWORK_CHECKED_ID;
+               } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
+                   eventID = this.vm.HOMEWORK_RESUBMISSION_ID;
+               }
 
-           this.vm.messageService.sendEventNotification(
-               this.vm.dataForMapping,
-               ['student'],
-               eventID,
-               this.vm.user.activeSchool.dbId,
-               this.vm.smsBalance
-           );
+               this.vm.messageService.sendEventNotification(
+                   this.vm.dataForMapping,
+                   ['student'],
+                   eventID,
+                   this.vm.user.activeSchool.dbId,
+                   this.vm.smsBalance
+               );
+           }
 
            this.getHomeworkReport();
            studentHomework.isStatusLoading = false;

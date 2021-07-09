@@ -38,7 +38,7 @@ def send_sms(instance_dict):
     }
 
     if instance_dict['scheduledDateTime'] is not None:
-        configurations["SchedTime"] = instance_dict['scheduledDateTime'].strftime('%d/%m/%Y %H:%M')
+        configurations["SchedTime"] = instance_dict['scheduledDateTime'].strftime('%Y/%m/%d %H:%M:%S')
 
     pay_load = {
         "Account": configurations,
