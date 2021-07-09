@@ -6,8 +6,10 @@ from common.common_views_3 import CommonView, CommonListView, APIView
 #################### MessageType #########################
 from decorators import user_permission
 from .models import MessageType
+from django.apps import apps
 
-CONSTANT_DATABASE_PATH = './information_app/constant_database/'
+
+CONSTANT_DATABASE_PATH = apps.get_app_config('information_app').path + '/constant_database/'
 
 
 class MessageTypeView(CommonView, APIView):

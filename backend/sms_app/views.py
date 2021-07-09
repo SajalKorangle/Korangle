@@ -1,5 +1,3 @@
-import os
-
 from common.common_functions import filter_json_func
 from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission
@@ -12,8 +10,9 @@ import json
 ############## SMS Old ##############
 from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
+from django.apps import apps
 
-CONSTANT_DATABASE_PATH = './sms_app/constant_database/'
+CONSTANT_DATABASE_PATH = apps.get_app_config('sms_app').path + '/constant_database/'
 
 class SMSOldListView(APIView):
 
@@ -123,7 +122,7 @@ class SMSEventView(APIView):
     @user_permission
     def get(request):
         request_json = request.GET
-        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json',)
+        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
         content = json.load(json_data)
         result = [x for x in content if filter_json_func(x, request_json)]
         return result[0]
@@ -133,7 +132,7 @@ class SMSEventListView(APIView):
     @user_permission
     def get(request):
         request_json = request.GET
-        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json',)
+        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
         content = json.load(json_data)
         result = [x for x in content if filter_json_func(x, request_json)]
         return result
