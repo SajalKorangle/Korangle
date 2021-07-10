@@ -10,7 +10,7 @@ export function openUrlInBrowser( url ) {
     }
 }
 
-export function openUrlInChrome( url ) {
+export function openUrlInChrome(url ) {
     if ( navigator.userAgent == 'Mobile' ) {
         Android.openInChrome( url );
     }

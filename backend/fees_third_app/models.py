@@ -274,6 +274,8 @@ class FeeReceipt(models.Model):
 
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return
     if instance.id and instance.cancelled:
         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
         if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:

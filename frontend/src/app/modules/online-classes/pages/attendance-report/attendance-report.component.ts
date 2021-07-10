@@ -38,7 +38,6 @@ export class AttendanceReportComponent implements OnInit {
         selectedDivision?: Division | null,
         selectedParsedClassSubject?: ParsedClassSubject,
         startDate?: Date;
-        endDate?: Date;
     } = {
         };
 
@@ -107,16 +106,10 @@ export class AttendanceReportComponent implements OnInit {
 
     validUserInput(): boolean {
         if (!(this.userInput.selectedClass && this.userInput.selectedDivision
-            && this.userInput.startDate && this.userInput.endDate
-            && this.userInput.selectedParsedClassSubject)) {
+            && this.userInput.startDate)) {
             return false;
         }
-        if (!this.getFilteredClassSubjectList().find(cs => cs == this.userInput.selectedParsedClassSubject))
-            return false;
         const startDate = new Date(this.userInput.startDate);
-        const endDate = new Date(this.userInput.endDate);
-        if (startDate > endDate)
-            return false;
         return true;
     }
 
@@ -132,30 +125,22 @@ export class AttendanceReportComponent implements OnInit {
         });
     }
 
-    getDaysDiff() {
-        if (this.userInput.startDate && this.userInput.endDate) {
-            return Math.floor((this.userInput.endDate.getTime() - this.userInput.startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-        }
-        return '-';
-    }
-
     getDisplayData() {
         return this.parsedStudentSection;
     }
 
     getDisplayColumns(): Array<string> {
-        const dislayColumns = ['S.No.', 'roll', 'name', 'attendanceCount'];
+        let dislayColumns = ['S.No.', 'roll', 'name'];
+        this.getFilteredClassSubjectList().forEach(classSubject => {
+            dislayColumns.push(classSubject.subjectInstance.name);
+        });
         return dislayColumns;
     }
 
-    getAttendanceCount(studentSection: ParsedStudentSection): number {
+    getAttendance(studentSection: ParsedStudentSection, classSubject: any): number {
         const filteredAttendanceList = this.backendData.studentAttendance.filter(studentAttendance =>
-            studentAttendance.parentStudentSection == studentSection.id);
+            (studentAttendance.parentStudentSection == studentSection.id) && (studentAttendance.parentClassSubject == classSubject.id));
         return filteredAttendanceList.length;
-    }
-
-    handleStartDateSelection() {
-        this.userInput.endDate = new Date(this.userInput.startDate);
     }
 
 }

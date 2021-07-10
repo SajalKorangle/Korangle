@@ -55,9 +55,19 @@ export class AddAccountServiceAdapter {
     }
 
     async addNewAccountInfo() {
-        if (!this.vm.newAccountInfoSanatyCheck())
+        if (this.vm.userInput.newAccountInfo.meetingNumber) {
+            if (!this.vm.newAccountInfoSanatyCheck())
             return;
+            this.vm.userInput.newAccountInfo.meetingUrl = null;
+        }
+        else {
+            if (!this.vm.newAccountInfoSanatyCheckURL())
+                return;
 
+            this.vm.userInput.newAccountInfo.meetingNumber = 0;
+            this.vm.userInput.newAccountInfo.passcode = null;
+
+        }
         const account_info_request = {
             parentEmployee: this.vm.userInput.newAccountInfo.parentEmployee,
         };
@@ -76,6 +86,7 @@ export class AddAccountServiceAdapter {
         this.vm.backendData.accountInfoList.push(createdAccountInfo);
         this.vm.userInput.resetNewAccountInfo();
         this.vm.isLoading = false;
+
     }
 
     async updateAccountInfo(accountInfo) {
