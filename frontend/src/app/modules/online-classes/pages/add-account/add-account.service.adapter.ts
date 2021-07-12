@@ -55,16 +55,16 @@ export class AddAccountServiceAdapter {
     }
 
     async addNewAccountInfo() {
-        if (this.vm.userInput.newAccountInfo.meetingNumber||this.vm.userInput.newAccountInfo.passcode) {
-            if (!this.vm.newAccountInfoSanatyCheck(this.vm.userInput.newAccountInfo.meetingNumber,this.vm.userInput.newAccountInfo.passcode))
+        if (this.vm.userInput.newAccountInfo.meetingNumber || this.vm.userInput.newAccountInfo.passcode) {
+            if (!this.vm.newAccountInfoSanatyCheck(this.vm.userInput.newAccountInfo.meetingNumber, this.vm.userInput.newAccountInfo.passcode))
             return;
         }
         else {
             if (!this.vm.newAccountInfoSanatyCheckURL(this.vm.userInput.newAccountInfo.meetingUrl))
                 return;
             var patternHttp = new RegExp('^(https?:\\/\\/)');
-            if(!patternHttp.test(this.vm.userInput.newAccountInfo.meetingUrl)){  //if user doesnt enter https to the front of the url
-                this.vm.userInput.newAccountInfo.meetingUrl = "https://"+this.vm.userInput.newAccountInfo.meetingUrl;//it adds for the user
+            if (!patternHttp.test(this.vm.userInput.newAccountInfo.meetingUrl)) {  //if user doesnt enter https to the front of the url
+                this.vm.userInput.newAccountInfo.meetingUrl = "https://" + this.vm.userInput.newAccountInfo.meetingUrl; //it adds for the user
             }
 
         }
@@ -90,8 +90,8 @@ export class AddAccountServiceAdapter {
     }
 
     async updateAccountInfo(accountInfo) {
-        if (accountInfo.meetingNumber||accountInfo.passcode) {            
-            if (!this.vm.newAccountInfoSanatyCheck(accountInfo.meetingNumber,accountInfo.passcode))
+        if (accountInfo.meetingNumber || accountInfo.passcode) {
+            if (!this.vm.newAccountInfoSanatyCheck(accountInfo.meetingNumber, accountInfo.passcode))
             return;
         }
         else {
@@ -99,8 +99,8 @@ export class AddAccountServiceAdapter {
                 return;
 
             var patternHttp = new RegExp('^(https?:\\/\\/)');
-            if(!patternHttp.test(accountInfo.meetingUrl)){        //if user doesnt enter https to the front of the url
-                accountInfo.meetingUrl = "https://"+accountInfo.meetingUrl;
+            if (!patternHttp.test(accountInfo.meetingUrl)) {        //if user doesnt enter https to the front of the url
+                accountInfo.meetingUrl = "https://" + accountInfo.meetingUrl;
             }
         }
         this.vm.isLoading = true;
@@ -113,7 +113,7 @@ export class AddAccountServiceAdapter {
 
     async deleteAccountInfo(accountInfo) {
         this.vm.isLoading = true;
-        if (!confirm('This account will be deleted permanently')){
+        if (!confirm('This account will be deleted permanently')) {
             this.vm.isLoading = false;
             return;
         }
