@@ -2429,7 +2429,7 @@ export class CurrentSession extends CanvasText implements Layer {
             dateValue2 = dateValue2.replace(dataReplacementKey, dateReplacementvalue);
         });
         this.text = dateValue1 + this.format.seperator + dateValue2;
-    };
+    }
 
     getDataToSave(): { [object: string]: any; } {
         let savingData = super.getDataToSave();
