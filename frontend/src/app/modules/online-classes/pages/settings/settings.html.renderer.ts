@@ -19,6 +19,8 @@ export class SettingsHtmlRenderer {
 
     colorPaletteHandle = ColorPaletteHandle;
 
+    employeeKeyTimeList: Array<Time>;
+
     constructor() { }
 
     initialize(vm: SettingsComponent): void {
@@ -26,6 +28,13 @@ export class SettingsHtmlRenderer {
     }
 
     initilizeTimeTable() {
+        this.editTimeSpanFormIndex = -1;    // reset display for new time table
+        this.newTimeSpanForm = false;
+
+        if (JSON.stringify(this.timeSpanList) == JSON.stringify(getDefaultTimeSpanList())) {
+            this.timeSpanList = []; // if default then empty
+        }
+
         if (this.vm.view == 'class') {
             if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
                 return;
@@ -51,14 +60,30 @@ export class SettingsHtmlRenderer {
                 }
                 return false;
             });
+
+            this.employeeKeyTimeList = [];
+            this.filteredOnlineClassList.forEach(onlineClass => {
+                let startTimeAlreadyPresent: boolean = false;
+                let endTimeAlreadyPresent: boolean = false;
+                this.employeeKeyTimeList.forEach(timeSpan => {
+                    if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
+                        startTimeAlreadyPresent = true;
+                    }
+                    if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
+                        endTimeAlreadyPresent = true;
+                    }
+                });
+                if (!startTimeAlreadyPresent) {
+                    this.employeeKeyTimeList.push(new Time({ ...onlineClass.startTimeJSON }));
+                }
+                if (!endTimeAlreadyPresent) {
+                    this.employeeKeyTimeList.push(new Time({ ...onlineClass.endTimeJSON }));
+                }
+            });
+            this.employeeKeyTimeList.sort(TimeComparator);
+            return;
         }
 
-        this.editTimeSpanFormIndex = -1;    // reset display for new time table
-        this.newTimeSpanForm = false;
-
-        if (JSON.stringify(this.timeSpanList) == JSON.stringify(getDefaultTimeSpanList())) {
-            this.timeSpanList = []; // if default then empty
-        }
         this.filteredOnlineClassList.forEach(onlineClass => {
             let result: boolean = false;
             this.timeSpanList.every(timeSpan => {
@@ -274,5 +299,33 @@ export class SettingsHtmlRenderer {
         [onlineClass1.endTimeJSON, onlineClass2.endTimeJSON] = [onlineClass2.endTimeJSON, onlineClass1.endTimeJSON];
     }
 
+    getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
+        return this.vm.backendData.onlineClassList.find(onlineClass => {
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeComparator(startTime, onlineClass.startTimeJSON) == 0)
+                return true;
+            return false;
+        });
+    }
+
+    getOnlineClassRowSpan(onlineClass: ParsedOnlineClass): number {
+        const startTimeIndex = this.employeeKeyTimeList.findIndex(time => {
+            return TimeComparator(time, onlineClass.startTimeJSON) == 0;
+        });
+        const endTimeIndex = this.employeeKeyTimeList.findIndex(time => {
+            return TimeComparator(time, onlineClass.endTimeJSON) == 0;
+        });
+        return endTimeIndex - startTimeIndex;
+    }
+
+    shouldRenderEmptyTd(weekdayKey, time: Time) {
+        return this.vm.backendData.onlineClassList.find(onlineClass => {
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeComparator(time, onlineClass.startTimeJSON) >= 0
+                && TimeComparator(time, onlineClass.endTimeJSON) < 0)
+                return true;
+            return false;
+        }) == undefined;
+    }
 
 }
