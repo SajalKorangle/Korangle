@@ -18,4 +18,22 @@ export class AddAccountHtmlRenderer {
         return Boolean(this.vm.backendData.accountInfoList.find(accountInfo => accountInfo.parentEmployee == employee.id));
     }
 
+    isZoomAccount(): boolean {
+        if((this.vm.userInput.newAccountInfo.meetingNumber)||(this.vm.userInput.newAccountInfo.passcode)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    isGmeetAccount(): boolean {
+        if(this.vm.userInput.newAccountInfo.meetingUrl){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }

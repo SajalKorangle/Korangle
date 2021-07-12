@@ -26,17 +26,17 @@
 
             <mat-form-field>
                 <mat-label>Zoom Meeting Id</mat-label>
-                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber" [disabled]="userInput.newAccountInfo.meetingUrl">
+                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber" [disabled]="htmlRenderer.isGmeetAccount()">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Zoom Meeting Passcode</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode" [disabled]="userInput.newAccountInfo.meetingUrl">
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode" [disabled]="htmlRenderer.isGmeetAccount()">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Google Meet url</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.meetingUrl" [disabled]="userInput.newAccountInfo.meetingNumber">
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.meetingUrl" [disabled]="htmlRenderer.isZoomAccount()">
             </mat-form-field>
 
             <br />
