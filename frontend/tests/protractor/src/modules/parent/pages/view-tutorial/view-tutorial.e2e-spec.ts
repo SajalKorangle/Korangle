@@ -25,7 +25,8 @@ describe('Parents -> Tutorials', () => {
         await page.waitForXPath('//iframe');
         node = await getNode('iframe', '');
         prop = await page.evaluate(el => el.src, node);
-        expect(prop).toBe("https://youtube.com/embed/AIgF0NJFm50");
+        prop = prop.split('?')[0];
+        expect(prop).toBe("https://www.youtube.com/embed/AIgF0NJFm50");
         node = await getNode('b', 'Published');
         prop = await page.evaluate(el => el.innerHTML, node);
         expect(prop).toBe("Published On : 16th - March - 2013");
