@@ -243,7 +243,7 @@ export class MessageService {
         notif_mobile_string = notif_mobile_string.slice(0, -2);
 
         let sms_data = {
-            contentType: this.hasUnicode(messageContent) ? '1' : '0',
+            contentType: this.hasUnicode(messageContent) ? '8' : '0',
             SMSEventId: smsEvent.id,
             content: messageContent,
             parentMessageType: null,
