@@ -57,7 +57,7 @@ export class AddAccountComponent implements OnInit {
         this.isLoading = false;
     }
 
-    newAccountInfoSanatyCheck(meetingNumber,passcode): boolean {
+    newAccountInfoSanatyCheck(meetingNumber, passcode): boolean {
         if ((!meetingNumber) || (!passcode)) {  // check for all the fields
             alert("All fields are required");
             return false;
