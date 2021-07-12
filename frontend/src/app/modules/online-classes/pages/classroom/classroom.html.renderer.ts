@@ -4,9 +4,11 @@ export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
 
-    timeSpanList: Array<Time>;
+    timeTableMatrx: Array<Array<ParsedOnlineClass>>;    // columns contains timetabe for one day
 
     colorPaletteHandle = ColorPaletteHandle;
+
+    hasAtleastOneClass = false;
 
     constructor() { }
 
@@ -17,26 +19,19 @@ export class ClassroomHtmlRenderer {
     initilizeTimeTable() {
         ColorPaletteHandle.reset();
 
-        this.timeSpanList = [];
-        this.vm.backendData.onlineClassList.forEach(onlineClass => {
-            let startTimeAlreadyPresent: boolean = false;
-            let endTimeAlreadyPresent: boolean = false;
-            this.timeSpanList.forEach(timeSpan => {
-                if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
-                    startTimeAlreadyPresent = true;
-                }
-                if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
-                    endTimeAlreadyPresent = true;
-                }
-            });
-            if (!startTimeAlreadyPresent) {
-                this.timeSpanList.push(new Time({ ...onlineClass.startTimeJSON }));
-            }
-            if (!endTimeAlreadyPresent) {
-                this.timeSpanList.push(new Time({ ...onlineClass.endTimeJSON }));
+        this.timeTableMatrx = [];
+
+        Object.values(this.vm.weekdays).forEach(weekday => {
+            const weekdayFilteredOnlineClassList = this.vm.backendData.onlineClassList
+                .filter(onlineClass => onlineClass.day == weekday);
+            weekdayFilteredOnlineClassList.sort((onlineclass1, onlineClass2) => TimeComparator(onlineclass1.startTimeJSON, onlineClass2.startTimeJSON));
+            this.timeTableMatrx.push(weekdayFilteredOnlineClassList);
+            if (weekdayFilteredOnlineClassList.length > 0) {
+                this.hasAtleastOneClass = true;
             }
         });
-        this.timeSpanList.sort(TimeComparator);
+        this.timeTableMatrx = Object.values(this.vm.weekdays).map((col1, i) => this.timeTableMatrx.map(row => row[i]));  // transpose
+        console.log('timetable = ', this.timeTableMatrx);
     }
 
     getTime() {
@@ -58,16 +53,6 @@ export class ClassroomHtmlRenderer {
         });
     }
 
-    getOnlineClassRowSpan(onlineClass: ParsedOnlineClass): number {
-        const startTimeIndex = this.timeSpanList.findIndex(time => {
-            return TimeComparator(time, onlineClass.startTimeJSON) == 0;
-        });
-        const endTimeIndex = this.timeSpanList.findIndex(time => {
-            return TimeComparator(time, onlineClass.endTimeJSON) == 0;
-        });
-        return endTimeIndex - startTimeIndex;
-    }
-
     getDisplayData(onlineClass: ParsedOnlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
@@ -86,16 +71,6 @@ export class ClassroomHtmlRenderer {
             return true;
         }
         return false;
-    }
-
-    shouldRenderEmptyTd(weekdayKey, time: Time) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
-                && TimeComparator(time, onlineClass.startTimeJSON) >= 0
-                && TimeComparator(time, onlineClass.endTimeJSON) < 0)
-                return true;
-            return false;
-        }) == undefined;
     }
 
     isActive(onlineClass: ParsedOnlineClass): boolean {
