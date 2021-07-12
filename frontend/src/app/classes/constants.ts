@@ -1,3 +1,3 @@
 export class Constants {
-    public static api_version = '/v6.0';
+    public static api_version = '/v6.1';
 }
