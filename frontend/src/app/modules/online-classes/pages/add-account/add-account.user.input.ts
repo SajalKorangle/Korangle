@@ -29,4 +29,5 @@ const DEFAULT_ACCOUNT_INFO: AccountInfo = {
     parentEmployee: null,
     meetingNumber: null,
     passcode: null,
+    meetingUrl: null,
 };
