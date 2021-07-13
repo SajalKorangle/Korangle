@@ -13,6 +13,7 @@ colorama==0.3.9
 cryptography==2.7
 decorator==4.2.1
 Django==1.11.6
+django-admin-rangefilter==0.8.1
 django-cleanup==5.0.0
 django-cors-headers==2.1.0
 django-extensions==1.9.9
@@ -26,7 +27,6 @@ docutils==0.14
 entrypoints==0.2.3
 factory-boy==2.10.0
 Faker==0.8.12
-# freeze==1.0.10
 gunicorn==19.9.0
 h2==2.6.2
 hpack==3.0.0
