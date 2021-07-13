@@ -72,7 +72,7 @@ class ResponseListFilter(admin.SimpleListFilter):
 class ErrorAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'Page', 'Response', 'Name', 'School', 'MobileNumber', 'id', 'Status', 'Github_Id')
-    list_filter = ('issueStatus', ResponseListFilter, PromptListFilter)
+    list_filter = ('issueStatus', ResponseListFilter, PromptListFilter, 'dateTime')
     search_fields = ("githubId",)
 
     def title(self, obj):
