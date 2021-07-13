@@ -1,16 +1,12 @@
 th{
     text-align: center;
-    border: 1px solid black;
+    min-width: 92px;
 }
 
 td{
     text-align: center;
-    border: 1px solid black;
 }
 
-tr{
-    border: 1px solid black; 
-}
 
 .glow-active{
     border-radius: 100%;

@@ -4,7 +4,7 @@ export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
 
-    timeTableMatrx: Array<Array<ParsedOnlineClass>>;    // columns contains timetabe for one day
+    employeeKeyTimeList: Array<Time>;
 
     colorPaletteHandle = ColorPaletteHandle;
 
@@ -18,20 +18,26 @@ export class ClassroomHtmlRenderer {
 
     initilizeTimeTable() {
         ColorPaletteHandle.reset();
-
-        this.timeTableMatrx = [];
-
-        Object.values(this.vm.weekdays).forEach(weekday => {
-            const weekdayFilteredOnlineClassList = this.vm.backendData.onlineClassList
-                .filter(onlineClass => onlineClass.day == weekday);
-            weekdayFilteredOnlineClassList.sort((onlineclass1, onlineClass2) => TimeComparator(onlineclass1.startTimeJSON, onlineClass2.startTimeJSON));
-            this.timeTableMatrx.push(weekdayFilteredOnlineClassList);
-            if (weekdayFilteredOnlineClassList.length > 0) {
-                this.hasAtleastOneClass = true;
+        this.employeeKeyTimeList = [];
+        this.vm.backendData.onlineClassList.forEach(onlineClass => {
+            let startTimeAlreadyPresent: boolean = false;
+            let endTimeAlreadyPresent: boolean = false;
+            this.employeeKeyTimeList.forEach(timeSpan => {
+                if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
+                    startTimeAlreadyPresent = true;
+                }
+                if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
+                    endTimeAlreadyPresent = true;
+                }
+            });
+            if (!startTimeAlreadyPresent) {
+                this.employeeKeyTimeList.push(new Time({ ...onlineClass.startTimeJSON }));
+            }
+            if (!endTimeAlreadyPresent) {
+                this.employeeKeyTimeList.push(new Time({ ...onlineClass.endTimeJSON }));
             }
         });
-        this.timeTableMatrx = Object.values(this.vm.weekdays).map((col1, i) => this.timeTableMatrx.map(row => row[i]));  // transpose
-        console.log('timetable = ', this.timeTableMatrx);
+        this.employeeKeyTimeList.sort(TimeComparator);
     }
 
     getTime() {
@@ -44,21 +50,12 @@ export class ClassroomHtmlRenderer {
         return customTime.getDisplayString();
     }
 
-    getOnlineClassByWeekDayAndStartTime(weekdayKey, time: Time) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
-                && TimeComparator(time, onlineClass.startTimeJSON) == 0)
-                return true;
-            return false;
-        });
-    }
-
     getDisplayData(onlineClass: ParsedOnlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
-        const classInstane = this.vm.backendData.getClassById(classSubject.parentClass);
+        const classInstance = this.vm.backendData.getClassById(classSubject.parentClass);
         const division = this.vm.backendData.getDivisionById(classSubject.parentDivision);
-        return { classSubject, subject, classInstane, division };
+        return { classSubject, subject, classInstance, division };
     }
 
     isActiveTime(time: Time): boolean {
@@ -91,6 +88,35 @@ export class ClassroomHtmlRenderer {
 
     getActiveClass() {
         return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
+    }
+
+    getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
+        return this.vm.backendData.onlineClassList.find(onlineClass => {
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeComparator(startTime, onlineClass.startTimeJSON) == 0)
+                return true;
+            return false;
+        });
+    }
+
+    getOnlineClassRowSpan(onlineClass: ParsedOnlineClass): number {
+        const startTimeIndex = this.employeeKeyTimeList.findIndex(time => {
+            return TimeComparator(time, onlineClass.startTimeJSON) == 0;
+        });
+        const endTimeIndex = this.employeeKeyTimeList.findIndex(time => {
+            return TimeComparator(time, onlineClass.endTimeJSON) == 0;
+        });
+        return endTimeIndex - startTimeIndex;
+    }
+
+    shouldRenderEmptyTd(weekdayKey, time: Time) {
+        return this.vm.backendData.onlineClassList.find(onlineClass => {
+            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+                && TimeComparator(time, onlineClass.startTimeJSON) >= 0
+                && TimeComparator(time, onlineClass.endTimeJSON) < 0)
+                return true;
+            return false;
+        }) == undefined;
     }
 
 }

@@ -33,4 +33,5 @@ th{
 
 td{
     text-align: center;
+    min-width: 92px;
 }

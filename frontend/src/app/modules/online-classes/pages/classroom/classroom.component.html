@@ -3,7 +3,7 @@
     <h3>{{htmlRenderer.getTime()}}</h3>
     <mat-divider style="margin-bottom: 8px;"></mat-divider>
     <ng-container *ngIf="isActiveSession else NotActiveSession">
-        <ng-container *ngIf="htmlRenderer.hasAtleastOneClass else NoClassReg">
+        <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
 
             <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
                 <h4>Onging Class:</h4>
@@ -11,7 +11,7 @@
 
                     <div style="margin-left: 12px;">
                         <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span>
-                        <span>({{htmlRenderer.getDisplayData(activeClass).classInstane.name}} &
+                        <span>({{htmlRenderer.getDisplayData(activeClass).classInstance.name}} &
                             {{htmlRenderer.getDisplayData(activeClass).division.name}})</span><br />
                         <span>
                             {{activeClass.startTimeJSON.getDisplayString()}} -
@@ -25,37 +25,52 @@
                         Class</button>
                 </div>
             </ng-container>
-            <div style="overflow: auto;">
-                <table class="mat-elevation-z8 table table-hover">
+            <div class="mat-elevation-z8" style="overflow-x: auto; width: 100%">
+                <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th></th>
                             <th *ngFor="let weekdayKey of getObjetKeys(weekdays)"
                                 [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
                                 {{weekdays[weekdayKey]}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let row of htmlRenderer.timeTableMatrx, let timeSpanIndex = index;">
+                        <ng-container
+                            *ngFor="let time of htmlRenderer.employeeKeyTimeList.slice(0, htmlRenderer.employeeKeyTimeList.length-1), let timeSpanIndex = index;">
                             <tr>
-                                <ng-container *ngFor="let onlineClass of row">
-                                    <ng-container *ngIf="onlineClass">
+                                <td style="vertical-align: top; text-align: left; width: 50px;">
+                                    <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
+                                </td>
+                                <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                    <ng-container
+                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                         <td style="position: relative; min-width: 100px;"
                                             [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
+                                            [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                             [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
                                             [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
                                             <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
-                                            <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstane.name}} -
-                                                {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span><br />
-                                            <span>{{onlineClass.startTimeJSON.getDisplayString() + ' - ' +
-                                                onlineClass.endTimeJSON.getDisplayString()}}</span>
+                                            <span> ({{htmlRenderer.getDisplayData(onlineClass).classInstance.name}} -
+                                                {{htmlRenderer.getDisplayData(onlineClass).division.name}})</span>
                                             <span *ngIf="backendData.accountInfo"
                                                 style="position: absolute; bottom: 8px; right: 8px;"
                                                 class="glow-active"></span>
                                         </td>
                                     </ng-container>
+                                    <ng-template #NoClass>
+                                        <td *ngIf="htmlRenderer.shouldRenderEmptyTd(weekday, time)"></td>
+                                    </ng-template>
                                 </ng-container>
                             </tr>
                         </ng-container>
+                        <tr style="border: none;">
+                            <td style="vertical-align: top; text-align: left; width: 50px;">
+                                <span style="position: relative; top: -12px;">
+                                    {{htmlRenderer.employeeKeyTimeList.slice(-1)[0].getDisplayString()}}
+                                </span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
