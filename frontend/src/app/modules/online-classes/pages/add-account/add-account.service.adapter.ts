@@ -55,17 +55,17 @@ export class AddAccountServiceAdapter {
     }
 
     async addNewAccountInfo() {
-        if (this.vm.userInput.newAccountInfo.meetingNumber) {
-            if (!this.vm.newAccountInfoSanatyCheck())
+        if (this.vm.userInput.newAccountInfo.meetingNumber || this.vm.userInput.newAccountInfo.passcode) {
+            if (!this.vm.newAccountInfoSanatyCheck(this.vm.userInput.newAccountInfo.meetingNumber, this.vm.userInput.newAccountInfo.passcode))
             return;
-            this.vm.userInput.newAccountInfo.meetingUrl = null;
         }
         else {
-            if (!this.vm.newAccountInfoSanatyCheckURL())
+            if (!this.vm.newAccountInfoSanatyCheckURL(this.vm.userInput.newAccountInfo.meetingUrl))
                 return;
-
-            this.vm.userInput.newAccountInfo.meetingNumber = 0;
-            this.vm.userInput.newAccountInfo.passcode = null;
+            var patternHttp = new RegExp('^(https?:\\/\\/)');
+            if (!patternHttp.test(this.vm.userInput.newAccountInfo.meetingUrl)) {  //if user doesnt enter https to the front of the url
+                this.vm.userInput.newAccountInfo.meetingUrl = "https://" + this.vm.userInput.newAccountInfo.meetingUrl; //it adds for the user
+            }
 
         }
         const account_info_request = {
@@ -90,6 +90,19 @@ export class AddAccountServiceAdapter {
     }
 
     async updateAccountInfo(accountInfo) {
+        if (accountInfo.meetingNumber || accountInfo.passcode) {
+            if (!this.vm.newAccountInfoSanatyCheck(accountInfo.meetingNumber, accountInfo.passcode))
+            return;
+        }
+        else {
+            if (!this.vm.newAccountInfoSanatyCheckURL(accountInfo.meetingUrl))
+                return;
+
+            var patternHttp = new RegExp('^(https?:\\/\\/)');
+            if (!patternHttp.test(accountInfo.meetingUrl)) {        //if user doesnt enter https to the front of the url
+                accountInfo.meetingUrl = "https://" + accountInfo.meetingUrl;
+            }
+        }
         this.vm.isLoading = true;
         const responseAccountInfo = await this.vm.onlineClassService.updateObject(this.vm.onlineClassService.account_info, accountInfo);
         const originalAccountInfo = this.vm.backendData.accountInfoList.find(ai => ai.id == accountInfo.id);
@@ -100,8 +113,10 @@ export class AddAccountServiceAdapter {
 
     async deleteAccountInfo(accountInfo) {
         this.vm.isLoading = true;
-        if (!confirm('This account will be deleted permanently'))
+        if (!confirm('This account will be deleted permanently')) {
+            this.vm.isLoading = false;
             return;
+        }
         const delete_request = {
             id: accountInfo.id
         };
