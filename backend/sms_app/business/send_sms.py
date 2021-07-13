@@ -55,6 +55,13 @@ def send_sms(instance_dict):
     response = conn.getresponse().read()
     print(response)
 
+    MessageData = json.loads(response.decode("utf-8"))['DeliveryReports']
+
+    for num in sent_sms_num_list:
+        for data in MessageData:
+            if data["Number"] == num["Number"]:
+                num["MessageId"] = data["MessageId"]
+
     job_id = str(json.loads(response.decode("utf-8"))['JobId'])
 
     return {'remark': 'SUCCESS', 'requestId': job_id}

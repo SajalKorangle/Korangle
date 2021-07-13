@@ -124,8 +124,8 @@ class SMSEventView(APIView):
         request_json = request.GET
         json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
         content = json.load(json_data)
-        result = [x for x in content if filter_json_func(x, request_json)]
-        return result[0]
+        result = next([x for x in content if filter_json_func(x, request_json)])
+        return result
 
 
 class SMSEventListView(APIView):
@@ -144,8 +144,8 @@ class SMSDefaultTemplateView(APIView):
         request_json = request.GET
         json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
         content = json.load(json_data)
-        result = [x for x in content if filter_json_func(x, request_json)]
-        return result[0]
+        result = next([x for x in content if filter_json_func(x, request_json)])
+        return result
 
 
 class SMSDefaultTemplateListView(APIView):

@@ -22,12 +22,10 @@ def get_sms_delivery_report_list(data):
 def handle_sms_delivery_report(data):
     for status in data:
         report = {
-            'requestId': status['requestId'],
-            'mobileNumber': int(status['mobileNumber'][2:]),
+            'mobileNumber': int(status['Number']),
             'status': status['status'],
-            'statusCode': status['statusCode'],
-            'deliveredDateTime': status['deliveredDateTime'] + "+05:30",
-            'senderId': status['senderId'],
+            'deliveredDateTime': status['Delivered Date'],
+            'senderId': status['SenderId']
         }
         queryset = SMSDeliveryReportModelSerializer.objects.filter(requestId=report['requestId'],
                                                                    mobileNumber=report['mobileNumber'])
