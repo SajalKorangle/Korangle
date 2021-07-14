@@ -63,6 +63,10 @@ export class SettingsServiceAdapter {
     }
 
     async updateOnlineClassList() {
+        if (this.vm.isAnyClassOverlapping()) {
+            alert('Tracher\'s time slot if overlapping. Kindly rectify.');
+            return;
+        }
         const onlineClassBackendDataIndexArray = [];
         // filter online classes for selected class and section
         const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -48,6 +49,7 @@ export class SettingsComponent implements OnInit {
 
     constructor(
         public dialog: MatDialog,
+        public snackBar: MatSnackBar,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public employeeService: EmployeeService,
@@ -88,6 +90,11 @@ export class SettingsComponent implements OnInit {
             return false;
         }
         return true;
+    }
+
+    isAnyClassOverlapping() {
+        const result = this.htmlRenderer.filteredOnlineClassList.every(onlineClass => !this.htmlRenderer.isOnlineClasOverlapping(onlineClass));
+        return result == false;
     }
 
 }
