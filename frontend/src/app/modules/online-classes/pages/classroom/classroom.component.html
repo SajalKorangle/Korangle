@@ -20,9 +20,12 @@
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
-                    <button *ngIf="backendData.accountInfo" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="redirectToMeeting()">Enter
+                    <button *ngIf="backendData.accountInfo else NoMeetingInfo"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="redirectToMeeting()">Enter
                         Class</button>
+                    <ng-template #NoMeetingInfo>
+                        <span style="margin-left: 12px; color:red">Meeting Info Not Available</span>
+                    </ng-template>
                 </div>
             </ng-container>
             <div class="mat-elevation-z8" style="overflow-x: auto; width: 100%">

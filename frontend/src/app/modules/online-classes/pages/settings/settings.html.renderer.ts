@@ -235,13 +235,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
@@ -313,7 +313,12 @@ export class SettingsHtmlRenderer {
         let onlineClass = this.filteredOnlineClassList[onlineClassIndex];
 
         // overlapping slot check
-        const dummyOnlineClass = { ...onlineClass, day: this.vm.weekdays[weekdayKey], startTimeJSON: new Time({ ...timespan.startTime }), endTimeJSON: new Time({ ...timespan.endTime }) };
+        const dummyOnlineClass = {
+            ...onlineClass,
+            day: this.vm.weekdays[weekdayKey],
+            startTimeJSON: new Time({ ...timespan.startTime }),
+            endTimeJSON: new Time({ ...timespan.endTime })
+        };
         if (this.isOnlineClasOverlapping(dummyOnlineClass)) {
             console.log("online class overlapping");
             this.vm.snackBar.open("Teacher's is slot overlapping", undefined, { duration: 7500 });

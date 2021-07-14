@@ -120,20 +120,20 @@ export class ColorPaletteHandle {
     static maxIndex = 0;
     static colorMappedBySubjectName: { [key: string]: number; } = {};
 
-    static getColorForSubject(subjectName: string) {
-        if (this.colorMappedBySubjectName[subjectName] == undefined) {
-            this.colorMappedBySubjectName[subjectName] = this.maxIndex;
+    static getColorForSubject(subjectKey: string) {
+        if (this.colorMappedBySubjectName[subjectKey] == undefined) {
+            this.colorMappedBySubjectName[subjectKey] = this.maxIndex;
             this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
         }
-        return ColorPalette[this.colorMappedBySubjectName[subjectName]][1];
+        return ColorPalette[this.colorMappedBySubjectName[subjectKey]][1];
     }
 
-    static getBackgroundColorForSubject(subjectName: string) {
-        if (this.colorMappedBySubjectName[subjectName] == undefined) {
-            this.colorMappedBySubjectName[subjectName] = this.maxIndex;
+    static getBackgroundColorForSubject(subjectKey: string) {
+        if (this.colorMappedBySubjectName[subjectKey] == undefined) {
+            this.colorMappedBySubjectName[subjectKey] = this.maxIndex;
             this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
         }
-        return ColorPalette[this.colorMappedBySubjectName[subjectName]][0];
+        return ColorPalette[this.colorMappedBySubjectName[subjectKey]][0];
     }
 
     static reset() {
