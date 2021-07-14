@@ -92,9 +92,4 @@ export class SettingsComponent implements OnInit {
         return true;
     }
 
-    isAnyClassOverlapping() {
-        const result = this.htmlRenderer.filteredOnlineClassList.every(onlineClass => !this.htmlRenderer.isOnlineClasOverlapping(onlineClass));
-        return result == false;
-    }
-
 }

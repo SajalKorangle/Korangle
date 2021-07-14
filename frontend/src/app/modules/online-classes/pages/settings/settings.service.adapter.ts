@@ -63,7 +63,7 @@ export class SettingsServiceAdapter {
     }
 
     async updateOnlineClassList() {
-        if (this.vm.isAnyClassOverlapping()) {
+        if (this.vm.htmlRenderer.isAnyClassOverlapping()) {
             alert('Tracher\'s time slot if overlapping. Kindly rectify.');
             return;
         }

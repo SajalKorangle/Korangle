@@ -119,7 +119,10 @@
             </table>
         </div>
         <mat-divider style="margin-top: 32px;"></mat-divider>
-        <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
+        <span *ngIf="htmlRenderer.isAnyClassOverlapping()" style="color: red; float: right;">Teacher's Slot if
+            overlapping</span><br />
+        <button [disabled]="htmlRenderer.isAnyClassOverlapping()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
             (click)="serviceAdapter.updateOnlineClassList();">Update</button>
 
         <ul>
