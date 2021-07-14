@@ -224,12 +224,13 @@
             [(ngModel)]="userInput.newTimeSpan.endTime">
         <mat-error *ngIf="htmlRenderer.endTimeBeforeStartTime()">End time before start time</mat-error>
         <mat-error *ngIf="htmlRenderer.timeSpanOverlapping()">Time Span Overlapping </mat-error>
+        <mat-error *ngIf="htmlRenderer.isEditingTimeSpanOverlapping()">Teacher's Slot Overlapping</mat-error>
     </mat-form-field>
 
     <button mat-stroked-button style="margin-top: 6px; margin-right: 6px;" (click)="htmlRenderer.deleteTimeSpan()">
         <mat-icon>delete</mat-icon>
     </button>
-    <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
+    <button mat-stroked-button [disabled]="htmlRenderer.editTimeSpanError()" style="margin-top: 6px;"
         (click)="htmlRenderer.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
 </ng-template>
 

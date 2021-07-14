@@ -238,7 +238,7 @@ export class SettingsHtmlRenderer {
     };
 
     editTimeSpanError = (): boolean => {
-        if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
+        if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
     };
@@ -251,6 +251,20 @@ export class SettingsHtmlRenderer {
         this.timeSpanList.push(new TimeSpan({ startTime, endTime }));
         this.timeSpanList.sort(TimeSpanComparator);
         this.vm.userInput.resetNewTimeSpanData();
+    }
+
+    isEditingTimeSpanOverlapping(): boolean {
+        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
+        const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
+        return this.filteredOnlineClassList.every(onlineClass => {
+            if (TimeSpanComparator(this.timeSpanList[this.editTimeSpanFormIndex],
+                new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0) {
+                return this.isOnlineClasOverlapping({ ...onlineClass, startTimeJSON: startTime, endTimeJSON: endTime }) == false;
+            }
+            return true;
+        }) == false;
     }
 
     editTimeSpan() {
