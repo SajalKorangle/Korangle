@@ -5,16 +5,19 @@ import { ExaminationOldService } from '../../../../services/modules/examination/
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 import { ViewMarksServiceAdapter } from './view-marks.service.adapter';
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'view-marks',
     templateUrl: './view-marks.component.html',
     styleUrls: ['./view-marks.component.css'],
-    providers: [ExaminationService, StudentOldService, ExaminationOldService, SubjectOldService],
+    providers: [OnlineClassService, ExaminationService, StudentOldService, ExaminationOldService, SubjectOldService],
 })
 export class ViewMarksComponent implements OnInit, OnChanges {
     user;
+
+    activeStudent: any;
 
     serviceAdapter: ViewMarksServiceAdapter;
 
@@ -26,7 +29,10 @@ export class ViewMarksComponent implements OnInit, OnChanges {
 
     isLoading = false;
 
+    restrictedStudent = null;
+
     constructor(
+        public onlineClassService: OnlineClassService,
         public studentService: StudentOldService,
         public examinationOldService: ExaminationOldService,
         public examinationService: ExaminationService,
@@ -39,6 +45,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.activeStudent = this.user.section.student;
 
         this.selectedStudent = null;
 

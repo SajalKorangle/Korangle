@@ -1,53 +1,55 @@
 <div class="card-content">
-    <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
-        <ng-container *ngIf="examinationList.length <= 0"> No Examinations to display yet! </ng-container>
-
-        <ng-container *ngIf="examinationList.length > 0">
-            <mat-form-field>
-                <mat-select
-                    placeholder="Select Examination"
-                    [ngModel]="selectedExamination"
-                    [disabled]="isLoading"
-                    (ngModelChange)="selectedExamination = $event"
-                >
-                    <mat-option *ngFor="let examination of examinationList" [value]="examination">
-                        {{ examination.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <table class="table table-hover" *ngIf="selectedExamination.marksList.length > 0">
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th>Test</th>
-                        <th>Max. Marks</th>
-                        <th>Marks Obt.</th>
-                        <th>Grade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let test of selectedExamination.marksList; let i = index">
-                        <td>{{ test.subjectName }}</td>
-                        <td>{{ test.maximumMarks }}</td>
-                        <td>{{ test.marksObtained }}</td>
-                        <td>{{ getTestGrade(test) }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>Total</b></td>
-                        <td>
-                            <b>{{ getTotalMaximumMarks(selectedExamination.marksList) }}</b>
-                        </td>
-                        <td>
-                            <b>{{ getTotalMarksObtained(selectedExamination.marksList) }}</b>
-                        </td>
-                        <td>
-                            <b>{{ getOverallGrade(selectedExamination.marksList) }}</b>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <ng-container *ngIf="selectedExamination.marksList.length === 0"> No tests created yet! </ng-container>
+    <ng-container *ngIf="!restrictedStudent else RestrictedStudent">
+        <ng-container *ngIf="selectedStudent && selectedStudent.fathersName !== undefined && !isLoading">
+            <ng-container *ngIf="examinationList.length <= 0"> No Examinations to display yet! </ng-container>
+    
+            <ng-container *ngIf="examinationList.length > 0">
+                <mat-form-field>
+                    <mat-select
+                        placeholder="Select Examination"
+                        [ngModel]="selectedExamination"
+                        [disabled]="isLoading"
+                        (ngModelChange)="selectedExamination = $event"
+                    >
+                        <mat-option *ngFor="let examination of examinationList" [value]="examination">
+                            {{ examination.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+    
+                <table class="table table-hover" *ngIf="selectedExamination.marksList.length > 0">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>Test</th>
+                            <th>Max. Marks</th>
+                            <th>Marks Obt.</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let test of selectedExamination.marksList; let i = index">
+                            <td>{{ test.subjectName }}</td>
+                            <td>{{ test.maximumMarks }}</td>
+                            <td>{{ test.marksObtained }}</td>
+                            <td>{{ getTestGrade(test) }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Total</b></td>
+                            <td>
+                                <b>{{ getTotalMaximumMarks(selectedExamination.marksList) }}</b>
+                            </td>
+                            <td>
+                                <b>{{ getTotalMarksObtained(selectedExamination.marksList) }}</b>
+                            </td>
+                            <td>
+                                <b>{{ getOverallGrade(selectedExamination.marksList) }}</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+    
+                <ng-container *ngIf="selectedExamination.marksList.length === 0"> No tests created yet! </ng-container>
+            </ng-container>
         </ng-container>
     </ng-container>
 </div>
@@ -55,3 +57,7 @@
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+
+<ng-template #RestrictedStudent>
+    <span style="color: red">Please contact School to gain access.</span>
+</ng-template>

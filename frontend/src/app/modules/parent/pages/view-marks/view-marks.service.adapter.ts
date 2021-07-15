@@ -42,10 +42,15 @@ export class ViewMarksServiceAdapter {
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        const restricted_student_request = {
+            parentStudent: this.vm.activeStudent.id,
+        };
+
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
             this.vm.studentService.getStudentFullProfile(request_student_data, this.vm.user.jwt),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
+            this.vm.onlineClassService.getObject(this.vm.onlineClassService.restricted_students, restricted_student_request),
         ]).then(
             (value) => {
                 this.examinationList = value[0];
@@ -55,6 +60,8 @@ export class ViewMarksServiceAdapter {
                 this.subjectList = value[2];
 
                 this.vm.selectedStudent = value[1];
+
+                this.vm.restrictedStudent = value[3];
 
                 if (this.examinationList.length === 0) {
                     this.vm.isLoading = false;

@@ -6,21 +6,25 @@ import { ViewTutorialsServiceAdapter } from '@modules/parent/pages/view-tutorial
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { StudentService } from '@services/modules/student/student.service';
 import {ViewTutorialsHtmlRenderer} from '@modules/parent/pages/view-tutorials/view-tutorials.html.renderer';
-
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 @Component({
     selector: 'app-view-tutorials',
     templateUrl: './view-tutorials.component.html',
     styleUrls: ['./view-tutorials.component.css'],
-    providers: [SubjectService, ClassService, StudentService, TutorialsService],
+    providers: [OnlineClassService, SubjectService, ClassService, StudentService, TutorialsService],
 })
 export class ViewTutorialsComponent implements OnInit {
 
     user: any;
 
+    activeStudent: any;
+
     serviceAdapter: ViewTutorialsServiceAdapter;
     htmlRenderer: ViewTutorialsHtmlRenderer;
 
     filteredStudentSubject = [];
+
+    restrictedStudent = null;
 
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
@@ -47,6 +51,7 @@ export class ViewTutorialsComponent implements OnInit {
     };
 
     constructor(
+        public onlineClassService: OnlineClassService,
         public subjectService: SubjectService,
         public classService: ClassService,
         public studentService: StudentService,
@@ -55,6 +60,7 @@ export class ViewTutorialsComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+        this.activeStudent = this.user.section.student;
 
         this.htmlRenderer = new ViewTutorialsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
