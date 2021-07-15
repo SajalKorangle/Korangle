@@ -13,7 +13,7 @@ export class ClassroomBackendData {
     subjectList: Array<Subject>;
     accountInfoList: Array<AccountInfo>;
 
-    studentAttendance: any;
+    studentAttendanceList: any;
 
     studentSection: any;
 
