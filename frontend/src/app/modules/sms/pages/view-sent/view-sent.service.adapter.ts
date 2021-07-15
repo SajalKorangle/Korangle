@@ -1,4 +1,4 @@
-import { ViewSentComponent } from './view-sent.component';
+import {ViewSentComponent} from './view-sent.component';
 
 export class ViewSentServiceAdapter {
     vm: ViewSentComponent;
@@ -49,9 +49,14 @@ export class ViewSentServiceAdapter {
 
 
     // Get Delivery Report
-    getDeliveryReport(sms: any): void {
+    async getDeliveryReport(sms: any) {
         if (sms.deliveryReportList) {
             this.vm.userInput.selectedStatus = this.vm.getStatusList(sms)[0];
+            return;
+        }
+
+        if (sms.requestId == -1 || sms.requestId == 0) {
+            console.log('here');
             return;
         }
 
@@ -59,18 +64,15 @@ export class ViewSentServiceAdapter {
 
         let data = {
             requestId: sms.requestId,
+            fetchedDeliveryStatus: sms.fetchedDeliveryStatus,
+            smsGateWayHubVendor: sms.smsGateWayHubVendor,
+            mobileNumberContentJson: sms.mobileNumberContentJson,
+            senderId: sms.sender
         };
 
-        this.vm.smsOldService.getMsgClubDeliveryReport(data).then(
-            (value) => {
-                sms['deliveryReportList'] = value;
-                this.vm.userInput.selectedStatus = this.vm.getStatusList(sms)[0];
-                sms.isLoading = false;
-            },
-            (error) => {
-                sms.isLoading = false;
-            }
-        );
+        sms['deliveryReportList'] = await this.vm.smsService.getObjectList(this.vm.smsService.sms_delivery_report, data);
+        this.vm.userInput.selectedStatus = this.vm.getStatusList(sms)[0];
+        sms.isLoading = false;
     }
 
     populateMessageTypeAndSMSEventList(): void {

@@ -18,8 +18,6 @@ def send_sms(instance_dict):
 
     conn = http.client.HTTPSConnection("www.smsgatewayhub.com")
 
-    print(instance_dict['mobileNumberContentJson'])
-
     sent_sms_num_list = json.loads(instance_dict['mobileNumberContentJson'])
 
     configurations = {
@@ -47,15 +45,12 @@ def send_sms(instance_dict):
 
     pay_load_json = json.dumps(pay_load)
 
-    print(pay_load_json)
-
     conn.request("POST", "/api/mt/SendSms",
                  pay_load_json, headers)
 
     response = conn.getresponse().read()
-    print(response)
 
-    message_data = json.loads(response.decode("utf-8"))['DeliveryReports']
+    message_data = json.loads(response.decode("utf-8"))['MessageData']
 
     for num in sent_sms_num_list:
         for data in message_data:

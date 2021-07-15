@@ -1,18 +1,13 @@
-from common.common_functions import filter_json_func
-from common.common_views_3 import CommonView, CommonListView
-from decorators import user_permission
-from django.http import HttpResponse
+from common.common_views_3 import CommonView, CommonListView, common_json_view_function
+from decorators import user_permission, user_permission_3
 
 from rest_framework.views import APIView
 
-import json
 
 ############## SMS Old ##############
 from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
-from django.apps import apps
 
-CONSTANT_DATABASE_PATH = apps.get_app_config('sms_app').path + '/constant_database/'
 
 class SMSOldListView(APIView):
 
@@ -38,23 +33,14 @@ class SMSCountView(APIView):
 
 
 ############## Msg Club Delivery Report ##############
-from .business.sms_delivery_report import handle_sms_delivery_report, get_sms_delivery_report_list
+from .business.sms_delivery_report import get_sms_delivery_report_list
 
 
 class SMSDeliveryReportView(APIView):
 
     @user_permission
     def get(request):
-        data = {
-            'requestId': request.GET['requestId'],
-        }
-        return get_sms_delivery_report_list(data)
-
-
-def handle_msg_club_delivery_report_view(request):
-    data = json.loads(request.body.decode('utf-8'))
-    handle_sms_delivery_report(data)
-    return HttpResponse(status=201)
+        return get_sms_delivery_report_list(request.GET)
 
 
 ############## SMS Purchase ##############
@@ -120,39 +106,24 @@ class SMSIdSchoolListView(CommonListView, APIView):
 
 class SMSEventView(APIView):
     @user_permission
-    def get(request):
-        request_json = request.GET
-        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
-        content = json.load(json_data)
-        result = next([x for x in content if filter_json_func(x, request_json)])
-        return result
+    def get(request):  # return only the first element or one element
+        return next(common_json_view_function(request.GET, "sms_app", "sms_event.json"))
 
 
 class SMSEventListView(APIView):
     @user_permission
     def get(request):
-        request_json = request.GET
-        json_data = open(CONSTANT_DATABASE_PATH + 'sms_event.json', )
-        content = json.load(json_data)
-        result = [x for x in content if filter_json_func(x, request_json)]
-        return result
+        return common_json_view_function(request.GET, "sms_app", "sms_event.json")
 
 
 class SMSDefaultTemplateView(APIView):
     @user_permission
     def get(request):
-        request_json = request.GET
-        json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
-        content = json.load(json_data)
-        result = next([x for x in content if filter_json_func(x, request_json)])
-        return result
+        return next(common_json_view_function(request.GET, "sms_app", "default_sms_templates.json"))
 
 
 class SMSDefaultTemplateListView(APIView):
     @user_permission
     def get(request):
-        request_json = request.GET
-        json_data = open(CONSTANT_DATABASE_PATH + 'default_sms_templates.json', )
-        content = json.load(json_data)
-        result = [x for x in content if filter_json_func(x, request_json)]
-        return result
+        return common_json_view_function(request.GET, "sms_app", "default_sms_templates.json")
+

@@ -1,4 +1,7 @@
-from sms_app.models import SMSDeliveryReport
+import json
+
+from sms_app.models import SMSDeliveryReport, SMS
+import requests
 
 from rest_framework import serializers
 
@@ -11,46 +14,30 @@ class SMSDeliveryReportModelSerializer(serializers.ModelSerializer):
 
 def get_sms_delivery_report_list(data):
     sms_delivery_report_list = []
+    if data['requestId'] == '-1' or data['requestId'] == '0':
+        return []
+    if data['smsGateWayHubVendor'] is 'false' or data['fetchedDeliveryStatus'] is 'true':
+        for delivery_report_object in \
+                SMSDeliveryReport.objects.filter(requestId=data['requestId']).order_by('mobileNumber'):
+            sms_delivery_report_list.append(SMSDeliveryReportModelSerializer(delivery_report_object).data)
+    else:
+        URL = "https://www.smsgatewayhub.com/api/mt/GetDelivery"
+        PARAMS = {"APIKey": "pZD3d2b620aBWzVP5XqD9g", "jobid": data['requestId']}
+        response = requests.get(url=URL, params=PARAMS)
+        response_json = response.json()
+        mobile_number_json = json.loads(data["mobileNumberContentJson"].replace("\'", "\""))
 
-    for msg_club_delivery_report_object in \
-            SMSDeliveryReport.objects.filter(requestId=data['requestId']).order_by('mobileNumber'):
-        sms_delivery_report_list.append(SMSDeliveryReportModelSerializer(msg_club_delivery_report_object).data)
+        for report in response_json["DeliveryReports"]:
+            for number in mobile_number_json:
+                if report["MessageId"] == number["MessageId"]:
+                    delivery_report = SMSDeliveryReport.objects.create(requestId=data['requestId'],
+                                                                       mobileNumber=number["Number"],
+                                                                       status=report["DeliveryStatus"],
+                                                                       senderId=data["senderId"],
+                                                                       deliveredDateTime=report["DeliveryDate"])
+                    sms_delivery_report_list.append(SMSDeliveryReportModelSerializer(delivery_report).data)
 
+        sms_obj = SMS.objects.get(requestId=data['requestId'])
+        sms_obj.fetchedDeliveryStatus = True
+        sms_obj.save()
     return sms_delivery_report_list
-
-
-def handle_sms_delivery_report(data):
-    for status in data:
-        report = {
-            'mobileNumber': int(status['Number']),
-            'status': status['status'],
-            'deliveredDateTime': status['Delivered Date'],
-            'senderId': status['SenderId']
-        }
-        queryset = SMSDeliveryReportModelSerializer.objects.filter(requestId=report['requestId'],
-                                                                   mobileNumber=report['mobileNumber'])
-        if queryset.count() > 0:
-            report['id'] = queryset[0].id
-            update_sms_delivery_report(report)
-        else:
-            create_sms_delivery_report(report)
-
-
-def update_sms_delivery_report(data):
-    object = SMSDeliveryReportModelSerializer(SMSDeliveryReport.objects.get(id=data['id']), data=data)
-    if object.is_valid():
-        object.save()
-        return 'Msg Club Delivery Report updated successfully'
-    else:
-        print('Msg Club Delivery Report updation failed')
-        return 'Msg Club Delivery Report updation failed'
-
-
-def create_sms_delivery_report(data):
-    msg_club_delivery_report_object = SMSDeliveryReportModelSerializer(data=data)
-    if msg_club_delivery_report_object.is_valid():
-        msg_club_delivery_report_object.save()
-        return 'Msg Club Delivery Report recorded successfully'
-    else:
-        print('Msg Club Delivery Report recording failed')
-        return 'Msg Club Delivery Report recording failed'

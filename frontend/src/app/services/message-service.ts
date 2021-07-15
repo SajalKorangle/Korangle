@@ -220,7 +220,7 @@ export class MessageService {
 
         sms_list.forEach((item) => {
             let temp = {
-                Number: item.mobileNumber,
+                Number: "91" + item.mobileNumber,
                 Text: this.getMessageFromTemplate(messageContent, item),
                 DLTTemplateId: smsTemplate.templateId
             };

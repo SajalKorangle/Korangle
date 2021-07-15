@@ -14,6 +14,7 @@ export class SmsService extends ServiceObject {
     public sms_event_settings = '/sms-event-settings';
     public sms_event = '/sms-event';
     public sms_default_template = '/sms-default-template';
+    public sms_delivery_report = '/sms-delivery-report';
     // public sms_purchase = '/sms-purchase';
     // public msg_club_delivery_report = '/msg-club-delivery-report';
 }

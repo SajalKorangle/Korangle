@@ -37,7 +37,7 @@ export class SmsOldService extends CommonServiceRequirements {
 
     // Msg Club Delivery Report
     getMsgClubDeliveryReport(data: any): Promise<any> {
-        const url = '/sms/msg-club-delivery-report?requestId=' + data['requestId'];
+        const url = '/sms/sms-delivery-report?requestId=' + data['requestId'];
         return super.getData(DataStorage.getInstance().getUser().jwt, url);
     }
 }

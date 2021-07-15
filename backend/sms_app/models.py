@@ -101,7 +101,7 @@ class SMS(models.Model):
     # scheduledSMS
     scheduledDateTime = models.DateTimeField(null=True)
 
-    smsGateWayHub = models.BooleanField(null=False, default=False)
+    smsGateWayHubVendor = models.BooleanField(null=False, default=False)
     fetchedDeliveryStatus = models.BooleanField(default=False)
 
     def __str__(self):
@@ -131,6 +131,7 @@ def sms_sender(sender, created, instance, **kwargs):
         instance.requestId = response['requestId']
         instance.remark = response['remark']
         instance.mobileNumberContentJson = response['mobileNumberContentJson']
+        instance.smsGateWayHubVendor = True
         instance.save()
 
 
@@ -145,7 +146,7 @@ class SMSDeliveryReport(models.Model):
     status = models.TextField(null=False, verbose_name='status')
 
     # Status Code
-    statusCode = models.TextField(null=False, verbose_name='statusCode')
+    statusCode = models.TextField(null=True, verbose_name='statusCode')
 
     # Delivered Date & Time
     deliveredDateTime = models.DateTimeField(null=True, verbose_name='deliveredDateTime')
