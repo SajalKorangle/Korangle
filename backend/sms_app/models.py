@@ -58,7 +58,7 @@ class SMS(models.Model):
     SMSEventId = models.IntegerField(null=False, default=0)
 
     # Content Type
-    contentType = models.TextField(null=False, default='', verbose_name='contentType')
+    contentType = models.TextField(null=False, default='', verbose_name='contentType(DCS)')
 
     sentStatus = models.BooleanField(null=False, default=True, verbose_name='sentStatus')
 
@@ -101,6 +101,9 @@ class SMS(models.Model):
     # scheduledSMS
     scheduledDateTime = models.DateTimeField(null=True)
 
+    smsGateWayHub = models.BooleanField(null=False, default=False)
+    fetchedDeliveryStatus = models.BooleanField(default=False)
+
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
 
@@ -110,7 +113,8 @@ class SMS(models.Model):
 
 @receiver(post_save, sender=SMS)
 def sms_sender(sender, created, instance, **kwargs):
-    response = {'remark': 'ONLY NOTIFICATION', 'requestId': 0}
+    response = {'remark': 'ONLY NOTIFICATION', 'requestId': 0,
+                'mobileNumberContentJson': instance.mobileNumberContentJson}
     if created:
         from sms_app.business.send_sms import send_sms
         try:
@@ -118,13 +122,15 @@ def sms_sender(sender, created, instance, **kwargs):
                 response = send_sms(instance.__dict__)
         except Exception as e:
             traceback.print_exc()
-            response = {'remark': 'EXCEPTION OCCURRED', 'requestId': -1}
+            response = {'remark': 'EXCEPTION OCCURRED', 'requestId': -1,
+                        'mobileNumberContentJson': instance.mobileNumberContentJson}
 
         if response['requestId'] == -1:
             instance.sentStatus = False
 
         instance.requestId = response['requestId']
         instance.remark = response['remark']
+        instance.mobileNumberContentJson = response['mobileNumberContentJson']
         instance.save()
 
 
@@ -169,7 +175,8 @@ class SMSPurchase(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     def __str__(self):
-        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price)
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(
+            self.numberOfSMS) + ' -- ' + str(self.price)
 
     class Meta:
         db_table = 'sms_purchase'

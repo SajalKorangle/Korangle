@@ -46,7 +46,7 @@ class SMSDeliveryReportView(APIView):
     @user_permission
     def get(request):
         data = {
-            'requestId': request.GET['jobId'],
+            'requestId': request.GET['requestId'],
         }
         return get_sms_delivery_report_list(data)
 

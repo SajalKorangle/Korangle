@@ -12,7 +12,7 @@ def send_sms(instance_dict):
     sms_count = get_sms_count(school_object.id)
 
     if instance_dict['count'] > sms_count['count']:
-        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1}
+        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1, 'mobileNumberContentJson': instance_dict['mobileNumberContentJson']}
 
     sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
 
@@ -55,13 +55,13 @@ def send_sms(instance_dict):
     response = conn.getresponse().read()
     print(response)
 
-    MessageData = json.loads(response.decode("utf-8"))['DeliveryReports']
+    message_data = json.loads(response.decode("utf-8"))['DeliveryReports']
 
     for num in sent_sms_num_list:
-        for data in MessageData:
-            if data["Number"] == num["Number"]:
+        for data in message_data:
+            if str(data["Number"]) == str(num["Number"]):
                 num["MessageId"] = data["MessageId"]
 
     job_id = str(json.loads(response.decode("utf-8"))['JobId'])
 
-    return {'remark': 'SUCCESS', 'requestId': job_id}
+    return {'remark': 'SUCCESS', 'requestId': job_id, 'mobileNumberContentJson': sent_sms_num_list}
