@@ -77,7 +77,7 @@ const routes: Routes = [
         data: { moduleName: 'students' },
     },
     {
-        path: 'block_student',
+        path: 'student_permission',
         loadChildren: 'app/modules/students/pages/block-student/block-student.module#BlockStudentModule',
         data: { moduleName: 'students' },
     },
