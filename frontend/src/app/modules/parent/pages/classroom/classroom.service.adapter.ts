@@ -101,7 +101,9 @@ export class ClassroomServiceAdapter {
             parentStudentSection: this.vm.backendData.studentSection.id,
             parentClassSubject: this.vm.htmlRenderer.getActiveClass().parentClassSubject,
         };
-        this.vm.backendData.studentAttendanceList = [await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance)];
+        this.vm.backendData.studentAttendanceList = [
+            await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance)
+        ];
     }
 
     // updateAttendance = async () => {
