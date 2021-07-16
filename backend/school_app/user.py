@@ -14,6 +14,7 @@ from datetime import date
 from team_app.models import Module
 from student_app.models import StudentSection
 from employee_app.models import Employee, EmployeePermission
+from online_classes_app.models import RestrictedStudent
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
@@ -53,6 +54,7 @@ def get_school_list(user):
                                       parentStudent__parentSchool__expired=False,
                                       parentSession=F('parentStudent__parentSchool__currentSession')) \
                 .select_related('parentStudent__parentSchool'):
+    
 
         school_data = get_data_from_school_list(school_list, student_section_object.parentStudent.parentSchool_id)
 
@@ -163,6 +165,14 @@ def get_school_data_by_object(school_object):
 
     return school_data
 
+def get_restricted_student_list():
+    student_list = []
+    for student_object in RestrictedStudent.objects.all():
+        student = dict()
+        student['id'] = student_object.parentStudent.id
+        student_list.append(student)
+    
+    return student_list
 
 class AuthenticationHandler():
     def authenticate_and_login(username, response):
@@ -186,7 +196,6 @@ class LoginUserView(JSONWebTokenAPIView):
         response = super().post(request)
 
         print(response)
-
         response_data = AuthenticationHandler.authenticate_and_login(
                 username=username,
                 response=response
@@ -212,6 +221,7 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
+        'restrictedStudentList': get_restricted_student_list(),
     }
 
     return response

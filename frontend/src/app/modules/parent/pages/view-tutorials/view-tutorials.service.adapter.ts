@@ -29,23 +29,20 @@ export class ViewTutorialsServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        const restricted_student_request = {
-            parentStudent: this.vm.activeStudent.id,
-        };
+        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
+        
 
         const value = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //0
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //1
             this.vm.subjectService.getObjectList(this.vm.subjectService.student_subject, request_student_subject_data), //2
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data), //3
-            this.vm.onlineClassService.getObject(this.vm.onlineClassService.restricted_students, restricted_student_request), //4
         ]);
 
         this.vm.backendData.classSubjectList = value[0];
         this.vm.backendData.subjectList = value[1];
         this.vm.backendData.studentSubjectList = value[2];
         this.vm.backendData.studentProfile = value[3][0];
-        this.vm.restrictedStudent = value[4];
         await this.populateTutorialList();
         this.vm.stateKeeper.isLoading = false;
     }

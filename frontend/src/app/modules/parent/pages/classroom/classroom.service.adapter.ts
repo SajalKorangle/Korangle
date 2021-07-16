@@ -19,16 +19,12 @@ export class ClassroomServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
 
-        const restricted_student_request = {
-            parentStudent: this.vm.activeStudent.id,
-        };
+        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
 
         [
             this.vm.backendData.studentSection,
-            this.vm.restrictedStudent
         ] = await Promise.all([
             this.vm.studentService.getObject(this.vm.studentService.student_section, student_section_request),  // 1
-            this.vm.onlineClassService.getObject(this.vm.onlineClassService.restricted_students, restricted_student_request), // 2
         ]);
 
 

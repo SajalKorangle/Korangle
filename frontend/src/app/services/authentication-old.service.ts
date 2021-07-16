@@ -16,6 +16,7 @@ export class AuthenticationOldService {
 
     loginUserDetails(username: any, password: any): Promise<any> {
         const body = { username: username, password: password };
+        console.log(body);
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http
             .post(this.loginUserDetailsUrl, body, { headers: this.headers })

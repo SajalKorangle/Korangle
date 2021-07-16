@@ -37,19 +37,16 @@ export class ViewHomeworkServiceAdapter {
             parentStudent: this.vm.selectedStudent,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
-        const restricted_student_request = {
-            parentStudent: this.vm.activeStudent.id,
-        };
-
+        
+        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
+        
         Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_subject_data),
-            this.vm.onlineClassService.getObject(this.vm.onlineClassService.restricted_students, restricted_student_request), 
         ]).then(
             (firstValue) => {
                 this.subjectList = firstValue[0];
                 this.vm.studentClassData = firstValue[1][0];
-                this.vm.restrictedStudent = firstValue[2];
 
                 let current_class_homework_question_data = {
                     parentClassSubject__parentSession: this.vm.user.activeSchool.currentSessionDbId,

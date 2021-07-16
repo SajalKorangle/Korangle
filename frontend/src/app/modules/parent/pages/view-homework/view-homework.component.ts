@@ -42,7 +42,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     selectedSubject: any;
     studentClassData: any;
     currentHomework: any;
-    restrictedStudent = null;
+    restrictedStudent: any ;
 
     pendingHomeworkList: any;
     completedHomeworkList: any;
