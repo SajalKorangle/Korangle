@@ -7,7 +7,8 @@ from random import randint
 from datetime import timedelta
 from django.utils import timezone
 
-from django.contrib.auth.models import User
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 from authentication_app.models import OTP
 
 

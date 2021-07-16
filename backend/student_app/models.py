@@ -4,8 +4,6 @@ from school_app.model.models import BusStop, Session, School
 
 from class_app.models import Class, Division
 
-from django.contrib.auth.models import User
-
 from django.core.exceptions import ObjectDoesNotExist
 
 import os

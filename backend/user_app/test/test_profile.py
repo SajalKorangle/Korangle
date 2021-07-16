@@ -7,7 +7,8 @@ from parent_test import ParentTestCase
 from user_app.business.profile import change_password, update_profile
 
 # Model
-from django.contrib.auth.models import User
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 
 class ProfileTestCase(ParentTestCase):
