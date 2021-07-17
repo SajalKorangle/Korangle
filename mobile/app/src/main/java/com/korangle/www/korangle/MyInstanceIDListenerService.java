@@ -11,6 +11,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyInstanceIDListenerService extends FirebaseMessagingService {
 
+    MainActivity mainActivity = new MainActivity();
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
@@ -21,6 +22,11 @@ public class MyInstanceIDListenerService extends FirebaseMessagingService {
         String title = remoteMessage.getNotification().getTitle();
         String message = remoteMessage.getNotification().getBody();
 
+        if(message!=null && message.equals("UPDATE")){
+            VolleyFace volleyFace = new VolleyFace(mainActivity);
+            volleyFace.checkingUpdates();
+            //return;
+        }
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
