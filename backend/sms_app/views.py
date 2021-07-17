@@ -36,11 +36,12 @@ class SMSCountView(APIView):
 from .business.sms_delivery_report import get_sms_delivery_report_list
 
 
-class SMSDeliveryReportView(APIView):
+class SMSDeliveryReportView(CommonView, APIView):
 
-    @user_permission
-    def get(request):
+    @user_permission_3
+    def get(self, request, activeSchoolID, activeStudentID):
         return get_sms_delivery_report_list(request.GET)
+
 
 
 ############## SMS Purchase ##############
@@ -66,6 +67,16 @@ class SmsView(CommonView, APIView):
 class SmsListView(CommonListView, APIView):
     Model = SMS
     RelationsToSchool = ['parentSchool__id']
+
+    @user_permission_3
+    def get(self, request, activeSchoolID, activeStudentID):
+        data = {
+            'parentSchool': activeSchoolID,
+            'startDateTime': request.GET['startDateTime'],
+            'endDateTime': request.GET['endDateTime'],
+            'sentStatus': request.GET['sentStatus']
+        }
+        return get_sms_list(data)
 
 
 class SMSIdView(CommonView, APIView):
@@ -105,25 +116,25 @@ class SMSIdSchoolListView(CommonListView, APIView):
 
 
 class SMSEventView(APIView):
-    @user_permission
-    def get(request):  # return only the first element or one element
+    @user_permission_3
+    def get(self, request, activeSchoolID, activeStudentID):  # return only the first element or one element
         return next(common_json_view_function(request.GET, "sms_app", "sms_event.json"))
 
 
 class SMSEventListView(APIView):
-    @user_permission
-    def get(request):
+    @user_permission_3
+    def get(self, request, activeSchoolID, activeStudentID):
         return common_json_view_function(request.GET, "sms_app", "sms_event.json")
 
 
 class SMSDefaultTemplateView(APIView):
-    @user_permission
-    def get(request):
+    @user_permission_3
+    def get(self, request, activeSchoolID, activeStudentID):
         return next(common_json_view_function(request.GET, "sms_app", "default_sms_templates.json"))
 
 
 class SMSDefaultTemplateListView(APIView):
-    @user_permission
-    def get(request):
+    @user_permission_3
+    def get(self, request, activeSchoolID, activeStudentID):
         return common_json_view_function(request.GET, "sms_app", "default_sms_templates.json")
 

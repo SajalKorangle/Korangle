@@ -114,25 +114,20 @@ export class MessageService {
             return;
         } // if there is not event settings or sentUpdateType is null then return
 
-        let customSMSTemplate, smsTemplate, messageContent;
+        let smsTemplate = await this.smsService.getObject(this.smsService.sms_default_template,
+                    {id: smsEvent.defaultSMSTemplateId});
 
+        let messageContent;
         if (eventSettings.sendUpdateTypeId == 3) { //if the type is Notification
             messageContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
         } else {
             // if there is any templated linked with the settings get that template and populate
             if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
-                customSMSTemplate = await this.smsService.getObject(this.smsService.sms_template,
+                smsTemplate = await this.smsService.getObject(this.smsService.sms_template,
                     {id: eventSettings.parentSMSTemplate});
-            }
-            if (customSMSTemplate) {
-                smsTemplate = customSMSTemplate;
-            } else {
-                smsTemplate = await this.smsService.getObject(this.smsService.sms_default_template,
-                    {id: smsEvent.defaultSMSTemplateId});
             }
             messageContent = smsTemplate.mappedContent;
         }
-
 
         try {
             await this.smsNotificationSender(
@@ -167,7 +162,7 @@ export class MessageService {
         let sms_list = [];
         let personVariablesMappedObjList = [];
 
-        let smsId = smsTemplate ? smsTemplate.parentSMSId : null;
+        let parentSMSId = smsTemplate ? smsTemplate.parentSMSId : null;
 
         // finding the corresponding eventSettingsPage to know the variablesList
         let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id);
@@ -220,7 +215,7 @@ export class MessageService {
 
         sms_list.forEach((item) => {
             let temp = {
-                Number: "91" + item.mobileNumber,
+                Number: item.mobileNumber,
                 Text: this.getMessageFromTemplate(messageContent, item),
                 DLTTemplateId: smsTemplate.templateId
             };
@@ -254,7 +249,7 @@ export class MessageService {
             mobileNumberList: sms_mobile_string,
             parentSchool: schoolId,
             scheduledDateTime: scheduledDateTime,
-            smsId: smsId,
+            parentSMSId: parentSMSId,
         };
 
         const notification_data = notificationMappedDataList.map((item) => {
@@ -268,9 +263,6 @@ export class MessageService {
                 parentSchool: schoolId,
             };
         });
-
-        console.log(sms_data);
-        console.log(notification_data);
 
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));

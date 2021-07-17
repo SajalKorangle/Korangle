@@ -122,9 +122,9 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='sms',
-            name='smsId',
+            name='parentSMSId',
             field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.SET_DEFAULT, to='sms_app.SMSId',
-                                    verbose_name='smsId'),
+                                    verbose_name='parentSMSId'),
         ),
         migrations.AddField(
             model_name='sms',
@@ -138,6 +138,26 @@ class Migration(migrations.Migration):
         migrations.AlterModelTable(
             name='smsdeliveryreport',
             table='sms_delivery_report',
+        ),
+        migrations.AddField(
+            model_name='sms',
+            name='fetchedDeliveryStatus',
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AddField(
+            model_name='sms',
+            name='smsGateWayHubVendor',
+            field=models.BooleanField(default=False),
+        ),
+        migrations.AlterField(
+            model_name='sms',
+            name='contentType',
+            field=models.TextField(default='', verbose_name='contentType(DCS)'),
+        ),
+        migrations.AlterField(
+            model_name='smsdeliveryreport',
+            name='statusCode',
+            field=models.TextField(null=True, verbose_name='statusCode'),
         ),
         migrations.RunPython(populate_sms_id),
         migrations.RunPython(populate_sms_templates),

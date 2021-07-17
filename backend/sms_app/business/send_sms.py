@@ -14,7 +14,7 @@ def send_sms(instance_dict):
     if instance_dict['count'] > sms_count['count']:
         return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1, 'mobileNumberContentJson': instance_dict['mobileNumberContentJson']}
 
-    sms_id_object = SMSId.objects.get(id=instance_dict['smsId_id'])
+    sms_id_object = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
 
     conn = http.client.HTTPSConnection("www.smsgatewayhub.com")
 
@@ -52,10 +52,12 @@ def send_sms(instance_dict):
 
     message_data = json.loads(response.decode("utf-8"))['MessageData']
 
-    for num in sent_sms_num_list:
-        for data in message_data:
-            if str(data["Number"]) == str(num["Number"]):
+    for data in message_data:
+        for num in sent_sms_num_list:
+            if str(data["Number"]) == "91" + str(num["Number"]):
                 num["MessageId"] = data["MessageId"]
+
+    print(sent_sms_num_list)
 
     job_id = str(json.loads(response.decode("utf-8"))['JobId'])
 

@@ -24,27 +24,22 @@ export class ViewSentServiceAdapter {
         });
     }
 
-    getSMSList(): void {
+    async getSMSList() {
         const data = {
-            startDateTime: this.vm.startDate.toString() + ' 00:00:00%2B05:30',
-            endDateTime: this.vm.endDate.toString() + ' 23:59:59%2B05:30',
+            startDateTime: this.vm.startDate.toString() + ' 00:00:00+05:30',
+            endDateTime: this.vm.endDate.toString() + ' 23:59:59+05:30',
             parentSchool: this.vm.user.activeSchool.dbId,
-            sentStatus: 'true__boolean',
+            sentStatus: 'true',
         };
 
         this.vm.stateKeeper.isLoading = true;
         this.vm.backendData.smsList = null;
         this.vm.populatedSMSList = null;
-        this.vm.smsOldService.getSMSList(data, this.vm.user.jwt).then(
-            (smsList) => {
-                this.vm.stateKeeper.isLoading = false;
-                this.vm.backendData.smsList = smsList;
-                this.vm.populatedSMSList = JSON.parse(JSON.stringify(smsList));
-            },
-            (error) => {
-                this.vm.stateKeeper.isLoading = false;
-            }
-        );
+        const smsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms, data);
+        this.vm.stateKeeper.isLoading = false;
+        this.vm.backendData.smsList = smsList;
+        this.vm.populatedSMSList = JSON.parse(JSON.stringify(smsList));
+
     }
 
 
@@ -56,7 +51,6 @@ export class ViewSentServiceAdapter {
         }
 
         if (sms.requestId == -1 || sms.requestId == 0) {
-            console.log('here');
             return;
         }
 
@@ -67,7 +61,7 @@ export class ViewSentServiceAdapter {
             fetchedDeliveryStatus: sms.fetchedDeliveryStatus,
             smsGateWayHubVendor: sms.smsGateWayHubVendor,
             mobileNumberContentJson: sms.mobileNumberContentJson,
-            senderId: sms.sender
+            parentSMSId: sms.parentSMSId
         };
 
         sms['deliveryReportList'] = await this.vm.smsService.getObjectList(this.vm.smsService.sms_delivery_report, data);

@@ -44,7 +44,6 @@ def sms_id_delete_check(sender, instance, **kwargs):
     try:
         sms_id = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
         sms_id_school_sibling_list_length = SMSIdSchool.objects.filter(parentSMSId=sms_id).count()
-        print(sms_id_school_sibling_list_length)
         if sms_id_school_sibling_list_length == 0:
             print('Parent SMS ID Deleted')
             sms_id.delete()
@@ -96,7 +95,7 @@ class SMS(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
     # SMSId
-    smsId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')
 
     # scheduledSMS
     scheduledDateTime = models.DateTimeField(null=True)
