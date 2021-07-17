@@ -51,6 +51,8 @@ else:
         }
     }
 
+DATABASE_ROUTERS =['postgresql_migration.db_router.MainDbRouter']
+
 # S3 Bucket config
 AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
 AWS_SECRET_ACCESS_KEY = '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'
