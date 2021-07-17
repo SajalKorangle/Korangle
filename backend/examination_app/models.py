@@ -144,7 +144,7 @@ class StudentTest(models.Model):
     parentSubject = models.ForeignKey(SubjectSecond, models.PROTECT, null=False, default=0, verbose_name='parentSubject')
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     testType = models.CharField(max_length=11, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
-    marksObtained = models.DecimalField(max_digits=20, decimal_places=3,null=False, verbose_name='marksObtained', default=0)
+    marksObtained = models.DecimalField(max_digits=6, decimal_places=3,null=False, verbose_name='marksObtained', default=0)
     absent = models.BooleanField(default=False, verbose_name='absent')
 
 
