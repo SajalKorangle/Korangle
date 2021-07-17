@@ -67,7 +67,7 @@ class School(models.Model):
 
     principalSignatureImage = models.ImageField("Principal Signature", upload_to=upload_principal_signature_to, blank=True)
 
-    mobileNumber = models.IntegerField(null=True)
+    mobileNumber = models.BigIntegerField(null=True)
 
     expired = models.BooleanField(default=False, verbose_name='expired')
 
@@ -76,7 +76,7 @@ class School(models.Model):
 
     # address is now considered as street address
     address = models.TextField(null=True, blank=True)
-    pincode = models.IntegerField(null=True, verbose_name='pincode', blank=True)
+    pincode = models.BigIntegerField(null=True, verbose_name='pincode', blank=True)
     villageCity = models.TextField(null=True, verbose_name='villageCity', blank=True)
     block = models.TextField(null=True, verbose_name='block', blank=True)
     district = models.TextField(null=True, verbose_name='district', blank=True)
