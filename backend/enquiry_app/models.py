@@ -17,7 +17,7 @@ class Enquiry(models.Model):
     dateOfEnquiry = models.DateField(null=False, auto_now_add=True, verbose_name='dateOfEnquiry')
 
     # Mobile Number
-    mobileNumber = models.IntegerField(null=True)
+    mobileNumber = models.BigIntegerField(null=True)
 
     # Address
     address = models.TextField(null=True)

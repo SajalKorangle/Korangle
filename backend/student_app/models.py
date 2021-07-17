@@ -27,7 +27,7 @@ def upload_document_to(instance,filename):
 
 class TransferCertificate(models.Model):
 
-    certificateNumber = models.IntegerField(null=False)
+    certificateNumber = models.BigIntegerField(null=False)
     issueDate = models.DateField(null=False)
     # admissionDate = models.DateField(null=False)
     leavingDate = models.DateField(null=False)
@@ -186,7 +186,7 @@ class StudentParameterValue(models.Model):
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
     value = models.TextField(null=True,blank=True)
-    document_value = models.FileField(upload_to=upload_document_to, blank=True, null=True)
+    document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
 
     class Meta:
