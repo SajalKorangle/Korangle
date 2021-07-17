@@ -33,6 +33,14 @@ if current_branch != 'master':
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
+        },
+        'postgresql': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'korangle_postgresql',
+            'USER': 'postgres',
+            'PASSWORD': 'macbook',
+            'HOST': 'localhost',
+            'PORT': '5432',
         }
     }
 else:
