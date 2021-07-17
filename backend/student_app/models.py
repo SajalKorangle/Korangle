@@ -49,8 +49,8 @@ class Student(models.Model):
 
     name = models.CharField(max_length=100)
     fathersName = models.CharField(max_length=100)
-    mobileNumber = models.IntegerField(null=True)
-    secondMobileNumber = models.IntegerField(null=True)
+    mobileNumber = models.BigIntegerField(null=True)
+    secondMobileNumber = models.BigIntegerField(null=True)
     scholarNumber = models.TextField(null=True, blank=True)
     totalFees = models.IntegerField(default=0)
     dateOfBirth = models.DateField(null=True)
@@ -81,12 +81,12 @@ class Student(models.Model):
 
     fatherOccupation = models.TextField(null=True,blank=True)
     address = models.TextField(null=True, blank=True)
-    familySSMID = models.IntegerField(null=True)
-    childSSMID = models.IntegerField(null=True)
+    familySSMID = models.BigIntegerField(null=True)
+    childSSMID = models.BigIntegerField(null=True)
     bankName = models.TextField(null=True, blank=True)
     bankIfscCode = models.TextField(null=True, blank=True)
     bankAccountNum = models.TextField(null=True, blank=True)
-    aadharNum = models.IntegerField(null=True)
+    aadharNum = models.BigIntegerField(null=True)
     bloodGroup = models.TextField(null=True, blank=True)
     fatherAnnualIncome = models.TextField(null=True, blank=True)
 
