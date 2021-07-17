@@ -1,7 +1,5 @@
 from parent_test import ParentTestCase
 
-from django.contrib.auth.models import User
-
 from student_app.handlers.update_profile import get_class_section_student_list, get_student_profile, update_student, delete_student
 
 from school_app.model.models import Session, School

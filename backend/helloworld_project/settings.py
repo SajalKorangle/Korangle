@@ -113,6 +113,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'helloworld_project.urls'
+AUTH_USER_MODEL = 'user_app.User'
 
 TEMPLATES = [
     {

@@ -1,8 +1,6 @@
 from parent_test import ParentTestCase
 from school_app.model.models import School
 
-from django.contrib.auth.models import User
-
 from expense_app.models import Expense
 
 from expense_app.handlers.expense_list_date_wise import expense_list_date_wise

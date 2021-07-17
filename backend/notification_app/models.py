@@ -2,7 +2,8 @@ from django.db import models
 
 # Create your models here.
 from school_app.model.models import School
-from django.contrib.auth.models import User
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 from information_app.models import MessageType
 
 from django.dispatch import receiver

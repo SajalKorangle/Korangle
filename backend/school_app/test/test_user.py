@@ -5,7 +5,8 @@ from parent_test import ParentTestCase
 from school_app.business.user import create_user
 
 # Models
-from django.contrib.auth.models import User
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 
 class UserTestCase(ParentTestCase):

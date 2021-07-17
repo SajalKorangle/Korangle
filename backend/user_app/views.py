@@ -7,7 +7,8 @@ import json
 from common.common_views_3 import CommonView, CommonListView
 from decorators import user_permission
 
-from django.contrib.auth.models import User
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 # Create your views here.
 

@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 
 from rest_framework.test import force_authenticate
 
-from django.contrib.auth.models import User
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 from rest_framework.test import APIRequestFactory
 

@@ -6,7 +6,6 @@ from employee_app.models import Employee
 from student_app.models import Student
 from school_app.model.models import School, Session
 from class_app.models import Division, Class
-from django.contrib.auth.models import User
 
 ABSENT_ATTENDANCE_STATUS = 'ABSENT'
 HOLIDAY_ATTENDANCE_STATUS = 'HOLIDAY'
