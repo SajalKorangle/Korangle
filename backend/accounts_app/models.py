@@ -10,7 +10,6 @@ from django.db.models.signals import pre_save, post_save
 
 import os
 from django.utils.timezone import now
-from datetime import datetime, date
 
 def upload_image_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
@@ -63,8 +62,8 @@ class AccountSession(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE,)
     openingBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
     currentBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
-    parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions')    # on delete?
-    parentHead = models.ForeignKey(Heads)
+    parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions', on_delete=models.SET_NULL) 
+    parentHead = models.ForeignKey(Heads, on_delete=models.PROTECT)
 
     class Meta:
         db_table = 'account_session'
