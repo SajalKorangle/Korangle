@@ -3,8 +3,8 @@ import os
 from django.utils.timezone import now
 
 from django.db import models
-from django.conf import settings
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 from school_app.model_custom_field import CustomImageField
 

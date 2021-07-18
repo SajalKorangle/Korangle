@@ -13,8 +13,8 @@ from attendance_app.business.attendance_permission \
 from attendance_app.models import AttendancePermission
 from school_app.model.models import Session
 from class_app.models import Division, Class
-from django.conf import settings
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class AttendancePermissionTestCase(ParentTestCase):

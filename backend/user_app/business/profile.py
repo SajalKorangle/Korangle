@@ -1,6 +1,6 @@
 
-from django.conf import settings
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 def update_profile(data):
