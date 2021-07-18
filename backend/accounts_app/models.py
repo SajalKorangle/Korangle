@@ -72,9 +72,11 @@ class AccountSession(models.Model):
 
 @receiver(pre_save, sender=AccountSession)
 def accountSessionPreSave(sender, instance, **kwargs):
+    if kwargs['raw']:
+        return
     if instance.openingBalance is None:
         instance.openingBalance = 0
-    if (instance.id is None) or kwargs['raw']:
+    if (instance.id is None):
         instance.currentBalance = instance.openingBalance
     else:
         instance.currentBalance += instance.openingBalance - AccountSession.objects.get(id=instance.id).openingBalance
