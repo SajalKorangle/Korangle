@@ -4,8 +4,8 @@ import datetime
 
 from school_app.model.models import School, Session, SchoolSession
 
-from django.conf import settings
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class UserFactory(factory.django.DjangoModelFactory):
 

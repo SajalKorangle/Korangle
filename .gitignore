@@ -112,3 +112,5 @@ mobile/app/release/*
 *.prettierrc
 
 .env
+
+backend/postgresql_migration/data

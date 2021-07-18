@@ -15,8 +15,8 @@ from employee_app.business.employee_session_detail \
 # Model
 from employee_app.models import EmployeeSessionDetail
 from school_app.model.models import Session
-from django.conf import settings
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class EmployeeSessionDetailTestCase(ParentTestCase):

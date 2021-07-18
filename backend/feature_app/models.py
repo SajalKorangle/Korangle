@@ -4,8 +4,8 @@ import os
 from django.utils.timezone import now
 
 
-from django.conf import settings
-User = settings.AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+User = get_user_model()
 # Create your models here.
 
 
