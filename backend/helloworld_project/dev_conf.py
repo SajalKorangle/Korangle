@@ -30,11 +30,11 @@ current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
 if current_branch != 'master':
     print('Branch: '+current_branch)
     DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
+        # },
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
-        },
-        'postgresql': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'korangle_postgresql',
             'USER': 'postgres',
@@ -51,7 +51,7 @@ else:
         }
     }
 
-DATABASE_ROUTERS =['postgresql_migration.db_router.MainDbRouter']
+# DATABASE_ROUTERS =['postgresql_migration.db_router.MainDbRouter']
 
 # S3 Bucket config
 AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
