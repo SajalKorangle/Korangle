@@ -4,6 +4,7 @@ def fix_crroupt_fee_receipts(app, schema_editor):
         try:
             if fee_receipt.parentTransacion:
                 transaction__id = fee_receipt.parentTransacion.id # to check if parentTranscation exists 
+                transaction__id += 1    # dummy operation 
         except:
             fee_receipt.parentTransacion = None
             fee_receipt.save()
