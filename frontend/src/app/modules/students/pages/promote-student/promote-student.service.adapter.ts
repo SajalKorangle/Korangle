@@ -173,7 +173,7 @@ export class PromoteStudentServiceAdapter {
             .forEach((classSubject) => {
                 this.vm.newPromotedList.forEach((studentSection) => {
                     const student_subject = new StudentSubject();
-                    student_subject.parentStudent = studentSection.id;
+                    student_subject.parentStudent = studentSection.parentStudent;
                     student_subject.parentSubject = classSubject.parentSubject;
                     student_subject.parentSession = classSubject.parentSession;
                     student_subject_list.push(student_subject);
