@@ -4,7 +4,6 @@ from common.common_views_3 import CommonView, CommonListView, APIView, common_js
 from decorators import user_permission_3
 from .models import MessageType
 
-
 class MessageTypeView(CommonView, APIView):
     Model = MessageType
 
