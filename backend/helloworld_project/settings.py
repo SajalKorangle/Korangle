@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'push_notifications',
 
     'django_cleanup.apps.CleanupConfig',
+    'rangefilter',
 
 ]
 

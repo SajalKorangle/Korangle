@@ -84,18 +84,20 @@ export class ClassroomServiceAdapter {
             dateTime__month: today.getUTCMonth() + 1,
             dateTime__year: today.getUTCFullYear(),
         };
-        this.vm.backendData.studentAttendance = await this.vm.onlineClassService.getObject(
+        this.vm.backendData.studentAttendanceList = await this.vm.onlineClassService.getObjectList(
             this.vm.onlineClassService.student_attendance,
             student_attendance_request
         );
-        if (this.vm.backendData.studentAttendance) {
+        if (this.vm.backendData.studentAttendanceList.length > 0) {
             return;
         }
         const studentAttendance = {
             parentStudentSection: this.vm.backendData.studentSection.id,
             parentClassSubject: this.vm.htmlRenderer.getActiveClass().parentClassSubject,
         };
-        this.vm.backendData.studentAttendance = await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance);
+        this.vm.backendData.studentAttendanceList = [
+            await this.vm.onlineClassService.createObject(this.vm.onlineClassService.student_attendance, studentAttendance)
+        ];
     }
 
     // updateAttendance = async () => {
