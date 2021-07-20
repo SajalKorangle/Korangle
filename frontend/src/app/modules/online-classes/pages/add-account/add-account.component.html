@@ -26,17 +26,17 @@
 
             <mat-form-field>
                 <mat-label>Zoom Meeting Id</mat-label>
-                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber" [disabled]="userInput.newAccountInfo.meetingUrl">
+                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber" [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.newAccountInfo.meetingUrl)">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Zoom Meeting Passcode</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode" [disabled]="userInput.newAccountInfo.meetingUrl">
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode" [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.newAccountInfo.meetingUrl)">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Google Meet url</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.meetingUrl" [disabled]="userInput.newAccountInfo.meetingNumber">
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.meetingUrl" [disabled]="htmlRenderer.isGmeetAccountDisabled(userInput.newAccountInfo.meetingNumber,userInput.newAccountInfo.passcode)">
             </mat-form-field>
 
             <br />
@@ -107,17 +107,17 @@
 
                         <mat-form-field>
                             <mat-label>Zoom Meeting Id</mat-label>
-                            <input matInput type="number" [(ngModel)]="userInput.selectedAccountInfo.meetingNumber" [disabled]="!userInput.selectedAccountInfo.meetingNumber">
+                            <input matInput type="number" [(ngModel)]="userInput.selectedAccountInfo.meetingNumber" [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.selectedAccountInfo.meetingUrl)">
                         </mat-form-field>
 
                         <mat-form-field>
                             <mat-label>Zoom Meeting Passcode</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.passcode" [disabled]="!userInput.selectedAccountInfo.meetingNumber">
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.passcode" [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.selectedAccountInfo.meetingUrl)">
                         </mat-form-field>
 
                         <mat-form-field>
                             <mat-label>Google Meeting URL</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.meetingUrl" [disabled]="userInput.selectedAccountInfo.meetingNumber">
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.meetingUrl" [disabled]="htmlRenderer.isGmeetAccountDisabled(userInput.selectedAccountInfo.meetingNumber,userInput.selectedAccountInfo.passcode)">
                         </mat-form-field><br />
 
                         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"

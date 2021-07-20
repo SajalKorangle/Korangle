@@ -9,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 from .models import Error
 from school_app.model.models import School
 
+from rangefilter.filters import DateTimeRangeFilter
+
 
 class UpdateStatusActionForm(ActionForm):
     githubId = forms.CharField(max_length=10, required=False)
@@ -72,7 +74,7 @@ class ResponseListFilter(admin.SimpleListFilter):
 class ErrorAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'Page', 'Response', 'Name', 'School', 'MobileNumber', 'id', 'Status', 'Github_Id')
-    list_filter = ('issueStatus', ResponseListFilter, PromptListFilter)
+    list_filter = ('dateTime', ('dateTime', DateTimeRangeFilter), 'issueStatus', ResponseListFilter, PromptListFilter,)
     search_fields = ("githubId",)
 
     def title(self, obj):
