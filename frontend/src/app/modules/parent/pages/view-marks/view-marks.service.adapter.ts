@@ -41,8 +41,6 @@ export class ViewMarksServiceAdapter {
             studentDbId: this.vm.user.section.student.id,
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
-
-        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
         
 
         Promise.all([

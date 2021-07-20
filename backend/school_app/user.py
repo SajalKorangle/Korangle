@@ -26,12 +26,13 @@ def get_data_from_school_list(schoolList, schoolDbId):
     return None
 
 
-def get_student_data(student_object):
+def get_student_data(student_object,isRestricted):
 
     student_data = dict()
     student_data['id'] = student_object.id
     student_data['name'] = student_object.name
     student_data['fathersName'] = student_object.fathersName
+    student_data['isRestricted'] = isRestricted
     if student_object.profileImage:
         student_data['profileImage'] = student_object.profileImage.url
     else:
@@ -54,7 +55,11 @@ def get_school_list(user):
                                       parentStudent__parentSchool__expired=False,
                                       parentSession=F('parentStudent__parentSchool__currentSession')) \
                 .select_related('parentStudent__parentSchool'):
-    
+        
+        isRestricted = False
+
+        if RestrictedStudent.objects.filter(parentStudent__id = student_section_object.parentStudent_id).count()>0:
+            isRestricted = True
 
         school_data = get_data_from_school_list(school_list, student_section_object.parentStudent.parentSchool_id)
 
@@ -62,7 +67,7 @@ def get_school_list(user):
             school_data = get_school_data_by_object(student_section_object.parentStudent.parentSchool)
             school_list.append(school_data)
 
-        school_data['studentList'].append(get_student_data(student_section_object.parentStudent))
+        school_data['studentList'].append(get_student_data(student_section_object.parentStudent,isRestricted))
         school_data['role'] = 'Parent'
 
     # Employee User
@@ -165,15 +170,6 @@ def get_school_data_by_object(school_object):
 
     return school_data
 
-def get_restricted_student_list():
-    student_list = []
-    for student_object in RestrictedStudent.objects.all():
-        student = dict()
-        student['id'] = student_object.parentStudent.id
-        student_list.append(student)
-    
-    return student_list
-
 class AuthenticationHandler():
     def authenticate_and_login(username, response):
         if 'token' in response.data:
@@ -221,7 +217,6 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
-        'restrictedStudentList': get_restricted_student_list(),
     }
 
     return response

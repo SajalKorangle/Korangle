@@ -61,6 +61,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.activeStudent = this.user.section.student;
+        this.restrictedStudent = this.activeStudent.isRestricted;
 
         this.userInput = new ClassroomUserInput();
         this.userInput.initialize(this);

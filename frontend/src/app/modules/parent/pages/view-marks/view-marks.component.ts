@@ -46,6 +46,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.activeStudent = this.user.section.student;
+        this.restrictedStudent = this.activeStudent.isRestricted;
 
         this.selectedStudent = null;
 

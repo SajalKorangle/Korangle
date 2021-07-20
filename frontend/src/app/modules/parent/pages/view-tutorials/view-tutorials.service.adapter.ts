@@ -28,8 +28,6 @@ export class ViewTutorialsServiceAdapter {
             parentStudent: this.vm.user.section.student.id,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
-
-        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
         
 
         const value = await Promise.all([

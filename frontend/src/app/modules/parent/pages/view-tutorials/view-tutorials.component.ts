@@ -61,6 +61,7 @@ export class ViewTutorialsComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
         this.activeStudent = this.user.section.student;
+        this.restrictedStudent = this.activeStudent.isRestricted;
 
         this.htmlRenderer = new ViewTutorialsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);

@@ -19,8 +19,6 @@ export class ClassroomServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
 
-        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
-
         [
             this.vm.backendData.studentSection,
         ] = await Promise.all([

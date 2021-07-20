@@ -38,8 +38,6 @@ export class ViewHomeworkServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
         
-        this.vm.restrictedStudent = this.vm.user.restrictedStudentList.find(student => student.id == this.vm.activeStudent.id);
-        
         Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_subject_data),

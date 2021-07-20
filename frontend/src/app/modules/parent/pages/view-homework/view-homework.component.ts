@@ -68,6 +68,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.activeStudent = this.user.section.student;
+        this.restrictedStudent = this.activeStudent.isRestricted;
         this.isSubmitting = false;
         this.showContent = false;
         this.loadMoreHomework = true;
