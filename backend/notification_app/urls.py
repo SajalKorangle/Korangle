@@ -18,11 +18,4 @@ urlpatterns += [
     url(r'^notifications', NotificationView.as_view()),
 ]
 
-from notification_app.views import UpdateApp
-
-urlpatterns += [
-    url(r'^update-app/', UpdateApp, name='update-App'),
-]
-
-
 

@@ -2,8 +2,10 @@ package com.korangle.www.korangle;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -255,6 +257,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        registerReceiver(myReceiver, new IntentFilter("APP-UPDATE"));
     }
 
     public boolean isNetworkConnected() {
@@ -421,5 +425,14 @@ public class MainActivity extends AppCompatActivity {
 
         return;
     }
+
+    public BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(" Main Activity ", "inside BroadCaster ");
+            volleyFace.checkingUpdates();
+        }
+    };
+
 
 }

@@ -1,12 +1,9 @@
 
 import json
 
-from django.http import HttpResponseRedirect
-
 from common.common_views_3 import CommonView, CommonListView, APIView
 from push_notifications.models import GCMDevice
 from .models import Notification
-from django.contrib import messages
 
 from .business.send_notification import send_notification
 
@@ -36,10 +33,3 @@ class NotificationView(CommonView, APIView):
 class NotificationListView(CommonListView, APIView):
     Model = Notification
     # RelationsToSchool = ['parentSchool__id']
-
-
-def UpdateApp(request):
-    fcm_devices = GCMDevice.objects.filter(active=True)
-    fcm_devices.send_message("UPDATE", title="APP Update")
-    messages.add_message(request, messages.INFO, 'Update App Notification Sent')
-    return HttpResponseRedirect('/admin/notification_app/notification')

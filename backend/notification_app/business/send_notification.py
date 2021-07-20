@@ -9,6 +9,7 @@ from push_notifications.models import GCMDevice
 #     fcm_devices.send_message(data_list[0]['content'], title=school_sms_id)
 
 def send_notification(data):
+
     school_sms_id = data.parentSchool.smsId
     fcm_devices = GCMDevice.objects.filter(user=data.parentUser)
     fcm_devices.send_message(data.content, title=school_sms_id)
