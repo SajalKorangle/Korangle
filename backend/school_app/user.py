@@ -170,6 +170,7 @@ def get_school_data_by_object(school_object):
 
     return school_data
 
+
 class AuthenticationHandler():
     def authenticate_and_login(username, response):
         if 'token' in response.data:
@@ -192,6 +193,7 @@ class LoginUserView(JSONWebTokenAPIView):
         response = super().post(request)
 
         print(response)
+
         response_data = AuthenticationHandler.authenticate_and_login(
                 username=username,
                 response=response
