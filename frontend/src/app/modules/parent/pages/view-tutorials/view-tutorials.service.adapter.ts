@@ -28,7 +28,6 @@ export class ViewTutorialsServiceAdapter {
             parentStudent: this.vm.user.section.student.id,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
-        
 
         const value = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //0

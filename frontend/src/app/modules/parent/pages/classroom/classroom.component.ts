@@ -74,7 +74,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
-        if(!this.restrictedStudent){ //data is fetched when the student is not restricted
+        if (!this.restrictedStudent) { //data is fetched when the student is not restricted
             this.serviceAdapter.initializeData();
         }
         // console.log('this: ', this);

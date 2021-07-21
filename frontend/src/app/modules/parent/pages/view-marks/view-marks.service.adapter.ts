@@ -41,7 +41,6 @@ export class ViewMarksServiceAdapter {
             studentDbId: this.vm.user.section.student.id,
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
-        
 
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),

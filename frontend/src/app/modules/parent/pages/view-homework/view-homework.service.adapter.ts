@@ -37,7 +37,7 @@ export class ViewHomeworkServiceAdapter {
             parentStudent: this.vm.selectedStudent,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
-        
+
         Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_subject_data),

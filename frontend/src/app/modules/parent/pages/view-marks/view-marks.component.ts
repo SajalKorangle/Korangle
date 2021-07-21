@@ -55,7 +55,7 @@ export class ViewMarksComponent implements OnInit, OnChanges {
         this.serviceAdapter = new ViewMarksServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
 
-        if(!this.restrictedStudent){ //fetches data only if the student is not restricted
+        if (!this.restrictedStudent) { //fetches data only if the student is not restricted
             this.serviceAdapter.initializeData();
         }
     }
