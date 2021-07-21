@@ -19,7 +19,6 @@ const routes: Routes = [
     loadChildren: 'app/modules/online-classes/pages/add-account/add-account.module#AddAccountModule',
     data: { moduleName: 'online_classes' },
   },
-  
   {
     path: 'attendance_report',
     loadChildren: 'app/modules/online-classes/pages/attendance-report/attendance-report.module#AttendanceReportModule',
