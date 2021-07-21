@@ -74,7 +74,9 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         this.loadMoreHomework = true;
         this.serviceAdapter = new ViewHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
+        if(!this.restrictedStudent){    //fetches data only if the student is not restricted
+            this.serviceAdapter.initializeData();
+        }
     }
 
     displayDateTime(date: any, time: any): any {

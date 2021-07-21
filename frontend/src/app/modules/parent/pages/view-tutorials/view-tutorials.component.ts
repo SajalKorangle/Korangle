@@ -68,7 +68,9 @@ export class ViewTutorialsComponent implements OnInit {
 
         this.serviceAdapter = new ViewTutorialsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
+        if(!this.restrictedStudent){   // fetches data only if the student is not restricted
+            this.serviceAdapter.initializeData();
+        }
 
         const tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
