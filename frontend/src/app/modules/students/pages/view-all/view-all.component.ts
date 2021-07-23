@@ -80,7 +80,7 @@ export class ViewAllComponent implements OnInit {
     /* Age Check */
     minAge: any;
     maxAge: any;
-    AsOn: any;
+    AsOnDate: any;
 
     /* Category Options */
     scSelected = false;
@@ -459,7 +459,7 @@ export class ViewAllComponent implements OnInit {
 
             /* Age Check */
             let age = student.dateOfBirth
-                ? Math.floor((new Date(this.AsOn).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                ? Math.floor((new Date(this.AsOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
                 : null;
             if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
                 if (!age) {
