@@ -266,7 +266,10 @@
             <span style="margin-right: 5px">&lt;= Age &lt;=</span>
             <input type="number" style="width: 60px" [(ngModel)]="maxAge" (ngModelChange)="handleStudentDisplay()" />
             &nbsp; &nbsp; as on date &nbsp;&nbsp;
-            <input type="date" [(ngModel)]="AsOnDate" (ngModelChange)="handleStudentDisplay()">
+            <!-- input type="date" [(ngModel)]="asOnDate" (ngModelChange)="handleStudentDisplay()" -->
+            <day-date [formattedDateOutput]="true"
+                      (onDateSelected)="asOnDate = $event; handleStudentDisplay()">
+            </day-date>
 
             <br /><br /><b>Category</b><br />
             <mat-checkbox
@@ -448,48 +451,50 @@
             <table class="table table-hover">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
-                        <th style="min-width: 60px" [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
-                        <th [class.hidden]="!columnFilter.showProfileImage" style="min-width: 120px; text-align: center">Profile Image</th>
-                        <th style="min-width: 180px" [class.hidden]="!columnFilter.showName">Name</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showClassName">Class</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showSectionName">Section</th>
-                        <th style="min-width: 80px" [class.hidden]="!columnFilter.showRollNumber">Roll No.</th>
-                        <th style="min-width: 180px" [class.hidden]="!columnFilter.showFathersName">Father's Name</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showMobileNumber">Mobile No.</th>
-                        <th style="min-width: 110px" [class.hidden]="!columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
-                        <th style="min-width: 90px" [class.hidden]="!columnFilter.showScholarNumber">Scholar No.</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showDateOfBirth">Date of Birth</th>
-                        <th style="min-width: 180px" [class.hidden]="!columnFilter.showMotherName">Mother's Name</th>
-                        <th style="min-width: 80px" [class.hidden]="!columnFilter.showGender">Gender</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showCaste">Caste</th>
-                        <th style="min-width: 80px" [class.hidden]="!columnFilter.showCategory">Category</th>
-                        <th style="min-width: 90px" [class.hidden]="!columnFilter.showReligion">Religion</th>
-                        <th style="min-width: 150px" [class.hidden]="!columnFilter.showFatherOccupation">Father's Occupation</th>
-                        <th style="min-width: 200px" [class.hidden]="!columnFilter.showAddress">Address</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showChildSSMID">Child SSMID</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showFamilySSMID">Family SSMID</th>
-                        <th style="min-width: 180px" [class.hidden]="!columnFilter.showBankName">Bank Name</th>
-                        <th style="min-width: 150px" [class.hidden]="!columnFilter.showBankIfscCode">Bank Ifsc Code</th>
-                        <th style="min-width: 150px" [class.hidden]="!columnFilter.showBankAccountNum">Bank Acc. No.</th>
-                        <th style="min-width: 150px" [class.hidden]="!columnFilter.showAadharNum">Aadhar No.</th>
-                        <th style="min-width: 100px" [class.hidden]="!columnFilter.showBloodGroup">Blood Group</th>
-                        <th style="min-width: 110px" [class.hidden]="!columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
-                        <th style="min-width: 60px" [class.hidden]="!columnFilter.showRTE">RTE</th>
-                        <th style="min-width: 140px" [class.hidden]="!columnFilter.showAdmissionSession">Admission Session</th>
-                        <th style="min-width: 150px" [class.hidden]="!columnFilter.showBusStopName">Bus Stop Name</th>
-                        <th style="min-width: 150px" [class.hidden]="!columnFilter.showDateOfAdmission">Date Of Admission</th>
-                        <th style="min-width: 200px" [class.hidden]="!columnFilter.showRemark">Remark</th>
-                        <th style="min-width: 150px" *ngFor="let parameter of studentParameterOtherList" [class.hidden]="!parameter.show">
-                            {{ parameter.name }}
-                        </th>
+                        <th style="min-width: 60px" *ngIf="columnFilter.showSerialNumber">S No.</th>
+                        <th *ngIf="columnFilter.showProfileImage" style="min-width: 120px; text-align: center">Profile Image</th>
+                        <th style="min-width: 180px" *ngIf="columnFilter.showName">Name</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showClassName">Class</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showSectionName">Section</th>
+                        <th style="min-width: 80px" *ngIf="columnFilter.showRollNumber">Roll No.</th>
+                        <th style="min-width: 180px" *ngIf="columnFilter.showFathersName">Father's Name</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showMobileNumber">Mobile No.</th>
+                        <th style="min-width: 110px" *ngIf="columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
+                        <th style="min-width: 90px" *ngIf="columnFilter.showScholarNumber">Scholar No.</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showDateOfBirth">Date of Birth</th>
+                        <th style="min-width: 180px" *ngIf="columnFilter.showMotherName">Mother's Name</th>
+                        <th style="min-width: 80px" *ngIf="columnFilter.showGender">Gender</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showCaste">Caste</th>
+                        <th style="min-width: 80px" *ngIf="columnFilter.showCategory">Category</th>
+                        <th style="min-width: 90px" *ngIf="columnFilter.showReligion">Religion</th>
+                        <th style="min-width: 150px" *ngIf="columnFilter.showFatherOccupation">Father's Occupation</th>
+                        <th style="min-width: 200px" *ngIf="columnFilter.showAddress">Address</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showChildSSMID">Child SSMID</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showFamilySSMID">Family SSMID</th>
+                        <th style="min-width: 180px" *ngIf="columnFilter.showBankName">Bank Name</th>
+                        <th style="min-width: 150px" *ngIf="columnFilter.showBankIfscCode">Bank Ifsc Code</th>
+                        <th style="min-width: 150px" *ngIf="columnFilter.showBankAccountNum">Bank Acc. No.</th>
+                        <th style="min-width: 150px" *ngIf="columnFilter.showAadharNum">Aadhar No.</th>
+                        <th style="min-width: 100px" *ngIf="columnFilter.showBloodGroup">Blood Group</th>
+                        <th style="min-width: 110px" *ngIf="columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
+                        <th style="min-width: 60px" *ngIf="columnFilter.showRTE">RTE</th>
+                        <th style="min-width: 140px" *ngIf="columnFilter.showAdmissionSession">Admission Session</th>
+                        <th style="min-width: 150px" *ngIf="columnFilter.showBusStopName">Bus Stop Name</th>
+                        <th style="min-width: 150px" *ngIf="columnFilter.showDateOfAdmission">Date Of Admission</th>
+                        <th style="min-width: 200px" *ngIf="columnFilter.showRemark">Remark</th>
+                        <ng-container *ngFor="let parameter of studentParameterOtherList">
+                            <th style="min-width: 150px" *ngIf="parameter.show">
+                                {{ parameter.name }}
+                            </th>
+                        </ng-container>
                     </tr>
                 </thead>
                 <tbody>
                     <ng-container *cdkVirtualFor="let student of studentFullProfileList">
-                        <tr [class.hidden]="!student.show">
+                        <tr *ngIf="student.show">
                             <ng-container>
-                                <td [class.hidden]="!columnFilter.showSerialNumber">{{ student.serialNumber }}.</td>
-                                <td [class.hidden]="!columnFilter.showProfileImage" align="center">
+                                <td *ngIf="columnFilter.showSerialNumber">{{ student.serialNumber }}.</td>
+                                <td *ngIf="columnFilter.showProfileImage" align="center">
                                     <img *ngIf="student.profileImage" src="{{ student.profileImage }}" style="width: 50px" />
                                     <img
                                         *ngIf="!student.profileImage"
@@ -497,62 +502,65 @@
                                         style="width: 50px"
                                     />
                                 </td>
-                                <td [attr.id]="'student-value-' + student.name.replace(' ', '')" [class.hidden]="!columnFilter.showName">
+                                <td [attr.id]="'student-value-' + student.name.replace(' ', '')" *ngIf="columnFilter.showName">
                                     {{ student.name }}
                                 </td>
-                                <td [class.hidden]="!columnFilter.showClassName">
+                                <td *ngIf="columnFilter.showClassName">
                                     {{ student.className }}
                                     <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
                                 </td>
-                                <td [class.hidden]="!columnFilter.showSectionName">{{ student.sectionName }}</td>
-                                <td [class.hidden]="!columnFilter.showRollNumber">{{ student.rollNumber }}</td>
+                                <td *ngIf="columnFilter.showSectionName">{{ student.sectionName }}</td>
+                                <td *ngIf="columnFilter.showRollNumber">{{ student.rollNumber }}</td>
                                 <td
                                     [attr.id]="'father-name-value-' + student.fathersName.replace(' ', '')"
-                                    [class.hidden]="!columnFilter.showFathersName"
+                                    *ngIf="columnFilter.showFathersName"
                                 >
                                     {{ student.fathersName }}
                                 </td>
-                                <td [class.hidden]="!columnFilter.showMobileNumber">
+                                <td *ngIf="columnFilter.showMobileNumber">
                                     <span class="hidden-xs hidden-sm">{{ student.mobileNumber }}</span>
                                     <a class="visible-xs visible-sm" href="tel:{{ student.mobileNumber }}">Call Me</a>
                                 </td>
-                                <td [class.hidden]="!columnFilter.showSecondMobileNumber">
+                                <td *ngIf="columnFilter.showSecondMobileNumber">
                                     <span class="hidden-xs hidden-sm">{{ student.secondMobileNumber }}</span>
                                     <a class="visible-xs visible-sm" href="tel:{{ student.secondMobileNumber }}">Call Me</a>
                                 </td>
-                                <td [class.hidden]="!columnFilter.showScholarNumber">{{ student.scholarNumber }}</td>
-                                <td [class.hidden]="!columnFilter.showDateOfBirth">
+                                <td *ngIf="columnFilter.showScholarNumber">{{ student.scholarNumber }}</td>
+                                <td *ngIf="columnFilter.showDateOfBirth">
                                     {{ student.dateOfBirth | date: 'dd/MM/yyyy' }}
                                 </td>
-                                <td [class.hidden]="!columnFilter.showMotherName">{{ student.motherName }}</td>
-                                <td [class.hidden]="!columnFilter.showGender">{{ student.gender }}</td>
-                                <td [class.hidden]="!columnFilter.showCaste">{{ student.caste }}</td>
-                                <td [class.hidden]="!columnFilter.showCategory">{{ student.category }}</td>
-                                <td [class.hidden]="!columnFilter.showReligion">{{ student.religion }}</td>
-                                <td [class.hidden]="!columnFilter.showFatherOccupation">{{ student.fatherOccupation }}</td>
-                                <td [class.hidden]="!columnFilter.showAddress">{{ student.address }}</td>
-                                <td [class.hidden]="!columnFilter.showChildSSMID">{{ student.childSSMID }}</td>
-                                <td [class.hidden]="!columnFilter.showFamilySSMID">{{ student.familySSMID }}</td>
-                                <td [class.hidden]="!columnFilter.showBankName">{{ student.bankName }}</td>
-                                <td [class.hidden]="!columnFilter.showBankIfscCode">{{ student.bankIfscCode }}</td>
-                                <td [class.hidden]="!columnFilter.showBankAccountNum">{{ student.bankAccountNum }}</td>
-                                <td [class.hidden]="!columnFilter.showAadharNum">{{ student.aadharNum }}</td>
-                                <td [class.hidden]="!columnFilter.showBloodGroup">{{ student.bloodGroup }}</td>
-                                <td [class.hidden]="!columnFilter.showFatherAnnualIncome">{{ student.fatherAnnualIncome }}</td>
-                                <td [class.hidden]="!columnFilter.showRTE">{{ student.rte }}</td>
-                                <td [class.hidden]="!columnFilter.showAdmissionSession">
+                                <!-- td *ngIf="columnFilter.showMotherName">{{ student.motherName }}</td -->
+                                <td *ngIf="columnFilter.showMotherName">{{student.motherName}}</td>
+                                <td *ngIf="columnFilter.showGender">{{ student.gender }}</td>
+                                <td *ngIf="columnFilter.showCaste">{{ student.caste }}</td>
+                                <td *ngIf="columnFilter.showCategory">{{ student.category }}</td>
+                                <td *ngIf="columnFilter.showReligion">{{ student.religion }}</td>
+                                <td *ngIf="columnFilter.showFatherOccupation">{{ student.fatherOccupation }}</td>
+                                <td *ngIf="columnFilter.showAddress">{{ student.address }}</td>
+                                <td *ngIf="columnFilter.showChildSSMID">{{ student.childSSMID }}</td>
+                                <td *ngIf="columnFilter.showFamilySSMID">{{ student.familySSMID }}</td>
+                                <td *ngIf="columnFilter.showBankName">{{ student.bankName }}</td>
+                                <td *ngIf="columnFilter.showBankIfscCode">{{ student.bankIfscCode }}</td>
+                                <td *ngIf="columnFilter.showBankAccountNum">{{ student.bankAccountNum }}</td>
+                                <td *ngIf="columnFilter.showAadharNum">{{ student.aadharNum }}</td>
+                                <td *ngIf="columnFilter.showBloodGroup">{{ student.bloodGroup }}</td>
+                                <td *ngIf="columnFilter.showFatherAnnualIncome">{{ student.fatherAnnualIncome }}</td>
+                                <td *ngIf="columnFilter.showRTE">{{ student.rte }}</td>
+                                <td *ngIf="columnFilter.showAdmissionSession">
                                     {{ getAdmissionSession(student.admissionSessionDbId) }}
                                 </td>
-                                <td [class.hidden]="!columnFilter.showBusStopName">
+                                <td *ngIf="columnFilter.showBusStopName">
                                     {{ getBusStopName(student.busStopDbId) }}
                                 </td>
-                                <td [class.hidden]="!columnFilter.showDateOfAdmission">
+                                <td *ngIf="columnFilter.showDateOfAdmission">
                                     {{ student.dateOfAdmission | date: 'dd/MM/yyyy' }}
                                 </td>
-                                <td [class.hidden]="!columnFilter.showRemark">{{ student.remark }}</td>
-                                <td *ngFor="let parameter of studentParameterOtherList" [class.hidden]="!parameter.show">
-                                    {{ getParameterValue(student, parameter) }}
-                                </td>
+                                <td *ngIf="columnFilter.showRemark">{{ student.remark }}</td>
+                                <ng-container *ngFor="let parameter of studentParameterOtherList">
+                                    <td *ngIf="parameter.show">
+                                        {{ getParameterValue(student, parameter) }}
+                                    </td>
+                                </ng-container>
                             </ng-container>
                         </tr>
                     </ng-container>
@@ -578,55 +586,53 @@
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th></th>
-                        <th [class.hidden]="!documentFilter.showSerialNumber">S No.</th>
-                        <th [class.hidden]="!documentFilter.showName">Name</th>
-                        <th [class.hidden]="!documentFilter.showFathersName">Father's Name</th>
-                        <th [class.hidden]="!documentFilter.showClassName">Class</th>
-                        <th [class.hidden]="!documentFilter.showSectionName">Section</th>
-                        <th [class.hidden]="!documentFilter.showRollNumber">Roll No.</th>
-                        <th [class.hidden]="!documentFilter.showScholarNumber">Scholar No.</th>
-                        <th [class.hidden]="!documentFilter.showMobileNumber">Mobile No.</th>
-                        <th class="text-center" *ngFor="let parameter of studentParameterDocumentList" [class.hidden]="!parameter.show">
-                            {{ parameter.name }}
-                        </th>
+                        <th *ngIf="documentFilter.showSerialNumber">S No.</th>
+                        <th *ngIf="documentFilter.showName">Name</th>
+                        <th *ngIf="documentFilter.showFathersName">Father's Name</th>
+                        <th *ngIf="documentFilter.showClassName">Class</th>
+                        <th *ngIf="documentFilter.showSectionName">Section</th>
+                        <th *ngIf="documentFilter.showRollNumber">Roll No.</th>
+                        <th *ngIf="documentFilter.showScholarNumber">Scholar No.</th>
+                        <th *ngIf="documentFilter.showMobileNumber">Mobile No.</th>
+                        <ng-container *ngFor="let parameter of studentParameterDocumentList">
+                            <th class="text-center"  *ngIf="parameter.show">
+                                {{ parameter.name }}
+                            </th>
+                        </ng-container>
                     </tr>
                 </thead>
                 <tbody>
                     <ng-container *cdkVirtualFor="let student of studentFullProfileList">
-                        <tr [class.hidden]="!student.show">
+                        <tr *ngIf="student.show">
                             <ng-container>
                                 <td>
                                     <mat-checkbox [(ngModel)]="student.selectDocument" (click)="$event.stopPropagation()"> </mat-checkbox>
                                 </td>
-                                <td [class.hidden]="!documentFilter.showSerialNumber">{{ student.serialNumber }}.</td>
-                                <td [attr.id]="'student-value-' + student.name.replace(' ', '')" [class.hidden]="!documentFilter.showName">
+                                <td *ngIf="documentFilter.showSerialNumber">{{ student.serialNumber }}.</td>
+                                <td [attr.id]="'student-value-' + student.name.replace(' ', '')" *ngIf="documentFilter.showName">
                                     {{ student.name }}
                                 </td>
                                 <td
                                     [attr.id]="'father-name-value-' + student.fathersName.replace(' ', '')"
-                                    [class.hidden]="!documentFilter.showFathersName"
+                                    *ngIf="documentFilter.showFathersName"
                                 >
                                     {{ student.fathersName }}
                                 </td>
-                                <td [class.hidden]="!documentFilter.showClassName">{{ student.className }}</td>
-                                <td [class.hidden]="!documentFilter.showSectionName">{{ student.sectionName }}</td>
-                                <td [class.hidden]="!documentFilter.showRollNumber">{{ student.rollNumber }}</td>
-                                <td [class.hidden]="!documentFilter.showScholarNumber">{{ student.scholarNumber }}</td>
-                                <td [class.hidden]="!documentFilter.showMobileNumber">
+                                <td *ngIf="documentFilter.showClassName">{{ student.className }}</td>
+                                <td *ngIf="documentFilter.showSectionName">{{ student.sectionName }}</td>
+                                <td *ngIf="documentFilter.showRollNumber">{{ student.rollNumber }}</td>
+                                <td *ngIf="documentFilter.showScholarNumber">{{ student.scholarNumber }}</td>
+                                <td *ngIf="documentFilter.showMobileNumber">
                                     <span class="hidden-xs hidden-sm">{{ student.mobileNumber }}</span>
                                     <a class="visible-xs visible-sm" href="tel:{{ student.mobileNumber }}">Call Me</a>
                                 </td>
-                                <td
-                                    class="text-center"
-                                    *ngFor="let parameter of studentParameterDocumentList"
-                                    [class.hidden]="!parameter.show"
-                                >
-                                    <img
-                                        src="{{ getDocumentIcon(student, parameter) }}"
-                                        style="width: 20px"
-                                        (click)="openFilePreviewDialog(student, parameter)"
-                                    />
-                                </td>
+                                <ng-container *ngFor="let parameter of studentParameterDocumentList">
+                                    <td class="text-center" *ngIf="parameter.show">
+                                        <img src="{{ getDocumentIcon(student, parameter) }}"
+                                             style="width: 20px"
+                                             (click)="openFilePreviewDialog(student, parameter)"/>
+                                    </td>
+                                </ng-container>
                             </ng-container>
                         </tr>
                     </ng-container>
