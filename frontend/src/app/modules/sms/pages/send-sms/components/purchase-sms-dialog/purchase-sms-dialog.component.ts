@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { isMobile } from '@classes/common.js';
+import { CommonFunctions } from '@classes/common-functions';
 
 import { GeneralSMSPurchaseServiceAdapter } from '@modules/sms/class/sms-purchase.service.adapter';
 import { PaymentService } from '@services/modules/payment/payment.service';
@@ -29,6 +29,8 @@ export class PurchaseSmsDialogComponent implements OnInit {
   noOfSMS = 100;
 
   validatorRegex = VALIDATORS_REGX;
+
+  isMobile = CommonFunctions.getInstance().isMobileMenu;
 
   constructor(
     public smsService: SmsService,
@@ -89,9 +91,4 @@ export class PurchaseSmsDialogComponent implements OnInit {
     await this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.email);
     this.dialogRef.close();
   }
-
-  isMobile(): boolean {
-    return isMobile();
-  }
-
 }

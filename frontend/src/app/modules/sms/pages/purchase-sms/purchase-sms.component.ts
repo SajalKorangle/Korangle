@@ -6,7 +6,7 @@ import { SmsService } from "../../../../services/modules/sms/sms.service";
 import { WindowRefService } from "../../../../services/modules/sms/window-ref.service";
 import { DataStorage } from 'app/classes/data-storage';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
-import { isMobile } from '../../../../classes/common.js';
+import { CommonFunctions } from '@classes/common-functions';
 import { GeneralSMSPurchaseServiceAdapter } from '@modules/sms/class/sms-purchase.service.adapter';
 import { PaymentService } from '@services/modules/payment/payment.service';
 import { SMS_PLAN } from '@modules/sms/class/constants';
@@ -41,6 +41,8 @@ export class PurchaseSmsComponent implements OnInit {
 
   validatorRegex = VALIDATORS_REGX;
 
+  isMobile = CommonFunctions.getInstance().isMobileMenu;
+
 
   constructor(public smsService: SmsService,
     public paymentService: PaymentService,
@@ -48,7 +50,7 @@ export class PurchaseSmsComponent implements OnInit {
     public userService: UserService,
     public winRef: WindowRefService,
     public cdRef: ChangeDetectorRef,
-    public dialog: MatDialog, ) { }
+    public dialog: MatDialog,) { }
 
   ngOnInit() {
 
@@ -120,10 +122,6 @@ export class PurchaseSmsComponent implements OnInit {
     }
     this.isLoading = true;
     this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.email);
-  }
-
-  isMobile(): boolean {
-    return isMobile();
   }
 
   openPaymentResponseDialog() {
