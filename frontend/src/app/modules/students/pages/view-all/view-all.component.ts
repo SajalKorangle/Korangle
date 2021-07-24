@@ -80,6 +80,7 @@ export class ViewAllComponent implements OnInit {
     /* Age Check */
     minAge: any;
     maxAge: any;
+    asOnDate = new Date();
 
     /* Category Options */
     scSelected = false;
@@ -457,25 +458,27 @@ export class ViewAllComponent implements OnInit {
             }
 
             /* Age Check */
-            let age = student.dateOfBirth
-                ? Math.floor((new Date().getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                : null;
-            if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
-                if (!age) {
-                    student.show = false;
-                    return;
-                } else if (age < this.minAge) {
-                    student.show = false;
-                    return;
+            if(this.asOnDate) {
+                let age = student.dateOfBirth
+                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                    : null;
+                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                    if (!age) {
+                        student.show = false;
+                        return;
+                    } else if (age < this.minAge) {
+                        student.show = false;
+                        return;
+                    }
                 }
-            }
-            if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
-                if (!age) {
-                    student.show = false;
-                    return;
-                } else if (age > this.maxAge) {
-                    student.show = false;
-                    return;
+                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (!age) {
+                        student.show = false;
+                        return;
+                    } else if (age > this.maxAge) {
+                        student.show = false;
+                        return;
+                    }
                 }
             }
 
