@@ -214,6 +214,25 @@ export class SettingsHtmlRenderer {
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
             }
+            if (classSubject.parentClass == this.vm.userInput.selectedClass.id) {
+                return false;
+            }
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                return true;
+            }
+        });
+        return Boolean(bookedSlotOnlineClass);
+    }
+
+    isOnlineClasSectionOverlapping(concernedOnlineClass: ParsedOnlineClass): boolean {
+        const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+            if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
+                return false;
+            }
             if (classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
                 return false;
@@ -235,13 +254,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
@@ -390,6 +409,11 @@ export class SettingsHtmlRenderer {
 
     isAnyClassOverlapping() {
         const result = this.filteredOnlineClassList.every(onlineClass => !this.isOnlineClasOverlapping(onlineClass));
+        return result == false;
+    }
+
+    isAnyClassSectionOverlapping() {
+        const result = this.filteredOnlineClassList.every(onlineClass => !this.isOnlineClasSectionOverlapping(onlineClass));
         return result == false;
     }
 

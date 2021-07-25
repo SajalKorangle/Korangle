@@ -119,8 +119,11 @@
             </table>
         </div>
         <mat-divider style="margin-top: 32px;"></mat-divider>
-        <span *ngIf="htmlRenderer.isAnyClassOverlapping()" style="color: red; float: right;">Teacher's Slot if
-            overlapping</span><br />
+        <span *ngIf="htmlRenderer.isAnyClassOverlapping()" style="color: red; float: right;">
+            Teacher's Slots are overlapping</span><br />
+        <span *ngIf="htmlRenderer.isAnyClassSectionOverlapping()" style="color: yellow; float: right;">
+            Teacher's Slots are overlapping within a single class
+        </span>
         <button [disabled]="htmlRenderer.isAnyClassOverlapping()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
             (click)="serviceAdapter.updateOnlineClassList();">Update</button>
