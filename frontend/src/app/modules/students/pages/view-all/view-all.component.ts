@@ -741,7 +741,6 @@ export class ViewAllComponent implements OnInit {
             template = [this.getHeaderValues()];
             this.studentFullProfileList.forEach((student) => {
                 if (student.selectProfile && student.show) {
-                    // console.log(this.getStudentDisplayInfo(student));
                     template.push(this.getStudentDisplayInfo(student));
                 }
             });
