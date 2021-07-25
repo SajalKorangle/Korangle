@@ -1,46 +1,27 @@
-<mat-dialog-actions>
-    <div class="row" style="width: 100%; margin: 0px">
-        <div class="col-xs-1" style="padding: 0px;">
-        </div>
-        <div class="col-xs-10" style="text-align: center; padding: 0px">
-        </div>
-        <div class="col-xs-1" style="padding: 0px;">
-            <span class="material-icons cursor" (click)="closeDialog();"
-                style="font-size: 25px; float:right; cursor: pointer;">clear</span>
-        </div>
-    </div>
-</mat-dialog-actions>
+<h2 mat-dialog-title>Purchase SMS</h2>
 <mat-dialog-content>
     <div class="row">
         <div class="col-md-12">
             <div style="float: left; font-size: 16px;"><strong>Purchase SMS</strong></div>
         </div>
     </div>
-    <div class="row" [ngStyle]="{'margin-top': isMobile() ? '28px' : '37px'}">
-        <div class="col-xs-12 col-sm-6" [ngStyle]="{'margin-bottom': isMobile() ? '10px' : '0px'}">
-            <strong>Choose your custom plan</strong>
+
+    <div class="row" style="margin-top:20px">
+
+        <div class="col-sm-12 col-md-6">
+            <span><strong>Choose Your Custom Plan</strong></span>
         </div>
-        <br />
+    </div>
+
+    <div class="row" style="margin-top: 40px;">
         <div class="col-xs-12 col-sm-6">
-            <div style="text-align: center;
-            flex-direction: row;
-            align-items: flex-start;
-            padding: 8px;
-            width: 170px;
-            height: 32px;
-            left: 843px;
-            margin-top: 20px;
-            top: 164px;
-            font-weight: bold;
-            background: #4CA750;
-            border-radius: 4px;
-            color: white;">
-
-                {{noOfSMS}} SMS for Rs. {{generalSMSPurchaseServiceAdapter.getPrice(noOfSMS)}}
-
+            <div
+                style="padding: 12px; width: 200px; height: 32px; background: #4CA750; border-radius: 4px; color: white;font-weight: bold;text-align: center; display: table-cell;">
+                {{noOfSMS}} SMS for ₹{{generalSMSPurchaseServiceAdapter.getPrice(noOfSMS)}}
             </div>
         </div>
     </div>
+
     <div class="row" style="margin-top: 17px;">
         <div class="col-12 col-sm-3 col-md-3">
         </div>
@@ -111,11 +92,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <div class="row" style="margin-top: 30px;">
-        <div class="col-md-12">
-            <div style="text-align: center;">
-                <button class="btn btn-warning" (click)="startPayment()">Pay</button>
-            </div>
-        </div>
-    </div>
+    <button class="btn btn-warning" style="display: block; margin: 30px auto" (click)="startPayment()">Pay</button>
 </mat-dialog-actions>
