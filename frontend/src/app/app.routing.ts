@@ -122,6 +122,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
     },
     {
+        path: 'my_design',
+        loadChildren: 'app/modules/my_design/my_design.module#MyDesignModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
