@@ -123,7 +123,7 @@ const routes: Routes = [
     },
     {
         path: 'my_design',
-        loadChildren: 'app/modules/my_design/my_design.module#MyDesignModule',
+        loadChildren: 'app/modules/my-design/my-design.module#MyDesignModule',
     },
     {
         path: 'print',
