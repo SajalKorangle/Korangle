@@ -63,8 +63,8 @@ export class SettingsServiceAdapter {
     }
 
     async updateOnlineClassList() {
-        if (this.vm.htmlRenderer.isAnyClassOverlapping()) {
-            alert('Tracher\'s time slot if overlapping. Kindly rectify.');
+        if (this.vm.view == 'class' && this.vm.htmlRenderer.isAnyClassOverlapping()) {
+            alert('Teacher\'s time slot if overlapping. Kindly rectify.');
             return;
         }
         const onlineClassBackendDataIndexArray = [];

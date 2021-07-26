@@ -61,8 +61,7 @@ export class NewOnlineClassDialogComponent implements OnInit {
       if (classSubject.parentEmployee != parentEmployee) {
         return false;
       }
-      if (classSubject.parentClass == this.data.vm.userInput.selectedClass.id
-        && classSubject.parentDivision == this.data.vm.userInput.selectedSection.id) {
+      if (classSubject.parentClass == this.data.vm.userInput.selectedClass.id) {
         return false;
       }
       if (this.data.weekday == onlineClass.day

@@ -83,11 +83,6 @@
                                             style="position: absolute; bottom: 8px; right: 8px;"
                                             class="glow-active"></span>
 
-                                        <mat-icon class="td-hover-show hover-red"
-                                            (click)="htmlRenderer.deleteOnlineClass(onlineClass); $event.stopPropagation()"
-                                            style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
-                                        </mat-icon>
-
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>
@@ -122,8 +117,8 @@
         <span *ngIf="htmlRenderer.isAnyClassOverlapping()" style="color: red; float: right;">
             Teacher's Slots are overlapping</span><br />
         <ng-container *ngIf="htmlRenderer.isAnyClassSectionOverlapping()">
-            <span style="color: yellow; float: right;">
-                Teacher's Slots are overlapping within a single class
+            <span style="color: rgb(255, 196, 0); float: right;">
+                Teacher's Slots are overlapping within sections of a single class
             </span><br />
         </ng-container>
         <button [disabled]="htmlRenderer.isAnyClassOverlapping()"
@@ -170,6 +165,10 @@
                                             *ngIf="backendData.getAccountInfoByParentEmployee(htmlRenderer.getDisplayData(onlineClass).employee.id)"
                                             style="position: absolute; bottom: 8px; right: 8px;"
                                             class="glow-active"></span>
+                                        <mat-icon class="td-hover-show hover-red"
+                                            (click)="htmlRenderer.deleteOnlineClass(onlineClass); $event.stopPropagation()"
+                                            style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
+                                        </mat-icon>
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>
@@ -188,6 +187,9 @@
                 </tbody>
             </table>
         </div>
+        <mat-divider style="margin-top: 32px;"></mat-divider>
+        <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
+            (click)="serviceAdapter.updateOnlineClassList();">Update</button>
     </ng-container>
 
 </div>

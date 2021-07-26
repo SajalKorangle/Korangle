@@ -54,7 +54,7 @@ export class SettingsHtmlRenderer {
             ColorPaletteHandle.reset();
             // filter online classes for selected class and section
             this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {
-                const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
                 if (classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
                     return true;
                 }
@@ -254,13 +254,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
@@ -379,7 +379,7 @@ export class SettingsHtmlRenderer {
     }
 
     getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
+        return this.filteredOnlineClassList.find(onlineClass => {
             if (onlineClass.day == this.vm.weekdays[weekdayKey]
                 && TimeComparator(startTime, onlineClass.startTimeJSON) == 0)
                 return true;
@@ -398,7 +398,7 @@ export class SettingsHtmlRenderer {
     }
 
     shouldRenderEmptyTd(weekdayKey, time: Time) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
+        return this.filteredOnlineClassList.find(onlineClass => {
             if (onlineClass.day == this.vm.weekdays[weekdayKey]
                 && TimeComparator(time, onlineClass.startTimeJSON) >= 0
                 && TimeComparator(time, onlineClass.endTimeJSON) < 0)
