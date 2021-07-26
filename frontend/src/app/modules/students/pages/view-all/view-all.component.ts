@@ -812,6 +812,9 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup ? headerValues.push('Blood Group') : '';
         this.columnFilter.showFatherAnnualIncome ? headerValues.push("Father's Annual Income") : '';
         this.columnFilter.showRTE ? headerValues.push('RTE') : '';
+        this.columnFilter.showDateOfAdmission ? headerValues.push('Date of Admission') : '';
+        this.columnFilter.showAdmissionSession ? headerValues.push('Admission Session') : '';
+        this.columnFilter.showBusStopName ? headerValues.push('Bus Stop') : '';
         this.columnFilter.showRemark ? headerValues.push('remark') : '';
         // Custom parameters
         this.studentParameterOtherList.forEach((item) => (item.show ? headerValues.push(item.name) : ''));
@@ -847,6 +850,9 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup ? studentDisplay.push(student.bloodGroup) : '';
         this.columnFilter.showFatherAnnualIncome ? studentDisplay.push(student.fatherAnnualIncome) : '';
         this.columnFilter.showRTE ? studentDisplay.push(student.rte) : '';
+        this.columnFilter.showDateOfAdmission ? studentDisplay.push(student.dateOfAdmission) : '';
+        this.columnFilter.showAdmissionSession ? studentDisplay.push(this.getAdmissionSession(student.admissionSessionDbId)) : '';
+        this.columnFilter.showBusStopName ? studentDisplay.push(this.getBusStopName(student.busStopDbId)) : '';
         this.columnFilter.showRemark ? studentDisplay.push(student.remark) : '';
         // Custom parameter values
         this.studentParameterOtherList.forEach((item) => (item.show ? studentDisplay.push(this.getParameterValue(student, item)) : ''));
