@@ -224,6 +224,6 @@ export class AddTransactionServiceAdapter {
                 resolve(base64data);
             };
         });
-    };
+    }
 
 }
