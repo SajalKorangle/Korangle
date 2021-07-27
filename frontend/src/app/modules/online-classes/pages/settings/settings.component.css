@@ -13,6 +13,14 @@ td:hover .td-hover-show{
     pointer-events: auto;
 }
 
+.overlapping-warnig{
+    border: 2px solid yellow;
+}
+
+.overlapping-danger{
+    border: 2px solid red !important;
+}
+
 .glow-active{
     border-radius: 100%;
     height: 4px;

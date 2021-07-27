@@ -36,8 +36,12 @@
 
     <ng-container *ngIf="view=='class' && userInput.selectedClass && userInput.selectedSection">
 
-        <h4>{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id, userInput.selectedSection.id)}}</h4>
-
+        <div>
+            <h4 style="display: inline-block;">{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
+                userInput.selectedSection.id)}}</h4>
+            <button style="float: right;" mat-stroked-button
+                (click)="htmlRenderer.filteredOnlineClassList=[]">Reset</button>
+        </div>
         <div style="overflow: auto;">
             <table class="mat-elevation-z8 table table-hover">
                 <thead>
@@ -62,6 +66,8 @@
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
                                     <td style="position: relative; cursor: pointer;" draggable="true"
+                                        [class.overlapping-warnig]="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
+                                        [class.overlapping-danger]="htmlRenderer.isOnlineClasOverlapping(onlineClass)"
                                         (dragover)="$event.preventDefault();"
                                         (dragstart)="$event.dataTransfer.setData('onlineClassIndex', htmlRenderer.getOnlineClassIndex(onlineClass));"
                                         (drop)="htmlRenderer.swapOnlineClass($event, onlineClass);"
@@ -82,6 +88,11 @@
                                             *ngIf="backendData.getAccountInfoByParentEmployee(backendData.getClassSubjectById(onlineClass.parentClassSubject).parentEmployee)"
                                             style="position: absolute; bottom: 8px; right: 8px;"
                                             class="glow-active"></span>
+
+                                        <mat-icon class="td-hover-show hover-red"
+                                            (click)="htmlRenderer.deleteOnlineClass(onlineClass); $event.stopPropagation()"
+                                            style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
+                                        </mat-icon>
 
                                     </td>
                                 </ng-container>
@@ -177,7 +188,7 @@
                             </ng-container>
                         </tr>
                     </ng-container>
-                    <tr style="border: none;">
+                    <tr style="border: none;" *ngIf="htmlRenderer.employeeKeyTimeList.length>1">
                         <td style="width: 50px; vertical-align: top;">
                             <span style="position: relative; top: -12px;">
                                 {{htmlRenderer.employeeKeyTimeList.slice(-1)[0].getDisplayString()}}

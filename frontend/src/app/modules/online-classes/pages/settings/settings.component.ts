@@ -82,6 +82,7 @@ export class SettingsComponent implements OnInit {
     }
 
     getObjetKeys(obj: { [key: string]: any; }): Array<string> {
+        console.log(Object.keys(obj));
         return Object.keys(obj);
     }
 
