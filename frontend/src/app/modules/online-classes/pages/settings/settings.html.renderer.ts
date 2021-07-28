@@ -275,7 +275,9 @@ export class SettingsHtmlRenderer {
         if (!bookedSlotOnlineClass)
             return null;
         const info = this.getDisplayData(bookedSlotOnlineClass);
-        const displayString = bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - ' + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name + ` (${info.classs.name} & ${info.section.name})`;
+        const displayString = bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
+            + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
+            + ` (${info.classs.name} & ${info.section.name})`;
         return displayString;
     }
 
@@ -287,13 +289,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
