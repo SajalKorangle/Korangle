@@ -94,6 +94,11 @@
                                             style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
                                         </mat-icon>
 
+                                        <mat-icon *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
+                                            [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
+                                            style="position: absolute; font-size: small; top: 2px; left: -3px; ">info
+                                        </mat-icon>
+
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>

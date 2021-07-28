@@ -223,8 +223,13 @@ export class SettingsHtmlRenderer {
                 return true;
             }
         });
+        if (bookedSlotOnlineClass) {
+            console.log('concerned Online Class: ', concernedOnlineClass);
+            console.log(bookedSlotOnlineClass);
+        }
         return Boolean(bookedSlotOnlineClass);
     }
+
 
     isOnlineClasSectionOverlapping(concernedOnlineClass: ParsedOnlineClass): boolean {
         const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
@@ -233,8 +238,9 @@ export class SettingsHtmlRenderer {
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
             }
-            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
-                && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+            if (classSubject.parentClass != this.vm.userInput.selectedClass.id)
+                return false;
+            if (classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
@@ -246,6 +252,33 @@ export class SettingsHtmlRenderer {
         return Boolean(bookedSlotOnlineClass);
     }
 
+    getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
+        // console.log(concernedOnlineClass, this.isOnlineClasOverlapping(concernedOnlineClass));
+        const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+            if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
+                return false;
+            }
+            if (classSubject.parentClass != this.vm.userInput.selectedClass.id)
+                return false;
+            if (classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+                return false;
+            }
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                return true;
+            }
+        });
+        // console.log(bookedSlotOnlineClass);
+        if (!bookedSlotOnlineClass)
+            return null;
+        const info = this.getDisplayData(bookedSlotOnlineClass);
+        const displayString = bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - ' + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name + ` (${info.classs.name} & ${info.section.name})`;
+        return displayString;
+    }
+
     nonEditingTimeSpanList(): Array<TimeSpan> {
         return this.timeSpanList.filter((timeSpan, timeSpanIndex) => timeSpanIndex != this.editTimeSpanFormIndex);
     }
@@ -254,13 +287,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
