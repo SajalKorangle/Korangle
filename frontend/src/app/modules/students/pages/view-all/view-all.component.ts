@@ -458,7 +458,7 @@ export class ViewAllComponent implements OnInit {
             }
 
             /* Age Check */
-            if(this.asOnDate) {
+            if (this.asOnDate) {
                 let age = student.dateOfBirth
                     ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
                     : null;
