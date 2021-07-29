@@ -255,7 +255,7 @@ export class SettingsHtmlRenderer {
     getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
         // console.log(concernedOnlineClass, this.isOnlineClasOverlapping(concernedOnlineClass));
         const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
-        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
+        const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
@@ -271,13 +271,13 @@ export class SettingsHtmlRenderer {
                 return true;
             }
         });
-        // console.log(bookedSlotOnlineClass);
-        if (!bookedSlotOnlineClass)
-            return null;
-        const info = this.getDisplayData(bookedSlotOnlineClass);
-        const displayString = bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
-            + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
-            + ` (${info.classs.name} & ${info.section.name})`;
+        let displayString = "";
+        bookedSlotOnlineClassList.forEach(bookedSlotOnlineClass => {
+            const info = this.getDisplayData(bookedSlotOnlineClass);
+            displayString += "• " + bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
+                + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
+                + ` (${info.classs.name} & ${info.section.name})  `;
+        });
         return displayString;
     }
 
@@ -289,13 +289,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
