@@ -211,6 +211,9 @@
                                 {{htmlRenderer.employeeKeyTimeList.slice(-1)[0].getDisplayString()}}
                             </span>
                         </td>
+                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                            <td></td>
+                        </ng-container>
                     </tr>
                 </tbody>
             </table>
