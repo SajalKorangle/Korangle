@@ -31,9 +31,7 @@ export class SettingsHtmlRenderer {
         this.editTimeSpanFormIndex = -1;    // reset display for new time table
         this.newTimeSpanForm = false;
 
-        if (JSON.stringify(this.timeSpanList) == JSON.stringify(getDefaultTimeSpanList())) {
-            this.timeSpanList = []; // if default then empty
-        }
+        this.timeSpanList = [];
 
         if (this.vm.view == 'class') {
             if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
@@ -60,6 +58,25 @@ export class SettingsHtmlRenderer {
                 }
                 return false;
             });
+
+            this.filteredOnlineClassList.forEach((concernedOnlineClass) => {
+                if (!concernedOnlineClass)
+                    return;
+                const bookedSlotOnlineClassIndex = this.filteredOnlineClassList.findIndex(onlineClass => {
+                    if (onlineClass.id == concernedOnlineClass.id) {
+                        return false;
+                    }
+                    if (concernedOnlineClass.day == onlineClass.day
+                        && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                        && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                        return true;
+                    }
+                });
+                if (bookedSlotOnlineClassIndex != -1) {
+                    this.filteredOnlineClassList.splice(bookedSlotOnlineClassIndex, 1);
+                }
+            });
+            // this.filteredOnlineClassList = this.filteredOnlineClassList.filter(Boolean);
 
             this.employeeKeyTimeList = [];
             this.filteredOnlineClassList.forEach(onlineClass => {
@@ -233,14 +250,15 @@ export class SettingsHtmlRenderer {
 
     isOnlineClasSectionOverlapping(concernedOnlineClass: ParsedOnlineClass): boolean {
         const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
             }
-            if (classSubject.parentClass != this.vm.userInput.selectedClass.id)
+            if (classSubject.parentClass != concernedClassSubject.parentClass)
                 return false;
-            if (classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+            if (classSubject.parentDivision == concernedClassSubject.parentDivision) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
@@ -255,14 +273,15 @@ export class SettingsHtmlRenderer {
     getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
         // console.log(concernedOnlineClass, this.isOnlineClasOverlapping(concernedOnlineClass));
         const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
             }
-            if (classSubject.parentClass != this.vm.userInput.selectedClass.id)
+            if (classSubject.parentClass != concernedClassSubject.parentClass)
                 return false;
-            if (classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
+            if (classSubject.parentDivision == concernedClassSubject.parentDivision) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
