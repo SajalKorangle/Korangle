@@ -6,7 +6,7 @@ const MAX_LENGTH_OF_GET_REQUEST = 900;
 export class GenerateReportCardServiceAdapter {
     vm: GenerateReportCardComponent;
 
-    constructor() {}
+    constructor() { }
 
     // Data
 
@@ -45,7 +45,7 @@ export class GenerateReportCardServiceAdapter {
 
                 const studentIdList = this.vm.studentSectionList.map((item) => item.parentStudent);
                 const studentIdChunkList = [];
-                for (let i = 0; i < studentIdList.length; ) {
+                for (let i = 0; i < studentIdList.length;) {
                     // dividing big id list to smaller chunks until request is satasfiable
                     const chunk = [];
                     while (chunk.join(',').length < MAX_LENGTH_OF_GET_REQUEST && i < studentIdList.length) {
@@ -97,6 +97,10 @@ export class GenerateReportCardServiceAdapter {
             parentExamination__parentSchool: this.vm.user.activeSchool.dbId,
             parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        const request_class_signature_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
         // this.vm.isLoading = true;
         return Promise.all([
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 0
@@ -106,6 +110,7 @@ export class GenerateReportCardServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
             this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data), // 5
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 6
+            this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //7
         ])
             .then(async (data) => {
                 this.vm.DATA.data.studentParameterList = data[0];
@@ -115,6 +120,7 @@ export class GenerateReportCardServiceAdapter {
                 this.vm.DATA.data.sessionList = data[4];
                 this.vm.DATA.data.gradeList = data[5];
                 this.vm.DATA.data.subGradeList = data[6];
+                this.vm.DATA.data.classSectionSignatureList = data[7];
 
                 const request_student_parameter_value_data = {
                     parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
@@ -167,11 +173,11 @@ export class GenerateReportCardServiceAdapter {
                         this.vm.DATA.data.studentSubGradeList = value[3];
                         this.vm.DATA.data.studentExaminationRemarksList = value[4];
                     },
-                    (error) => {}
+                    (error) => { }
                 );
                 this.populateParameterListWithStudentCustomField();
             })
-            .catch((err) => {});
+            .catch((err) => { });
     }
 
     populateParameterListWithStudentCustomField(): void {
