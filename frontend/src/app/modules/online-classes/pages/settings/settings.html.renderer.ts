@@ -226,12 +226,13 @@ export class SettingsHtmlRenderer {
 
     isOnlineClasOverlapping(concernedOnlineClass: ParsedOnlineClass): boolean {
         const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
             }
-            if (classSubject.parentClass == this.vm.userInput.selectedClass.id) {
+            if (classSubject.parentClass == concernedClassSubject.parentClass) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
@@ -258,7 +259,7 @@ export class SettingsHtmlRenderer {
             }
             if (classSubject.parentClass != concernedClassSubject.parentClass)
                 return false;
-            if (classSubject.parentDivision == concernedClassSubject.parentDivision) {
+            if (onlineClass == concernedOnlineClass) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
@@ -271,19 +272,14 @@ export class SettingsHtmlRenderer {
     }
 
     getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
-        // console.log(concernedOnlineClass, this.isOnlineClasOverlapping(concernedOnlineClass));
         const concernedOnlineCassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
-        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedOnlineCassParentEmployee.parentEmployee) {
                 return false;
             }
-            if (classSubject.parentClass != concernedClassSubject.parentClass)
+            if (onlineClass == concernedOnlineClass)
                 return false;
-            if (classSubject.parentDivision == concernedClassSubject.parentDivision) {
-                return false;
-            }
             if (concernedOnlineClass.day == onlineClass.day
                 && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
                 && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {

@@ -94,8 +94,10 @@
                                             style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
                                         </mat-icon>
 
-                                        <mat-icon *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
+                                        <mat-icon
+                                            *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass) || htmlRenderer.isOnlineClasOverlapping(onlineClass)"
                                             [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
+                                            [style.color]="htmlRenderer.isOnlineClasOverlapping(onlineClass)?'red':'yellow'"
                                             style="position: absolute; font-size: small; top: 2px; left: -3px; ">info
                                         </mat-icon>
 
@@ -171,6 +173,7 @@
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                     <td style="position: relative; min-width: 100px;"
                                         [class.overlapping-warnig]="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
+                                        [class.overlapping-danger]="htmlRenderer.isOnlineClasOverlapping(onlineClass)"
                                         [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                         [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
@@ -187,9 +190,12 @@
                                             style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
                                         </mat-icon>
 
-                                        <mat-icon *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
+                                        <mat-icon
+                                            *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass) || htmlRenderer.isOnlineClasOverlapping(onlineClass)"
                                             [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
-                                            style="position: absolute; font-size: small; top: 2px; left: -3px; ">info
+                                            [style.color]="htmlRenderer.isOnlineClasOverlapping(onlineClass)?'red':'yellow'"
+                                            style="position: absolute; font-size: small; top: 2px; left: -3px;">
+                                            info
                                         </mat-icon>
                                     </td>
                                 </ng-container>
