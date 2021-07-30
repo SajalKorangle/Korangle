@@ -7,7 +7,11 @@ def upload_thumbnail_to(instance, filename):
     return '%s/my_design/imageAssets/%s_%s' % (instance.parentSchool.id, now().timestamp(), filename)
 
 class Layout(models.Model):
-    type = models.CharField(max_length=50)
+    TYPE_CHOICES = (
+        ('REPORT CARD', 'REPORT CARD'),
+        ('TC', 'TC'),
+    )
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES)
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_thumbnail_to, null=True)
