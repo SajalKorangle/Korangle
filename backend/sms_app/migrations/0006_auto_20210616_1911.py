@@ -159,6 +159,18 @@ class Migration(migrations.Migration):
             name='statusCode',
             field=models.TextField(null=True, verbose_name='statusCode'),
         ),
+        migrations.AlterField(
+            model_name='sms',
+            name='parentSMSId',
+            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.SET_DEFAULT, to='sms_app.SMSId',
+                                    verbose_name='smsId'),
+        ),
+        migrations.AlterField(
+            model_name='sms',
+            name='parentSchool',
+            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='school_app.School',
+                                    verbose_name='parentSchool'),
+        ),
         migrations.RunPython(populate_sms_id),
         migrations.RunPython(populate_sms_templates),
         migrations.RunPython(populate_sms_event_settings),
