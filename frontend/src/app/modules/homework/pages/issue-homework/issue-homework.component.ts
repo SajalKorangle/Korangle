@@ -66,9 +66,9 @@ export class IssueHomeworkComponent implements OnInit {
     noPermission: any;
     smsBalance: any;
 
-    HOMEWORK_CREATION_ID = 7;
-    HOMEWORK_UPDATION_ID = 8;
-    HOMEWORK_DELETION_ID = 9;
+    HOMEWORK_CREATION_EVENT_DBID = 7;
+    HOMEWORK_UPDATION_EVENT_DBID = 8;
+    HOMEWORK_DELETION_EVENT_DBID = 9;
 
     dataForMapping =  {} as any;
 

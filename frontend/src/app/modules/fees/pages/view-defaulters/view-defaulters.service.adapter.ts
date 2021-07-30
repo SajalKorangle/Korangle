@@ -17,8 +17,8 @@ export class ViewDefaultersServiceAdapter {
 
         const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
             {parentSchool: this.vm.user.activeSchool.dbId}), //0
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventId: this.vm.NOTIFY_DEFAULTERS_ID}), //1
-            this.vm.smsService.getObject(this.vm.smsService.sms_event, {id: this.vm.NOTIFY_DEFAULTERS_ID}), //2
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventId: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID}), //1
+            this.vm.smsService.getObject(this.vm.smsService.sms_event, {id: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID}), //2
             this.vm.informationService.getObjectList(this.vm.informationService.send_update_type, {})]); //3
 
         this.vm.backendData.smsIdSchoolList = firstValue[0];
@@ -192,7 +192,8 @@ export class ViewDefaultersServiceAdapter {
 
     async sendSMSNotificationDefaulter() {
         if (this.vm.getEstimatedSMSCount() > 0 &&
-            !confirm('Please confirm that you are sending ' + (this.vm.userInput.scheduleSMS ? 'Scheduling ' : 'Sending ') + this.vm.getEstimatedSMSCount() + ' SMS.')) {
+            !confirm('Please confirm that you are ' + (this.vm.userInput.scheduleSMS ? 'Scheduling ' : 'Sending ') +
+                this.vm.getEstimatedSMSCount() + ' SMS.')) {
             return;
         }
         this.vm.isLoading = true;
@@ -210,7 +211,7 @@ export class ViewDefaultersServiceAdapter {
         }
 
         let scheduledDataTime = null;
-        if (this.vm.userInput.scheduleSMS && this.vm.userInput.scheduledDate && this.vm.userInput.scheduledDate) {
+        if (this.vm.userInput.scheduleSMS && this.vm.userInput.scheduledDate && this.vm.userInput.scheduledTime) {
             scheduledDataTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime).format('YYYY-MM-DD HH:mm');
         }
         this.vm.dataForMapping['studentList'] = studentData;
@@ -232,7 +233,7 @@ export class ViewDefaultersServiceAdapter {
             this.vm.isLoading = false;
             return;
         }
-        alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Sent Successfully');
+        alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Successfully');
         this.vm.isLoading = false;
     }
 }

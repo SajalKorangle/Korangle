@@ -15,7 +15,7 @@ export class ViewDefaultersHtmlRenderer {
     }
 
     getPlaceHolder() {
-        if (this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID &&
+        if (this.vm.userInput.selectedSendUpdateType.id != this.vm.SEND_UPDATE_NOTIFICATION_TYPE_DBID &&
             (!this.vm.userInput.selectedTemplate.id || !this.vm.message || this.vm.message.trim() == '')) {
             return 'Select a template from template List';
         } else {
@@ -30,6 +30,7 @@ export class ViewDefaultersHtmlRenderer {
     selectTemplate(template: any) {
         this.vm.populatedTemplateList.forEach(temp => temp.selected = false);
         template.selected = true;
+        // studentName is the default variable whenever a template is selected
         this.vm.message = template.rawContent.replace(/{#var#}/g, '{#studentName#}').replace(NEW_LINE_REGEX, "\n");
         this.vm.userInput.selectedTemplate = template;
         let textArea = document.getElementById('messageBox');
@@ -39,32 +40,32 @@ export class ViewDefaultersHtmlRenderer {
 
     isSendDisabled() {
         let disabled = this.vm.getEstimatedSMSCount() + this.vm.getEstimatedNotificationCount() == 0 || this.vm.message.length == 0;
-        if (!disabled && this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID) {
+        if (!disabled && this.vm.userInput.selectedSendUpdateType.id != this.vm.SEND_UPDATE_NOTIFICATION_TYPE_DBID) {
             disabled = this.vm.getEstimatedSMSCount() > this.vm.smsBalance;
             if (!disabled) {
                 disabled = this.isTemplateModified();
             }
         }
-        if (!disabled && this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_TYPE_ID && this.vm.userInput.scheduleSMS) {
+        if (!disabled && this.vm.userInput.selectedSendUpdateType.id == this.vm.SEND_UPDATE_SMS_TYPE_DBID && this.vm.userInput.scheduleSMS) {
             disabled = !this.vm.userInput.scheduledDate || !this.vm.userInput.scheduledTime || this.checkDateTimeInvalid();
         }
         return disabled;
     }
 
     isTemplateModified() {
-        return this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID &&
+        return this.vm.userInput.selectedSendUpdateType.id != this.vm.SEND_UPDATE_NOTIFICATION_TYPE_DBID &&
             this.vm.message.replace(FIND_VARIABLE_REGEX, '{#var#}') !=  this.vm.userInput.selectedTemplate.rawContent.replace(NEW_LINE_REGEX, "\n");
     }
 
     getButtonText() {
         let text = this.vm.userInput.scheduleSMS ? 'Schedule ' : 'Send ';
-        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_TYPE_ID) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SEND_UPDATE_SMS_TYPE_DBID) {
             return text + this.vm.getEstimatedSMSCount() + ' SMS';
         }
-        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.NOTIFICATION_TYPE_ID) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SEND_UPDATE_NOTIFICATION_TYPE_DBID) {
             return text + this.vm.getEstimatedNotificationCount() + ' notifications';
         }
-        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_AND_NOTIFICATION_TYPE_ID) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SEND_UPDATE_SMS_AND_NOTIFICATION_TYPE_DBID) {
             return text + this.vm.getEstimatedSMSCount() + ' SMS & '
                 + this.vm.getEstimatedNotificationCount() + ' notifications';
         }
@@ -251,7 +252,7 @@ export class ViewDefaultersHtmlRenderer {
     }
 
     sendUpdateTypeChanged() {
-        if (this.vm.userInput.selectedSendUpdateType.id != this.vm.NOTIFICATION_TYPE_ID) {
+        if (this.vm.userInput.selectedSendUpdateType.id != this.vm.SEND_UPDATE_NOTIFICATION_TYPE_DBID) {
             this.vm.message = '';
         }
         this.vm.userInput.scheduleSMS = false;
@@ -275,7 +276,7 @@ export class ViewDefaultersHtmlRenderer {
                 parent.studentList.forEach(student => personList.push(student)));
         }
         let estimatedCount = Number(this.vm.getEstimatedSMSCount());
-        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SMS_AND_NOTIFICATION_TYPE_ID) {
+        if (this.vm.userInput.selectedSendUpdateType.id == this.vm.SEND_UPDATE_SMS_AND_NOTIFICATION_TYPE_DBID) {
             personList = personList.filter(x => !x.notification);
         }
         let count2 = Number(personList.length);

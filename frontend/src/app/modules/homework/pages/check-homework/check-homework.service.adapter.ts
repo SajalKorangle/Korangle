@@ -274,9 +274,9 @@ export class CheckHomeworkServiceAdapter {
                this.vm.dataForMapping['subject'] = this.vm.selectedSubject;
                let eventID;
                if (studentHomework.status == this.vm.HOMEWORK_STATUS[2]) {
-                   eventID = this.vm.HOMEWORK_CHECKED_ID;
+                   eventID = this.vm.HOMEWORK_CHECKED_EVENT_DBID;
                } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
-                   eventID = this.vm.HOMEWORK_RESUBMISSION_ID;
+                   eventID = this.vm.HOMEWORK_RESUBMISSION_EVENT_DBID;
                }
 
                this.vm.messageService.sendEventNotification(

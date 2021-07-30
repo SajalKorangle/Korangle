@@ -57,8 +57,6 @@ def send_sms(instance_dict):
             if str(data["Number"]) == "91" + str(num["Number"]):
                 num["MessageId"] = data["MessageId"]
 
-    print(sent_sms_num_list)
-
     job_id = str(json.loads(response.decode("utf-8"))['JobId'])
 
     return {'remark': 'SUCCESS', 'requestId': job_id, 'mobileNumberContentJson': sent_sms_num_list}

@@ -32,7 +32,7 @@ class SMSCountView(APIView):
         return get_sms_count(school_id)
 
 
-############## Msg Club Delivery Report ##############
+############## SMS Delivery Report ##############
 from .business.sms_delivery_report import get_sms_delivery_report_list
 
 

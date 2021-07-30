@@ -33,7 +33,7 @@ export class RecordAttendanceServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //3
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
-                { id__in: this.vm.ATTENDANCE_UPDATION_ID + ',' + this.vm.ATTENDANCE_CREATION_ID }) //4
+                { id__in: this.vm.ATTENDANCE_UPDATION_EVENT_DBID + ',' + this.vm.ATTENDANCE_CREATION_EVENT_DBID }) //4
         ]);
 
         this.vm.smsBalance = value[3].count;
@@ -256,8 +256,8 @@ export class RecordAttendanceServiceAdapter {
     notifyParents(): void {
         let createdStudentList = [];
         let updatedStudentList = [];
-        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_CREATION_ID);
-        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_UPDATION_ID);
+        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_CREATION_EVENT_DBID);
+        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_UPDATION_EVENT_DBID);
         this.vm.studentAttendanceStatusList.forEach((student) => {
             student.attendanceStatusList.forEach((attendanceStatus) => {
                 let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(student, attendanceStatus.date);
@@ -296,7 +296,7 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.messageService.sendEventNotification(
                    this.vm.dataForMapping,
                     ['student'],
-                    this.vm.ATTENDANCE_CREATION_ID,
+                    this.vm.ATTENDANCE_CREATION_EVENT_DBID,
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
                 );
@@ -307,7 +307,7 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.messageService.sendEventNotification(
                     this.vm.dataForMapping,
                     ['student'],
-                    this.vm.ATTENDANCE_UPDATION_ID,
+                    this.vm.ATTENDANCE_UPDATION_EVENT_DBID,
                     this.vm.user.activeSchool.dbId,
                     this.vm.smsBalance
                 );

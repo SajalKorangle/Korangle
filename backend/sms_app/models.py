@@ -92,7 +92,7 @@ class SMS(models.Model):
     requestId = models.TextField(null=True, verbose_name='requestId')
 
     # School
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
 
     # SMSId
     parentSMSId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')

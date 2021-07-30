@@ -130,7 +130,7 @@ export class AddEventServiceAdapter {
                 value2[0].forEach((eachVal) => {
                     this.vm.eventNotifyList.push(eachVal);
                 });
-                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_CREATION_ID, value1[0]);
+                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_CREATION_EVENT_ID, value1[0]);
                 this.vm.initializeNewEvent();
                 this.vm.eventList = this.vm.eventList.sort((a, b) => {
                     // @ts-ignore
@@ -165,7 +165,7 @@ export class AddEventServiceAdapter {
 
             if (actualEvent.title != this.vm.editingEvent.title || actualEvent.description != this.vm.editingEvent.description ||
                 actualEvent.heldOn != this.vm.editingEvent.heldOn) {
-                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_UPDATION_ID, this.vm.editingEvent);
+                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_UPDATION_EVENT_ID, this.vm.editingEvent);
             }
 
             Object.assign(
@@ -213,7 +213,7 @@ export class AddEventServiceAdapter {
             ]).then((value) => {
                 this.vm.eventList = this.vm.eventList.filter((event) => event.id != editingEvent.id);
                 this.vm.editing = false;
-                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_DELETION_ID, editingEvent);
+                this.populatePersonListAndNotify(this.vm.EVENT_GALLERY_DELETION_EVENT_ID, editingEvent);
                 this.vm.initializeNewEvent();
                 this.vm.htmlAdapter.unSelectAll();
                 this.vm.isLoading = false;

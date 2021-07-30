@@ -1,5 +1,7 @@
 from django.db import models
 
+
+# Deprecated Model (Do Not Use it)
 class MessageType(models.Model):
     """
     1 - General

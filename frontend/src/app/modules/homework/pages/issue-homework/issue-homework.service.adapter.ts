@@ -218,7 +218,7 @@ export class IssueHomeworkServiceAdapter {
         const sValue = await Promise.all(this.getHomeworkServices());
         alert('Homework has been successfully created');
 
-        this.sendNotificationToParents(this.vm.currentHomework, this.vm.HOMEWORK_CREATION_ID);
+        this.sendNotificationToParents(this.vm.currentHomework, this.vm.HOMEWORK_CREATION_EVENT_DBID);
         this.populateCurrentHomeworkImages(value[0].id, sValue);
         this.vm.currentHomework = new Homework();
         this.vm.currentHomeworkImages = [];
@@ -262,7 +262,7 @@ export class IssueHomeworkServiceAdapter {
             }
         });
 
-        this.sendNotificationToParents(tempHomework, this.vm.HOMEWORK_DELETION_ID);
+        this.sendNotificationToParents(tempHomework, this.vm.HOMEWORK_DELETION_EVENT_DBID);
         alert('Homework Deleted');
         this.vm.isLoading = false;
     }
@@ -314,7 +314,7 @@ export class IssueHomeworkServiceAdapter {
 
         const value = await Promise.all(promises);
         this.populateEditedHomework(value);
-        this.sendNotificationToParents(value[0], this.vm.HOMEWORK_UPDATION_ID);
+        this.sendNotificationToParents(value[0], this.vm.HOMEWORK_UPDATION_EVENT_DBID);
         alert('Homework Edited Successfully');
         this.vm.isLoading = false;
     }

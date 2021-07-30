@@ -58,8 +58,8 @@ export class RecordAttendanceComponent implements OnInit {
 
     receiverList = RECEIVER_LIST;
 
-    ATTENDANCE_CREATION_ID = 5;
-    ATTENDANCE_UPDATION_ID = 6;
+    ATTENDANCE_CREATION_EVENT_DBID = 5;
+    ATTENDANCE_UPDATION_EVENT_DBID = 6;
 
     backendData = {
         eventSettingsList: [],
