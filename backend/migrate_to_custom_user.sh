@@ -1,2 +1,0 @@
-echo "INSERT INTO django_migrations (app, name, applied) VALUES ('user_app', '0004_user', CURRENT_TIMESTAMP);" | ./manage.py dbshell
-echo "UPDATE django_content_type SET app_label = 'user_app' WHERE app_label = 'auth' and model = 'user';" | ./manage.py dbshell
