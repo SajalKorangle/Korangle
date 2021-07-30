@@ -429,7 +429,6 @@ public class MainActivity extends AppCompatActivity {
     public BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(" Main Activity ", "inside BroadCaster ");
             volleyFace.checkingUpdates();
         }
     };

@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
+
 public class MyInstanceIDListenerService extends FirebaseMessagingService {
 
     @Override
@@ -24,8 +26,8 @@ public class MyInstanceIDListenerService extends FirebaseMessagingService {
 
         if (updateMessage != null && updateMessage.equals("UPDATE")) {
             Intent myIntent = new Intent("APP-UPDATE");
-            this.sendBroadcast(myIntent);
-           return;
+            this.sendBroadcast(myIntent); // send broadcast to Main Activity to check for Updates
+            return;
         }
 
         String title = remoteMessage.getNotification().getTitle();
