@@ -1,8 +1,8 @@
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
-<h1>design-layout works!</h1>
+<div class="card-content table-responsive" id="design-main-wrapper" style="height: 90vh;"
+    *ngIf="!htmlRenderer.isLoading; else LoaderSpinner">
+
+</div>
+
+<ng-template #LoaderSpinner>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>

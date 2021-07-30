@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ComponentsModule } from '@components/components.module';
 
 import { DesignLayoutRouting } from './design-layout.routing';
 import { DesignLayoutComponent } from './design-layout.component';
 
-import { ParametersPannelModule } from '@modules/my-design/components/parameters-pannel.module';
+// import { ParametersPannelModule } from '@modules/my-design/components/parameters-pannel.module';
 @NgModule({
   declarations: [DesignLayoutComponent],
   imports: [
-    CommonModule,
+    ComponentsModule,
     DesignLayoutRouting,
-    ParametersPannelModule
+    // ParametersPannelModule
   ],
   bootstrap: [DesignLayoutComponent]
 })
