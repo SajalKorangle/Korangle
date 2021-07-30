@@ -3,8 +3,6 @@ import os
 from django.utils.timezone import now
 
 from django.db import models
-from django.contrib.auth import get_user_model
-User = get_user_model()
 
 from school_app.model_custom_field import CustomImageField
 
@@ -47,12 +45,6 @@ class Session(models.Model):
     class Meta:
         db_table = 'session'
 
-
-def get_user():
-    if User.objects.filter(username='brightstar'):
-        return User.objects.filter(username='brightstar')[0].id
-    else:
-        return 1
 
 
 class School(models.Model):
