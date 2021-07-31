@@ -40,6 +40,6 @@ urlpatterns = [
     url(r'^'+api_version+'accounts/', include('accounts_app.urls')),
     url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),
     url(r'^'+api_version+'online-class/', include('online_classes_app.urls')),
-    url(r'^'+api_version+'my-design/', include('my-design.urls')),
+    url(r'^'+api_version+'my-design/', include('my_design.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
