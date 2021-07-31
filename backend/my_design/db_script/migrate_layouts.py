@@ -39,7 +39,7 @@ def migrate_tc_layout_data(apps, schema_editor):
 
     for tc_layout in TcLayout.objects.all():
         newLayout = Layout.objects.create(
-            type = 'REPORT CARD',
+            type = 'TC',
             parentSchool = tc_layout.parentSchool,
             name = tc_layout.name,
             thumbnail = tc_layout.thumbnail,
