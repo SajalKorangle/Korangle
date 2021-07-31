@@ -6,9 +6,9 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class ReportCardService extends ServiceObject {
     // objects urls
-    // public report_card_layout_new = '/report-card-layout-new';
-    // public layout_sharing = '/layout-sharing';
-    // public image_assets = '/image-assets';
+    public layout = '/layout';
+    public layout_sharing = '/layout-sharing';
+    public image_assets = '/image-assets';
 
     protected module_url = '/my-design';
 
