@@ -3,14 +3,14 @@ import { ComponentsModule } from '@components/components.module';
 
 import { DesignLayoutRouting } from './design-layout.routing';
 import { DesignLayoutComponent } from './design-layout.component';
+import { LocalComponentsModule } from './../../components/local-component.module';
 
-// import { ParametersPannelModule } from '@modules/my-design/components/parameters-pannel.module';
 @NgModule({
   declarations: [DesignLayoutComponent],
   imports: [
     ComponentsModule,
     DesignLayoutRouting,
-    // ParametersPannelModule
+    LocalComponentsModule,
   ],
   bootstrap: [DesignLayoutComponent]
 })

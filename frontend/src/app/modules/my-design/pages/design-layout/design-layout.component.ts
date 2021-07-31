@@ -39,6 +39,12 @@ export class DesignLayoutComponent implements OnInit {
 
   user: User;
 
+  backendData: {
+    layoutList: Array<any>,
+  } = {
+      layoutList: null,
+    };
+
   serviceAdapter: DesignLayoutServiceAdapter;
   htmlRenderer: DesignLayoutHtmlRenderer;
 
@@ -56,6 +62,10 @@ export class DesignLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
+    this.serviceAdapter = new DesignLayoutServiceAdapter(this);
+    this.htmlRenderer = new DesignLayoutHtmlRenderer(this);
+
+    this.serviceAdapter.initilizeDate();
   }
 
 }

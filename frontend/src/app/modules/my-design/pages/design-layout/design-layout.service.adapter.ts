@@ -6,4 +6,8 @@ export class DesignLayoutServiceAdapter {
     constructor(vm: DesignLayoutComponent) {
         this.vm = vm;
     }
+
+    async initilizeDate() {
+        this.vm.htmlRenderer.isLoading = true;
+    }
 }
