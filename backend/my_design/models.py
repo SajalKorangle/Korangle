@@ -16,7 +16,7 @@ class Layout(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_thumbnail_to, null=True)
     publiclyShared = models.BooleanField(default=False)
-    content = models.TextField()    # Contains the JSON content for the layout
+    contentJSON = models.TextField()    # Contains the JSON content for the layout
     
     class Meta:
         unique_together = ('type', 'parentSchool', 'name')

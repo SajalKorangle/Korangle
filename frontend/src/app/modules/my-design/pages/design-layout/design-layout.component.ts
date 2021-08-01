@@ -4,6 +4,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 
 
 // Backend Services
+import { MyDesignService } from '@services/modules/my-design/my-design.service';
 import { ReportCardService } from '@services/modules/report-card/report-card.service';
 import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
@@ -15,6 +16,8 @@ import { GradeService } from '@services/modules/grade/grade.service';
 
 // For Types
 import { User } from '@classes/user';
+import { Layout } from '@services/modules/my-design/models/layout';
+import { LayoutSharing } from '@services/modules/my-design/models/layout-sharing';
 
 import { DesignLayoutHtmlRenderer } from './design-layout.html.renderer';
 import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
@@ -24,6 +27,7 @@ import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
   templateUrl: './design-layout.component.html',
   styleUrls: ['./design-layout.component.css'],
   providers: [
+    MyDesignService,
     ReportCardService,
     StudentService,
     ClassService,
@@ -40,15 +44,18 @@ export class DesignLayoutComponent implements OnInit {
   user: User;
 
   backendData: {
-    layoutList: Array<any>,
+    layoutList: Array<Layout>,
+    layoutSharingSharedWithMeList: Array<LayoutSharing>,
   } = {
       layoutList: null,
+      layoutSharingSharedWithMeList: null,
     };
 
   serviceAdapter: DesignLayoutServiceAdapter;
   htmlRenderer: DesignLayoutHtmlRenderer;
 
   constructor(
+    public myDesignService: MyDesignService,
     public reportCardService: ReportCardService,
     public studentService: StudentService,
     public classService: ClassService,
@@ -66,6 +73,7 @@ export class DesignLayoutComponent implements OnInit {
     this.htmlRenderer = new DesignLayoutHtmlRenderer(this);
 
     this.serviceAdapter.initilizeDate();
+    console.log('main component: ', this);
   }
 
 }

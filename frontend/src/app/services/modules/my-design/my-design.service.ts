@@ -4,7 +4,7 @@ import { ServiceObject } from '../../common/service-object';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
-export class ReportCardService extends ServiceObject {
+export class MyDesignService extends ServiceObject {
     // objects urls
     public layout = '/layout';
     public layout_sharing = '/layout-sharing';
