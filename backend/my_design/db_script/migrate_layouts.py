@@ -18,7 +18,7 @@ def migrate_rc_layout_data(apps, schema_editor):
         )
 
         for rc_layout_sharing in LayoutSharingReportCard.objects.filter(parentLayout=rc_layout):
-            LayoutSharing.objects.craete(
+            LayoutSharing.objects.create(
                 parentLayout = newLayout,
                 parentSchool = rc_layout_sharing.parentSchool
             )
@@ -48,7 +48,7 @@ def migrate_tc_layout_data(apps, schema_editor):
         )
 
         for rc_layout_sharing in LayoutSharingTc.objects.filter(parentLayout=tc_layout):
-            LayoutSharing.objects.craete(
+            LayoutSharing.objects.create(
                 parentLayout = newLayout,
                 parentSchool = rc_layout_sharing.parentSchool
             )
