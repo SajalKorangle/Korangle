@@ -1,7 +1,19 @@
 <h2 mat-dialog-title>Inventory</h2>
 <mat-dialog-content style="height: 62vh; width: 75vw">
 
-    <ng-container *ngIf="activeLayoutType">
+    <ng-container *ngIf="!activeLayoutType else LAYOUTS_CHOSSER">
+        <ng-container *ngFor="let layoutType of layoutTypeList">
+            <div style="text-align: center; display: inline-block; padding: 4px; width: 160px; margin: 6px; cursor: default; border-radius: 5px; user-select: none;"
+                [class.active-folder]="clickedLayoutFolderType==layoutType" (dblclick)="activeLayoutType=layoutType"
+                (click)="clickedLayoutFolderType=layoutType">
+                <mat-icon style="font-size: 48px; height: fit-content; width: fit-content; color: rgb(49, 208, 255);">
+                    folder</mat-icon><br />
+                <span>{{layoutType}}</span>
+            </div>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #LAYOUTS_CHOSSER>
         <mat-tab-group mat-align-tabs="center" (selectedTabChange)="resetSelection()">
             <mat-tab label="My Layouts">
                 <div style="display: flex; flex-wrap: wrap; padding-top: 6px">
@@ -16,7 +28,7 @@
                             border: solid 3px;
                             display: table-cell;
                             vertical-align: middle;
-                        " [style.borderColor]="!selectedLayout.id ? 'blue' : 'lightgrey'">
+                        " [style.borderColor]="selectedLayout && !selectedLayout.id ? 'blue' : 'lightgrey'">
                             <span class="material-icons" style="font-size: xx-large">add</span>
                         </div>
                         <span>New Layout</span>
@@ -114,9 +126,9 @@
                 </div>
             </mat-tab>
         </mat-tab-group>
-    </ng-container>
+    </ng-template>
 </mat-dialog-content>
-<div mat-dialog-actions style="color: white">
+<div mat-dialog-actions style="color: white" *ngIf="activeLayoutType">
     <span style="display: inline-block; margin-left: auto"></span>
     <button mat-button *ngIf="isMyLayout()" (click)="copyAndApply()" class="btn" style="background-color: blue"
         cdkFocusInitial>

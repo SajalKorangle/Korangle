@@ -14,15 +14,17 @@ import { Layout, TYPE_CHOICES } from '@services/modules/my-design/models/layout'
 export class InventoryDialogComponent implements OnInit {
     vm: DesignLayoutComponent;
 
-    layoutTypes = TYPE_CHOICES;
+    layoutTypeList = TYPE_CHOICES;
 
     activeLayoutType: typeof TYPE_CHOICES[number] = null;
+
+    clickedLayoutFolderType: typeof TYPE_CHOICES[number] = null;
 
     selectedLayout: Partial<Layout>; // type = page
 
     constructor(public dialogRef: MatDialogRef<InventoryDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }) {
         this.vm = data.vm;
-        this.selectedLayout = data.selectedLayout;
+        // this.selectedLayout = data.selectedLayout;
     }
 
     ngOnInit() { }
@@ -55,11 +57,16 @@ export class InventoryDialogComponent implements OnInit {
     }
 
     isMyLayout(): boolean {
-        return this.selectedLayout.parentSchool == this.vm.user.activeSchool.dbId;
+        if (this.selectedLayout && this.selectedLayout.parentSchool) {
+            return this.selectedLayout.parentSchool == this.vm.user.activeSchool.dbId;
+        }
+        else {
+            false;
+        }
     }
 
     apply(): void {
-        if (this.isMyLayout() || this.selectedLayout == this.vm.ADD_LAYOUT_STRING) {
+        if (this.isMyLayout() || !this.selectedLayout.id) {
             this.dialogRef.close({ layout: this.selectedLayout, copy: false });
         } else {
             this.copyAndApply();
