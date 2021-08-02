@@ -93,7 +93,7 @@ export class MessageService {
 
     async sendEventNotification(
         Data, // contains all the backend list which are required to populate the variables
-        personsList, // ['student','employee'] either or both of them
+        personsTypeList, // ['student','employee'] either or both of them
         eventId, // id of the Event like 'Homework Creation' = 7 as a number
         schoolId, // school dbId
         smsBalance, // school sms balance
@@ -114,7 +114,7 @@ export class MessageService {
             return;
         } // if there is not event settings or sentUpdateType is null then return
 
-        let smsTemplate = await this.smsService.getObject(this.smsService.sms_default_template,
+        let smsDefaultTemplate = await this.smsService.getObject(this.smsService.sms_default_template,
                     {id: smsEvent.defaultSMSTemplateId});
 
         let messageContent;
@@ -123,19 +123,19 @@ export class MessageService {
         } else {
             // if there is any templated linked with the settings get that template and populate
             if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
-                smsTemplate = await this.smsService.getObject(this.smsService.sms_template,
+                smsDefaultTemplate = await this.smsService.getObject(this.smsService.sms_template,
                     {id: eventSettings.parentSMSTemplate});
             }
-            messageContent = smsTemplate.mappedContent;
+            messageContent = smsDefaultTemplate.mappedContent;
         }
 
         try {
             await this.smsNotificationSender(
                 Data,
-                personsList,
+                personsTypeList,
                 smsEvent,
                 eventSettings.sendUpdateTypeId,
-                smsTemplate,
+                smsDefaultTemplate,
                 messageContent,
                 null,
                 schoolId,
@@ -148,7 +148,7 @@ export class MessageService {
 
     async smsNotificationSender(
         data: any, // contains all the backend list which are required to populate the variables
-        personsList: any, // ['student','employee'] either or both of them
+        personsTypeList: any, // ['student','employee'] either or both of them
         smsEvent: any, // corresponding SMS Event
         sendUpdateTypeId: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
         smsTemplate: any, // This contains any sms template that is used ( if not null )
@@ -167,7 +167,7 @@ export class MessageService {
         // finding the corresponding eventSettingsPage to know the variablesList
         let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id);
 
-        personsList.forEach(person => {
+        personsTypeList.forEach(person => {
             data[person + 'List'].forEach(personData => {
                 if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
                     let mappedObject = this.getMappingData(variableMappedEvent.variableList, data, person, personData);

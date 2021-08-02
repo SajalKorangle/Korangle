@@ -42,9 +42,9 @@ export class AddEventComponent implements OnInit {
     eventCount = 0;
     loadingCount = 10;
 
-    EVENT_GALLERY_CREATION_EVENT_ID = 15;
-    EVENT_GALLERY_UPDATION_EVENT_ID = 16;
-    EVENT_GALLERY_DELETION_EVENT_ID = 17;
+    EVENT_GALLERY_CREATION_EVENT_DBID = 15;
+    EVENT_GALLERY_UPDATION_EVENT_DBID = 16;
+    EVENT_GALLERY_DELETION_EVENT_DBID = 17;
 
     isLoading = false;
     loadMoreEvents = false;

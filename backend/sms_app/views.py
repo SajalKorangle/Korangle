@@ -118,7 +118,7 @@ class SMSIdSchoolListView(CommonListView, APIView):
 class SMSEventView(APIView):
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):  # return only the first element or one element
-        return next(common_json_view_function(request.GET, "sms_app", "sms_event.json"))
+        return common_json_view_function(request.GET, "sms_app", "sms_event.json")[0]
 
 
 class SMSEventListView(APIView):
@@ -130,7 +130,7 @@ class SMSEventListView(APIView):
 class SMSDefaultTemplateView(APIView):
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
-        return next(common_json_view_function(request.GET, "sms_app", "default_sms_templates.json"))
+        return common_json_view_function(request.GET, "sms_app", "default_sms_templates.json")[0]
 
 
 class SMSDefaultTemplateListView(APIView):
