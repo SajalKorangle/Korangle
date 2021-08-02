@@ -24,7 +24,7 @@ export class AppHtmlRenderer {
             console.log('uptill here');
             let dateOfExpiryInDateObject = new Date(this.vm.user.activeSchool.dateOfExpiry+"T23:59:59");
             let todaysDate = new Date();
-            if (parseInt(Math.abs(dateOfExpiryInDateObject-todaysDate)/(1000 * 60 * 60 * 24)) < 15) {
+            if (Math.abs(dateOfExpiryInDateObject.getTime()-todaysDate.getTime())/(1000 * 60 * 60 * 24) < 15) {
                 return 'Your school will expire on ' + this.formatDate(dateOfExpiryInDateObject);
             }
         }
