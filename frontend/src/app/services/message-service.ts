@@ -20,7 +20,6 @@ SentUpdateType -
 })*/
 
 export class MessageService {
-    STUDENT_LIMITER = 200;
     notif_usernames = [];
 
     notificationService: any;
@@ -34,34 +33,23 @@ export class MessageService {
     }
 
     fetchGCMDevicesNew: any = (studentList: any) => {
-        const service_list = [];
-        const iterationCount = Math.ceil(studentList.length / this.STUDENT_LIMITER);
-        let loopVariable = 0;
+        const mobile_list = studentList.filter((item) => item.mobileNumber).map((obj) => obj.mobileNumber.toString());
+        const gcm_data = {
+            user__username__in: mobile_list,
+            active: 'true__boolean',
+        };
+        const user_data = {
+            fields__korangle: 'username,id',
+            username__in: mobile_list,
+        };
 
-        while (loopVariable < iterationCount) {
-            const mobile_list = studentList.filter((item) => item.mobileNumber).map((obj) => obj.mobileNumber.toString());
-            const gcm_data = {
-                user__username__in: mobile_list.slice(this.STUDENT_LIMITER * loopVariable, this.STUDENT_LIMITER * (loopVariable + 1)),
-                active: 'true__boolean',
-            };
-            const user_data = {
-                fields__korangle: 'username,id',
-                username__in: mobile_list.slice(this.STUDENT_LIMITER * loopVariable, this.STUDENT_LIMITER * (loopVariable + 1)),
-            };
-            service_list.push(this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data));
-            service_list.push(this.userService.getObjectList(this.userService.user, user_data));
-            loopVariable = loopVariable + 1;
-        }
+        Promise.all([
+            this.notificationService.getDataWithPost(this.notificationService.gcm_device, gcm_data),
+            this.userService.getDataWithPost(this.userService.user, user_data)
+        ]).then((value) => {
 
-        Promise.all(service_list).then((value) => {
-            let temp_gcm_list = [];
-            let temp_user_list = [];
-            let loopVariable = 0;
-            while (loopVariable < iterationCount) {
-                temp_gcm_list = temp_gcm_list.concat(value[loopVariable * 2]);
-                temp_user_list = temp_user_list.concat(value[loopVariable * 2 + 1]);
-                loopVariable = loopVariable + 1;
-            }
+            let temp_gcm_list = value[0];
+            let temp_user_list = value[1];
 
             const notif_usernames = temp_user_list.filter((user) => {
                 return (
@@ -70,6 +58,7 @@ export class MessageService {
                     }) != undefined
                 );
             });
+
             // Storing because they're used later
             this.notif_usernames = notif_usernames;
 
@@ -90,6 +79,11 @@ export class MessageService {
             });
         });
     }
+
+    /*
+     This sendEventNotification function is called by all the Automated Events like Tutorials,Homework,Event-Gallery because to
+     avoid code repetition ( like - fetching the smsEventData smseventSettings data in all the pages )
+     */
 
     async sendEventNotification(
         Data, // contains all the backend list which are required to populate the variables
@@ -121,7 +115,7 @@ export class MessageService {
         if (eventSettings.sendUpdateTypeId == 3) { //if the type is Notification
             messageContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
         } else {
-            // if there is any templated linked with the settings get that template and populate
+            // if there is any template linked with the settings get that template and store it
             if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
                 smsDefaultTemplate = await this.smsService.getObject(this.smsService.sms_template,
                     {id: eventSettings.parentSMSTemplate});
@@ -146,6 +140,12 @@ export class MessageService {
         }
     }
 
+     /*
+     smsNotificationSender is called by the AutomatedEvents function sendEventNotification and
+     For SendGeneralSMS and NotifyDefaultersSMS this function is called directly from the respective pages
+     as they don't have any smsEventSettings and the pages contain the smsContent by themselves
+     */
+
     async smsNotificationSender(
         data: any, // contains all the backend list which are required to populate the variables
         personsTypeList: any, // ['student','employee'] either or both of them
@@ -167,9 +167,12 @@ export class MessageService {
         // finding the corresponding eventSettingsPage to know the variablesList
         let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id);
 
-        personsTypeList.forEach(person => {
+        // Iterating over the person Type list because in Event-Gallery we require both Students and Employees
+        // So it is determined by the function caller
+        personsTypeList.forEach(person => { // here person is Student or Employee
             data[person + 'List'].forEach(personData => {
                 if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
+                    // Getting the mapped data like - { studentName : "Rahul", class: "10" ... etc }
                     let mappedObject = this.getMappingData(variableMappedEvent.variableList, data, person, personData);
                     mappedObject['notification'] = personData.notification;
                     mappedObject['id'] = personData.id;
@@ -179,15 +182,15 @@ export class MessageService {
 
         });
 
-        if (sendUpdateTypeId == 2) {
+        if (sendUpdateTypeId == 2) { // if the update type is 2 (SMS) populating only the sms_list
             sms_list = personVariablesMappedObjList;
             notification_list = [];
-        } else if (sendUpdateTypeId == 3) {
+        } else if (sendUpdateTypeId == 3) { // if the update type is 3 (NOTIFICATION) populating only the notification_list
             sms_list = [];
             notification_list = personVariablesMappedObjList.filter((obj) => {
                 return obj.notification;
             });
-        } else {
+        } else { // populating both
             notification_list = personVariablesMappedObjList.filter((obj) => {
                 return obj.notification;
             });
@@ -204,10 +207,11 @@ export class MessageService {
         notification_list.forEach((item) => {
             let temp = {
                 mobileNumber: item.mobileNumber,
+                // Getting the exact message from the template format text (for eg: by replacing the {#studentName#} with Rahul)
                 content: this.getMessageFromTemplate(messageContent, item)
             };
             let duplicateData = notificationMappedDataList.some(x => x.mobileNumber == item.mobileNumber && x.content == temp.content);
-            if (!duplicateData) {
+            if (!duplicateData) { // if there is no duplicate data with same number and same message then pushing
                 notif_mobile_string += item.mobileNumber + ', ';
                 notificationMappedDataList.push(temp);
             }
@@ -216,11 +220,12 @@ export class MessageService {
         sms_list.forEach((item) => {
             let temp = {
                 Number: item.mobileNumber,
+                // Getting the exact message from the template format text (for eg: by replacing the {#studentName#} with Rahul)
                 Text: this.getMessageFromTemplate(messageContent, item),
                 DLTTemplateId: smsTemplate.templateId
             };
             let duplicateData = smsMappedDataList.some(x => x.mobileNumber == temp.Number && x.Text == temp.Text);
-            if (!duplicateData) {
+            if (!duplicateData) { // if there is no duplicate data with same number and same message then pushing
                 sms_mobile_string += item.mobileNumber + ', ';
                 smsMappedDataList.push(temp);
             }
@@ -228,7 +233,7 @@ export class MessageService {
 
         let smsCount = this.getEstimatedSMSCount(sendUpdateTypeId, smsMappedDataList);
 
-        if (smsCount > smsBalance) {
+        if (smsCount > smsBalance) { // if balance is low not sending any SMS ( but notification is sent )
             smsMappedDataList = [];
             smsCount = 0;
             sms_mobile_string = '';
@@ -238,7 +243,7 @@ export class MessageService {
         notif_mobile_string = notif_mobile_string.slice(0, -2);
 
         let sms_data = {
-            contentType: this.hasUnicode(messageContent) ? '8' : '0',
+            contentType: this.hasUnicode(messageContent) ? '8' : '0', // 8 is the DCS Code give by vendor for unicode messages
             SMSEventId: smsEvent.id,
             content: messageContent,
             parentMessageType: null,
