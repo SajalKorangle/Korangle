@@ -14,7 +14,6 @@ import { UserService } from 'app/services/modules/user/user.service';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
 import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
-import {valueType} from '@modules/common/in-page-permission';
 import {EmployeeService} from '@services/modules/employee/employee.service';
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
 
