@@ -44,8 +44,8 @@ export class MessageService {
         };
 
         Promise.all([
-            this.notificationService.getDataWithPost(this.notificationService.gcm_device, gcm_data),
-            this.userService.getDataWithPost(this.userService.user, user_data)
+            this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data),
+            this.userService.getObjectList(this.userService.user, user_data)
         ]).then((value) => {
 
             let temp_gcm_list = value[0];
