@@ -1,4 +1,4 @@
-import { ClassroomComponent } from './classroom.component';
+import { TeachClassComponent } from './teach-class.component';
 
 import { TimeComparator, Time } from '@modules/online-classes/class/constants';
 
@@ -8,9 +8,9 @@ import { AccountInfo } from '@services/modules/online-class/models/account-info'
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { Subject } from '@services/modules/subject/models/subject';
 
-export class ClassroomBackendData {
+export class TeachClassBackendData {
 
-    vm: ClassroomComponent;
+    vm: TeachClassComponent;
 
     private _onlineClassList: Array<ParsedOnlineClass>;
     accountInfo: AccountInfo;
@@ -22,7 +22,7 @@ export class ClassroomBackendData {
 
     constructor() { }
 
-    initialize(vm: ClassroomComponent): void {
+    initialize(vm: TeachClassComponent): void {
         this.vm = vm;
     }
 

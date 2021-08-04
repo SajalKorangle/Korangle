@@ -75,6 +75,9 @@
                                     {{htmlRenderer.timeBreakPoints.slice(-1)[0].getDisplayString()}}
                                 </span>
                             </td>
+                            <ng-container *ngFor="let weekday of getObjectKeys(weekdayKeysMappedByDisplayName)">
+                                <td></td>
+                            </ng-container>
                         </tr>
                     </tbody>
                 </table>

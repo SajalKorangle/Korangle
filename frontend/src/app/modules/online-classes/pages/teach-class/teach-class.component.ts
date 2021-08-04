@@ -3,9 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataStorage } from "@classes/data-storage";
 
-import { ClassroomServiceAdapter } from './classroom.service.adapter';
-import { ClassroomHtmlRenderer } from './classroom.html.renderer';
-import { ClassroomBackendData } from './classroom.backend.data';
+import { TeachClassServiceAdapter } from './teach-class.service.adapter';
+import { TeachClassHtmlRenderer } from './teach-class.html.renderer';
+import { TeachClassBackendData } from './teach-class.backend.data';
 
 // services
 import { SubjectService } from '@services/modules/subject/subject.service';
@@ -21,12 +21,12 @@ import UtilityMixin from '@classes/mixins/utility-mixin';
 
 @Component({
     selector: 'classroom',
-    templateUrl: './classroom.component.html',
-    styleUrls: ['./classroom.component.css'],
+    templateUrl: './teach-class.component.html',
+    styleUrls: ['./teach-class.component.css'],
     providers: [SubjectService, OnlineClassService, ClassService, SchoolService],
 })
 
-export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestroy {
+export class TeachClassComponent extends UtilityMixin implements OnInit, OnDestroy {
 
     user: any;
 
@@ -39,9 +39,9 @@ export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestro
 
     timeHandleInterval;
 
-    serviceAdapter: ClassroomServiceAdapter;
-    htmlRenderer: ClassroomHtmlRenderer;
-    backendData: ClassroomBackendData;
+    serviceAdapter: TeachClassServiceAdapter;
+    htmlRenderer: TeachClassHtmlRenderer;
+    backendData: TeachClassBackendData;
 
     isPasswordVisible: boolean = false;
     isActiveSession: boolean;
@@ -59,15 +59,13 @@ export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestro
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.userInput.initialize(this);
-
-        this.backendData = new ClassroomBackendData();
+        this.backendData = new TeachClassBackendData();
         this.backendData.initialize(this);
 
-        this.htmlRenderer = new ClassroomHtmlRenderer();
+        this.htmlRenderer = new TeachClassHtmlRenderer();
         this.htmlRenderer.initialize(this);
 
-        this.serviceAdapter = new ClassroomServiceAdapter();
+        this.serviceAdapter = new TeachClassServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
 

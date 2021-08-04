@@ -1,8 +1,9 @@
-import { ClassroomComponent } from './classroom.component';
+import { TeachClassComponent } from './teach-class.component';
 import { TimeComparator, Time, ColorPaletteHandle, ParsedOnlineClass } from '@modules/online-classes/class/constants';
-export class ClassroomHtmlRenderer {
 
-    vm: ClassroomComponent;
+export class TeachClassHtmlRenderer {
+
+    vm: TeachClassComponent;
 
     timeBreakPoints: Array<Time>;
 
@@ -10,7 +11,7 @@ export class ClassroomHtmlRenderer {
 
     constructor() { }
 
-    initialize(vm: ClassroomComponent): void {
+    initialize(vm: TeachClassComponent): void {
         this.vm = vm;
     }
 

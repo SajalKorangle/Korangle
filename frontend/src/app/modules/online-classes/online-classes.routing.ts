@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'join_class',
-    loadChildren: 'app/modules/online-classes/pages/classroom/classroom.module#ClassroomModule',
+    loadChildren: 'app/modules/online-classes/pages/teach-class/teach-class.module#TeachClassModule',
     data: { moduleName: 'online_classes' },
   },
   {
@@ -32,7 +32,7 @@ const routes: Routes = [
   {
     path: 'join_all',
     loadChildren: 'app/modules/online-classes/pages/join-all/join-all.module#JoinAllModule',
-    data: {moduleName: 'online_classes'},
+    data: { moduleName: 'online_classes' },
   },
   {
     path: '',
