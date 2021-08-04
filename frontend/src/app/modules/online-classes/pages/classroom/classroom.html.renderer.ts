@@ -1,14 +1,12 @@
 import { ClassroomComponent } from './classroom.component';
-import { TimeSpan, TimeComparator, TimeSpanComparator, Time, ColorPaletteHandle, ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { TimeComparator, Time, ColorPaletteHandle, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
 
-    employeeKeyTimeList: Array<Time>;
+    timeBreakPoints: Array<Time>;
 
     colorPaletteHandle = ColorPaletteHandle;
-
-    hasAtleastOneClass = false;
 
     constructor() { }
 
@@ -16,31 +14,7 @@ export class ClassroomHtmlRenderer {
         this.vm = vm;
     }
 
-    initilizeTimeTable() {
-        ColorPaletteHandle.reset();
-        this.employeeKeyTimeList = [];
-        this.vm.backendData.onlineClassList.forEach(onlineClass => {
-            let startTimeAlreadyPresent: boolean = false;
-            let endTimeAlreadyPresent: boolean = false;
-            this.employeeKeyTimeList.forEach(timeSpan => {
-                if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
-                    startTimeAlreadyPresent = true;
-                }
-                if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
-                    endTimeAlreadyPresent = true;
-                }
-            });
-            if (!startTimeAlreadyPresent) {
-                this.employeeKeyTimeList.push(new Time({ ...onlineClass.startTimeJSON }));
-            }
-            if (!endTimeAlreadyPresent) {
-                this.employeeKeyTimeList.push(new Time({ ...onlineClass.endTimeJSON }));
-            }
-        });
-        this.employeeKeyTimeList.sort(TimeComparator);
-    }
-
-    getTime() {
+    getCurrentTime() {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
@@ -50,24 +24,12 @@ export class ClassroomHtmlRenderer {
         return customTime.getDisplayString();
     }
 
-    getDisplayData(onlineClass: ParsedOnlineClass) {
+    getCardSlotDisplayData(onlineClass: ParsedOnlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
         const classInstance = this.vm.backendData.getClassById(classSubject.parentClass);
         const division = this.vm.backendData.getDivisionById(classSubject.parentDivision);
-        return { classSubject, subject, classInstance, division };
-    }
-
-    isActiveTime(time: Time): boolean {
-        const activeClass = this.getActiveClass();
-        if (!activeClass)
-            return false;
-
-        if (TimeComparator(activeClass.startTimeJSON, time) <= 0
-            && TimeComparator(time, activeClass.endTimeJSON) < 0) {
-            return true;
-        }
-        return false;
+        return { subject, classInstance, division };
     }
 
     isActive(onlineClass: ParsedOnlineClass): boolean {
@@ -100,16 +62,16 @@ export class ClassroomHtmlRenderer {
     }
 
     getOnlineClassRowSpan(onlineClass: ParsedOnlineClass): number {
-        const startTimeIndex = this.employeeKeyTimeList.findIndex(time => {
+        const startTimeIndex = this.timeBreakPoints.findIndex(time => {
             return TimeComparator(time, onlineClass.startTimeJSON) == 0;
         });
-        const endTimeIndex = this.employeeKeyTimeList.findIndex(time => {
+        const endTimeIndex = this.timeBreakPoints.findIndex(time => {
             return TimeComparator(time, onlineClass.endTimeJSON) == 0;
         });
         return endTimeIndex - startTimeIndex;
     }
 
-    shouldRenderEmptyTd(weekdayKey, time: Time) {
+    isCellOccupiedDueToRowspan(weekdayKey, time: Time) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
             if (onlineClass.day == this.vm.weekdays[weekdayKey]
                 && TimeComparator(time, onlineClass.startTimeJSON) >= 0

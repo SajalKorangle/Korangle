@@ -13,7 +13,7 @@ import { OnlineClassService } from '@services/modules/online-class/online-class.
 import { ClassService } from '@services/modules/class/class.service';
 import { SchoolService } from '@services/modules/school/school.service';
 
-import { Time, WEEKDAYS, ZOOM_BASE_URL, ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { Time, WEEKDAYS, ZOOM_BASE_URL, ColorPaletteHandle, TimeComparator } from '@modules/online-classes/class/constants';
 
 import { isMobile, openUrlInBrowser } from '@classes/common.js';
 
@@ -80,11 +80,35 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         clearInterval(this.timeHandleInterval);
     }
 
-    getObjetKeys(obj: { [key: string]: any; }): Array<string> {
+    initializeTimeTable() {
+        ColorPaletteHandle.reset();
+        this.htmlRenderer.timeBreakPoints = [];
+        this.backendData.onlineClassList.forEach(onlineClass => {
+            let startTimeAlreadyPresent: boolean = false;
+            let endTimeAlreadyPresent: boolean = false;
+            this.htmlRenderer.timeBreakPoints.forEach(timeSpan => {
+                if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
+                    startTimeAlreadyPresent = true;
+                }
+                if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
+                    endTimeAlreadyPresent = true;
+                }
+            });
+            if (!startTimeAlreadyPresent) {
+                this.htmlRenderer.timeBreakPoints.push(new Time({ ...onlineClass.startTimeJSON }));
+            }
+            if (!endTimeAlreadyPresent) {
+                this.htmlRenderer.timeBreakPoints.push(new Time({ ...onlineClass.endTimeJSON }));
+            }
+        });
+        this.htmlRenderer.timeBreakPoints.sort(TimeComparator);
+    }
+
+    getObjectKeys(obj: { [key: string]: any; }): Array<string> {
         return Object.keys(obj);
     }
 
-    parseBacknedData() {
+    parseBackendData() {
         this.backendData.onlineClassList.forEach(onlineClass => {
             Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);

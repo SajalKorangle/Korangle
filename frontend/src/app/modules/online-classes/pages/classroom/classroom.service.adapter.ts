@@ -52,8 +52,8 @@ export class ClassroomServiceAdapter {
 
         this.vm.backendData.onlineClassList = await this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request);
 
-        this.vm.parseBacknedData();
-        this.vm.htmlRenderer.initilizeTimeTable();
+        this.vm.parseBackendData();
+        this.vm.initializeTimeTable();
         this.vm.isLoading = false;
     }
 
