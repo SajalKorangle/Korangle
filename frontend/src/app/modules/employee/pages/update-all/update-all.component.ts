@@ -44,7 +44,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle("Mother's Name", 'motherName', 'text', false, ''), // 8
         new ColumnHandle('Aadhar No.', 'aadharNumber', 'number', false, ''), // 9
         new ColumnHandle('Passport No.', 'passportNumber', 'number', false, ''), // 10
-        new ColumnHandle('Qualification', 'qualification', 'number', false, ''), // 11
+        new ColumnHandle('Qualification', 'qualification', 'text', false, ''), // 11
         new ColumnHandle('Current Post', 'currentPost', 'text', false, ''), // 12
         new ColumnHandle('Date Of Joining', 'dateOfJoining', 'date', false, ''), // 13
         new ColumnHandle('Pan No.', 'panNumber', 'number', false, ''), // 14
@@ -54,7 +54,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Bank Acc. No.', 'bankAccountNumber', 'text', false, ''), // 18
         new ColumnHandle('Epf Acc. No.', 'epfAccountNumber', 'number', false, ''), // 19
         new ColumnHandle('Bank IFSC Code', 'bankIfscCode', 'text', false, ''), // 20
-        new ColumnHandle('Month Salary', 'monthlySalary', 'text', false, ''), // 21
+        new ColumnHandle('Month Salary', 'monthlySalary', 'number', false, ''), // 21
         new ColumnHandle('Pran No.', 'pranNumber', 'text', false, ''), // 22
         new ColumnHandle('Remark', 'remark', 'text', false, ''), // 23
     ];

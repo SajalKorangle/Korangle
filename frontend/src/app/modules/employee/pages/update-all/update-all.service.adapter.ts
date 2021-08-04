@@ -54,14 +54,15 @@ export class UpdateAllServiceAdapter {
         let data = {
             id: employee['id'],
         };
+        if (newValue != null && newValue.toString().trim() == '') {
+            newValue = null;
+        }
         data[key] = newValue;
         console.log(data);
         if (employee[key] != newValue) {
             if (key == 'mobileNumber') {
-                if (newValue.toString().length !== 10) {
-                    if (employee.mobileNumber != null) {
-                        alert('Mobile number should be 10 digits!');
-                    }
+                if (newValue == null || newValue.toString().length !== 10) {
+                    alert('Mobile number should be 10 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.mobileNumber;
                     return;
                 } else {
@@ -76,39 +77,37 @@ export class UpdateAllServiceAdapter {
                         alert('Mobile Number already exists in ' + selectedEmployee.name + "'s profile");
                         (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.mobileNumber;
                         return;
-                    } else {
-                        data['mobileNumber'] = newValue;
                     }
                 }
             } else if (key == 'aadharNumber') {
-                if (newValue.toString().length !== 12) {
-                    if (employee.aadharNumber != null) {
-                        alert('Aadhar number should be 12 digits!');
-                    }
+                if (newValue != null && newValue.toString().length !== 12) {
+                    alert('Aadhar number should be 12 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.aadharNumber;
                     return;
-                } else {
-                    data['aadharNumber'] = newValue;
                 }
             } else if (key == 'panNumber') {
-                if (newValue.toString().length !== 10) {
-                    if (employee.panNumber != null) {
-                        alert('Pan number should be 10 digits!');
-                    }
+                if (newValue != null && newValue.toString().length !== 10) {
+                    alert('Pan number should be 10 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.panNumber;
                     return;
-                } else {
-                    data['panNumber'] = newValue;
                 }
             } else if (key == 'bankIfscCode') {
-                if (newValue.toString().length !== 11) {
-                    if (employee.bankIfscCode != null) {
-                        alert('Pan number should be 11 digits!');
-                    }
+                if (newValue != null && newValue.toString().length !== 11) {
+                    alert('Bank IFSC Code should be 11 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.bankIfscCode;
                     return;
-                } else {
-                    data['bankIfscCode'] = newValue;
+                }
+            } else if (key == 'fatherName') {
+                if (newValue == null || newValue.trim() == "") {
+                    alert('Father Name Cannot be Empty');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.fatherName;
+                    return;
+                }
+            } else if (key == 'name') {
+                if (newValue == null || newValue.trim() == "") {
+                    alert('Employee Name Cannot be Empty');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.name;
+                    return;
                 }
             }
 
