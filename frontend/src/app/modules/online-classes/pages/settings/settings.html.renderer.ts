@@ -76,7 +76,6 @@ export class SettingsHtmlRenderer {
                     this.filteredOnlineClassList.splice(bookedSlotOnlineClassIndex, 1);
                 }
             });
-            // this.filteredOnlineClassList = this.filteredOnlineClassList.filter(Boolean);
 
             this.employeeKeyTimeList = [];
             this.filteredOnlineClassList.forEach(onlineClass => {
@@ -304,13 +303,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));

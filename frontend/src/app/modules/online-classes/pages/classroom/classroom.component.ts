@@ -8,14 +8,17 @@ import { ClassroomHtmlRenderer } from './classroom.html.renderer';
 import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
+// services
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SchoolService } from '@services/modules/school/school.service';
 
-import { Time, WEEKDAYS, ZOOM_BASE_URL, ColorPaletteHandle, TimeComparator } from '@modules/online-classes/class/constants';
+import { Time, WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, ZOOM_BASE_URL, ColorPaletteHandle, TimeComparator } from '@modules/online-classes/class/constants';
 
 import { isMobile, openUrlInBrowser } from '@classes/common.js';
+
+import UtilityMixin from '@classes/mixins/utility-mixin';
 
 @Component({
     selector: 'classroom',
@@ -24,15 +27,15 @@ import { isMobile, openUrlInBrowser } from '@classes/common.js';
     providers: [SubjectService, OnlineClassService, ClassService, SchoolService],
 })
 
-export class ClassroomComponent implements OnInit, OnDestroy {
+export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestroy {
 
     user: any;
 
     isMobile = isMobile;
 
-    weekdays = WEEKDAYS;
+    weekdayKeysMappedByDisplayName = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
-    today: string = Object.values(WEEKDAYS)[new Date().getDay()];
+    todayDisplayName: string = Object.values(WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME)[new Date().getDay()];
     currentTime: Date = new Date();
 
     timeHandleInterval;
@@ -53,7 +56,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         public classService: ClassService,
         public schoolService: SchoolService,
         public snackBar: MatSnackBar,
-    ) { }
+    ) { super(); }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -81,8 +84,9 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     }
 
     initializeTimeTable() {
-        ColorPaletteHandle.reset();
+        ColorPaletteHandle.reset(); // resets mapping of subjects with colors
         this.htmlRenderer.timeBreakPoints = [];
+
         this.backendData.onlineClassList.forEach(onlineClass => {
             let startTimeAlreadyPresent: boolean = false;
             let endTimeAlreadyPresent: boolean = false;
@@ -108,13 +112,6 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         return Object.keys(obj);
     }
 
-    parseBackendData() {
-        this.backendData.onlineClassList.forEach(onlineClass => {
-            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
-            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
-        });
-    }
-
     redirectToMeeting(): void {
         if (this.backendData.accountInfo.meetingNumber) {
             if (isMobile()) {
@@ -130,11 +127,6 @@ export class ClassroomComponent implements OnInit, OnDestroy {
             }
             window.open(this.backendData.accountInfo.meetingUrl, '_blank');
         }
-    }
-
-    selectText(text: string) {
-        navigator.clipboard.writeText(text);
-        this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 
 }

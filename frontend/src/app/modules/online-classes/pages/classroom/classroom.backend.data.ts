@@ -1,4 +1,8 @@
 import { ClassroomComponent } from './classroom.component';
+
+import { TimeComparator, Time } from '@modules/online-classes/class/constants';
+
+// for types
 import { ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import { AccountInfo } from '@services/modules/online-class/models/account-info';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
@@ -8,7 +12,7 @@ export class ClassroomBackendData {
 
     vm: ClassroomComponent;
 
-    onlineClassList: Array<ParsedOnlineClass>;
+    private _onlineClassList: Array<ParsedOnlineClass>;
     accountInfo: AccountInfo;
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
@@ -20,6 +24,36 @@ export class ClassroomBackendData {
 
     initialize(vm: ClassroomComponent): void {
         this.vm = vm;
+    }
+
+    get onlineClassList(): Array<ParsedOnlineClass> {
+        return this._onlineClassList;
+    }
+
+    set onlineClassList(onlineClassListValue: Array<ParsedOnlineClass>) {
+        onlineClassListValue.forEach(onlineClass => {
+            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
+            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
+        });
+
+        onlineClassListValue.forEach((concernedOnlineClass) => {
+            if (!concernedOnlineClass)
+                return;
+            const bookedSlotOnlineClassIndex = onlineClassListValue.findIndex(onlineClass => {
+                if (onlineClass.id == concernedOnlineClass.id) {
+                    return false;
+                }
+                if (concernedOnlineClass.day == onlineClass.day
+                    && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                    && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                    return true;
+                }
+            });
+            if (bookedSlotOnlineClassIndex != -1) {
+                onlineClassListValue.splice(bookedSlotOnlineClassIndex, 1);
+            }
+        });
+        this._onlineClassList = onlineClassListValue;
     }
 
     getClassById(classId: number) {

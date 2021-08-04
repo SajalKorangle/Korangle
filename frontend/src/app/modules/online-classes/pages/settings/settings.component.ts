@@ -16,7 +16,7 @@ import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
+import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, Time } from '@modules/online-classes/class/constants';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class SettingsComponent implements OnInit {
 
     user: any;
 
-    weekdays = WEEKDAYS;
+    weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer: SettingsHtmlRenderer;
@@ -74,15 +74,11 @@ export class SettingsComponent implements OnInit {
         console.log("this: ", this);
     }
 
-    parseBacknedData() {
+    parseBackendData() {
         this.backendData.onlineClassList.forEach(onlineClass => {
             Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
         });
-    }
-
-    getObjetKeys(obj: { [key: string]: any; }): Array<string> {
-        return Object.keys(obj);
     }
 
     hasAdminPermission() {

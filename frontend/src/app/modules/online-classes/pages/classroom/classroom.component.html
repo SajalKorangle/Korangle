@@ -33,9 +33,9 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th *ngFor="let weekdayKey of getObjectKeys(weekdays)"
-                                [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
-                                {{weekdays[weekdayKey]}}</th>
+                            <th *ngFor="let weekdayKey of getObjectKeys(weekdayKeysMappedByDisplayName)"
+                                [style.color]="weekdayKeysMappedByDisplayName[weekdayKey]==todayDisplayName?'#ff9800':''">
+                                {{weekdayKeysMappedByDisplayName[weekdayKey]}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,7 @@
                                 <td style="vertical-align: top; text-align: left; width: 50px;">
                                     <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
                                 </td>
-                                <ng-container *ngFor="let weekday of getObjectKeys(weekdays)">
+                                <ng-container *ngFor="let weekday of getObjectKeys(weekdayKeysMappedByDisplayName)">
                                     <ng-container
                                         *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                         <td style="position: relative; min-width: 100px;"

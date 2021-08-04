@@ -15,9 +15,11 @@ import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.se
 import { environment } from 'environments/environment';
 import { Constants } from 'app/classes/constants';
 
-import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
+import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, Time } from '@modules/online-classes/class/constants';
 
 import { openUrlInChrome, isMobile, openUrlInBrowser } from '@classes/common.js';
+
+import UtilityMixin from '@classes/mixins/utility-mixin';
 
 @Component({
     selector: 'classroom',
@@ -26,15 +28,15 @@ import { openUrlInChrome, isMobile, openUrlInBrowser } from '@classes/common.js'
     providers: [OnlineClassService, StudentService, SubjectService],
 })
 
-export class ClassroomComponent implements OnInit, OnDestroy {
+export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestroy {
 
     user: any;
 
     activeStudent: any;
 
-    weekdays = WEEKDAYS;
+    weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
-    today: string = Object.values(WEEKDAYS)[new Date().getDay()];
+    today: string = Object.values(WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME)[new Date().getDay()];
     currentTime: Date = new Date();
 
     serviceAdapter: ClassroomServiceAdapter;
@@ -56,7 +58,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         public onlineClassService: OnlineClassService,
         public studentService: StudentService,
         public subjectService: SubjectService,
-    ) { }
+    ) { super(); }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -81,11 +83,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         // clearInterval(this.attendanceMarkerInterval);
     }
 
-    getObjetKeys(obj: { [key: string]: any; }): Array<string> {
-        return Object.keys(obj);
-    }
-
-    parseBacknedData() {
+    parseBackendData() {
         this.backendData.onlineClassList.forEach(onlineClass => {
             Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);

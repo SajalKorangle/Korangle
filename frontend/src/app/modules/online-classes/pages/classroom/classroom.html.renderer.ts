@@ -49,12 +49,12 @@ export class ClassroomHtmlRenderer {
     }
 
     getActiveClass() {
-        return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
+        return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.todayDisplayName && this.isActive(onlineClass));
     }
 
     getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+            if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(startTime, onlineClass.startTimeJSON) == 0)
                 return true;
             return false;
@@ -73,7 +73,7 @@ export class ClassroomHtmlRenderer {
 
     isCellOccupiedDueToRowspan(weekdayKey, time: Time) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+            if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(time, onlineClass.startTimeJSON) >= 0
                 && TimeComparator(time, onlineClass.endTimeJSON) < 0)
                 return true;

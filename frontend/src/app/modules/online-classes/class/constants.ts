@@ -1,4 +1,4 @@
-export const WEEKDAYS = {
+export const WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME = {
     'sunday': 'Sunday',
     'monday': 'Monday',
     'tuesday': 'Tuesday',

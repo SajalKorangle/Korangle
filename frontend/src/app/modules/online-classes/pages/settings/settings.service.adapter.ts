@@ -57,7 +57,7 @@ export class SettingsServiceAdapter {
             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request), //7
         ]);
 
-        this.vm.parseBacknedData();
+        this.vm.parseBackendData();
         this.vm.isLoading = false;
 
     }
@@ -121,7 +121,7 @@ export class SettingsServiceAdapter {
         this.vm.backendData.onlineClassList = this.vm.backendData.onlineClassList.filter(Boolean);
         this.vm.backendData.onlineClassList.push(...updateResponse);
         this.vm.backendData.onlineClassList.push(...createResponse);
-        this.vm.parseBacknedData();
+        this.vm.parseBackendData();
         this.vm.htmlRenderer.initilizeTimeTable();
         this.vm.isLoading = false;
     }

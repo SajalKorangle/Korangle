@@ -58,7 +58,7 @@ export class ClassroomServiceAdapter {
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
             ]);
 
-            this.vm.parseBacknedData();
+            this.vm.parseBackendData();
             this.vm.htmlRenderer.initilizeTimeTable();
         }
         else {
