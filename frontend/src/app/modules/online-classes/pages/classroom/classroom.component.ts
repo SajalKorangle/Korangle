@@ -5,7 +5,6 @@ import { DataStorage } from "@classes/data-storage";
 
 import { ClassroomServiceAdapter } from './classroom.service.adapter';
 import { ClassroomHtmlRenderer } from './classroom.html.renderer';
-import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
 // services
@@ -42,7 +41,6 @@ export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestro
 
     serviceAdapter: ClassroomServiceAdapter;
     htmlRenderer: ClassroomHtmlRenderer;
-    userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
     isPasswordVisible: boolean = false;
@@ -61,7 +59,6 @@ export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestro
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.userInput = new ClassroomUserInput();
         this.userInput.initialize(this);
 
         this.backendData = new ClassroomBackendData();
