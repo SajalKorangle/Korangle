@@ -118,27 +118,27 @@ export const ColorPalette = [
 ];
 export class ColorPaletteHandle {
     static maxIndex = 0;
-    static colorMappedBySubjectName: { [key: string]: number; } = {};
+    static colorMappedBySubjectKey: { [key: string]: number; } = {};
 
     static getColorForSubject(subjectKey: string) {
-        if (this.colorMappedBySubjectName[subjectKey] == undefined) {
-            this.colorMappedBySubjectName[subjectKey] = this.maxIndex;
+        if (this.colorMappedBySubjectKey[subjectKey] == undefined) {
+            this.colorMappedBySubjectKey[subjectKey] = this.maxIndex;
             this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
         }
-        return ColorPalette[this.colorMappedBySubjectName[subjectKey]][1];
+        return ColorPalette[this.colorMappedBySubjectKey[subjectKey]][1];
     }
 
     static getBackgroundColorForSubject(subjectKey: string) {
-        if (this.colorMappedBySubjectName[subjectKey] == undefined) {
-            this.colorMappedBySubjectName[subjectKey] = this.maxIndex;
+        if (this.colorMappedBySubjectKey[subjectKey] == undefined) {
+            this.colorMappedBySubjectKey[subjectKey] = this.maxIndex;
             this.maxIndex = (this.maxIndex + 1) % ColorPalette.length;
         }
-        return ColorPalette[this.colorMappedBySubjectName[subjectKey]][0];
+        return ColorPalette[this.colorMappedBySubjectKey[subjectKey]][0];
     }
 
     static reset() {
         this.maxIndex = 0;
-        this.colorMappedBySubjectName = {};
+        this.colorMappedBySubjectKey = {};
     }
 }
 
