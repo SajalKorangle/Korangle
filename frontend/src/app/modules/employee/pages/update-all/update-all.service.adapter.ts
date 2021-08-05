@@ -87,7 +87,7 @@ export class UpdateAllServiceAdapter {
                 }
             } else if (key == 'panNumber') {
                 if (newValue != null && newValue.toString().length !== 10) {
-                    alert('Pan number should be 10 digits!');
+                    alert('Pan number should be 10 characters!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.panNumber;
                     return;
                 }
