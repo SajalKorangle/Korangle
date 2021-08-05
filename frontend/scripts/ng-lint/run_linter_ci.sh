@@ -1,15 +1,8 @@
-# for CI platform only
+./node_modules/@angular/cli/bin/ng lint
+ERROR_COUNT=$(./node_modules/@angular/cli/bin/ng lint | grep -c "ERROR: ")
 
-
-if [[ ! -f benchmark-linting-error-count.json ]]; then
-
-    echo $'{\n\t\"tslint-errors\": 0\n}' > ./scripts/ng-lint/benchmark-linting-error-count.json
-
+if [[ $ERROR_COUNT -gt 0 ]]
+then
+    echo "ERROR: Linter found $ERROR_COUNT errors"
+    exit 1
 fi
-
-echo $'CI: Testing linting error count...\n'
-node ./scripts/ng-lint/run_linter.js "ci" $(./node_modules/@angular/cli/bin/ng lint | grep -c "ERROR: /") || exit
-
-# upload to aws
-aws s3 cp ./scripts/ng-lint/benchmark-linting-error-count.json s3://korangleplus/benchmark-linting-error-count.json
-echo $'\nLinter benchmark updated.\n'
