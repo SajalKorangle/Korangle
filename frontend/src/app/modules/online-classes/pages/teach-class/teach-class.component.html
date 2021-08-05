@@ -33,7 +33,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th *ngFor="let weekdayKey of getObjectKeys(weekdayKeysMappedByDisplayName)"
+                            <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)"
                                 [style.color]="weekdayKeysMappedByDisplayName[weekdayKey]==todayDisplayName?'#ff9800':''">
                                 {{weekdayKeysMappedByDisplayName[weekdayKey]}}</th>
                         </tr>
@@ -45,7 +45,8 @@
                                 <td style="vertical-align: top; text-align: left; width: 50px;">
                                     <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
                                 </td>
-                                <ng-container *ngFor="let weekday of getObjectKeys(weekdayKeysMappedByDisplayName)">
+                                <ng-container
+                                    *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
                                     <ng-container
                                         *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                         <td style="position: relative; min-width: 100px;"
@@ -75,7 +76,8 @@
                                     {{htmlRenderer.timeBreakPoints.slice(-1)[0].getDisplayString()}}
                                 </span>
                             </td>
-                            <ng-container *ngFor="let weekday of getObjectKeys(weekdayKeysMappedByDisplayName)">
+                            <ng-container
+                                *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
                                 <td></td>
                             </ng-container>
                         </tr>

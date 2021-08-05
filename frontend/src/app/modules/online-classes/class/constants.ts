@@ -1,3 +1,5 @@
+import { Time as BaseTime } from '@services/modules/online-class/models/online-class';
+
 export const WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME = {
     'sunday': 'Sunday',
     'monday': 'Monday',
@@ -8,17 +10,14 @@ export const WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME = {
     'saturday': 'Saturday'
 };
 
-
-export class Time {
-    hour: number;
-    minute: number;
-    ampm: 'am' | 'pm';
+export class Time extends BaseTime {
 
     constructor(attributes: Partial<Time> = {}) {
+        super();
         Object.entries(attributes).forEach(([key, value]) => this[key] = value);
     }
 
-    getString(): string {
+    getString(): string {   // can be feed to js Date constructor for html time selection
         const hours24 = this.ampm == 'am' ? this.hour : 12 + this.hour;
         return hours24.toString().padStart(2, '0') + ':' + this.minute.toString().padStart(2, '0');
     }
@@ -78,9 +77,9 @@ export function TimeComparator(time1: Time, time2: Time) {
 }
 
 
-export function TimeSpanComparator(timespan1: TimeSpan, timespan2: TimeSpan) {
-    const startTime1 = timespan1.startTime;
-    const startTime2 = timespan2.startTime;
+export function TimeSpanComparator(timeSpan1: TimeSpan, timeSpan2: TimeSpan) {
+    const startTime1 = timeSpan1.startTime;
+    const startTime2 = timeSpan2.startTime;
     return TimeComparator(startTime1, startTime2);
 }
 

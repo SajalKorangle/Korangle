@@ -17,7 +17,7 @@ import { Time, WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, ZOOM_BASE_URL, ColorPaletteH
 
 import { isMobile, openUrlInBrowser } from '@classes/common.js';
 
-import UtilityMixin from '@classes/mixins/utility-mixin';
+import { CommonFunctions } from '@classes/common-functions';
 
 @Component({
     selector: 'classroom',
@@ -26,9 +26,11 @@ import UtilityMixin from '@classes/mixins/utility-mixin';
     providers: [SubjectService, OnlineClassService, ClassService, SchoolService],
 })
 
-export class TeachClassComponent extends UtilityMixin implements OnInit, OnDestroy {
+export class TeachClassComponent implements OnInit, OnDestroy {
 
     user: any;
+
+    commonFunctions = CommonFunctions.getInstance();
 
     isMobile = isMobile;
 
@@ -54,7 +56,7 @@ export class TeachClassComponent extends UtilityMixin implements OnInit, OnDestr
         public classService: ClassService,
         public schoolService: SchoolService,
         public snackBar: MatSnackBar,
-    ) { super(); }
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -101,10 +103,6 @@ export class TeachClassComponent extends UtilityMixin implements OnInit, OnDestr
             }
         });
         this.htmlRenderer.timeBreakPoints.sort(TimeComparator);
-    }
-
-    getObjectKeys(obj: { [key: string]: any; }): Array<string> {
-        return Object.keys(obj);
     }
 
     redirectToMeeting(): void {

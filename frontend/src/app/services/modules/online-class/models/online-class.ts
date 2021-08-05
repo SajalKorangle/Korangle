@@ -4,7 +4,13 @@ export class OnlineClass {
     id?: number;
     parentClassSubject: number;
     day: WEEKDAYS_CHOICES;
-    startTimeJSON: { [key: string]: any; };
-    endTimeJSON: { [key: string]: any; };
+    startTimeJSON: Time;
+    endTimeJSON: Time;
 }
 
+
+export class Time {
+    hour: number;
+    minute: number;
+    ampm: 'am' | 'pm';
+}

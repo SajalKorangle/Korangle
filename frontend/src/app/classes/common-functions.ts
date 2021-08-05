@@ -34,12 +34,13 @@ export class CommonFunctions {
     static formatDate(dateStr: any, status: any): any {
         let d = new Date(dateStr);
 
-        if (status === 'firstDate') {
+        if (status === 'firstDate') {   // not used any where 
             d = new Date(d.getFullYear(), d.getMonth(), 1);
-        } else if (status === 'lastDate') {
+        } else if (status === 'lastDate') { // not used any where 
             d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
         }
 
+        // unwanted logic; can be simple done by d.toLocaleDateString().replaceAll("/", '-');
         let month = '' + (d.getMonth() + 1);
         let day = '' + d.getDate();
         let year = d.getFullYear();
@@ -51,6 +52,7 @@ export class CommonFunctions {
     }
 
     static formatTime(dateStr: any): any {
+        // unwanted logic can be simply done with d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         let d = new Date(dateStr);
         let hours = '' + d.getHours();
         let minutes = '' + d.getMinutes();
@@ -103,5 +105,14 @@ export class CommonFunctions {
         }
 
         return arr;
+    }
+
+    getObjectKeys(obj: { [key: string]: any; }): Array<string> {
+        return Object.keys(obj);
+    }
+
+    copyText(text: string, snackBar: any) {
+        navigator.clipboard.writeText(text);
+        snackBar?.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 }
