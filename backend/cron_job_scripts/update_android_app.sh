@@ -2,6 +2,6 @@
 # 30 2 * * * sh /path/to/korangle/backend/update_app.sh
 
 # changing directory is required to backend to access the database
-cd /path/to/korangle/backend
+cd ~/code/korangle/backend
 # ignoring the output using /dev/null
-/path/to/virtual_venv/bin/python manage.py runjobs daily > /dev/null 2>&1 &
+~/env/bin/python manage.py runjobs daily > /dev/null 2>&1 &
