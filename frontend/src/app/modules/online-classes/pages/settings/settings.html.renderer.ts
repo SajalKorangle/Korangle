@@ -10,22 +10,30 @@ export class SettingsHtmlRenderer {
 
     vm: SettingsComponent;
 
-    timeSpanList: Array<TimeSpan> = getDefaultTimeSpanList();
+    // timeSpanList: Array<TimeSpan> = getDefaultTimeSpanList();
 
     newTimeSpanForm: boolean = false;
     editTimeSpanFormIndex: number = -1;
 
-    filteredOnlineClassList: Array<ParsedOnlineClass> = [];
-
     colorPaletteHandle = ColorPaletteHandle;
 
-    employeeKeyTimeList: Array<Time>;
+    // employeeKeyTimeList: Array<Time>;
 
     constructor() { }
 
     initialize(vm: SettingsComponent): void {
         this.vm = vm;
     }
+
+    getTimeSpanList(): Array<TimeSpan> {
+        if (!(this.vm.view == 'class'))
+            return null;
+        if (!(this.vm.userInput.selectedClass && this.vm.userInput.selectedSection))
+            return null;
+
+
+    }
+
 
     initilizeTimeTable() {
         this.editTimeSpanFormIndex = -1;    // reset display for new time table
@@ -38,14 +46,7 @@ export class SettingsHtmlRenderer {
                 return;
             ColorPaletteHandle.reset();
             // filter online classes for selected class and section
-            this.filteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass) => {
-                const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-                if (classSubject.parentClass == this.vm.userInput.selectedClass.id
-                    && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
-                    return true;
-                }
-                return false;
-            });
+
         } else {
             if (!this.vm.userInput.selectedEmployee)
                 return;
