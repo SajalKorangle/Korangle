@@ -58,8 +58,6 @@ export class AddTutorialComponent implements OnInit {
 
     updateService: any;
 
-    // inPagePermissionMappedByKey: { [key: string]: valueType; };
-
     backendData = {
         classList: [],
         sectionList: [],
