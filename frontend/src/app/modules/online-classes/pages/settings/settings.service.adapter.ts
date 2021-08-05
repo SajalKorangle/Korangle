@@ -68,7 +68,7 @@ export class SettingsServiceAdapter {
         }
 
         // filter online classes for selected class and section
-        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {
+        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
             if (this.vm.userInput.view == 'class' && classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
@@ -79,7 +79,7 @@ export class SettingsServiceAdapter {
             }
             return false;
         });
-        const updatedFilteredOnlineClassList = this.vm.htmlRenderer.filteredOnlineClassList;
+        const updatedFilteredOnlineClassList = this.vm.userInput.filteredOnlineClassList;
 
         const toCreateList = [];
         const toUpdateList = [];

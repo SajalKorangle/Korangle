@@ -39,7 +39,7 @@
             <h4 style="display: inline-block;">{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
                 userInput.selectedSection.id)}}</h4>
             <button style="float: right;" mat-stroked-button
-                (click)="htmlRenderer.filteredOnlineClassList=[]">Reset</button>
+                (click)="userInput.filteredOnlineClassList.splice(0, userInput.filteredOnlineClassList.length)">Reset</button>
         </div>
         <div style="overflow: auto;">
             <table class="mat-elevation-z8 table table-hover">
@@ -58,7 +58,7 @@
                                     *ngIf="userInput.editTimeSpanFormIndex!=timeSpanIndex else EditTimeSpanForm">
                                     {{timeSpan.startTime.getDisplayString()}} - {{timeSpan.endTime.getDisplayString()}}
                                     <mat-icon class="td-hover-show"
-                                        (click)="htmlRenderer.editTimeSpanFormIndex=timeSpanIndex; htmlRenderer.setupEditTimeSpan()"
+                                        (click)="htmlRenderer.setupEditTimeSpan(timeSpanIndex)"
                                         style="font-size: small;">edit</mat-icon>
                                 </ng-container>
                             </td>
@@ -115,7 +115,7 @@
                     </ng-container>
                     <tr>
                         <td style="width: 200px">
-                            <button mat-fab (click)="htmlRenderer.newTimeSpanForm = true;"
+                            <button mat-fab (click)="userInput.newTimeSpanForm = true;"
                                 *ngIf="!userInput.newTimeSpanForm else NewTimeSpanForm">
                                 <mat-icon>add</mat-icon>
                             </button>
@@ -240,9 +240,9 @@
         <mat-error *ngIf="htmlRenderer.timeSpanOverlapping()">Time Span Overlapping </mat-error>
     </mat-form-field>
     <button mat-stroked-button style="margin-top: 6px;"
-        (click)="userInput.resetNewTimeSpanData(); htmlRenderer.newTimeSpanForm = false;">Cancel</button>
+        (click)="userInput.resetNewTimeSpanData(); userInput.newTimeSpanForm = false;">Cancel</button>
     <button mat-stroked-button [disabled]="htmlRenderer.newTimeSpanError()" style="margin-top: 6px;"
-        (click)="htmlRenderer.addNewTimeSpan(); htmlRenderer.newTimeSpanForm = false;">Add</button>
+        (click)="htmlRenderer.addNewTimeSpan(); userInput.newTimeSpanForm = false;">Add</button>
 </ng-template>
 
 
@@ -266,7 +266,7 @@
         <mat-icon>delete</mat-icon>
     </button>
     <button mat-stroked-button [disabled]="htmlRenderer.editTimeSpanError()" style="margin-top: 6px;"
-        (click)="htmlRenderer.editTimeSpan(); htmlRenderer.editTimeSpanForm = -1;">Update</button>
+        (click)="htmlRenderer.editTimeSpan(); userInput.editTimeSpanForm = -1;">Update</button>
 </ng-template>
 
 <ng-template #EmployeeFilter>

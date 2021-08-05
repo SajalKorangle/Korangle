@@ -55,10 +55,10 @@ export class SettingsUserInput {
             }
         });
         this._filteredOnlineClassList = onlineClassListValue;
-
+        const timeSpanList: Array<TimeSpan> = [];
         if (this.view == 'class') {
             onlineClassListValue.forEach(onlineClass => {
-                const timeSpanNotFound = this.timeSpanList.every(timeSpan => {
+                const timeSpanNotFound = timeSpanList.every(timeSpan => {
                     if (TimeComparator(onlineClass.startTimeJSON, timeSpan.endTime) == -1
                         && TimeComparator(timeSpan.startTime, onlineClass.endTimeJSON) == -1) {
                         return false;
@@ -66,15 +66,18 @@ export class SettingsUserInput {
                     return true;
                 });
                 if (timeSpanNotFound) {
-                    this.timeSpanList.push(new TimeSpan(
+                    timeSpanList.push(new TimeSpan(
                         {
                             startTime: new Time({ ...onlineClass.startTimeJSON }),
                             endTime: new Time({ ...onlineClass.endTimeJSON })
                         }));
                 }
             });
-            if (this.timeSpanList.length == 0) {
+            if (timeSpanList.length == 0) {
                 this.timeSpanList = getDefaultTimeSpanList();
+            }
+            else {
+                this.timeSpanList = timeSpanList;
             }
         }
     }

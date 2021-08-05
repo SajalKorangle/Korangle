@@ -12,6 +12,8 @@ export class SettingsHtmlRenderer {
 
     colorPaletteHandle = ColorPaletteHandle;
 
+    count = 0;
+
     constructor() { }
 
     initialize(vm: SettingsComponent): void {
@@ -19,6 +21,7 @@ export class SettingsHtmlRenderer {
     }
 
     getEmployeeKeyTimeList(): Array<Time> {
+        console.log("employee key time list called: ", ++this.count);
         const employeeKeyTimeList = [];
         this.vm.userInput.filteredOnlineClassList.forEach(onlineClass => {
             let startTimeAlreadyPresent: boolean = false;
@@ -96,7 +99,9 @@ export class SettingsHtmlRenderer {
         return classInstance.name + ' - ' + divisionInstance.name;
     }
 
-    setupEditTimeSpan() {
+    setupEditTimeSpan(editTimeSpanFormIndex: number) {
+        console.log('editTimeSpanFormIndex: ' + editTimeSpanFormIndex);
+        this.vm.userInput.editTimeSpanFormIndex = editTimeSpanFormIndex;
         this.vm.userInput.newTimeSpan = {
             startTime: this.vm.userInput.timeSpanList[this.vm.userInput.editTimeSpanFormIndex].startTime.getString(),
             endTime: this.vm.userInput.timeSpanList[this.vm.userInput.editTimeSpanFormIndex].endTime.getString()
@@ -225,8 +230,7 @@ export class SettingsHtmlRenderer {
         const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
         const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
-        this.vm.userInput.timeSpanList.push(new TimeSpan({ startTime, endTime }));
-        this.vm.userInput.timeSpanList.sort(TimeSpanComparator);
+        this.vm.userInput.timeSpanList = [...this.vm.userInput.timeSpanList, new TimeSpan({ startTime, endTime })];
         this.vm.userInput.resetNewTimeSpanData();
     }
 
