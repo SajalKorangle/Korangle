@@ -80,6 +80,7 @@ export class ViewAllComponent implements OnInit {
     /* Age Check */
     minAge: any;
     maxAge: any;
+    asOnDate = new Date();
 
     /* Category Options */
     scSelected = false;
@@ -457,25 +458,27 @@ export class ViewAllComponent implements OnInit {
             }
 
             /* Age Check */
-            let age = student.dateOfBirth
-                ? Math.floor((new Date().getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                : null;
-            if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
-                if (!age) {
-                    student.show = false;
-                    return;
-                } else if (age < this.minAge) {
-                    student.show = false;
-                    return;
+            if (this.asOnDate) {
+                let age = student.dateOfBirth
+                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                    : null;
+                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                    if (!age) {
+                        student.show = false;
+                        return;
+                    } else if (age < this.minAge) {
+                        student.show = false;
+                        return;
+                    }
                 }
-            }
-            if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
-                if (!age) {
-                    student.show = false;
-                    return;
-                } else if (age > this.maxAge) {
-                    student.show = false;
-                    return;
+                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (!age) {
+                        student.show = false;
+                        return;
+                    } else if (age > this.maxAge) {
+                        student.show = false;
+                        return;
+                    }
                 }
             }
 
@@ -809,6 +812,9 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup ? headerValues.push('Blood Group') : '';
         this.columnFilter.showFatherAnnualIncome ? headerValues.push("Father's Annual Income") : '';
         this.columnFilter.showRTE ? headerValues.push('RTE') : '';
+        this.columnFilter.showDateOfAdmission ? headerValues.push('Date of Admission') : '';
+        this.columnFilter.showAdmissionSession ? headerValues.push('Admission Session') : '';
+        this.columnFilter.showBusStopName ? headerValues.push('Bus Stop') : '';
         this.columnFilter.showRemark ? headerValues.push('remark') : '';
         // Custom parameters
         this.studentParameterOtherList.forEach((item) => (item.show ? headerValues.push(item.name) : ''));
@@ -844,6 +850,9 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showBloodGroup ? studentDisplay.push(student.bloodGroup) : '';
         this.columnFilter.showFatherAnnualIncome ? studentDisplay.push(student.fatherAnnualIncome) : '';
         this.columnFilter.showRTE ? studentDisplay.push(student.rte) : '';
+        this.columnFilter.showDateOfAdmission ? studentDisplay.push(student.dateOfAdmission) : '';
+        this.columnFilter.showAdmissionSession ? studentDisplay.push(this.getAdmissionSession(student.admissionSessionDbId)) : '';
+        this.columnFilter.showBusStopName ? studentDisplay.push(this.getBusStopName(student.busStopDbId)) : '';
         this.columnFilter.showRemark ? studentDisplay.push(student.remark) : '';
         // Custom parameter values
         this.studentParameterOtherList.forEach((item) => (item.show ? studentDisplay.push(this.getParameterValue(student, item)) : ''));

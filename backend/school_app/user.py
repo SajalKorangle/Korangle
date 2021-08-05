@@ -52,6 +52,8 @@ def get_school_list(user):
     for student_section_object in \
         StudentSection.objects.filter(Q(parentStudent__mobileNumber=user.username)
                                       | Q(parentStudent__secondMobileNumber=user.username),
+                                      Q(parentStudent__parentSchool__dateOfExpiry=None)
+                                      | Q(parentStudent__parentSchool__dateOfExpiry__gte=date.today()),
                                       parentStudent__parentSchool__expired=False,
                                       parentSession=F('parentStudent__parentSchool__currentSession')) \
                 .select_related('parentStudent__parentSchool'):
@@ -71,7 +73,9 @@ def get_school_list(user):
         school_data['role'] = 'Parent'
 
     # Employee User
-    for employee_object in Employee.objects.filter(mobileNumber=user.username,
+    for employee_object in Employee.objects.filter(Q(parentSchool__dateOfExpiry=None)
+                                                   | Q(parentSchool__dateOfExpiry__gte=date.today()),
+                                                   mobileNumber=user.username,
                                                    parentSchool__expired=False,
                                                    dateOfLeaving=None).select_related('parentSchool'):
 
@@ -94,10 +98,6 @@ def get_employee_school_module_list(employee_object):
 
     school_object = employee_object.parentSchool
 
-    '''for access_object in \
-            Access.objects.filter(parentSchool=school_object)\
-                    .order_by('parentModule__orderNumber')\
-                    .select_related('parentModule'):'''
     for module_object in \
             Module.objects.filter(Q(parentBoard=None) | Q(parentBoard=school_object.parentBoard))\
                     .order_by('orderNumber'):
@@ -164,6 +164,7 @@ def get_school_data_by_object(school_object):
     school_data['employeeId'] = None
 
     school_data['expired'] = school_object.expired
+    school_data['dateOfExpiry'] = school_object.dateOfExpiry
 
     school_data['moduleList'] = []
     school_data['studentList'] = []
