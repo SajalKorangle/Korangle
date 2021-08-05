@@ -4,6 +4,7 @@ import { SettingsComponent } from '@modules/online-classes/pages/settings/settin
 import { TimeSpan, ParsedOnlineClass, TimeComparator } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonFunctions } from '@classes/common-functions';
 
 @Component({
   selector: 'app-new-online-class-dialog',
@@ -18,19 +19,19 @@ export class NewOnlineClassDialogComponent implements OnInit {
 
   isPasswordVisible: boolean = false;
 
+  commonFunctions = CommonFunctions.getInstance();
+
   constructor(public dialogRef: MatDialogRef<NewOnlineClassDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     vm: SettingsComponent,
     weekday: string,
-    timespan: TimeSpan,
+    timeSpan: TimeSpan,
     onlineClass: ParsedOnlineClass,
   },
     public snackBar: MatSnackBar
   ) {
     this.filteredClassSubject = data.vm.backendData.classSubjectList.filter(classSubject => {
-      if (data.vm.view == 'class' && classSubject.parentClass == data.vm.userInput.selectedClass.id
+      if (classSubject.parentClass == data.vm.userInput.selectedClass.id
         && classSubject.parentDivision == data.vm.userInput.selectedSection.id)
-        return true;
-      else if (data.vm.view == 'employee' && classSubject.parentEmployee == data.vm.userInput.selectedEmployee.id)
         return true;
       return false;
     });
@@ -51,9 +52,6 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
 
   isOccupied(classSubject: ClassSubject): boolean {
-    if (this.data.vm.view == 'employee')
-      return false;
-
     const parentEmployee = classSubject.parentEmployee;
 
     const bookedSlotOnlineClass = this.data.vm.backendData.onlineClassList.find(onlineClass => {
@@ -65,18 +63,13 @@ export class NewOnlineClassDialogComponent implements OnInit {
         return false;
       }
       if (this.data.weekday == onlineClass.day
-        && TimeComparator(this.data.timespan.startTime, onlineClass.endTimeJSON) < 0
-        && TimeComparator(onlineClass.startTimeJSON, this.data.timespan.endTime) < 0) {
+        && TimeComparator(this.data.timeSpan.startTime, onlineClass.endTimeJSON) < 0
+        && TimeComparator(onlineClass.startTimeJSON, this.data.timeSpan.endTime) < 0) {
         return true;
       }
     });
 
     return Boolean(bookedSlotOnlineClass);
-  }
-
-  selectText(text: string) {
-    navigator.clipboard.writeText(text);
-    this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
   }
 
   apply(): void {

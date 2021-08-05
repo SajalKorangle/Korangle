@@ -36,7 +36,7 @@ export class TeachClassBackendData {
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
             return onlineClass as ParsedOnlineClass;
         });
-
+        onlineClassListValue.sort((a, b) => b.id - a.id);
         parsedOnlineClassList.forEach((concernedOnlineClass) => {
             if (!concernedOnlineClass)
                 return;

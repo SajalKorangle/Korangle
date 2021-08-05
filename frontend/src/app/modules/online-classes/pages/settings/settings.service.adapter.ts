@@ -62,21 +62,19 @@ export class SettingsServiceAdapter {
     }
 
     async updateOnlineClassList() {
-        if (this.vm.view == 'class' && this.vm.htmlRenderer.isAnyClassOverlapping()) {
+        if (this.vm.userInput.view == 'class' && this.vm.htmlRenderer.isAnyClassOverlapping()) {
             alert('Teacher\'s time slot if overlapping. Kindly rectify.');
             return;
         }
-        const onlineClassBackendDataIndexArray = [];
+
         // filter online classes for selected class and section
         const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-            if (this.vm.view == 'class' && classSubject.parentClass == this.vm.userInput.selectedClass.id
+            if (this.vm.userInput.view == 'class' && classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
-                onlineClassBackendDataIndexArray.push(index);
                 return true;
             }
-            else if (this.vm.view == 'employee' && classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
-                onlineClassBackendDataIndexArray.push(index);
+            else if (this.vm.userInput.view == 'employee' && classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
                 return true;
             }
             return false;
@@ -116,11 +114,13 @@ export class SettingsServiceAdapter {
         this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.online_class, toCreateList),
         ]);
 
-        onlineClassBackendDataIndexArray.forEach(index => delete this.vm.backendData.onlineClassList[index]);
-        this.vm.backendData.onlineClassList = this.vm.backendData.onlineClassList.filter(Boolean);
-        this.vm.backendData.onlineClassList.push(...updateResponse);
-        this.vm.backendData.onlineClassList.push(...createResponse);
-        this.vm.htmlRenderer.initilizeTimeTable();
+        this.vm.backendData.onlineClassList =
+            [
+                ...this.vm.backendData.onlineClassList.filter(onlineClass => !originalFilteredOnlineClassList.includes(onlineClass)),
+                ...updateResponse,
+                ...createResponse
+            ];
+        this.vm.initializeTimeTable();
         this.vm.isLoading = false;
     }
 

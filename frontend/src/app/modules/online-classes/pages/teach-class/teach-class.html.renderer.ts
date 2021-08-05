@@ -72,7 +72,7 @@ export class TeachClassHtmlRenderer {
         return endTimeIndex - startTimeIndex;
     }
 
-    isCellOccupiedDueToRowspan(weekdayKey, time: Time) {
+    isCellOccupiedDueToRowSpan(weekdayKey, time: Time) {
         return this.vm.backendData.onlineClassList.find(onlineClass => {
             if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(time, onlineClass.startTimeJSON) >= 0

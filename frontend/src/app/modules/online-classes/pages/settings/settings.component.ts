@@ -18,6 +18,8 @@ import { EmployeeService } from '@services/modules/employee/employee.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME } from '@modules/online-classes/class/constants';
 
+import { CommonFunctions } from '@classes/common-functions';
+
 
 @Component({
     selector: 'settings',
@@ -35,6 +37,8 @@ import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME } from '@modules/online-classes/cla
 export class SettingsComponent implements OnInit {
 
     user: any;
+
+    commonFunctions = CommonFunctions.getInstance();
 
     weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
@@ -78,6 +82,38 @@ export class SettingsComponent implements OnInit {
             return false;
         }
         return true;
+    }
+
+    initializeTimeTable() {
+        this.userInput.editTimeSpanFormIndex = -1;    // reset display for new time table
+        this.userInput.newTimeSpanForm = false;
+        this.htmlRenderer.colorPaletteHandle.reset();
+        this.userInput.filteredOnlineClassList = [];
+
+        if (this.userInput.view == 'class') {
+            if (!(this.userInput.selectedClass && this.userInput.selectedSection))
+                return;
+            // filter online classes for selected class and section
+            this.userInput.filteredOnlineClassList = this.backendData.onlineClassList.filter((onlineClass) => {
+                const classSubject = this.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                if (classSubject.parentClass == this.userInput.selectedClass.id
+                    && classSubject.parentDivision == this.userInput.selectedSection.id) {
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            if (!this.userInput.selectedEmployee)
+                return;
+            // filter online classes for selected employee
+            this.userInput.filteredOnlineClassList = this.backendData.onlineClassList.filter((onlineClass) => {
+                const classSubject = this.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+                if (classSubject.parentEmployee == this.userInput.selectedEmployee.id) {
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
 }

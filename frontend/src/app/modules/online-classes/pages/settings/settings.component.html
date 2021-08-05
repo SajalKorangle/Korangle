@@ -1,9 +1,9 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
     <div>
-        <ng-container *ngIf="view=='class' else EmployeeFilter">
+        <ng-container *ngIf="userInput.view=='class' else EmployeeFilter">
             <mat-form-field style="margin-right: 20px;">
                 <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
-                    (ngModelChange)="htmlRenderer.initilizeTimeTable()">
+                    (ngModelChange)="initializeTimeTable()">
                     <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
                         {{ classs.name }}
                     </mat-option>
@@ -12,7 +12,7 @@
 
             <mat-form-field style="margin-right: 20px;">
                 <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
-                    (ngModelChange)="htmlRenderer.initilizeTimeTable()">
+                    (ngModelChange)="initializeTimeTable()">
                     <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
                         {{ division.name }}
                     </mat-option>
@@ -24,8 +24,7 @@
             <mat-label>
                 View
             </mat-label>
-            <mat-select [(ngModel)]="view"
-                (ngModelChange)="htmlRenderer.filteredOnlineClassList.splice(0, htmlRenderer.filteredOnlineClassList.length); htmlRenderer.initilizeTimeTable(); userInput.resetInput();">
+            <mat-select [(ngModel)]="userInput.view" (ngModelChange)="initializeTimeTable(); userInput.resetInput();">
                 <mat-option value="class">Class & Section</mat-option>
                 <mat-option value="employee">Employee</mat-option>
             </mat-select>
@@ -34,7 +33,7 @@
     </div>
 
 
-    <ng-container *ngIf="view=='class' && userInput.selectedClass && userInput.selectedSection">
+    <ng-container *ngIf="userInput.view=='class' && userInput.selectedClass && userInput.selectedSection">
 
         <div>
             <h4 style="display: inline-block;">{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
@@ -47,42 +46,39 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th *ngFor="let weekdayKey of getObjetKeys(weekdays)">{{weekdays[weekdayKey]}}</th>
+                        <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdays)">{{weekdays[weekdayKey]}}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <ng-container *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                    <ng-container *ngFor="let timeSpan of userInput.timeSpanList, let timeSpanIndex = index;">
                         <tr>
                             <td style="width: 160px">
                                 <ng-container
-                                    *ngIf="htmlRenderer.editTimeSpanFormIndex!=timeSpanIndex else EditTimeSpanForm">
-                                    {{timespan.startTime.getDisplayString()}} - {{timespan.endTime.getDisplayString()}}
+                                    *ngIf="userInput.editTimeSpanFormIndex!=timeSpanIndex else EditTimeSpanForm">
+                                    {{timeSpan.startTime.getDisplayString()}} - {{timeSpan.endTime.getDisplayString()}}
                                     <mat-icon class="td-hover-show"
                                         (click)="htmlRenderer.editTimeSpanFormIndex=timeSpanIndex; htmlRenderer.setupEditTimeSpan()"
                                         style="font-size: small;">edit</mat-icon>
                                 </ng-container>
                             </td>
-                            <ng-container *ngFor="let weekday of getObjetKeys(weekdays), let i = index;">
+                            <ng-container
+                                *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays), let i = index;">
                                 <ng-container
-                                    *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                    *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
                                     <td style="position: relative; cursor: pointer;" draggable="true"
-                                        [class.overlapping-warnig]="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
-                                        [class.overlapping-danger]="htmlRenderer.isOnlineClasOverlapping(onlineClass)"
+                                        [class.overlapping-warning]="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass)"
+                                        [class.overlapping-danger]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
                                         (dragover)="$event.preventDefault();"
                                         (dragstart)="$event.dataTransfer.setData('onlineClassIndex', htmlRenderer.getOnlineClassIndex(onlineClass));"
                                         (drop)="htmlRenderer.swapOnlineClass($event, onlineClass);"
-                                        (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)"
+                                        (click)="htmlRenderer.openNewOnlineClassDialog(weekday, timeSpan)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
 
                                         <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
                                         <span
-                                            *ngIf="view=='class'">({{htmlRenderer.getDisplayData(onlineClass).employee.name}})</span>
-                                        <span
-                                            *ngIf="view=='employee'">({{htmlRenderer.getDisplayData(onlineClass).classs.name}})</span><br />
-                                        <span
-                                            *ngIf="view=='employee'">({{htmlRenderer.getDisplayData(onlineClass).section.name}})</span>
-
+                                            *ngIf="userInput.view=='class'">({{htmlRenderer.getDisplayData(onlineClass).employee.name}})</span>
 
                                         <span
                                             *ngIf="backendData.getAccountInfoByParentEmployee(backendData.getClassSubjectById(onlineClass.parentClassSubject).parentEmployee)"
@@ -95,20 +91,20 @@
                                         </mat-icon>
 
                                         <mat-icon
-                                            *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass) || htmlRenderer.isOnlineClasOverlapping(onlineClass)"
+                                            *ngIf="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass) || htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
                                             [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
-                                            [style.color]="htmlRenderer.isOnlineClasOverlapping(onlineClass)?'red':'yellow'"
+                                            [style.color]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)?'red':'yellow'"
                                             style="position: absolute; font-size: small; top: 2px; left: -3px; ">info
                                         </mat-icon>
 
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>
-                                    <td (drop)="htmlRenderer.moveOnlineClass($event, weekday, timespan);"
+                                    <td (drop)="htmlRenderer.moveOnlineClass($event, weekday, timeSpan);"
                                         (dragover)="$event.preventDefault();">
                                         <div>
                                             <button mat-stroked-button
-                                                (click)="htmlRenderer.openNewOnlineClassDalog(weekday, timespan)">
+                                                (click)="htmlRenderer.openNewOnlineClassDialog(weekday, timeSpan)">
                                                 <mat-icon>add</mat-icon>
                                             </button>
                                         </div>
@@ -120,11 +116,11 @@
                     <tr>
                         <td style="width: 200px">
                             <button mat-fab (click)="htmlRenderer.newTimeSpanForm = true;"
-                                *ngIf="!htmlRenderer.newTimeSpanForm else NewTimeSpanForm">
+                                *ngIf="!userInput.newTimeSpanForm else NewTimeSpanForm">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </td>
-                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                        <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
                             <td></td>
                         </ng-container>
                     </tr>
@@ -151,29 +147,30 @@
 
     </ng-container>
 
-    <ng-container *ngIf="view=='employee' && userInput.selectedEmployee">
+    <ng-container *ngIf="userInput.view=='employee' && userInput.selectedEmployee">
         <h4>{{userInput.selectedEmployee.name}}</h4>
         <div class="mat-elevation-z8" style="overflow-x: auto; width: 100%">
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th></th>
-                        <th *ngFor="let weekdayKey of getObjetKeys(weekdays)">{{weekdays[weekdayKey]}}</th>
+                        <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdays)">{{weekdays[weekdayKey]}}
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <ng-container
-                        *ngFor="let time of htmlRenderer.employeeKeyTimeList.slice(0, htmlRenderer.employeeKeyTimeList.length-1), let timeSpanIndex = index;">
+                        *ngFor="let time of htmlRenderer.getEmployeeKeyTimeList().slice(0, htmlRenderer.getEmployeeKeyTimeList().length-1), let timeSpanIndex = index;">
                         <tr>
                             <td style="width: 50px; vertical-align: top;">
                                 <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
                             </td>
-                            <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                            <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                     <td style="position: relative; min-width: 100px;"
-                                        [class.overlapping-warnig]="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass)"
-                                        [class.overlapping-danger]="htmlRenderer.isOnlineClasOverlapping(onlineClass)"
+                                        [class.overlapping-warning]="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass)"
+                                        [class.overlapping-danger]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
                                         [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                         [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
@@ -191,27 +188,27 @@
                                         </mat-icon>
 
                                         <mat-icon
-                                            *ngIf="htmlRenderer.isOnlineClasSectionOverlapping(onlineClass) || htmlRenderer.isOnlineClasOverlapping(onlineClass)"
+                                            *ngIf="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass) || htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
                                             [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
-                                            [style.color]="htmlRenderer.isOnlineClasOverlapping(onlineClass)?'red':'yellow'"
+                                            [style.color]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)?'red':'yellow'"
                                             style="position: absolute; font-size: small; top: 2px; left: -3px;">
                                             info
                                         </mat-icon>
                                     </td>
                                 </ng-container>
                                 <ng-template #NoClass>
-                                    <td *ngIf="htmlRenderer.shouldRenderEmptyTd(weekday, time)"></td>
+                                    <td *ngIf="htmlRenderer.isCellOccupiedDueToRowSpan(weekday, time)"></td>
                                 </ng-template>
                             </ng-container>
                         </tr>
                     </ng-container>
-                    <tr style="border: none;" *ngIf="htmlRenderer.employeeKeyTimeList.length>1">
+                    <tr style="border: none;" *ngIf="htmlRenderer.getEmployeeKeyTimeList().length>1">
                         <td style="width: 50px; vertical-align: top;">
                             <span style="position: relative; top: -12px;">
-                                {{htmlRenderer.employeeKeyTimeList.slice(-1)[0].getDisplayString()}}
+                                {{htmlRenderer.getEmployeeKeyTimeList().slice(-1)[0].getDisplayString()}}
                             </span>
                         </td>
-                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                        <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
                             <td></td>
                         </ng-container>
                     </tr>
@@ -275,7 +272,7 @@
 <ng-template #EmployeeFilter>
     <mat-form-field>
         <mat-label>Select Employee</mat-label>
-        <mat-select [(ngModel)]="userInput.selectedEmployee" (ngModelChange)="htmlRenderer.initilizeTimeTable();">
+        <mat-select [(ngModel)]="userInput.selectedEmployee" (ngModelChange)="initializeTimeTable();">
             <ng-container *ngFor="let employee of backendData.employeeList">
                 <mat-option [value]="employee">{{employee.name}}</mat-option>
             </ng-container>
