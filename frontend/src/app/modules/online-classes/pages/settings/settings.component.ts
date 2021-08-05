@@ -16,7 +16,7 @@ import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, ParsedOnlineClass, TimeComparator } from '@modules/online-classes/class/constants';
+import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME } from '@modules/online-classes/class/constants';
 
 
 @Component({
@@ -38,14 +38,11 @@ export class SettingsComponent implements OnInit {
 
     weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
-    filteredOnlineClassList: Array<ParsedOnlineClass> = [];
-
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer: SettingsHtmlRenderer;
     userInput: SettingsUserInput;
     backendData: SettingsBackendData;
 
-    view: 'class' | 'employee' = 'class';
 
     isLoading: boolean;
 
@@ -81,44 +78,6 @@ export class SettingsComponent implements OnInit {
             return false;
         }
         return true;
-    }
-
-    populateFilteredOnlineClassList() {
-        this.htmlRenderer.colorPaletteHandle.reset();
-        this.filteredOnlineClassList = [];
-        if (this.view == 'class') {
-            if (!(this.userInput.selectedClass && this.userInput.selectedSection))
-                return;
-            this.filteredOnlineClassList = this.backendData.onlineClassList.filter((onlineClass) => {
-                const classSubject = this.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-                if (classSubject.parentClass == this.userInput.selectedClass.id
-                    && classSubject.parentDivision == this.userInput.selectedSection.id) {
-                    return true;
-                }
-                return false;
-            });
-        }
-        else {
-
-        }
-
-        this.filteredOnlineClassList.forEach((concernedOnlineClass) => {
-            if (!concernedOnlineClass)
-                return;
-            const bookedSlotOnlineClassIndex = this.filteredOnlineClassList.findIndex(onlineClass => {
-                if (onlineClass.id == concernedOnlineClass.id) {
-                    return false;
-                }
-                if (concernedOnlineClass.day == onlineClass.day
-                    && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
-                    && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
-                    return true;
-                }
-            });
-            if (bookedSlotOnlineClassIndex != -1) {
-                this.filteredOnlineClassList.splice(bookedSlotOnlineClassIndex, 1);
-            }
-        });
     }
 
 }

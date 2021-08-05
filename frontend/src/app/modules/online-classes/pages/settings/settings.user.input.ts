@@ -3,12 +3,14 @@ import { DEFAULT_START_TIME_STRING, DEFAULT_END_TIME_STRING } from '@modules/onl
 
 export class SettingsUserInput {
 
-    private _selectedClass: any;
-    private _selectedSection: any;
+    selectedClass: any;
+    selectedSection: any;
 
     selectedEmployee: any;
 
     newTimeSpan: { startTime: string, endTime: string; };
+
+    view: 'class' | 'employee' = 'class';
 
     vm: SettingsComponent;
 
@@ -18,26 +20,6 @@ export class SettingsUserInput {
 
     initialize(vm: SettingsComponent): void {
         this.vm = vm;
-    }
-
-    get selectedClass() {
-        return this._selectedClass;
-    }
-
-    set selectedClass(selectedClassValue) {
-        this.vm.htmlRenderer.editTimeSpanFormIndex = -1;    // reset display for new time table
-        this.vm.htmlRenderer.newTimeSpanForm = false;
-        this._selectedClass = selectedClassValue;
-    }
-
-    get selectedSection() {
-        return this._selectedSection;
-    }
-
-    set selectedSection(selectedSectionValue) {
-        this.vm.htmlRenderer.editTimeSpanFormIndex = -1;    // reset display for new time table
-        this.vm.htmlRenderer.newTimeSpanForm = false;
-        this._selectedSection = selectedSectionValue;
     }
 
     resetNewTimeSpanData() {
