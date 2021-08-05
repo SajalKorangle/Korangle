@@ -37,23 +37,23 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th *ngFor="let weekdayKey of getObjetKeys(weekdays)"
+                                    <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdays)"
                                         [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
                                         {{weekdays[weekdayKey]}}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <ng-container
-                                    *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                                    *ngFor="let timeSpan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
                                     <tr>
                                         <td style="width: 160px"
-                                            [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
-                                            {{timespan.startTime.getDisplayString()}} -
-                                            {{timespan.endTime.getDisplayString()}}
+                                            [style.color]="htmlRenderer.isActiveTimeSpan(timeSpan)?'#ff9800':'unset'">
+                                            {{timeSpan.startTime.getDisplayString()}} -
+                                            {{timeSpan.endTime.getDisplayString()}}
                                         </td>
-                                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                        <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
                                             <ng-container
-                                                *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                                *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
                                                 <td style="position: relative; min-width: 100px;"
                                                     [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
                                                     [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">

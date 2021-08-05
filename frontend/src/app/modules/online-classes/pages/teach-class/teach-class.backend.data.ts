@@ -26,20 +26,21 @@ export class TeachClassBackendData {
         this.vm = vm;
     }
 
-    get onlineClassList(): Array<ParsedOnlineClass> {
+    get onlineClassList() {
         return this._onlineClassList;
     }
 
-    set onlineClassList(onlineClassListValue: Array<ParsedOnlineClass>) {
-        onlineClassListValue.forEach(onlineClass => {
+    set onlineClassList(onlineClassListValue) {
+        const parsedOnlineClassList: Array<ParsedOnlineClass> = onlineClassListValue.map(onlineClass => {
             Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
+            return onlineClass as ParsedOnlineClass;
         });
 
-        onlineClassListValue.forEach((concernedOnlineClass) => {
+        parsedOnlineClassList.forEach((concernedOnlineClass) => {
             if (!concernedOnlineClass)
                 return;
-            const bookedSlotOnlineClassIndex = onlineClassListValue.findIndex(onlineClass => {
+            const bookedSlotOnlineClassIndex = parsedOnlineClassList.findIndex(onlineClass => {
                 if (onlineClass.id == concernedOnlineClass.id) {
                     return false;
                 }
@@ -50,10 +51,10 @@ export class TeachClassBackendData {
                 }
             });
             if (bookedSlotOnlineClassIndex != -1) {
-                onlineClassListValue.splice(bookedSlotOnlineClassIndex, 1);
+                parsedOnlineClassList.splice(bookedSlotOnlineClassIndex, 1);
             }
         });
-        this._onlineClassList = onlineClassListValue;
+        this._onlineClassList = parsedOnlineClassList;
     }
 
     getClassById(classId: number) {

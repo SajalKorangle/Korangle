@@ -19,8 +19,7 @@ import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, Time } from '@modules/online-class
 
 import { openUrlInChrome, isMobile, openUrlInBrowser } from '@classes/common.js';
 
-import UtilityMixin from '@classes/mixins/utility-mixin';
-
+import { CommonFunctions } from '@classes/common-functions';
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
@@ -28,9 +27,11 @@ import UtilityMixin from '@classes/mixins/utility-mixin';
     providers: [OnlineClassService, StudentService, SubjectService],
 })
 
-export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestroy {
+export class ClassroomComponent implements OnInit, OnDestroy {
 
     user: any;
+
+    commonFunctions = CommonFunctions.getInstance();
 
     activeStudent: any;
 
@@ -58,7 +59,7 @@ export class ClassroomComponent extends UtilityMixin implements OnInit, OnDestro
         public onlineClassService: OnlineClassService,
         public studentService: StudentService,
         public subjectService: SubjectService,
-    ) { super(); }
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

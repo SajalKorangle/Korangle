@@ -113,6 +113,6 @@ export class CommonFunctions {
 
     copyText(text: string, snackBar: any) {
         navigator.clipboard.writeText(text);
-        snackBar?.open("Copied To Clipboard", undefined, { duration: 2000 });
+        snackBar && snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 }

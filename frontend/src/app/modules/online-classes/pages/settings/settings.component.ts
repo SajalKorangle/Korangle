@@ -74,13 +74,6 @@ export class SettingsComponent implements OnInit {
         console.log("this: ", this);
     }
 
-    parseBackendData() {
-        this.backendData.onlineClassList.forEach(onlineClass => {
-            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
-            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
-        });
-    }
-
     hasAdminPermission() {
         if (this.backendData.employeePermission.configJSON[USER_PERMISSION_KEY] == TEACHER_PERMISSION) {
             return false;
