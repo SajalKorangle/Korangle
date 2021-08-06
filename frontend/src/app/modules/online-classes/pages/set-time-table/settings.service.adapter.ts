@@ -119,7 +119,10 @@ export class SettingsServiceAdapter {
             ];
         this.vm.initializeTimeTable();
         this.vm.isLoading = false;
-        this.vm.snackBar.open(`Online Classes updated for ${this.vm.userInput.selectedClass.name} - ${this.vm.userInput.selectedSection.name}`, undefined, { duration: 2000 });
+        this.vm.snackBar.open(
+            `Online Classes updated for ${this.vm.userInput.selectedClass.name} - ${this.vm.userInput.selectedSection.name}`,
+            undefined,
+            { duration: 2000 });
 
     }
 }

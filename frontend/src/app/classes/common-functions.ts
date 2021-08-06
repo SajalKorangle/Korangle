@@ -34,9 +34,9 @@ export class CommonFunctions {
     static formatDate(dateStr: any, status: any): any {
         let d = new Date(dateStr);
 
-        if (status === 'firstDate') {   // not used any where 
+        if (status === 'firstDate') {   // not used any where
             d = new Date(d.getFullYear(), d.getMonth(), 1);
-        } else if (status === 'lastDate') { // not used any where 
+        } else if (status === 'lastDate') { // not used any where
             d = new Date(d.getFullYear(), d.getMonth() + 1, 0);
         }
 

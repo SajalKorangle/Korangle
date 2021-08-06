@@ -1,5 +1,8 @@
 import { SettingsComponent } from './settings.component';
-import { DEFAULT_START_TIME_STRING, DEFAULT_END_TIME_STRING, ParsedOnlineClass, getDefaultTimeSpanList, TimeSpan, TimeComparator, Time, TimeSpanComparator } from '@modules/online-classes/class/constants';
+import {
+    DEFAULT_START_TIME_STRING, DEFAULT_END_TIME_STRING, ParsedOnlineClass, getDefaultTimeSpanList,
+    TimeSpan, TimeComparator, Time, TimeSpanComparator
+} from '@modules/online-classes/class/constants';
 
 export class SettingsUserInput {
 
