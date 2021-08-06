@@ -17,6 +17,7 @@
                             <div class="card-header-part1">
                                 <h4 class="title">{{ user.section.title }} - {{ user.section.subTitle }}</h4>
                                 <div style="display: flex">
+                                    <span style="font-size: 16px;">{{htmlRenderer.getExpiryStatement()}}</span>
                                     <a
                                         *ngIf="user.section.videoUrl"
                                         style="text-decoration: none; cursor: pointer"
