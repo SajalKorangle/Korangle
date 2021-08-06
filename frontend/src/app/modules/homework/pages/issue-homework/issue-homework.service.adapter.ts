@@ -1,6 +1,7 @@
 import { IssueHomeworkComponent } from './issue-homework.component';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { CommonFunctions } from '../../../../classes/common-functions.js';
+import { CommonFunctions as moduleCommonFunctions } from '@modules/common/common-functions';
 import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
 
 export class IssueHomeworkServiceAdapter {
@@ -18,13 +19,27 @@ export class IssueHomeworkServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
-        let request_class_subject_list = {
+    async initializeData() {
+        this.vm.isInitialLoading = true;
+
+        const routeInformation = moduleCommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
             parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+
+        let request_class_subject_list = {
+            parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        this.vm.isInitialLoading = true;
+        if (!this.vm.hasAdminPermission()) { // if not admin get only the employee linked subjects
+            request_class_subject_list['parentEmployee'] = this.vm.user.activeSchool.employeeId;
+        }
 
         Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //0

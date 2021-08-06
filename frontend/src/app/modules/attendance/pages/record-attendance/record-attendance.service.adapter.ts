@@ -1,6 +1,7 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
+import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
@@ -15,16 +16,31 @@ export class RecordAttendanceServiceAdapter {
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
     }
 
-    initializeData(): void {
+   async  initializeData() {
         this.vm.isInitialLoading = true;
+
+        const routeInformation = moduleCommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         let request_attendance_permission_list_data = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        if (!this.vm.hasAdminPermission()) {
+            request_attendance_permission_list_data['parentEmployee'] = this.vm.user.activeSchool.employeeId;
+        }
 
         Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {

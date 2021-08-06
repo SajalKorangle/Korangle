@@ -15,12 +15,15 @@ import { RecordAttendanceServiceAdapter } from './record-attendance.service.adap
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
+import {valueType} from '@modules/common/in-page-permission';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
+import {EmployeeService} from '@services/modules/employee/employee.service';
 
 @Component({
     selector: 'record-attendance',
     templateUrl: './record-attendance.component.html',
     styleUrls: ['./record-attendance.component.css'],
-    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService],
+    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, EmployeeService],
 })
 export class RecordAttendanceComponent implements OnInit {
     // @Input() user;
@@ -69,6 +72,7 @@ export class RecordAttendanceComponent implements OnInit {
     serviceAdapter: RecordAttendanceServiceAdapter;
 
     currentAttendanceList = [];
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     constructor(
         private excelService: ExcelService,
@@ -79,7 +83,8 @@ export class RecordAttendanceComponent implements OnInit {
         public attendanceService: AttendanceService,
         public studentService: StudentService,
         public smsOldService: SmsOldService,
-        public classService: ClassService
+        public classService: ClassService,
+        public employeeService: EmployeeService
     ) {}
 
     changeSelectedSectionToFirst(): void {
@@ -371,5 +376,9 @@ export class RecordAttendanceComponent implements OnInit {
         let dateStr = this.formatDate(attendance.date.toString(), '');
         dateStr = dateStr.substr(dateStr.length - 2, 2);
         return student.name + ', ' + dateStr;
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 }

@@ -17,6 +17,9 @@ import { isMobile } from '../../../../classes/common.js';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
+import {valueType} from '@modules/common/in-page-permission';
+import {EmployeeService} from '@services/modules/employee/employee.service';
 
 export interface EditHomeworkDialogData {
     id: any;
@@ -42,7 +45,7 @@ export interface ImagePreviewDialogData {
     selector: 'issue-homework',
     templateUrl: './issue-homework.component.html',
     styleUrls: ['./issue-homework.component.css'],
-    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService],
+    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService, EmployeeService],
 })
 export class IssueHomeworkComponent implements OnInit {
     // @Input() user;
@@ -78,6 +81,7 @@ export class IssueHomeworkComponent implements OnInit {
     serviceAdapter: IssueHomeworkServiceAdapter;
 
     updateService: any;
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     constructor(
         public subjectService: SubjectService,
@@ -88,7 +92,8 @@ export class IssueHomeworkComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public employeeService: EmployeeService
     ) {}
 
     // Server Handling - Initial
@@ -208,5 +213,9 @@ export class IssueHomeworkComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 }
