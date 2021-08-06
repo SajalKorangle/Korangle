@@ -4,7 +4,6 @@ import { DataStorage } from "@classes/data-storage";
 
 import { ClassroomServiceAdapter } from './classroom.service.adapter';
 import { ClassroomHtmlRenderer } from './classroom.html.renderer';
-import { ClassroomUserInput } from './classroom.user.input';
 import { ClassroomBackendData } from './classroom.backend.data';
 
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
@@ -42,7 +41,6 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     serviceAdapter: ClassroomServiceAdapter;
     htmlRenderer: ClassroomHtmlRenderer;
-    userInput: ClassroomUserInput;
     backendData: ClassroomBackendData;
 
     meetingParameters: any;
@@ -65,9 +63,6 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         this.user = DataStorage.getInstance().getUser();
         this.activeStudent = this.user.section.student;
 
-        this.userInput = new ClassroomUserInput();
-        this.userInput.initialize(this);
-
         this.backendData = new ClassroomBackendData();
         this.backendData.initialize(this);
 
@@ -82,13 +77,6 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // clearInterval(this.attendanceMarkerInterval);
-    }
-
-    parseBackendData() {
-        this.backendData.onlineClassList.forEach(onlineClass => {
-            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
-            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
-        });
     }
 
     populateMeetingParametersAndStart(accountInfo, signature, apiKey) {
@@ -114,14 +102,14 @@ export class ClassroomComponent implements OnInit, OnDestroy {
                 if (this.htmlRenderer.meetingEntered) {
                     const searchParams = new URLSearchParams();
                     Object.entries(this.meetingParameters).forEach(([key, value]: any) => searchParams.append(key, value));
-                    const encodSearchParams = btoa(searchParams.toString());
+                    const encodedSearchParams = btoa(searchParams.toString());
                     console.log(btoa(searchParams.toString()));
                     if (isMobile()) {
-                        openUrlInChrome(location.origin + '/assets/zoom/index.html?' + encodSearchParams);
+                        openUrlInChrome(location.origin + '/assets/zoom/index.html?' + encodedSearchParams);
                         this.htmlRenderer.meetingEntered = false;
                     }
                     else {
-                        zoomIFrame.src = '/assets/zoom/index.html?' + encodSearchParams;
+                        zoomIFrame.src = '/assets/zoom/index.html?' + encodedSearchParams;
                     }
                 }
                 // this.attendanceMarkerInterval = setInterval(this.serviceAdapter.updateAttendance, this.attendanceUpdateDuration * 1000);

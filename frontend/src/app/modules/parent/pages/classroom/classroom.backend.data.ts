@@ -1,3 +1,5 @@
+import { Time } from '@modules/online-classes/class/constants';
+
 import { ClassroomComponent } from './classroom.component';
 import { ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
@@ -8,7 +10,7 @@ export class ClassroomBackendData {
 
     vm: ClassroomComponent;
 
-    onlineClassList: Array<ParsedOnlineClass>;
+    private _onlineClassList: Array<ParsedOnlineClass>;
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
     accountInfoList: Array<AccountInfo>;
@@ -22,6 +24,21 @@ export class ClassroomBackendData {
     initialize(vm: ClassroomComponent): void {
         this.vm = vm;
     }
+
+    get onlineClassList() {
+        return this._onlineClassList;
+    }
+
+    set onlineClassList(onlineClassListValue) {
+        const parsedOnlineClassList: Array<ParsedOnlineClass> = onlineClassListValue.map(onlineClass => {
+            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
+            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
+            return onlineClass as ParsedOnlineClass;
+        });
+        onlineClassListValue.sort((a, b) => b.id - a.id);
+        this._onlineClassList = parsedOnlineClassList;
+    }
+
 
     getClassSubjectById(id: number) {
         return this.classSubjectList.find(classSubject => classSubject.id == id);

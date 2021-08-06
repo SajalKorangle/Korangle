@@ -57,9 +57,6 @@ export class ClassroomServiceAdapter {
                 this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
             ]);
-
-            this.vm.parseBackendData();
-            this.vm.htmlRenderer.initilizeTimeTable();
         }
         else {
             this.vm.isActiveSession = false;
@@ -68,7 +65,7 @@ export class ClassroomServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    async initilizeMeetingData(accountInfo) {
+    async initializeMeetingData(accountInfo) {
         this.vm.isLoading = true;
         const signature_request = {
             meetingNumber: accountInfo.meetingNumber,

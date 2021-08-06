@@ -5,8 +5,6 @@ export class ClassroomHtmlRenderer {
 
     vm: ClassroomComponent;
 
-    timeSpanList: Array<TimeSpan>;
-
     colorPaletteHandle = ColorPaletteHandle;
 
     meetingEntered: boolean = false;
@@ -15,34 +13,55 @@ export class ClassroomHtmlRenderer {
 
     initialize(vm: ClassroomComponent): void {
         this.vm = vm;
+        ColorPaletteHandle.reset();
     }
 
-    initilizeTimeTable() {
-        ColorPaletteHandle.reset();
+    getOverlappingFilteredOnlineClassList(): Array<ParsedOnlineClass> {
+        const onlineClassList = [...this.vm.backendData.onlineClassList];
+        onlineClassList.forEach((concernedOnlineClass) => {
+            if (!concernedOnlineClass)
+                return;
+            const bookedSlotOnlineClassIndex = onlineClassList.findIndex(onlineClass => {
+                if (onlineClass.id == concernedOnlineClass.id) {
+                    return false;
+                }
+                if (concernedOnlineClass.day == onlineClass.day
+                    && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                    && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                    return true;
+                }
+            });
+            if (bookedSlotOnlineClassIndex != -1) {
+                onlineClassList.splice(bookedSlotOnlineClassIndex, 1);
+            }
+        });
+        return onlineClassList;
+    }
 
-        this.timeSpanList = [];
-        this.vm.backendData.onlineClassList.forEach(onlineClass => {
-            let result: boolean = false;
-            this.timeSpanList.every(timeSpan => {
+    getTimeSpanList(): Array<TimeSpan> {
+
+        const timeSpanList: Array<TimeSpan> = [];
+        this.getOverlappingFilteredOnlineClassList().forEach(onlineClass => {
+            const timeSpanNotFound = timeSpanList.every(timeSpan => {
                 if (TimeComparator(onlineClass.startTimeJSON, timeSpan.endTime) == -1
                     && TimeComparator(timeSpan.startTime, onlineClass.endTimeJSON) == -1) {
-                    result = true;
                     return false;
                 }
                 return true;
             });
-            if (!result) {
-                this.timeSpanList.push(new TimeSpan(
+            if (timeSpanNotFound) {
+                timeSpanList.push(new TimeSpan(
                     {
                         startTime: new Time({ ...onlineClass.startTimeJSON }),
                         endTime: new Time({ ...onlineClass.endTimeJSON })
                     }));
             }
         });
-        this.timeSpanList.sort(TimeSpanComparator);
+        timeSpanList.sort(TimeSpanComparator);
+        return timeSpanList;
     }
 
-    getTime() {
+    getCurrentTime() {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
@@ -52,30 +71,30 @@ export class ClassroomHtmlRenderer {
         return customTime.getDisplayString();
     }
 
-    getOnlineClassByWeekDayAndTime(weekdayKey, timespan) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
+    getOnlineClassByWeekDayAndTime(weekdayKey, timeSpan) {
+        return this.getOverlappingFilteredOnlineClassList().find(onlineClass => {
             if (onlineClass.day == this.vm.weekdays[weekdayKey]
-                && TimeSpanComparator(timespan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
+                && TimeSpanComparator(timeSpan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return true;
             return false;
         });
     }
 
-    getDisplayData(onlineClass: ParsedOnlineClass) {
+    getCardSlotDisplayData(onlineClass: ParsedOnlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
         return { classSubject, subject };
     }
 
-    isActiveTimeSpan(timespan: TimeSpan): boolean {
+    isActiveTimeSpan(timeSpan: TimeSpan): boolean {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({
             hour: currentTime.getHours() % 12,
             minute: currentTime.getMinutes(),
             ampm: currentTime.getHours() >= 12 ? 'pm' : 'am',
         });
-        if (TimeComparator(timespan.startTime, customTime) == -1
-            && TimeComparator(customTime, timespan.endTime) == -1) {
+        if (TimeComparator(timeSpan.startTime, customTime) == -1
+            && TimeComparator(customTime, timeSpan.endTime) == -1) {
             return true;
         }
         return false;
@@ -98,7 +117,7 @@ export class ClassroomHtmlRenderer {
     }
 
     getActiveClass() {
-        return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
+        return this.getOverlappingFilteredOnlineClassList().find(onlineClass => onlineClass.day == this.vm.today && this.isActive(onlineClass));
     }
 
     getClassAccountInfo(onlineClass) {

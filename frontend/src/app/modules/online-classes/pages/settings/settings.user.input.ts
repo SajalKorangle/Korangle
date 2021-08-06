@@ -8,7 +8,7 @@ export class SettingsUserInput {
 
     selectedEmployee: any;
 
-    newTimeSpan: { startTime: string, endTime: string; };
+    timeSpanFormInput: { startTime: string, endTime: string; };
     employeeTimeBreakPoints: Array<Time>;
 
 
@@ -116,7 +116,7 @@ export class SettingsUserInput {
     }
 
     resetNewTimeSpanData() {
-        this.newTimeSpan = { startTime: DEFAULT_START_TIME_STRING, endTime: DEFAULT_END_TIME_STRING };
+        this.timeSpanFormInput = { startTime: DEFAULT_START_TIME_STRING, endTime: DEFAULT_END_TIME_STRING };
     }
 
     resetInput() {

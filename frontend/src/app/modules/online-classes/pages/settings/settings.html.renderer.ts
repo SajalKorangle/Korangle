@@ -75,15 +75,15 @@ export class SettingsHtmlRenderer {
     setupEditTimeSpan(editTimeSpanFormIndex: number) {
         console.log('editTimeSpanFormIndex: ' + editTimeSpanFormIndex);
         this.vm.userInput.editTimeSpanFormIndex = editTimeSpanFormIndex;
-        this.vm.userInput.newTimeSpan = {
+        this.vm.userInput.timeSpanFormInput = {
             startTime: this.vm.userInput.timeSpanList[this.vm.userInput.editTimeSpanFormIndex].startTime.getString(),
             endTime: this.vm.userInput.timeSpanList[this.vm.userInput.editTimeSpanFormIndex].endTime.getString()
         };
     }
 
     endTimeBeforeStartTime(): boolean {
-        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
-        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.timeSpanFormInput.endTime.split(':').map(t => parseInt(t));
         if (endTimeArray[0] < startTimeArray[0])
             return true;
         else if (endTimeArray[0] == startTimeArray[0] && endTimeArray[1] < startTimeArray[1])
@@ -92,8 +92,8 @@ export class SettingsHtmlRenderer {
     }
 
     timeSpanOverlapping(): boolean {
-        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
-        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.timeSpanFormInput.endTime.split(':').map(t => parseInt(t));
         const newStartTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const newEndTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
         let result: boolean = false;
@@ -193,8 +193,8 @@ export class SettingsHtmlRenderer {
     };
 
     addNewTimeSpan() {
-        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
-        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.timeSpanFormInput.endTime.split(':').map(t => parseInt(t));
         const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
         this.vm.userInput.timeSpanList = [...this.vm.userInput.timeSpanList, new TimeSpan({ startTime, endTime })];
@@ -202,8 +202,8 @@ export class SettingsHtmlRenderer {
     }
 
     isEditingTimeSpanOverlapping(): boolean {
-        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
-        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.timeSpanFormInput.endTime.split(':').map(t => parseInt(t));
         const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
         return this.vm.userInput.filteredOnlineClassList.every(onlineClass => {
@@ -216,8 +216,8 @@ export class SettingsHtmlRenderer {
     }
 
     editTimeSpan() {
-        const startTimeArray = this.vm.userInput.newTimeSpan.startTime.split(':').map(t => parseInt(t));
-        const endTimeArray = this.vm.userInput.newTimeSpan.endTime.split(':').map(t => parseInt(t));
+        const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));
+        const endTimeArray = this.vm.userInput.timeSpanFormInput.endTime.split(':').map(t => parseInt(t));
         const startTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const endTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
 
