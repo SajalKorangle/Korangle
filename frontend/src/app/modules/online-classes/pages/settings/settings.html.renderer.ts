@@ -12,37 +12,10 @@ export class SettingsHtmlRenderer {
 
     colorPaletteHandle = ColorPaletteHandle;
 
-    count = 0;
-
     constructor() { }
 
     initialize(vm: SettingsComponent): void {
         this.vm = vm;
-    }
-
-    getEmployeeKeyTimeList(): Array<Time> {
-        console.log("employee key time list called: ", ++this.count);
-        const employeeKeyTimeList = [];
-        this.vm.userInput.filteredOnlineClassList.forEach(onlineClass => {
-            let startTimeAlreadyPresent: boolean = false;
-            let endTimeAlreadyPresent: boolean = false;
-            employeeKeyTimeList.forEach(timeSpan => {
-                if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
-                    startTimeAlreadyPresent = true;
-                }
-                if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
-                    endTimeAlreadyPresent = true;
-                }
-            });
-            if (!startTimeAlreadyPresent) {
-                employeeKeyTimeList.push(new Time({ ...onlineClass.startTimeJSON }));
-            }
-            if (!endTimeAlreadyPresent) {
-                employeeKeyTimeList.push(new Time({ ...onlineClass.endTimeJSON }));
-            }
-        });
-        employeeKeyTimeList.sort(TimeComparator);
-        return employeeKeyTimeList;
     }
 
     getOnlineClassByWeekDayAndTime(weekdayKey, timeSpan) {
@@ -54,7 +27,7 @@ export class SettingsHtmlRenderer {
         });
     }
 
-    getDisplayData(onlineClass) {
+    getCardSlotDisplayData(onlineClass) {
         const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
         const subject = this.vm.backendData.getSubjectById(classSubject.parentSubject);
         const classs = this.vm.backendData.getClassById(classSubject.parentClass);
@@ -138,11 +111,10 @@ export class SettingsHtmlRenderer {
     }
 
     isOnlineClassOverlappingWithDifferentClass(concernedOnlineClass: ParsedOnlineClass): boolean {
-        const concernedOnlineClassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-            if (classSubject.parentEmployee != concernedOnlineClassParentEmployee.parentEmployee) {
+            if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
                 return false;
             }
             if (classSubject.parentClass == concernedClassSubject.parentClass) {
@@ -154,20 +126,15 @@ export class SettingsHtmlRenderer {
                 return true;
             }
         });
-        if (bookedSlotOnlineClass) {
-            console.log('concerned Online Class: ', concernedOnlineClass);
-            console.log(bookedSlotOnlineClass);
-        }
         return Boolean(bookedSlotOnlineClass);
     }
 
 
     isOnlineClassSectionOverlappingWithDifferentSection(concernedOnlineClass: ParsedOnlineClass): boolean {
-        const concernedOnlineClassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-            if (classSubject.parentEmployee != concernedOnlineClassParentEmployee.parentEmployee) {
+            if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
                 return false;
             }
             if (classSubject.parentClass != concernedClassSubject.parentClass)
@@ -185,10 +152,10 @@ export class SettingsHtmlRenderer {
     }
 
     getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
-        const concernedOnlineClassParentEmployee = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-            if (classSubject.parentEmployee != concernedOnlineClassParentEmployee.parentEmployee) {
+            if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
                 return false;
             }
             if (onlineClass == concernedOnlineClass)
@@ -201,7 +168,7 @@ export class SettingsHtmlRenderer {
         });
         let displayString = "";
         bookedSlotOnlineClassList.forEach(bookedSlotOnlineClass => {
-            const info = this.getDisplayData(bookedSlotOnlineClass);
+            const info = this.getCardSlotDisplayData(bookedSlotOnlineClass);
             displayString += "[ " + bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
                 + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
                 + ` (${info.classs.name} & ${info.section.name}) ], `;
@@ -350,10 +317,10 @@ export class SettingsHtmlRenderer {
     }
 
     getOnlineClassRowSpan(onlineClass: ParsedOnlineClass): number {
-        const startTimeIndex = this.getEmployeeKeyTimeList().findIndex(time => {
+        const startTimeIndex = this.vm.userInput.employeeTimeBreakPoints.findIndex(time => {
             return TimeComparator(time, onlineClass.startTimeJSON) == 0;
         });
-        const endTimeIndex = this.getEmployeeKeyTimeList().findIndex(time => {
+        const endTimeIndex = this.vm.userInput.employeeTimeBreakPoints.findIndex(time => {
             return TimeComparator(time, onlineClass.endTimeJSON) == 0;
         });
         return endTimeIndex - startTimeIndex;

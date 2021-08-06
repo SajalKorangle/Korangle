@@ -84,7 +84,7 @@ export class TeachClassComponent implements OnInit, OnDestroy {
         ColorPaletteHandle.reset(); // resets mapping of subjects with colors
         this.htmlRenderer.timeBreakPoints = [];
 
-        this.backendData.onlineClassList.forEach(onlineClass => {
+        this.htmlRenderer.getOverlappingFilteredOnlineClassList().forEach(onlineClass => {
             let startTimeAlreadyPresent: boolean = false;
             let endTimeAlreadyPresent: boolean = false;
             this.htmlRenderer.timeBreakPoints.forEach(timeSpan => {

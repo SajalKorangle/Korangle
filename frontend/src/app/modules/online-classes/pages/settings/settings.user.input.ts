@@ -9,6 +9,8 @@ export class SettingsUserInput {
     selectedEmployee: any;
 
     newTimeSpan: { startTime: string, endTime: string; };
+    employeeTimeBreakPoints: Array<Time>;
+
 
     private _timeSpanList: Array<TimeSpan> = getDefaultTimeSpanList();
 
@@ -35,6 +37,7 @@ export class SettingsUserInput {
 
     set filteredOnlineClassList(onlineClassListValue: Array<ParsedOnlineClass>) {
         this.timeSpanList = []; // reset the time span list
+        this.employeeTimeBreakPoints = [];
         onlineClassListValue.sort((a, b) => b.id - a.id);   // sorted in descending order of id to make the next filtering process always consistent
 
         onlineClassListValue.forEach((concernedOnlineClass) => {     // filter out online classes thar are overlapping
@@ -79,6 +82,27 @@ export class SettingsUserInput {
             else {
                 this.timeSpanList = timeSpanList;
             }
+        }
+        else {
+            onlineClassListValue.forEach(onlineClass => {
+                let startTimeAlreadyPresent: boolean = false;
+                let endTimeAlreadyPresent: boolean = false;
+                this.employeeTimeBreakPoints.forEach(timeSpan => {
+                    if (TimeComparator(onlineClass.startTimeJSON, timeSpan) == 0) {
+                        startTimeAlreadyPresent = true;
+                    }
+                    if (TimeComparator(onlineClass.endTimeJSON, timeSpan) == 0) {
+                        endTimeAlreadyPresent = true;
+                    }
+                });
+                if (!startTimeAlreadyPresent) {
+                    this.employeeTimeBreakPoints.push(new Time({ ...onlineClass.startTimeJSON }));
+                }
+                if (!endTimeAlreadyPresent) {
+                    this.employeeTimeBreakPoints.push(new Time({ ...onlineClass.endTimeJSON }));
+                }
+            });
+            this.employeeTimeBreakPoints.sort(TimeComparator);
         }
     }
 

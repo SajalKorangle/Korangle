@@ -70,11 +70,8 @@ export class SettingsServiceAdapter {
         // filter online classes for selected class and section
         const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-            if (this.vm.userInput.view == 'class' && classSubject.parentClass == this.vm.userInput.selectedClass.id
+            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
-                return true;
-            }
-            else if (this.vm.userInput.view == 'employee' && classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
                 return true;
             }
             return false;
@@ -122,6 +119,7 @@ export class SettingsServiceAdapter {
             ];
         this.vm.initializeTimeTable();
         this.vm.isLoading = false;
-    }
+        this.vm.snackBar.open(`Online Classes updated for ${this.vm.userInput.selectedClass.name} - ${this.vm.userInput.selectedSection.name}`, undefined, { duration: 2000 });
 
+    }
 }

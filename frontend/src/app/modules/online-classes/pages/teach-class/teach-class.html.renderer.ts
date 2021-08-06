@@ -15,6 +15,28 @@ export class TeachClassHtmlRenderer {
         this.vm = vm;
     }
 
+    getOverlappingFilteredOnlineClassList(): Array<ParsedOnlineClass> {
+        const onlineClassList = [...this.vm.backendData.onlineClassList];
+        onlineClassList.forEach((concernedOnlineClass) => {
+            if (!concernedOnlineClass)
+                return;
+            const bookedSlotOnlineClassIndex = onlineClassList.findIndex(onlineClass => {
+                if (onlineClass.id == concernedOnlineClass.id) {
+                    return false;
+                }
+                if (concernedOnlineClass.day == onlineClass.day
+                    && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                    && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                    return true;
+                }
+            });
+            if (bookedSlotOnlineClassIndex != -1) {
+                onlineClassList.splice(bookedSlotOnlineClassIndex, 1);
+            }
+        });
+        return onlineClassList;
+    }
+
     getCurrentTime() {
         const currentTime = this.vm.currentTime;
         const customTime = new Time({
@@ -50,11 +72,11 @@ export class TeachClassHtmlRenderer {
     }
 
     getActiveClass() {
-        return this.vm.backendData.onlineClassList.find(onlineClass => onlineClass.day == this.vm.todayDisplayName && this.isActive(onlineClass));
+        return this.getOverlappingFilteredOnlineClassList().find(onlineClass => onlineClass.day == this.vm.todayDisplayName && this.isActive(onlineClass));
     }
 
     getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
+        return this.getOverlappingFilteredOnlineClassList().find(onlineClass => {
             if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(startTime, onlineClass.startTimeJSON) == 0)
                 return true;
@@ -73,13 +95,68 @@ export class TeachClassHtmlRenderer {
     }
 
     isCellOccupiedDueToRowSpan(weekdayKey, time: Time) {
-        return this.vm.backendData.onlineClassList.find(onlineClass => {
+        return this.getOverlappingFilteredOnlineClassList().find(onlineClass => {
             if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(time, onlineClass.startTimeJSON) >= 0
                 && TimeComparator(time, onlineClass.endTimeJSON) < 0)
                 return true;
             return false;
         }) == undefined;
+    }
+
+    isOnlineClassOverlappingWithDifferentClass(concernedOnlineClass: ParsedOnlineClass): boolean {
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+
+            if (classSubject.parentClass == concernedClassSubject.parentClass) {
+                return false;
+            }
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                return true;
+            }
+        });
+        return Boolean(bookedSlotOnlineClass);
+    }
+
+    isOnlineClassSectionOverlappingWithDifferentSection(concernedOnlineClass: ParsedOnlineClass): boolean {
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+            if (classSubject.parentClass != concernedClassSubject.parentClass)
+                return false;
+            if (onlineClass == concernedOnlineClass) {
+                return false;
+            }
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                return true;
+            }
+        });
+        return Boolean(bookedSlotOnlineClass);
+    }
+
+    getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
+        const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
+            if (onlineClass == concernedOnlineClass)
+                return false;
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                return true;
+            }
+        });
+        let displayString = "";
+        bookedSlotOnlineClassList.forEach(bookedSlotOnlineClass => {
+            const info = this.getCardSlotDisplayData(bookedSlotOnlineClass);
+            displayString += "[ " + bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
+                + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
+                + ` (${info.classInstance.name} & ${info.division.name}) ], `;
+        });
+        return displayString;
     }
 
 }

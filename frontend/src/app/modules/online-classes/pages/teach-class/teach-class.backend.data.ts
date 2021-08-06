@@ -37,23 +37,6 @@ export class TeachClassBackendData {
             return onlineClass as ParsedOnlineClass;
         });
         onlineClassListValue.sort((a, b) => b.id - a.id);
-        parsedOnlineClassList.forEach((concernedOnlineClass) => {
-            if (!concernedOnlineClass)
-                return;
-            const bookedSlotOnlineClassIndex = parsedOnlineClassList.findIndex(onlineClass => {
-                if (onlineClass.id == concernedOnlineClass.id) {
-                    return false;
-                }
-                if (concernedOnlineClass.day == onlineClass.day
-                    && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
-                    && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
-                    return true;
-                }
-            });
-            if (bookedSlotOnlineClassIndex != -1) {
-                parsedOnlineClassList.splice(bookedSlotOnlineClassIndex, 1);
-            }
-        });
         this._onlineClassList = parsedOnlineClassList;
     }
 

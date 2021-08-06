@@ -18,7 +18,7 @@ td:hover .td-hover-show{
 }
 
 .overlapping-danger{
-    border: 2px solid red;
+    border: 2px solid red !important;
 }
 
 .glow-active{

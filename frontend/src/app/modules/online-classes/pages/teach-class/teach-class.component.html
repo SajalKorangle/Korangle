@@ -52,6 +52,8 @@
                                         <td style="position: relative; min-width: 100px;"
                                             [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                             [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
+                                            [class.overlapping-warning]="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass)"
+                                            [class.overlapping-danger]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
                                             [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
                                             [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
                                             <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
@@ -62,6 +64,14 @@
                                             <span *ngIf="backendData.accountInfo"
                                                 style="position: absolute; bottom: 8px; right: 8px;"
                                                 class="glow-active"></span>
+
+                                            <mat-icon
+                                                *ngIf="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass) || htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                                [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
+                                                [style.color]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)?'red':'yellow'"
+                                                style="position: absolute; font-size: small; top: 2px; left: -3px;">
+                                                info
+                                            </mat-icon>
                                         </td>
                                     </ng-container>
                                     <ng-template #NoClass>
