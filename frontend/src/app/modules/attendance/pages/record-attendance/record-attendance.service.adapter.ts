@@ -1,7 +1,7 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
-import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
@@ -19,7 +19,7 @@ export class RecordAttendanceServiceAdapter {
    async  initializeData() {
         this.vm.isInitialLoading = true;
 
-        const routeInformation = moduleCommonFunctions.getModuleTaskPaths();
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
         const in_page_permission_request = {
             parentTask__parentModule__path: routeInformation.modulePath,
             parentTask__path: routeInformation.taskPath,

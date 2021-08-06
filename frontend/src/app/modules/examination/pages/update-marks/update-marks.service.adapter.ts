@@ -1,8 +1,7 @@
 import { UpdateMarksComponent } from './update-marks.component';
 
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
-import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
-import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class UpdateMarksServiceAdapter {
     vm: UpdateMarksComponent;
@@ -42,7 +41,7 @@ export class UpdateMarksServiceAdapter {
         this.vm.isInitialLoading = true;
         this.vm.isUpdated = false;
 
-        const routeInformation = moduleCommonFunctions.getModuleTaskPaths();
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
         const in_page_permission_request = {
             parentTask__parentModule__path: routeInformation.modulePath,
             parentTask__path: routeInformation.taskPath,
