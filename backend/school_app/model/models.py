@@ -70,6 +70,8 @@ class School(models.Model):
     mobileNumber = models.IntegerField(null=True)
 
     expired = models.BooleanField(default=False, verbose_name='expired')
+    dateOfExpiry = models.DateField(default=None, null=True, blank=True, verbose_name='date_of_expiry')
+    dateOfCreation = models.DateField(default=None, null=True, blank=True, verbose_name='date_of_creation')
 
     primaryThemeColor = models.TextField(null=True)
     secondaryThemeColor = models.TextField(null=True)
