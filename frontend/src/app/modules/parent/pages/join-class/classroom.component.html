@@ -32,14 +32,14 @@
                         </div>
                     </ng-container>
 
-                    <div style="overflow: auto;">
+                    <div class="mat-elevation-z8" style="overflow: auto;">
                         <table class="mat-elevation-z8 table table-hover">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdays)"
-                                        [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
-                                        {{weekdays[weekdayKey]}}</th>
+                                    <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)"
+                                        [style.color]="weekdayKeysMappedByDisplayName[weekdayKey]==today?'#ff9800':''">
+                                        {{weekdayKeysMappedByDisplayName[weekdayKey]}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,7 +51,8 @@
                                             {{timeSpan.startTime.getDisplayString()}} -
                                             {{timeSpan.endTime.getDisplayString()}}
                                         </td>
-                                        <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
+                                        <ng-container
+                                            *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
                                             <ng-container
                                                 *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
                                                 <td style="position: relative; min-width: 100px;"

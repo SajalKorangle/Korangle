@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SettingsComponent } from '@modules/online-classes/pages/settings/settings.component';
+import { SettingsComponent } from '@modules/online-classes/pages/set-time-table/settings.component';
 import { TimeSpan, ParsedOnlineClass, TimeComparator } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { MatSnackBar } from '@angular/material/snack-bar';

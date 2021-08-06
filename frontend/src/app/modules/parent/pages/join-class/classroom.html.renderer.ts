@@ -73,7 +73,7 @@ export class ClassroomHtmlRenderer {
 
     getOnlineClassByWeekDayAndTime(weekdayKey, timeSpan) {
         return this.getOverlappingFilteredOnlineClassList().find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+            if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeSpanComparator(timeSpan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return true;
             return false;

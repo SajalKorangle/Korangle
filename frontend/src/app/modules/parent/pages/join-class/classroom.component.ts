@@ -34,7 +34,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
     activeStudent: any;
 
-    weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
+    weekdayKeysMappedByDisplayName = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
     today: string = Object.values(WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME)[new Date().getDay()];
     currentTime: Date = new Date();

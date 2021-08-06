@@ -1,10 +1,12 @@
 th{
     text-align: center;
     min-width: 92px;
+    border: 1px solid rgb(221, 221, 221);
 }
 
 td{
     text-align: center;
+    border: 1px solid rgb(221, 221, 221);
 }
 
 

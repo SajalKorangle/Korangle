@@ -46,7 +46,8 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdays)">{{weekdays[weekdayKey]}}
+                        <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
+                            {{weekdayKeysMappedByDisplayName[weekdayKey]}}
                         </th>
                     </tr>
                 </thead>
@@ -63,7 +64,7 @@
                                 </ng-container>
                             </td>
                             <ng-container
-                                *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays), let i = index;">
+                                *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName), let i = index;">
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
                                     <td style="position: relative; cursor: pointer;" draggable="true"
@@ -114,15 +115,13 @@
                         </tr>
                     </ng-container>
                     <tr>
-                        <td style="width: 200px">
+                        <td style="width: 200px; border-width: 0 1px;">
                             <button mat-fab (click)="userInput.newTimeSpanForm = true;"
                                 *ngIf="!userInput.newTimeSpanForm else NewTimeSpanForm">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </td>
-                        <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
-                            <td></td>
-                        </ng-container>
+                        <td colspan="7" style="border: none;"></td>
                     </tr>
                 </tbody>
             </table>
@@ -155,7 +154,8 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdays)">{{weekdays[weekdayKey]}}
+                        <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
+                            {{weekdayKeysMappedByDisplayName[weekdayKey]}}
                         </th>
                     </tr>
                 </thead>
@@ -166,7 +166,8 @@
                             <td style="width: 50px; vertical-align: top;">
                                 <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
                             </td>
-                            <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
+                            <ng-container
+                                *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                     <td style="position: relative; min-width: 100px;"
@@ -205,9 +206,7 @@
                                 {{userInput.employeeTimeBreakPoints.slice(-1)[0].getDisplayString()}}
                             </span>
                         </td>
-                        <ng-container *ngFor="let weekday of commonFunctions.getObjectKeys(weekdays)">
-                            <td></td>
-                        </ng-container>
+                        <td colspan="7" style="border: none;"></td>
                     </tr>
                 </tbody>
             </table>

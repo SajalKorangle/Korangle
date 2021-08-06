@@ -6,7 +6,7 @@ import { OnlineClassesComponent } from './online-classes.component';
 const routes: Routes = [
   {
     path: 'settings',
-    loadChildren: 'app/modules/online-classes/pages/settings/settings.module#SettingsModule',
+    loadChildren: 'app/modules/online-classes/pages/set-time-table/settings.module#SettingsModule',
     data: { moduleName: 'online_classes' },
   },
   {

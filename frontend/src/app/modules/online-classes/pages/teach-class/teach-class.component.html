@@ -86,10 +86,7 @@
                                     {{htmlRenderer.timeBreakPoints.slice(-1)[0].getDisplayString()}}
                                 </span>
                             </td>
-                            <ng-container
-                                *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
-                                <td></td>
-                            </ng-container>
+                            <td colspan="7" style="border: none;"></td>
                         </tr>
                     </tbody>
                 </table>

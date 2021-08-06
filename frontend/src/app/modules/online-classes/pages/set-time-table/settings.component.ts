@@ -40,7 +40,7 @@ export class SettingsComponent implements OnInit {
 
     commonFunctions = CommonFunctions.getInstance();
 
-    weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
+    weekdayKeysMappedByDisplayName = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer: SettingsHtmlRenderer;

@@ -20,7 +20,7 @@ export class SettingsHtmlRenderer {
 
     getOnlineClassByWeekDayAndTime(weekdayKey, timeSpan) {
         return this.vm.userInput.filteredOnlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+            if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeSpanComparator(timeSpan, new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0)
                 return true;
             return false;
@@ -40,7 +40,7 @@ export class SettingsHtmlRenderer {
         let onlineClass: ParsedOnlineClass = this.getOnlineClassByWeekDayAndTime(weekdayKey, timeSpan);
         const data = {
             vm: this.vm,
-            weekday: this.vm.weekdays[weekdayKey],
+            weekday: this.vm.weekdayKeysMappedByDisplayName[weekdayKey],
             timeSpan: timeSpan,
             onlineClass
         };
@@ -53,7 +53,7 @@ export class SettingsHtmlRenderer {
                 if (!onlineClass) {
                     onlineClass = {
                         parentClassSubject: data.parentClassSubject,
-                        day: this.vm.weekdays[weekdayKey],
+                        day: this.vm.weekdayKeysMappedByDisplayName[weekdayKey],
                         startTimeJSON: new Time({ ...timeSpan.startTime }),
                         endTimeJSON: new Time({ ...timeSpan.endTime }),
                     };
@@ -263,7 +263,7 @@ export class SettingsHtmlRenderer {
         // overlapping slot check
         const dummyOnlineClass = {
             ...onlineClass,
-            day: this.vm.weekdays[weekdayKey],
+            day: this.vm.weekdayKeysMappedByDisplayName[weekdayKey],
             startTimeJSON: new Time({ ...timeSpan.startTime }),
             endTimeJSON: new Time({ ...timeSpan.endTime })
         };
@@ -277,7 +277,7 @@ export class SettingsHtmlRenderer {
             onlineClass = { ...onlineClass, id: null };
             this.vm.userInput.filteredOnlineClassList.push(onlineClass);
         }
-        onlineClass.day = this.vm.weekdays[weekdayKey];
+        onlineClass.day = this.vm.weekdayKeysMappedByDisplayName[weekdayKey];
         onlineClass.startTimeJSON = new Time({ ...timeSpan.startTime });
         onlineClass.endTimeJSON = new Time({ ...timeSpan.endTime });
     }
@@ -309,7 +309,7 @@ export class SettingsHtmlRenderer {
 
     getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
         return this.vm.userInput.filteredOnlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+            if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(startTime, onlineClass.startTimeJSON) == 0)
                 return true;
             return false;
@@ -328,7 +328,7 @@ export class SettingsHtmlRenderer {
 
     isCellOccupiedDueToRowSpan(weekdayKey, time: Time) {
         return this.vm.userInput.filteredOnlineClassList.find(onlineClass => {
-            if (onlineClass.day == this.vm.weekdays[weekdayKey]
+            if (onlineClass.day == this.vm.weekdayKeysMappedByDisplayName[weekdayKey]
                 && TimeComparator(time, onlineClass.startTimeJSON) >= 0
                 && TimeComparator(time, onlineClass.endTimeJSON) < 0)
                 return true;
