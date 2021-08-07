@@ -36,5 +36,7 @@ class Notification(models.Model):
 
 @receiver(post_save, sender=Notification)
 def sendNotification(sender, instance, created, **kwargs):
+    if kwargs['raw']:
+        return
     if(created):
         send_notification(instance)

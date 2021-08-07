@@ -32,7 +32,7 @@ class Heads(models.Model):
 class EmployeeAmountPermission(models.Model):
 
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    restrictedAmount = models.IntegerField(default=0) 
+    restrictedAmount = models.BigIntegerField(default=0) 
     
     class Meta:
         db_table = 'employee_amount_permission'
@@ -72,9 +72,11 @@ class AccountSession(models.Model):
 
 @receiver(pre_save, sender=AccountSession)
 def accountSessionPreSave(sender, instance, **kwargs):
+    if kwargs['raw']:
+        return
     if instance.openingBalance is None:
         instance.openingBalance = 0
-    if (instance.id is None) or kwargs['raw']:
+    if (instance.id is None):
         instance.currentBalance = instance.openingBalance
     else:
         instance.currentBalance += instance.openingBalance - AccountSession.objects.get(id=instance.id).openingBalance
@@ -93,6 +95,8 @@ class Transaction(models.Model):
 
 @receiver(pre_save, sender=Transaction)
 def transactionPreSave(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return 
     if instance.id is None:
         instance.voucherNumber = 1
         last_voucher_number = \
@@ -103,6 +107,8 @@ def transactionPreSave(sender, instance, **kwargs):
         
 @receiver(post_save, sender=Transaction)
 def transactionPostSave(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return 
     if (kwargs['created'] and instance.approvalId):
         transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
         approval = Approval.objects.get(approvalId=instance.approvalId,
@@ -181,6 +187,8 @@ class Approval(models.Model):   # what if both the employee are deleted, parentS
 
 @receiver(pre_save, sender=Approval)
 def approvalPreSave(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return 
     if instance.id is None:
         instance.approvalId = 1
         last_approval_id = \

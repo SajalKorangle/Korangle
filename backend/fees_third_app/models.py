@@ -20,7 +20,7 @@ class FeeType(models.Model):
 
     name = models.TextField(verbose_name='name')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
-    orderNumber = models.IntegerField(verbose_name='orderNumber', default=0)
+    orderNumber = models.BigIntegerField(verbose_name='orderNumber', default=0)
 
     class Meta:
         db_table = 'fee_type_new'
@@ -252,7 +252,7 @@ class FeeReceipt(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee', related_name='parentEmployee')
 
-    chequeNumber = models.IntegerField(null=True, verbose_name='chequeNumber')
+    chequeNumber = models.BigIntegerField(null=True, verbose_name='chequeNumber')
 
     cancelledDateTime = models.DateTimeField(null=True, verbose_name='cancelledDateTime')
     cancelledRemark = models.TextField(null=True, verbose_name='cancelledRemark')
