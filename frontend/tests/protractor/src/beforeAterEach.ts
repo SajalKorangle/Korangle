@@ -37,13 +37,12 @@ export class BeforeAfterEach {
     }
 
     static async afterEach() {
-        console.log("Entering After Each");
+
         stopBackendServer();
 
         await BeforeAfterEach.page.waitForSelector('a#Logout');
         await BeforeAfterEach.page.click('a#Logout');
         await BeforeAfterEach.browser.close();
-        console.log("Exiting After Each Function Call");
 
     }
 
