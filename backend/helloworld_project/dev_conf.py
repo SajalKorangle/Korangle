@@ -27,29 +27,18 @@ command = 'git rev-parse --abbrev-ref HEAD'
 proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
 (out, err) = proc.communicate()
 current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
-if current_branch != 'master':
-    print('Branch: '+current_branch)
-    DATABASES = {
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.sqlite3',
-        #     'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
-        # },
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'korangle_postgresql',
-            'USER': 'postgres',
-            'PASSWORD': 'macbook',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
+print('Branch: '+current_branch)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': current_branch,
+        'USER': os.environ['POSTGRES_USERNAME'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+}
+
 
 # DATABASE_ROUTERS =['postgresql_migration.db_router.MainDbRouter']
 
