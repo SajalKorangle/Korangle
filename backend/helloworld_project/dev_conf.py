@@ -1,8 +1,6 @@
 # dev/testing specific config
 
 
-import os
-
 # import symbols from settings.py
 try:
     from helloworld_project.settings import BASE_DIR
@@ -32,8 +30,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': current_branch,
-        'USER': os.environ['POSTGRES_USERNAME'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }
