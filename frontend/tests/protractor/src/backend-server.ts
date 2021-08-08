@@ -11,6 +11,7 @@ export function startBackendServer(fixtureFileList: any) {
         (err, stdout, stderr) => {
             // console.log('Backend server ended');
         });
+    return new Promise((resolve) => { setTimeout(() => { resolve(); }, 7500); });
 }
 
 export function stopBackendServer() {
