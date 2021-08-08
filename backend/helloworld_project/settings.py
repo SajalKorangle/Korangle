@@ -115,6 +115,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'helloworld_project.urls'
 AUTH_USER_MODEL = 'user_app.User'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

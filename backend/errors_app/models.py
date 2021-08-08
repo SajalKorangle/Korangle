@@ -19,7 +19,7 @@ ISSUE_STATUSES = (
 
 class Error(models.Model):
 
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     errorSource = models.CharField(max_length=50, choices=ERROR_SOURCES, null=False, blank=False, verbose_name='Error Source')
     url = models.TextField()
     description = models.TextField()
