@@ -52,7 +52,7 @@ jobs:
         key: ${{ secrets.STAGING_PRIVATE_KEY }}
         port: 22
         source: "frontend/korangle.zip"
-        target: "/home/ubuntu/korangle.zip"
+        target: "/home/ubuntu"
 
     
     - name: Deploy to Ec2
