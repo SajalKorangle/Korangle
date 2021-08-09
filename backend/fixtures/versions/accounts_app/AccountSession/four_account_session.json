@@ -1,6 +1,6 @@
 [
-	{ "model": "accounts_app.accountsession", "pk": 1, "fields": {"parentAccount": 1, "parentSession": 1,"openingBalance":500,"currentBalance":null,"parentGroup":null,"parentHead":1} },
-	{ "model": "accounts_app.accountsession", "pk": 2, "fields": {"parentAccount": 2, "parentSession": 1,"openingBalance":500,"currentBalance":null,"parentGroup":null,"parentHead":2 } },
-    { "model": "accounts_app.accountsession", "pk": 3, "fields": {"parentAccount": 3, "parentSession": 1,"openingBalance":500,"currentBalance":null,"parentGroup":null,"parentHead":3 } },
-    { "model": "accounts_app.accountsession", "pk": 4, "fields": {"parentAccount": 4, "parentSession": 1,"openingBalance":500,"currentBalance":null,"parentGroup":null,"parentHead":4 } }
+	{ "model": "accounts_app.accountsession", "pk": 1, "fields": {"parentAccount": 1, "parentSession": 1,"openingBalance":500,"currentBalance":500,"parentGroup":null,"parentHead":1} },
+	{ "model": "accounts_app.accountsession", "pk": 2, "fields": {"parentAccount": 2, "parentSession": 1,"openingBalance":500,"currentBalance":500,"parentGroup":null,"parentHead":2 } },
+    { "model": "accounts_app.accountsession", "pk": 3, "fields": {"parentAccount": 3, "parentSession": 1,"openingBalance":500,"currentBalance":500,"parentGroup":null,"parentHead":3 } },
+    { "model": "accounts_app.accountsession", "pk": 4, "fields": {"parentAccount": 4, "parentSession": 1,"openingBalance":500,"currentBalance":500,"parentGroup":null,"parentHead":4 } }
 ]

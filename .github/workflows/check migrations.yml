@@ -21,10 +21,21 @@ jobs:
     if: contains( github.event.pull_request.labels.*.name, 'Run Tests')
     # if: github.event.review.state == 'approved'
     # The type of runner that the job will run on 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
+
+    services:
+      postgres:
+        image: postgres:13.3
+        env:
+          POSTGRES_DB: postgres        
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+
     strategy:
       matrix:
-        python-version: [3.6]
+        python-version: [3.9.6]
         node-version: [10.16]
 
     # Steps represent a sequence of tasks that will be executed as part of the job

@@ -1,21 +1,21 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import { openModuleAndPage, reClickPage } from '../../../../open-page';
+import { containsFirst } from '../../../../contains';
 
 describe('Attendance -> Record Student Attendance', () => {
 
     let page: any;
 
-    afterEach( async () => {
+    afterEach(async () => {
         await BeforeAfterEach.afterEach();
     });
 
     it('Recording Attendance', async () => {
 
         // Start Backend Server
-        startBackendServer(getFixtureFiles('modules/attendance/pages/record-attendance/record-attendance.json'));
+        await startBackendServer(getFixtureFiles('modules/attendance/pages/record-attendance/record-attendance.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -55,7 +55,7 @@ describe('Attendance -> Record Student Attendance', () => {
         expect(presentAttendance.length).toBe(2);
 
         // Confirming the number of absent attendance
-        const absentAttendance  = await page.$x('//button[contains(., " A ")]');
+        const absentAttendance = await page.$x('//button[contains(., " A ")]');
         expect(absentAttendance.length).toBe(3);
 
     });

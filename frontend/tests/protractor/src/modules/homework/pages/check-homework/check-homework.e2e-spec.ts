@@ -1,8 +1,8 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import { openModuleAndPage, reClickPage } from '../../../../open-page';
+import { containsFirst } from '../../../../contains';
 
 describe('Homework -> Check Homework', () => {
 
@@ -15,7 +15,7 @@ describe('Homework -> Check Homework', () => {
     it('Checking Homework', async () => {
 
         // Start Backend Server
-        startBackendServer(getFixtureFiles('modules/homework/pages/check-homework/check-homework.json'));
+        await startBackendServer(getFixtureFiles('modules/homework/pages/check-homework/check-homework.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -45,7 +45,7 @@ describe('Homework -> Check Homework', () => {
         const submittedHomework = await page.$x('//button[contains(., " S ")]');
         expect(submittedHomework.length).toBe(5);
 
-        const checkedHomework  = await page.$x('//button[contains(., " C ")]');
+        const checkedHomework = await page.$x('//button[contains(., " C ")]');
         expect(checkedHomework.length).toBe(5);
 
     });
