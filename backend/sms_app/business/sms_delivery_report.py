@@ -1,6 +1,7 @@
 import distutils
 from distutils import util
 import json
+import ast
 
 from sms_app.models import SMSDeliveryReport, SMS, SMSId
 import requests
@@ -27,7 +28,7 @@ def get_sms_delivery_report_list(data):
         PARAMS = {"APIKey": "pZD3d2b620aBWzVP5XqD9g", "jobid": data['requestId']}
         response = requests.get(url=URL, params=PARAMS)
         response_json = response.json()
-        mobile_number_json = json.loads(data["mobileNumberContentJson"].replace("\'", "\""))
+        mobile_number_json = ast.literal_eval(data["mobileNumberContentJson"])
 
         for report in response_json["DeliveryReports"]:
             for number in mobile_number_json:
