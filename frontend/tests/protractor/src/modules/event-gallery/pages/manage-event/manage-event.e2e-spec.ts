@@ -1,15 +1,15 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Event Gallery -> Manage Event', () => {
 
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/event-gallery/pages/manage-event/manage-event.json'));
+        await startBackendServer(getFixtureFiles('modules/event-gallery/pages/manage-event/manage-event.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -25,7 +25,7 @@ describe('Event Gallery -> Manage Event', () => {
 
     });
 
-    it('Manage Event : Checks tag\'s functions', async () => {
+    fit('Manage Event : Checks tag\'s functions', async () => {
         let nodes, node;
 
         nodes = await containsAll('div[contains(@class, \'btn\') and contains(@class, \'ng-star-inserted\')]', '');
@@ -45,6 +45,8 @@ describe('Event Gallery -> Manage Event', () => {
         //     editor.focus();
         //     document.execCommand('insertText', false, 'New Tag');
         // }, 1000);
+
+        await page.waitForTimeout(1000);
 
         node = await containsFirst('div', '');
         await node.click();
@@ -74,6 +76,8 @@ describe('Event Gallery -> Manage Event', () => {
 
         nodes = await containsFirst('a', 'Delete Tag');
         await nodes.click();
+
+        await page.waitForTimeout(1000);
 
         nodes = await containsAll('div[contains(@class, \'btn\') and contains(@class, \'ng-star-inserted\')]', '');
         expect(nodes.length).toBe(2);
