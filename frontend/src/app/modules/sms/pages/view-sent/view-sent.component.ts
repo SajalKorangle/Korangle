@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
-import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { InformationService } from '../../../../services/modules/information/information.service';
 import { ViewSentServiceAdapter } from './view-sent.service.adapter';
 import { DataStorage } from '../../../../classes/data-storage';
@@ -44,7 +43,7 @@ export class ViewSentComponent implements OnInit {
     serviceAdapter: ViewSentServiceAdapter;
     htmlRenderer: ViewSentHtmlRenderer;
 
-    constructor(public smsOldService: SmsOldService, public informationService: InformationService, private cdRef: ChangeDetectorRef,
+    constructor(public informationService: InformationService, private cdRef: ChangeDetectorRef,
                 public smsService: SmsService) {}
 
     ngOnInit(): void {
