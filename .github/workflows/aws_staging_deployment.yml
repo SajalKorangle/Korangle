@@ -64,13 +64,13 @@ jobs:
         port: 22
         envs: GITHUB_REF
         script: |
-          source env/bin/activate
+          source env/bin/activate || exit 1
           export KORANGLE_STAGING=TRUE
           export STAGING_BRANCH=$GITHUB_REF
           export PGPASSWORD=postgres
           sh /home/ubuntu/code/korangle/backend/stop_server.sh
-          sh ./setupkorangle.sh
-          sh ./setupBackend.sh
+          sh ./setupkorangle.sh || exit 1
+          sh ./setupBackend.sh || exit 1
           cd /home/ubuntu/code/korangle/backend
-          sh /home/ubuntu/code/korangle/backend/start_server.sh
+          sh /home/ubuntu/code/korangle/backend/start_server.sh || exit 1
           
