@@ -2,7 +2,8 @@ from django.db import models
 
 # Create your models here.
 from school_app.model.models import School
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from information_app.models import MessageType
 
 from django.dispatch import receiver
@@ -38,5 +39,7 @@ class Notification(models.Model):
 
 @receiver(post_save, sender=Notification)
 def sendNotification(sender, instance, created, **kwargs):
+    if kwargs['raw']:
+        return
     if(created):
         send_notification(instance)
