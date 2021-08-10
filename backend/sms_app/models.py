@@ -139,7 +139,7 @@ class SMSDeliveryReport(models.Model):
     requestId = models.TextField(null=False, verbose_name='requestId')
 
     # Mobile Number
-    mobileNumber = models.IntegerField(null=False, verbose_name='mobileNumber')
+    mobileNumber = models.BigIntegerField(null=False, verbose_name='mobileNumber')
 
     # Status
     status = models.TextField(null=False, verbose_name='status')
