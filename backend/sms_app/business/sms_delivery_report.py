@@ -1,6 +1,5 @@
 import distutils
 from distutils import util
-import json
 import ast
 
 from sms_app.models import SMSDeliveryReport, SMS, SMSId
@@ -15,11 +14,21 @@ class SMSDeliveryReportModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+def checkMobileNumberStatus(data):
+    mobile_number_json = ast.literal_eval(data["mobileNumberContentJson"])
+    for number in mobile_number_json:
+        if number['DeliveryStatus'] == 'Sent' or number['DeliveryStatus'] \
+                == 'Message in queue' or number['DeliveryStatus'] == 'Submitted to carrier':
+            return False
+    return True
+
+
 def get_sms_delivery_report_list(data):
     sms_delivery_report_list = []
     if data['requestId'] == '-1' or data['requestId'] == '0':
         return []
-    if bool(distutils.util.strtobool(data['smsGateWayHubVendor'])) is False or bool(distutils.util.strtobool(data['fetchedDeliveryStatus'])) is True:
+    if bool(distutils.util.strtobool(data['smsGateWayHubVendor'])) is False or (
+            bool(distutils.util.strtobool(data['fetchedDeliveryStatus'])) and checkMobileNumberStatus(data)) is True:
         for delivery_report_object in \
                 SMSDeliveryReport.objects.filter(requestId=data['requestId']).order_by('mobileNumber'):
             sms_delivery_report_list.append(SMSDeliveryReportModelSerializer(delivery_report_object).data)
@@ -33,12 +42,20 @@ def get_sms_delivery_report_list(data):
         for report in response_json["DeliveryReports"]:
             for number in mobile_number_json:
                 if report["MessageId"] == number["MessageId"]:
-                    senderId = SMSId.objects.get(id=data["parentSMSId"]).smsId
-                    delivery_report = SMSDeliveryReport.objects.create(requestId=data['requestId'],
-                                                                       mobileNumber=number["Number"],
-                                                                       status=report["DeliveryStatus"],
-                                                                       senderId=senderId,
-                                                                       deliveredDateTime=report["DeliveryDate"])
+                    if checkMobileNumberStatus(data):
+                        senderId = SMSId.objects.get(id=data["parentSMSId"]).smsId
+                        delivery_report = SMSDeliveryReport.objects.create(requestId=data['requestId'],
+                                                                           mobileNumber=number["Number"],
+                                                                           status=report["DeliveryStatus"],
+                                                                           senderId=senderId,
+                                                                           deliveredDateTime=report["DeliveryDate"])
+                    else:
+                        delivery_report = SMSDeliveryReport.objects.get(requestId=data['requestId'],
+                                                                        mobileNumber=number["Number"])
+                        delivery_report.status = report["DeliveryStatus"]
+                        delivery_report.deliveredDateTime = report["DeliveryDate"]
+                        delivery_report.save()
+
                     sms_delivery_report_list.append(SMSDeliveryReportModelSerializer(delivery_report).data)
 
         sms_obj = SMS.objects.get(requestId=data['requestId'])

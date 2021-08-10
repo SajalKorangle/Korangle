@@ -1,7 +1,7 @@
 def populate_sms_templates(apps, schema_editor):
     sms_template = apps.get_model('sms_app', 'SMSTemplate')
     sms_id = apps.get_model('sms_app', 'SMSId')
-
+    print("templates")
     sms_template.objects.create(parentSMSId=sms_id.objects.get(smsId='SNCSCH'), templateName='Project 2',
                                 templateId='1007396821056959918',
                                 rawContent='सभी को सूचित किया जाता है कि कक्षा {#var#} से कक्षा {#var#} तक '

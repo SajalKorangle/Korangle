@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notification_app', '0002_notification_parentmessagetype'),
-        ('sms_app', '0006_auto_20210616_1911')
+        ('notification_app', '0002_notification_parentuser'),
+        ('sms_app', '0002_sms_template_addon')
     ]
 
     operations = [

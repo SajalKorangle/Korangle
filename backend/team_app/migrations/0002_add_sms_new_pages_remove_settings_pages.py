@@ -5,14 +5,16 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 from team_app.db_script.add_manage_sms_id_and_templates_tasks import add_manage_sms_id_and_templates_tasks
+from team_app.db_script.remove_setting_pages import remove_setting_pages
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0031_auto_20210707_1805'),
+        ('team_app', '0001_initial'),
     ]
 
     operations = [
-        migrations.RunPython(add_manage_sms_id_and_templates_tasks)
+        migrations.RunPython(add_manage_sms_id_and_templates_tasks),
+        migrations.RunPython(remove_setting_pages)
     ]

@@ -8,8 +8,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('attendance_app', '0010_attendancesettings'),
-        ('sms_app', '0006_auto_20210616_1911'),
+        ('attendance_app', '0001_initial'),
+        ('sms_app', '0002_sms_template_addon'),
     ]
 
     operations = [

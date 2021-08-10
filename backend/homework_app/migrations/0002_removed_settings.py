@@ -8,20 +8,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tutorial_app', '0002_tutorialsettings'),
-        ('sms_app', '0006_auto_20210616_1911')
+        ('homework_app', '0001_initial'),
+        ('sms_app', '0002_sms_template_addon'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='tutorialsettings',
+            model_name='homeworksettings',
             name='parentSchool',
         ),
-        migrations.RemoveField(
-            model_name='tutorialsettings',
-            name='sentUpdateType',
-        ),
         migrations.DeleteModel(
-            name='TutorialSettings',
+            name='HomeworkSettings',
         ),
     ]
