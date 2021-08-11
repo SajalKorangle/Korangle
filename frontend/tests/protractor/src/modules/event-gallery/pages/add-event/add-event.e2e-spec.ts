@@ -1,15 +1,15 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Event Gallery -> Add Event', () => {
 
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/event-gallery/pages/add-event/add-event.json'));
+        await startBackendServer(getFixtureFiles('modules/event-gallery/pages/add-event/add-event.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
