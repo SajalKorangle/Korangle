@@ -47,7 +47,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Qualification', 'qualification', 'text', false, ''), // 11
         new ColumnHandle('Current Post', 'currentPost', 'text', false, ''), // 12
         new ColumnHandle('Date Of Joining', 'dateOfJoining', 'date', false, ''), // 13
-        new ColumnHandle('Pan No.', 'panNumber', 'number', false, ''), // 14
+        new ColumnHandle('Pan No.', 'panNumber', 'text', false, ''), // 14
         new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 15
         new ColumnHandle('Address', 'address', 'text', false, ''), // 16
         new ColumnHandle('Bank Name', 'bankName', 'text', false, ''), // 17

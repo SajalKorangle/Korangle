@@ -68,6 +68,7 @@
                                     *ngIf="column.inputType==='text' || column.inputType==='number' || column.inputType==='date'">
                                     <input [attr.type]="column.inputType" [attr.id]="employee.id+column.key"
                                         class="customInput"
+                                        [ngStyle]="{'text-transform':(column.key ==  'panNumber')?'uppercase': 'none'}"  
                                         (blur)="serviceAdapter.updateEmloyeeField(column.key,employee, $event.target.value,column.inputType)"
                                         [ngModel]="employee[column.key]" />
                                 </ng-container>
