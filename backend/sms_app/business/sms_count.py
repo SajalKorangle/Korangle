@@ -11,7 +11,7 @@ def get_sms_count(school_id):
     if purchase_count is None:
         purchase_count = 0
 
-    spent_count = SMS.objects.filter(parentSchool_id=school_id).exclude(remark='INSUFFICIENT BALANCE') \
+    spent_count = SMS.objects.filter(parentSchool_id=school_id).exclude(sentStatus=False) \
         .aggregate(spentCount=Sum('count'))['spentCount']
 
     if spent_count is None:
