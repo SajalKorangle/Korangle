@@ -46,19 +46,16 @@ export class SettingsUserInput {
         onlineClassListValue.forEach((concernedOnlineClass) => {     // filter out online classes thar are overlapping
             if (!concernedOnlineClass)
                 return;
-            const bookedSlotOnlineClassIndex = onlineClassListValue.findIndex(onlineClass => {
+            onlineClassListValue.forEach((onlineClass, index) => {
                 if (onlineClass.id == concernedOnlineClass.id) {
                     return false;
                 }
                 if (concernedOnlineClass.day == onlineClass.day
                     && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
                     && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
-                    return true;
+                    onlineClassListValue.splice(index, 1);
                 }
             });
-            if (bookedSlotOnlineClassIndex != -1) {
-                onlineClassListValue.splice(bookedSlotOnlineClassIndex, 1);
-            }
         });
         this._filteredOnlineClassList = onlineClassListValue;
         const timeSpanList: Array<TimeSpan> = [];

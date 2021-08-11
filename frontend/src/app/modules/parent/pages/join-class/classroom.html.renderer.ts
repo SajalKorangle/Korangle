@@ -21,19 +21,16 @@ export class ClassroomHtmlRenderer {
         onlineClassList.forEach((concernedOnlineClass) => {
             if (!concernedOnlineClass)
                 return;
-            const bookedSlotOnlineClassIndex = onlineClassList.findIndex(onlineClass => {
+            onlineClassList.forEach((onlineClass, index) => {
                 if (onlineClass.id == concernedOnlineClass.id) {
                     return false;
                 }
                 if (concernedOnlineClass.day == onlineClass.day
                     && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
                     && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
-                    return true;
+                    onlineClassList.splice(index, 1);
                 }
             });
-            if (bookedSlotOnlineClassIndex != -1) {
-                onlineClassList.splice(bookedSlotOnlineClassIndex, 1);
-            }
         });
         return onlineClassList;
     }

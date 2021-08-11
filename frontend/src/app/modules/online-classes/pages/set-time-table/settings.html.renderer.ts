@@ -96,7 +96,7 @@ export class SettingsHtmlRenderer {
         const endTimeArray = this.vm.userInput.timeSpanFormInput.endTime.split(':').map(t => parseInt(t));
         const newStartTime = new Time({ hour: startTimeArray[0] % 12, minute: startTimeArray[1], ampm: startTimeArray[0] < 12 ? 'am' : 'pm' });
         const newEndTime = new Time({ hour: endTimeArray[0] % 12, minute: endTimeArray[1], ampm: endTimeArray[0] < 12 ? 'am' : 'pm' });
-        let result: boolean = false;
+        let result: boolean = TimeComparator(newStartTime, newEndTime) == 0;
 
         const filteredTimeSpans = this.nonEditingTimeSpanList();
         filteredTimeSpans.every(timeSpan => {
@@ -184,13 +184,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    }
+    };
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));

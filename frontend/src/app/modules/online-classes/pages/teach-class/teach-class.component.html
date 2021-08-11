@@ -5,11 +5,11 @@
     <ng-container *ngIf="isActiveSession else NotActiveSession">
         <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
 
-            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+            <ng-container *ngIf="htmlRenderer.getActiveClassList().length>0 ">
                 <h4>Ongoing Class:</h4>
-                <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
+                <div style="padding: 8px; display: flex; flex-wrap: wrap; align-items: center;">
 
-                    <div style="margin-left: 12px;">
+                    <div style="margin: 12px 20px;" *ngFor="let activeClass of htmlRenderer.getActiveClassList()">
                         <span>{{htmlRenderer.getCardSlotDisplayData(activeClass).subject.name}} </span>
                         <span>({{htmlRenderer.getCardSlotDisplayData(activeClass).classInstance.name}} &
                             {{htmlRenderer.getCardSlotDisplayData(activeClass).division.name}})</span><br />
