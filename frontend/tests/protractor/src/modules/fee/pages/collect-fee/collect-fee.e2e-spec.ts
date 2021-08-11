@@ -9,7 +9,7 @@ describe('Fees 3.0 -> Collect Fee', () => {
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/fee/pages/collect-fee/collect-fee.json'));
+        await startBackendServer(getFixtureFiles('modules/fee/pages/collect-fee/collect-fee.json'));
 
         page = await BeforeAfterEach.beforeEach();
 

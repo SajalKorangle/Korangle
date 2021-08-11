@@ -1,7 +1,7 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
+import { openModuleAndPage } from '../../../../open-page';
 import { containsAll, containsFirst } from '../../../../contains';
 
 
@@ -12,7 +12,7 @@ describe('Examination -> Create Test', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/examination/pages/create-test/create-test.json'));
+        await startBackendServer(getFixtureFiles('modules/examination/pages/create-test/create-test.json'));
 
         page = await BeforeAfterEach.beforeEach();
 

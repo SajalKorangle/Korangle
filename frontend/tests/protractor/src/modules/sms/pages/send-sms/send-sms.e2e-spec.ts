@@ -1,5 +1,5 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import {openModuleAndPage} from '../../../../open-page';
 import {containsAll, containsFirst} from '../../../../contains';
