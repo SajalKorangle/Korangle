@@ -198,7 +198,7 @@ class SMSTemplate(models.Model):
 class SMSEventSettings(models.Model):
     SMSEventId = models.IntegerField(null=False, default=0)
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.SET_NULL, default=0, null=True,
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.SET_NULL, null=True,
                                           verbose_name='parentSMSTemplate')
     sendUpdateTypeId = models.IntegerField(null=False, default=0)
     customNotificationContent = models.TextField(null=True, verbose_name='customNotificationContent')

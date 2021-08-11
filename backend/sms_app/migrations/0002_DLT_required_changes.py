@@ -151,7 +151,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sms',
             name='parentSMSId',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='sms_app.smsid', verbose_name='smsId'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='sms_app.smsid', verbose_name='smsId'),
         ),
         migrations.RunPython(populate_sms_id),
         migrations.RunPython(populate_sms_templates),
