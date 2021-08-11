@@ -93,10 +93,10 @@ export class UpdateProfileComponent implements OnInit {
             alert("Print Name shouldn't be empty");
             return;
         }
-        if (this.currentPrintName.length > 30) {
+        /*if (this.currentPrintName.length > 30) {
             alert("Print Name length shouldn't be greater than 30");
             return;
-        }
+        }*/
         let data = {
             dbId: this.user.activeSchool.dbId,
             name: this.currentName,
