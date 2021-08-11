@@ -1,21 +1,21 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst, containsAll} from '../../../../contains';
+import { openModuleAndPage, reClickPage } from '../../../../open-page';
+import { containsFirst, containsAll } from '../../../../contains';
 
 describe('Class -> Assign Class', () => {
 
     let page: any;
 
-    afterEach( async () => {
+    afterEach(async () => {
         await BeforeAfterEach.afterEach();
     });
 
     it('Assign Class', async () => {
 
         // Start Backend Server
-        startBackendServer(getFixtureFiles('modules/class/pages/assign-class/assign-class.json'));
+        await startBackendServer(getFixtureFiles('modules/class/pages/assign-class/assign-class.json'));
 
         page = await BeforeAfterEach.beforeEach();
 

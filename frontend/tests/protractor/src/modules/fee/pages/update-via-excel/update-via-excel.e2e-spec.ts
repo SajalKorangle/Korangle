@@ -1,5 +1,5 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 import { openModuleAndPage } from '../../../../open-page';
 import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
@@ -26,7 +26,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/fee/pages/update-via-excel/update-via-excel.json'));
+        await startBackendServer(getFixtureFiles('modules/fee/pages/update-via-excel/update-via-excel.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -86,7 +86,7 @@ describe('Fees 3.0 -> Upload Excel', () => {
         it('Cell Error/Warning test', async () => {
             let node, nodes;
 
-            let isWarning = await page.$eval('tbody tr:nth-child(25) td:nth-child(7)', element => isWarning =  element.classList.contains("bgWarning"));
+            let isWarning = await page.$eval('tbody tr:nth-child(25) td:nth-child(7)', element => isWarning = element.classList.contains("bgWarning"));
             expect(isWarning).toBe(true);
 
             node = await containsFirst('button', 'Errors');
