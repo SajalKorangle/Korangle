@@ -1,8 +1,8 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst } from '../../../../contains';
 
 
 describe('Parents -> View Homework', () => {
@@ -12,7 +12,7 @@ describe('Parents -> View Homework', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/parent/pages/view-homework/view-homework.json'));
+        await startBackendServer(getFixtureFiles('modules/parent/pages/view-homework/view-homework.json'));
         page = await BeforeAfterEach.beforeEach();
         await page.select('select[ng-reflect-model="Employee"]', 'Parent');
         await openModuleAndPage('Homework', '');

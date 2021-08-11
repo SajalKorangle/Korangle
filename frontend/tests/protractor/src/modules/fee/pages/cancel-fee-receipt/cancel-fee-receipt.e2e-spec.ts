@@ -1,15 +1,15 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Fees 3.0 -> Cancel Fee Receipt', () => {
 
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/fee/pages/cancel-fee-receipt/cancel-fee-receipt.json'));
+        await startBackendServer(getFixtureFiles('modules/fee/pages/cancel-fee-receipt/cancel-fee-receipt.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -134,8 +134,8 @@ describe('Fees 3.0 -> Cancel Fee Receipt', () => {
         node = await containsFirst('mat-dialog-container//following::textarea[1]', '');
         await node.type('Invalid Receipt 3');
 
-         node = await containsFirst('mat-dialog-container//following::button[2]', 'Cancel');  // click show subject filter button
-         await node.click();
+        node = await containsFirst('mat-dialog-container//following::button[2]', 'Cancel');  // click show subject filter button
+        await node.click();
 
         // Checking the cancelled text exists in the mat cards
         nodes = await containsAll('span', 'This fee receipt is cancelled');  //count check

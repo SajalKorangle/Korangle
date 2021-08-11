@@ -70,6 +70,8 @@ class TransactionAccountDetailsListView(CommonListView, APIView):
 from school_app.model.models import Session
 
 def updateCurrentBalanceOnTransactionAccountDetailsSave(sender, instance, **kwargs):
+    if kwargs['raw']:
+        return
     session_object = \
         Session.objects.get(startDate__lte=instance.parentTransaction.transactionDate,
                             endDate__gte=instance.parentTransaction.transactionDate)

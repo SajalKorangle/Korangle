@@ -1,21 +1,21 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNodes} from '../../../../contains';
+import { openModuleAndPage, reClickPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNodes } from '../../../../contains';
 
 describe('Homework -> Settings', () => {
 
     let page: any;
 
-    afterEach( async () => {
+    afterEach(async () => {
         await BeforeAfterEach.afterEach();
     });
 
     it('Changing Settings', async () => {
 
         // Start Backend Server
-        startBackendServer(getFixtureFiles('modules/homework/pages/settings/settings.json'));
+        await startBackendServer(getFixtureFiles('modules/homework/pages/settings/settings.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
