@@ -2,7 +2,7 @@ def populate_sms_id(apps, schema_editor):
     school = apps.get_model('school_app', 'School')
     sms_id = apps.get_model('sms_app', 'SMSId')
     sms_id_school = apps.get_model('sms_app', 'SMSIdSchool')
-    print("sms_id")
+
     sms_id.objects.create(entityName='Harshal Agrawal',
                           entityRegistrationId='1001789907875138385', smsId='KORNGL',
                           smsIdRegistrationNumber='1005782167817961670', smsIdStatus='ACTIVATED')

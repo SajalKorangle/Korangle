@@ -95,7 +95,7 @@ export class AddEventServiceAdapter {
         });
         employeeData.forEach((employee) => {
             employee['employee'] = true;
-            this.notifyPersonData.push(employee);
+            this.notifyPersonData.push(employee); //check mobile number is null or something else
         });
         this.vm.messageService.fetchGCMDevicesNew(this.notifyPersonData);
     }
@@ -266,19 +266,11 @@ export class AddEventServiceAdapter {
         this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
             (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
         );
-        let personList = [];
         this.vm.dataForMapping['event'] = eventObject;
-        this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData.filter(x => x.student);
-        this.vm.dataForMapping['employeeList'] = this.vm.notifyPersonData.filter(x => x.employee);
-        if (this.vm.dataForMapping['studentList'].length > 0) {
-            personList.push('student');
-        }
-        if (this.vm.dataForMapping['employeeList'].length > 0) {
-            personList.push('employee');
-        }
-        this.vm.messageService.sendEventNotification(
+        this.vm.dataForMapping['commonPersonList'] = this.vm.notifyPersonData;
+        this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
             this.vm.dataForMapping,
-            personList,
+            'commonPerson',
             eventID,
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance,

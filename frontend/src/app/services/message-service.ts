@@ -32,8 +32,11 @@ export class MessageService {
         this.smsService = smsService;
     }
 
-    fetchGCMDevicesNew: any = (studentList: any) => {
-        const mobile_list = studentList.filter((item) => item.mobileNumber).map((obj) => obj.mobileNumber.toString());
+
+    //// FETCHING GCM DEVICES PART STARTS TO POPULATE THE KEY NOTIFICATION(TRUE OR FALSE) FOR ANY PERSON ////
+
+    fetchGCMDevicesNew: any = (personList: any) => {
+        const mobile_list = personList.filter((item) => item.mobileNumber).map((obj) => obj.mobileNumber.toString());
         const gcm_data = {
             user__username__in: mobile_list,
             active: 'true__boolean',
@@ -64,14 +67,14 @@ export class MessageService {
 
             let notification_list;
 
-            notification_list = studentList.filter((obj) => {
+            notification_list = personList.filter((obj) => {
                 return (
                     notif_usernames.find((user) => {
                         return user.username == obj.mobileNumber;
                     }) != undefined
                 );
             });
-            studentList.forEach((item, i) => {
+            personList.forEach((item, i) => {
                 item.notification = false;
             });
             notification_list.forEach((item, i) => {
@@ -80,14 +83,20 @@ export class MessageService {
         });
     }
 
+
+    //// END OF FETCHING GCM DEVICES PART ////
+
+
+    //// START OF SENDING SMS AND NOTIFICATIONS RELATED FUNCTIONS ////
+
     /*
      This sendEventNotification function is called by all the Automated Events like Tutorials,Homework,Event-Gallery because to
      avoid code repetition ( like - fetching the smsEventData smseventSettings data in all the pages )
      */
 
-    async sendEventNotification(
-        Data, // contains all the backend list which are required to populate the variables
-        personsTypeList, // ['student','employee'] either or both of them
+    async fetchEventDataAndSendEventSMSNotification(
+        dataForMapping, // contains all the backend list which are required to populate the variables
+        personType, // 'student' or 'employee' or 'studentAndEmployee'
         eventId, // id of the Event like 'Homework Creation' = 7 as a number
         schoolId, // school dbId
         smsBalance, // school sms balance
@@ -95,7 +104,7 @@ export class MessageService {
 
         const smsEvent = await this.smsService.getObject(this.smsService.sms_event, {id: eventId});
         if (!smsEvent) {
-            throw "No Events Found";
+            throw 'No Events Found';
         } // if there is not event return
 
         let fetch_event_settings_list = {
@@ -109,14 +118,14 @@ export class MessageService {
         } // if there is not event settings or sentUpdateType is null then return
 
         let smsDefaultTemplate = await this.smsService.getObject(this.smsService.sms_default_template,
-                    {id: smsEvent.defaultSMSTemplateId});
+            {id: smsEvent.defaultSMSTemplateId});
 
         let messageContent;
         if (eventSettings.sendUpdateTypeId == 3) { //if the type is Notification
             messageContent = eventSettings.customNotificationContent ? eventSettings.customNotificationContent : smsEvent.defaultNotificationContent;
         } else {
             // if there is any template linked with the settings get that template and store it
-            if (eventSettings.parentSMSTemplate && eventSettings.parentSMSTemplate != 0) {
+            if (eventSettings.parentSMSTemplate) {
                 smsDefaultTemplate = await this.smsService.getObject(this.smsService.sms_template,
                     {id: eventSettings.parentSMSTemplate});
             }
@@ -124,9 +133,9 @@ export class MessageService {
         }
 
         try {
-            await this.smsNotificationSender(
-                Data,
-                personsTypeList,
+            await this.sendEventSMSNotification(
+                dataForMapping,
+                personType,
                 smsEvent,
                 eventSettings.sendUpdateTypeId,
                 smsDefaultTemplate,
@@ -140,15 +149,15 @@ export class MessageService {
         }
     }
 
-     /*
-     smsNotificationSender is called by the AutomatedEvents function sendEventNotification and
-     For SendGeneralSMS and NotifyDefaultersSMS this function is called directly from the respective pages
-     as they don't have any smsEventSettings and the pages contain the smsContent by themselves
-     */
+    /*
+    smsNotificationSender is called by the AutomatedEvents function sendEventNotification and
+    For SendGeneralSMS and NotifyDefaultersSMS this function is called directly from the respective pages
+    as they don't have any smsEventSettings and the pages contain the smsContent by themselves
+    */
 
-    async smsNotificationSender(
-        data: any, // contains all the backend list which are required to populate the variables
-        personsTypeList: any, // ['student','employee'] either or both of them
+    async sendEventSMSNotification(
+        dataForMapping: any, // contains all the backend list which are required to populate the variables
+        personType: any, // 'student','employee' or 'commonPerson'
         smsEvent: any, // corresponding SMS Event
         sendUpdateTypeId: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
         smsTemplate: any, // This contains any sms template that is used ( if not null )
@@ -169,18 +178,17 @@ export class MessageService {
 
         // Iterating over the person Type list because in Event-Gallery we require both Students and Employees
         // So it is determined by the function caller
-        personsTypeList.forEach(person => { // here person is Student or Employee
-            data[person + 'List'].forEach(personData => {
-                if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
-                    // Getting the mapped data like - { studentName : "Rahul", class: "10" ... etc }
-                    let mappedObject = this.getMappingData(variableMappedEvent.variableList, data, person, personData);
-                    mappedObject['notification'] = personData.notification;
-                    mappedObject['id'] = personData.id;
-                    personVariablesMappedObjList.push(mappedObject);
-                }
-            });
-
+        // personsTypeList.forEach(person => { // here person is Student or Employee
+        dataForMapping[personType + 'List'].forEach(personData => {
+            if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
+                // Getting the mapped data like - { studentName : "Rahul", class: "10" ... etc }
+                let mappedObject = this.getMappingData(variableMappedEvent.variableList, dataForMapping, personType, personData);
+                mappedObject['notification'] = personData.notification;
+                mappedObject['id'] = personData.id;
+                personVariablesMappedObjList.push(mappedObject);
+            }
         });
+        // });
 
         if (sendUpdateTypeId == 2) { // if the update type is 2 (SMS) populating only the sms_list
             sms_list = personVariablesMappedObjList;
@@ -280,19 +288,21 @@ export class MessageService {
             if (value[0].sentStatus) {
                 smsBalance -= value[0].count;
             } else {
-                throw "NOT SENT";
+                throw 'NOT SENT';
             }
         }
 
         return smsBalance;
     }
 
+    //// HELPER FUNCTIONS PART STARTS ////
+
     getMessageFromTemplate = (message, mappedDataObj) => {
         let ret = message;
         for (let key in mappedDataObj) {
             ret = ret.replace(new RegExp('{#' + key + '#}', 'g'), mappedDataObj[key]);
         }
-        ret = ret.replace(/{#/g, '').replace(/#}/g, '').replace(NEW_LINE_REGEX, "\n");
+        ret = ret.replace(/{#/g, '').replace(/#}/g, '').replace(NEW_LINE_REGEX, '\n');
         return ret;
     }
 
@@ -321,19 +331,6 @@ export class MessageService {
         return count;
     }
 
-    getEstimatedNotificationCount = (sendUpdateTypeId: any, student_list: any) => {
-        let count = 0;
-        if (sendUpdateTypeId == 2) {
-            return 0;
-        }
-
-        count = student_list.filter((item) => {
-            return item.mobileNumber && item.notification;
-        }).length;
-
-        return count;
-    }
-
     getMessageCount = (message) => {
         if (this.hasUnicode(message)) {
             return Math.ceil(message.length / 70);
@@ -347,7 +344,7 @@ export class MessageService {
         data['person'] = person; // which person? student or employee is stored here
         data[person] = personData; // person details eg: data['student'] details are stored here
         eventVariableList.forEach(eventVariable => {
-                temp[eventVariable.displayVariable] = eventVariable.getValueFunc(data);
+            temp[eventVariable.displayVariable] = eventVariable.getValueFunc(data);
         });
         return temp;
     }
@@ -358,9 +355,14 @@ export class MessageService {
         let number = secondNumber ? 'secondMobileNumber' : 'mobileNumber';
         return previousList.some(personData => {
                 return personData.mobileNumber == currentPerson[number] &&
-                this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, personData)) ==
+                    this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, personData)) ==
                     this.getMessageFromTemplate(message, this.getMappingData(eventVariables, data, person, currentPerson));
             }
         );
     }
+
+    //// HELPER FUNCTIONS PART ENDS ////
+
+    //// END OF SENDING SMS AND NOTIFICATIONS RELATED FUNCTIONS ////
+
 }

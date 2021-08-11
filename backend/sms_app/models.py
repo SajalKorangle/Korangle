@@ -31,7 +31,7 @@ class SMSId(models.Model):
 
 
 class SMSIdSchool(models.Model):
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSMSId')
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, null=False, verbose_name='parentSMSId')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
 
     class Meta:
@@ -95,7 +95,7 @@ class SMS(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
 
     # SMSId
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.SET_DEFAULT, default=0, verbose_name='smsId')
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.SET_NULL, null=True, verbose_name='smsId')
 
     # scheduledSMS
     scheduledDateTime = models.DateTimeField(null=True)
@@ -183,7 +183,7 @@ class SMSPurchase(models.Model):
 
 
 class SMSTemplate(models.Model):
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, default=0, verbose_name='parentSenderId')
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, null=False, verbose_name='parentSenderId')
     createdDate = models.DateField(null=False, auto_now_add=True, verbose_name='createdDate')
 
     templateId = models.TextField(null=False, verbose_name='templateId')
@@ -198,7 +198,7 @@ class SMSTemplate(models.Model):
 class SMSEventSettings(models.Model):
     SMSEventId = models.IntegerField(null=False, default=0)
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, default=0, null=True,
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.SET_NULL, default=0, null=True,
                                           verbose_name='parentSMSTemplate')
     sendUpdateTypeId = models.IntegerField(null=False, default=0)
     customNotificationContent = models.TextField(null=True, verbose_name='customNotificationContent')

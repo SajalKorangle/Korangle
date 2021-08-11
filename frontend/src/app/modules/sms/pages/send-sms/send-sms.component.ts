@@ -48,8 +48,7 @@ export class SendSmsComponent implements OnInit {
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
-    studentMessageService: any;
-    employeeMessageService: any;
+    messageService: any;
 
     SMS_TYPE_ID = 2;
     NOTIFICATION_TYPE_ID = 3;
@@ -151,8 +150,7 @@ export class SendSmsComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.studentMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
-        this.employeeMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -177,13 +175,13 @@ export class SendSmsComponent implements OnInit {
                     return x.selected;
                 })
                 .forEach((studentSection) => {
-                    if (!this.studentMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
+                    if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                         studentSection.student, this.message, 'student')) {
                         studentSection.student['student'] = true;
                         tempList.push(studentSection.student);
                     }
                     if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                        if (!this.studentMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
+                        if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                             studentSection.student, this.message, 'student', true)) {
                             studentSection.student['student'] = true;
                             tempList.push(studentSection.student);
@@ -194,7 +192,7 @@ export class SendSmsComponent implements OnInit {
         if (this.userInput.selectedSendTo.id != 1) {
             this.dataForMapping['employeeList'] = this.employeeList.filter(x => x.selected);
             this.employeeList.forEach((employee) => {
-                if (employee.selected && !this.employeeMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
+                if (employee.selected && !this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                     employee, this.message, 'employee')) {
                     employee['employee'] = true;
                     tempList.push(employee);

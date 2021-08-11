@@ -336,7 +336,7 @@ export class IssueHomeworkServiceAdapter {
 
     sendNotificationToParents(currentHomework: any, eventId: any) {
         this.vm.dataForMapping['homework'] = currentHomework;
-        this.vm.messageService.sendEventNotification(
+        this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
             this.vm.dataForMapping,
             ['student'],
             eventId,

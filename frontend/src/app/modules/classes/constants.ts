@@ -35,9 +35,9 @@ class EmployeeVariableStructure {
     }
 }
 
-class PersonVariableStructure {
+class CommonPersonVariableStructure {
     static getStructure(displayVariable: any, backendKey: any, getValFunc: any = (dataObject) => {
-        return dataObject[dataObject['person']][backendKey];
+        return dataObject['commonPerson'][backendKey];
     }) {
         return VariableStructure.getStructure(
             displayVariable,
@@ -114,10 +114,10 @@ export const EMPLOYEE_VARIABLE_LIST = [
 ];
 
 
-export const PERSON_VARIABLE_LIST = [
-     PersonVariableStructure.getStructure('name', 'name'),
-     PersonVariableStructure.getStructure('mobileNumber', 'mobileNumber'),
-     PersonVariableStructure.getStructure('fathersName', 'fathersName')
+export const COMMON_PERSON_VARIABLE_LIST = [
+     CommonPersonVariableStructure.getStructure('name', 'name'),
+     CommonPersonVariableStructure.getStructure('mobileNumber', 'mobileNumber'),
+     CommonPersonVariableStructure.getStructure('fathersName', 'fathersName')
 ];
 
 
@@ -186,9 +186,9 @@ class MappingEventWithVariableStructure{
 }
 
 export const VARIABLE_MAPPED_EVENT_LIST = [
-    MappingEventWithVariableStructure.getStructure(1, STUDENT_VARIABLE_LIST),
+    MappingEventWithVariableStructure.getStructure(1, STUDENT_VARIABLE_LIST), // write comments
     MappingEventWithVariableStructure.getStructure(2, EMPLOYEE_VARIABLE_LIST),
-    MappingEventWithVariableStructure.getStructure(3, PERSON_VARIABLE_LIST),
+    MappingEventWithVariableStructure.getStructure(3, COMMON_PERSON_VARIABLE_LIST),
     MappingEventWithVariableStructure.getStructure(4, STUDENT_VARIABLE_LIST.concat(DEFAULTER_VARIABLE_LIST)),
     MappingEventWithVariableStructure.getStructure(5, STUDENT_VARIABLE_LIST.concat(ATTENDANCE_VARIABLE_LIST)),
     MappingEventWithVariableStructure.getStructure(6, STUDENT_VARIABLE_LIST.concat(ATTENDANCE_VARIABLE_LIST)),
@@ -200,7 +200,7 @@ export const VARIABLE_MAPPED_EVENT_LIST = [
     MappingEventWithVariableStructure.getStructure(12, STUDENT_VARIABLE_LIST.concat(TUTORIAL_VARIABLE_LIST)),
     MappingEventWithVariableStructure.getStructure(13, STUDENT_VARIABLE_LIST.concat(TUTORIAL_VARIABLE_LIST)),
     MappingEventWithVariableStructure.getStructure(14, STUDENT_VARIABLE_LIST.concat(TUTORIAL_VARIABLE_LIST)),
-    MappingEventWithVariableStructure.getStructure(15, PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)),
-    MappingEventWithVariableStructure.getStructure(16, PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)),
-    MappingEventWithVariableStructure.getStructure(17, PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST))
+    MappingEventWithVariableStructure.getStructure(15, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)),
+    MappingEventWithVariableStructure.getStructure(16, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)),
+    MappingEventWithVariableStructure.getStructure(17, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST))
 ];

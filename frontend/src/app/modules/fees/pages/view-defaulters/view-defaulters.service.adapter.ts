@@ -216,7 +216,7 @@ export class ViewDefaultersServiceAdapter {
         }
         this.vm.dataForMapping['studentList'] = studentData;
         try {
-           this.vm.smsBalance = await this.vm.messageService.smsNotificationSender(
+           this.vm.smsBalance = await this.vm.messageService.sendEventSMSNotification(
                 this.vm.dataForMapping,
                 ['student'],
                 this.vm.backendData.defaultersSMSEvent,

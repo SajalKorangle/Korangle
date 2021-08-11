@@ -180,8 +180,8 @@ export class SendSmsHtmlRenderer {
             this.vm.getMobileNumberList('sms').filter(x => x.student).forEach(student => {
                 let person = 'student';
                 count += this.getSMSCount(
-                    this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
-                        this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, student))
+                    this.vm.messageService.getMessageFromTemplate(this.vm.message,
+                        this.vm.messageService.getMappingData(variables, this.vm.dataForMapping, person, student))
                 );
             });
         }
@@ -189,8 +189,8 @@ export class SendSmsHtmlRenderer {
             this.vm.getMobileNumberList('sms').filter(x => x.employee).forEach(employee => {
                 let person = 'employee';
                 count += this.getSMSCount(
-                    this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
-                        this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, employee))
+                    this.vm.messageService.getMessageFromTemplate(this.vm.message,
+                        this.vm.messageService.getMappingData(variables, this.vm.dataForMapping, person, employee))
                 );
             });
         }

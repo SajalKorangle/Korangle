@@ -279,7 +279,7 @@ export class CheckHomeworkServiceAdapter {
                    eventID = this.vm.HOMEWORK_RESUBMISSION_EVENT_DBID;
                }
 
-               this.vm.messageService.sendEventNotification(
+               this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                    this.vm.dataForMapping,
                    ['student'],
                    eventID,

@@ -293,7 +293,7 @@ export class RecordAttendanceServiceAdapter {
 
             if (createdStudentList.length > 0) {
                 this.vm.dataForMapping['studentList'] =  createdStudentList;
-                this.vm.messageService.sendEventNotification(
+                this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                    this.vm.dataForMapping,
                     ['student'],
                     this.vm.ATTENDANCE_CREATION_EVENT_DBID,
@@ -304,7 +304,7 @@ export class RecordAttendanceServiceAdapter {
 
             if (updatedStudentList.length > 0) {
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
-                this.vm.messageService.sendEventNotification(
+                this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                     this.vm.dataForMapping,
                     ['student'],
                     this.vm.ATTENDANCE_UPDATION_EVENT_DBID,

@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tutorial_app', '0002_delete_tutorialsettings'),
-        ('information_app', '0001_initial'),
+        ('attendance_app', '0001_initial'),
+        ('sms_app', '0002_DLT_required_changes')
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='SentUpdateType',
+            name='AttendanceSettings',
         ),
     ]

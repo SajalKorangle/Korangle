@@ -3,7 +3,7 @@ def populate_sms_event_settings(apps, schema_editor):
     sms_event_settings = apps.get_model('sms_app', 'SMSEventSettings')
     sms_template = apps.get_model('sms_app', 'SMSTemplate')
     sms_id_school = apps.get_model('sms_app', 'SMSIdSchool')
-    print("event_ sett")
+
     for template in sms_template.objects.all():
         sms_id_school_list = sms_id_school.objects.filter(parentSMSId=template.parentSMSId)
         for sms_school in sms_id_school_list:

@@ -281,7 +281,7 @@ export class AddTutorialServiceAdapter {
 
     sendNotificationToParents(currentTutorial: any, eventId: number) {
         this.vm.dataForMapping['tutorial'] = currentTutorial;
-        this.vm.messageService.sendEventNotification(
+        this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
             this.vm.dataForMapping,
             ['student'],
             eventId,
