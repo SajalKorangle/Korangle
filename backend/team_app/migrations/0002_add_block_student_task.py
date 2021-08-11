@@ -10,7 +10,7 @@ from team_app.db_script.block_student import student_add_task
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0031_auto_20210707_1805'),
+        ('team_app', '0001_initial'),
     ]
 
     operations = [
