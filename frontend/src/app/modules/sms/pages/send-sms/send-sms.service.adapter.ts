@@ -135,6 +135,7 @@ export class SendSmsServiceAdapter {
 
     populateStudentList(studentList: any): void {
         this.vm.backendData.studentList = studentList;
+        this.vm.studentMessageService.fetchGCMDevicesNew(this.vm.backendData.studentList);
     }
 
     populateEmployeeList(employeeList: any): void {
@@ -143,7 +144,7 @@ export class SendSmsServiceAdapter {
             employee['selected'] = true;
             employee['validMobileNumber'] = this.vm.isMobileNumberValid(employee.mobileNumber);
         });
-        this.vm.messageService.fetchGCMDevicesNew(this.vm.backendData.studentList.concat(this.vm.employeeList));
+        this.vm.employeeMessageService.fetchGCMDevicesNew(this.vm.employeeList);
     }
 
     populateStudentSectionList(): void {
@@ -178,24 +179,23 @@ export class SendSmsServiceAdapter {
             scheduledDataTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime).format('YYYY-MM-DD HH:mm');
         }
 
-        let personType;
+        let messageService, personTypeList = [];
         if (this.vm.userInput.selectedSendTo.id == 1) {
             this.vm.dataForMapping['studentList'] = this.vm.getMobileNumberList('both').filter(x => x.student);
-            personType = 'student';
-        } else if (this.vm.userInput.selectedSendTo.id == 2) {
+            messageService = this.vm.studentMessageService;
+            personTypeList.push('student');
+        }
+        if (this.vm.userInput.selectedSendTo.id == 2) {
             this.vm.dataForMapping['employeeList'] = this.vm.getMobileNumberList('both').filter(x => x.employee);
-            personType = 'employee';
-        } else if (this.vm.userInput.selectedSendTo.id == 3) {
-            this.vm.dataForMapping['commonPersonList'] = this.vm.getMobileNumberList('both');
-            personType = 'commonPerson';
+            messageService = this.vm.employeeMessageService;
+            personTypeList.push('employee');
         }
 
 
         try {
-            console.log(this.vm.dataForMapping);
-            this.vm.backendData.smsBalance = await this.vm.messageService.sendEventSMSNotification(
+            this.vm.backendData.smsBalance = await messageService.sendEventSMSNotification(
                 this.vm.dataForMapping,
-                personType,
+                personTypeList,
                 this.vm.backendData.generalSMSEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
                 this.vm.userInput.selectedSendUpdateType.id,
                 this.vm.userInput.selectedTemplate,

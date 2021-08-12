@@ -96,7 +96,7 @@ export class MessageService {
 
     async fetchEventDataAndSendEventSMSNotification(
         dataForMapping, // contains all the backend list which are required to populate the variables
-        personType, // 'student' or 'employee' or 'studentAndEmployee'
+        personListType, // ['student'] or ['employee'] or  ['student','employee']
         eventId, // id of the Event like 'Homework Creation' = 7 as a number
         schoolId, // school dbId
         smsBalance, // school sms balance
@@ -135,7 +135,7 @@ export class MessageService {
         try {
             await this.sendEventSMSNotification(
                 dataForMapping,
-                personType,
+                personListType,
                 smsEvent,
                 eventSettings.sendUpdateTypeId,
                 smsDefaultTemplate,
@@ -157,7 +157,7 @@ export class MessageService {
 
     async sendEventSMSNotification(
         dataForMapping: any, // contains all the backend list which are required to populate the variables
-        personType: any, // 'student','employee' or 'commonPerson'
+        personsTypeList: any, // ['student'] or ['employee'] or  ['student','employee']
         smsEvent: any, // corresponding SMS Event
         sendUpdateTypeId: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
         smsTemplate: any, // This contains any sms template that is used ( if not null )
@@ -178,17 +178,17 @@ export class MessageService {
 
         // Iterating over the person Type list because in Event-Gallery we require both Students and Employees
         // So it is determined by the function caller
-        // personsTypeList.forEach(person => { // here person is Student or Employee
-        dataForMapping[personType + 'List'].forEach(personData => {
+        personsTypeList.forEach(person => { // here person is Student or Employee
+        dataForMapping[person + 'List'].forEach(personData => {
             if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
                 // Getting the mapped data like - { studentName : "Rahul", class: "10" ... etc }
-                let mappedObject = this.getMappingData(variableMappedEvent.variableList, dataForMapping, personType, personData);
+                let mappedObject = this.getMappingData(variableMappedEvent.variableList, dataForMapping, person, personData);
                 mappedObject['notification'] = personData.notification;
                 mappedObject['id'] = personData.id;
                 personVariablesMappedObjList.push(mappedObject);
             }
         });
-        // });
+        });
 
         if (sendUpdateTypeId == 2) { // if the update type is 2 (SMS) populating only the sms_list
             sms_list = personVariablesMappedObjList;
@@ -341,7 +341,7 @@ export class MessageService {
 
     getMappingData(eventVariableList: any, data: any, person: any, personData: any) {
         let temp = {};
-        data['person'] = person; // which person? student or employee is stored here
+        data['person'] = person; // which person? student or employee or commonPerson is stored here
         data[person] = personData; // person details eg: data['student'] details are stored here
         eventVariableList.forEach(eventVariable => {
             temp[eventVariable.displayVariable] = eventVariable.getValueFunc(data);
