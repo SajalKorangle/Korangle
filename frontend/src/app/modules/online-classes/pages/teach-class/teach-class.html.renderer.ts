@@ -1,5 +1,6 @@
 import { TeachClassComponent } from './teach-class.component';
 import { TimeComparator, Time, ColorPaletteHandle, ParsedOnlineClass } from '@modules/online-classes/class/constants';
+import { Division } from '@services/modules/class/models/division';
 
 export class TeachClassHtmlRenderer {
 
@@ -70,10 +71,6 @@ export class TeachClassHtmlRenderer {
 
     getActiveClass() {
         return this.getOverlappingFilteredOnlineClassList().find(onlineClass => onlineClass.day == this.vm.todayDisplayName && this.isActive(onlineClass));
-    }
-
-    getActiveClassList() {
-        return this.vm.backendData.onlineClassList.filter(onlineClass => onlineClass.day == this.vm.todayDisplayName && this.isActive(onlineClass));
     }
 
     getOnlineClassByWeekDayAndStartTime(weekdayKey, startTime: Time) {
@@ -157,6 +154,28 @@ export class TeachClassHtmlRenderer {
                 + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
                 + ` (${info.classInstance.name} & ${info.division.name}) ], `;
         });
+        return displayString;
+    }
+
+    getSectionDisplayString(concernedOnlineClass: ParsedOnlineClass): string {
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+
+        const divisionIdSet = new Set<number>();
+
+        this.vm.backendData.onlineClassList.forEach(onlineClass => {
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+            if (classSubject.parentClass != concernedClassSubject.parentClass)
+                return;
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                divisionIdSet.add(classSubject.parentDivision);
+            }
+        });
+
+        const sectionList: Array<Division> = Array.from(divisionIdSet).map(divisionId => this.vm.backendData.getDivisionById(divisionId));
+        sectionList.sort((a, b) => a.name.localeCompare(b.name));
+        const displayString = 'Section - ' + sectionList.map(section => section.name.substr(-1)).join(", ");    // assumption section has only one letter which is the last letter of the name
         return displayString;
     }
 

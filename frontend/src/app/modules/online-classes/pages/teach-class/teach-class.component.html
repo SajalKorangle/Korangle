@@ -5,14 +5,14 @@
     <ng-container *ngIf="isActiveSession else NotActiveSession">
         <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
 
-            <ng-container *ngIf="htmlRenderer.getActiveClassList().length>0 ">
+            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
                 <h4>Ongoing Class:</h4>
                 <div style="padding: 8px; display: flex; flex-wrap: wrap; align-items: center;">
 
-                    <div style="margin: 12px 20px;" *ngFor="let activeClass of htmlRenderer.getActiveClassList()">
+                    <div style="margin: 12px 20px;">
                         <span>{{htmlRenderer.getCardSlotDisplayData(activeClass).subject.name}} </span>
                         <span>({{htmlRenderer.getCardSlotDisplayData(activeClass).classInstance.name}} &
-                            {{htmlRenderer.getCardSlotDisplayData(activeClass).division.name}})</span><br />
+                            {{htmlRenderer.getSectionDisplayString(activeClass)}})</span><br />
                         <span>
                             {{activeClass.startTimeJSON.getDisplayString()}} -
                             {{activeClass.endTimeJSON.getDisplayString()}}
@@ -59,8 +59,8 @@
                                             <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
                                             <span>
                                                 ({{htmlRenderer.getCardSlotDisplayData(onlineClass).classInstance.name}}
-                                                -
-                                                {{htmlRenderer.getCardSlotDisplayData(onlineClass).division.name}})</span>
+                                                &
+                                                {{htmlRenderer.getSectionDisplayString(onlineClass)}})</span>
                                             <span *ngIf="backendData.accountInfo"
                                                 style="position: absolute; bottom: 8px; right: 8px;"
                                                 class="glow-active"></span>
