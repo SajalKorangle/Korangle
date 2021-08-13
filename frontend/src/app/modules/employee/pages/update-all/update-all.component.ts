@@ -40,10 +40,10 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle("Father's Name", 'fatherName', 'text', true, ''), // 4
         new ColumnHandle("Spouse's Name", 'spouseName', 'text', false, ''), // 5
         new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 6
-        new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
+        new ColumnHandle('Date Of Birth', 'dateOfBirth', 'date', false, ''), // 7
         new ColumnHandle("Mother's Name", 'motherName', 'text', false, ''), // 8
         new ColumnHandle('Aadhar No.', 'aadharNumber', 'number', false, ''), // 9
-        new ColumnHandle('Passport No.', 'passportNumber', 'number', false, ''), // 10
+        new ColumnHandle('Passport No.', 'passportNumber', 'text', false, ''), // 10
         new ColumnHandle('Qualification', 'qualification', 'text', false, ''), // 11
         new ColumnHandle('Current Post', 'currentPost', 'text', false, ''), // 12
         new ColumnHandle('Date Of Joining', 'dateOfJoining', 'date', false, ''), // 13
@@ -141,5 +141,9 @@ export class UpdateAllComponent implements OnInit {
         this.COLUMNHANDLES.forEach((item) => {
             item.show = false;
         });
+    }
+
+    checkOnlyUppercaseFields(key: any) {
+        return key == 'panNumber' || key == 'passportNumber' || key == 'bankIfscCode';
     }
 }
