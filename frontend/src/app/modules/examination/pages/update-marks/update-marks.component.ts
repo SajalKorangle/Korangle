@@ -11,7 +11,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { StudentService } from 'app/services/modules/student/student.service';
 import { UpdateMarksHtmlRenderer } from './update-marks.html.renderer';
-import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/examination/pages/update-marks/update-marks.permissions';
 import {valueType} from '@modules/common/in-page-permission';
 import {EmployeeService} from '@services/modules/employee/employee.service';
 

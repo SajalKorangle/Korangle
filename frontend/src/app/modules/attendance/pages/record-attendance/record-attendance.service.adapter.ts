@@ -34,13 +34,9 @@ export class RecordAttendanceServiceAdapter {
         };
 
         let request_attendance_permission_list_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentEmployee: this.vm.user.activeSchool.employeeId
         };
-
-        if (!this.vm.hasAdminPermission()) {
-            request_attendance_permission_list_data['parentEmployee'] = this.vm.user.activeSchool.employeeId;
-        }
 
         Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {
@@ -65,10 +61,17 @@ export class RecordAttendanceServiceAdapter {
                 }
                 let class_permission_list = [];
                 let division_permission_list = [];
-                value[1].forEach((element) => {
-                    class_permission_list.push(element.parentClass);
-                    division_permission_list.push(element.parentDivision);
-                });
+
+                if (this.vm.hasAdminPermission()) {
+                    class_permission_list = value[2].map(classs => classs.id);
+                    division_permission_list = value[3].map(div => div.id);
+                } else {
+                    value[1].forEach((element) => {
+                        class_permission_list.push(element.parentClass);
+                        division_permission_list.push(element.parentDivision);
+                    });
+                }
+
                 let student_section_data = {
                     parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
                     parentClass__in: class_permission_list,
@@ -110,7 +113,7 @@ export class RecordAttendanceServiceAdapter {
     ): any {
         this.vm.classSectionStudentList = [];
         studentList.forEach((student) => {
-            if (this.vm.classSectionInPermissionList(student.parentClass, student.parentDivision, attendancePermissionList)) {
+            if (this.vm.hasAdminPermission() || this.vm.classSectionInPermissionList(student.parentClass, student.parentDivision, attendancePermissionList)) {
                 let classIndex = -1;
                 let tempIndex = 0;
                 this.vm.classSectionStudentList.forEach((classs) => {
