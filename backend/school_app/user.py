@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 from django.db.models import F
 from django.db.models import Q

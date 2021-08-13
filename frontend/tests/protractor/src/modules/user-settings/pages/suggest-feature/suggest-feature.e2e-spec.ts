@@ -8,7 +8,7 @@ describe('Settings -> Suggest Feature', () => {
     let page: any;
 
     beforeEach(async () => {
-        startBackendServer(getFixtureFiles('modules/user-settings/pages/suggest-feature/suggest-feature.json'));
+        await startBackendServer(getFixtureFiles('modules/user-settings/pages/suggest-feature/suggest-feature.json'));
 
         page = await BeforeAfterEach.beforeEach();
 

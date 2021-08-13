@@ -1,5 +1,5 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
 
 describe('Settings -> Contact Us', () => {
@@ -8,7 +8,7 @@ describe('Settings -> Contact Us', () => {
 
     it('Able to open Contact Us Page', async () => {
 
-        startBackendServer(getFixtureFiles('modules/user-settings/pages/contact-us/able-to-open-contact-us.json'));
+        await startBackendServer(getFixtureFiles('modules/user-settings/pages/contact-us/able-to-open-contact-us.json'));
 
         page = await BeforeAfterEach.beforeEach();
         await page.click('#settings');

@@ -10,7 +10,6 @@ from django.db.models.signals import pre_save, post_save
 
 import os
 from django.utils.timezone import now
-from datetime import datetime, date
 
 def upload_image_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
@@ -32,7 +31,7 @@ class Heads(models.Model):
 class EmployeeAmountPermission(models.Model):
 
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    restrictedAmount = models.IntegerField(default=0) 
+    restrictedAmount = models.BigIntegerField(default=0) 
     
     class Meta:
         db_table = 'employee_amount_permission'
@@ -63,8 +62,8 @@ class AccountSession(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.CASCADE,)
     openingBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
     currentBalance = models.DecimalField(null=True, blank=True, max_digits=10, decimal_places=2)
-    parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions')    # on delete?
-    parentHead = models.ForeignKey(Heads)
+    parentGroup = models.ForeignKey(Accounts, null=True, related_name='groupAcccountSessions', on_delete=models.SET_NULL) 
+    parentHead = models.ForeignKey(Heads, on_delete=models.PROTECT)
 
     class Meta:
         db_table = 'account_session'
@@ -72,9 +71,11 @@ class AccountSession(models.Model):
 
 @receiver(pre_save, sender=AccountSession)
 def accountSessionPreSave(sender, instance, **kwargs):
+    if kwargs['raw']:
+        return
     if instance.openingBalance is None:
         instance.openingBalance = 0
-    if (instance.id is None) or kwargs['raw']:
+    if (instance.id is None):
         instance.currentBalance = instance.openingBalance
     else:
         instance.currentBalance += instance.openingBalance - AccountSession.objects.get(id=instance.id).openingBalance
@@ -93,6 +94,8 @@ class Transaction(models.Model):
 
 @receiver(pre_save, sender=Transaction)
 def transactionPreSave(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return 
     if instance.id is None:
         instance.voucherNumber = 1
         transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
@@ -104,6 +107,8 @@ def transactionPreSave(sender, instance, **kwargs):
         
 @receiver(post_save, sender=Transaction)
 def transactionPostSave(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return 
     if (kwargs['created'] and instance.approvalId):
         transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
         approval = Approval.objects.get(approvalId=instance.approvalId,
@@ -182,6 +187,8 @@ class Approval(models.Model):   # what if both the employee are deleted, parentS
 
 @receiver(pre_save, sender=Approval)
 def approvalPreSave(sender, instance, **kwargs):
+    if(kwargs['raw']):
+        return 
     if instance.id is None:
         instance.approvalId = 1
         last_approval_id = \
