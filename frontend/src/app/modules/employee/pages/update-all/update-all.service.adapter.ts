@@ -49,7 +49,7 @@ export class UpdateAllServiceAdapter {
         });
     }
 
-    updateEmloyeeField(key: any, employee: any, newValue: any, inputType: any): void {
+    updateEmloyeeField(columnName: any, key: any, employee: any, newValue: any, inputType: any): void {
         console.log(employee[key], newValue, inputType);
         let data = {
             id: employee['id'],
@@ -65,19 +65,6 @@ export class UpdateAllServiceAdapter {
                     alert('Mobile number should be 10 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.mobileNumber;
                     return;
-                } else {
-                    let selectedEmployee = null;
-                    this.vm.employeeFullProfileList.forEach((employee) => {
-                        if (employee.mobileNumber == newValue) {
-                            selectedEmployee = employee;
-                        }
-                    });
-                    //console.log("selectedEmployee is : ",selectedEmployee);
-                    if (selectedEmployee) {
-                        alert('Mobile Number already exists in ' + selectedEmployee.name + "'s profile");
-                        (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.mobileNumber;
-                        return;
-                    }
                 }
             } else if (key == 'aadharNumber') {
                 if (newValue != null && newValue.toString().length !== 12) {
@@ -109,6 +96,24 @@ export class UpdateAllServiceAdapter {
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.name;
                     return;
                 }
+            }else if (key == 'monthlySalary') {
+                if (newValue != null && newValue > 2147483647) {
+                    alert('Checkout the Monthly salary is greater than 9 digits');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.monthlySalary;
+                    return;
+                }
+            }
+
+            if (newValue !== null && newValue.toString().trim() !== '') {
+                if (key == 'aadharNumber' || key == 'mobileNumber' || key == 'panNumber' || key == 'employeeNumber'
+                    || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'bankIfscCode') {
+                    let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id !== employee.id && emp[key] == newValue.toString());
+                    if (employeeWithSameValue) {
+                        alert(columnName + ' already exists in ' + employeeWithSameValue.name + '\'s profile');
+                        (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee[key];
+                        return;
+                    }
+                }
             }
 
             document.getElementById(key + employee.id).classList.add('updatingField');
@@ -122,15 +127,16 @@ export class UpdateAllServiceAdapter {
                     console.log(response);
                     if (response != null) {
                         employee[key] = newValue;
-                        document.getElementById(key + employee.id).classList.remove('updatingField');
                         console.log(inputType);
-                        if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
-                            (<HTMLInputElement>document.getElementById(employee.id + key)).disabled = false;
-                        } else if (inputType === 'list') {
-                        }
                     } else {
-                        alert('Not able to update ' + key + ' for value: ' + newValue);
+                        alert('Not able to update ' + columnName + ' for value: ' + newValue);
+                        (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee[key];
                     }
+                    if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
+                        (<HTMLInputElement>document.getElementById(employee.id + key)).disabled = false;
+                    } else if (inputType === 'list') {
+                    }
+                    document.getElementById(key + employee.id).classList.remove('updatingField');
                 },
                 (error) => {
                     alert('Server Error: Contact Admin');

@@ -3,6 +3,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { UpdateAllServiceAdapter } from './update-all.service.adapter';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { PARAMETER_TYPE_LIST } from 'app/classes/constants/parameter';
+import {formatDate} from '@angular/common';
 
 class ColumnHandle {
     name: any;
@@ -145,5 +146,16 @@ export class UpdateAllComponent implements OnInit {
 
     checkOnlyUppercaseFields(key: any) {
         return key == 'panNumber' || key == 'passportNumber' || key == 'bankIfscCode';
+    }
+
+    disableDateTypeInput(inputType: any) {
+        return inputType != 'date';
+    }
+
+    getMaxDateForDateType(key: any, inputType: string) {
+        if (key == 'dateOfBirth' && inputType == 'date' ) {
+            return formatDate(new Date(), 'yyyy-MM-dd', 'en');
+        }
+        return '';
     }
 }

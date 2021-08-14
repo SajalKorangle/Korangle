@@ -57,7 +57,7 @@
                                 <ng-container *ngIf="column.inputType==='list'">
                                     <mat-form-field>
                                         <mat-select [ngModel]="employee[column.key]" [attr.id]="employee.id+column.key"
-                                            (ngModelChange)="serviceAdapter.updateEmloyeeField(column.key, employee, $event,column.inputType)">
+                                            (ngModelChange)="serviceAdapter.updateEmloyeeField(column.name, column.key, employee, $event,column.inputType)">
                                             <mat-option *ngFor='let item of column.list;' [value]="item">
                                                 {{item}}
                                             </mat-option>
@@ -68,9 +68,11 @@
                                     *ngIf="column.inputType==='text' || column.inputType==='number' || column.inputType==='date'">
                                     <input [attr.type]="column.inputType" [attr.id]="employee.id+column.key"
                                         class="customInput" 
-                                        (keydown)="checkDateField()"
+                                        [min]="column.inputType==='number'?0:''"
+                                        [max]="getMaxDateForDateType(column.key, column.inputType)"   
+                                        (keydown)="disableDateTypeInput(column.inputType)"
                                         [ngStyle]="{'text-transform':(checkOnlyUppercaseFields(column.key))?'uppercase': 'none'}"  
-                                        (blur)="serviceAdapter.updateEmloyeeField(column.key,employee, $event.target.value,column.inputType)"
+                                        (blur)="serviceAdapter.updateEmloyeeField(column.name,column.key,employee, $event.target.value,column.inputType)"
                                         [ngModel]="employee[column.key]" />
                                 </ng-container>
                             </td>
