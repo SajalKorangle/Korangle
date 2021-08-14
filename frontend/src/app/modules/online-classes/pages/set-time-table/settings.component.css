@@ -13,9 +13,9 @@ td:hover .td-hover-show{
     pointer-events: auto;
 }
 
-.overlapping-warning{
+/* .overlapping-warning{
     border: 2px solid yellow;
-}
+} */
 
 .overlapping-danger{
     border: 2px solid red !important;
