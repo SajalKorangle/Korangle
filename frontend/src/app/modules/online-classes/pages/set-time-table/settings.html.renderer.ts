@@ -110,14 +110,14 @@ export class SettingsHtmlRenderer {
         return result;
     }
 
-    isOnlineClassOverlappingWithDifferentClass(concernedOnlineClass: ParsedOnlineClass): boolean {
+    onlineClassHasOverlappingError(concernedOnlineClass: ParsedOnlineClass): boolean {
         const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
                 return false;
             }
-            if (classSubject.parentClass == concernedClassSubject.parentClass) {
+            if (classSubject.parentClass == concernedClassSubject.parentClass && classSubject.parentSubject == concernedClassSubject.parentSubject) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
@@ -129,27 +129,6 @@ export class SettingsHtmlRenderer {
         return Boolean(bookedSlotOnlineClass);
     }
 
-
-    isOnlineClassSectionOverlappingWithDifferentSection(concernedOnlineClass: ParsedOnlineClass): boolean {
-        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
-        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
-            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-            if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
-                return false;
-            }
-            if (classSubject.parentClass != concernedClassSubject.parentClass)
-                return false;
-            if (onlineClass == concernedOnlineClass) {
-                return false;
-            }
-            if (concernedOnlineClass.day == onlineClass.day
-                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
-                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
-                return true;
-            }
-        });
-        return Boolean(bookedSlotOnlineClass);
-    }
 
     getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
         const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
@@ -158,7 +137,7 @@ export class SettingsHtmlRenderer {
             if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
                 return false;
             }
-            if (onlineClass == concernedOnlineClass)
+            if (classSubject.parentClass == concernedClassSubject.parentClass && classSubject.parentSubject == concernedClassSubject.parentSubject)
                 return false;
             if (concernedOnlineClass.day == onlineClass.day
                 && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
@@ -209,7 +188,7 @@ export class SettingsHtmlRenderer {
         return this.vm.userInput.filteredOnlineClassList.every(onlineClass => {
             if (TimeSpanComparator(this.vm.userInput.timeSpanList[this.vm.userInput.editTimeSpanFormIndex],
                 new TimeSpan({ startTime: onlineClass.startTimeJSON, endTime: onlineClass.endTimeJSON })) == 0) {
-                return this.isOnlineClassOverlappingWithDifferentClass({ ...onlineClass, startTimeJSON: startTime, endTimeJSON: endTime }) == false;
+                return this.onlineClassHasOverlappingError({ ...onlineClass, startTimeJSON: startTime, endTimeJSON: endTime }) == false;
             }
             return true;
         }) == false;
@@ -267,7 +246,7 @@ export class SettingsHtmlRenderer {
             startTimeJSON: new Time({ ...timeSpan.startTime }),
             endTimeJSON: new Time({ ...timeSpan.endTime })
         };
-        if (this.isOnlineClassOverlappingWithDifferentClass(dummyOnlineClass)) {
+        if (this.onlineClassHasOverlappingError(dummyOnlineClass)) {
             console.log("online class overlapping");
             this.vm.snackBar.open("Teacher's is slot overlapping", undefined, { duration: 7500 });
             return;
@@ -287,7 +266,7 @@ export class SettingsHtmlRenderer {
         if (event.shiftKey) {
             // possible time slot overlap checking
             const dummyOnlineClass = { ...onlineClass2, parentClassSubject: onlineClass1.parentClassSubject };
-            if (this.isOnlineClassOverlappingWithDifferentClass(dummyOnlineClass)) {
+            if (this.onlineClassHasOverlappingError(dummyOnlineClass)) {
                 this.vm.snackBar.open("Teacher's is slot overlapping", undefined, { duration: 7500 });
                 return;
             }
@@ -298,7 +277,7 @@ export class SettingsHtmlRenderer {
         [onlineClass1.startTimeJSON, onlineClass2.startTimeJSON] = [onlineClass2.startTimeJSON, onlineClass1.startTimeJSON];
         [onlineClass1.endTimeJSON, onlineClass2.endTimeJSON] = [onlineClass2.endTimeJSON, onlineClass1.endTimeJSON];
         // overlapping checking and fix
-        if (this.isOnlineClassOverlappingWithDifferentClass(onlineClass1) || this.isOnlineClassOverlappingWithDifferentClass(onlineClass2)) {
+        if (this.onlineClassHasOverlappingError(onlineClass1) || this.onlineClassHasOverlappingError(onlineClass2)) {
             this.vm.snackBar.open("Teacher's is slot overlapping", undefined, { duration: 7500 });
             [onlineClass1.day, onlineClass2.day] = [onlineClass2.day, onlineClass1.day];
             [onlineClass1.startTimeJSON, onlineClass2.startTimeJSON] = [onlineClass2.startTimeJSON, onlineClass1.startTimeJSON];
@@ -336,13 +315,8 @@ export class SettingsHtmlRenderer {
         }) == undefined;
     }
 
-    isAnyClassOverlapping() {
-        const result = this.vm.userInput.filteredOnlineClassList.every(onlineClass => !this.isOnlineClassOverlappingWithDifferentClass(onlineClass));
-        return result == false;
-    }
-
-    isAnyClassSectionOverlapping() {
-        const result = this.vm.userInput.filteredOnlineClassList.every(onlineClass => !this.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass));
+    timeTableHasOverlappingError() {
+        const result = this.vm.userInput.filteredOnlineClassList.every(onlineClass => !this.onlineClassHasOverlappingError(onlineClass));
         return result == false;
     }
 

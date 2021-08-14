@@ -62,7 +62,7 @@ export class SettingsServiceAdapter {
     }
 
     async updateOnlineClassList() {
-        if (this.vm.userInput.view == 'class' && this.vm.htmlRenderer.isAnyClassOverlapping()) {
+        if (this.vm.userInput.view == 'class' && this.vm.htmlRenderer.timeTableHasOverlappingError()) {
             alert('Teacher\'s time slot if overlapping. Kindly rectify.');
             return;
         }

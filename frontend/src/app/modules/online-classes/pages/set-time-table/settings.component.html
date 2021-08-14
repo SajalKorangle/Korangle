@@ -72,8 +72,7 @@
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
                                     <td style="position: relative; cursor: pointer;" draggable="true"
-                                        [class.overlapping-warning]="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass)"
-                                        [class.overlapping-danger]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                        [class.overlapping-danger]="htmlRenderer.onlineClassHasOverlappingError(onlineClass)"
                                         (dragover)="$event.preventDefault();"
                                         (dragstart)="$event.dataTransfer.setData('onlineClassIndex', htmlRenderer.getOnlineClassIndex(onlineClass));"
                                         (drop)="htmlRenderer.swapOnlineClass($event, onlineClass);"
@@ -95,11 +94,10 @@
                                             style="position: absolute; font-size: small; top: 2px; right: -6px; ">delete
                                         </mat-icon>
 
-                                        <mat-icon
-                                            *ngIf="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass) || htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                        <mat-icon *ngIf="htmlRenderer.onlineClassHasOverlappingError(onlineClass)"
                                             [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
-                                            [style.color]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)?'red':'yellow'"
-                                            style="position: absolute; font-size: small; top: 2px; left: -3px; ">info
+                                            style="position: absolute; font-size: small; top: 2px; left: -3px; color: red;">
+                                            info
                                         </mat-icon>
 
                                     </td>
@@ -131,14 +129,9 @@
             </table>
         </div>
         <mat-divider style="margin-top: 32px;"></mat-divider>
-        <span *ngIf="htmlRenderer.isAnyClassOverlapping()" style="color: red; float: right;">
+        <span *ngIf="htmlRenderer.timeTableHasOverlappingError()" style="color: red; float: right;">
             Teacher's Slots are overlapping</span><br />
-        <ng-container *ngIf="htmlRenderer.isAnyClassSectionOverlapping()">
-            <span style="color: rgb(255, 196, 0); float: right;">
-                Teacher's Slots are overlapping within sections of a single class
-            </span><br />
-        </ng-container>
-        <button [disabled]="htmlRenderer.isAnyClassOverlapping()"
+        <button [disabled]="htmlRenderer.timeTableHasOverlappingError()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;"
             (click)="serviceAdapter.updateOnlineClassList();">Update</button>
 
@@ -175,8 +168,7 @@
                                 <ng-container
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                     <td style="position: relative; min-width: 100px;"
-                                        [class.overlapping-warning]="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass)"
-                                        [class.overlapping-danger]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                        [class.overlapping-danger]="htmlRenderer.onlineClassHasOverlappingError(onlineClass)"
                                         [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                         [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
@@ -189,11 +181,9 @@
                                             style="position: absolute; bottom: 8px; right: 8px;"
                                             class="glow-active"></span>
 
-                                        <mat-icon
-                                            *ngIf="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass) || htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                        <mat-icon *ngIf="htmlRenderer.onlineClassHasOverlappingError(onlineClass)"
                                             [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
-                                            [style.color]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)?'red':'yellow'"
-                                            style="position: absolute; font-size: small; top: 2px; left: -3px;">
+                                            style="position: absolute; font-size: small; top: 2px; left: -3px; color: red;">
                                             info
                                         </mat-icon>
                                     </td>
