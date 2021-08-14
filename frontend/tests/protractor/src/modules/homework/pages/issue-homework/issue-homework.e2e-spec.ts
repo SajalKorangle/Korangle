@@ -1,8 +1,8 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import { openModuleAndPage, reClickPage } from '../../../../open-page';
+import { containsFirst } from '../../../../contains';
 
 describe('Homework -> Issue Homework', () => {
 
@@ -11,7 +11,7 @@ describe('Homework -> Issue Homework', () => {
     it('Creating Homework', async () => {
 
         // Start Backend Server
-        startBackendServer(getFixtureFiles('modules/homework/pages/issue-homework/issue-homework.json'));
+        await startBackendServer(getFixtureFiles('modules/homework/pages/issue-homework/issue-homework.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
