@@ -52,8 +52,7 @@
                                         <td style="position: relative; min-width: 100px;"
                                             [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                             [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
-                                            [class.overlapping-warning]="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass)"
-                                            [class.overlapping-danger]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                            [class.overlapping-danger]="htmlRenderer.onlineClassListHasOverlappingError(onlineClass)"
                                             [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
                                             [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
                                             <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
@@ -66,10 +65,9 @@
                                                 class="glow-active"></span>
 
                                             <mat-icon
-                                                *ngIf="htmlRenderer.isOnlineClassSectionOverlappingWithDifferentSection(onlineClass) || htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)"
+                                                *ngIf="htmlRenderer.onlineClassListHasOverlappingError(onlineClass)"
                                                 [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
-                                                [style.color]="htmlRenderer.isOnlineClassOverlappingWithDifferentClass(onlineClass)?'red':'yellow'"
-                                                style="position: absolute; font-size: small; top: 2px; left: -3px;">
+                                                style="position: absolute; font-size: small; top: 2px; left: -3px; color: red;">
                                                 info
                                             </mat-icon>
                                         </td>

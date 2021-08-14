@@ -102,12 +102,12 @@ export class TeachClassHtmlRenderer {
         }) == undefined;
     }
 
-    isOnlineClassOverlappingWithDifferentClass(concernedOnlineClass: ParsedOnlineClass): boolean {
+    onlineClassListHasOverlappingError(concernedOnlineClass: ParsedOnlineClass): boolean {
         const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
-        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
+        const overlappingSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
 
-            if (classSubject.parentClass == concernedClassSubject.parentClass) {
+            if (classSubject.parentClass == concernedClassSubject.parentClass && classSubject.parentSubject == concernedClassSubject.parentSubject) {
                 return false;
             }
             if (concernedOnlineClass.day == onlineClass.day
@@ -116,31 +116,18 @@ export class TeachClassHtmlRenderer {
                 return true;
             }
         });
-        return Boolean(bookedSlotOnlineClass);
-    }
-
-    isOnlineClassSectionOverlappingWithDifferentSection(concernedOnlineClass: ParsedOnlineClass): boolean {
-        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
-        const bookedSlotOnlineClass = this.vm.backendData.onlineClassList.find(onlineClass => {
-            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-            if (classSubject.parentClass != concernedClassSubject.parentClass)
-                return false;
-            if (onlineClass == concernedOnlineClass) {
-                return false;
-            }
-            if (concernedOnlineClass.day == onlineClass.day
-                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
-                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
-                return true;
-            }
-        });
-        return Boolean(bookedSlotOnlineClass);
+        return Boolean(overlappingSlotOnlineClass);
     }
 
     getOverlappingOnlineClassInfo(concernedOnlineClass: ParsedOnlineClass) {
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
         const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
-            if (onlineClass == concernedOnlineClass)
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+
+            if (classSubject.parentClass == concernedClassSubject.parentClass && classSubject.parentSubject == concernedClassSubject.parentSubject) {
                 return false;
+            }
+
             if (concernedOnlineClass.day == onlineClass.day
                 && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
                 && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
@@ -164,7 +151,7 @@ export class TeachClassHtmlRenderer {
 
         this.vm.backendData.onlineClassList.forEach(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-            if (classSubject.parentClass != concernedClassSubject.parentClass)
+            if (classSubject.parentClass != concernedClassSubject.parentClass || classSubject.parentSubject != concernedClassSubject.parentSubject)
                 return;
             if (concernedOnlineClass.day == onlineClass.day
                 && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0

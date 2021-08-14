@@ -36,7 +36,11 @@ export class TeachClassBackendData {
             Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
             return onlineClass as ParsedOnlineClass;
         });
-        parsedOnlineClassList.sort((a, b) => b.id - a.id);
+        parsedOnlineClassList.sort((onlineClass1, onlineClass2) => {    // more preference to lower class and lower section
+            const classSubject1 = this.getClassSubjectById(onlineClass1.parentClassSubject);
+            const classSubject2 = this.getClassSubjectById(onlineClass2.parentClassSubject);
+            return classSubject1.parentClass - classSubject2.parentClass || classSubject1.parentDivision - classSubject2.parentDivision;
+        });
         this._onlineClassList = parsedOnlineClassList;
     }
 
