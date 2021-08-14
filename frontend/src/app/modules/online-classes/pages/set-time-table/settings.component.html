@@ -38,8 +38,12 @@
         <div>
             <h4 style="display: inline-block;">{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
                 userInput.selectedSection.id)}}</h4>
-            <button style="float: right;" mat-stroked-button
-                (click)="userInput.filteredOnlineClassList.splice(0, userInput.filteredOnlineClassList.length)">Reset</button>
+            <div style="float: right;">
+                <button style="margin: 0 6px;" mat-stroked-button (click)="initializeTimeTable()">Reset Changes</button>
+                <button style="margin: 0 6px;" mat-stroked-button
+                    (click)="userInput.filteredOnlineClassList.splice(0, userInput.filteredOnlineClassList.length)">Delete
+                    All</button>
+            </div>
         </div>
         <div style="overflow: auto;">
             <table class="mat-elevation-z8 table table-hover">
