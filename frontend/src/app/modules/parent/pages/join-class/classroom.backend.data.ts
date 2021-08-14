@@ -38,7 +38,9 @@ export class ClassroomBackendData {
         parsedOnlineClassList.sort((onlineClass1, onlineClass2) => {    // more preference to lower class and lower section
             const classSubject1 = this.getClassSubjectById(onlineClass1.parentClassSubject);
             const classSubject2 = this.getClassSubjectById(onlineClass2.parentClassSubject);
-            return classSubject1.parentClass - classSubject2.parentClass || classSubject1.parentDivision - classSubject2.parentDivision || onlineClass1.id - onlineClass2.id;
+            return classSubject1.parentClass - classSubject2.parentClass
+                || classSubject1.parentDivision - classSubject2.parentDivision
+                || onlineClass1.id - onlineClass2.id;
         });
         this._onlineClassList = parsedOnlineClassList;
     }

@@ -162,7 +162,8 @@ export class TeachClassHtmlRenderer {
 
         const sectionList: Array<Division> = Array.from(divisionIdSet).map(divisionId => this.vm.backendData.getDivisionById(divisionId));
         sectionList.sort((a, b) => a.name.localeCompare(b.name));
-        const displayString = 'Section - ' + sectionList.map(section => section.name.substr(-1)).join(", ");    // assumption section has only one letter which is the last letter of the name
+        // assumption section has only one letter which is the last letter of the name
+        const displayString = 'Section - ' + sectionList.map(section => section.name.substr(-1)).join(", ");
         return displayString;
     }
 

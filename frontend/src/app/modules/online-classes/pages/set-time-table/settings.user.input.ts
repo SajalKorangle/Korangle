@@ -44,7 +44,9 @@ export class SettingsUserInput {
         onlineClassListValue.sort((onlineClass1, onlineClass2) => {    // more preference to lower class then lower section then last created(id)
             const classSubject1 = this.vm.backendData.getClassSubjectById(onlineClass1.parentClassSubject);
             const classSubject2 = this.vm.backendData.getClassSubjectById(onlineClass2.parentClassSubject);
-            return classSubject1.parentClass - classSubject2.parentClass || classSubject1.parentDivision - classSubject2.parentDivision || onlineClass1.id - onlineClass2.id;
+            return classSubject1.parentClass - classSubject2.parentClass
+                || classSubject1.parentDivision - classSubject2.parentDivision
+                || onlineClass1.id - onlineClass2.id;
         });
 
         onlineClassListValue.forEach((concernedOnlineClass) => {     // filter out online classes thar are overlapping

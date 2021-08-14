@@ -164,13 +164,13 @@ export class SettingsHtmlRenderer {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     editTimeSpanError = (): boolean => {
         if (this.endTimeBeforeStartTime() || this.timeSpanOverlapping() || this.isEditingTimeSpanOverlapping())
             return true;
         return false;
-    };
+    }
 
     addNewTimeSpan() {
         const startTimeArray = this.vm.userInput.timeSpanFormInput.startTime.split(':').map(t => parseInt(t));
@@ -341,7 +341,8 @@ export class SettingsHtmlRenderer {
 
         const sectionList: Array<Division> = Array.from(divisionIdSet).map(divisionId => this.vm.backendData.getDivisionById(divisionId));
         sectionList.sort((a, b) => a.name.localeCompare(b.name));
-        const displayString = 'Section - ' + sectionList.map(section => section.name.substr(-1)).join(", ");    // assumption section has only one letter which is the last letter of the name
+        // assumption section has only one letter which is the last letter of the name
+        const displayString = 'Section - ' + sectionList.map(section => section.name.substr(-1)).join(", ");
         return displayString;
     }
 
