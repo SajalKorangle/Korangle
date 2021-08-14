@@ -10,7 +10,7 @@ describe('View All', () => {
     let columns;
     let rows;
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/students/pages/view-all/view-all.json'));
+        await startBackendServer(getFixtureFiles('modules/students/pages/view-all/view-all.json'));
         page = await BeforeAfterEach.beforeEach();
         await openModuleAndPage('Students', 'View All');
     });

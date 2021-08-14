@@ -10,7 +10,8 @@ from authentication_app.business.generate_otp import generate_otp
 from authentication_app.business.generate_otp_for_signup import generate_otp_for_signup
 
 from authentication_app.models import OTP
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from decorators import get_success_response
 
 # Create your views here.

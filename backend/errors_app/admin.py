@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.admin.helpers import ActionForm
 from django import forms
 from django.utils.safestring import mark_safe
-from django.core import urlresolvers
+from django.urls import reverse
 import re
 from django.utils.translation import gettext_lazy as _
 
@@ -152,7 +152,7 @@ class ErrorAdmin(admin.ModelAdmin):
         return [f.name for f in self.model._meta.fields]+['user_link']
 
     def user_link(self, obj):
-        change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
+        change_url = reverse('admin:auth_user_change', args=(obj.user.id,))
         return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
 
 

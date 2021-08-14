@@ -1,5 +1,5 @@
 import * as puppeteer from 'puppeteer';
-import {stopBackendServer} from './backend-server';
+import { stopBackendServer } from './backend-server';
 
 // Q: How to take Screenshot
 // A: await page.screenshot({ path: 'e2e/before-login.png' });
@@ -13,7 +13,7 @@ export class BeforeAfterEach {
 
         // SET PUPPETEER_ENVIRONMENT to local in your bashrc (for unix terminal)
         if (process.env.PUPPETEER_ENVIRONMENT == 'local') {
-            BeforeAfterEach.browser = await puppeteer.launch({headless: false, slowMo: 30});
+            BeforeAfterEach.browser = await puppeteer.launch({ headless: false, slowMo: 30 });
         } else {
             BeforeAfterEach.browser = await puppeteer.launch();
         }

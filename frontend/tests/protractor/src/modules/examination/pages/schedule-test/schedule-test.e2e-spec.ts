@@ -1,7 +1,7 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
+import { openModuleAndPage } from '../../../../open-page';
 import { containsFirst } from '../../../../contains';
 import { Keys } from '@swimlane/ngx-datatable/release/utils';
 
@@ -13,7 +13,7 @@ describe('Examination -> Schedule Test', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/examination/pages/schedule-test/schedule-test.json'));
+        await startBackendServer(getFixtureFiles('modules/examination/pages/schedule-test/schedule-test.json'));
 
         page = await BeforeAfterEach.beforeEach();
 

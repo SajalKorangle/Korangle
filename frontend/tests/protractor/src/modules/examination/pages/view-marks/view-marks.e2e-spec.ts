@@ -10,7 +10,7 @@ describe('Examination -> View Marks', () => {
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/examination/pages/view-marks/view-marks.json'));
+        await startBackendServer(getFixtureFiles('modules/examination/pages/view-marks/view-marks.json'));
 
         page = await BeforeAfterEach.beforeEach();
         page.on('dialog', async dialog => {

@@ -22,6 +22,7 @@ export class School {
     affiliationNumber: string;
 
     expired: boolean;
+    dateOfExpiry = null;
 
     opacity: number;
 
@@ -72,6 +73,7 @@ export class School {
         this.employeeId = schoolData.employeeId;
 
         this.expired = schoolData.expired;
+        this.dateOfExpiry = schoolData.dateOfExpiry;
 
         this.parentBoard = schoolData.parentBoard;
 

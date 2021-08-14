@@ -1,15 +1,15 @@
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {openModuleAndPage, reClickPage} from '../../../../open-page';
-import {containsAll, containsFirst, getNodes} from '../../../../contains';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { openModuleAndPage, reClickPage } from '../../../../open-page';
+import { containsAll, containsFirst, getNodes } from '../../../../contains';
 
 describe('Tutorials -> Add Tutorial', () => {
 
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/tutorials/pages/add-tutorial/add-tutorial.json'));
+        await startBackendServer(getFixtureFiles('modules/tutorials/pages/add-tutorial/add-tutorial.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
