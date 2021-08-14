@@ -47,6 +47,7 @@ import '@modules/homework/pages/issue-homework/issue-homework.permissions';
 
 // Examination
 import '@modules/examination/pages/update-marks/update-marks.permissions';
+import '@modules/examination/pages/add-student-remarks/add-student-remarks.permissions';
 
 // Attendance
 import '@modules/attendance/pages/record-attendance/record-attendance.permissions';

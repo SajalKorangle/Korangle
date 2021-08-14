@@ -1,4 +1,5 @@
 import { AddStudentRemarksComponent } from './add-student-remarks.component';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class AddStudentRemarksServiceAdapter {
     vm: AddStudentRemarksComponent;
@@ -10,8 +11,18 @@ export class AddStudentRemarksServiceAdapter {
     }
 
     // initialize data
-    initializeData(): void {
+    async initializeData() {
         this.vm.isInitialLoading = true;
+
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         const attendance_permission_data = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
@@ -57,6 +68,11 @@ export class AddStudentRemarksServiceAdapter {
                     parentSession: this.vm.user.activeSchool.currentSessionDbId,
                     parentStudent__parentTransferCertificate: 'null__korangle',
                 };
+
+                if (this.vm.hasAdminPermission()) {
+                    request_student_section_data.parentClass__in = value[0].map(classs => classs.id).join();
+                    request_student_section_data.parentDivision__in = value[1].map(div => div.id).join();
+                }
 
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
