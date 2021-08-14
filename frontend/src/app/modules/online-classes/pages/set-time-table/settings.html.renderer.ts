@@ -5,6 +5,7 @@ import {
 } from '@modules/online-classes/class/constants';
 
 import { NewOnlineClassDialogComponent } from '@modules/online-classes/components/new-online-class-dialog/new-online-class-dialog.component';
+import { Division } from '@services/modules/class/models/division';
 
 export class SettingsHtmlRenderer {
 
@@ -318,6 +319,30 @@ export class SettingsHtmlRenderer {
     timeTableHasOverlappingError() {
         const result = this.vm.userInput.filteredOnlineClassList.every(onlineClass => !this.onlineClassHasOverlappingError(onlineClass));
         return result == false;
+    }
+
+    getSectionDisplayString(concernedOnlineClass: ParsedOnlineClass): string {
+        const concernedClassSubject = this.vm.backendData.getClassSubjectById(concernedOnlineClass.parentClassSubject);
+
+        const divisionIdSet = new Set<number>();
+
+        this.vm.backendData.onlineClassList.forEach(onlineClass => {
+            const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+            if (classSubject.parentEmployee != concernedClassSubject.parentEmployee)
+                return;
+            if (classSubject.parentClass != concernedClassSubject.parentClass || classSubject.parentSubject != concernedClassSubject.parentSubject)
+                return;
+            if (concernedOnlineClass.day == onlineClass.day
+                && TimeComparator(concernedOnlineClass.startTimeJSON, onlineClass.endTimeJSON) < 0
+                && TimeComparator(onlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) < 0) {
+                divisionIdSet.add(classSubject.parentDivision);
+            }
+        });
+
+        const sectionList: Array<Division> = Array.from(divisionIdSet).map(divisionId => this.vm.backendData.getDivisionById(divisionId));
+        sectionList.sort((a, b) => a.name.localeCompare(b.name));
+        const displayString = 'Section - ' + sectionList.map(section => section.name.substr(-1)).join(", ");    // assumption section has only one letter which is the last letter of the name
+        return displayString;
     }
 
 }

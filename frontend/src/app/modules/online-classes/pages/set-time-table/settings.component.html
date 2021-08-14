@@ -139,6 +139,7 @@
             <li>Drag blocks to move to a different time slot</li>
             <li>Dropping block to an already existing block will swap blocks</li>
             <li>Shift + Drag to make a copy of the block</li>
+            <li>Time Table Allows A Teacher for same class and subject but with different section</li>
         </ul>
 
     </ng-container>
@@ -174,8 +175,8 @@
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
                                         <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
-                                        <span> ({{htmlRenderer.getCardSlotDisplayData(onlineClass).classs.name}} -
-                                            {{htmlRenderer.getCardSlotDisplayData(onlineClass).section.name}})</span>
+                                        <span> ({{htmlRenderer.getCardSlotDisplayData(onlineClass).classs.name}} &
+                                            {{htmlRenderer.getSectionDisplayString(onlineClass)}})</span>
                                         <span
                                             *ngIf="backendData.getAccountInfoByParentEmployee(htmlRenderer.getCardSlotDisplayData(onlineClass).employee.id)"
                                             style="position: absolute; bottom: 8px; right: 8px;"

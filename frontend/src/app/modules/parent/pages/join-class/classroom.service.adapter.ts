@@ -47,15 +47,15 @@ export class ClassroomServiceAdapter {
                 parentClassSubject__parentDivision: this.vm.backendData.studentSection.parentDivision,
             };
             [
-                this.vm.backendData.onlineClassList,
                 this.vm.backendData.classSubjectList,
                 this.vm.backendData.subjectList,
-                this.vm.backendData.accountInfoList
+                this.vm.backendData.accountInfoList,
+                this.vm.backendData.onlineClassList,
             ] = await Promise.all([
-                this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request),
                 this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request),
                 this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.account_info, {}),
+                this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request),
             ]);
         }
         else {
