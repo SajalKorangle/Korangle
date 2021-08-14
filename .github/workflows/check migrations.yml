@@ -61,6 +61,11 @@ jobs:
         cd frontend
         npm ci
 
+    - name: Testing Linting
+      run: |
+        cd frontend
+        ./scripts/ng-lint/run_linter_ci.sh
+
     - name: Checking Migration
       run: |
         cd backend
