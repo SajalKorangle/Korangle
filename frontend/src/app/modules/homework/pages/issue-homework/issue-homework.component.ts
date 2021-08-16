@@ -17,7 +17,7 @@ import { isMobile } from '../../../../classes/common.js';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
-import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/homework/pages/issue-homework/issue-homework.permissions';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './issue-homework.permissions';
 import {valueType} from '@modules/common/in-page-permission';
 import {EmployeeService} from '@services/modules/employee/employee.service';
 

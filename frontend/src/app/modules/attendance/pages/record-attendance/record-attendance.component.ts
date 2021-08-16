@@ -16,7 +16,7 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import {valueType} from '@modules/common/in-page-permission';
-import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/attendance/pages/record-attendance/record-attendance.permissions';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
 import {EmployeeService} from '@services/modules/employee/employee.service';
 
 @Component({

@@ -1,6 +1,7 @@
 <div class="card-content">
     <ng-container *ngIf="!isInitialLoading">
-        <div class="row">
+        <ng-container *ngIf="filteredClassSectionList.length == 0">You do not have permission for any class</ng-container>
+        <div class="row" *ngIf ="filteredClassSectionList.length > 0">
             <div class="col-md-12" *ngIf="gradeList.length > 0 && examinationList.length > 0 && studentList.length > 0">
                 <mat-form-field style="margin-right: 5px">
                     <mat-select

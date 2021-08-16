@@ -1,4 +1,5 @@
 import { ViewStudentRemarksComponent } from './view-student-remarks.component';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class ViewStudentRemarksServiceAdapter {
     vm: ViewStudentRemarksComponent;
@@ -10,8 +11,24 @@ export class ViewStudentRemarksServiceAdapter {
     }
 
     // initialize data
-    initializeData(): void {
+    async initializeData() {
         this.vm.isInitialLoading = true;
+
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+        const attendance_permission_data = {
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+
 
         const examination_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -24,6 +41,13 @@ export class ViewStudentRemarksServiceAdapter {
             parentStudent__parentTransferCertificate: 'null__korangle',
         };
 
+        if (!this.vm.hasAdminPermission()) {
+            const attendance_perm_list = await this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,
+                attendance_permission_data);
+            request_student_section_data['parentClass__in'] = attendance_perm_list.map(permission => permission.parentClass).join();
+            request_student_section_data['parentDivision__in'] = attendance_perm_list.map(permission => permission.parentClass).join();
+        }
+
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
@@ -34,6 +58,11 @@ export class ViewStudentRemarksServiceAdapter {
                 this.populateExaminationList(value[2]);
 
                 this.vm.studentSectionList = value[3];
+
+                if (this.vm.studentSectionList.length == 0) {
+                    this.vm.isInitialLoading = false;
+                    return;
+                }
 
                 const request_student_data = {
                     id__in: this.vm.studentSectionList

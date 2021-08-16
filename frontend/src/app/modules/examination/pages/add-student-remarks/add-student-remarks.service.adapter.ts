@@ -44,7 +44,7 @@ export class AddStudentRemarksServiceAdapter {
                 this.vm.attendancePermissionList = value[2];
                 this.populateExaminationList(value[3]);
 
-                if (this.vm.attendancePermissionList.length === 0) {
+                if (!this.vm.hasAdminPermission() && this.vm.attendancePermissionList.length === 0) {
                     this.vm.isInitialLoading = false;
                     return;
                 }
@@ -70,14 +70,14 @@ export class AddStudentRemarksServiceAdapter {
                 };
 
                 if (this.vm.hasAdminPermission()) {
-                    request_student_section_data.parentClass__in = value[0].map(classs => classs.id).join();
-                    request_student_section_data.parentDivision__in = value[1].map(div => div.id).join();
+                    request_student_section_data['parentClass__in'] = value[0].map(classs => classs.id).join();
+                    request_student_section_data['parentDivision__in'] = value[1].map(div => div.id).join();
                 }
 
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
-                        this.populateStudentSectionList(value_studentSection);
-
+                        // this.populateStudentSectionList(value_studentSection);
+                        this.vm.studentSectionList = value_studentSection;
                         if (this.vm.studentSectionList.length === 0) {
                             alert('No students have been allocated in your permitted class');
                             this.vm.isInitialLoading = false;
