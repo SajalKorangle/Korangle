@@ -171,29 +171,22 @@ export class SendSmsHtmlRenderer {
         if (this.vm.userInput.selectedSendUpdateType.id == this.vm.NOTIFICATION_TYPE_ID) {
             return 0;
         }
+
         let variables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.eventId == this.vm.userInput.selectedSendTo.id).variableList;
         this.vm.dataForMapping['studentList'] = this.vm.getFilteredStudentList().filter((x) => {
             return x.selected;
         }).map(a => a.student);
         this.vm.dataForMapping['employeeList'] = this.vm.employeeList.filter(x => x.selected);
-        if (this.vm.userInput.selectedSendTo.id != 2) {
-            this.vm.getMobileNumberList('sms').filter(x => x.student).forEach(student => {
-                let person = 'student';
-                count += this.getSMSCount(
-                    this.vm.studentMessageService.getMessageFromTemplate(this.vm.message,
-                        this.vm.studentMessageService.getMappingData(variables, this.vm.dataForMapping, person, student))
-                );
-            });
-        }
-        if (this.vm.userInput.selectedSendTo.id != 1) {
-            this.vm.getMobileNumberList('sms').filter(x => x.employee).forEach(employee => {
-                let person = 'employee';
-                count += this.getSMSCount(
-                    this.vm.employeeMessageService.getMessageFromTemplate(this.vm.message,
-                        this.vm.employeeMessageService.getMappingData(variables, this.vm.dataForMapping, person, employee))
-                );
-            });
-        }
+        this.vm.dataForMapping['commonPersonList'] = this.vm.getMobileNumberList('sms');
+
+        this.vm.getMobileNumberList('sms').forEach(anyPerson => {
+            let personType = this.vm.personTypeListIndexedWithSendToId[this.vm.userInput.selectedSendTo.id];
+            count += this.getSMSCount(
+                this.vm.messageService.getMessageFromTemplate(this.vm.message,
+                    this.vm.messageService.getMappingData(variables, this.vm.dataForMapping, personType, anyPerson))
+            );
+        });
+
         return count;
     }
 

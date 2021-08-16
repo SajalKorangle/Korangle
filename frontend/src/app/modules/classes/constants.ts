@@ -39,11 +39,12 @@ class EmployeeVariableStructure {
     }
 }
 
-class StudentEmployeeCommonVariableStructure {
+class CommonPersonVariableStructure {
     static getStructure(displayVariable: any, backendKeyOrFunc: any) {
         return VariableStructure.getStructure(
             displayVariable,
             backendKeyOrFunc,
+            'commonPerson'
         );
     }
 }
@@ -115,10 +116,10 @@ export const EMPLOYEE_VARIABLE_LIST = [
 ];
 
 
-export const STUDENT_EMPLOYEE_COMMON_VARIABLE_LIST = [
-    StudentEmployeeCommonVariableStructure.getStructure('name', 'name'),
-    StudentEmployeeCommonVariableStructure.getStructure('mobileNumber', 'mobileNumber'),
-    StudentEmployeeCommonVariableStructure.getStructure('fathersName', 'fathersName')
+export const COMMON_PERSON_VARIABLE_LIST = [
+    CommonPersonVariableStructure.getStructure('name', 'name'),
+    CommonPersonVariableStructure.getStructure('mobileNumber', 'mobileNumber'),
+    CommonPersonVariableStructure.getStructure('fathersName', 'fathersName')
 ];
 
 

@@ -48,8 +48,7 @@ export class SendSmsComponent implements OnInit {
     studentParameterList: any[] = [];
     studentParameterValueList: any[] = [];
 
-    studentMessageService: any;
-    employeeMessageService: any;
+    messageService: any;
 
 
     SMS_TYPE_ID = 2;
@@ -60,6 +59,8 @@ export class SendSmsComponent implements OnInit {
     timeout: any;
     nameFilter = '';
     message = '';
+
+    personTypeListIndexedWithSendToId = ['student', 'employee', 'commonPerson'];
 
     stateKeeper = {
         isLoading: false
@@ -152,8 +153,7 @@ export class SendSmsComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.studentMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
-        this.employeeMessageService = new MessageService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -166,42 +166,32 @@ export class SendSmsComponent implements OnInit {
     getMobileNumberList(returnType: string): any {
         let tempList = [];
         let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.eventId == this.userInput.selectedSendTo.id).variableList;
+        this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((x) => {
+            return x.selected;
+        }).map(a => a.student);
+        this.dataForMapping['employeeList'] = this.employeeList.filter(x => x.selected);
+        this.dataForMapping['commonPersonList'] = this.dataForMapping['studentList'].concat(this.dataForMapping['employeeList']);
+        let personType = this.personTypeListIndexedWithSendToId[this.userInput.selectedSendTo.id];
 
-        if (this.userInput.selectedSendTo.id != 2) {
-
-            this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((x) => {
-                return x.selected;
-            }).map(a => a.student);
-
-              this.getFilteredStudentList()
-                .filter((x) => {
-                    return x.selected;
-                })
-                .forEach((studentSection) => {
-                    if (!this.studentMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
-                        studentSection.student, this.message, 'student')) {
-                        studentSection.student['student'] = true;
-                        tempList.push(studentSection.student);
+        this.dataForMapping[personType + 'List'].forEach(person => {
+            if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
+                person, this.message, personType)) {
+                person[personType] = true; // to identify which person in list eg: x['student'] = true
+                tempList.push(person);
+            }
+            if (this.userInput.selectedSendTo.id == 1) {
+                if (this.includeSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
+                    if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
+                        person, this.message, person, true)) {
+                        person[personType] = true;
+                        let personWithoutReference = JSON.parse(JSON.stringify(person));
+                        personWithoutReference.mobileNumber = person.secondMobileNumber;
+                        tempList.push(personWithoutReference);
                     }
-                    if (this.includeSecondMobileNumber && this.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                        if (!this.studentMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
-                            studentSection.student, this.message, 'student', true)) {
-                            studentSection.student['student'] = true;
-                            tempList.push(studentSection.student);
-                        }
-                    }
-                });
-        }
-        if (this.userInput.selectedSendTo.id != 1) {
-            this.dataForMapping['employeeList'] = this.employeeList.filter(x => x.selected);
-            this.employeeList.forEach((employee) => {
-                if (employee.selected && !this.employeeMessageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
-                    employee, this.message, 'employee')) {
-                    employee['employee'] = true;
-                    tempList.push(employee);
                 }
-            });
-        }
+            }
+        });
+
         if (this.userInput.selectedSendUpdateType.id == this.SMS_TYPE_ID) {
             this.smsPersonList = tempList;
             this.notificationPersonList = [];

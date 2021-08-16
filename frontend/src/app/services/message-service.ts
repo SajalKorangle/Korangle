@@ -157,7 +157,7 @@ export class MessageService {
 
     async sendEventSMSNotification(
         dataForMapping: any, // contains all the backend list which are required to populate the variables
-        personsTypeList: any, // ['student'] or ['employee'] or  ['student','employee']
+        personsType: any, // 'student' or 'employee' or 'commonPerson'
         smsEvent: any, // corresponding SMS Event
         sendUpdateTypeId: any, // Sent Update Type [NULL,SMS,NOTIFICATION,SMS/NOTIF.]
         smsTemplate: any, // This contains any sms template that is used ( if not null )
@@ -178,16 +178,14 @@ export class MessageService {
 
         // Iterating over the person Type list because in Event-Gallery we require both Students and Employees
         // So it is determined by the function caller
-        personsTypeList.forEach(person => { // here person is Student or Employee
-        dataForMapping[person + 'List'].forEach(personData => {
+        dataForMapping[personsType + 'List'].forEach(personData => {
             if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
                 // Getting the mapped data like - { studentName : "Rahul", class: "10" ... etc }
-                let mappedObject = this.getMappingData(variableMappedEvent.variableList, dataForMapping, person, personData);
+                let mappedObject = this.getMappingData(variableMappedEvent.variableList, dataForMapping, personsType, personData);
                 mappedObject['notification'] = personData.notification;
                 mappedObject['id'] = personData.id;
                 personVariablesMappedObjList.push(mappedObject);
             }
-        });
         });
 
         if (sendUpdateTypeId == 2) { // if the update type is 2 (SMS) populating only the sms_list
