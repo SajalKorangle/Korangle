@@ -1,58 +1,62 @@
 <div class="card-content">
     <ng-container *ngIf="!stateKeeper.isLoading">
-        
-        <div class="row" *ngIf="!htmlRenderer.tutorialsExist()">
-            <span style="margin-left: 20px">[ No Tutorial Videos Present ]</span>
-        </div>
-        
-        <ng-container *ngIf="htmlRenderer.tutorialsExist()">
-        <div class="row">
-            <mat-form-field style="margin: 20px">
-                <mat-select placeholder="Select Subject" [ngModel]="userInput.selectedSubject" (ngModelChange)="htmlRenderer.handleSubjectSelection($event)">
-                    <mat-option *ngFor="let subject of filteredStudentSubject" [value]="subject">
-                        {{ htmlRenderer.getSubjectName(subject) }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <mat-form-field style="margin: 20px">
-                <mat-select placeholder="Select Chapter" [ngModel]="userInput.selectedChapter" (ngModelChange)="htmlRenderer.handleChapterSelection($event)">
-                    <mat-option *ngFor="let chapter of userInput.selectedSubject.chapterList" [value]="chapter">
-                        {{ chapter.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <mat-form-field style="margin: 20px">
-                <mat-select placeholder="Select Topic" [ngModel]="userInput.selectedTopic" (ngModelChange)="htmlRenderer.handleTopicSelection($event)">
-                    <mat-option *ngFor="let topic of userInput.selectedChapter.topicList" [value]="topic">
-                        {{ topic.topic }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+        <ng-container *ngIf="!restrictedStudent else RestrictedStudent">
+            <div class="row" *ngIf="!htmlRenderer.tutorialsExist()">
+                <span style="margin-left: 20px">[ No Tutorial Videos Present ]</span>
+            </div>
             
-        <ng-container *ngIf="stateKeeper.isIFrameLoading">
-            <app-loading-spinner [user]="user"></app-loading-spinner>
-        </ng-container>
-
-            <div  [class.d-none]="stateKeeper.isIFrameLoading"
-                 style="height: 70%; width: 70%; margin-left: 10%; margin-bottom: 5%">
-                <div class="embed-responsive embed-responsive-16by9">
-                    <youtube-player
-                        [videoId]="htmlRenderer.getVideoUrlId()"
-                        (ready)="htmlRenderer.onReady($event)"
-                    ></youtube-player>
+            <ng-container *ngIf="htmlRenderer.tutorialsExist()">
+            <div class="row">
+                <mat-form-field style="margin: 20px">
+                    <mat-select placeholder="Select Subject" [ngModel]="userInput.selectedSubject" (ngModelChange)="htmlRenderer.handleSubjectSelection($event)">
+                        <mat-option *ngFor="let subject of filteredStudentSubject" [value]="subject">
+                            {{ htmlRenderer.getSubjectName(subject) }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+    
+                <mat-form-field style="margin: 20px">
+                    <mat-select placeholder="Select Chapter" [ngModel]="userInput.selectedChapter" (ngModelChange)="htmlRenderer.handleChapterSelection($event)">
+                        <mat-option *ngFor="let chapter of userInput.selectedSubject.chapterList" [value]="chapter">
+                            {{ chapter.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+    
+                <mat-form-field style="margin: 20px">
+                    <mat-select placeholder="Select Topic" [ngModel]="userInput.selectedTopic" (ngModelChange)="htmlRenderer.handleTopicSelection($event)">
+                        <mat-option *ngFor="let topic of userInput.selectedChapter.topicList" [value]="topic">
+                            {{ topic.topic }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+                
+            <ng-container *ngIf="stateKeeper.isIFrameLoading">
+                <app-loading-spinner [user]="user"></app-loading-spinner>
+            </ng-container>
+    
+                <div  [class.d-none]="stateKeeper.isIFrameLoading"
+                     style="height: 70%; width: 70%; margin-left: 10%; margin-bottom: 5%">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <youtube-player
+                            [videoId]="htmlRenderer.getVideoUrlId()"
+                            (ready)="htmlRenderer.onReady($event)"
+                        ></youtube-player>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <span>
-                    <b>Published On : {{ htmlRenderer.getPublishedDate() }}</b>
-                </span>
-            </div>
+                <div class="d-flex justify-content-center">
+                    <span>
+                        <b>Published On : {{ htmlRenderer.getPublishedDate() }}</b>
+                    </span>
+                </div>
+            </ng-container>
         </ng-container>
     </ng-container>
 </div>
 <ng-container *ngIf="stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+<ng-template #RestrictedStudent>
+    <span style="color: red">This Page is Blocked. Please Contact School.</span>
+</ng-template>
