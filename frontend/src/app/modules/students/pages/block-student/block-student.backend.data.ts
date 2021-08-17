@@ -1,8 +1,8 @@
-import { StudentPermissionComponent } from './student-permission.component';
+import { BlockStudentComponent } from './block-student.component';
 
-export class StudentPermissionBackendData {
+export class BlockStudentBackendData {
 
-    vm: StudentPermissionComponent;
+    vm: BlockStudentComponent;
 
     classList: Array<any>;
     divisionList: Array<any>;
@@ -14,7 +14,7 @@ export class StudentPermissionBackendData {
 
     constructor() { }
 
-    initialize(vm: StudentPermissionComponent): void {
+    initialize(vm: BlockStudentComponent): void {
         this.vm = vm;
     }
 
