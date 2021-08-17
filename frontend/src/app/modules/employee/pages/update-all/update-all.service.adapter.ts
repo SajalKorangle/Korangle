@@ -57,6 +57,9 @@ export class UpdateAllServiceAdapter {
         if (newValue != null && newValue.toString().trim() == '') {
             newValue = null;
         }
+        if (newValue != null && this.vm.checkOnlyUppercaseFields(key)) { // to check in-case is some of the characters are lower case
+            newValue = newValue.toString().toUpperCase(); // update them to upperCase
+        }
         data[key] = newValue;
         console.log(data);
         if (employee[key] != newValue) {
@@ -107,7 +110,8 @@ export class UpdateAllServiceAdapter {
             if (newValue !== null && newValue.toString().trim() !== '') {
                 if (key == 'aadharNumber' || key == 'mobileNumber' || key == 'panNumber' || key == 'employeeNumber'
                     || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'bankIfscCode') {
-                    let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id !== employee.id && emp[key] == newValue.toString());
+                    let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id != employee.id && emp[key] ==
+                        newValue.toString());
                     if (employeeWithSameValue) {
                         alert(columnName + ' already exists in ' + employeeWithSameValue.name + '\'s profile');
                         (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee[key];

@@ -148,8 +148,13 @@ export class UpdateAllComponent implements OnInit {
         return key == 'panNumber' || key == 'passportNumber' || key == 'bankIfscCode';
     }
 
-    disableDateTypeInput(inputType: any) {
-        return inputType != 'date';
+    handleOnKeyDown(inputType: any, event: any, backendKey: any) {
+        let keyPressed = event.keyCode;
+        if (inputType == 'text' && (backendKey == 'panNumber' || backendKey == 'passportNumber') && keyPressed == 32) { //space
+            event.preventDefault(); // if space is pressed prevent Default
+        } else if (inputType == 'date') { //check if it is date
+            return false; // don't allow to input any value
+        }
     }
 
     getMaxDateForDateType(key: any, inputType: string) {
