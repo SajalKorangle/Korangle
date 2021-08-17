@@ -96,7 +96,7 @@ export class MessageService {
 
     async fetchEventDataAndSendEventSMSNotification(
         dataForMapping, // contains all the backend list which are required to populate the variables
-        personListType, // ['student'] or ['employee'] or  ['student','employee']
+        personType, // 'student' or 'employee' or  'commonPerson'
         eventId, // id of the Event like 'Homework Creation' = 7 as a number
         schoolId, // school dbId
         smsBalance, // school sms balance
@@ -135,7 +135,7 @@ export class MessageService {
         try {
             await this.sendEventSMSNotification(
                 dataForMapping,
-                personListType,
+                personType,
                 smsEvent,
                 eventSettings.sendUpdateTypeId,
                 smsDefaultTemplate,

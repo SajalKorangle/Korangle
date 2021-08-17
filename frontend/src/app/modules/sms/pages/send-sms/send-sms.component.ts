@@ -171,8 +171,7 @@ export class SendSmsComponent implements OnInit {
         }).map(a => a.student);
         this.dataForMapping['employeeList'] = this.employeeList.filter(x => x.selected);
         this.dataForMapping['commonPersonList'] = this.dataForMapping['studentList'].concat(this.dataForMapping['employeeList']);
-        let personType = this.personTypeListIndexedWithSendToId[this.userInput.selectedSendTo.id];
-
+        let personType = this.personTypeListIndexedWithSendToId[this.userInput.selectedSendTo.id - 1];
         this.dataForMapping[personType + 'List'].forEach(person => {
             if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                 person, this.message, personType)) {

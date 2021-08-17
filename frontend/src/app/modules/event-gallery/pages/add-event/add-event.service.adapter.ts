@@ -266,19 +266,13 @@ export class AddEventServiceAdapter {
         this.vm.notifyPersonData = this.vm.notifyPersonData.filter(
             (v, i, a) => a.findIndex((t) => t.mobileNumber === v.mobileNumber) === i
         );
-        let personList = [];
+
         this.vm.dataForMapping['event'] = eventObject;
-        this.vm.dataForMapping['studentList'] = this.vm.notifyPersonData.filter(x => x.student);
-        this.vm.dataForMapping['employeeList'] = this.vm.notifyPersonData.filter(x => x.employee);
-        if (this.vm.dataForMapping['studentList'].length > 0) {
-            personList.push('student');
-        }
-        if (this.vm.dataForMapping['employeeList'].length > 0) {
-            personList.push('employee');
-        }
+        this.vm.dataForMapping['commonPersonList'] = this.vm.notifyPersonData;
+        let personType = 'commonPerson';
         this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
             this.vm.dataForMapping,
-            personList,
+            personType,
             eventID,
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance,

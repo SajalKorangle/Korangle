@@ -180,7 +180,7 @@ export class SendSmsHtmlRenderer {
         this.vm.dataForMapping['commonPersonList'] = this.vm.getMobileNumberList('sms');
 
         this.vm.getMobileNumberList('sms').forEach(anyPerson => {
-            let personType = this.vm.personTypeListIndexedWithSendToId[this.vm.userInput.selectedSendTo.id];
+            let personType = this.vm.personTypeListIndexedWithSendToId[this.vm.userInput.selectedSendTo.id - 1];
             count += this.getSMSCount(
                 this.vm.messageService.getMessageFromTemplate(this.vm.message,
                     this.vm.messageService.getMappingData(variables, this.vm.dataForMapping, personType, anyPerson))
