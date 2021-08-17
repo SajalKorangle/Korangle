@@ -83,7 +83,7 @@ export class UpdateAllServiceAdapter {
                 }
             } else if (key == 'bankIfscCode') {
                 if (newValue != null && newValue.toString().length !== 11) {
-                    alert('Bank IFSC Code should be 11 digits!');
+                    alert('Bank IFSC Code should be 11 characters!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.bankIfscCode;
                     return;
                 }
@@ -109,7 +109,7 @@ export class UpdateAllServiceAdapter {
 
             if (newValue !== null && newValue.toString().trim() !== '') {
                 if (key == 'aadharNumber' || key == 'mobileNumber' || key == 'panNumber' || key == 'employeeNumber'
-                    || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'bankIfscCode') {
+                    || key == 'passportNumber' || key == 'bankAccountNumber') {
                     let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id != employee.id && emp[key] ==
                         newValue.toString());
                     if (employeeWithSameValue) {
