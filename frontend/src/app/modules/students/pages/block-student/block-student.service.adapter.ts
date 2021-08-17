@@ -1,13 +1,13 @@
-import { StudentPermissionComponent } from './student-permission.component';
+import { BlockStudentComponent } from './block-student.component';
 import { CommonFunctions } from '@modules/common/common-functions';
 
-export class StudentPermissionServiceAdapter {
+export class BlockStudentServiceAdapter {
 
-    vm: StudentPermissionComponent;
+    vm: BlockStudentComponent;
 
     constructor() { }
 
-    initialize(vm: StudentPermissionComponent): void {
+    initialize(vm: BlockStudentComponent): void {
         this.vm = vm;
     }
 
