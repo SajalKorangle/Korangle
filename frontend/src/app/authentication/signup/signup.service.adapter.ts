@@ -50,7 +50,7 @@ export class SignupServiceAdapter {
 
     verifyOTP() {
         if (this.vm.password !== this.vm.confirmPassword) {
-            alert('New Password and confirm password are not same');
+            alert('Password and confirm password are not same');
             return;
         }
 

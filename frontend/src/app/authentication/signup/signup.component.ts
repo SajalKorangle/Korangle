@@ -31,7 +31,7 @@ export class SignupComponent implements OnInit {
     password = '';
     confirmPassword = '';
 
-    section = 'userDetails';
+    section = 'otp';
 
     visibilityMode = false;
 
@@ -78,6 +78,17 @@ export class SignupComponent implements OnInit {
         } else if (this.lastName && !this.validators.name.test(this.lastName)) {
             return false;
         } else if (this.emailAddress && !this.validators.email.test(this.emailAddress)) {
+            return false;
+        }
+        return true;
+    }
+
+    isOtpFormValid() {
+        if (!this.otp || this.otp.trim().length == 0) {
+            return false;
+        } else if (!this.password || this.password.trim().length < 8) {
+            return false;
+        } else if (!this.confirmPassword || this.confirmPassword.trim().length < 8) {
             return false;
         }
         return true;

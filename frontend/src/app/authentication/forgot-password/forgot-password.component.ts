@@ -68,4 +68,15 @@ export class ForgotPasswordComponent implements OnInit {
     isMobileNumberValid(): boolean {
         return this.validators.phoneNumber.test(this.mobileNumber);
     }
+
+    isOtpFormValid() {
+        if (!this.otp || this.otp.trim().length == 0) {
+            return false;
+        } else if (!this.password || this.password.trim().length < 8) {
+            return false;
+        } else if (!this.confirmPassword || this.confirmPassword.trim().length < 8) {
+            return false;
+        }
+        return true;
+    }
 }
