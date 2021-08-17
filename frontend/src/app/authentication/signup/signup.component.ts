@@ -31,7 +31,7 @@ export class SignupComponent implements OnInit {
     password = '';
     confirmPassword = '';
 
-    section = 'otp';
+    section = 'userDetails';
 
     visibilityMode = false;
 
