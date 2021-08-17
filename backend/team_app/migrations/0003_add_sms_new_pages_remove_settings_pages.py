@@ -11,7 +11,7 @@ from team_app.db_script.remove_setting_pages import remove_setting_pages
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0001_initial'),
+        ('team_app', '0002_add_block_student_task'),
     ]
 
     operations = [
