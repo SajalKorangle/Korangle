@@ -57,28 +57,26 @@ export class SettingsServiceAdapter {
             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request), //7
         ]);
 
-        this.vm.parseBacknedData();
         this.vm.isLoading = false;
 
     }
 
     async updateOnlineClassList() {
-        const onlineClassBackendDataIndexArray = [];
+        if (this.vm.userInput.view == 'class' && this.vm.htmlRenderer.timeTableHasOverlappingError()) {
+            alert('Teacher\'s time slot if overlapping. Kindly rectify.');
+            return;
+        }
+
         // filter online classes for selected class and section
-        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter((onlineClass, index) => {
+        const originalFilteredOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
-            if (this.vm.view == 'class' && classSubject.parentClass == this.vm.userInput.selectedClass.id
+            if (classSubject.parentClass == this.vm.userInput.selectedClass.id
                 && classSubject.parentDivision == this.vm.userInput.selectedSection.id) {
-                onlineClassBackendDataIndexArray.push(index);
-                return true;
-            }
-            else if (this.vm.view == 'employee' && classSubject.parentEmployee == this.vm.userInput.selectedEmployee.id) {
-                onlineClassBackendDataIndexArray.push(index);
                 return true;
             }
             return false;
         });
-        const updatedFilteredOnlineClassList = this.vm.htmlRenderer.filteredOnlineClassList;
+        const updatedFilteredOnlineClassList = this.vm.userInput.filteredOnlineClassList;
 
         const toCreateList = [];
         const toUpdateList = [];
@@ -113,13 +111,18 @@ export class SettingsServiceAdapter {
         this.vm.onlineClassService.createObjectList(this.vm.onlineClassService.online_class, toCreateList),
         ]);
 
-        onlineClassBackendDataIndexArray.forEach(index => delete this.vm.backendData.onlineClassList[index]);
-        this.vm.backendData.onlineClassList = this.vm.backendData.onlineClassList.filter(Boolean);
-        this.vm.backendData.onlineClassList.push(...updateResponse);
-        this.vm.backendData.onlineClassList.push(...createResponse);
-        this.vm.parseBacknedData();
-        this.vm.htmlRenderer.initilizeTimeTable();
+        this.vm.backendData.onlineClassList =
+            [
+                ...this.vm.backendData.onlineClassList.filter(onlineClass => !originalFilteredOnlineClassList.includes(onlineClass)),
+                ...updateResponse,
+                ...createResponse
+            ];
+        this.vm.initializeTimeTable();
         this.vm.isLoading = false;
-    }
+        this.vm.snackBar.open(
+            `Online Classes updated for ${this.vm.userInput.selectedClass.name} - ${this.vm.userInput.selectedSection.name}`,
+            undefined,
+            { duration: 2000 });
 
+    }
 }

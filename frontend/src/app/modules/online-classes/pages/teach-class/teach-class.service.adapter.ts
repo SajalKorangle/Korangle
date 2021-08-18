@@ -1,13 +1,13 @@
-import { ClassroomComponent } from './classroom.component';
+import { TeachClassComponent } from './teach-class.component';
 import { CommonFunctions } from '@modules/common/common-functions';
 
-export class ClassroomServiceAdapter {
+export class TeachClassServiceAdapter {
 
-    vm: ClassroomComponent;
+    vm: TeachClassComponent;
 
     constructor() { }
 
-    initialize(vm: ClassroomComponent): void {
+    initialize(vm: TeachClassComponent): void {
         this.vm = vm;
     }
 
@@ -52,8 +52,7 @@ export class ClassroomServiceAdapter {
 
         this.vm.backendData.onlineClassList = await this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.online_class, online_class_request);
 
-        this.vm.parseBacknedData();
-        this.vm.htmlRenderer.initilizeTimeTable();
+        this.vm.initializeTimeTable();
         this.vm.isLoading = false;
     }
 
