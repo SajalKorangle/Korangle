@@ -1,16 +1,13 @@
 th{
     text-align: center;
-    border: 1px solid black;
+    border: 1px solid rgb(221, 221, 221);
 }
 
 td{
     text-align: center;
-    border: 1px solid black;
+    border: 1px solid rgb(221, 221, 221);
 }
 
-tr{
-    border: 1px solid black; 
-}
 
 .glow-active{
     border-radius: 100%;
