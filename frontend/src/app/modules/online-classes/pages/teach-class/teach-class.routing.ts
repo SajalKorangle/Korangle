@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ClassroomComponent } from './classroom.component';
+import { TeachClassComponent } from './teach-class.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: ClassroomComponent ,
+        component: TeachClassComponent,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class ClassroomRouting { }
+export class TeachClassRouting { }
