@@ -2,19 +2,19 @@ import { Component, OnInit } from '@angular/core';
 
 import { DataStorage } from "@classes/data-storage";
 
-import { StudentPermissionServiceAdapter } from './student-permission.service.adapter';
-import { StudentPermissionHtmlRenderer } from './student-permission.html.renderer';
-import { StudentPermissionUserInput } from './student-permission.user.input';
-import { StudentPermissionBackendData } from './student-permission.backend.data';
+import { BlockStudentServiceAdapter } from './block-student.service.adapter';
+import { BlockStudentHtmlRenderer } from './block-student.html.renderer';
+import { BlockStudentUserInput } from './block-student.user.input';
+import { BlockStudentBackendData } from './block-student.backend.data';
 
 import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 
 @Component({
-    selector: 'student-permission',
-    templateUrl: './student-permission.component.html',
-    styleUrls: ['./student-permission.component.css'],
+    selector: 'block-student',
+    templateUrl: './block-student.component.html',
+    styleUrls: ['./block-student.component.css'],
     providers: [
         StudentService,
         ClassService,
@@ -22,14 +22,14 @@ import { OnlineClassService } from '@services/modules/online-class/online-class.
     ],
 })
 
-export class StudentPermissionComponent implements OnInit {
+export class BlockStudentComponent implements OnInit {
 
     user: any;
 
-    serviceAdapter: StudentPermissionServiceAdapter;
-    htmlRenderer: StudentPermissionHtmlRenderer;
-    userInput: StudentPermissionUserInput;
-    backendData: StudentPermissionBackendData;
+    serviceAdapter: BlockStudentServiceAdapter;
+    htmlRenderer: BlockStudentHtmlRenderer;
+    userInput: BlockStudentUserInput;
+    backendData: BlockStudentBackendData;
 
     isActiveSession: boolean;
 
@@ -44,16 +44,16 @@ export class StudentPermissionComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.userInput = new StudentPermissionUserInput();
+        this.userInput = new BlockStudentUserInput();
         this.userInput.initialize(this);
 
-        this.backendData = new StudentPermissionBackendData();
+        this.backendData = new BlockStudentBackendData();
         this.backendData.initialize(this);
 
-        this.htmlRenderer = new StudentPermissionHtmlRenderer();
+        this.htmlRenderer = new BlockStudentHtmlRenderer();
         this.htmlRenderer.initialize(this);
 
-        this.serviceAdapter = new StudentPermissionServiceAdapter();
+        this.serviceAdapter = new BlockStudentServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initilizeData();
     }

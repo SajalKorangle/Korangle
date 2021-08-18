@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { StudentPermissionComponent } from './student-permission.component';
+import { BlockStudentComponent } from './block-student.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: StudentPermissionComponent ,
+        component: BlockStudentComponent ,
     }
 ];
 
@@ -20,4 +20,5 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class StudentPermissionRouting { }
+export class BlockStudentRouting { }
+
