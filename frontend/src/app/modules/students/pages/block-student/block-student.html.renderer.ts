@@ -1,8 +1,8 @@
-import { StudentPermissionComponent } from './student-permission.component';
+import { BlockStudentComponent } from './block-student.component';
 
-export class StudentPermissionHtmlRenderer {
+export class BlockStudentHtmlRenderer {
 
-    vm: StudentPermissionComponent;
+    vm: BlockStudentComponent;
 
     classDivisionList: Array<any>;
 
@@ -10,7 +10,7 @@ export class StudentPermissionHtmlRenderer {
 
     constructor() { }
 
-    initialize(vm: StudentPermissionComponent): void {
+    initialize(vm: BlockStudentComponent): void {
         this.vm = vm;
     }
 

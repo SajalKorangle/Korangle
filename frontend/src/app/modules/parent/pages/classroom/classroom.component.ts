@@ -61,6 +61,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.activeStudent = this.user.section.student;
+        this.restrictedStudent = this.activeStudent.isRestricted;
 
         this.userInput = new ClassroomUserInput();
         this.userInput.initialize(this);
@@ -73,7 +74,9 @@ export class ClassroomComponent implements OnInit, OnDestroy {
 
         this.serviceAdapter = new ClassroomServiceAdapter();
         this.serviceAdapter.initialize(this);
-        this.serviceAdapter.initializeData();
+        if (!this.restrictedStudent) { //data is fetched when the student is not restricted
+            this.serviceAdapter.initializeData();
+        }
         // console.log('this: ', this);
     }
 

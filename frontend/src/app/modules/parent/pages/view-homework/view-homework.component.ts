@@ -6,6 +6,7 @@ import { HomeworkService } from '../../../../services/modules/homework/homework.
 
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
+import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { isMobile } from '../../../../classes/common.js';
 
 import { MatDialog } from '@angular/material';
@@ -17,7 +18,7 @@ import { CdkDragDrop, moveItemInArray, CdkDragEnter } from '@angular/cdk/drag-dr
     selector: 'view-homework',
     templateUrl: './view-homework.component.html',
     styleUrls: ['./view-homework.component.css'],
-    providers: [HomeworkService, SubjectService, StudentService],
+    providers: [OnlineClassService, HomeworkService, SubjectService, StudentService],
 })
 export class ViewHomeworkComponent implements OnInit, OnChanges {
     user;
@@ -37,9 +38,11 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     isSubmitting: any;
 
+    activeStudent: any;
     selectedSubject: any;
     studentClassData: any;
     currentHomework: any;
+    restrictedStudent: any ;
 
     pendingHomeworkList: any;
     completedHomeworkList: any;
@@ -52,6 +55,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     constructor(
         public homeworkService: HomeworkService,
+        public onlineClassService: OnlineClassService,
         public subjectService: SubjectService,
         public studentService: StudentService,
         public dialog: MatDialog
@@ -63,12 +67,16 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.activeStudent = this.user.section.student;
+        this.restrictedStudent = this.activeStudent.isRestricted;
         this.isSubmitting = false;
         this.showContent = false;
         this.loadMoreHomework = true;
         this.serviceAdapter = new ViewHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
+        if (!this.restrictedStudent) {    //fetches data only if the student is not restricted
+            this.serviceAdapter.initializeData();
+        }
     }
 
     displayDateTime(date: any, time: any): any {
