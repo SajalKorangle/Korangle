@@ -20,11 +20,6 @@ const routes: Routes = [
     data: { moduleName: 'online_classes' },
   },
   {
-    path: 'student_permission',
-    loadChildren: 'app/modules/online-classes/pages/student-permission/student-permission.module#StudentPermissionModule',
-    data: { moduleName: 'online_classes' },
-  },
-  {
     path: 'attendance_report',
     loadChildren: 'app/modules/online-classes/pages/attendance-report/attendance-report.module#AttendanceReportModule',
     data: { moduleName: 'online_classes' },
