@@ -109,7 +109,7 @@ export class UpdateAllServiceAdapter {
 
             if (newValue !== null && newValue.toString().trim() !== '') {
                 if (key == 'aadharNumber' || key == 'mobileNumber' || key == 'panNumber' || key == 'employeeNumber'
-                    || key == 'passportNumber' || key == 'bankAccountNumber') {
+                    || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'epfAccountNumber') {
                     let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id != employee.id && emp[key] ==
                         newValue.toString());
                     if (employeeWithSameValue) {

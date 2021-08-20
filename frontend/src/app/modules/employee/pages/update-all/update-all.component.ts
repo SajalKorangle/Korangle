@@ -152,7 +152,7 @@ export class UpdateAllComponent implements OnInit {
         let keyPressed = event.keyCode;
         if (inputType == 'text' && (backendKey == 'panNumber' || backendKey == 'passportNumber') && keyPressed == 32) { //space
             event.preventDefault(); // if space is pressed prevent Default
-        } else if (inputType == 'date') { //check if it is date
+        } else if (inputType == 'date' && keyPressed != 8 && keyPressed != 46) { //check if it is date and not delete
             return false; // don't allow to input any value
         }
     }
