@@ -3,15 +3,15 @@
         <ng-container *ngIf="isActiveSession else NotActiveSession">
 
             <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
-                <ng-container *ngIf="htmlRenderer.timeSpanList.length>0 else NoClassReg">
-                    <h3>{{htmlRenderer.getTime()}}</h3>
+                <ng-container *ngIf="htmlRenderer.getTimeSpanList().length>0 else NoClassReg">
+                    <h3>{{htmlRenderer.getCurrentTime()}}</h3>
 
                     <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
                         <h4>Ongoing Class:</h4>
                         <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
 
                             <div style="margin-left: 12px;">
-                                <span>{{htmlRenderer.getDisplayData(activeClass).subject.name}} </span><br />
+                                <span>{{htmlRenderer.getCardSlotDisplayData(activeClass).subject.name}} </span><br />
                                 <span>
                                     {{activeClass.startTimeJSON.getDisplayString()}} -
                                     {{activeClass.endTimeJSON.getDisplayString()}}
@@ -28,36 +28,37 @@
                         <div style="margin-bottom: 24px;">
                             <button *ngIf="htmlRenderer.getClassAccountInfo(activeClass)"
                                 class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                (click)="serviceAdapter.initilizeMeetingData(htmlRenderer.getClassAccountInfo(activeClass))">EnterClass</button>
+                                (click)="serviceAdapter.initializeMeetingData(htmlRenderer.getClassAccountInfo(activeClass))">EnterClass</button>
                         </div>
                     </ng-container>
 
-                    <div style="overflow: auto;">
+                    <div class="mat-elevation-z8" style="overflow: auto;">
                         <table class="mat-elevation-z8 table table-hover">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th *ngFor="let weekdayKey of getObjetKeys(weekdays)"
-                                        [style.color]="weekdays[weekdayKey]==today?'#ff9800':''">
-                                        {{weekdays[weekdayKey]}}</th>
+                                    <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)"
+                                        [style.color]="weekdayKeysMappedByDisplayName[weekdayKey]==today?'#ff9800':''">
+                                        {{weekdayKeysMappedByDisplayName[weekdayKey]}}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <ng-container
-                                    *ngFor="let timespan of htmlRenderer.timeSpanList, let timeSpanIndex = index;">
+                                    *ngFor="let timeSpan of htmlRenderer.getTimeSpanList(), let timeSpanIndex = index;">
                                     <tr>
                                         <td style="width: 160px"
-                                            [style.color]="htmlRenderer.isActiveTimeSpan(timespan)?'#ff9800':'unset'">
-                                            {{timespan.startTime.getDisplayString()}} -
-                                            {{timespan.endTime.getDisplayString()}}
+                                            [style.color]="htmlRenderer.isActiveTimeSpan(timeSpan)?'#ff9800':'unset'">
+                                            {{timeSpan.startTime.getDisplayString()}} -
+                                            {{timeSpan.endTime.getDisplayString()}}
                                         </td>
-                                        <ng-container *ngFor="let weekday of getObjetKeys(weekdays)">
+                                        <ng-container
+                                            *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
                                             <ng-container
-                                                *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timespan) as onlineClass else NoClass;">
+                                                *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
                                                 <td style="position: relative; min-width: 100px;"
-                                                    [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)"
-                                                    [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getDisplayData(onlineClass).subject.name)">
-                                                    <span>{{htmlRenderer.getDisplayData(onlineClass).subject.name}}</span><br />
+                                                    [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name)"
+                                                    [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name)">
+                                                    <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
                                                     <span *ngIf="htmlRenderer.getClassAccountInfo(onlineClass)"
                                                         style="position: absolute; bottom: 8px; right: 8px;"
                                                         class="glow-active"></span>
