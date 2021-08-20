@@ -268,12 +268,14 @@
 </ng-template>
 
 <ng-template #EmployeeFilter>
-    <mat-form-field>
-        <mat-label>Select Employee</mat-label>
-        <mat-select [(ngModel)]="userInput.selectedEmployee" (ngModelChange)="initializeTimeTable();">
-            <ng-container *ngFor="let employee of backendData.employeeList">
-                <mat-option [value]="employee">{{employee.name}}</mat-option>
-            </ng-container>
-        </mat-select>
-    </mat-form-field>
+    <div class="col-md-6">
+        <mat-form-field>
+            <mat-label>Select Employee</mat-label>
+            <mat-select [(ngModel)]="userInput.selectedEmployee" (ngModelChange)="initializeTimeTable();">
+                <ng-container *ngFor="let employee of backendData.employeeList">
+                    <mat-option [value]="employee">{{employee.name}}</mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+    </div>
 </ng-template>
