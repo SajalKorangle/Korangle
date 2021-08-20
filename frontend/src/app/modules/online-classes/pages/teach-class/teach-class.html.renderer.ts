@@ -21,7 +21,7 @@ export class TeachClassHtmlRenderer {
             if (TimeComparator(concernedOnlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) == 0)
                 return false;
             return true;
-        });;
+        });
         onlineClassList.forEach((concernedOnlineClass) => {
             onlineClassList.forEach((onlineClass, index) => {
                 if (onlineClass.id == concernedOnlineClass.id) {
