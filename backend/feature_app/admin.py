@@ -55,9 +55,6 @@ class FeatureAdmin(admin.ModelAdmin):
     list_display = ('title', 'generationDateTime', 'user_school', 'status', 'remark')
     list_filter = ('status',)
 
-    '''def title_link(self, obj):
-        return str(obj.parentUser.username) + ' - ' + obj.title'''
-
     def user_school(self, obj):
         return format_html(str(obj.parentUser.first_name) + ' ' + str(obj.parentUser.last_name) + '<br /> ' + getAssociatedSchool(obj.parentUser.username))
 
