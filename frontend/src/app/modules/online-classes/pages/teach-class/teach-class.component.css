@@ -26,3 +26,8 @@ td{
 .overlapping-danger{
     border: 2px solid red !important;
 }
+
+[mattooltip] {
+    touch-action: auto !important;
+  }
+  
