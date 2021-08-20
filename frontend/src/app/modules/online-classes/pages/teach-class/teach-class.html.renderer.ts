@@ -17,10 +17,12 @@ export class TeachClassHtmlRenderer {
     }
 
     getOverlappingFilteredOnlineClassList(): Array<ParsedOnlineClass> {
-        const onlineClassList = [...this.vm.backendData.onlineClassList];
+        const onlineClassList = this.vm.backendData.onlineClassList.filter(concernedOnlineClass => {
+            if (TimeComparator(concernedOnlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) == 0)
+                return false;
+            return true;
+        });;
         onlineClassList.forEach((concernedOnlineClass) => {
-            if (!concernedOnlineClass)
-                return;
             onlineClassList.forEach((onlineClass, index) => {
                 if (onlineClass.id == concernedOnlineClass.id) {
                     return false;
@@ -32,6 +34,7 @@ export class TeachClassHtmlRenderer {
                 }
             });
         });
+
         return onlineClassList;
     }
 

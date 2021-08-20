@@ -41,6 +41,13 @@ export class SettingsUserInput {
     set filteredOnlineClassList(onlineClassListValue: Array<ParsedOnlineClass>) {
         this.timeSpanList = []; // reset the time span list
         this.employeeTimeBreakPoints = [];
+
+        onlineClassListValue = onlineClassListValue.filter(concernedOnlineClass => {    // filter time slots whose start and end time is same
+            if (TimeComparator(concernedOnlineClass.startTimeJSON, concernedOnlineClass.endTimeJSON) == 0)
+                return false;
+            return true;
+        });
+
         onlineClassListValue.sort((onlineClass1, onlineClass2) => {    // more preference to lower class then lower section then last created(id)
             const classSubject1 = this.vm.backendData.getClassSubjectById(onlineClass1.parentClassSubject);
             const classSubject2 = this.vm.backendData.getClassSubjectById(onlineClass2.parentClassSubject);
@@ -48,6 +55,7 @@ export class SettingsUserInput {
                 || classSubject1.parentDivision - classSubject2.parentDivision
                 || onlineClass1.id - onlineClass2.id;
         });
+
 
         onlineClassListValue.forEach((concernedOnlineClass) => {     // filter out online classes thar are overlapping
             if (!concernedOnlineClass)
