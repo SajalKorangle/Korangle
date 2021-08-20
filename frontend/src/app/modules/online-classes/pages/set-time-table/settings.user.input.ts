@@ -56,7 +56,6 @@ export class SettingsUserInput {
                 || onlineClass1.id - onlineClass2.id;
         });
 
-
         onlineClassListValue.forEach((concernedOnlineClass) => {     // filter out online classes thar are overlapping
             if (!concernedOnlineClass)
                 return;
