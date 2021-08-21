@@ -1,8 +1,9 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsAll, containsFirst} from '../../../../contains';
+import { containsAll, containsFirst } from '../../../../contains';
+import { openModuleAndPage } from '../../../../open-page';
+
 
 
 
@@ -10,7 +11,7 @@ describe('SMS -> Send SMS', () => {
 
     let page: any;
 
-    afterEach( async () => {
+    afterEach(async () => {
         await BeforeAfterEach.afterEach();
     });
 
@@ -18,7 +19,7 @@ describe('SMS -> Send SMS', () => {
     it('Send SMS', async () => {
 
         // Start Backend Server
-        startBackendServer(getFixtureFiles('modules/sms/pages/send-sms/send-sms.json'));
+        await startBackendServer(getFixtureFiles('modules/sms/pages/send-sms/send-sms.json'));
 
         page = await BeforeAfterEach.beforeEach();
 

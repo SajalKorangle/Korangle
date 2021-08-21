@@ -1,7 +1,7 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
+import { openModuleAndPage } from '../../../../open-page';
 import { containsAll, containsFirst } from '../../../../contains';
 
 
@@ -12,7 +12,7 @@ describe('Examination -> Update Marks', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/examination/pages/update-marks/update-marks.json'));
+        await startBackendServer(getFixtureFiles('modules/examination/pages/update-marks/update-marks.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -37,7 +37,8 @@ describe('Examination -> Update Marks', () => {
         const [marks] = await page.$x('//input[1]');
         await marks.type('75');
 
-        (await containsFirst('button', 'Update')).click();
+        // clicking somewhere else on the page to update
+        (await containsFirst('span', 'Max. Marks')).click();
 
         await page.waitForTimeout(3000);
 

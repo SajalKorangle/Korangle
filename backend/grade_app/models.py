@@ -4,8 +4,6 @@ from examination_app.models import Examination
 from school_app.model.models import BusStop, Session, School
 from student_app.models import Student
 
-from django.contrib.auth.models import User
-
 class Grade(models.Model):
     name = models.TextField(verbose_name='name')
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0,verbose_name='parentSchool')

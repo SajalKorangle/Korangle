@@ -1,8 +1,8 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Accounts -> Manage Accounts', () => {
     let confirmDeleteDialog = async dialog => {
@@ -36,13 +36,15 @@ describe('Accounts -> Manage Accounts', () => {
     let node: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/accounts/pages/manage-accounts/manage-accounts.json'));
+        await startBackendServer(getFixtureFiles('modules/accounts/pages/manage-accounts/manage-accounts.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
         // Opening Page
         await openModuleAndPage('Accounts', 'Manage Accounts');
-        await page.waitForTimeout(3000);
+        await page.waitForTimeout(5000);
+        const viewToggle = (await page.$x('//mat-slide-toggle'))[0];
+        await viewToggle.click();
     });
     it('Edit Account', async () => {
         page.on('dialog', successDialog);
@@ -53,15 +55,17 @@ describe('Accounts -> Manage Accounts', () => {
         await page.waitForSelector('input[ng-reflect-model="expense"]');
         await page.type('input[ng-reflect-model="expense"]', 'Account');
 
-        await page.waitForSelector('input[ng-reflect-placeholder="Change Balance"]');
-        await page.type('input[ng-reflect-placeholder="Change Balance"]', '00');
+        await page.waitForXPath('//mat-form-field[contains(., "Opening Balance")]//input');
+        const input = (await page.$x('//mat-form-field[contains(., "Opening Balance")]//input'))[0];
+        await input.type('0');
 
         node = await containsFirst('span', 'Edit Account');
         await node.click();
 
         await page.waitForTimeout(3000);
     });
-    it ('Delete Account', async () => {
+
+    it('Delete Account', async () => {
         page.on('dialog', confirmDeleteDialog);
 
         await page.waitForTimeout(1000);
@@ -74,14 +78,15 @@ describe('Accounts -> Manage Accounts', () => {
         await page.waitForTimeout(1000);
     });
 
-    it ('Add Account', async () => {
+    it('Add Account', async () => {
         page.on('dialog', accountCreated);
 
         node = await containsFirst('button', 'Create Account');
         await node.click();
 
-        await page.waitForSelector('input[placeholder="Account Name *"]');
-        await page.type('input[placeholder="Account Name *"]', 'liability backup');
+        await page.waitForXPath('//mat-form-field[contains(., "Account Name *")]//input');
+        const accountNameInput = (await page.$x('//mat-form-field[contains(., "Account Name *")]//input'))[0];
+        await accountNameInput.type('liability backup');
 
         node = await containsFirst('mat-select', '');
         await node.click();

@@ -45,7 +45,7 @@ const routes: Routes = [
     },
     {
         path: 'join_class',
-        loadChildren: 'app/modules/parent/pages/classroom/classroom.module#ClassroomModule',
+        loadChildren: 'app/modules/parent/pages/join-class/classroom.module#ClassroomModule',
         data: { moduleName: 'parent' },
     },
     {

@@ -1,9 +1,9 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
+import { openModuleAndPage } from '../../../../open-page';
 
-import {getNode} from '../../../../contains';
+import { getNode } from '../../../../contains';
 
 
 describe('Parents -> Tutorials', () => {
@@ -13,7 +13,7 @@ describe('Parents -> Tutorials', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/parent/pages/view-tutorial/view-tutorial.json'));
+        await startBackendServer(getFixtureFiles('modules/parent/pages/view-tutorial/view-tutorial.json'));
         page = await BeforeAfterEach.beforeEach();
         await page.select('select[ng-reflect-model="Employee"]', 'Parent');
         await openModuleAndPage('Tutorial', '');
@@ -25,7 +25,8 @@ describe('Parents -> Tutorials', () => {
         await page.waitForXPath('//iframe');
         node = await getNode('iframe', '');
         prop = await page.evaluate(el => el.src, node);
-        expect(prop).toBe("https://youtube.com/embed/AIgF0NJFm50");
+        prop = prop.split('?')[0];
+        expect(prop).toBe("https://www.youtube.com/embed/AIgF0NJFm50");
         node = await getNode('b', 'Published');
         prop = await page.evaluate(el => el.innerHTML, node);
         expect(prop).toBe("Published On : 16th - March - 2013");
@@ -33,7 +34,7 @@ describe('Parents -> Tutorials', () => {
     });
 
     afterAll(async () => {
-         await BeforeAfterEach.afterEach();
+        await BeforeAfterEach.afterEach();
     });
 
 });

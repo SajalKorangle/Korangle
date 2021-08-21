@@ -7,7 +7,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { DataStorage } from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
 
-const MAX_URL_LENGTH = 8000;
+const MAX_URL_LENGTH = 2048;
 
 @Injectable()
 export class RestApiGateway {

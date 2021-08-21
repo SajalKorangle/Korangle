@@ -3,7 +3,8 @@ import os
 from django.utils.timezone import now
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 from school_app.model_custom_field import CustomImageField
 
@@ -66,16 +67,18 @@ class School(models.Model):
 
     principalSignatureImage = models.ImageField("Principal Signature", upload_to=upload_principal_signature_to, blank=True)
 
-    mobileNumber = models.IntegerField(null=True)
+    mobileNumber = models.BigIntegerField(null=True)
 
     expired = models.BooleanField(default=False, verbose_name='expired')
+    dateOfExpiry = models.DateField(default=None, null=True, blank=True, verbose_name='date_of_expiry')
+    dateOfCreation = models.DateField(default=None, null=True, blank=True, verbose_name='date_of_creation')
 
     primaryThemeColor = models.TextField(null=True)
     secondaryThemeColor = models.TextField(null=True)
 
     # address is now considered as street address
     address = models.TextField(null=True, blank=True)
-    pincode = models.IntegerField(null=True, verbose_name='pincode', blank=True)
+    pincode = models.BigIntegerField(null=True, verbose_name='pincode', blank=True)
     villageCity = models.TextField(null=True, verbose_name='villageCity', blank=True)
     block = models.TextField(null=True, verbose_name='block', blank=True)
     district = models.TextField(null=True, verbose_name='district', blank=True)

@@ -2,12 +2,14 @@ from django.contrib import admin, messages
 from django.contrib.admin.helpers import ActionForm
 from django import forms
 from django.utils.safestring import mark_safe
-from django.core import urlresolvers
+from django.urls import reverse
 import re
 from django.utils.translation import gettext_lazy as _
 
 from .models import Error
 from school_app.model.models import School
+
+from rangefilter.filters import DateTimeRangeFilter
 
 
 class UpdateStatusActionForm(ActionForm):
@@ -72,7 +74,7 @@ class ResponseListFilter(admin.SimpleListFilter):
 class ErrorAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'Page', 'Response', 'Name', 'School', 'MobileNumber', 'id', 'Status', 'Github_Id')
-    list_filter = ('issueStatus', ResponseListFilter, PromptListFilter)
+    list_filter = ('dateTime', ('dateTime', DateTimeRangeFilter), 'issueStatus', ResponseListFilter, PromptListFilter,)
     search_fields = ("githubId",)
 
     def title(self, obj):
@@ -150,7 +152,7 @@ class ErrorAdmin(admin.ModelAdmin):
         return [f.name for f in self.model._meta.fields]+['user_link']
 
     def user_link(self, obj):
-        change_url = urlresolvers.reverse('admin:auth_user_change', args=(obj.user.id,))
+        change_url = reverse('admin:user_app_user_change', args=(obj.user.id,))
         return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
 
 

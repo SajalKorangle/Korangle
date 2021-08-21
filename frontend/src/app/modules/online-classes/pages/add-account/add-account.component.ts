@@ -57,9 +57,24 @@ export class AddAccountComponent implements OnInit {
         this.isLoading = false;
     }
 
-    newAccountInfoSanatyCheck(): boolean {
-        if (!Object.values(this.userInput.newAccountInfo).every(v => v)) {  // check for all the fields
+    newAccountInfoSanatyCheck(meetingNumber, passcode): boolean {
+        if ((!meetingNumber) || (!passcode)) {  // check for all the fields
             alert("All fields are required");
+            return false;
+        }
+        return true;
+    }
+
+    newAccountInfoSanatyCheckURL(meetingUrl): boolean {
+        var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((meet\\.google\\.)+[a-z]{2,})' + // domain name
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*') ; // port and path
+        if (!meetingUrl) {  // check for all the fields
+            alert("All fields are required");
+            return false;
+        }
+        else if (!pattern.test(meetingUrl)) {
+            alert("URL is not valid");
             return false;
         }
         return true;

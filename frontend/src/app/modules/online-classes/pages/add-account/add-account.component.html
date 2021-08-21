@@ -26,19 +26,30 @@
 
             <mat-form-field>
                 <mat-label>Zoom Meeting Id</mat-label>
-                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber">
+                <input matInput type="number" [(ngModel)]="userInput.newAccountInfo.meetingNumber"
+                    [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.newAccountInfo.meetingUrl)">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Zoom Meeting Passcode</mat-label>
-                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode">
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.passcode"
+                    [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.newAccountInfo.meetingUrl)">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Google Meet url</mat-label>
+                <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.meetingUrl"
+                    [disabled]="htmlRenderer.isGmeetAccountDisabled(userInput.newAccountInfo.meetingNumber,userInput.newAccountInfo.passcode)">
             </mat-form-field>
 
             <br />
             <button mat-button (click)="serviceAdapter.addNewAccountInfo()"
+                [disabled]="!userInput.newAccountInfo.parentEmployee || ((!userInput.newAccountInfo.meetingNumber || !userInput.newAccountInfo.passcode) && !userInput.newAccountInfo.meetingUrl) "
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}">
                 ADD
             </button>
+            <br />
+
         </div>
     </mat-card>
 
@@ -54,6 +65,7 @@
                 <th *ngIf="hasAdminPermission()">Employee</th>
                 <th>Meeting ID</th>
                 <th>Meeting Passcode</th>
+                <th>Google Meet URL</th>
                 <th></th>
             </tr>
         </thead>
@@ -63,8 +75,9 @@
                     (click)="userInput.selectedAccountInfo=htmlRenderer.copyObject(accountInfo)">
                     <td *ngIf="hasAdminPermission()">{{backendData.getEmployeeById(accountInfo.parentEmployee).name}}
                     </td>
-                    <td>{{accountInfo.meetingNumber}}</td>
-                    <td>{{accountInfo.passcode}}</td>
+                    <td>{{accountInfo.meetingNumber?accountInfo.meetingNumber:"N/A"}}</td>
+                    <td>{{accountInfo.passcode?accountInfo.passcode:"N/A"}}</td>
+                    <td>{{accountInfo.meetingUrl?accountInfo.meetingUrl:"N/A"}}</td>
                     <td style="width: 40px;">
                         <button (click)="serviceAdapter.deleteAccountInfo(accountInfo)" mat-stroked-button>
                             <mat-icon>delete</mat-icon>
@@ -98,15 +111,24 @@
 
                         <mat-form-field>
                             <mat-label>Zoom Meeting Id</mat-label>
-                            <input matInput type="number" [(ngModel)]="userInput.selectedAccountInfo.meetingNumber">
+                            <input matInput type="number" [(ngModel)]="userInput.selectedAccountInfo.meetingNumber"
+                                [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.selectedAccountInfo.meetingUrl)">
                         </mat-form-field>
 
                         <mat-form-field>
                             <mat-label>Zoom Meeting Passcode</mat-label>
-                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.passcode">
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.passcode"
+                                [disabled]="htmlRenderer.isZoomAccountDisabled(userInput.selectedAccountInfo.meetingUrl)">
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <mat-label>Google Meeting URL</mat-label>
+                            <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.meetingUrl"
+                                [disabled]="htmlRenderer.isGmeetAccountDisabled(userInput.selectedAccountInfo.meetingNumber,userInput.selectedAccountInfo.passcode)">
                         </mat-form-field><br />
 
                         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                            [disabled]="!userInput.selectedAccountInfo.parentEmployee || ((!userInput.selectedAccountInfo.meetingNumber || !userInput.selectedAccountInfo.passcode) && !userInput.selectedAccountInfo.meetingUrl) "
                             (click)="serviceAdapter.updateAccountInfo(userInput.selectedAccountInfo)"
                             style="float: right;">Update</button>
                     </td>

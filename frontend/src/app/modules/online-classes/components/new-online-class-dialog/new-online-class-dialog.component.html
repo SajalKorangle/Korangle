@@ -1,8 +1,8 @@
 <h2 mat-dialog-title>Add Online Class</h2>
 <mat-dialog-content style="height: 65vh; width: 60vw; min-height: 300px; min-width: 280px; overflow: hidden;">
 
-    <h4>{{data.weekday}}: {{data.timespan.startTime.getDisplayString()}} -
-        {{data.timespan.endTime.getDisplayString()}}</h4>
+    <h4>{{data.weekday}}: {{data.timeSpan.startTime.getDisplayString()}} -
+        {{data.timeSpan.endTime.getDisplayString()}}</h4>
 
     <mat-form-field style="width: -webkit-fill-available">
         <mat-label>Subject</mat-label>
@@ -10,9 +10,6 @@
             <ng-container *ngFor="let classSubject of filteredClassSubject">
                 <mat-option [value]="classSubject.id" [disabled]="isOccupied(classSubject)">
                     {{data.vm.backendData.getSubjectById(classSubject.parentSubject).name}}
-                    <ng-container *ngIf="data.vm.view=='employee'">:
-                        {{data.vm.backendData.getClassById(classSubject.parentClass).name}} -
-                        {{data.vm.backendData.getDivisionById(classSubject.parentDivision).name}}</ng-container>
                 </mat-option>
             </ng-container>
         </mat-select>
@@ -22,16 +19,30 @@
     <div class="Flex-Row-Col" *ngIf="data.vm.hasAdminPermission() && getAccountInfoForSelectedSubject()"
         style="margin: 24px 0;">
         <div style="margin: 16px">
-            <div style="display: flex; flex-direction: row;">
+            <div *ngIf="getAccountInfoForSelectedSubject().meetingNumber" style="display: flex; flex-direction: row;">
                 <span>Meeting ID: {{getAccountInfoForSelectedSubject().meetingNumber}}</span>
                 <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
-                    (click)="selectText(getAccountInfoForSelectedSubject().meetingNumber)">content_copy
+                    (click)="commonFunctions.copyText(getAccountInfoForSelectedSubject().meetingNumber, data.vm.snackBar)">
+                    content_copy
                 </mat-icon>
+            </div>
+            <div *ngIf="!getAccountInfoForSelectedSubject().meetingNumber" style="display: flex; flex-direction: row;">
+                <span>Meeting ID: N/A</span>
             </div>
             <div style="display: flex; flex-direction: row;">
                 <span>Passcode: {{getAccountInfoForSelectedSubject().passcode}}</span>
-                <mat-icon style="font-size: medium; margin-left: 8px; cursor: pointer;"
-                    (click)="selectText(getAccountInfoForSelectedSubject().passcode)">content_copy
+                <mat-icon *ngIf="getAccountInfoForSelectedSubject().meetingNumber"
+                    style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                    (click)="commonFunctions.copyText(getAccountInfoForSelectedSubject().passcode, data.vm.snackBar)">
+                    content_copy
+                </mat-icon>
+            </div>
+            <div>
+                <span>Google Meet URL: {{getAccountInfoForSelectedSubject().meetingUrl}}</span>
+                <mat-icon *ngIf="!getAccountInfoForSelectedSubject().meetingNumber"
+                    style="font-size: medium; margin-left: 8px; cursor: pointer;"
+                    (click)="commonFunctions.copyText(getAccountInfoForSelectedSubject().meetingUrl, data.vm.snackBar)">
+                    content_copy
                 </mat-icon>
             </div>
         </div>

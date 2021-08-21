@@ -1,8 +1,6 @@
 # dev/testing specific config
 
 
-import os
-
 # import symbols from settings.py
 try:
     from helloworld_project.settings import BASE_DIR
@@ -27,21 +25,20 @@ command = 'git rev-parse --abbrev-ref HEAD'
 proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
 (out, err) = proc.communicate()
 current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
-if current_branch != 'master':
-    print('Branch: '+current_branch)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, current_branch+'_db.sqlite3'),
-        }
+print('Branch: '+current_branch)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': current_branch,
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+}
+
+
+# DATABASE_ROUTERS =['postgresql_migration.db_router.MainDbRouter']
 
 # S3 Bucket config
 AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
