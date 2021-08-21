@@ -115,4 +115,19 @@ export class CommonFunctions {
         navigator.clipboard.writeText(text);
         snackBar && snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
+
+    deepCopy(obj: any) {
+        if (obj == null || typeof obj !== 'object') {
+            return obj;
+        }
+        else if (Array.isArray(obj)) {
+            const clone = obj.map(el => this.deepCopy(el));
+            return clone;
+        }
+        const clone = { ...obj };
+        Object.keys(clone).forEach(key => {
+            clone[key] = this.deepCopy(clone[key]);
+        });
+        return clone;
+    }
 }
