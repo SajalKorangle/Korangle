@@ -117,7 +117,7 @@ export class CommonFunctions {
     }
 
     deepCopy(obj: any) {
-        if (obj == null || typeof obj !== 'object') {
+        if (obj == null || typeof obj != 'object') {
             return obj;
         }
         else if (Array.isArray(obj)) {
