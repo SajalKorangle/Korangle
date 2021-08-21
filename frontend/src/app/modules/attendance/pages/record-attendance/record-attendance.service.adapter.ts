@@ -1,13 +1,15 @@
-import { RecordAttendanceComponent } from './record-attendance.component';
-import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
+import {RecordAttendanceComponent} from './record-attendance.component';
+import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
+import {INFORMATION_TYPE_LIST} from '../../../../classes/constants/information-type';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
 
     informationMessageType: any;
 
-    constructor() {}
+    constructor() {
+    }
+
     // Data
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
@@ -15,7 +17,7 @@ export class RecordAttendanceServiceAdapter {
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
     }
 
-    initializeData(): void {
+    async initializeData() {
         this.vm.isInitialLoading = true;
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -55,21 +57,38 @@ export class RecordAttendanceServiceAdapter {
                 });
                 let student_section_data = {
                     parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+                    parentStudent__parentTransferCertificate: 'null__korangle',
                     parentClass__in: class_permission_list,
                     parentDivision__in: division_permission_list,
                     parentSession: this.vm.user.activeSchool.currentSessionDbId,
                 };
 
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)]).then(
-                    (secondValue) => {
+                    async (secondValue) => {
                         let student_id_list = [];
+
+                        secondValue[0].forEach((element) => {
+                            student_id_list.push(element.parentStudent);
+                        });
+
+                        let student_tc_data = {
+                            id__in: student_id_list,
+                            status: 'Generated',
+                            status__or: 'Issued'
+                        };
+                        console.log(student_id_list);
+                        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
+                        console.log(tc_generated_student_list);
+                        student_id_list = student_id_list.filter(id => {
+                            return tc_generated_student_list.find(tc => tc.parentStudent == id) == undefined;
+                        });
+                        console.log(student_id_list);
+
                         let student_data = {
                             id__in: student_id_list,
                             fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
                         };
-                        secondValue[0].forEach((element) => {
-                            student_id_list.push(element.parentStudent);
-                        });
+
                         Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then(
                             (thirdValue) => {
                                 this.initializeClassSectionStudentList(value[2], value[3], secondValue[0], thirdValue[0], value[1]);
@@ -551,7 +570,9 @@ export class RecordAttendanceServiceAdapter {
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if (this.vm.selectedSentType == this.vm.sentTypeList[2]) return 0;
+        if (this.vm.selectedSentType == this.vm.sentTypeList[2]) {
+            return 0;
+        }
         this.vm.studentList
             .filter((item) => item.mobileNumber)
             .forEach((item, i) => {
@@ -573,7 +594,9 @@ export class RecordAttendanceServiceAdapter {
 
     getEstimatedNotificationCount = () => {
         let count = 0;
-        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) return 0;
+        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {
+            return 0;
+        }
 
         count = this.vm.studentList.filter((item) => {
             return item.mobileNumber && item.notification;
