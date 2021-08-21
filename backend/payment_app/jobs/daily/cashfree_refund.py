@@ -1,30 +1,35 @@
 from django_extensions.management.jobs import DailyJob
+from django.db import transaction
+
 from payment_app.models import Order
 from payment_app.cashfree.cashfree import getOrderStatus
 
+
+
 class Job(DailyJob): # Should be run between 3am to 5am
-    help = "Cashfree Refund job."
+    help = "Cashfree Orders Updating job."
 
 
     def execute(self):
-        print('Processing pending cashfree jobs...')
+        print('Updating Orders...')
         toCheckOrderList = Order.objects.filter(status = 'Pending')
         for orderInstance in toCheckOrderList:
             try:
-                cashfreeOrder = getOrderStatus(orderInstance.orderId)
+                cashfreeOrder = getOrderStatus(orderInstance.orderId, disableAssertion=True)
                 print(cashfreeOrder)
                 if cashfreeOrder['status'] == 'ERROR' and cashfreeOrder['reason'] == 'Order Id does not exist':
                     orderInstance.status = 'Failed'
-                    orderInstance.save()
+                    orderInstance.save()   
                     continue
                 assert cashfreeOrder['orderStatus'] != "ACTIVE"
-            except: # continue in case of any bug or order is active or order is nor registered in cashfree
+            except: # continue in case of order is active or order is nor registered in cashfree or network error on our side or cashfree side
                 continue
             if(cashfreeOrder['txStatus']=='SUCCESS'):
                 orderInstance.status = 'Completed'
                 orderInstance.referenceId = cashfreeOrder['referenceId']
                 try:
-                    orderInstance.save()
+                    with transaction.atomic():
+                        orderInstance.save()
                 except:
                     orderInstance.status = 'Refund Pending'
                     orderInstance.save()
