@@ -225,7 +225,7 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
         if (
             !forceUpdate &&
             !this.isLayoutSaved() &&
-            !window.confirm('Current Layout is not saved. To save cancle and save current layout.')
+            !window.confirm('Current Layout is not saved. To save cancel and save current layout.')
         ) {
             return;
         }

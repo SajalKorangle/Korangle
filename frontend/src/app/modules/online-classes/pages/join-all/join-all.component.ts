@@ -16,7 +16,7 @@ import { SchoolService } from '@services/modules/school/school.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 
 import { Time, ParsedOnlineClass } from '@modules/online-classes/class/constants';
-import { WEEKDAYS } from '@modules/online-classes/class/constants';
+import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME } from '@modules/online-classes/class/constants';
 import { isMobile, openUrlInChrome, openUrlInBrowser } from '@classes/common.js';
 import { Constants } from 'app/classes/constants';
 import { environment } from 'environments/environment';
@@ -42,9 +42,9 @@ export class JoinAllComponent implements OnInit {
     employeeList: Array<any>;
 
 
-    weekdays = WEEKDAYS;
+    weekdays = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
-    today: string = Object.values(WEEKDAYS)[new Date().getDay()];
+    today: string = Object.values(WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME)[new Date().getDay()];
     currentTime: Date = new Date();
 
     user: any;

@@ -42,6 +42,9 @@ feesTotalCollection.inPagePermissionMappedByKey['numberOfDays'] = new InPagePerm
 // Online Classes
 import '@modules/online-classes/pages/add-account/add-account.permissions';
 
+// Tutorial
+import '@modules/tutorials/pages/add-tutorial/add-tutorial.permissions';
+
 // Homework
 import '@modules/homework/pages/issue-homework/issue-homework.permissions';
 
