@@ -117,14 +117,17 @@ export class CommonFunctions {
     }
 
     deepCopy(obj: any) {
+        let clone;
         if (obj == null || typeof obj != 'object') {
             return obj;
         }
-        else if (Array.isArray(obj)) {
-            const clone = obj.map(el => this.deepCopy(el));
-            return clone;
+        else if (obj instanceof Date) {
+            clone = new Date(obj);
         }
-        const clone = { ...obj };
+        else if (Array.isArray(obj)) {
+            clone = obj.map(el => this.deepCopy(el));
+        }
+        clone = Object.create(obj);
         Object.keys(clone).forEach(key => {
             clone[key] = this.deepCopy(clone[key]);
         });
