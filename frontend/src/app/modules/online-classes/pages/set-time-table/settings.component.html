@@ -1,5 +1,5 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
-    <div>
+    <div class="row">
         <ng-container *ngIf="userInput.view=='class' else EmployeeFilter">
             <mat-form-field style="margin-right: 20px;">
                 <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
@@ -20,33 +20,38 @@
             </mat-form-field>
         </ng-container>
 
-        <mat-form-field style="float: right">
-            <mat-label>
-                View
-            </mat-label>
-            <mat-select [(ngModel)]="userInput.view" (ngModelChange)="initializeTimeTable(); userInput.resetInput();">
-                <mat-option value="class">Class & Section</mat-option>
-                <mat-option value="employee">Employee</mat-option>
-            </mat-select>
-        </mat-form-field>
-
+        <div class="col-md-6" style="text-align: right;">
+            <mat-form-field>
+                <mat-label>
+                    View
+                </mat-label>
+                <mat-select [(ngModel)]="userInput.view"
+                    (ngModelChange)="initializeTimeTable(); userInput.resetInput();">
+                    <mat-option value="class">Class & Section</mat-option>
+                    <mat-option value="employee">Employee</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
 
 
     <ng-container *ngIf="userInput.view=='class' && userInput.selectedClass && userInput.selectedSection">
 
-        <div>
-            <h4 style="display: inline-block;">{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
-                userInput.selectedSection.id)}}</h4>
-            <div style="float: right;">
+        <div class="row">
+            <div class="col-md-4">
+                <h4 style="display: inline-block;">{{htmlRenderer.getClassDivisionName(userInput.selectedClass.id,
+                    userInput.selectedSection.id)}}</h4>
+            </div>
+            <div class="col-md-8" style="text-align: right;">
                 <button style="margin: 0 6px;" mat-stroked-button (click)="initializeTimeTable()">Reset Changes</button>
                 <button style="margin: 0 6px;" mat-stroked-button
                     (click)="userInput.filteredOnlineClassList.splice(0, userInput.filteredOnlineClassList.length)">Delete
                     All</button>
             </div>
         </div>
+
         <div style="overflow: auto;">
-            <table class="mat-elevation-z8 table table-hover">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th></th>
@@ -170,7 +175,6 @@
                                     *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                     <td style="position: relative; min-width: 100px;"
                                         [class.overlapping-danger]="htmlRenderer.onlineClassHasOverlappingError(onlineClass)"
-                                        [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                         [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                         [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
                                         [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
