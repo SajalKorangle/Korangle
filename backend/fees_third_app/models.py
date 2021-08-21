@@ -1,4 +1,6 @@
+from re import split
 from django.db import models, transaction
+from django.db.models.expressions import RawSQL
 from rest_framework.serializers import ModelSerializer
 
 from school_app.model.models import School, Session, BusStop
@@ -600,7 +602,7 @@ from accounts_app.views import TransactionAccountDetailsView
 
 @receiver(pre_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
-    if not instance._state.adding and instance.status == 'Completed':
+    if (not instance._state.adding) and instance.status == 'Completed':
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
         if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
 
@@ -668,3 +670,31 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                         subFeeReceipt['parentFeeReceipt'] = newFeeReceipt.id
                     create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
 
+
+from payment_app.models import OnlinePaymentAccount
+from payment_app.cashfree.cashfree import initiateRefund
+
+@receiver(post_save, sender=Order)
+def OrderCompletionHandler(sender, instance, **kwargs):
+    if (not kwargs['created']) and instance.status == 'Refund Pending':
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
+        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Refund Pending'
+
+            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder = preSavedOrder)
+            if len(onlinePaymentTransactionList) == 0: # Order is made for some other purpose
+                return
+
+            onlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
+            splitDetails = [
+                {
+                    "merchantVendorId": onlinePaymentAccount.vendorId,
+                    "amount": instance.amount,
+                }
+            ]
+
+            refundApiResponse = initiateRefund(instance.orderId, splitDetails)
+            if refundApiResponse['status'] == 'SUCCESS':
+                instance.status = 'Refund Pending'
+                instance.save()
+
+            

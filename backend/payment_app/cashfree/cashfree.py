@@ -65,12 +65,16 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
         )
         ).decode('utf-8')
 
-    orderData = {
-        'appId': CASHFREE_APP_ID,
-        'orderId': str(orderId),
-        'paymentSplits': paymentSplitEncoded,
-    }
+    orderData = {}
     orderData.update(data)
+    orderData.update(
+        {
+            'appId': CASHFREE_APP_ID,
+            'orderId': str(orderId),
+            'paymentSplits': paymentSplitEncoded,
+            'orderAmount': data['orderAmount']*1.005,
+        }
+    )
 
     orderData.update({
         'signature': getSignature(orderData)
@@ -91,6 +95,26 @@ def createAndSignSelfCashfreeOrder(data, orderId):
     })
     return orderData
 
+
+def getOrderDetails(orderId):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    orderData = {
+        'appId': CASHFREE_APP_ID,
+        'secretKey': CASHFREE_SECRET_KEY,
+        'orderId': str(orderId),
+    }
+
+    response = requests.post(
+        url=base_url+'/api/v1/order/info', 
+        data=orderData,
+        headers=headers
+        )
+        
+    assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json())
+    return response.json()
 
 def getOrderStatus(orderId):
     headers = {
@@ -123,26 +147,33 @@ def getOrderStatus(orderId):
 #         pass
 #     return result
 
-# def initiateRefund(orderId, amount):
-#     orderStatusData = getOrderStatus(orderId)
+def initiateRefund(orderId, splitData):
+    orderStatusData = getOrderStatus(orderId)
+    orderDetails = getOrderDetails(orderId)
 
-#     headers = {
-#         'Content-Type': 'application/x-www-form-urlencoded'
-#         }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-#     orderData = {
-#         'appId': CASHFREE_APP_ID,
-#         'secretKey': CASHFREE_SECRET_KEY,
-#         'referenceId': orderStatusData['referenceId'],
-#         'refundAmount': str(amount) ,
-#         'refundNote': 'refund towards school fee payment'
-#     }
+    orderData = {
+        'appId': CASHFREE_APP_ID,
+        'secretKey': CASHFREE_SECRET_KEY,
+        'referenceId': orderStatusData['referenceId'],
+        'refundAmount': str(orderDetails['orderAmount']) ,
+        'refundNote': 'refund towards school fee payment',
+    }
 
-#     response = requests.post(
-#         url=base_url+'/api/v1/order/refund', 
-#         data=orderData,
-#         headers=headers
-#         )
+    if(len(splitData)>0):
+        orderData.update({
+            'isSplit': True,
+            'splitDetails': splitData
+        })
+
+    response = requests.post(
+        url=base_url+'/api/v1/order/refund', 
+        data=orderData,
+        headers=headers
+        )
 
 
 def addVendor(newVendorData, vendorId):
