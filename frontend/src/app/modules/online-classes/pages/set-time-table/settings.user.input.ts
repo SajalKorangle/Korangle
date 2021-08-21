@@ -63,7 +63,7 @@ export class SettingsUserInput {
                 }
             });
         });
-        this._filteredOnlineClassList = onlineClassListValue;
+        this._filteredOnlineClassList = this.vm.commonFunctions.deepCopy(onlineClassListValue);
         const timeSpanList: Array<TimeSpan> = [];
         if (this.view == 'class') {
             onlineClassListValue.forEach(onlineClass => {
