@@ -5,12 +5,13 @@ import json
 import requests
 import time
 
-
 from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url
 
 bank_verification_base_url = 'https://payout-gamma.cashfree.com'
 
-def getResponseSignature(postData):
+KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 0.5
+
+def getResponseSignature(postData): # used for validating that a response indeed came from cashfree
     signatureData = postData["orderId"] + postData["orderAmount"] + postData["referenceId"] + postData["txStatus"] + postData["paymentMode"] + postData["txMsg"] + postData["txTime"]
     message = signatureData.encode('utf-8')
 
@@ -20,25 +21,26 @@ def getResponseSignature(postData):
         )
     return signature
 
-def verifyCredentials():
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
+# def verifyCredentials(): 
+#     headers = {
+#         'Content-Type': 'application/x-www-form-urlencoded'
+#     }
 
-    data = {
-        'appId': CASHFREE_APP_ID,
-        'secretKey': CASHFREE_SECRET_KEY
-    }
+#     data = {
+#         'appId': CASHFREE_APP_ID,
+#         'secretKey': CASHFREE_SECRET_KEY
+#     }
 
-    response = requests.post(
-        url=base_url+'/api/v1/credentials/verify',
-        headers = headers,
-        data=data
-    )
+#     response = requests.post(
+#         url=base_url+'/api/v1/credentials/verify',
+#         headers = headers,
+#         data=data
+#     )
 
-    assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
+#     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
-def getSignature(orderData):
+
+def getSignature(orderData): # used to authenticate that the data is a valid data comming from korangle
     sortedKeys = sorted(orderData)
     signatureData = ""
     for key in sortedKeys:
@@ -49,6 +51,7 @@ def getSignature(orderData):
     secret = CASHFREE_SECRET_KEY.encode('utf-8')
     signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
     return signature.decode('utf-8')
+
 
 def createAndSignCashfreeOrder(data, orderId, vendorId):
 
@@ -72,7 +75,7 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': data['orderAmount']*1.005,
+            'orderAmount': data['orderAmount']*(1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE/100),
         }
     )
 
@@ -84,11 +87,12 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
 
 def createAndSignSelfCashfreeOrder(data, orderId):
 
-    orderData = {
+    orderData = {}
+    orderData.update(data)
+    orderData.update({
         'appId': CASHFREE_APP_ID,
         'orderId': str(orderId),
-    }
-    orderData.update(data)
+    })
 
     orderData.update({
         'signature': getSignature(orderData)
@@ -116,7 +120,7 @@ def getOrderDetails(orderId):
     assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json())
     return response.json()
 
-def getOrderStatus(orderId):
+def getOrderStatus(orderId, disableAssertion=False):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -132,8 +136,10 @@ def getOrderStatus(orderId):
         data=orderData,
         headers=headers
         )
-        
-    assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json())
+
+    if(not disableAssertion): 
+        assert response.json()['status'] == 'OK', 'Cashfree Order Status Check Failed, response : {0}'.format(response.json()) 
+
     return response.json()
 
 
@@ -175,6 +181,9 @@ def initiateRefund(orderId, splitData):
         headers=headers
         )
 
+    assert response.json()['status'] == 'OK', 'Cashfree Refund Initiation Failed, response : {0}'.format(response.json()) 
+    return response.json()
+
 
 def addVendor(newVendorData, vendorId):
     newVendorData.update({
@@ -182,7 +191,7 @@ def addVendor(newVendorData, vendorId):
         'id': vendorId,
     })
 
-    #Remove special characters from name
+    #Remove special characters and numbers from name (not allowed in cashfree)
     newVendorData['name'] = ''.join(ch for ch in newVendorData['name'] if ch.isalnum() and not ch.isnumeric())
     
     headers = {
@@ -208,6 +217,8 @@ def updateVendor(vendorData):
     for field in applicableFields:
         if(field in vendorData):
             toUpdateVendorData[field] = vendorData[field]
+
+    toUpdateVendorData['name'] = ''.join(ch for ch in toUpdateVendorData['name'] if ch.isalnum() and not ch.isnumeric())
 
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
@@ -251,6 +262,7 @@ def getSettelmentsCycleList():
         url=base_url+ '/api/v2/easy-split/vendors/settlement-cycles',
         headers=headers,
         )
+        
     assert response.json()['status'] == 'OK'
 
     return response.json()['settlementCycles']
