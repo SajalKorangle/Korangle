@@ -2,7 +2,7 @@ from django_extensions.management.jobs import DailyJob
 from django.db import transaction
 
 from payment_app.models import Order
-from payment_app.cashfree.cashfree import getOrderStatus
+from payment_app.cashfree.cashfree import getOrderStatus, getRefundStatus
 
 
 
@@ -12,6 +12,19 @@ class Job(DailyJob): # Should be run between 3am to 5am
 
     def execute(self):
         print('Updating Orders...')
+
+        # Refund Status Check
+        toCheckOrderList = Order.objects.filter(status = 'Refund Initiated')
+        for orderInstance in toCheckOrderList:
+            try:
+                refundStatus = getRefundStatus(orderInstance.refundId)['refund'][0]
+                if refundStatus['processed'] == 'YES':
+                    orderInstance.status = 'Refunded'
+                    orderInstance.save()
+            except:
+                continue
+
+        # Order completion check
         toCheckOrderList = Order.objects.filter(status = 'Pending')
         for orderInstance in toCheckOrderList:
             try:

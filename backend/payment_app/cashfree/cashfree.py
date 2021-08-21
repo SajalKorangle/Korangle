@@ -180,9 +180,32 @@ def initiateRefund(orderId, splitData):
         data=orderData,
         headers=headers
         )
-
+    
     assert response.json()['status'] == 'OK', 'Cashfree Refund Initiation Failed, response : {0}'.format(response.json()) 
     return response.json()
+
+def getRefundStatus(refundId, disableAssertion=False):
+
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+    refundData = {
+        'appId': CASHFREE_APP_ID,
+        'secretKey': CASHFREE_SECRET_KEY,
+        'refundId': str(refundId),
+    }
+
+    response = requests.post(
+        url=base_url+'/api/v1/refundStatus', 
+        data=refundData,
+        headers=headers
+        )
+
+    if(not disableAssertion): 
+        assert response.json()['status'] == 'OK', 'Cashfree Refund Fetch Failed, response : {0}'.format(response.json()) 
+    return response.json()
+
 
 
 def addVendor(newVendorData, vendorId):
@@ -251,7 +274,7 @@ def getVendor(vendorId):
 
 
 
-def getSettelmentsCycleList():
+def getSettlementsCycleList():
     headers = {
         'x-client-id': CASHFREE_APP_ID, 
         'x-client-secret': CASHFREE_SECRET_KEY,

@@ -681,10 +681,10 @@ from payment_app.cashfree.cashfree import initiateRefund
 def OrderCompletionHandler(sender, instance, **kwargs):
     if (not kwargs['created']) and instance.status == 'Refund Pending':
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
-        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Refund Pending'
+        if preSavedOrder.status == 'Pending': # if status changed from 'Pending' to 'Refund Pending'
 
             onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder = preSavedOrder)
-            if len(onlinePaymentTransactionList) == 0: # Order is made for some other purpose
+            if len(onlinePaymentTransactionList) == 0: # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
                 return
 
             onlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
@@ -695,9 +695,9 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                 }
             ]
 
-            refundApiResponse = initiateRefund(instance.orderId, splitDetails)
-            if refundApiResponse['status'] == 'SUCCESS':
-                instance.status = 'Refund Pending'
-                instance.save()
+            response = initiateRefund(instance.orderId, splitDetails)
+            instance.status = 'Refund Initiated'
+            instance.refundId = response['refundId']
+            instance.save()
 
             

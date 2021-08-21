@@ -1,12 +1,12 @@
 from common.common_views_3 import APIView
 from decorators import user_permission_3
-from .cashfree import getSettelmentsCycleList, ifscVerification, bankVerification
+from .cashfree import getSettlementsCycleList, ifscVerification, bankVerification
 
-class SettelmentsCycleListView(APIView):
+class SettlementsCycleListView(APIView):
 
     @user_permission_3
     def get(self, request, *args, **kwargs):
-        return getSettelmentsCycleList()   
+        return getSettlementsCycleList()   
 
 
 class IFSCVerification(APIView):
