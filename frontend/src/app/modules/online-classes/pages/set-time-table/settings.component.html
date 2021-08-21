@@ -1,23 +1,25 @@
 <div class="card-content" *ngIf="!isLoading else MainLoader">
     <div class="row">
         <ng-container *ngIf="userInput.view=='class' else EmployeeFilter">
-            <mat-form-field style="margin-right: 20px;">
-                <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
-                    (ngModelChange)="initializeTimeTable(); htmlRenderer.colorPaletteHandle.reset()">
-                    <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
-                        {{ classs.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="col-md-6">
+                <mat-form-field style="margin-right: 20px;">
+                    <mat-select placeholder="Select Class" [(ngModel)]="userInput.selectedClass"
+                        (ngModelChange)="initializeTimeTable(); htmlRenderer.colorPaletteHandle.reset();">
+                        <mat-option *ngFor="let classs of backendData.classList" [value]="classs">
+                            {{ classs.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 
-            <mat-form-field style="margin-right: 20px;">
-                <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
-                    (ngModelChange)="initializeTimeTable(); htmlRenderer.colorPaletteHandle.reset()">
-                    <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
-                        {{ division.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+                <mat-form-field style="margin-right: 20px;">
+                    <mat-select placeholder="Select Section" [(ngModel)]="userInput.selectedSection"
+                        (ngModelChange)="initializeTimeTable(); htmlRenderer.colorPaletteHandle.reset();">
+                        <mat-option *ngFor="let division of backendData.divisionList" [value]="division">
+                            {{ division.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </ng-container>
 
         <div class="col-md-6" style="text-align: right;">
@@ -265,13 +267,15 @@
 </ng-template>
 
 <ng-template #EmployeeFilter>
-    <mat-form-field>
-        <mat-label>Select Employee</mat-label>
-        <mat-select [(ngModel)]="userInput.selectedEmployee"
-            (ngModelChange)="initializeTimeTable(); htmlRenderer.colorPaletteHandle.reset()">
-            <ng-container *ngFor="let employee of backendData.employeeList">
-                <mat-option [value]="employee">{{employee.name}}</mat-option>
-            </ng-container>
-        </mat-select>
-    </mat-form-field>
+    <div class="col-md-6">
+        <mat-form-field>
+            <mat-label>Select Employee</mat-label>
+            <mat-select [(ngModel)]="userInput.selectedEmployee"
+                (ngModelChange)="initializeTimeTable(); htmlRenderer.colorPaletteHandle.reset();">
+                <ng-container *ngFor="let employee of backendData.employeeList">
+                    <mat-option [value]="employee">{{employee.name}}</mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+    </div>
 </ng-template>
