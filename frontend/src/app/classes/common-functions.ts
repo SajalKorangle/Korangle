@@ -127,10 +127,12 @@ export class CommonFunctions {
         else if (Array.isArray(obj)) {
             clone = obj.map(el => this.deepCopy(el));
         }
-        clone = Object.create(obj);
-        Object.keys(clone).forEach(key => {
-            clone[key] = this.deepCopy(clone[key]);
-        });
+        else {
+            clone = Object.create(obj);
+            Object.keys(clone).forEach(key => {
+                clone[key] = this.deepCopy(clone[key]);
+            });
+        }
         return clone;
     }
 }
