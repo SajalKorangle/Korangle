@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order
+from .models import Order, OnlinePaymentAccount
 
 
 class OrderAdminTabular(admin.ModelAdmin):
@@ -8,3 +8,4 @@ class OrderAdminTabular(admin.ModelAdmin):
     list_filter = ('status', 'dateTime')
 
 admin.site.register(Order, OrderAdminTabular)
+admin.site.register(OnlinePaymentAccount)
