@@ -3,15 +3,23 @@ from django.db import transaction
 
 from payment_app.models import Order
 from payment_app.cashfree.cashfree import getOrderStatus, getRefundStatus
-
-
+from payment_app.models import DailyJobsReport
+import time
+import random
 
 class Job(DailyJob): # Should be run between 3am to 5am
     help = "Cashfree Orders Updating job."
 
-
     def execute(self):
         print('Updating Orders...')
+        waitTime = random.randint(1,5)
+        print('Waiting for {0}s'.format(waitTime))
+        time.sleep(waitTime)
+        try:
+            dailyJobsReport = DailyJobsReport.objects.create()
+        except:
+            print('Executing Failed')
+            return
 
         # Refund Status Check
         toCheckOrderList = Order.objects.filter(status = 'Refund Initiated')
@@ -49,4 +57,6 @@ class Job(DailyJob): # Should be run between 3am to 5am
             else: 
                 orderInstance.status = 'Failed'
                 orderInstance.save()
-        pass
+        
+        dailyJobsReport.status = 'SUCCESS'
+        dailyJobsReport.save()

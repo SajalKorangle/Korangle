@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import DateField
 from school_app.model.models import School
 from django.utils.timezone import make_aware, make_naive
 
@@ -30,3 +31,17 @@ class Order(models.Model):
 
     def __str__(self):
         return self.status+ ' | ' + self.orderId + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
+
+
+class DailyJobsReport(models.Model):
+
+    STATUS_CHOICES = (
+        ('INITIATED', 'INITIATED'),
+        ('SUCCESS', 'SUCCESS'),
+    )
+
+    date = DateField(auto_now_add=True, unique=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='INITIATED', blank=True)
+
+    def __str__(self):
+        return '{0} : {1}'.format(self.date.strftime("%d-%m-%Y"), self.status)
