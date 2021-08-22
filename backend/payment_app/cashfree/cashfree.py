@@ -75,7 +75,7 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': data['orderAmount']*(1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE/100),
+            'orderAmount': round(data['orderAmount']*(1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE/100), 2),
         }
     )
 
