@@ -50,7 +50,6 @@
                                     <ng-container
                                         *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
                                         <td style="position: relative; min-width: 100px;"
-                                            [matTooltip]="onlineClass.startTimeJSON.getDisplayString() + ' - ' + onlineClass.endTimeJSON.getDisplayString()"
                                             [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
                                             [class.overlapping-danger]="htmlRenderer.onlineClassListHasOverlappingError(onlineClass)"
                                             [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
