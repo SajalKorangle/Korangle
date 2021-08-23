@@ -28,7 +28,7 @@ export class RecordAttendanceServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        Promise.all([
+        const value = await Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //0
@@ -39,69 +39,52 @@ export class RecordAttendanceServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //4
-        ]).then(
-            (value) => {
-                this.vm.smsBalance = value[4];
-                if (value[0].length > 0) {
-                    this.vm.selectedSentType = value[0][0].sentUpdateType;
-                    this.vm.selectedReceiver = value[0][0].receiverType;
-                } else {
-                    this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
-                    this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
-                }
-                let class_permission_list = [];
-                let division_permission_list = [];
-                value[1].forEach((element) => {
-                    class_permission_list.push(element.parentClass);
-                    division_permission_list.push(element.parentDivision);
-                });
-                let student_section_data = {
-                    parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-                    parentStudent__parentTransferCertificate: 'null__korangle',
-                    parentClass__in: class_permission_list,
-                    parentDivision__in: division_permission_list,
-                    parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                };
+        ]);
 
-                Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)]).then(
-                    async (secondValue) => {
-                        let student_id_list = [];
+        this.vm.smsBalance = value[4];
+        if (value[0].length > 0) {
+            this.vm.selectedSentType = value[0][0].sentUpdateType;
+            this.vm.selectedReceiver = value[0][0].receiverType;
+        } else {
+            this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
+            this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
+        }
+        let class_permission_list = [];
+        let division_permission_list = [];
+        value[1].forEach((element) => {
+            class_permission_list.push(element.parentClass);
+            division_permission_list.push(element.parentDivision);
+        });
+        let student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentClass__in: class_permission_list,
+            parentDivision__in: division_permission_list,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
 
-                        secondValue[0].forEach((element) => {
-                            student_id_list.push(element.parentStudent);
-                        });
+        let studentSectionList = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data);
+        let student_tc_data = {
+            parentStudent__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status__in: ['Generated', 'Issued'].join(','),
+            fields__korangle: 'id,parentStudent,status'
+        };
 
-                        let student_tc_data = {
-                            id__in: student_id_list,
-                            status: 'Generated',
-                            status__or: 'Issued'
-                        };
-                        console.log(student_id_list);
-                        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
-                        console.log(tc_generated_student_list);
-                        student_id_list = student_id_list.filter(id => {
-                            return tc_generated_student_list.find(tc => tc.parentStudent == id) == undefined;
-                        });
-                        console.log(student_id_list);
+        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
+        studentSectionList = studentSectionList.filter(student_section => {
+            return tc_generated_student_list.find(tc => tc.parentStudent == student_section.parentStudent) == undefined;
+        });
 
-                        let student_data = {
-                            id__in: student_id_list,
-                            fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
-                        };
+        let student_data = {
+            id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
+            fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
+        };
 
-                        Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then(
-                            (thirdValue) => {
-                                this.initializeClassSectionStudentList(value[2], value[3], secondValue[0], thirdValue[0], value[1]);
-                                this.vm.isInitialLoading = false;
-                            }
-                        );
-                    }
-                );
-            },
-            (error) => {
-                this.vm.isInitialLoading = false;
-            }
-        );
+        const studentDataList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
+        this.initializeClassSectionStudentList(value[2], value[3], studentSectionList, studentDataList, value[1]);
+        this.vm.isInitialLoading = false;
+
     }
 
     initializeClassSectionStudentList(
@@ -112,71 +95,32 @@ export class RecordAttendanceServiceAdapter {
         attendancePermissionList: any
     ): any {
         this.vm.classSectionStudentList = [];
-        studentList.forEach((student) => {
-            if (this.vm.classSectionInPermissionList(student.parentClass, student.parentDivision, attendancePermissionList)) {
-                let classIndex = -1;
-                let tempIndex = 0;
-                this.vm.classSectionStudentList.forEach((classs) => {
-                    if (classs.dbId == student.parentClass) {
-                        classIndex = tempIndex;
-                        return;
-                    }
-                    tempIndex = tempIndex + 1;
-                });
-                if (classIndex === -1) {
-                    let classs = classList.find((classs) => classs.id === student.parentClass);
-                    let tempClass = {
-                        name: classs.name,
-                        dbId: classs.id,
-                        sectionList: [],
-                    };
-                    this.vm.classSectionStudentList.push(tempClass);
-                    let tempIndex = 0;
-                    this.vm.classSectionStudentList.forEach((classs) => {
-                        if (classs.dbId == student.parentClass) {
-                            classIndex = tempIndex;
-                            return;
-                        }
-                        tempIndex = tempIndex + 1;
-                    });
-                }
-                let divisionIndex = -1;
-                tempIndex = 0;
-                this.vm.classSectionStudentList[classIndex].sectionList.forEach((division) => {
-                    if (division.dbId == student.parentDivision) {
-                        divisionIndex = tempIndex;
-                        return;
-                    }
-                    tempIndex = tempIndex + 1;
-                });
 
-                if (divisionIndex === -1) {
-                    let division = divisionList.find((division) => division.id === student.parentDivision);
-                    let tempDivision = {
-                        name: division.name,
-                        dbId: division.id,
-                        studentList: [],
-                    };
-                    this.vm.classSectionStudentList[classIndex].sectionList.push(tempDivision);
-                    tempIndex = 0;
-                    this.vm.classSectionStudentList[classIndex].sectionList.forEach((division) => {
-                        if (division.dbId == student.parentDivision) {
-                            divisionIndex = tempIndex;
-                            return;
-                        }
-                        tempIndex = tempIndex + 1;
-                    });
-                }
-                let studentDetails = studentDetailsList.find((studentDetails) => studentDetails.id == student.parentStudent);
-                let tempData = {
-                    name: studentDetails.name,
-                    dbId: studentDetails.id,
-                    scholarNumber: studentDetails.scholarNumber,
-                    mobileNumber: studentDetails.mobileNumber,
-                };
-                this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
+        attendancePermissionList.forEach(perm => {
+            let classs = classList.find(cl => cl.id == perm.parentClass);
+            let tempClass = {
+                name: classs.name,
+                dbId: classs.id,
+                sectionList: [],
+            };
+            let division = divisionList.find(div => div.id == perm.parentDivision);
+            let permittedStudentList = studentList.filter(studentSec => studentSec.parentClass == perm.parentClass &&
+                perm.parentDivision == studentSec.parentDivision).map(stud => studentDetailsList.find(student => stud.parentStudent == student.id));
+            permittedStudentList.forEach(st => st["dbId"] = st.id);
+            let tempDivision = {
+                name: division.name,
+                dbId: division.id,
+                studentList: permittedStudentList,
+            };
+            let alreadyPresentClass = this.vm.classSectionStudentList.find(c => c.dbId == tempClass.dbId);
+            if (alreadyPresentClass) {
+                alreadyPresentClass.sectionList.push(tempDivision);
+            } else {
+                tempClass.sectionList.push(tempDivision);
+                this.vm.classSectionStudentList.push(tempClass);
             }
         });
+
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
                 section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));

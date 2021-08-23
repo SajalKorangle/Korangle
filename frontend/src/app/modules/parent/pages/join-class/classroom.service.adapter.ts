@@ -13,6 +13,34 @@ export class ClassroomServiceAdapter {
 
     async initializeData() {
         this.vm.isLoading = true;
+        console.log(this.vm.user.section.student);
+
+        let student_data = {
+            id: this.vm.user.section.student.id,
+            'fields__korangle': 'id,parentTransferCertificate'
+        };
+
+        const studentData = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
+
+        if (studentData[0].parentTransferCertificate != null) {
+            this.vm.isLoading = false;
+            this.vm.studentIsPermitted = false;
+            return;
+        }
+
+        let tc_data = {
+            parentStudent: this.vm.user.section.student.id,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status__in: ['Generated', 'Issued'].join(','),
+            fields__korangle: 'id,parentStudent,status'
+        };
+
+        const studentTcData = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data);
+        if (studentTcData[0]) {
+            this.vm.isLoading = false;
+            this.vm.studentIsPermitted = false;
+            return;
+        }
 
         const student_section_request = {
             parentStudent: this.vm.activeStudent.id,

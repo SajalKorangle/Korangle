@@ -57,8 +57,10 @@
     <div class="row" *ngIf="selectedClass">
         <div class="col-md-12" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px"></div>
     </div>
+    
+    <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList && studentAttendanceStatusList.length == 0"> No Students in the selected Section </ng-container>
 
-    <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
+    <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList && studentAttendanceStatusList.length > 0">
         <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllPresent()">All Present</button>
 
         <table class="table table-hover">

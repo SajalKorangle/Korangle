@@ -13,12 +13,13 @@ import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 
 import { CdkDragDrop, moveItemInArray, CdkDragEnter } from '@angular/cdk/drag-drop';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'view-homework',
     templateUrl: './view-homework.component.html',
     styleUrls: ['./view-homework.component.css'],
-    providers: [OnlineClassService, HomeworkService, SubjectService, StudentService],
+    providers: [OnlineClassService, HomeworkService, SubjectService, StudentService, TCService],
 })
 export class ViewHomeworkComponent implements OnInit, OnChanges {
     user;
@@ -48,6 +49,8 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
     completedHomeworkList: any;
     homeworkOpen: any;
 
+    studentIsPermitted = true;
+
     isHomeworkLoading: any;
     currentHomeworkImages: any;
     currentHomeworkAnswerImages: any;
@@ -58,6 +61,7 @@ export class ViewHomeworkComponent implements OnInit, OnChanges {
         public onlineClassService: OnlineClassService,
         public subjectService: SubjectService,
         public studentService: StudentService,
+        public tcService: TCService,
         public dialog: MatDialog
     ) {}
 

@@ -7,11 +7,12 @@ import { SubjectService } from '@services/modules/subject/subject.service';
 import { StudentService } from '@services/modules/student/student.service';
 import {ViewTutorialsHtmlRenderer} from '@modules/parent/pages/view-tutorials/view-tutorials.html.renderer';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
+import {TCService} from '@services/modules/tc/tc.service';
 @Component({
     selector: 'app-view-tutorials',
     templateUrl: './view-tutorials.component.html',
     styleUrls: ['./view-tutorials.component.css'],
-    providers: [OnlineClassService, SubjectService, ClassService, StudentService, TutorialsService],
+    providers: [OnlineClassService, SubjectService, ClassService, StudentService, TutorialsService, TCService],
 })
 export class ViewTutorialsComponent implements OnInit {
 
@@ -25,6 +26,7 @@ export class ViewTutorialsComponent implements OnInit {
     filteredStudentSubject = [];
 
     restrictedStudent = null;
+    studentIsPermitted = true;
 
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
@@ -55,7 +57,8 @@ export class ViewTutorialsComponent implements OnInit {
         public subjectService: SubjectService,
         public classService: ClassService,
         public studentService: StudentService,
-        public tutorialService: TutorialsService
+        public tutorialService: TutorialsService,
+        public tcService: TCService
     ) {}
 
     ngOnInit() {

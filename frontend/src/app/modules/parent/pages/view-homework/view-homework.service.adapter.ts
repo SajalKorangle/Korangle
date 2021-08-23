@@ -16,7 +16,7 @@ export class ViewHomeworkServiceAdapter {
     completedHomeworksIdList = [];
     count = 0;
     //initialize data
-    initializeData(): void {
+    async initializeData() {
         this.classSubjectList = [];
         this.subjectList = [];
         this.vm.isSessionLoading = true;
@@ -32,6 +32,30 @@ export class ViewHomeworkServiceAdapter {
         this.vm.subjectList.push(all_subject);
 
         this.vm.selectedStudent = this.vm.user.section.student.id;
+        let student_data = {
+            id: this.vm.selectedStudent,
+            fields__korangle: 'id,parentTransferCertificate'
+        };
+        const studentData = await this.vm.studentService.getObject(this.vm.studentService.student, student_data);
+        if (studentData.parentTransferCertificate != null) {
+            this.vm.isSessionLoading = false;
+            this.vm.studentIsPermitted = false;
+            return;
+        }
+
+        let tc_data = {
+            parentStudent: this.vm.selectedStudent,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status__in: ['Generated', 'Issued'].join(','),
+            fields__korangle: 'id,parentStudent,status'
+        };
+
+        const studentTcData = await this.vm.tcService.getObject(this.vm.tcService.transfer_certificate, tc_data);
+        if (studentTcData) {
+            this.vm.isSessionLoading = false;
+            this.vm.studentIsPermitted = false;
+            return;
+        }
 
         let student_subject_data = {
             parentStudent: this.vm.selectedStudent,
