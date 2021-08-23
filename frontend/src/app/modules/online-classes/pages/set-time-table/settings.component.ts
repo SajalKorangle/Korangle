@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataStorage } from "@classes/data-storage";
 
@@ -15,7 +16,9 @@ import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { WEEKDAYS, Time } from '@modules/online-classes/class/constants';
+import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME } from '@modules/online-classes/class/constants';
+
+import { CommonFunctions } from '@classes/common-functions';
 
 
 @Component({
@@ -35,19 +38,21 @@ export class SettingsComponent implements OnInit {
 
     user: any;
 
-    weekdays = WEEKDAYS;
+    commonFunctions = CommonFunctions.getInstance();
+
+    weekdayKeysMappedByDisplayName = WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME;
 
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer: SettingsHtmlRenderer;
     userInput: SettingsUserInput;
     backendData: SettingsBackendData;
 
-    view: 'class' | 'employee' = 'class';
 
     isLoading: boolean;
 
     constructor(
         public dialog: MatDialog,
+        public snackBar: MatSnackBar,
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public employeeService: EmployeeService,
@@ -69,18 +74,7 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
-        console.log("this: ", this);
-    }
-
-    parseBacknedData() {
-        this.backendData.onlineClassList.forEach(onlineClass => {
-            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
-            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
-        });
-    }
-
-    getObjetKeys(obj: { [key: string]: any; }): Array<string> {
-        return Object.keys(obj);
+        // console.log("this: ", this);
     }
 
     hasAdminPermission() {
@@ -88,6 +82,38 @@ export class SettingsComponent implements OnInit {
             return false;
         }
         return true;
+    }
+
+    initializeTimeTable() {
+        this.userInput.editTimeSpanFormIndex = -1;    // reset display for new time table
+        this.userInput.newTimeSpanForm = false;
+        this.htmlRenderer.colorPaletteHandle.reset();
+        this.userInput.filteredOnlineClassList = [];
+
+        if (this.userInput.view == 'class') {
+            if (!(this.userInput.selectedClass && this.userInput.selectedSection))
+                return;
+            // filter online classes for selected class and section
+            this.userInput.filteredOnlineClassList = this.backendData.onlineClassList.filter((onlineClass) => {
+                const classSubject = this.backendData.classSubjectList.find(cs => cs.id == onlineClass.parentClassSubject);
+                if (classSubject.parentClass == this.userInput.selectedClass.id
+                    && classSubject.parentDivision == this.userInput.selectedSection.id) {
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            if (!this.userInput.selectedEmployee)
+                return;
+            // filter online classes for selected employee
+            this.userInput.filteredOnlineClassList = this.backendData.onlineClassList.filter((onlineClass) => {
+                const classSubject = this.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+                if (classSubject.parentEmployee == this.userInput.selectedEmployee.id) {
+                    return true;
+                }
+                return false;
+            });
+        }
     }
 
 }

@@ -13,6 +13,9 @@ import { SmsService } from 'app/services/modules/sms/sms.service';
 import { UserService } from 'app/services/modules/user/user.service';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
+import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
+import {EmployeeService} from '@services/modules/employee/employee.service';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -27,6 +30,7 @@ import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/a
         SmsService,
         UserService,
         SmsOldService,
+        EmployeeService,
     ],
 })
 export class AddTutorialComponent implements OnInit {
@@ -58,6 +62,7 @@ export class AddTutorialComponent implements OnInit {
         subjectList: [],
         fullStudentList: [],
         currentClassStudentSectionList: [],
+        inPagePermissionMappedByKey: {} as any,
     };
 
     userInput = {
@@ -91,7 +96,8 @@ export class AddTutorialComponent implements OnInit {
         public notificationService: NotificationService,
         public smsService: SmsService,
         public userService: UserService,
-        public smsOldService: SmsOldService
+        public smsOldService: SmsOldService,
+        public employeeService: EmployeeService
     ) {}
 
     ngOnInit() {
@@ -129,6 +135,10 @@ export class AddTutorialComponent implements OnInit {
             link: null,
             orderNumber: 0,
         };
+    }
+
+    hasAdminPermission(): boolean {
+        return this.backendData.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 
 }

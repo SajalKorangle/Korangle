@@ -1,4 +1,5 @@
 import { AddTutorialComponent } from './add-tutorial.component';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
@@ -11,6 +12,16 @@ export class AddTutorialServiceAdapter {
 
     async initializeData() {
         this.vm.stateKeeper.isLoading = true;
+
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+        this.vm.backendData.inPagePermissionMappedByKey = (await
+            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         let class_subject_list = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -70,7 +81,7 @@ export class AddTutorialServiceAdapter {
                     if (
                         classSubject.parentClass === tempClass['id'] &&
                         classSubject.parentDivision === tempSection['id'] &&
-                        classSubject.parentEmployee === this.vm.user.activeSchool.employeeId
+                        (classSubject.parentEmployee === this.vm.user.activeSchool.employeeId || this.vm.hasAdminPermission())
                     ) {
                         let tempSubject = {};
 
