@@ -1,0 +1,106 @@
+<div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
+    <ng-container *ngIf="!restrictedStudent else RestrictedStudent">
+        <ng-container *ngIf="isActiveSession else NotActiveSession">
+
+            <ng-container *ngIf="!htmlRenderer.meetingEntered else zoomIframe">
+                <ng-container *ngIf="htmlRenderer.getTimeSpanList().length>0 else NoClassReg">
+                    <h3>{{htmlRenderer.getCurrentTime()}}</h3>
+
+                    <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                        <h4>Ongoing Class:</h4>
+                        <div style="padding: 8px; display: flex; flex-direction: row; align-items: center;">
+
+                            <div style="margin-left: 12px;">
+                                <span>{{htmlRenderer.getCardSlotDisplayData(activeClass).subject.name}} </span><br />
+                                <span>
+                                    {{activeClass.startTimeJSON.getDisplayString()}} -
+                                    {{activeClass.endTimeJSON.getDisplayString()}}
+                                </span>
+                            </div>
+
+                            <!-- div style="margin-left: 32px;">
+                                <span>Meeting Id: {{htmlRenderer.getClassAccountInfo(activeClass)?.meetingNumber ||
+                                    '-'}}</span><br />
+                                <span>Pass Code: {{htmlRenderer.getClassAccountInfo(activeClass)?.passcode ||
+                                    '-'}}</span><br />
+                            </div -->
+                        </div>
+                        <div style="margin-bottom: 24px;">
+                            <button *ngIf="htmlRenderer.getClassAccountInfo(activeClass)"
+                                class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                                (click)="serviceAdapter.initializeMeetingData(htmlRenderer.getClassAccountInfo(activeClass))">EnterClass</button>
+                        </div>
+                    </ng-container>
+
+                    <div class="mat-elevation-z8" style="overflow: auto;">
+                        <table class="mat-elevation-z8 table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)"
+                                        [style.color]="weekdayKeysMappedByDisplayName[weekdayKey]==today?'#ff9800':''">
+                                        {{weekdayKeysMappedByDisplayName[weekdayKey]}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container
+                                    *ngFor="let timeSpan of htmlRenderer.getTimeSpanList(), let timeSpanIndex = index;">
+                                    <tr>
+                                        <td style="width: 160px"
+                                            [style.color]="htmlRenderer.isActiveTimeSpan(timeSpan)?'#ff9800':'unset'">
+                                            {{timeSpan.startTime.getDisplayString()}} -
+                                            {{timeSpan.endTime.getDisplayString()}}
+                                        </td>
+                                        <ng-container
+                                            *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
+                                            <ng-container
+                                                *ngIf="htmlRenderer.getOnlineClassByWeekDayAndTime(weekday, timeSpan) as onlineClass else NoClass;">
+                                                <td style="position: relative; min-width: 100px;"
+                                                    [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name)"
+                                                    [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name)">
+                                                    <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
+                                                    <span *ngIf="htmlRenderer.getClassAccountInfo(onlineClass)"
+                                                        style="position: absolute; bottom: 8px; right: 8px;"
+                                                        class="glow-active"></span>
+                                                </td>
+                                            </ng-container>
+                                            <ng-template #NoClass>
+                                                <td></td>
+                                            </ng-template>
+                                        </ng-container>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+</div>
+<ng-template #Loader>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
+
+<ng-template #NotActiveSession>
+    <span style="color: red;">This session is closed</span>
+</ng-template>
+
+<ng-template #NoClassReg>
+    <span>No Online Registered Class</span>
+</ng-template>
+
+<ng-template #zoomIframe>
+    <button (click)="htmlRenderer.meetingEntered = false;"
+        style="margin-bottom: 12px; display: flex; border-radius: 50%;background-color: black; color:white;">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <iframe id="zoomIFrame" allowfullscreen="true" allow="camera *;microphone *"
+        style="width: 100%; height: 75vh;"></iframe>
+</ng-template>
+
+<ng-template #RestrictedStudent>
+    <span style="color: red">This Page is Blocked. Please Contact School.</span>
+</ng-template>

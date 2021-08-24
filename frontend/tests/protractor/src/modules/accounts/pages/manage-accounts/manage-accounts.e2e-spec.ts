@@ -36,7 +36,7 @@ describe('Accounts -> Manage Accounts', () => {
     let node: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/accounts/pages/manage-accounts/manage-accounts.json'));
+        await startBackendServer(getFixtureFiles('modules/accounts/pages/manage-accounts/manage-accounts.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
