@@ -56,6 +56,11 @@ export class ForgotPasswordServiceAdapter {
             return;
         }
 
+        if (!this.vm.otp) {
+            alert('OTP verification failed');
+            return;
+        }
+
         this.vm.isLoading = true;
         this.vm.showFrontPageProgressBar.emit('true');
         this.vm.authenticationService
