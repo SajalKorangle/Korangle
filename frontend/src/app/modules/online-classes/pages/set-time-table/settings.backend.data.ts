@@ -1,4 +1,7 @@
 import { SettingsComponent } from './settings.component';
+import { Time } from '@modules/online-classes/class/constants';
+
+// for types
 import { Classs } from '@services/modules/class/models/classs';
 import { Division } from '@services/modules/class/models/division';
 import { AccountInfo } from '@services/modules/online-class/models/account-info';
@@ -6,13 +9,14 @@ import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { Subject } from '@services/modules/subject/models/subject';
 import { ParsedOnlineClass } from '@modules/online-classes/class/constants';
 
+
 export class SettingsBackendData {
 
     classList: Array<Classs>;
     divisionList: Array<Division>;
 
     accountInfoList: Array<AccountInfo>;
-    onlineClassList: Array<ParsedOnlineClass>;
+    private _onlineClassList: Array<ParsedOnlineClass>;
     classSubjectList: Array<ClassSubject>;
     subjectList: Array<Subject>;
 
@@ -25,6 +29,19 @@ export class SettingsBackendData {
 
     initialize(vm: SettingsComponent): void {
         this.vm = vm;
+    }
+
+    get onlineClassList() {
+        return this._onlineClassList;
+    }
+
+    set onlineClassList(onlineClassList) {
+        const parsedOnlineClassList: Array<ParsedOnlineClass> = onlineClassList.map(onlineClass => {
+            Object.setPrototypeOf(onlineClass.startTimeJSON, Time.prototype);
+            Object.setPrototypeOf(onlineClass.endTimeJSON, Time.prototype);
+            return onlineClass as ParsedOnlineClass;
+        });
+        this._onlineClassList = parsedOnlineClassList;
     }
 
     getClassById(classId: number) {
