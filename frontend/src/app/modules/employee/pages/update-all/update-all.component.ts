@@ -56,7 +56,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Epf Acc. No.', 'epfAccountNumber', 'number', false, ''), // 19
         new ColumnHandle('Bank IFSC Code', 'bankIfscCode', 'text', false, ''), // 20
         new ColumnHandle('Month Salary', 'monthlySalary', 'number', false, ''), // 21
-        new ColumnHandle('Pran No.', 'pranNumber', 'text', false, ''), // 22
+        new ColumnHandle('Pran No.', 'pranNumber', 'number', false, ''), // 22
         new ColumnHandle('Remark', 'remark', 'text', false, ''), // 23
     ];
 

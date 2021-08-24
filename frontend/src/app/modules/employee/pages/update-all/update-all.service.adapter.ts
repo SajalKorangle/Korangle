@@ -50,7 +50,6 @@ export class UpdateAllServiceAdapter {
     }
 
     updateEmloyeeField(columnName: any, key: any, employee: any, newValue: any, inputType: any): void {
-        console.log(employee[key], newValue, inputType);
         let data = {
             id: employee['id'],
         };
@@ -60,8 +59,10 @@ export class UpdateAllServiceAdapter {
         if (newValue != null && this.vm.checkOnlyUppercaseFields(key)) { // to check in-case is some of the characters are lower case
             newValue = newValue.toString().toUpperCase(); // update them to upperCase
         }
+        if (inputType == 'date' && newValue == null) {
+            (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = '';
+        }
         data[key] = newValue;
-        console.log(data);
         if (employee[key] != newValue) {
             if (key == 'mobileNumber') {
                 if (newValue == null || newValue.toString().length !== 10) {
@@ -79,6 +80,12 @@ export class UpdateAllServiceAdapter {
                 if (newValue != null && newValue.toString().length !== 10) {
                     alert('Pan number should be 10 characters!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.panNumber;
+                    return;
+                }
+            }  else if (key == 'pranNumber') {
+                if (newValue != null && newValue.toString().length !== 12) {
+                    alert('PRAN number should be 12 digits!');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.pranNumber;
                     return;
                 }
             } else if (key == 'bankIfscCode') {
@@ -109,7 +116,7 @@ export class UpdateAllServiceAdapter {
 
             if (newValue !== null && newValue.toString().trim() !== '') {
                 if (key == 'aadharNumber' || key == 'mobileNumber' || key == 'panNumber' || key == 'employeeNumber'
-                    || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'epfAccountNumber') {
+                    || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'epfAccountNumber' || key == 'pranNumber') {
                     let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id != employee.id && emp[key] ==
                         newValue.toString());
                     if (employeeWithSameValue) {
