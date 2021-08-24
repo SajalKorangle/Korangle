@@ -147,6 +147,19 @@ export class AddTransactionComponent implements OnInit {
     }
     return false;
   }
+  isAmountMoreThanMaximum(transaction): boolean {
+    for (let i = 0; i < transaction.debitAccountList.length; i++) {
+      if (transaction.debitAccountList[i].amount > 99999999.99 && transaction.debitAccountList[i].parentAccount != null) {
+        return true;
+      }
+    }
+    for (let i = 0; i < transaction.creditAccountList.length; i++) {
+      if (transaction.creditAccountList[i].amount > 99999999.99 && transaction.creditAccountList[i].parentAccount != null) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   isAmountMoreThanApproval(transaction): boolean {
     if (transaction.approval == null) {
