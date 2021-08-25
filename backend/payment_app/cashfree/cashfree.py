@@ -21,6 +21,8 @@ def getResponseSignature(postData): # used for validating that a response indeed
         )
     return signature
 
+# Code Review
+# Does this code has the possibility to be used in future?
 # def verifyCredentials(): 
 #     headers = {
 #         'Content-Type': 'application/x-www-form-urlencoded'
@@ -40,6 +42,8 @@ def getResponseSignature(postData): # used for validating that a response indeed
 #     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
 
+# Code Review
+# 1. 'comming' - Spelling is wrong
 def getSignature(orderData): # used to authenticate that the data is a valid data comming from korangle
     sortedKeys = sorted(orderData)
     signatureData = ""

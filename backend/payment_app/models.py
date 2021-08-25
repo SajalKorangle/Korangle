@@ -4,7 +4,8 @@ from school_app.model.models import School
 from django.utils.timezone import make_aware, make_naive
 
 
-
+# Code Review
+# Would it more understandable if we change this name to SchoolMerchantId or SchoolVendorId ? (Point No. 22 from code practice file)
 class OnlinePaymentAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
     vendorId = models.CharField(max_length=20, unique=True)
@@ -14,6 +15,8 @@ class OnlinePaymentAccount(models.Model):
 
 
 class Order(models.Model):
+    # Code Review
+    # Please comment at least one scenario for below transaction status to be possible.
     TransactionStatus = (
         ('Pending', 'Pending'),
         ('Completed', 'Completed'),

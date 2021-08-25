@@ -6,8 +6,6 @@ from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusSto
     SubFeeReceipt, Discount, SubDiscount
 
 
-
-
 # Create your views here.
 
 
@@ -157,16 +155,21 @@ class FeeSettingsListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
 
 
-
 ########### Transaction #############
 from fees_third_app.models import OnlineFeePaymentTransaction
 class OnlineFeePaymentTransactionView(CommonView, APIView):
     Model = OnlineFeePaymentTransaction
-    RelationsToSchool = ['parentSchool__id'] 
+    RelationsToSchool = ['parentSchool__id']
+    # Code Review
+    # Is 'get' or 'post' being called from frontend or from anywhere else?
+    # If it is being called from cashfree then it needs to be in api free version url.
     permittedMethods = ['get', 'post']
         
 class OnlineFeePaymentTransactionListView(CommonListView, APIView):
     Model = OnlineFeePaymentTransaction
     RelationsToSchool = ['parentSchool__id'] 
+    # Code Review
+    # Is 'get' being called from frontend or from anywhere else?
+    # If it is being called from cashfree then it needs to be in api free version url.
     permittedMethods = ['get', 'post']
 
