@@ -116,7 +116,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sms',
             name='sentStatus',
-            field=models.BooleanField(default=True, verbose_name='sentStatus'),
+            field=models.CharField(choices=[('SUCCESS', 'SUCCESS'), ('FAILED', 'FAILED'), ('PENDING', 'PENDING')], default='PENDING', max_length=10, null=True, verbose_name='sentStatus'),
         ),
         migrations.AddField(
             model_name='sms',

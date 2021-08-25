@@ -18,7 +18,7 @@ def add_manage_sms_id_and_templates_tasks(apps, schema_editor):
     addManageTemplates.parentModule = sms_module
     addManageTemplates.path = 'manage_templates'
     addManageTemplates.title = 'Manage Templates'
-    addManageTemplates.orderNumber = 4
+    addManageTemplates.orderNumber = 5
     addManageTemplates.parentBoard = None
     addManageTemplates.save()
 

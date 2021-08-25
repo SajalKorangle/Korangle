@@ -11,10 +11,13 @@ admin.site.register(SMSDeliveryReport)
 @admin.register(SMS)
 class SMSAdmin(admin.ModelAdmin):
     search_fields = ('parentSchool__id', 'requestId')
-    list_display = ('Sent_By_KID', 'Content', 'requestId', 'Sent_Status', 'Remark')
+    list_display = ('School_Name', 'KID', 'Content', 'requestId', 'Sent_Status', 'Remark')
     list_filter = ('sentStatus',)
 
-    def Sent_By_KID(self, obj):
+    def School_Name(self, obj):
+        return str(obj.parentSchool.name)
+
+    def KID(self, obj):
         return str(obj.parentSchool.id)
 
     def Content(self, obj):

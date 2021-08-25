@@ -59,7 +59,17 @@ class SMS(models.Model):
     # Content Type
     contentType = models.TextField(null=False, default='', verbose_name='contentType(DCS)')
 
-    sentStatus = models.BooleanField(null=False, default=True, verbose_name='sentStatus')
+    SUCCESS = 'SUCCESS'
+    FAILED = 'FAILED'
+    PENDING = 'PENDING'
+    SENT_STATUS_CHOICES = [
+        (SUCCESS, 'SUCCESS'),
+        (FAILED, 'FAILED'),
+        (PENDING, 'PENDING')
+    ]
+
+    sentStatus = models.CharField(max_length=10, choices=SENT_STATUS_CHOICES, default=PENDING, null=True,
+                                  verbose_name='sentStatus')
 
     remark = models.TextField(null=False, default='SUCCESS', verbose_name='remark')
 
@@ -112,20 +122,21 @@ class SMS(models.Model):
 
 @receiver(post_save, sender=SMS)
 def sms_sender(sender, created, instance, **kwargs):
-    response = {'remark': 'ONLY NOTIFICATION', 'requestId': 0,
-                'mobileNumberContentJson': instance.mobileNumberContentJson}
     if created:
+        response = {'remark': 'ONLY NOTIFICATION', 'requestId': 0,
+                    'mobileNumberContentJson': instance.mobileNumberContentJson}
         from sms_app.business.send_sms import send_sms
         try:
             if instance.count > 0:
                 response = send_sms(instance.__dict__)
+                # RequestId will become -1 if the sms balance is low
+                instance.sentStatus = 'FAILED' if response['requestId'] == -1 else 'SUCCESS'
         except Exception as e:
             traceback.print_exc()
+            # Whenever exception occurs in the function we are saving the remark
+            # The sent status is by default PENDING so it will remain the same, support team can confirm the sent
             response = {'remark': 'EXCEPTION OCCURRED', 'requestId': -1,
                         'mobileNumberContentJson': instance.mobileNumberContentJson}
-
-        if response['requestId'] == -1:
-            instance.sentStatus = False
 
         instance.requestId = response['requestId']
         instance.remark = response['remark']
