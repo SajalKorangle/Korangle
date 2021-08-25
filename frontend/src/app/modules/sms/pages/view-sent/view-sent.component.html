@@ -3,13 +3,13 @@
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">Start Date</label>
-                <input type="date" class="form-control" [(ngModel)]="startDate" />
+                <input type="date" class="form-control" [(ngModel)]="startDate" (ngModelChange)="backendData.smsList = null" />
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group form-black label-floating">
                 <label class="control-label">End Date</label>
-                <input type="date" class="form-control" [(ngModel)]="endDate" />
+                <input type="date" class="form-control" [(ngModel)]="endDate" (ngModelChange)="backendData.smsList = null" />
             </div>
         </div>
         <div class="col-md-3">

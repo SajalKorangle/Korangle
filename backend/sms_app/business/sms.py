@@ -18,7 +18,7 @@ def get_sms_list(data):
 
     for sms_object in \
             SMS.objects.filter(parentSchool_id=data['parentSchool'],
-                               sentStatus=bool(distutils.util.strtobool(data['sentStatus'])),
+                               sentStatus=data['sentStatus'],
                                sentDateTime__gte=data['startDateTime'],
                                sentDateTime__lte=data['endDateTime']).order_by('sentDateTime'):
         sms_list.append(SMSModelSerializer(sms_object).data)

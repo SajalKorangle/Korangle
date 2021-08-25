@@ -29,7 +29,8 @@ export class ViewSentServiceAdapter {
             startDateTime: this.vm.startDate.toString() + ' 00:00:00+05:30',
             endDateTime: this.vm.endDate.toString() + ' 23:59:59+05:30',
             parentSchool: this.vm.user.activeSchool.dbId,
-            sentStatus: 'true',
+            sentStatus: 'PENDING',
+            sentStatus__or: 'SUCCESS',
         };
 
         this.vm.stateKeeper.isLoading = true;
