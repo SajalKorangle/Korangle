@@ -19,5 +19,7 @@ class IFSCVerification(APIView):
 class BankAccountVerification(APIView):
 
     @user_permission_3
+    # Code Review
+    # jab sab jagah baaki jagah get chal raha tha to yahan par post kyun kiya?
     def post(self, request, *args, **kwargs):
         return bankVerification(**request.data)

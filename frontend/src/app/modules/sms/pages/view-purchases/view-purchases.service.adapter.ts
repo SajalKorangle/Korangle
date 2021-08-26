@@ -7,6 +7,8 @@ export class ViewPurchasesServiceAdapter {
         this.vm = vm;
     }
 
+    // Code Review
+    // Please correct the spelling - 'initilizeDate'
     async initilizeDate() {
         const incompleteTransactionRequest = {
             parentSmsPurchase: 'null__korangle'

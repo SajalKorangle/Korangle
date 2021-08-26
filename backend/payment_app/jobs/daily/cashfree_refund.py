@@ -49,6 +49,8 @@ class Job(DailyJob): # Should be run between 3am to 5am
                 orderInstance.status = 'Completed'
                 orderInstance.referenceId = cashfreeOrder['referenceId']
                 try:
+                    # Code Review
+                    # Why transaction atomic here but not at other places?
                     with transaction.atomic():
                         orderInstance.save()
                 except:

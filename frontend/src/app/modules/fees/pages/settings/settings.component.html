@@ -59,6 +59,11 @@
                             </mat-select>
                         </mat-form-field>
 
+                        <!--
+                            Code Review
+                            'KORANGLE' mode of payment can only have one credit account as
+                            user will not be choosing between any options
+                        -->
                         <mat-form-field style="flex-grow: 2;">
                             <mat-label>Mode: {{paymentMode}}</mat-label>
                             <mat-chip-list required>
@@ -71,7 +76,7 @@
                                 </mat-chip>
                             </mat-chip-list>
                             <input style="pointer-events: none; opacity: 0;">
-                            <!--Hack for propor placeholder display-->
+                            <!--Hack for proper placeholder display-->
                         </mat-form-field>
 
                     </div>

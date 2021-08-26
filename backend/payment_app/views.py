@@ -110,6 +110,8 @@ class OrderCompletionView(APIView):
         if(request.POST['txStatus'] == 'SUCCESS'):
             orderInstance.status = 'Completed'
             orderInstance.referenceId = request.POST['referenceId']
+            # Code Review
+            # Write a comment why the first orderInstance.save() is different than the other one.
             try:
                 orderInstance.save()
             except:

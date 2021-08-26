@@ -343,8 +343,9 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
             modeOfPayment = instance.modeOfPayment
 
             # Code Review
-            # Why is this 'and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0' required after
+            # 1. Why is this 'and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0' required after
             # checking this 'accountingSettings['toAccountsStructure'].get(modeOfPayment, None)'
+            # 2. Comment Why transaction row needs to be created here.
             if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
                 or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)\
                      and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0):
@@ -518,7 +519,9 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
 
 
 
-
+# Code Review
+# Are we not calling the post/put/patch api of models in account app at all,
+# when creating a fee receipt?
 @receiver(post_save, sender=SubFeeReceipt)
 def handleAccountsTransaction(sender, instance, created, **kwargs):
     if(created and instance.parentFeeReceipt.parentTransaction):
@@ -650,8 +653,8 @@ from accounts_app.views import TransactionAccountDetailsView
 
 # Code Review
 # Why is the signal for another Order model is not implemented in the same file as the model?
-# Is the signal implemented w.r.t. to OnlineFeePaymentTransaction? Is it implemented with the future possibility
-# that multiple OrderCompletionHandler will be implemented?
+# Is this signal implemented w.r.t. to OnlineFeePaymentTransaction? Is it implemented with the future possibility
+# that multiple OrderCompletionHandler will be implemented in different files?
 @receiver(pre_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
     if (not instance._state.adding) and instance.status == 'Completed':
@@ -665,8 +668,9 @@ def OrderCompletionHandler(sender, instance, **kwargs):
             activeSchoolID = onlinePaymentTransactionList[0].parentSchool.id
 
             # Code Review
-            # Will the status order be changed in few seconds from pending to completion or will it might take days.
+            # 1. Will the status order be changed in few seconds from pending to completion or will it might take days.
             # Current Session retrieval method can fail at the end of the session.
+            # I think this code will run with in few minutes of order placement by a parent. Please confirm.
             currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
             debitAccount = None
             creditAccount = None
@@ -738,8 +742,9 @@ from payment_app.cashfree.cashfree import initiateRefund
 
 
 # Code Review
-# Is it okay to have two different functions with same name in the same file? Have you run it to make sure that
+# 1. Is it okay to have two different functions with same name in the same file? Have you run it to make sure that
 # they will not clash.
+# 2. Comment here why this function is implemented.
 @receiver(post_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
     if (not kwargs['created']) and instance.status == 'Refund Pending':

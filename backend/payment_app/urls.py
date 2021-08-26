@@ -16,6 +16,8 @@ urlpatterns += [
 
 from .views import OrderCompletionView
 
+# Code Review
+# api calls for other than korangle frontend, should be api version free.
 urlpatterns += [
     url(r'^order-completion', OrderCompletionView.as_view()),
 ]

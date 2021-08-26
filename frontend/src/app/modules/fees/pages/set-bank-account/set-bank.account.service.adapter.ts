@@ -59,6 +59,8 @@ export class SetBankAccountServiceAdapter {
         this.vm.isLoading = true;
 
         const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
+        // Code Review
+        // Remove the console log statement, if not necessary.
         console.log('newOnlinePayment Account: ', newOnlinePaymentAccount);
         await this.verifyIFSC();
         if (!this.vm.cache.ifsc) {

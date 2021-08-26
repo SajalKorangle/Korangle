@@ -5,6 +5,9 @@ import json
 import requests
 import time
 
+# Code Review
+# Do you know why they didn't just use CASHFREE_APP_ID and CASHFREE_SECRET_KEY instead of CLIENT_ID & CLIENT_SECRET
+# for bearer token
 from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url
 
 bank_verification_base_url = 'https://payout-gamma.cashfree.com'
@@ -48,6 +51,9 @@ def getSignature(orderData): # used to authenticate that the data is a valid dat
     sortedKeys = sorted(orderData)
     signatureData = ""
     for key in sortedKeys:
+      # Code Review
+      # 1. Please indent with 4 spaces.
+      # 2. Previously you have not used key to create signatureData. Please confirm.
       signatureData += key+str(orderData[key])
 
     message = signatureData.encode('utf-8')
@@ -59,6 +65,8 @@ def getSignature(orderData): # used to authenticate that the data is a valid dat
 
 def createAndSignCashfreeOrder(data, orderId, vendorId):
 
+    # Code Review
+    # Is it not required to mention the vendor id and amount for Korangle here?
     paymentSplit = [
             {
                 "vendorId" : str(vendorId),
@@ -147,6 +155,8 @@ def getOrderStatus(orderId, disableAssertion=False):
     return response.json()
 
 
+# Code Review
+# Does this code has the possibility to be used in future?
 # def isOrderCompleted(orderId):
 #     result = False # either false or orderResonseData
 #     try:
@@ -184,10 +194,14 @@ def initiateRefund(orderId, splitData):
         data=orderData,
         headers=headers
         )
-    
+
+    # Code Review
+    # Will the execution stop, if assertion fails?
     assert response.json()['status'] == 'OK', 'Cashfree Refund Initiation Failed, response : {0}'.format(response.json()) 
     return response.json()
 
+# Code Review
+# What was the purpose of disable assertion? Doesn't seem to be called from anywhere.
 def getRefundStatus(refundId, disableAssertion=False):
 
     headers = {
@@ -341,6 +355,8 @@ def ifscVerification(ifsc):
     else:
         return None
 
+# Code Review
+# Jab sab jagah bankAccountVerification likha hai, to yahan par bhi wahi chalne do.
 def bankVerification(accountNumber, ifsc):
     headers = {
         'Authorization': getBearerToken(),

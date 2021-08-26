@@ -139,6 +139,8 @@ export class ViewFeeServiceAdapter {
     async initiatePayment() {
         const totalAmount = this.vm.getTotalPaymentAmount();
 
+        // Code Review
+        // Good Commenting
         // ---------------- Data Validation ----------------
         if (totalAmount <= 0) {
             alert('Invalid amount');
@@ -182,7 +184,7 @@ export class ViewFeeServiceAdapter {
         const redirectParams = new URLSearchParams(location.search);
 
 
-        // redirect_to params decides the prontend page and state at which the user is redirected after payment
+        // redirect_to params decides the frontend page and state at which the user is redirected after payment
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
 
         const newOrder = {
