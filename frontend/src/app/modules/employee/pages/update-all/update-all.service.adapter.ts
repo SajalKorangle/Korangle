@@ -49,66 +49,81 @@ export class UpdateAllServiceAdapter {
         });
     }
 
-    updateEmloyeeField(key: any, employee: any, newValue: any, inputType: any): void {
-        console.log(employee[key], newValue, inputType);
+    updateEmloyeeField(columnName: any, key: any, employee: any, newValue: any, inputType: any): void {
         let data = {
             id: employee['id'],
         };
+        if (newValue != null && newValue.toString().trim() == '') {
+            newValue = null;
+        }
+        if (newValue != null && this.vm.checkOnlyUppercaseFields(key)) { // to check in-case is some of the characters are lower case
+            newValue = newValue.toString().toUpperCase(); // update them to upperCase
+        }
+        if (inputType == 'date' && newValue == null) {
+            (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = '';
+        }
         data[key] = newValue;
-        console.log(data);
         if (employee[key] != newValue) {
             if (key == 'mobileNumber') {
-                if (newValue.toString().length !== 10) {
-                    if (employee.mobileNumber != null) {
-                        alert('Mobile number should be 10 digits!');
-                    }
+                if (newValue == null || newValue.toString().length !== 10) {
+                    alert('Mobile number should be 10 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.mobileNumber;
                     return;
-                } else {
-                    let selectedEmployee = null;
-                    this.vm.employeeFullProfileList.forEach((employee) => {
-                        if (employee.mobileNumber == newValue) {
-                            selectedEmployee = employee;
-                        }
-                    });
-                    //console.log("selectedEmployee is : ",selectedEmployee);
-                    if (selectedEmployee) {
-                        alert('Mobile Number already exists in ' + selectedEmployee.name + "'s profile");
-                        (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.mobileNumber;
-                        return;
-                    } else {
-                        data['mobileNumber'] = newValue;
-                    }
                 }
             } else if (key == 'aadharNumber') {
-                if (newValue.toString().length !== 12) {
-                    if (employee.aadharNumber != null) {
-                        alert('Aadhar number should be 12 digits!');
-                    }
+                if (newValue != null && newValue.toString().length !== 12) {
+                    alert('Aadhar number should be 12 digits!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.aadharNumber;
                     return;
-                } else {
-                    data['aadharNumber'] = newValue;
                 }
             } else if (key == 'panNumber') {
-                if (newValue.toString().length !== 10) {
-                    if (employee.panNumber != null) {
-                        alert('Pan number should be 10 digits!');
-                    }
+                if (newValue != null && newValue.toString().length !== 10) {
+                    alert('Pan number should be 10 characters!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.panNumber;
                     return;
-                } else {
-                    data['panNumber'] = newValue;
+                }
+            }  else if (key == 'pranNumber') {
+                if (newValue != null && newValue.toString().length !== 12) {
+                    alert('PRAN number should be 12 digits!');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.pranNumber;
+                    return;
                 }
             } else if (key == 'bankIfscCode') {
-                if (newValue.toString().length !== 11) {
-                    if (employee.bankIfscCode != null) {
-                        alert('Pan number should be 11 digits!');
-                    }
+                if (newValue != null && newValue.toString().length !== 11) {
+                    alert('Bank IFSC Code should be 11 characters!');
                     (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.bankIfscCode;
                     return;
-                } else {
-                    data['bankIfscCode'] = newValue;
+                }
+            } else if (key == 'fatherName') {
+                if (newValue == null || newValue.trim() == "") {
+                    alert('Father Name Cannot be Empty');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.fatherName;
+                    return;
+                }
+            } else if (key == 'name') {
+                if (newValue == null || newValue.trim() == "") {
+                    alert('Employee Name Cannot be Empty');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.name;
+                    return;
+                }
+            }else if (key == 'monthlySalary') {
+                if (newValue != null && newValue > 2147483647) {
+                    alert('Checkout the Monthly salary is greater than 9 digits');
+                    (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee.monthlySalary;
+                    return;
+                }
+            }
+
+            if (newValue !== null && newValue.toString().trim() !== '') {
+                if (key == 'aadharNumber' || key == 'mobileNumber' || key == 'panNumber' || key == 'employeeNumber'
+                    || key == 'passportNumber' || key == 'bankAccountNumber' || key == 'epfAccountNumber' || key == 'pranNumber') {
+                    let employeeWithSameValue = this.vm.employeeFullProfileList.find(emp => emp.id != employee.id && emp[key] ==
+                        newValue.toString());
+                    if (employeeWithSameValue) {
+                        alert(columnName + ' already exists in ' + employeeWithSameValue.name + '\'s profile');
+                        (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee[key];
+                        return;
+                    }
                 }
             }
 
@@ -123,15 +138,16 @@ export class UpdateAllServiceAdapter {
                     console.log(response);
                     if (response != null) {
                         employee[key] = newValue;
-                        document.getElementById(key + employee.id).classList.remove('updatingField');
                         console.log(inputType);
-                        if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
-                            (<HTMLInputElement>document.getElementById(employee.id + key)).disabled = false;
-                        } else if (inputType === 'list') {
-                        }
                     } else {
-                        alert('Not able to update ' + key + ' for value: ' + newValue);
+                        alert('Not able to update ' + columnName + ' for value: ' + newValue);
+                        (<HTMLInputElement>document.getElementById(employee.id.toString() + key.toString())).value = employee[key];
                     }
+                    if (inputType === 'text' || inputType === 'number' || inputType === 'date') {
+                        (<HTMLInputElement>document.getElementById(employee.id + key)).disabled = false;
+                    } else if (inputType === 'list') {
+                    }
+                    document.getElementById(key + employee.id).classList.remove('updatingField');
                 },
                 (error) => {
                     alert('Server Error: Contact Admin');
