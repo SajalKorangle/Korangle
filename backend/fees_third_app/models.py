@@ -275,11 +275,9 @@ class FeeReceipt(models.Model):
 def FeeReceiptCancellationHandler(sender, instance, **kwargs):
     if(kwargs['raw']):
         return
-    if instance.id and instance.cancelled:
-        originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
-        if originalFeeReceipt.cancelled == False and originalFeeReceipt.parentTransaction != None:
-            instance.parentTransaction.delete()
-            instance.parentTransaction = None
+    if instance.cancelled and instance.parentTransaction:
+        instance.parentTransaction.delete()
+        instance.parentTransaction = None
     pass
 
 
