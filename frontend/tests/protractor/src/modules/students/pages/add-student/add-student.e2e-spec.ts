@@ -1,7 +1,7 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
+import { openModuleAndPage } from '../../../../open-page';
 import { containsAll } from '../../../../contains';
 
 describe('Students -> Add Student', () => {
@@ -10,7 +10,7 @@ describe('Students -> Add Student', () => {
 
     it('Add student', async () => {
 
-        startBackendServer(getFixtureFiles('modules/students/pages/add-student/add-student.json'));
+        await startBackendServer(getFixtureFiles('modules/students/pages/add-student/add-student.json'));
 
         page = await BeforeAfterEach.beforeEach();
         page.on('dialog', async dialog => {

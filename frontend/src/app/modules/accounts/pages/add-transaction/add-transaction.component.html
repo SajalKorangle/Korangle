@@ -160,6 +160,11 @@
                         </span>
                     </div>
                     <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
+                        <span *ngIf="isAmountMoreThanMaximum(transaction) == true" class="error-container">
+                            <span class="material-icons error-icon" >dangerous</span><span>Amount should be less than 10,00,00,000</span>
+                        </span>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;padding: 0px">
                         <div *ngIf="isAccountRepeated(transaction) == true" class="error-container">
                             <span class="material-icons error-icon">dangerous</span><span>Same Account Can Not Be Used In The Same Transaction</span>
                         </div>

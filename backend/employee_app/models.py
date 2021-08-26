@@ -37,13 +37,13 @@ class Employee(models.Model):
     gender = models.TextField(null=True)
 
     # Mobile Number
-    mobileNumber = models.IntegerField(null=True)
+    mobileNumber = models.BigIntegerField(null=True)
 
     # Address
     address = models.TextField(null=True)
 
     # Aadhar No.
-    aadharNumber = models.IntegerField(null=True)
+    aadharNumber = models.BigIntegerField(null=True)
 
     # Passport No.
     passportNumber = models.TextField(null=True)
@@ -144,7 +144,7 @@ class EmployeeParameterValue(models.Model):
     parentEmployeeParameter = models.ForeignKey(EmployeeParameter, on_delete=models.CASCADE, default=0, verbose_name='parentEmployeeParameter')
 
     value = models.TextField(null=True,blank=True)
-    document_value = models.FileField(upload_to=upload_document_to, blank=True, null=True)
+    document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
 
     class Meta:

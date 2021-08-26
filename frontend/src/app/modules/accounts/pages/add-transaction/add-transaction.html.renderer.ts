@@ -139,7 +139,7 @@ export class AddTransactionHtmlRenderer {
             if (this.vm.isApprovalRequired(this.vm.transactionList[i]) || this.vm.isAmountUnEqual(this.vm.transactionList[i]) ||
                 this.vm.isAccountNotMentioned(this.vm.transactionList[i]) || this.vm.isAccountRepeated(this.vm.transactionList[i]) ||
                 this.vm.isAmountMoreThanApproval(this.vm.transactionList[i]) || this.vm.isAmountLessThanMinimum(this.vm.transactionList[i]) ||
-                this.isApprovalUsedTwice(this.vm.transactionList[i])) {
+                this.vm.isAmountMoreThanMaximum(this.vm.transactionList[i]) || this.isApprovalUsedTwice(this.vm.transactionList[i])) {
                 return true;
             }
         }
