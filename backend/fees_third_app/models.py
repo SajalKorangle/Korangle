@@ -264,7 +264,6 @@ class FeeReceipt(models.Model):
         ('Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
     class Meta:
@@ -273,7 +272,7 @@ class FeeReceipt(models.Model):
 
 
 @receiver(pre_save, sender=FeeReceipt)
-def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+def FeeReceiptCancellationHandler(sender, instance, **kwargs):
     if(kwargs['raw']):
         return
     if instance.id and instance.cancelled:
