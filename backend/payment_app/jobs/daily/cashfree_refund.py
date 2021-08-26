@@ -22,6 +22,8 @@ class Job(DailyJob): # Should be run between 3am to 5am
             return
 
         # Refund Status Check
+        # Code Review
+        # Change the name from 'toCheckOrderList' to 'refundInitiatedOrderList'
         toCheckOrderList = Order.objects.filter(status = 'Refund Initiated')
         for orderInstance in toCheckOrderList:
             try:
@@ -33,16 +35,23 @@ class Job(DailyJob): # Should be run between 3am to 5am
                 continue
 
         # Order completion check
+        # Code Review
+        # Change the name from 'toCheckOrderList' to 'pendingOrderList'
         toCheckOrderList = Order.objects.filter(status = 'Pending')
         for orderInstance in toCheckOrderList:
             try:
                 cashfreeOrder = getOrderStatus(orderInstance.orderId, disableAssertion=True)
+                # Code Review
+                # Is this printing statement required?
                 print(cashfreeOrder)
                 if cashfreeOrder['status'] == 'ERROR' and cashfreeOrder['reason'] == 'Order Id does not exist':
                     orderInstance.status = 'Failed'
                     orderInstance.save()   
                     continue
                 assert cashfreeOrder['orderStatus'] != "ACTIVE"
+            # Code Review
+            # If there is a network error on our side or cashfree side,
+            # we are changing the status of order to 'Failed'. Please confirm.
             except: # continue in case of order is active or order is nor registered in cashfree or network error on our side or cashfree side
                 continue
             if(cashfreeOrder['txStatus']=='SUCCESS'):
