@@ -16,6 +16,7 @@ import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/a
 import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
 import {EmployeeService} from '@services/modules/employee/employee.service';
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -31,6 +32,7 @@ import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/page
         UserService,
         SmsOldService,
         EmployeeService,
+        TCService
     ],
 })
 export class AddTutorialComponent implements OnInit {
@@ -95,7 +97,8 @@ export class AddTutorialComponent implements OnInit {
         public smsService: SmsService,
         public userService: UserService,
         public smsOldService: SmsOldService,
-        public employeeService: EmployeeService
+        public employeeService: EmployeeService,
+        public tcService: TCService
     ) {}
 
     ngOnInit() {

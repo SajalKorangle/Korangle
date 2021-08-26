@@ -31,23 +31,36 @@ export class AddTutorialServiceAdapter {
         const fetch_student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent__parentTransferCertificate: 'null__korangle'
         };
+
+        let studentSectionList = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data);
+        let student_tc_data = {
+            parentStudent__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status__in: ['Generated', 'Issued'].join(','),
+            fields__korangle: 'id,parentStudent,status'
+        };
+
+        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
+        this.vm.backendData.fullStudentList = studentSectionList.filter(student_section => {
+            return tc_generated_student_list.find(tc => tc.parentStudent == student_section.parentStudent) == undefined;
+        });
 
         const value = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //2
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data), //4
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
-            }), //5
-            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
+            }), //4
+            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //5
         ]);
 
-        this.vm.smsBalance = value[6];
+        this.vm.smsBalance = value[5];
         if (value[5].length > 0) {
-            this.vm.settings = value[5][0];
+            this.vm.settings = value[4][0];
         } else {
             this.vm.settings = {
                 sentUpdateType: 1,
@@ -60,7 +73,6 @@ export class AddTutorialServiceAdapter {
         this.vm.backendData.sectionList = value[1];
         this.vm.backendData.classSubjectList = value[2];
         this.vm.backendData.subjectList = value[3];
-        this.vm.backendData.fullStudentList = value[4];
         this.populateClassSectionSubjectList();
         this.populateDefaults();
         this.vm.stateKeeper.isLoading = false;

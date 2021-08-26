@@ -124,7 +124,7 @@ export class IssueHomeworkServiceAdapter {
         this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
     }
 
-    getHomeworks(): any {
+    async getHomeworks() {
         this.vm.isLoading = true;
         this.vm.showContent = false;
         this.vm.homeworkList = [];
@@ -132,6 +132,7 @@ export class IssueHomeworkServiceAdapter {
 
         let student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null_korangle',
             parentClass: this.vm.selectedClassSection.classDbId,
             parentDivision: this.vm.selectedClassSection.divisionDbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -142,23 +143,30 @@ export class IssueHomeworkServiceAdapter {
             parentHomeworkQuestion__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
         };
 
+        let studentSectionList = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data);
+        let student_tc_data = {
+            parentStudent__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status__in: ['Generated', 'Issued'].join(','),
+            fields__korangle: 'id,parentStudent,status'
+        };
+        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
+        studentSectionList = studentSectionList.filter(student_section => {
+            return tc_generated_student_list.find(tc => tc.parentStudent == student_section.parentStudent) == undefined;
+        });
+
         Promise.all([
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question, {
                 parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
             }), //0
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data), //1
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //2
             // this.vm.
         ]).then(
             (value) => {
                 this.vm.homeworkImagesList = value[1];
                 this.initialiseHomeworks(value[0], value[1]);
-                let studentIdList = [];
-                value[2].forEach((student) => {
-                    studentIdList.push(student.parentStudent);
-                });
                 let student_data = {
-                    id__in: studentIdList,
+                    id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
                     fields__korangle: 'id,name,mobileNumber',
                 };
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then((value) => {

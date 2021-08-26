@@ -15,14 +15,14 @@ export class AddEventServiceAdapter {
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('General') + 1;
     }
 
-    initializeData(): void {
+    async initializeData() {
         this.vm.isLoading = true;
         this.vm.eventList = [];
         this.vm.imageList = [];
         this.vm.eventNotifyList = [];
         this.vm.loadMoreEvents = true;
         this.fetchLoadingCount();
-        this.getNotificationPersonData();
+        await this.getNotificationPersonData();
     }
 
     fetchLoadingCount() {
@@ -259,8 +259,9 @@ export class AddEventServiceAdapter {
         }
     }
 
-    getNotificationPersonData() {
-        let student_data = {
+    async getNotificationPersonData() {
+        let student_section_data = {
+            parentStudent__parentTransferCertificate: 'null__korangle',
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
@@ -269,9 +270,22 @@ export class AddEventServiceAdapter {
             fields__korangle: 'id,name,mobileNumber',
         };
 
-        Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_data)]).then((value1) => {
+        let studentSectionList = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data);
+
+            let student_tc_data = {
+                parentStudent__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                status__in: ['Generated', 'Issued'].join(','),
+                fields__korangle: 'id,parentStudent,status'
+            };
+
+            const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
+            studentSectionList = studentSectionList.filter(student_section => {
+                return tc_generated_student_list.find(tc => tc.parentStudent == student_section.parentStudent) == undefined;
+            });
+
             let data = {
-                id__in: value1[0].map((section) => section.parentStudent).join(),
+                id__in: studentSectionList.map((section) => section.parentStudent).join(),
                 fields__korangle: 'id,name,mobileNumber',
             };
 
@@ -280,10 +294,9 @@ export class AddEventServiceAdapter {
                 this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             ]).then((value2) => {
                 this.populateNotifyPersonData(value2[0], value2[1]);
-                this.populateStudentClassList(this.notifyPersonData, value1[0]);
+                this.populateStudentClassList(this.notifyPersonData, studentSectionList);
                 this.vm.updateService.fetchGCMDevicesNew(this.notifyPersonData);
             });
-        });
     }
 
     populateStudentClassList(notifyPersonData: any, studentSection: any) {
