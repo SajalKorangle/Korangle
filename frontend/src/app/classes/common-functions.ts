@@ -17,7 +17,7 @@ export class CommonFunctions {
     }
 
     copyObject(object: any): any {
-        let tempObject = {};
+        let tempObject = { };
         Object.keys(object).forEach((key) => {
             tempObject[key] = object[key];
         });
@@ -116,23 +116,23 @@ export class CommonFunctions {
         snackBar && snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
     }
 
-    deepCopy(obj: any) {
-        let clone;
+    deepCopy(obj: any) { // use with extra attention if your object contains arrow function as it is not being copied
         if (obj == null || typeof obj != 'object') {
             return obj;
         }
         else if (obj instanceof Date) {
-            clone = new Date(obj);
+            return new Date(obj);
         }
         else if (Array.isArray(obj)) {
-            clone = obj.map(el => this.deepCopy(el));
+            return obj.map(el => this.deepCopy(el));
         }
         else {
-            clone = Object.create(obj);
+            const clone = Object.create(obj);
+            Object.assign(clone, obj);
             Object.keys(clone).forEach(key => {
                 clone[key] = this.deepCopy(clone[key]);
             });
+            return clone;
         }
-        return clone;
     }
 }
