@@ -152,7 +152,7 @@ class ErrorAdmin(admin.ModelAdmin):
         return [f.name for f in self.model._meta.fields]+['user_link']
 
     def user_link(self, obj):
-        change_url = reverse('admin:auth_user_change', args=(obj.user.id,))
+        change_url = reverse('admin:user_app_user_change', args=(obj.user.id,))
         return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.username))
 
 

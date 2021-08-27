@@ -9,7 +9,7 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    types: [opened, labeled, unlabeled, synchronize]
+    types: [ labeled ]
   # pull_request_review:
   #   branches: [ master ]
   #   types: [ submitted ]
@@ -60,6 +60,11 @@ jobs:
         pip install -r backend/requirements.txt
         cd frontend
         npm ci
+
+    - name: Testing Linting
+      run: |
+        cd frontend
+        ./scripts/ng-lint/run_linter_ci.sh
 
     - name: Checking Migration
       run: |

@@ -1,0 +1,111 @@
+<div class="card-content" id="classroom-main" #classRoom *ngIf="!isLoading else Loader">
+
+    <h3>{{htmlRenderer.getCurrentTime()}}</h3>
+    <mat-divider style="margin-bottom: 8px;"></mat-divider>
+    <ng-container *ngIf="isActiveSession else NotActiveSession">
+        <ng-container *ngIf="backendData.onlineClassList.length>0 else NoClassReg">
+
+            <ng-container *ngIf="htmlRenderer.getActiveClass() as activeClass">
+                <h4>Ongoing Class:</h4>
+                <div style="padding: 8px; display: flex; flex-wrap: wrap; align-items: center;">
+
+                    <div style="margin: 12px 20px;">
+                        <span>{{htmlRenderer.getCardSlotDisplayData(activeClass).subject.name}} </span>
+                        <span>({{htmlRenderer.getCardSlotDisplayData(activeClass).classInstance.name}} &
+                            {{htmlRenderer.getSectionDisplayString(activeClass)}})</span><br />
+                        <span>
+                            {{activeClass.startTimeJSON.getDisplayString()}} -
+                            {{activeClass.endTimeJSON.getDisplayString()}}
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 24px;">
+                    <button *ngIf="backendData.accountInfo else NoMeetingInfo"
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="redirectToMeeting()">Enter
+                        Class</button>
+                    <ng-template #NoMeetingInfo>
+                        <span style="margin-left: 12px; color:red">Meeting Info Not Available</span>
+                    </ng-template>
+                </div>
+            </ng-container>
+            <div class="mat-elevation-z8" style="overflow-x: auto; width: 100%">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let weekdayKey of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)"
+                                [style.color]="weekdayKeysMappedByDisplayName[weekdayKey]==todayDisplayName?'#ff9800':''">
+                                {{weekdayKeysMappedByDisplayName[weekdayKey]}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container
+                            *ngFor="let time of htmlRenderer.timeBreakPoints.slice(0, htmlRenderer.timeBreakPoints.length-1), let timeSpanIndex = index;">
+                            <tr>
+                                <td style="vertical-align: top; text-align: left; width: 50px;">
+                                    <span style="position: relative; top: -12px;">{{time.getDisplayString()}}</span>
+                                </td>
+                                <ng-container
+                                    *ngFor="let weekday of commonFunctions.getObjectKeys(weekdayKeysMappedByDisplayName)">
+                                    <ng-container
+                                        *ngIf="htmlRenderer.getOnlineClassByWeekDayAndStartTime(weekday, time) as onlineClass else NoClass;">
+                                        <td style="position: relative; min-width: 100px;"
+                                            [attr.rowspan]="htmlRenderer.getOnlineClassRowSpan(onlineClass)"
+                                            [class.overlapping-danger]="htmlRenderer.onlineClassListHasOverlappingError(onlineClass)"
+                                            [style.color]="htmlRenderer.colorPaletteHandle.getColorForSubject(onlineClass.parentClassSubject)"
+                                            [style.backgroundColor]="htmlRenderer.colorPaletteHandle.getBackgroundColorForSubject(onlineClass.parentClassSubject)">
+                                            <span>{{htmlRenderer.getCardSlotDisplayData(onlineClass).subject.name}}</span><br />
+                                            <span>
+                                                ({{htmlRenderer.getCardSlotDisplayData(onlineClass).classInstance.name}}
+                                                &
+                                                {{htmlRenderer.getSectionDisplayString(onlineClass)}})</span>
+                                            <span *ngIf="backendData.accountInfo"
+                                                style="position: absolute; bottom: 8px; right: 8px;"
+                                                class="glow-active"></span>
+
+                                            <mat-icon
+                                                *ngIf="htmlRenderer.onlineClassListHasOverlappingError(onlineClass)"
+                                                [matTooltip]="htmlRenderer.getOverlappingOnlineClassInfo(onlineClass)"
+                                                style="position: absolute; font-size: small; top: 2px; left: -3px; color: red;">
+                                                info
+                                            </mat-icon>
+                                        </td>
+                                    </ng-container>
+                                    <ng-template #NoClass>
+                                        <td *ngIf="htmlRenderer.isCellOccupiedDueToRowSpan(weekday, time)"></td>
+                                    </ng-template>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                        <tr style="border: none;">
+                            <td style="vertical-align: top; text-align: left; width: 50px;">
+                                <span style="position: relative; top: -12px;">
+                                    {{htmlRenderer.timeBreakPoints.slice(-1)[0].getDisplayString()}}
+                                </span>
+                            </td>
+                            <td colspan="7" style="border: none;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </ng-container>
+    </ng-container>
+
+</div>
+
+<ng-template #Loader>
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-template>
+
+<ng-template #NoClassReg>
+    <span>No Registered Class For Today</span>
+</ng-template>
+
+<ng-template #NotActiveSession>
+    <span style="color: red;">This session is closed</span>
+</ng-template>
+
+<ng-template #HiddenPassword>
+    <span style="cursor: pointer;" (click)="isPasswordVisible=true;">*******</span>
+</ng-template>

@@ -3,6 +3,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { UpdateAllServiceAdapter } from './update-all.service.adapter';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { PARAMETER_TYPE_LIST } from 'app/classes/constants/parameter';
+import {formatDate} from '@angular/common';
 
 class ColumnHandle {
     name: any;
@@ -40,22 +41,22 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle("Father's Name", 'fatherName', 'text', true, ''), // 4
         new ColumnHandle("Spouse's Name", 'spouseName', 'text', false, ''), // 5
         new ColumnHandle('Mobile No.', 'mobileNumber', 'number', true, ''), // 6
-        new ColumnHandle('Date of Birth', 'dateOfBirth', 'date', false, ''), // 7
+        new ColumnHandle('Date Of Birth', 'dateOfBirth', 'date', false, ''), // 7
         new ColumnHandle("Mother's Name", 'motherName', 'text', false, ''), // 8
         new ColumnHandle('Aadhar No.', 'aadharNumber', 'number', false, ''), // 9
-        new ColumnHandle('Passport No.', 'passportNumber', 'number', false, ''), // 10
-        new ColumnHandle('Qualification', 'qualification', 'number', false, ''), // 11
+        new ColumnHandle('Passport No.', 'passportNumber', 'text', false, ''), // 10
+        new ColumnHandle('Qualification', 'qualification', 'text', false, ''), // 11
         new ColumnHandle('Current Post', 'currentPost', 'text', false, ''), // 12
         new ColumnHandle('Date Of Joining', 'dateOfJoining', 'date', false, ''), // 13
-        new ColumnHandle('Pan No.', 'panNumber', 'number', false, ''), // 14
+        new ColumnHandle('Pan No.', 'panNumber', 'text', false, ''), // 14
         new ColumnHandle('Gender', 'gender', 'list', false, GENDER_LIST), // 15
         new ColumnHandle('Address', 'address', 'text', false, ''), // 16
         new ColumnHandle('Bank Name', 'bankName', 'text', false, ''), // 17
         new ColumnHandle('Bank Acc. No.', 'bankAccountNumber', 'text', false, ''), // 18
         new ColumnHandle('Epf Acc. No.', 'epfAccountNumber', 'number', false, ''), // 19
         new ColumnHandle('Bank IFSC Code', 'bankIfscCode', 'text', false, ''), // 20
-        new ColumnHandle('Month Salary', 'monthlySalary', 'text', false, ''), // 21
-        new ColumnHandle('Pran No.', 'pranNumber', 'text', false, ''), // 22
+        new ColumnHandle('Month Salary', 'monthlySalary', 'number', false, ''), // 21
+        new ColumnHandle('Pran No.', 'pranNumber', 'number', false, ''), // 22
         new ColumnHandle('Remark', 'remark', 'text', false, ''), // 23
     ];
 
@@ -141,5 +142,25 @@ export class UpdateAllComponent implements OnInit {
         this.COLUMNHANDLES.forEach((item) => {
             item.show = false;
         });
+    }
+
+    checkOnlyUppercaseFields(key: any) {
+        return key == 'panNumber' || key == 'passportNumber' || key == 'bankIfscCode';
+    }
+
+    handleOnKeyDown(inputType: any, event: any, backendKey: any) {
+        let keyPressed = event.keyCode;
+        if (inputType == 'text' && (backendKey == 'panNumber' || backendKey == 'passportNumber') && keyPressed == 32) { //space
+            event.preventDefault(); // if space is pressed prevent Default
+        } else if (inputType == 'date' && keyPressed != 8 && keyPressed != 46) { //check if it is date and not delete
+            return false; // don't allow to input any value
+        }
+    }
+
+    getMaxDateForDateType(key: any, inputType: string) {
+        if (key == 'dateOfBirth' && inputType == 'date' ) {
+            return formatDate(new Date(), 'yyyy-MM-dd', 'en');
+        }
+        return '';
     }
 }
