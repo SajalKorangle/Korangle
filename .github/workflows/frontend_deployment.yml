@@ -1,0 +1,45 @@
+name: Staging Deployment
+
+on: workflow_dispatch
+
+
+jobs:
+  buildDeploy:
+    # The type of runner that the job will run on 
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [10.16]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    #Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    #Installing Dependencies
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Prepare Package Staging
+      run: |
+        cd frontend
+        curl 'https://korangle.com/version.json' -o version.json
+        sh ./preparePackage.sh
+          
+    - name: Send frontend build s3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run : |
+        cd frontend
+        aws s3 cp -r ./korangle  s3://korangleplus/frontendBuild
+
+    
+
+          
