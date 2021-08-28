@@ -34,15 +34,18 @@
                             <input
                                 type="text"
                                 matInput
+                                style="text-transform: uppercase"
+                                pattern="/^[A-Z]{6,6}$/"
                                 [(ngModel)]="userInput.newSMSId.smsId"
                                 (ngModelChange)="serviceAdapter.getExistingSMSIdData()"
                             />
+                           <mat-error>SMS ID Must be 6 Characters</mat-error>
                        </mat-form-field>
                     </div>
                     
                     <div class="col-md-4">
                         <mat-form-field style="width: 100%">
-                             <mat-label>SMS Registration Number</mat-label>
+                             <mat-label>SMS ID Registration Number</mat-label>
                             <input
                                 type="text"
                                 matInput
@@ -66,6 +69,7 @@
             </div>
             <div class="col-md-4">
                 <div class="row" *ngIf="htmlRenderer.smsIdAlreadyExist()"><span style="color: red;font-weight: 400">SMS ID Already Exist in your List</span></div>
+                <div class="row" *ngIf="htmlRenderer.smsIdRegistrationAlreadyExist()"><span style="color: red;font-weight: 400">SMS ID Registration Number Already Exist in your List</span></div>
                 <div class="row" *ngIf="htmlRenderer.invalidSMSIdDetails()"><span style="color: red;font-weight: 400">Invalid Entity Registration Id for the Provided SMS ID</span></div>
             </div>
             

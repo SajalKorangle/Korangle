@@ -161,9 +161,9 @@
                             <ng-container *ngFor="let status of getStatusList(sms); let last = last">
                                 {{ status }}: {{ htmlRenderer.getMobileNumberListByStatusAndSMS(status, sms).length }},&nbsp;&nbsp;
                             </ng-container>
-                            Total: {{ htmlRenderer.getMobileNumberListBySMS(sms).length }}<br/><br/>
+                            Total SMS Numbers: {{ htmlRenderer.getMobileNumberListBySMS(sms).length }}<br/><br/>
 
-                            <mat-form-field>
+                            <mat-form-field *ngIf="htmlRenderer.getMobileNumberListBySMS(sms).length > 0">
                                 <mat-select placeholder="Select Status" [(ngModel)]="userInput.selectedStatus">
                                     <mat-option *ngFor="let status of getStatusList(sms)" [value]="status">
                                         {{ status }}

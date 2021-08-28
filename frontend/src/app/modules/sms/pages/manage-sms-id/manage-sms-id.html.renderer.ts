@@ -60,4 +60,10 @@ export class ManageSmsIdHtmlRenderer {
         }
         return false;
     }
+
+    smsIdRegistrationAlreadyExist() {
+        return this.vm.userInput.newSMSId.smsIdRegistrationNumber && !!this.vm.backendData.SMSIdList.find((smsId) => {
+            return smsId.smsIdRegistrationNumber == this.vm.userInput.newSMSId.smsIdRegistrationNumber;
+        });
+    }
 }
