@@ -1,4 +1,4 @@
-name: Staging Deployment
+name: Frontend Deployment Web Mobile
 
 on: workflow_dispatch
 
@@ -30,7 +30,7 @@ jobs:
       run: |
         cd frontend
         curl 'https://korangle.com/version.json' -o version.json
-        sh ./preparePackage.sh
+        sh ./preparePackage.sh mobile
           
     - name: Send frontend build s3
       env:
@@ -39,6 +39,7 @@ jobs:
       run : |
         cd frontend
         aws s3 cp -r ./korangle  s3://korangleplus/frontendBuild
+        aws cloudfront create-invalidation --distribution-id EDFDVBD6EXAMPLE --paths "/*"
 
     
 
