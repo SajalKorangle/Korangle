@@ -39,7 +39,7 @@ jobs:
       run : |
         cd frontend
         aws s3 cp -r ./korangle  s3://korangleplus/frontendBuild
-        aws cloudfront create-invalidation --distribution-id <Add Deployment id here> --paths "/*"
+        aws cloudfront create-invalidation --distribution-id E20ZD1859U30XI --paths "/*"
 
     
 
