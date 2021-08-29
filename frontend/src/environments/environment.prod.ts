@@ -2,7 +2,7 @@
 
 export const environment = {
     production: true,
-    versionCheckURL: 'www.korangle.com/version.json',
-    DJANGO_SERVER: 'https://www.korangle.com:8443',
+    versionCheckURL: 'backend.korangle.com/version.json',
+    DJANGO_SERVER: 'https://backend.korangle.com:8443',
     api_version: '/v2.0',
 };
