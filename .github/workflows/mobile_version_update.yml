@@ -1,4 +1,4 @@
-name: Frontend Deployment Web
+name: Mobile Version Update
 
 on: workflow_dispatch
 
