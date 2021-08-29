@@ -18,7 +18,6 @@ frontend/build/post-build.js
 frontend/korangle/
 frontend/korangle.*
 frontend/version.json
-frontend/src/environments/environment.prod.ts
 frontend/dist/
 frontend/src/coverage-report/
 frontend/src/coverage/*.json
