@@ -1,4 +1,4 @@
-name: Frontend Deployment Web Mobile
+name: Frontend Deployment
 
 on: workflow_dispatch
 
@@ -30,7 +30,7 @@ jobs:
       run: |
         cd frontend
         curl 'https://korangle.com/version.json' -o version.json
-        sh ./preparePackage.sh mobile
+        sh ./preparePackage.sh
           
     - name: Send frontend build s3
       env:

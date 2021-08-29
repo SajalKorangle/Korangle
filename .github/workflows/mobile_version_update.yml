@@ -30,7 +30,7 @@ jobs:
       run: |
         cd frontend
         curl 'https://korangle.com/version.json' -o version.json
-        sh ./preparePackage.sh
+        npm run post-build mobile
           
     - name: Send frontend build s3
       env:
@@ -38,8 +38,8 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run : |
         cd frontend
-        aws s3 cp -r ./korangle  s3://korangleplus/frontendBuild
-        aws cloudfront create-invalidation --distribution-id E20ZD1859U30XI --paths "/*"
+        aws s3 cp -r ./version.json  s3://korangleplus/frontendBuild/korangle/version.json
+        aws cloudfront create-invalidation --distribution-id E20ZD1859U30XI --paths "/version.json"
 
     
 
