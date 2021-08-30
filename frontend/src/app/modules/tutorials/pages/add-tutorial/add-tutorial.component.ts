@@ -65,7 +65,7 @@ export class AddTutorialComponent implements OnInit {
         sectionList: [],
         classSubjectList: [],
         subjectList: [],
-        fullStudentList: [],
+        fullStudentSectionList: [],
         inPagePermissionMappedByKey: {} as any,
     };
 

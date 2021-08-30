@@ -1,6 +1,7 @@
 import {RecordAttendanceComponent} from './record-attendance.component';
 import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
 import {INFORMATION_TYPE_LIST} from '../../../../classes/constants/information-type';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
@@ -63,18 +64,7 @@ export class RecordAttendanceServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let studentSectionList = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data);
-        let student_tc_data = {
-            parentStudent__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            status__in: ['Generated', 'Issued'].join(','),
-            fields__korangle: 'id,parentStudent,status'
-        };
-
-        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
-        studentSectionList = studentSectionList.filter(student_section => {
-            return tc_generated_student_list.find(tc => tc.parentStudent == student_section.parentStudent) == undefined;
-        });
+        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
 
         let student_data = {
             id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),

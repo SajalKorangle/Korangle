@@ -1,5 +1,6 @@
 import { AddTutorialComponent } from './add-tutorial.component';
 import {CommonFunctions} from '@modules/common/common-functions';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
@@ -34,18 +35,7 @@ export class AddTutorialServiceAdapter {
             parentStudent__parentTransferCertificate: 'null__korangle'
         };
 
-        let studentSectionList = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data);
-        let student_tc_data = {
-            parentStudent__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            status__in: ['Generated', 'Issued'].join(','),
-            fields__korangle: 'id,parentStudent,status'
-        };
-
-        const tc_generated_student_list = await this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_tc_data);
-        this.vm.backendData.fullStudentList = studentSectionList.filter(student_section => {
-            return tc_generated_student_list.find(tc => tc.parentStudent == student_section.parentStudent) == undefined;
-        });
+        this.vm.backendData.fullStudentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data);
 
         const value = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
@@ -128,7 +118,7 @@ export class AddTutorialServiceAdapter {
     }
 
     containsStudent(sectionTemp: any) {
-        return this.vm.backendData.fullStudentList.some((student) => {
+        return this.vm.backendData.fullStudentSectionList.some((student) => {
             return student.parentDivision === sectionTemp.id && student.parentClass === sectionTemp.parentClass;
         });
     }
@@ -316,7 +306,7 @@ export class AddTutorialServiceAdapter {
 
     async prepareStudentList() {
         this.vm.currentClassStudentList = [];
-        let student_list = this.vm.backendData.fullStudentList.filter((student) => {
+        let student_list = this.vm.backendData.fullStudentSectionList.filter((student) => {
             if (student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id) return true;
             return false;
         });

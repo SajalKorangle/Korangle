@@ -19,12 +19,11 @@ import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, Time } from '@modules/online-class
 import { openUrlInChrome, isMobile, openUrlInBrowser } from '@classes/common.js';
 
 import { CommonFunctions } from '@classes/common-functions';
-import {TCService} from '@services/modules/tc/tc.service';
 @Component({
     selector: 'classroom',
     templateUrl: './classroom.component.html',
     styleUrls: ['./classroom.component.css'],
-    providers: [OnlineClassService, StudentService, SubjectService, TCService],
+    providers: [OnlineClassService, StudentService, SubjectService],
 })
 
 export class ClassroomComponent implements OnInit, OnDestroy {
@@ -54,13 +53,10 @@ export class ClassroomComponent implements OnInit, OnDestroy {
     isActiveSession: boolean = false;
     isLoading: any;
 
-    studentIsPermitted = true;
-
     constructor(
         public onlineClassService: OnlineClassService,
         public studentService: StudentService,
         public subjectService: SubjectService,
-        public tcService: TCService,
     ) { }
 
     ngOnInit(): void {

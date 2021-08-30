@@ -14,31 +14,6 @@ export class ViewTutorialsServiceAdapter {
     async initializeData() {
         this.vm.stateKeeper.isLoading = true;
 
-        let student_data = {
-            id: this.vm.user.section.student.id,
-            fields__korangle: 'id,parentTransferCertificate'
-        };
-        const studentData = await this.vm.studentService.getObject(this.vm.studentService.student, student_data);
-        if (studentData.parentTransferCertificate != null) {
-            this.vm.stateKeeper.isLoading = false;
-            this.vm.studentIsPermitted = false;
-            return;
-        }
-
-        let tc_data = {
-            parentStudent: this.vm.user.section.student.id,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            status__in: ['Generated', 'Issued'].join(','),
-            fields__korangle: 'id,parentStudent,status'
-        };
-
-        const studentTcData = await this.vm.tcService.getObject(this.vm.tcService.transfer_certificate, tc_data);
-        if (studentTcData) {
-            this.vm.stateKeeper.isLoading = false;
-            this.vm.studentIsPermitted = false;
-            return;
-        }
-
         const request_student_subject_data = {
             parentStudent: this.vm.user.section.student.id,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
