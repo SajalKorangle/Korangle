@@ -13,6 +13,8 @@ export class GradeStudentServiceAdapter {
     }
 
     //initialize data
+    // Code Review
+    // Please write the start and end comments, refer code review file to understand
     async initializeData() {
         this.vm.isInitialLoading = true;
 
@@ -91,6 +93,8 @@ export class GradeStudentServiceAdapter {
                 const student_studentSection_map = {};
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
+                        // Code Review
+                        // If no use of code in future then remove it.
                         console.log(value_studentSection);
                         // value_studentSection = value_studentSection.filter((item) => {
                         //     return this.vm.attendancePermissionList.find((permission) => {
@@ -143,6 +147,10 @@ export class GradeStudentServiceAdapter {
         );
     }
 
+    // Code Review
+    // Why are we not checking through attendance permission list.
+    // Is the case of Class - 10, Section - A; Class - 9, Section - B;
+    // but not Class - 10, Section - B; and Class - 9, Section - A have been handled?
     populateFilteredClassSectionList(student_section_list): void {
         this.vm.filteredClassSectionList = [];
         this.vm.classList.forEach((classs) => {
