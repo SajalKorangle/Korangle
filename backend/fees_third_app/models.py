@@ -655,6 +655,7 @@ from accounts_app.views import TransactionAccountDetailsView
 # Why is the signal for another Order model is not implemented in the same file as the model?
 # Is this signal implemented w.r.t. to OnlineFeePaymentTransaction? Is it implemented with the future possibility
 # that multiple OrderCompletionHandler will be implemented in different files?
+# 2. Would it be more understandable if we rename it the below function to FeeReceiptOrderCompletionHandler
 @receiver(pre_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
     if (not instance._state.adding) and instance.status == 'Completed':
@@ -745,6 +746,7 @@ from payment_app.cashfree.cashfree import initiateRefund
 # 1. Is it okay to have two different functions with same name in the same file? Have you run it to make sure that
 # they will not clash.
 # 2. Comment here why this function is implemented.
+# 3. Based on the comment we can also change the name of this function.
 @receiver(post_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
     if (not kwargs['created']) and instance.status == 'Refund Pending':

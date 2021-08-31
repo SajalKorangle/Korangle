@@ -1,3 +1,6 @@
+// Code Review
+// Where is the winRef variable being used?
+
 import { Injectable } from '@angular/core';
 
 function _window(): any {

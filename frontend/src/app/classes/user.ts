@@ -154,6 +154,8 @@ export class User {
         } else if (this.checkUserSchoolSessionPermission(urlParams)) {
             // checking the school id  and session id in the url is valid for this user
             switch (
+            # Code Review
+            # Revert the unnecessary change
             modulePath // from here we are populating module
             ) {
                 // if the user refreshes the notification or user - settings
@@ -271,6 +273,9 @@ export class User {
                 this.section['videoUrl'] = task.videoUrl;
             }
         }
+        # Code Review
+        # I think this is written for orderId. Please confirm. Should this be handled in their
+        # respective pages. Also, where the extra query param is getting used?
         let urlParams = new URLSearchParams(window.location.search);
         urlParams.forEach((value, key) => {
             if (['school_id', 'session', 'student_id'].includes(key))

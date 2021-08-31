@@ -12,6 +12,8 @@ import { PaymentResponseDialogComponent } from './components/payment-response-di
     imports: [ViewFeeRoutingModule, ComponentsModule, FeesComponentsModule],
     exports: [],
     providers: [],
+    // Code Review
+    // Will the dialog open just after entering the page every time?
     entryComponents: [PaymentResponseDialogComponent],
     bootstrap: [ViewFeeComponent],
 })

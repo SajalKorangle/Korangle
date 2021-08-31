@@ -78,6 +78,8 @@ export class SettingsComponent implements OnInit {
         this.backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode].push(customAccountSession.id);
     }
 
+    // Code Review
+    // Move the function to service adapter.
     settingsValidityCheck(): boolean {
         let errormsg = '';
         let dataValid = true;

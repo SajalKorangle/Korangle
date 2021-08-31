@@ -19,9 +19,6 @@ import { PaymentResponseDialogComponent } from './components/payment-response-di
     declarations: [
         SmsComponent,
         PaymentResponseDialogComponent,
-        // SendSmsComponent,
-        // ViewSentComponent,
-        // ViewPurchasesComponent,
     ],
     entryComponents: [PaymentResponseDialogComponent],
     imports: [ComponentsModule, SmsRoutingModule, NgxDatatableModule],

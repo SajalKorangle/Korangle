@@ -1,3 +1,7 @@
+<!--
+    Code Review
+    Please write the start and end comments
+-->
 <div class="card-content">
 
     <ng-container *ngIf="!isLoading">
@@ -59,11 +63,6 @@
                             </mat-select>
                         </mat-form-field>
 
-                        <!--
-                            Code Review
-                            'KORANGLE' mode of payment can only have one credit account as
-                            user will not be choosing between any options
-                        -->
                         <mat-form-field style="flex-grow: 2;">
                             <mat-label>Mode: {{paymentMode}}</mat-label>
                             <mat-chip-list required>

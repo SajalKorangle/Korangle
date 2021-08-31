@@ -6,6 +6,9 @@ import { OnlinePaymentAccount } from '@services/modules/payment/models/online-pa
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
+// Code Review
+// Please indent the code with 4 spaces.
+
 @Component({
   selector: 'app-online-payment-account',
   templateUrl: './set-bank-account.component.html',
@@ -18,6 +21,9 @@ export class SetBankAccountComponent implements OnInit {
   validators = VALIDATORS_REGX;
 
   onlinePaymentAccount: OnlinePaymentAccount = new OnlinePaymentAccount();
+
+  // Code Review
+  // Correct the settelment spelling.
   settelmentCycleList: Array<SettelmentOption> = [];
 
   serviceAdapter: SetBankAccountServiceAdapter;
@@ -56,6 +62,8 @@ export class SetBankAccountComponent implements OnInit {
     // console.log('this: ', this);
   }
 
+  // Code Review
+  // This function is only being used in service adapter, so move it there.
   resetintermediateUpdateState(): void {
     this.intermediateUpdateState.accountVerificationLoading = false;
     this.intermediateUpdateState.ifscVerificationLoading = false;
@@ -63,6 +71,8 @@ export class SetBankAccountComponent implements OnInit {
     this.isLoading = false;
   }
 
+  // Code Review
+  // This function is only being used in service adapter, so move it there.
   getRequiredPaymentAccountData() {
     const requiredOnlyFields: OnlinePaymentAccount = JSON.parse(JSON.stringify(this.onlinePaymentAccount));
     delete requiredOnlyFields.vendorData.addedOn;
@@ -73,7 +83,11 @@ export class SetBankAccountComponent implements OnInit {
     return requiredOnlyFields;
   }
 
+  // Code Review
+  // Transfer this function to html renderer file.
   ifscError = (): boolean => {
+    // Code Review
+    // ifsc is not loading and ifsc
     if (!this.onlinePaymentAccount.vendorData.bank.ifsc || this.isIFSCLoading)
       return false;
     if (this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
@@ -81,6 +95,8 @@ export class SetBankAccountComponent implements OnInit {
     return true;
   }
 
+  // Code Review
+  // This function is only being used in service adapter, so move it there.
   offlineValidation(): boolean {
     if (this.onlinePaymentAccount.vendorData.bank.ifsc.length != 11) {
       alert('Invalid IFSC');
@@ -114,6 +130,10 @@ export class SetBankAccountComponent implements OnInit {
     return true;
   }
 
+    // Code Review
+    // 1. If the update is going on, what does isUpdating returning, true or false?
+    // I think the nomenclature of this function is opposite.
+    // 2. Also, move this function to html renderer file.
   isUpdating(): boolean {
     return Object.values(this.intermediateUpdateState).reduce((acc: boolean, next: boolean) => acc || next, false);
   }
@@ -123,5 +143,7 @@ export class SetBankAccountComponent implements OnInit {
 
 interface SettelmentOption {
   id: string;
+  // Code Review
+  // Use full words in variable names.
   desc: string;
 }

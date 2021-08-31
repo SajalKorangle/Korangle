@@ -52,7 +52,6 @@ const routes: Routes = [
         path: '',
         component: ParentComponent,
     },
-
     {
         path: PRINT_FULL_FEE_RECIEPT_LIST,
         component: PrintFullFeeReceiptListComponent,

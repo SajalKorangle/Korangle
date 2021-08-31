@@ -38,6 +38,8 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
     window.history.pushState({}, document.title, url);
   }
 
+  // Code Review
+  // Please correct the spelling - initilize
   async initilizeData() {
     const order_request = {
       orderId: this.orderId,
@@ -47,6 +49,8 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
   }
 
 
+  // Code Review
+  // Please correct the spelling.
   isTranactionSuccessfull() {
     return this.backendData.order.status == STATUS_CHOICES[1];
   }

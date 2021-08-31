@@ -69,12 +69,6 @@ export class CancelFeeReceiptServiceAdapter {
                     return item.id == feeReceipt.id;
                 }).cancelled = true;
 
-                /*this.vm.subFeeReceiptList.filter(item => {
-                return item.parentFeeReceipt == feeReceipt.id;
-            }).forEach(item => {
-                item.cancelled = true;
-            });*/
-
                 this.vm.isLoading = false;
             }
         );

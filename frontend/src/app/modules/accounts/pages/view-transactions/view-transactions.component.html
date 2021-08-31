@@ -59,6 +59,10 @@
                 </mat-option>
                 <mat-option *ngFor="let account of filterAccountsList">
                     <mat-checkbox [(ngModel)]="account.selected"
+                        <!--
+                            Code Review
+                            Please check if the page will work without click binding. If yes please remove it.
+                         -->
                         (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}&nbsp;A/c
                     </mat-checkbox>
                 </mat-option>
@@ -85,6 +89,10 @@
                 </mat-option>
                 <mat-option *ngFor="let employee of filterEmployeeList">
                     <mat-checkbox [(ngModel)]="employee.selected"
+                        <!--
+                            Code Review
+                            Please check if the page will work without click binding. If yes please remove it.
+                         -->
                         (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
                 </mat-option>
                 <mat-option>
@@ -110,6 +118,10 @@
                 </mat-option>
                 <mat-option *ngFor="let head of filterHeadsList">
                     <mat-checkbox [(ngModel)]="head.selected"
+                        <!--
+                            Code Review
+                            Please check if the page will work without click binding. If yes please remove it.
+                         -->
                         (click)="getFilteredTransactionList();$event.stopPropagation()">{{head.title}}</mat-checkbox>
                 </mat-option>
                 <mat-option>
@@ -135,6 +147,10 @@
                 </mat-option>
                 <mat-option *ngFor="let group of filterGroupsList">
                     <mat-checkbox [(ngModel)]="group.selected"
+                        <!--
+                            Code Review
+                            Please check if the page will work without click binding. If yes please remove it.
+                         -->
                         (click)="getFilteredTransactionList();$event.stopPropagation()">{{group.title}}</mat-checkbox>
                 </mat-option>
                 <mat-option>
@@ -148,6 +164,10 @@
             </mat-select>
         </mat-form-field>
 
+        <!--
+            Code Review
+            Please check if the page will work without click binding. If yes please remove it.
+         -->
         <mat-slide-toggle [(ngModel)]="showSelectedOnly" (click)="getFilteredTransactionList();"
             style="margin-top:20px; margin-left: auto;">Only Selected Accounts <mat-icon style="vertical-align: middle;"
                 matTooltip="only transactions between selected accounts">help</mat-icon>

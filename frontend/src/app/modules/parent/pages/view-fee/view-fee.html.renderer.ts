@@ -7,6 +7,8 @@ export class ViewFeeHTMLRenderer {
         this.vm = vm;
     }
 
+    // Code Review
+    // Move this function back to component. HTML renderer file is to render html not to execute on user actions.
     openPaymentResponseDialog() {
         this.vm.dialog.open(PaymentResponseDialogComponent, {
             data: {

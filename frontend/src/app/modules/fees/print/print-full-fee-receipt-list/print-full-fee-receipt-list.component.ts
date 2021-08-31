@@ -26,6 +26,8 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
 
     checkView = false;
 
+    // Code Review
+    // This variable can be called single receipt or double receipt. if it is only used in html.
     parentView = false;
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }

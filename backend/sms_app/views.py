@@ -1,5 +1,9 @@
 from common.common_views_3 import CommonView, CommonListView
+# Code Review
+# Remove update_object import
 from common.common_serializer_interface_3 import create_object, update_object
+# Code Review
+# Remove user_permission_new import
 from decorators import user_permission, user_permission_3, user_permission_new
 from django.http import HttpResponse
 

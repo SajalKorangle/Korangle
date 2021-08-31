@@ -11,6 +11,8 @@ export class GeneralSMSPurchaseServiceAdapter {
         return noOfSMS * SMS_CHARGE;
     }
 
+    // Code Review
+    // This code is also written in parent - view fee service adapter.
     updateUserEmail(email) {
         const user_email_update_request = {
             'id': this.vm.user.id,
@@ -19,6 +21,8 @@ export class GeneralSMSPurchaseServiceAdapter {
         this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request);
     }
 
+    // Code Review
+    // Please write start and ending comments to segregate the code in this function.
     async makeSMSPurchase(noOfSMS: number, email: string) {
         if (noOfSMS <= 0) {
             alert('Invalid SMS Count');
@@ -33,7 +37,7 @@ export class GeneralSMSPurchaseServiceAdapter {
 
         const redirectParams = new URLSearchParams(location.search);
 
-        // redirect_to params decides the prontend page and state at which the user is redirected after payment
+        // redirect_to params decides the frontend page and state at which the user is redirected after payment
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
 
         const newOrder = {
@@ -45,6 +49,9 @@ export class GeneralSMSPurchaseServiceAdapter {
             orderNote: `payment towards sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`
         };
 
+        // Code Review
+        // Since this is a custom api, should we handle the Order and
+        // SMSPurchaseOrder (you are calling it onlineSmsPaymentTransaction for now) in the same api?
         const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.order_self, newOrder);
 
         const smsPurchase = {
@@ -62,6 +69,8 @@ export class GeneralSMSPurchaseServiceAdapter {
         const onlineSmsPaymentTransactionResponse =
             this.vm.smsService.createObject(this.vm.smsService.online_sms_payment_transaction, onlineSmsPaymentTransaction);
         if (!onlineSmsPaymentTransactionResponse)
+            // Code Review
+            // Should we alert user with a failded message here?
             return;
 
         const form = document.createElement('form');

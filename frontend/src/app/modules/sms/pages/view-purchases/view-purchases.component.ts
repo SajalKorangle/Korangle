@@ -41,6 +41,8 @@ export class ViewPurchasesComponent implements OnInit {
         this.serviceAdapter.initilizeDate();
     }
 
+    // Code Review
+    // This function should be in service adapter.
     formStructureFromBackendData() {
         this.parsedIncompleteTransactions
             = this.backendData.incompleteOnlineSmsPaymentTransactionList.map(transaction => {

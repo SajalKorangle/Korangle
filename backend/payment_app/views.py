@@ -16,6 +16,8 @@ class OnlinePaymentAccountView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
+        # Code Review
+        # Are we creating a random vendor id here? Why not create it like order id?
         vendorId = str(int(time()*1000000))
         vendorData = data['vendorData']
 
@@ -54,6 +56,9 @@ class OnlinePaymentAccountView(CommonView, APIView):
 from .models import Order
 from .cashfree.cashfree import createAndSignCashfreeOrder
 
+# Code Review
+# Please comment that order School is for online fee payment.
+# 2. Should the order id be created from here or from pre save signal of FeeReceiptOrder
 class OrderSchoolView(CommonView, APIView):
     Model = Order
     permittedMethods=['get', 'post',]
@@ -73,6 +78,9 @@ class OrderSchoolView(CommonView, APIView):
         return responseOrderData
 
 
+# Code Review
+# 1. Please comment that order self is for sms purchases.
+# 2. Should the order id be created from here or from pre save signal of SchoolSMSPurchaseOrder
 from .cashfree.cashfree import createAndSignSelfCashfreeOrder
 class OrderSelfView(CommonView, APIView):
     Model = Order
@@ -98,6 +106,8 @@ class OrderListView(CommonListView, APIView):
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from .cashfree.cashfree import getResponseSignature
 
+# Code Review
+# Please comment that order Completion is for Cashfree webhook.
 class OrderCompletionView(APIView):
     permission_classes = []
 

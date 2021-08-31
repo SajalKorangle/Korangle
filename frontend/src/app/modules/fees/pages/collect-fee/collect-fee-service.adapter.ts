@@ -169,6 +169,8 @@ export class CollectFeeServiceAdapter {
             if (feeReceipt['remark'] == '') {
                 feeReceipt['remark'] = null;
             }
+            // Code Review
+            // Why are we explicitly deleting the receipt number from tempObject now.
             delete tempObject.receiptNumber;
             return tempObject;
         });
@@ -177,8 +179,6 @@ export class CollectFeeServiceAdapter {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
 
-        // console.log('fee_receipt_list: ', fee_receipt_list);
-        // console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
 
 

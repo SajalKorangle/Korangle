@@ -30,6 +30,8 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() boardList;
     @Input() sessionList = [];
     @Input() isPrinting = false;
+    // Code Review
+    // What is the use of this variable?
     @Input() isParent = false;
 
     @Output() receiptCancelled = new EventEmitter<any>();

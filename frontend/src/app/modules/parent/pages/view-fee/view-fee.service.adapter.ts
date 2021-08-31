@@ -74,6 +74,8 @@ export class ViewFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
+            // Code Review
+            // Shouldn't there be a school filter applied in below api requests?
             this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}), // 13
             this.vm.feeService.getObjectList(this.vm.feeService.online_fee_payment_transaction, {}), //14
         ]).then(
@@ -149,7 +151,7 @@ export class ViewFeeServiceAdapter {
 
         let errorFlag = false;
 
-        this.vm.selectedStudentList.forEach(student => { // initilizing
+        this.vm.selectedStudentList.forEach(student => { // initializing
             if (this.vm.amountError(student)())
                 errorFlag = true;
         });
@@ -173,11 +175,11 @@ export class ViewFeeServiceAdapter {
                 'id': this.vm.user.id,
                 'email': this.vm.email
             };
-            // no need to await for response, not critica; task/ utility task
+            // no need to await for response, not critical task/ utility task
             this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request);
         }
 
-        // backend url were api will be hit after payment
+        // backend url api which will be hit by cashfree to verify the completion of payment on their portal.
         const returnUrl = new URL(
             environment.DJANGO_SERVER + Constants.api_version + this.vm.paymentService.module_url + this.vm.paymentService.order_completion);
 
@@ -196,6 +198,9 @@ export class ViewFeeServiceAdapter {
             orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`
         };
 
+        // Code Review
+        // Since this is a custom api, should we handle the Order and
+        // FeeReceiptOnlineOrder (you are calling it OnlinePaymentTransaction for now) in the same api?
         const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order_school, newOrder);
 
         const onlineFeePaymentTransactionList = [];

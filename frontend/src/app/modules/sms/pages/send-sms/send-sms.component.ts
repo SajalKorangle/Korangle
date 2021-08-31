@@ -452,7 +452,6 @@ export class SendSmsComponent implements OnInit {
         return true;
     }
 
-
     openPurchaseSMSDialog(): void {
         this.dialog.open(PurchaseSmsDialogComponent, {
             data: {
