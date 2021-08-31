@@ -35,6 +35,8 @@ export class AddTutorialServiceAdapter {
             parentStudent__parentTransferCertificate: 'null__korangle'
         };
 
+        // Code Review
+        // Should we include this in Promise all like in block student page
         this.vm.backendData.fullStudentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data);
 
         const value = await Promise.all([

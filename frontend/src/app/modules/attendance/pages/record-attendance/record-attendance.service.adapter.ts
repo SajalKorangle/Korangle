@@ -8,16 +8,15 @@ export class RecordAttendanceServiceAdapter {
 
     informationMessageType: any;
 
-    constructor() {
-    }
-
-    // Data
+    constructor() {}
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
     }
 
+    // Code Review
+    // Please write start and end comments.
     async initializeData() {
         this.vm.isInitialLoading = true;
         const sms_count_request_data = {
@@ -102,6 +101,9 @@ export class RecordAttendanceServiceAdapter {
                 dbId: division.id,
                 studentList: permittedStudentList,
             };
+            // Code Review
+            // If the student list is zero for a particular class,
+            // we shouldn't be making an api call for its attendance list.
             let alreadyPresentClass = this.vm.classSectionStudentList.find(c => c.dbId == tempClass.dbId);
             if (alreadyPresentClass) {
                 alreadyPresentClass.sectionList.push(tempDivision);

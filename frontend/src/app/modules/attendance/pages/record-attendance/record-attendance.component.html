@@ -57,7 +57,12 @@
     <div class="row" *ngIf="selectedClass">
         <div class="col-md-12" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px"></div>
     </div>
-    
+
+    <!--
+        Code Review
+        If the student list is zero for a particular class we shouldn't be making an api call for attendance list.
+        When will be the case when studentAttendanceStatusList's length is zero
+    -->
     <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList && studentAttendanceStatusList.length == 0"> No Students in the selected Section </ng-container>
 
     <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList && studentAttendanceStatusList.length > 0">
