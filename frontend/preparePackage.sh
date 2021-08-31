@@ -4,3 +4,4 @@ mv dist/ korangle
 npm run post-build $1
 cp version.json korangle/version.json
 zip -r korangle.zip korangle/
+mv korangle.zip ./korangle/
