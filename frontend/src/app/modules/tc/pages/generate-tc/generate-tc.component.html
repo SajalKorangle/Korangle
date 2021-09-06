@@ -3,51 +3,15 @@
         <div>
             <mat-form-field style="margin-right: 15px">
                 <mat-select placeholder="Select Class">
-                    <mat-option>
-                        <button
-                            class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
-                        >
-                            Select All
-                        </button>
-                        <button
-                            class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
-                        >
-                            Clear All
-                        </button>
-                    </mat-option>
-
                     <ng-container *ngFor="let classSection of classSectionList">
                         <mat-option style="width: 100%">
-                            <mat-checkbox
-                                [ngModel]="classSection.selected"
+                            <mat-checkbox [ngModel]="classSection.selected"
                                 (ngModelChange)="unselectAllClasses(); classSection.selected = $event; handleFilteredStudentSectionList()"
-                                (click)="$event.stopPropagation()"
-                            >
+                                (click)="$event.stopPropagation()">
                                 {{ classSection.class.name }}{{ classSection.showDivision ? ', ' + classSection.section.name : '' }}
                             </mat-checkbox>
                         </mat-option>
                     </ng-container>
-
-                    <mat-option>
-                        <button
-                            class="btn"
-                            style="padding: 4px 7px"
-                            (click)="selectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
-                        >
-                            Select All
-                        </button>
-                        <button
-                            class="btn"
-                            style="padding: 4px 7px"
-                            (click)="unselectAllClasses(); handleFilteredStudentSectionList(); $event.stopPropagation()"
-                        >
-                            Clear All
-                        </button>
-                    </mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -94,9 +58,8 @@
                 <button class="btn" style="padding: 4px 7px" (click)="clearAllStudents(); $event.stopPropagation()">Clear All</button>
 
                 <div style="float: right; margin-right: 12px">
-                    Selected: <b>{{ getSelectedStudentList().length }}</b
-                    >, Display: <b>{{ filteredStudentSectionList.length }}</b
-                    >, Total: <b>{{ studentSectionList.length }}</b>
+                    Selected: <b>{{ getSelectedStudentList().length }}</b>, Display: <b>{{ filteredStudentSectionList.length }}</b>, Total: <b>{{
+                        studentSectionList.length }}</b>
                 </div>
             </div>
 
@@ -114,7 +77,8 @@
                     <ng-container *ngFor="let studentSection of filteredStudentSectionList; let i = index">
                         <tr>
                             <td>
-                                <mat-checkbox [(ngModel)]="studentSection.selected" [disabled]="studentSection.disabled"></mat-checkbox>
+                                <mat-checkbox [ngModel]="studentSection.selected || studentSection.disabled" (ngModelChange)="studentSection.selected=$event"
+                                    [disabled]="studentSection.disabled"></mat-checkbox>
                             </td>
                             <td>{{ i + 1 }}</td>
                             <td>{{ getStudent(studentSection.parentStudent).name }}</td>
@@ -125,11 +89,8 @@
                 </tbody>
             </table>
 
-            <button
-                *ngIf="getSelectedStudentList().length > 0 && selectedLayout"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                (click)="generateTC()"
-            >
+            <button *ngIf="getSelectedStudentList().length > 0 && selectedLayout" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="generateTC()">
                 Generate
             </button>
         </div>
@@ -141,9 +102,7 @@
     <div style="text-align: center" *ngIf="generatedTcs != 0">
         <mat-progress-bar mode="determinate" [value]="(generatedTcs * 100) / getSelectedStudentList().length"></mat-progress-bar>
         {{ generatedTcs }}/{{ getSelectedStudentList().length }}<br />
-        <ng-container *ngIf="estimatedTime"
-            >Estimated Time: {{ estimatedTime.minutes }} minutes {{ estimatedTime.seconds }} seconds</ng-container
-        >
+        <ng-container *ngIf="estimatedTime">Estimated Time: {{ estimatedTime.minutes }} minutes {{ estimatedTime.seconds }} seconds</ng-container>
         <ng-container *ngIf="!estimatedTime">Processing ...</ng-container>
     </div>
 </ng-template>
