@@ -79,10 +79,7 @@ def get_list(data, query_set, ModelSerializer):
                     print('filter exception:')
                     print(filter_var)
 
-    return_data = []
-
-    for object in query_set:
-        return_data.append(ModelSerializer(object).data)
+    return_data = ModelSerializer(query_set, many=True).data
 
     return return_data
 
@@ -108,7 +105,7 @@ def update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStu
     return return_data
 
 
-def update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):        
+def update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
     serializer = ModelSerializer(query_set.get(id=data['id']), data=data)
     assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID), "errors: {0}, data: {1}".format(serializer.errors, data)
     serializer.save()
