@@ -10,6 +10,11 @@
             <ng-container *ngFor="let classSubject of filteredClassSubject">
                 <mat-option [value]="classSubject.id" [disabled]="isOccupied(classSubject)">
                     {{data.vm.backendData.getSubjectById(classSubject.parentSubject).name}}
+                    : {{data.vm.backendData.getEmployeeById(classSubject.parentEmployee).name}}
+                    <mat-icon *ngIf="isOccupied(classSubject)" [matTooltip]="getOccupiedInfo(classSubject)"
+                        style="font-size: medium; margin-top: 6px; color: red;">
+                        info
+                    </mat-icon>
                 </mat-option>
             </ng-container>
         </mat-select>

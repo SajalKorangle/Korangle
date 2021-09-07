@@ -39,7 +39,7 @@ export class ViewDefaultersServiceAdapter {
         this.populateTemplateList();
 
         const feeTypeList = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         const student_section_list = {
@@ -56,7 +56,7 @@ export class ViewDefaultersServiceAdapter {
             }),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {
                 parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
-                parentStudentParamter__parameterType: 'FILTER',
+                parentStudentParameter__parameterType: 'FILTER',
             }),
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),
         ]).then((val) => {
@@ -95,11 +95,11 @@ export class ViewDefaultersServiceAdapter {
                     parentSchool: this.vm.user.activeSchool.dbId,
                 };
 
-                service_list.push(this.vm.classService.getObjectList(this.vm.classService.classs, {}));
-                service_list.push(this.vm.classService.getObjectList(this.vm.classService.division, {}));
-                service_list.push(this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt));
+                service_list.push(this.vm.classService.getObjectList(this.vm.classService.classs, {})); // 0
+                service_list.push(this.vm.classService.getObjectList(this.vm.classService.division, {})); // 1
+                service_list.push(this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt)); // 2
 
-                let loopVariable = 0;
+                /*let loopVariable = 0;
                 while (loopVariable < iterationCount) {
                     const student_list = {
                         id__in: tempStudentIdList
@@ -139,7 +139,36 @@ export class ViewDefaultersServiceAdapter {
                     service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list));
 
                     loopVariable = loopVariable + 1;
-                }
+                }*/
+
+                const student_list = {
+                    id__in: tempStudentIdList,
+                    fields__korangle: 'id,name,fathersName,mobileNumber,secondMobileNumber,address,scholarNumber',
+                };
+
+                const student_fee_list = {
+                    parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
+                    cleared: 'false__boolean',
+                    parentStudent__in: tempStudentIdList,
+                };
+
+                const sub_fee_receipt_list = {
+                    parentStudentFee__parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
+                    parentStudentFee__cleared: 'false__boolean',
+                    parentStudentFee__parentStudent__in: tempStudentIdList,
+                    parentFeeReceipt__cancelled: 'false__boolean',
+                };
+
+                const sub_discount_list = {
+                    parentStudentFee__parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
+                    parentStudentFee__cleared: 'false__boolean',
+                    parentStudentFee__parentStudent__in: tempStudentIdList,
+                    parentDiscount__cancelled: 'false__boolean',
+                };
+                service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list)); // 3
+                service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list)); // 4
+                service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list)); // 5
+                service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list)); // 6
 
                 Promise.all(service_list).then(
                     (value) => {
@@ -156,7 +185,7 @@ export class ViewDefaultersServiceAdapter {
                         this.vm.subFeeReceiptList = [];
                         this.vm.subDiscountList = [];
 
-                        let remaining_result = value.slice(3);
+                        /*let remaining_result = value.slice(3);
 
                         let loopVariable = 0;
                         while (loopVariable < iterationCount) {
@@ -165,7 +194,12 @@ export class ViewDefaultersServiceAdapter {
                             this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(remaining_result[loopVariable * 4 + 2]);
                             this.vm.subDiscountList = this.vm.subDiscountList.concat(remaining_result[loopVariable * 4 + 3]);
                             loopVariable = loopVariable + 1;
-                        }
+                        }*/
+
+                        this.vm.studentList = this.vm.studentList.concat(value[3]);
+                        this.vm.studentFeeList = this.vm.studentFeeList.concat(value[4]);
+                        this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value[5]);
+                        this.vm.subDiscountList = this.vm.subDiscountList.concat(value[6]);
 
                         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
                         this.vm.handleLoading();
