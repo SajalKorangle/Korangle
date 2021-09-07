@@ -40,7 +40,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     showStudentList = false;
 
-    studentAttendanceStatusList: any;
+    studentAttendanceStatusList = [];
 
     isInitialLoading = false;
 

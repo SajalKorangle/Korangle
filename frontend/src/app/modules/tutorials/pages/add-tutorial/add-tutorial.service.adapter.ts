@@ -36,24 +36,22 @@ export class AddTutorialServiceAdapter {
         };
 
         // Code Review
-        // Should we include this in Promise all like in block student page
-        this.vm.backendData.fullStudentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data);
-
-        const value = await Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //2
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //3
-            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {
+        // Should we include this in Promise all like in block student page --> Done
+        [this.vm.backendData.fullStudentSectionList, this.vm.backendData.classList, this.vm.backendData.sectionList,
+            this.vm.backendData.classSubjectList, this.vm.backendData.subjectList, this.vm.settings,
+            this.vm.smsBalance] = await Promise.all([
+            await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+            this.vm.tutorialService.getObject(this.vm.tutorialService.tutorial_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //4
             this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //5
         ]);
 
-        this.vm.smsBalance = value[5];
-        if (value[5].length > 0) {
-            this.vm.settings = value[4][0];
-        } else {
+        if (this.vm.smsBalance.length < 0) {
             this.vm.settings = {
                 sentUpdateType: 1,
                 sendCreateUpdate: false,
@@ -61,10 +59,7 @@ export class AddTutorialServiceAdapter {
                 sendDeleteUpdate: false,
             };
         }
-        this.vm.backendData.classList = value[0];
-        this.vm.backendData.sectionList = value[1];
-        this.vm.backendData.classSubjectList = value[2];
-        this.vm.backendData.subjectList = value[3];
+
         this.populateClassSectionSubjectList();
         this.populateDefaults();
         this.vm.stateKeeper.isLoading = false;
