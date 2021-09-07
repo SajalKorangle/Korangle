@@ -17,6 +17,7 @@ import { isMobile } from '../../../../classes/common.js';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
+import moment = require('moment');
 
 export interface EditHomeworkDialogData {
     id: any;
@@ -197,12 +198,16 @@ export class IssueHomeworkComponent implements OnInit {
         return isMobile();
     }
 
-    isCreateButtonDisabled(str: string): boolean {
-        if (str == null) {
-            return true;
-        }
-        if (str.trim().length == 0) {
-            return true;
+    isCreateButtonDisabled(currentHomework: any): boolean {
+        return currentHomework.homeworkName == null || currentHomework.homeworkName.trim().length == 0 ||
+            this.checkDateTimeInvalid(currentHomework);
+    }
+
+    checkDateTimeInvalid(currentHomework: any) {
+        if (currentHomework.endDate && currentHomework.endTime) {
+            let deadLine = moment(currentHomework.endDate + ' ' + currentHomework.endTime);
+            let dateNow = moment();
+            return deadLine < dateNow;
         }
         return false;
     }

@@ -73,8 +73,7 @@ class SmsListView(CommonListView, APIView):
         data = {
             'parentSchool': activeSchoolID,
             'startDateTime': request.GET['startDateTime'],
-            'endDateTime': request.GET['endDateTime'],
-            'sentStatus': request.GET['sentStatus']
+            'endDateTime': request.GET['endDateTime']
         }
         return get_sms_list(data)
 

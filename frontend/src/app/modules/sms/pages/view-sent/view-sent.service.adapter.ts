@@ -45,17 +45,19 @@ export class ViewSentServiceAdapter {
 
 
     // Get Delivery Report
-    async getDeliveryReport(sms: any) {
+    async   getDeliveryReport(sms: any) {
+        sms['isLoading'] = true;
         if (sms.deliveryReportList) {
             this.vm.userInput.selectedStatus = this.vm.getStatusList(sms)[0];
+            sms.isLoading = false;
             return;
         }
 
-        if (sms.requestId == -1 || sms.requestId == 0) {
+        if (sms.remark == 'FAILED' || sms.remark == 'ONLY NOTIFICATION') {
+            sms.isLoading = false;
             return;
         }
 
-        sms['isLoading'] = true;
 
         let data = {
             requestId: sms.requestId,

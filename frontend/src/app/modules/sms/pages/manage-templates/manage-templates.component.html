@@ -18,9 +18,9 @@
     </ng-container>
 
     <ng-container *ngIf="userInput.selectedPage">
-        <div class="row" style="margin-left: 1px;" *ngIf="!userInput.selectedEvent">
+        <div class="row" style="margin-left: 1px;">
             <button type="submit" class="btn" style="float: left; cursor: pointer; padding: 4px 7px"
-                    (click)="previousPage = userInput.selectedPage;userInput.selectedPage = null;">
+                    (click)="htmlRenderer.handleBackClick()">
                 Go Back
             </button>
         </div>
@@ -47,13 +47,6 @@
             </ng-container>
 
             <ng-container *ngIf="userInput.selectedEvent">
-                <div class="row" style="margin-left: 1px;">
-                    <button type="submit" class="btn" style="float: left; cursor: pointer; padding: 4px 7px"
-                            (click)="previousPage = userInput.selectedPage;userInput.selectedEvent = null;">
-                        Go Back
-                    </button>
-                </div>
-
                 <div class="row" style="padding-left:5px">
                     <b style="font-size:16px;margin-left:12px">{{userInput.selectedEvent.eventName}}</b>
                 </div>

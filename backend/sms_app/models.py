@@ -123,7 +123,7 @@ class SMS(models.Model):
 @receiver(post_save, sender=SMS)
 def sms_sender(sender, created, instance, **kwargs):
     if created:
-        response = {'remark': 'ONLY NOTIFICATION', 'requestId': 0,
+        response = {'remark': 'ONLY NOTIFICATION', 'requestId': None,
                     'mobileNumberContentJson': instance.mobileNumberContentJson}
         from sms_app.business.send_sms import send_sms
         try:

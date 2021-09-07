@@ -31,7 +31,7 @@ export class ManageTemplatesComponent implements OnInit {
     populatedSMSIdList = [];
     populatedSMSEventSettingsList = [];
 
-    previousPage = null;
+    NOTIFY_DEFAULTERS_SMS_EVENT_ID = 4;
 
     userInput = {
         selectedPage: null,

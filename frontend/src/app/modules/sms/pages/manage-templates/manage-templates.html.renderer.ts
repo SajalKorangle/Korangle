@@ -99,7 +99,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     setNotificationContent(smsEvent: any, $event: any) {
-        smsEvent.eventSettings.customNotificationContent = $event.replace(/(\\r)?\\n/g, "\n");
+        smsEvent.eventSettings.customNotificationContent = $event.replace(/(\\r)?\\n/g, '\n');
         let textArea = document.getElementById('notificationContent');
         textArea.style.height = '0px';
         textArea.style.height = (textArea.scrollHeight + 30) + 'px';
@@ -123,7 +123,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     rawContentChanged(smsEvent: any, $event: any) {
-        smsEvent.customEventTemplate.rawContent = $event.replace(/(\\r)?\\n/g, "\n");
+        smsEvent.customEventTemplate.rawContent = $event.replace(/(\\r)?\\n/g, '\n');
         smsEvent.customEventTemplate.mappedContent = smsEvent.customEventTemplate.rawContent.replace(/{#var#}/g, '{#studentName#}');
         let textArea = document.getElementById('smsTemplate');
         textArea.style.height = '0px';
@@ -159,12 +159,12 @@ export class ManageTemplatesHtmlRenderer {
             smsEvent.customEventTemplate.mappedContent.replace(FIND_VARIABLE_REGEX, '{#var#}') != smsEvent.customEventTemplate.rawContent;
     }
 
-    getVariableList(smsEvent : any) {
+    getVariableList(smsEvent: any) {
         return VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id).variableList.map(a => a.displayVariable);
     }
 
     newTemplateChanged(event: any) {
-        this.vm.userInput.newTemplate.rawContent = event.replace(/(\\r)?\\n/g, "\n");
+        this.vm.userInput.newTemplate.rawContent = event.replace(/(\\r)?\\n/g, '\n');
         let textArea = document.getElementById('newTemplate');
         textArea.style.height = '0px';
         textArea.style.height = (textArea.scrollHeight + 30) + 'px';
@@ -183,5 +183,12 @@ export class ManageTemplatesHtmlRenderer {
 
     getEventName(eventId: any) {
         return this.vm.backendData.SMSEventList.find(x => x.id == eventId).eventName;
+    }
+
+    handleBackClick() {
+        if (!this.vm.userInput.selectedEvent || this.vm.userInput.selectedEvent.id == this.vm.NOTIFY_DEFAULTERS_SMS_EVENT_ID) {
+            this.vm.userInput.selectedPage = null;
+        }
+        this.vm.userInput.selectedEvent = null;
     }
 }
