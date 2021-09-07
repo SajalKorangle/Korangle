@@ -37,7 +37,7 @@ export class SettingsHtmlRenderer {
         return { subject, classs, section, employee };
     }
 
-    openNewOnlineClassDialog(weekdayKey, timeSpan) { // check here
+    openNewOnlineClassDialog(weekdayKey, timeSpan) {
         let onlineClass: ParsedOnlineClass = this.getOnlineClassByWeekDayAndTime(weekdayKey, timeSpan);
         const data = {
             vm: this.vm,
@@ -118,6 +118,9 @@ export class SettingsHtmlRenderer {
             if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
                 return false;
             }
+            if (concernedClassSubject.parentClass == classSubject.parentClass && concernedClassSubject.parentDivision == classSubject.parentDivision) {
+                return false;
+            }
             if (classSubject.parentClass == concernedClassSubject.parentClass && classSubject.parentSubject == concernedClassSubject.parentSubject) {
                 return false;
             }
@@ -136,6 +139,9 @@ export class SettingsHtmlRenderer {
         const bookedSlotOnlineClassList = this.vm.backendData.onlineClassList.filter(onlineClass => {
             const classSubject = this.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
             if (classSubject.parentEmployee != concernedClassSubject.parentEmployee) {
+                return false;
+            }
+            if (concernedClassSubject.parentClass == classSubject.parentClass && concernedClassSubject.parentDivision == classSubject.parentDivision) {
                 return false;
             }
             if (classSubject.parentClass == concernedClassSubject.parentClass && classSubject.parentSubject == concernedClassSubject.parentSubject)
