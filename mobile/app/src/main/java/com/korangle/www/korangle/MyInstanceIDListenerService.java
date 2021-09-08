@@ -21,12 +21,12 @@ public class MyInstanceIDListenerService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
-
         String updateMessage = data.get("data");
 
         if (updateMessage != null && updateMessage.equals("UPDATE")) {
             Intent myIntent = new Intent("APP-UPDATE");
-            this.sendBroadcast(myIntent); // send broadcast to Main Activity to check for Updates
+            MainActivity.volleyFace.checkingUpdates(); // checking updates
+            this.sendBroadcast(myIntent); // send broadcast to Main Activity to Remove the app from background
             return;
         }
 

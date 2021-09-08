@@ -18,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     Bitmap mImageBitmap;
 
-    public VolleyFace volleyFace;
+    public static VolleyFace volleyFace;
 
     private long pressedTime;
 
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
             handleSuccessfulInternetConnection();
         }
 
+        registerReceiver(myReceiver, new IntentFilter("APP-UPDATE"));
     }
 
     // back press button click handler
@@ -258,8 +260,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-        registerReceiver(myReceiver, new IntentFilter("APP-UPDATE"));
     }
 
     public boolean isNetworkConnected() {
@@ -430,12 +430,16 @@ public class MainActivity extends AppCompatActivity {
     public BroadcastReceiver myReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            volleyFace.checkingUpdates();
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 finishAndRemoveTask();
             }
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
+    }
 
 }

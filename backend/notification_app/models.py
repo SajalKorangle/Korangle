@@ -5,7 +5,6 @@ from django.db.models import DateField
 
 from school_app.model.models import School
 from django.contrib.auth import get_user_model
-
 User = get_user_model()
 from information_app.models import MessageType
 
@@ -15,6 +14,7 @@ from .business.send_notification import send_notification
 
 
 class Notification(models.Model):
+
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
@@ -40,7 +40,7 @@ class Notification(models.Model):
 def sendNotification(sender, instance, created, **kwargs):
     if kwargs['raw']:
         return
-    if (created):
+    if(created):
         send_notification(instance)
 
 
