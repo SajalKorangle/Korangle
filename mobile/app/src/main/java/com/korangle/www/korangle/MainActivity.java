@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
+    public String webapp_url = "https://www.korangle.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
