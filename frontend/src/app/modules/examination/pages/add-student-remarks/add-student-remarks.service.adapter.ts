@@ -78,7 +78,10 @@ export class AddStudentRemarksServiceAdapter {
                     (value_studentSection) => {
                         // Code Review
                         // Why is the below function call commented?
-                        // this.populateStudentSectionList(value_studentSection);
+
+                        // --> this function populates the StudentSection by checking the permitted Classes of the user
+                        // it is not needed since we are fetching only the permitted Class Student Section List (request_student_section_data)
+
                         this.vm.studentSectionList = value_studentSection;
                         if (this.vm.studentSectionList.length === 0) {
                             alert('No students have been allocated in your permitted class');
@@ -135,19 +138,6 @@ export class AddStudentRemarksServiceAdapter {
         }
     }
 
-    populateStudentSectionList(studentSectionList: any): void {
-        this.vm.studentSectionList = studentSectionList.filter((eachStudentSection) => {
-            return this.vm.attendancePermissionList.some((eachAttendancePermission) => {
-                if (
-                    eachStudentSection.parentClass === eachAttendancePermission.parentClass &&
-                    eachStudentSection.parentDivision === eachAttendancePermission.parentDivision
-                ) {
-                    return true;
-                }
-                return false;
-            });
-        });
-    }
 
     populateClassSectionList(classList: any, sectionList: any): void {
         classList.forEach((classs) => {

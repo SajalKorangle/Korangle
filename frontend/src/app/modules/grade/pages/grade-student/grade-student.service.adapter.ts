@@ -94,13 +94,7 @@ export class GradeStudentServiceAdapter {
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
                         // Code Review
-                        // If no use of code in future then remove it.
-                        console.log(value_studentSection);
-                        // value_studentSection = value_studentSection.filter((item) => {
-                        //     return this.vm.attendancePermissionList.find((permission) => {
-                        //         return permission.parentClass === item.parentClass && permission.parentDivision === item.parentDivision;
-                        //     }) !== undefined;
-                        // });
+                        // If no use of code in future then remove it. --> Removed
 
                         if (value_studentSection.length === 0) {
                             this.vm.isInitialLoading = false;
