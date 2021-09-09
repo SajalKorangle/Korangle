@@ -1,5 +1,4 @@
 import { ViewGradeComponent } from './view-grade.component';
-import {CommonFunctions} from '@modules/common/common-functions';
 
 export class ViewGradeServiceAdapter {
     vm: ViewGradeComponent;
@@ -13,18 +12,8 @@ export class ViewGradeServiceAdapter {
     }
 
     // initialize data
-    async initializeData() {
+    initializeData(): void {
         this.vm.isInitialLoading = true;
-
-        const routeInformation = CommonFunctions.getModuleTaskPaths();
-        const in_page_permission_request = {
-            parentTask__parentModule__path: routeInformation.modulePath,
-            parentTask__path: routeInformation.taskPath,
-            parentEmployee: this.vm.user.activeSchool.employeeId,
-        };
-
-         this.vm.inPagePermissionMappedByKey = (await
-             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         let grade_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -39,69 +28,63 @@ export class ViewGradeServiceAdapter {
             parentExamination: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        let request_student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent__parentTransferCertificate: 'null__korangle',
-        };
-
-        const attendance_permission_data = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
-        if (!this.vm.hasAdminPermission()) {
-            const attendance_perm_list = await this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_permission,
-                attendance_permission_data);
-            request_student_section_data['parentClass__in'] = attendance_perm_list.map(permission => permission.parentClass).join();
-            request_student_section_data['parentDivision__in'] = attendance_perm_list.map(permission => permission.parentClass).join();
-        }
-
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
-            this.vm.gradeService.getObjectList(this.vm.gradeService.grade, grade_data), //2
-            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, sub_grade_data), //3
-            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, examination_data), //4
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data) //5
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
+            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.gradeService.getObjectList(this.vm.gradeService.grade, grade_data),
+            this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, sub_grade_data),
+            this.vm.examinationService.getObjectList(this.vm.examinationService.examination, examination_data),
         ]).then(
             (value) => {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.examinationList = value[4];
-                let value_studentSection = value[5];
-                let student_studentSection_map = {};
 
-                if (value_studentSection.length == 0) {
-                    this.vm.isInitialLoading = false;
-                    return;
-                }
-
-                let student_id = [];
-                value_studentSection.forEach((item) => {
-                    student_studentSection_map[item.parentStudent] = item;
-                    student_id.push(item.parentStudent);
-                });
-
-                let request_student_data = {
-                    id__in: student_id.join(),
-                    fields__korangle: 'id,name,profileImage',
+                let request_student_section_data = {
+                    parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+                    parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                    parentStudent__parentTransferCertificate: 'null__korangle',
                 };
 
-                this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
-                    (value_student) => {
-                        // map student with student section
-                        this.vm.studentList = value_student.map((student) => {
-                            student['studentSection'] = student_studentSection_map[student.id];
-                            return student;
+                let student_studentSection_map = {};
+                this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
+                    (value_studentSection) => {
+                        if (value_studentSection.length == 0) {
+                            this.vm.isInitialLoading = false;
+                            return;
+                        }
+
+                        let student_id = [];
+                        value_studentSection.forEach((item) => {
+                            student_studentSection_map[item.parentStudent] = item;
+                            student_id.push(item.parentStudent);
                         });
-                        this.vm.isInitialLoading = false;
+
+                        let request_student_data = {
+                            id__in: student_id.join(),
+                            fields__korangle: 'id,name,profileImage',
+                        };
+
+                        this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data).then(
+                            (value_student) => {
+                                // map student with student section
+                                this.vm.studentList = value_student.map((student) => {
+                                    student['studentSection'] = student_studentSection_map[student.id];
+                                    return student;
+                                });
+                                this.vm.isInitialLoading = false;
+                            },
+                            (error) => {
+                                console.log('Error fetching students');
+                            }
+                        );
+
+                        this.populateFilteredClassSectionList(value_studentSection);
                     },
                     (error) => {
-                        console.log('Error fetching students');
+                        console.log('Error fetching student section data');
                     }
                 );
-                this.populateFilteredClassSectionList(value_studentSection);
                 this.populateGradeList(value[2], value[3]);
             },
             (error) => {

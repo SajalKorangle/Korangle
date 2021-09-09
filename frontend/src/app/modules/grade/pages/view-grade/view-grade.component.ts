@@ -5,16 +5,12 @@ import { StudentService } from '../../../../services/modules/student/student.ser
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { ExaminationService } from '@services/modules/examination/examination.service';
-import {valueType} from '@modules/common/in-page-permission';
-import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './view-grade.permissions';
-import {EmployeeService} from '@services/modules/employee/employee.service';
-import {AttendanceService} from '@services/modules/attendance/attendance.service';
 
 @Component({
     selector: 'app-view-grade',
     templateUrl: './view-grade.component.html',
     styleUrls: ['./view-grade.component.css'],
-    providers: [GradeService, ClassService, StudentService, ExaminationService, EmployeeService, AttendanceService],
+    providers: [GradeService, ClassService, StudentService, ExaminationService],
 })
 export class ViewGradeComponent implements OnInit {
     user;
@@ -24,7 +20,6 @@ export class ViewGradeComponent implements OnInit {
     showTestDetails = false;
 
     serviceAdapter: ViewGradeServiceAdapter;
-    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     classList = [];
     sectionList = [];
@@ -43,9 +38,7 @@ export class ViewGradeComponent implements OnInit {
         public examinationService: ExaminationService,
         public studentService: StudentService,
         public classService: ClassService,
-        private cdRef: ChangeDetectorRef,
-        public employeeService: EmployeeService,
-        public attendanceService: AttendanceService
+        private cdRef: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -67,10 +60,6 @@ export class ViewGradeComponent implements OnInit {
                 student.studentSection.parentDivision === this.selectedClassSection.section.id
             );
         });
-    }
-
-    hasAdminPermission(): boolean {
-        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 
     /*selectClass(classs: any){
