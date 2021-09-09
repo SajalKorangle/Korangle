@@ -29,7 +29,7 @@ public class MyInstanceIDListenerService extends FirebaseMessagingService {
             // So, will the app be removed from the background,
             // even if it was in the background previously? --> Yes, Even if the app is open 
             // Why is this necessary? --> Because, if we dont remove the app, when resuming the app it is going to the login page, when the user is already logged in
-            // I have fixed it now, it wont go to the login page even if it is background
+            // I have fixed it now, it wont go to the login page even if it is background ( It was my mistake, after checking updates it was redirecting to korngle login page not localhost, i thought it was logging out'
             return;
         }
 
