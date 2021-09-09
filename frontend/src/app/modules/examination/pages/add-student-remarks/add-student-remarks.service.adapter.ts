@@ -80,7 +80,7 @@ export class AddStudentRemarksServiceAdapter {
                         // Why is the below function call commented?
 
                         // --> this function populates the StudentSection by checking the permitted Classes of the user
-                        // it is not needed since we are fetching only the permitted Class Student Section List (request_student_section_data)
+                        // it is not needed since we are fetching only the permitted Class Student Section List from the backend (request_student_section_data)
 
                         this.vm.studentSectionList = value_studentSection;
                         if (this.vm.studentSectionList.length === 0) {

@@ -15,6 +15,8 @@ export class GradeStudentServiceAdapter {
     //initialize data
     // Code Review
     // Please write the start and end comments, refer code review file to understand
+
+    // Start of Fetching and populating the Student,Permitted Classes,grade details
     async initializeData() {
         this.vm.isInitialLoading = true;
 
@@ -143,8 +145,11 @@ export class GradeStudentServiceAdapter {
 
     // Code Review
     // Why are we not checking through attendance permission list.
+    // --> because if we check through attendance permission list, we cannot handle the case of adminstrator permission (he needs to see all the classes)
     // Is the case of Class - 10, Section - A; Class - 9, Section - B;
-    // but not Class - 10, Section - B; and Class - 9, Section - A have been handled?
+    // but not Class - 10, Section - B; and Class - 9, Section - A have been handled? --> yes it has been handled
+    // --> here we will be checking whether the any student (Only the students for which the user has permission) is present in that section,
+    // if yes we are adding the section
     populateFilteredClassSectionList(student_section_list): void {
         this.vm.filteredClassSectionList = [];
         this.vm.classList.forEach((classs) => {
@@ -176,6 +181,7 @@ export class GradeStudentServiceAdapter {
         // console.log(this.vm.gradeList);
         // this.vm.selectedGrade = this.vm.gradeList[0];
     }
+     // End of Fetching and populating the Student,Permitted Classes,grade details
 
     // Get Student Sub-Grade Details
     getStudentSubGradeDetails(): void {
