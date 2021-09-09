@@ -24,13 +24,12 @@ public class MyInstanceIDListenerService extends FirebaseMessagingService {
         String updateMessage = data.get("data");
 
         if (updateMessage != null && updateMessage.equals("UPDATE")) {
-            Intent myIntent = new Intent("APP-UPDATE");
             MainActivity.volleyFace.checkingUpdates(); // checking updates
             // Code Review
             // So, will the app be removed from the background,
-            // even if it was in the background previously?
-            // Why is this necessary?
-            this.sendBroadcast(myIntent); // send broadcast to Main Activity to Remove the app from background
+            // even if it was in the background previously? --> Yes, Even if the app is open 
+            // Why is this necessary? --> Because, if we dont remove the app, when resuming the app it is going to the login page, when the user is already logged in
+            // I have fixed it now, it wont go to the login page even if it is background
             return;
         }
 

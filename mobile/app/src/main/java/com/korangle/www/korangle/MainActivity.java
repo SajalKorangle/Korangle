@@ -2,10 +2,8 @@ package com.korangle.www.korangle;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,7 +16,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -213,10 +210,6 @@ public class MainActivity extends AppCompatActivity {
             handleSuccessfulInternetConnection();
         }
 
-        // Code Review
-        // Will this receiver work when the application is closed/destroyed?
-        // Why is this receiver required?
-        registerReceiver(myReceiver, new IntentFilter("APP-UPDATE"));
     }
 
     // back press button click handler
@@ -428,21 +421,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return;
-    }
-
-    public BroadcastReceiver myReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                finishAndRemoveTask();
-            }
-        }
-    };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(myReceiver);
     }
 
 }
