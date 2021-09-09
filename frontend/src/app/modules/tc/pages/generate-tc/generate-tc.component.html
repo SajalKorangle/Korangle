@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" style="height: 90vh" *ngIf="!isLoading; else spinner">
+<div class="card-content main-page" style="height: 90vh" *ngIf="!isLoading; else spinner">
     <ng-container *ngIf="!isLoading">
         <div>
             <mat-form-field style="margin-right: 15px">
@@ -62,32 +62,33 @@
                         studentSectionList.length }}</b>
                 </div>
             </div>
-
-            <table class="table table-hover">
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th></th>
-                        <th>S. No.</th>
-                        <th>Name</th>
-                        <th>Class & Section</th>
-                        <th>Father's Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let studentSection of filteredStudentSectionList; let i = index">
+            <div class="responsive-table-wrapper">
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
-                            <td>
-                                <mat-checkbox [ngModel]="studentSection.selected || studentSection.disabled" (ngModelChange)="studentSection.selected=$event"
-                                    [disabled]="studentSection.disabled"></mat-checkbox>
-                            </td>
-                            <td>{{ i + 1 }}</td>
-                            <td>{{ getStudent(studentSection.parentStudent).name }}</td>
-                            <td>{{ getClass(studentSection.parentClass).name }}, {{ getDivision(studentSection.parentDivision).name }}</td>
-                            <td>{{ getStudent(studentSection.parentStudent).fathersName }}</td>
+                            <th></th>
+                            <th>S. No.</th>
+                            <th>Name</th>
+                            <th>Class & Section</th>
+                            <th>Father's Name</th>
                         </tr>
-                    </ng-container>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let studentSection of filteredStudentSectionList; let i = index">
+                            <tr>
+                                <td>
+                                    <mat-checkbox [ngModel]="studentSection.selected || studentSection.disabled"
+                                        (ngModelChange)="studentSection.selected=$event" [disabled]="studentSection.disabled"></mat-checkbox>
+                                </td>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ getStudent(studentSection.parentStudent).name }}</td>
+                                <td>{{ getClass(studentSection.parentClass).name }}, {{ getDivision(studentSection.parentDivision).name }}</td>
+                                <td>{{ getStudent(studentSection.parentStudent).fathersName }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
 
             <button *ngIf="getSelectedStudentList().length > 0 && selectedLayout" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                 (click)="generateTC()">
