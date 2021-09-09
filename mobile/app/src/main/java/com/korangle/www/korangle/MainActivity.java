@@ -213,6 +213,9 @@ public class MainActivity extends AppCompatActivity {
             handleSuccessfulInternetConnection();
         }
 
+        // Code Review
+        // Will this receiver work when the application is closed/destroyed?
+        // Why is this receiver required?
         registerReceiver(myReceiver, new IntentFilter("APP-UPDATE"));
     }
 
