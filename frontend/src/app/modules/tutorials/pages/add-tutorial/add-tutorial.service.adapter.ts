@@ -36,7 +36,7 @@ export class AddTutorialServiceAdapter {
         };
 
         // Code Review
-        // Should we include this in Promise all like in block student page --> Done
+        // go with the value format
         [this.vm.backendData.fullStudentSectionList, this.vm.backendData.classList, this.vm.backendData.sectionList,
             this.vm.backendData.classSubjectList, this.vm.backendData.subjectList, this.vm.settings,
             this.vm.smsBalance] = await Promise.all([
