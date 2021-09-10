@@ -49,6 +49,7 @@ def send_sms(instance_dict):
                  pay_load_json, headers)
 
     response = conn.getresponse().read()
+    print(response)
 
     message_data = json.loads(response.decode("utf-8"))['MessageData']
 

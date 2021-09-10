@@ -161,6 +161,8 @@ class SMSDeliveryReport(models.Model):
     # Delivered Date & Time
     deliveredDateTime = models.DateTimeField(null=True, verbose_name='deliveredDateTime')
 
+    messageId = models.TextField(null=True, verbose_name='messageId')
+
     # Sender Id
     senderId = models.CharField(null=False, max_length=10, default='KORNGL', verbose_name='senderId')
 
@@ -169,7 +171,7 @@ class SMSDeliveryReport(models.Model):
 
     class Meta:
         db_table = 'sms_delivery_report'
-        unique_together = ('requestId', 'mobileNumber')
+        unique_together = ('requestId', 'mobileNumber', 'messageId')
 
 
 class SMSPurchase(models.Model):

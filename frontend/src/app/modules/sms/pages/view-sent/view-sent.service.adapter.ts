@@ -60,11 +60,13 @@ export class ViewSentServiceAdapter {
 
 
         let data = {
+            parentSMSDbId: sms.id,
             requestId: sms.requestId,
             fetchedDeliveryStatus: sms.fetchedDeliveryStatus,
             smsGateWayHubVendor: sms.smsGateWayHubVendor,
             mobileNumberContentJson: sms.mobileNumberContentJson,
-            parentSMSId: sms.parentSMSId
+            parentSMSId: sms.parentSMSId,
+            scheduledDateTime: sms.scheduledDateTime
         };
 
         sms['deliveryReportList'] = await this.vm.smsService.getObjectList(this.vm.smsService.sms_delivery_report, data);
