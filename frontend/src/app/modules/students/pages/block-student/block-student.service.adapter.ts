@@ -30,14 +30,18 @@ export class BlockStudentServiceAdapter {
         };
 
         // Code Review
-        // go with the value format
-        [this.vm.backendData.studentSectionList, this.vm.backendData.classList, this.vm.backendData.divisionList, this.vm.backendData.restrictedStudentList]
-            = await Promise.all([
+        // go with the value format --> done
+        const value = await Promise.all([
                 getValidStudentSectionList(this.vm.tcService, this.vm.studentService, request_student_section_data), // 0
                 this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 1
                 this.vm.classService.getObjectList(this.vm.classService.division, {}), // 2
                 this.vm.onlineClassService.getObjectList(this.vm.onlineClassService.restricted_students, restricted_student_request), //3
             ]);
+
+        this.vm.backendData.studentSectionList = value[0];
+        this.vm.backendData.classList = value[1];
+        this.vm.backendData.divisionList = value[2];
+        this.vm.backendData.restrictedStudentList = value[3];
 
         let request_student_data = {
             id__in: [],

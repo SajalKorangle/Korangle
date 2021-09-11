@@ -36,20 +36,26 @@ export class AddTutorialServiceAdapter {
         };
 
         // Code Review
-        // go with the value format
-        [this.vm.backendData.fullStudentSectionList, this.vm.backendData.classList, this.vm.backendData.sectionList,
-            this.vm.backendData.classSubjectList, this.vm.backendData.subjectList, this.vm.settings,
-            this.vm.smsBalance] = await Promise.all([
-            await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list),
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}),
+        // go with the value format --> Done
+        const value = await Promise.all([
+            await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data), //0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //3
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //4
             this.vm.tutorialService.getObject(this.vm.tutorialService.tutorial_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
-            }), //4
-            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //5
+            }), //5
+            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
         ]);
+
+        this.vm.backendData.fullStudentSectionList = value[0];
+        this.vm.backendData.classList = value[1];
+        this.vm.backendData.sectionList = value[2];
+        this.vm.backendData.classSubjectList = value[3];
+        this.vm.backendData.subjectList = value[4];
+        this.vm.settings = value[5];
+        this.vm.smsBalance = value[6];
 
         if (this.vm.smsBalance.length < 0) {
             this.vm.settings = {

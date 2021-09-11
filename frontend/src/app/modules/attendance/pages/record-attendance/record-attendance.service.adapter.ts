@@ -17,18 +17,16 @@ export class RecordAttendanceServiceAdapter {
 
     // Code Review
     // Please write start and end comments. --> Done
-    // Start of Fetching the Student Data for all the classes in which the user has permission
     async initializeData() {
         this.vm.isInitialLoading = true;
+        // ------------------- Initial Data Fetching Starts ---------------------
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
-
         let request_attendance_permission_list_data = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
-
         const value = await Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
@@ -41,6 +39,7 @@ export class RecordAttendanceServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //4
         ]);
+        // ------------------- Initial Data Fetching Ends ---------------------
 
         this.vm.smsBalance = value[4];
         if (value[0].length > 0) {
@@ -56,6 +55,7 @@ export class RecordAttendanceServiceAdapter {
             class_permission_list.push(element.parentClass);
             division_permission_list.push(element.parentDivision);
         });
+        // ------------------- Fetching Valid Student Data Starts ---------------------
         let student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentStudent__parentTransferCertificate: 'null__korangle',
@@ -70,14 +70,13 @@ export class RecordAttendanceServiceAdapter {
             id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
             fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
         };
-
         const studentDataList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
+        // ------------------- Fetching Valid Student Data Ends ---------------------
+        // ------------------- Initialization of the ClassSectionStudentList using initial and student data ---------------------
         this.initializeClassSectionStudentList(value[2], value[3], studentSectionList, studentDataList, value[1]);
         this.vm.isInitialLoading = false;
     }
-    // End of Fetching data
 
-    // Start of Populating the ClassSectionStudentList with the permitted Classes of the user
     initializeClassSectionStudentList(
         classList: any,
         divisionList: any,
@@ -87,34 +86,40 @@ export class RecordAttendanceServiceAdapter {
     ): any {
         this.vm.classSectionStudentList = [];
 
+        // ------------------- Populating  classSectionStudentList Starts ---------------------
         attendancePermissionList.forEach(perm => {
-            let classs = classList.find(cl => cl.id == perm.parentClass);
-            let tempClass = {
-                name: classs.name,
-                dbId: classs.id,
-                sectionList: [],
-            };
-            let division = divisionList.find(div => div.id == perm.parentDivision);
             let permittedStudentList = studentList.filter(studentSec => studentSec.parentClass == perm.parentClass &&
                 perm.parentDivision == studentSec.parentDivision).map(stud => studentDetailsList.find(student => stud.parentStudent == student.id));
-            permittedStudentList.forEach(st => st["dbId"] = st.id);
-            let tempDivision = {
-                name: division.name,
-                dbId: division.id,
-                studentList: permittedStudentList,
-            };
-            // Code Review
-            // If the student list is zero for a particular class,
-            // we shouldn't be making an api call for its attendance list. --> Handled on line no. 138
-            let alreadyPresentClass = this.vm.classSectionStudentList.find(c => c.dbId == tempClass.dbId);
-            if (alreadyPresentClass) {
-                alreadyPresentClass.sectionList.push(tempDivision);
-            } else {
-                tempClass.sectionList.push(tempDivision);
-                this.vm.classSectionStudentList.push(tempClass);
+            if (permittedStudentList.length > 0) {
+                let classs = classList.find(cl => cl.id == perm.parentClass);
+                let tempClass = {
+                    name: classs.name,
+                    dbId: classs.id,
+                    sectionList: [],
+                };
+                let division = divisionList.find(div => div.id == perm.parentDivision);
+                permittedStudentList.forEach(st => st['dbId'] = st.id);
+                let tempDivision = {
+                    name: division.name,
+                    dbId: division.id,
+                    studentList: permittedStudentList,
+                };
+                // Code Review
+                // If the student list is zero for a particular class,
+                // we shouldn't be making an api call for its attendance list.
+                // --> Handled at line no.93 ( only if students are present in the class the class will be added in the dropdown)
+                let alreadyPresentClass = this.vm.classSectionStudentList.find(c => c.dbId == tempClass.dbId);
+                if (alreadyPresentClass) {
+                    alreadyPresentClass.sectionList.push(tempDivision);
+                } else {
+                    tempClass.sectionList.push(tempDivision);
+                    this.vm.classSectionStudentList.push(tempClass);
+                }
             }
         });
+        // ------------------- Populating  classSectionStudentList Ends ---------------------
 
+        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Starts ---------------------
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
                 section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
@@ -126,20 +131,13 @@ export class RecordAttendanceServiceAdapter {
             this.vm.selectedClass = this.vm.classSectionStudentList[0];
             this.vm.changeSelectedSectionToFirst();
         }
+        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Ends ---------------------
     }
-    // End of Populating the ClassStudentSectionList
 
-    // Fetching and Populating the AttendanceStatus after selecting a particular class section and click on Get
     getStudentsAttendanceStatusList(): void {
         this.vm.isLoading = true;
         this.vm.showStudentList = true;
         this.vm.currentAttendanceList = [];
-
-        if (this.getStudentIdList().length == 0) {
-            this.vm.studentAttendanceStatusList = [];
-            this.vm.isLoading = false;
-            return;
-        }
 
         let data = {
             parentStudent__in: this.getStudentIdList(),
@@ -185,8 +183,6 @@ export class RecordAttendanceServiceAdapter {
         });
         this.fetchGCMDevices(this.vm.studentAttendanceStatusList);
     }
-
-    // End of fetching and populating the AttendaceStatusList of selected Class
 
     updateStudentAttendanceList(): void {
         let data = this.vm.prepareStudentAttendanceStatusListData();
@@ -518,9 +514,7 @@ export class RecordAttendanceServiceAdapter {
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if (this.vm.selectedSentType == this.vm.sentTypeList[2]) {
-            return 0;
-        }
+        if (this.vm.selectedSentType == this.vm.sentTypeList[2]) return 0;
         this.vm.studentList
             .filter((item) => item.mobileNumber)
             .forEach((item, i) => {
@@ -542,9 +536,7 @@ export class RecordAttendanceServiceAdapter {
 
     getEstimatedNotificationCount = () => {
         let count = 0;
-        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {
-            return 0;
-        }
+        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) return 0;
 
         count = this.vm.studentList.filter((item) => {
             return item.mobileNumber && item.notification;
