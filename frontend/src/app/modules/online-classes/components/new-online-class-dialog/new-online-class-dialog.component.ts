@@ -52,14 +52,16 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
 
   isOccupied(classSubject: ClassSubject): boolean {
-    const parentEmployee = classSubject.parentEmployee;
 
     const bookedSlotOnlineClass = this.data.vm.backendData.onlineClassList.find(onlineClass => {
-      const classSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-      if (classSubject.parentEmployee != parentEmployee) {
+      const concernedClassSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+      if (concernedClassSubject.parentEmployee != classSubject.parentEmployee) {
         return false;
       }
-      if (classSubject.parentClass == this.data.vm.userInput.selectedClass.id) {
+      if (concernedClassSubject.parentClass == classSubject.parentClass && concernedClassSubject.parentDivision == classSubject.parentDivision) {
+        return false;
+      }
+      if (concernedClassSubject.parentClass == this.data.vm.userInput.selectedClass.id && concernedClassSubject.parentSubject == classSubject.parentSubject) {
         return false;
       }
       if (this.data.weekday == onlineClass.day
@@ -70,6 +72,37 @@ export class NewOnlineClassDialogComponent implements OnInit {
     });
 
     return Boolean(bookedSlotOnlineClass);
+  }
+
+  getOccupiedInfo(classSubject: ClassSubject): string {
+
+    const bookedSlotOnlineClassList = this.data.vm.backendData.onlineClassList.filter(onlineClass => {
+      const concernedClassSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+      if (concernedClassSubject.parentEmployee != classSubject.parentEmployee) {
+        return false;
+      }
+      if (concernedClassSubject.parentClass == classSubject.parentClass && concernedClassSubject.parentDivision == classSubject.parentDivision) {
+        return false;
+      }
+      if (concernedClassSubject.parentClass == this.data.vm.userInput.selectedClass.id && concernedClassSubject.parentSubject == classSubject.parentSubject) {
+        return false;
+      }
+      if (this.data.weekday == onlineClass.day
+        && TimeComparator(this.data.timeSpan.startTime, onlineClass.endTimeJSON) < 0
+        && TimeComparator(onlineClass.startTimeJSON, this.data.timeSpan.endTime) < 0) {
+        return true;
+      }
+    });
+
+    let displayString = "";
+    bookedSlotOnlineClassList.forEach(bookedSlotOnlineClass => {
+      const info = this.data.vm.htmlRenderer.getCardSlotDisplayData(bookedSlotOnlineClass);
+      displayString += "[ " + bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
+        + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
+        + ` (${info.classs.name} & ${info.section.name}) ], `;
+    });
+
+    return displayString;
   }
 
   apply(): void {

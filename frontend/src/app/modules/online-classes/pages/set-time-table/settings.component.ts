@@ -87,7 +87,6 @@ export class SettingsComponent implements OnInit {
     initializeTimeTable() {
         this.userInput.editTimeSpanFormIndex = -1;    // reset display for new time table
         this.userInput.newTimeSpanForm = false;
-        this.htmlRenderer.colorPaletteHandle.reset();
         this.userInput.filteredOnlineClassList = [];
 
         if (this.userInput.view == 'class') {
