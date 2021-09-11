@@ -95,8 +95,6 @@ export class GradeStudentServiceAdapter {
                 const student_studentSection_map = {};
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
-                        // Code Review
-                        // If no use of code in future then remove it. --> Removed
 
                         if (value_studentSection.length === 0) {
                             this.vm.isInitialLoading = false;
