@@ -54,11 +54,15 @@ export class SignupServiceAdapter {
             return;
         }
 
+        // Code Review
+        // Is this going to be called if we are already checking this.otp in isOtpFormValid?
         if (this.vm.password.length < 8) {
             alert('There should be atleast 8 characters in your password');
             return;
         }
 
+        // Code Review
+        // Is this going to be called if we are already checking this.otp in isOtpFormValid?
         if (!this.vm.otp) {
             alert('OTP verification failed');
             return;
