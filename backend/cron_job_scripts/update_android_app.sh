@@ -4,6 +4,4 @@
 # changing directory is required to backend to access the database
 cd ~/code/korangle/backend
 # ignoring the output using /dev/null
-# Code Review
-# Wouldn't this run all those other jobs that are scheduled to run at some other point of time? -- Yes , now i have mentioned specifically the update_app job
 ~/env/bin/python manage.py runjob notify_update_app > /dev/null 2>&1 &
