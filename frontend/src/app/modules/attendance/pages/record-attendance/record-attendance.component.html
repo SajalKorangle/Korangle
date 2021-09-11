@@ -58,11 +58,6 @@
         <div class="col-md-12" style="border-bottom: 1px solid lightgrey; margin-top: 10px; margin-bottom: 10px"></div>
     </div>
 
-    <!--
-        Code Review
-        If the student list is zero for a particular class we shouldn't be making an api call for attendance list. --# Done
-        When will be the case when studentAttendanceStatusList's length is zero --# Removed
-    -->
     <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
         <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllPresent()">All Present</button>
 

@@ -29,8 +29,6 @@ export class BlockStudentServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        // Code Review
-        // go with the value format --> done
         const value = await Promise.all([
                 getValidStudentSectionList(this.vm.tcService, this.vm.studentService, request_student_section_data), // 0
                 this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 1

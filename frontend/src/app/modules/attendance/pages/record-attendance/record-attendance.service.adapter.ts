@@ -15,8 +15,6 @@ export class RecordAttendanceServiceAdapter {
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
     }
 
-    // Code Review
-    // Please write start and end comments. --> Done
     async initializeData() {
         this.vm.isInitialLoading = true;
         // ------------------- Initial Data Fetching Starts ---------------------
@@ -104,10 +102,6 @@ export class RecordAttendanceServiceAdapter {
                     dbId: division.id,
                     studentList: permittedStudentList,
                 };
-                // Code Review
-                // If the student list is zero for a particular class,
-                // we shouldn't be making an api call for its attendance list.
-                // --> Handled at line no.93 ( only if students are present in the class the class will be added in the dropdown)
                 let alreadyPresentClass = this.vm.classSectionStudentList.find(c => c.dbId == tempClass.dbId);
                 if (alreadyPresentClass) {
                     alreadyPresentClass.sectionList.push(tempDivision);

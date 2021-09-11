@@ -35,8 +35,6 @@ export class AddTutorialServiceAdapter {
             parentStudent__parentTransferCertificate: 'null__korangle'
         };
 
-        // Code Review
-        // go with the value format --> Done
         const value = await Promise.all([
             await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data), //0
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
