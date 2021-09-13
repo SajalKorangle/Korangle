@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from common.common_views_3 import CommonView, CommonListView, common_json_view_function
 from decorators import user_permission, user_permission_3
 
@@ -21,6 +22,12 @@ class SMSOldListView(APIView):
         return get_sms_list(data)
 
 
+def handle_sms_delivery_report_view(request):
+    data_from_vendor = request.body.decode('utf-8')
+    handle_sms_delivery_report(data_from_vendor)
+    return HttpResponse(status=201)
+
+
 ############## SMS Count ##############
 from .business.sms_count import get_sms_count
 
@@ -33,7 +40,7 @@ class SMSCountView(APIView):
 
 
 ############## SMS Delivery Report ##############
-from .business.sms_delivery_report import get_sms_delivery_report_list
+from .business.sms_delivery_report import get_sms_delivery_report_list, handle_sms_delivery_report
 
 
 class SMSDeliveryReportView(CommonView, APIView):

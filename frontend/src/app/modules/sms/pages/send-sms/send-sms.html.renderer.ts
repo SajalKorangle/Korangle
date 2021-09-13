@@ -199,7 +199,7 @@ export class SendSmsHtmlRenderer {
     checkDateTimeInvalid() {
         if (this.vm.userInput.scheduledDate && this.vm.userInput.scheduledTime) {
             let selectedDateTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime);
-            let dateNow = moment();
+            let dateNow = moment().add(15, 'minutes');
             return selectedDateTime < dateNow;
         }
         return false;

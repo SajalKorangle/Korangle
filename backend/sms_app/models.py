@@ -111,7 +111,6 @@ class SMS(models.Model):
     scheduledDateTime = models.DateTimeField(null=True)
 
     smsGateWayHubVendor = models.BooleanField(null=False, default=False)
-    fetchedDeliveryStatus = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
@@ -147,10 +146,10 @@ def sms_sender(sender, created, instance, **kwargs):
 
 class SMSDeliveryReport(models.Model):
     # Request Id
-    requestId = models.TextField(null=False, verbose_name='requestId')
+    requestId = models.TextField(null=True, verbose_name='requestId')
 
     # Mobile Number
-    mobileNumber = models.BigIntegerField(null=False, verbose_name='mobileNumber')
+    mobileNumber = models.BigIntegerField(null=True, verbose_name='mobileNumber')
 
     # Status
     status = models.TextField(null=False, verbose_name='status')
@@ -164,14 +163,14 @@ class SMSDeliveryReport(models.Model):
     messageId = models.TextField(null=True, verbose_name='messageId')
 
     # Sender Id
-    senderId = models.CharField(null=False, max_length=10, default='KORNGL', verbose_name='senderId')
+    senderId = models.CharField(max_length=10, default='KORNGL', verbose_name='senderId')
 
     def __str__(self):
         return self.requestId
 
     class Meta:
         db_table = 'sms_delivery_report'
-        unique_together = ('requestId', 'mobileNumber', 'messageId')
+        unique_together = ('mobileNumber', 'messageId')
 
 
 class SMSPurchase(models.Model):

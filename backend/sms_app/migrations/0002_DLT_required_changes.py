@@ -19,16 +19,17 @@ class Migration(migrations.Migration):
             name='SMSDeliveryReport',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('requestId', models.TextField(verbose_name='requestId')),
-                ('mobileNumber', models.BigIntegerField(verbose_name='mobileNumber')),
+                ('requestId', models.TextField(null=True, verbose_name='requestId')),
+                ('mobileNumber', models.BigIntegerField(null=True, verbose_name='mobileNumber')),
                 ('status', models.TextField(verbose_name='status')),
                 ('statusCode', models.TextField(null=True, verbose_name='statusCode')),
                 ('deliveredDateTime', models.DateTimeField(null=True, verbose_name='deliveredDateTime')),
                 ('senderId', models.CharField(default='KORNGL', max_length=10, verbose_name='senderId')),
+                ('messageId', models.TextField(null=True, verbose_name='messageId'))
             ],
             options={
                 'db_table': 'sms_delivery_report',
-                'unique_together': {('requestId', 'mobileNumber')},
+                'unique_together': {('mobileNumber', 'messageId')},
             },
         ),
         migrations.CreateModel(
@@ -92,11 +93,6 @@ class Migration(migrations.Migration):
             model_name='sms',
             name='SMSEventId',
             field=models.IntegerField(default=0),
-        ),
-        migrations.AddField(
-            model_name='sms',
-            name='fetchedDeliveryStatus',
-            field=models.BooleanField(default=False),
         ),
         migrations.AddField(
             model_name='sms',
