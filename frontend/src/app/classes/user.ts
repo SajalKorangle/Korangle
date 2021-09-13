@@ -156,7 +156,6 @@ export class User {
             switch (
             // # Code Review
             // # Revert the unnecessary change
-            // done
                 modulePath // from here we are populating module
             ) {
                 // if the user refreshes the notification or user - settings
