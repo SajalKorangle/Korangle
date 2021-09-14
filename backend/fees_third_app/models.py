@@ -283,6 +283,7 @@ class FeeReceipt(models.Model):
 
     # Code Review
     # Why null=False replaced by blank=True in receiptNumber field of FeeReceipt Table?
+    # @answer: null=False is the default behavior, no need to specify it. Blank=True is needed because now this field is not comming from frontend and is not present in the data during save. Receipt number is calculated in the signal.
     receiptNumber = models.IntegerField(blank=True, default=0, verbose_name='receiptNumber')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
@@ -316,12 +317,20 @@ class FeeReceipt(models.Model):
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            with db_transaction.atomic():
+                super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+
 
 # Code Review
 # Why the pre_save signal not implemented for Discount model like it is handled for FeeReceipt model?
 # Is it still being handled from frontend? Can we move it to backend? Not talking about Transaction but Cancellation.
 # Also more commenting is required inside this function, like you did in pre save signal of Fee Receipt.
-
+# @answer : I wasn't working near discount so I didn't implemented it, but can be implemented.
+# What do you mean by "Not talking about Transaction but Cancellation" and which function requires more commenting?
 
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptPreSave(sender, instance, **kwargs):
@@ -331,6 +340,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
 
         # Code Review
         # Is atomic transaction not required for calculating last fee receipt number?
+        # @answer : It is required but even then it will not cover all the cases. That's why I have added transaction atomic in FeeReceipt Save Function
         ## receipt number handling ##
         last_receipt_number = FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
             .aggregate(Max('receiptNumber'))['receiptNumber__max']
