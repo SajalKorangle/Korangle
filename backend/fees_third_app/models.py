@@ -24,12 +24,10 @@ from student_app.models import Student
 
 from employee_app.models import Employee
 
-from django.contrib.auth.models import User
-
-from accounts_app.models import Accounts, Transaction, AccountSession, TransactionAccountDetails
+from accounts_app.models import Transaction, AccountSession
 from payment_app.models import Order
 
-from datetime import date, datetime
+from datetime import datetime
 from accounts_app.models import Transaction, AccountSession
 
 from django.dispatch import receiver
