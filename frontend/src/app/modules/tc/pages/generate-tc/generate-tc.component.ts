@@ -190,9 +190,9 @@ export class GenerateTCComponent implements OnInit {
         });
     }
 
-    selectAllClasses(): void {
-        this.classSectionList.forEach((classSection) => (classSection.selected = true));
-    }
+    // selectAllClasses(): void {
+    //     this.classSectionList.forEach((classSection) => (classSection.selected = true));
+    // }
 
     unselectAllClasses(): void {
         this.classSectionList.forEach((classSection) => (classSection.selected = false));
