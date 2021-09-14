@@ -1,15 +1,20 @@
 # Code Review
 # Why is split imported from re
-from re import split
-from django.db import models, transaction
+# @answer : It mush have been imported due to auto completion by mistake I am removing it
+from django.core.serializers import serialize
+from payment_app.cashfree.cashfree import initiateRefund
+from payment_app.models import OnlinePaymentAccount
+from accounts_app.views import TransactionAccountDetailsView
+from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
+from django.db import models
 
 # Code Review
 # Why is RawSQL imported
-from django.db.models.expressions import RawSQL
+# @answer : It mush have been imported due to auto completion by mistake I am removing it
 
 # Code Review
 # Why is ModelSerializer imported?
-from rest_framework.serializers import ModelSerializer
+# @answer : It mush have been imported due to auto completion by mistake I am removing it
 
 from school_app.model.models import School, Session, BusStop
 
@@ -36,6 +41,7 @@ from common.common_serializer_interface_3 import create_object, create_list
 
 # Code Review
 # Why is transaction imported a second time?
+# @answer : I have removed the first time, it was by mistake
 from django.db import transaction as db_transaction
 
 INSTALLMENT_LIST = [
@@ -51,8 +57,7 @@ INSTALLMENT_LIST = [
     'january',
     'february',
     'march',
-]   
-
+]
 
 
 class FeeType(models.Model):
@@ -300,39 +305,41 @@ class FeeReceipt(models.Model):
     cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='cancelledBy', related_name='cancelledBy')
 
     MODE_OF_PAYMENT = (
-        ( 'Cash', 'Cash' ),
-        ( 'Cheque', 'Cheque' ),
-        ( 'Online', 'Online'),
+        ('Cash', 'Cash'),
+        ('Cheque', 'Cheque'),
+        ('Online', 'Online'),
         ('KORANGLE', 'KORANGLE'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
+    # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
-from django.core.serializers import serialize
 
 # Code Review
 # Why the pre_save signal not implemented for Discount model like it is handled for FeeReceipt model?
 # Is it still being handled from frontend? Can we move it to backend? Not talking about Transaction but Cancellation.
 # Also more commenting is required inside this function, like you did in pre save signal of Fee Receipt.
+
+
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptPreSave(sender, instance, **kwargs):
     if(kwargs['raw']):
         return
-    if not instance.id: # before Fee Receipt creation
+    if not instance.id:  # before Fee Receipt creation
 
         # Code Review
         # Is atomic transaction not required for calculating last fee receipt number?
         ## receipt number handling ##
         last_receipt_number = FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
-                .aggregate(Max('receiptNumber'))['receiptNumber__max']
-        instance.receiptNumber = (last_receipt_number or 0) +1
+            .aggregate(Max('receiptNumber'))['receiptNumber__max']
+        instance.receiptNumber = (last_receipt_number or 0) + 1
 
         ## Transaction Creation ##
-        currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
+        currentSession = Session.objects.get(startDate__lte=datetime.now(), endDate__gte=datetime.now())
         feeSettings = None
         try:
             feeSettings = FeeSettings.objects.get(parentSchool=instance.parentSchool, parentSession=currentSession)
@@ -347,13 +354,13 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
             # checking this 'accountingSettings['toAccountsStructure'].get(modeOfPayment, None)'
             # 2. Comment Why transaction row needs to be created here.
             if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
-                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)\
-                     and len(accountingSettings['toAccountsStructure'].get(modeOfPayment))>0):
+                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)
+                    and len(accountingSettings['toAccountsStructure'].get(modeOfPayment)) > 0):
                 instance.parentTransaction = Transaction.objects.create(
-                    parentEmployee = instance.parentEmployee,
-                    parentSchool = instance.parentSchool,
-                    transactionDate = datetime.now(),
-                    remark = 'Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
+                    parentEmployee=instance.parentEmployee,
+                    parentSchool=instance.parentSchool,
+                    transactionDate=datetime.now(),
+                    remark='Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
                 )
 
     ## Fee Receipt Cancellation Handler ##
@@ -361,7 +368,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         # Code Review
         # Do we need to check the conditions of original fee receipt?
         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
-        if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
+        if originalFeeReceipt.cancelled == False and originalFeeReceipt.parentTransaction != None:
             originalFeeReceipt.parentTransaction.delete()
 
         ## Clearance Date and Cleared ##
@@ -374,7 +381,6 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
                     studentFee.cleared = False
             studentFee.save()
     pass
-
 
 
 class SubFeeReceipt(models.Model):
@@ -439,15 +445,16 @@ class SubFeeReceipt(models.Model):
 # Code Review
 # Why the pre_save signal not implemented for SubDiscount model like it is handled for SubFeeReceipt model?
 # Is it still being handled from frontend? Can we move it to backend?
+
+
 @receiver(pre_save, sender=SubFeeReceipt)
 def subFeeReceiptDataCheck(sender, instance, **kwargs):
     studentFee = instance.parentStudentFee
-    subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled = False)
-    subDiscountSet = SubDiscount.objects.filter(parentDiscount__cancelled = False, parentStudentFee=studentFee)
+    subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
+    subDiscountSet = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
     monthClearanceFlagDict = {}
     for month in INSTALLMENT_LIST:
         monthClearanceFlagDict[month] = False
-    
 
     for month in INSTALLMENT_LIST:
         amount = 0
@@ -457,12 +464,12 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             for subFeeReceipt in subFeeReceiptSet:
                 if getattr(subFeeReceipt, month+'Amount'):
                     amount += getattr(subFeeReceipt, month+'Amount')
-            
+
             for subDiscount in subDiscountSet:
                 if getattr(subDiscount, month+'Amount'):
                     amount -= getattr(subDiscount, month+'Amount')
 
-            studentFeeAmount =0
+            studentFeeAmount = 0
             if getattr(studentFee, month+'Amount'):
                 studentFeeAmount += getattr(studentFee, month+'Amount')
 
@@ -472,7 +479,7 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             if(amount == studentFeeAmount):
                 monthClearanceFlagDict[month] = True
 
-        if(getattr(studentFee, month+'ClearanceDate')): # month cleared
+        if(getattr(studentFee, month+'ClearanceDate')):  # month cleared
             # Code Review
             # What happens when the four implemented assert fails ? We are already checking
             # this once on frontend, right? This type of assertion is more useful, if we are saving
@@ -483,9 +490,9 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             # backend, it is not ultimately helping in keeping the integrity of data
             # as fee receipt is already generated.
             assert not getattr(instance, month+'LateFee'), "incoming late fee after month fee is cleared"
-        
+
         elif getattr(studentFee, month+'Amount') and getattr(studentFee, month+'LastDate')\
-                and getattr(studentFee, month+'LateFee'): # late fee not cleared
+                and getattr(studentFee, month+'LateFee'):  # late fee not cleared
             delta = datetime.now().date() - getattr(studentFee, month+'LastDate')
             lateFee = delta.days * getattr(studentFee, month+'LateFee')
             if(getattr(studentFee, month+'MaximumLateFee')):
@@ -499,7 +506,7 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             for subFeeReceipt in subFeeReceiptSet:
                 if getattr(subFeeReceipt, month+'LateFee'):
                     totalPaidLateFee += getattr(subFeeReceipt, month+'LateFee')
-            
+
             if getattr(instance, month+'LateFee'):
                 totalPaidLateFee += getattr(instance, month+'LateFee')
 
@@ -518,7 +525,6 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
     studentFee.save()
 
 
-
 # Code Review
 # Are we not calling the post/put/patch api of models in account app at all,
 # when creating a fee receipt?
@@ -533,11 +539,11 @@ def handleAccountsTransaction(sender, instance, created, **kwargs):
                 amount += getattr(instance, month+'LateFee')
         # Code Review
         # 'creaditAccountDetail' - Spelling is wrong
-        creaditAccountDetail =  instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
-            transactionType = 'CREDIT'
+        creaditAccountDetail = instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
+            transactionType='CREDIT'
         )
         debitAccountDetail = instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
-            transactionType = 'DEBIT'
+            transactionType='DEBIT'
         )
         creaditAccountDetail.amount += amount
         debitAccountDetail.amount += amount
@@ -629,11 +635,11 @@ class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
-    accountingSettingsJSON = models.TextField(null=True) # json data
+    accountingSettingsJSON = models.TextField(null=True)  # json data
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
-    
+
 
 # Code Review
 # 1. Would it be more understandable if we change the model name
@@ -645,25 +651,22 @@ class OnlineFeePaymentTransaction(models.Model):
     parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
     feeDetailJSON = models.TextField()
     parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, null=True, blank=True)
-    
 
-
-from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
-from accounts_app.views import TransactionAccountDetailsView
 
 # Code Review
 # Why is the signal for another Order model is not implemented in the same file as the model?
 # Is this signal implemented w.r.t. to OnlineFeePaymentTransaction? Is it implemented with the future possibility
 # that multiple OrderCompletionHandler will be implemented in different files?
 # 2. Would it be more understandable if we rename it the below function to FeeReceiptOrderCompletionHandler
+
 @receiver(pre_save, sender=Order)
 def OrderCompletionHandler(sender, instance, **kwargs):
     if (not instance._state.adding) and instance.status == 'Completed':
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
-        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
+        if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Completed'
 
-            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder = preSavedOrder)
-            if len(onlinePaymentTransactionList) == 0: # Order is made for some other purpose
+            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder=preSavedOrder)
+            if len(onlinePaymentTransactionList) == 0:  # Order is made for some other purpose
                 return
 
             activeSchoolID = onlinePaymentTransactionList[0].parentSchool.id
@@ -672,7 +675,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
             # 1. Will the status order be changed in few seconds from pending to completion or will it might take days.
             # Current Session retrieval method can fail at the end of the session.
             # I think this code will run with in few minutes of order placement by a parent. Please confirm.
-            currentSession = Session.objects.get(startDate__lte = datetime.now(), endDate__gte = datetime.now())
+            currentSession = Session.objects.get(startDate__lte=datetime.now(), endDate__gte=datetime.now())
             debitAccount = None
             creditAccount = None
             try:
@@ -682,7 +685,7 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                     # 'accountingSessings' -  Spelling is wrong
                     accountingSessings = json.loads(feeSettings.accountingSettingsJSON)
                     debitAccount = AccountSession.objects.get(id=accountingSessings['parentAccountFrom']).parentAccount
-                    creditAccount= AccountSession.objects.get(id=accountingSessings['parentOnlinePaymentCreditAccount']).parentAccount
+                    creditAccount = AccountSession.objects.get(id=accountingSessings['parentOnlinePaymentCreditAccount']).parentAccount
             except:
                 pass
 
@@ -691,19 +694,19 @@ def OrderCompletionHandler(sender, instance, **kwargs):
 
             with db_transaction.atomic():
                 for onlinePaymentTransaction in onlinePaymentTransactionList:
-                    feeDetailsList= json.loads(onlinePaymentTransaction.feeDetailJSON)
+                    feeDetailsList = json.loads(onlinePaymentTransaction.feeDetailJSON)
                     activeStudentID = StudentFee.objects.get(id=feeDetailsList[0]['parentStudentFee']).parentStudent.id
                     transaction_dict = {}
-                    for field in FeeReceipt._meta.concrete_fields:  #all fields filed set to None
+                    for field in FeeReceipt._meta.concrete_fields:  # all fields filed set to None
                         transaction_dict[field] = None
 
                     transaction_dict.update({
-                            'parentSchool': activeSchoolID,
-                            'parentStudent': activeStudentID,
-                            'parentSession': feeDetailsList[0]['parentSession'],
-                            'remark': 'Reference id: {0}'.format(instance.referenceId),
-                            'modeOfPayment': 'KORANGLE',
-                        })
+                        'parentSchool': activeSchoolID,
+                        'parentStudent': activeStudentID,
+                        'parentSession': feeDetailsList[0]['parentSession'],
+                        'remark': 'Reference id: {0}'.format(instance.referenceId),
+                        'modeOfPayment': 'KORANGLE',
+                    })
 
                     response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
                     newFeeReceipt = FeeReceipt.objects.get(id=response['id'])
@@ -733,13 +736,9 @@ def OrderCompletionHandler(sender, instance, **kwargs):
                     # Code Review
                     # 'populaing' - Spelling is wrong
                     # If commenting for multiple lines of code then comment above the line not in front of the line.
-                    for subFeeReceipt in feeDetailsList: # populaing parentFeeReceipt
+                    for subFeeReceipt in feeDetailsList:  # populaing parentFeeReceipt
                         subFeeReceipt['parentFeeReceipt'] = newFeeReceipt.id
                     create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
-
-
-from payment_app.models import OnlinePaymentAccount
-from payment_app.cashfree.cashfree import initiateRefund
 
 
 # Code Review
@@ -754,11 +753,10 @@ def OrderCompletionHandler(sender, instance, **kwargs):
 
         # Code Review
         # In a post save signal how can the status of preSavedOrder and current instance be different
-        if preSavedOrder.status == 'Pending': # if status changed from 'Pending' to 'Refund Pending'
+        if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Refund Pending'
 
-
-            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder = preSavedOrder)
-            if len(onlinePaymentTransactionList) == 0: # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
+            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder=preSavedOrder)
+            if len(onlinePaymentTransactionList) == 0:  # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
                 return
 
             onlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
@@ -780,5 +778,3 @@ def OrderCompletionHandler(sender, instance, **kwargs):
             instance.status = 'Refund Initiated'
             instance.refundId = response['refundId']
             instance.save()
-
-            

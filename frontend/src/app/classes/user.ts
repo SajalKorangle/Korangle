@@ -154,8 +154,9 @@ export class User {
         } else if (this.checkUserSchoolSessionPermission(urlParams)) {
             // checking the school id  and session id in the url is valid for this user
             switch (
-            // # Code Review
-            // # Revert the unnecessary change
+            // Code Review
+            // Revert the unnecessary change
+            // Answer: I have reverted the unnecessary changes
                 modulePath // from here we are populating module
             ) {
                 // if the user refreshes the notification or user - settings

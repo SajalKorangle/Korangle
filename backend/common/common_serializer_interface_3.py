@@ -96,7 +96,9 @@ def create_object(data, ModelSerializer, activeSchoolID, activeStudentID):
     # Code Review
     # Write a comment to explain the following change, what it is doing, and why is it needed
     # ", str(serializer.errors) + '\ndata: {0}'.format(data)"
-    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID = activeStudentID), str(serializer.errors) + '\ndata: {0}'.format(data)
+    # @answer : It is needed to log the error message and the data for which the error happened for easy debugging
+    # It wont affect he production as these logs are not recorded in the production logs
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID), str(serializer.errors) + '\ndata: {0}'.format(data)
     serializer.save()
     return serializer.data
 
@@ -123,7 +125,7 @@ def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, a
 
 
 def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-    serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial= True)
+    serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial=True)
     assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
     serializer.save()
     return serializer.data
@@ -134,7 +136,7 @@ def delete_object(data, query_set):
     return data['id']
 
 
-def delete_list(data, query_set ):
+def delete_list(data, query_set):
 
     filter_var_list = []
     filter_var = ''
@@ -187,4 +189,3 @@ def delete_list(data, query_set ):
         query_set.delete()
 
     return return_data
-
