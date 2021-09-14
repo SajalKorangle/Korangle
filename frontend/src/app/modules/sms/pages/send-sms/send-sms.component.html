@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" [class.hidden]="stateKeeper.isLoading">
+<div class="card-content main-page table-responsive" style="height: 90vh" [class.hidden]="stateKeeper.isLoading">
     <!-- Gap -->
     <div class="row" style="margin-Top: 10px">
         <div class="col-md-3">
@@ -419,6 +419,7 @@
 
                 <!-- Employee Table List -->
                 <ng-container *ngIf="!this.stateKeeper.isLoading">
+                    <div class="responsive-table-wrapper">
                     <table class="table table-hover">
                         <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
@@ -450,6 +451,7 @@
                         </ng-container>
                         </tbody>
                     </table>
+                    </div>
                 </ng-container>
             </div>
 
