@@ -41,7 +41,7 @@ export class AddTutorialServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //3
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //4
-            this.vm.tutorialService.getObject(this.vm.tutorialService.tutorial_settings, {
+            this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //5
             this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
@@ -52,7 +52,7 @@ export class AddTutorialServiceAdapter {
         this.vm.backendData.sectionList = value[2];
         this.vm.backendData.classSubjectList = value[3];
         this.vm.backendData.subjectList = value[4];
-        this.vm.settings = value[5];
+        this.vm.settings = value[5][0];
         this.vm.smsBalance = value[6];
 
         if (this.vm.smsBalance.length < 0) {

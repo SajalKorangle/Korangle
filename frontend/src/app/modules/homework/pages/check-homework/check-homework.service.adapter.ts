@@ -14,7 +14,7 @@ export class CheckHomeworkServiceAdapter {
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Homework') + 1;
     }
 
-    initializeData(): void {
+    async initializeData() {
         this.vm.isInitialLoading = true;
 
         this.vm.sendCheckUpdate = false;
@@ -31,7 +31,7 @@ export class CheckHomeworkServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        Promise.all([
+        const value = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //0
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
@@ -41,30 +41,43 @@ export class CheckHomeworkServiceAdapter {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //5
             this.vm.smsOldService.getSMSCount({ parentSchool: this.vm.user.activeSchool.dbId }, this.vm.user.jwt), //6
-        ]).then(
-            (value) => {
-                this.vm.smsBalance = value[6];
-                if (value[5].length > 0) {
-                    this.vm.sendUpdateType = value[5][0].sentUpdateType;
-                    this.vm.sendCheckUpdate = value[5][0].sendCheckUpdate;
-                    this.vm.sendResubmissionUpdate = value[5][0].sendResubmissionUpdate;
-                    if (this.vm.sendUpdateType == 'NULL') {
-                        this.vm.sendUpdateType = 1;
-                    } else if (this.vm.sendUpdateType == 'SMS') {
-                        this.vm.sendUpdateType = 2;
-                    } else if (this.vm.sendUpdateType == 'NOTIFICATION') {
-                        this.vm.sendUpdateType = 3;
-                    } else {
-                        this.vm.sendUpdateType = 4;
-                    }
-                }
-                this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
-                this.vm.isInitialLoading = false;
-            },
-            (error) => {
-                this.vm.isInitialLoading = false;
+        ]);
+
+        this.vm.smsBalance = value[6];
+        if (value[5].length > 0) {
+            this.vm.sendUpdateType = value[5][0].sentUpdateType;
+            this.vm.sendCheckUpdate = value[5][0].sendCheckUpdate;
+            this.vm.sendResubmissionUpdate = value[5][0].sendResubmissionUpdate;
+            if (this.vm.sendUpdateType == 'NULL') {
+                this.vm.sendUpdateType = 1;
+            } else if (this.vm.sendUpdateType == 'SMS') {
+                this.vm.sendUpdateType = 2;
+            } else if (this.vm.sendUpdateType == 'NOTIFICATION') {
+                this.vm.sendUpdateType = 3;
+            } else {
+                this.vm.sendUpdateType = 4;
             }
-        );
+        }
+
+        let permitted_class_list = [];
+        let permitted_section_list = [];
+        value[4].forEach((element) => {
+            permitted_class_list.push(element.parentClass);
+            permitted_section_list.push(element.parentDivision);
+        });
+
+        let student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentClass__in: permitted_class_list,
+            parentDivision__in: permitted_section_list,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        this.vm.studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+        console.log(this.vm.studentSectionList);
+        this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
+        this.vm.isInitialLoading = false;
     }
 
     initialiseClassSubjectData(subjectList: any, classList: any, divisionList: any, homeworkList: any, classSectionSubjectList: any) {
@@ -76,38 +89,45 @@ export class CheckHomeworkServiceAdapter {
             let tempClassSubject = classSectionSubjectList.find(
                 (classSectionSubject) => classSectionSubject.id == homework.parentClassSubject
             );
-            let tempClass = classList.find((classs) => classs.id == tempClassSubject.parentClass);
-            let tempDivision = divisionList.find((division) => division.id == tempClassSubject.parentDivision);
-            let tempSubject = subjectList.find((subject) => subject.id == tempClassSubject.parentSubject);
-            let currentClassSection = this.vm.classSectionHomeworkList.find(
-                (classSection) => classSection.classDbId == tempClass.id && classSection.divisionDbId == tempDivision.id
-            );
-            if (currentClassSection === undefined) {
-                let classSection = {
-                    classDbId: tempClass.id,
-                    className: tempClass.name,
-                    divisionDbId: tempDivision.id,
-                    divisionName: tempDivision.name,
-                    subjectList: [],
-                };
-                this.vm.classSectionHomeworkList.push(classSection);
-                currentClassSection = this.vm.classSectionHomeworkList.find(
+            let checkStudentPresence = this.vm.studentSectionList.some(studSection => studSection.parentClass == tempClassSubject.parentClass &&
+            studSection.parentDivision == tempClassSubject.parentDivision);
+            if (checkStudentPresence) {
+                let tempClass = classList.find((classs) => classs.id == tempClassSubject.parentClass);
+                let tempDivision = divisionList.find((division) => division.id == tempClassSubject.parentDivision);
+                let tempSubject = subjectList.find((subject) => subject.id == tempClassSubject.parentSubject);
+                let currentClassSection = this.vm.classSectionHomeworkList.find(
                     (classSection) => classSection.classDbId == tempClass.id && classSection.divisionDbId == tempDivision.id
                 );
-            }
+                if (currentClassSection === undefined) {
+                    let classSection = {
+                        classDbId: tempClass.id,
+                        className: tempClass.name,
+                        divisionDbId: tempDivision.id,
+                        divisionName: tempDivision.name,
+                        subjectList: [],
+                    };
+                    this.vm.classSectionHomeworkList.push(classSection);
+                    currentClassSection = this.vm.classSectionHomeworkList.find(
+                        (classSection) => classSection.classDbId == tempClass.id && classSection.divisionDbId == tempDivision.id
+                    );
+                }
 
-            let currentSubject = currentClassSection.subjectList.find((subject) => subject.dbId == tempSubject.id);
-            if (currentSubject == undefined) {
-                let subject = {
-                    dbId: tempSubject.id,
-                    name: tempSubject.name,
-                    homeworkList: [],
-                };
-                currentClassSection.subjectList.push(subject);
-                currentSubject = currentClassSection.subjectList.find((subject) => subject.dbId == tempSubject.id);
+                let currentSubject = currentClassSection.subjectList.find((subject) => subject.dbId == tempSubject.id);
+                if (currentSubject == undefined) {
+                    let subject = {
+                        dbId: tempSubject.id,
+                        name: tempSubject.name,
+                        homeworkList: [],
+                    };
+                    currentClassSection.subjectList.push(subject);
+                    currentSubject = currentClassSection.subjectList.find((subject) => subject.dbId == tempSubject.id);
+                }
+                currentSubject.homeworkList.push(homework);
             }
-            currentSubject.homeworkList.push(homework);
         });
+        if (this.vm.classSectionHomeworkList.length == 0) {
+            return;
+        }
 
         this.vm.classSectionHomeworkList.forEach((classSection) => {
             classSection.subjectList.forEach((subject) => {
@@ -144,17 +164,6 @@ export class CheckHomeworkServiceAdapter {
             parentHomeworkQuestion: this.vm.selectedHomework.id,
         };
 
-        let student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentStudent__parentTransferCertificate: 'null__korangle',
-            parentClass: this.vm.selectedClassSection.classDbId,
-            parentDivision: this.vm.selectedClassSection.divisionDbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            fields__korangle: 'parentStudent',
-        };
-
-        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
-
         this.vm.currentHomework = {
             name: this.vm.selectedHomework.homeworkName,
             startDate: this.vm.selectedHomework.startDate,
@@ -172,10 +181,12 @@ export class CheckHomeworkServiceAdapter {
                 this.vm.currentHomework.images = value[0];
                 this.vm.currentHomework.images.sort((a, b) => (a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0));
                 let studentIdList = [];
-                studentSectionList.forEach((student) => {
-                    studentIdList.push(student.parentStudent);
+                this.vm.studentSectionList.forEach((studentSection) => {
+                    if (studentSection.parentClass == this.vm.selectedClassSection.classDbId &&
+                        studentSection.parentDivision == this.vm.selectedClassSection.divisionDbId) {
+                        studentIdList.push(studentSection.parentStudent);
+                    }
                 });
-
                 let student_data = {
                     id__in: studentIdList,
                     fields__korangle: 'id,name,mobileNumber',
@@ -245,28 +256,30 @@ export class CheckHomeworkServiceAdapter {
     initialiseStudentHomeworkData(studentHomeworkImagesList: any, studentHomeworkList: any): any {
         studentHomeworkList.forEach((studentHomework) => {
             let tempStudent = this.vm.studentList.find((student) => student.dbId == studentHomework.parentStudent);
-            let tempData = {
-                id: studentHomework.id,
-                studentName: tempStudent.name,
-                mobileNumber: tempStudent.mobileNumber,
-                parentStudent: studentHomework.parentStudent,
-                parentHomeworkQuestion: studentHomework.parentHomeworkQuestion,
-                status: studentHomework.homeworkStatus,
-                text: studentHomework.answerText,
-                remark: studentHomework.remark,
-                submissionDate: studentHomework.submissionDate,
-                submissionTime: studentHomework.submissionTime,
-                images: [],
-                isStatusLoading: false,
-                isRemarkLoading: false,
-            };
-            studentHomeworkImagesList.forEach((image) => {
-                if (image.parentHomeworkAnswer == tempData.id) {
-                    tempData.images.push(image);
-                }
-            });
-            tempData.images.sort((a, b) => (a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0));
-            this.vm.studentHomeworkList.push(tempData);
+            if (tempStudent) {
+                let tempData = {
+                    id: studentHomework.id,
+                    studentName: tempStudent.name,
+                    mobileNumber: tempStudent.mobileNumber,
+                    parentStudent: studentHomework.parentStudent,
+                    parentHomeworkQuestion: studentHomework.parentHomeworkQuestion,
+                    status: studentHomework.homeworkStatus,
+                    text: studentHomework.answerText,
+                    remark: studentHomework.remark,
+                    submissionDate: studentHomework.submissionDate,
+                    submissionTime: studentHomework.submissionTime,
+                    images: [],
+                    isStatusLoading: false,
+                    isRemarkLoading: false,
+                };
+                studentHomeworkImagesList.forEach((image) => {
+                    if (image.parentHomeworkAnswer == tempData.id) {
+                        tempData.images.push(image);
+                    }
+                });
+                tempData.images.sort((a, b) => (a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0));
+                this.vm.studentHomeworkList.push(tempData);
+            }
         });
     }
 

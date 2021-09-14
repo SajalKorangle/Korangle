@@ -44,6 +44,7 @@ export class CheckHomeworkComponent implements OnInit {
     selectedHomework: any;
     currentHomework: any;
     studentList: any;
+    studentSectionList = [];
 
     sendUpdateType: any;
     sendCheckUpdate: any;

@@ -55,6 +55,7 @@ export class IssueHomeworkComponent implements OnInit {
     classSectionSubjectList: any;
     selectedClassSection: any;
     selectedSubject: any;
+    studentSectionList = [];
 
     homeworkList: any;
     homeworkImagesList: any;
