@@ -1,3 +1,5 @@
+from payment_app.cashfree.cashfree import initiateRefund
+from .views import SMSPurchaseView
 import json
 from django.db import models
 from django.db import transaction as db_transaction
@@ -96,7 +98,6 @@ class SMSPurchase(models.Model):
     # School
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
 
-
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(self.numberOfSMS) + ' -- ' + str(self.price)
 
@@ -114,19 +115,21 @@ class OnlineSmsPaymentTransaction(models.Model):
     parentSmsPurchase = models.ForeignKey(SMSPurchase, on_delete=models.PROTECT, null=True, blank=True)
 
 
-from .views import SMSPurchaseView
 SMSPurchaseModelSerializer = SMSPurchaseView().ModelSerializer
 
 # Code Review
 # 1. Make the h capital in 'handler'
+# @answer : Done
+
+
 @receiver(pre_save, sender=Order)
-def SMSOrderCompletionhandler(sender, instance, **kwargs):
+def SMSOrderCompletionHandler(sender, instance, **kwargs):
     if not instance._state.adding and instance.status == 'Completed':
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
-        if preSavedOrder.status=='Pending': # if status changed from 'Pending' to 'Completed'
+        if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Completed'
             try:
-                onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder = preSavedOrder)
-            except: # Order was not mabe for SMS
+                onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder=preSavedOrder)
+            except:  # Order was not for SMS
                 return
             activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
             smsPurchaseData = json.loads(onlineSmsPaymentTransaction.smsPurchaseJSON)
@@ -139,3 +142,22 @@ def SMSOrderCompletionhandler(sender, instance, **kwargs):
 
 # Code Review
 # Does Refund Initiation not required for SchoolSMSPurchaseOrder? Why not?
+# @answer : I added the code below for a sense of completion. however, I cannot think of a case when it will be triggered
+
+
+@receiver(pre_save, sender=Order)
+def SMSRefundHandler(sender, instance, **kwargs):
+    if (not instance._state.adding) and instance.status == 'Refund Pending':
+
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
+        if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Refund Pending'
+
+            try:
+                onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder=preSavedOrder)
+            except:  # Order was not for SMS
+                return
+
+            # 2nd argument is split, empty split means amount will be deducted from korangle not from other vendor account(school)
+            response = initiateRefund(instance.orderId, [])
+            instance.refundId = response['refundId']
+            instance.status = 'Refund Initiated'

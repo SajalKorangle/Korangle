@@ -811,5 +811,5 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
             ]
 
             response = initiateRefund(instance.orderId, splitDetails)
-            instance.status = 'Refund Initiated'
             instance.refundId = response['refundId']
+            instance.status = 'Refund Initiated'

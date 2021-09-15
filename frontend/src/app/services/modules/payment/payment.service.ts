@@ -10,7 +10,8 @@ export class PaymentService extends ServiceObject {
     //Cashfree
     // Code Review
     // Please correct the spelling of - 'settelment'
-    public settelment_cycle = '/cashfree/settelment-cycle';
+    // @answer : Done
+    public settelment_cycle = '/cashfree/settlement-cycle';
     public ifsc_verification = '/cashfree/ifsc-verification';
     public bank_account_verification = '/cashfree/bank-account-verification';
 
