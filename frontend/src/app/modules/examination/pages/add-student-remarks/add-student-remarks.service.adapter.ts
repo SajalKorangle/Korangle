@@ -77,11 +77,8 @@ export class AddStudentRemarksServiceAdapter {
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
                         // Code Review
-                        // Why is the below function call commented?
-
-                        // --> this function populates the StudentSection by checking the permitted Classes of the user
-                        // it is not needed since we are fetching only the permitted Class Student Section List from the backend (request_student_section_data)
-
+                        // Why is the below function call commented? --> Uncommented after discussion
+                        this.populateStudentSectionList(value_studentSection);
                         this.vm.studentSectionList = value_studentSection;
                         if (this.vm.studentSectionList.length === 0) {
                             alert('No students have been allocated in your permitted class');
@@ -138,6 +135,21 @@ export class AddStudentRemarksServiceAdapter {
         }
     }
 
+    populateStudentSectionList(studentSectionList: any): void {
+        // If the user has adminPermission Not needed to check the attendancePermissionList,
+        // else filter only the permittedStudentSection using attendancePermissionList
+        this.vm.studentSectionList = this.vm.hasAdminPermission() ? studentSectionList : studentSectionList.filter((eachStudentSection) => {
+            return this.vm.attendancePermissionList.some((eachAttendancePermission) => {
+                if (
+                    eachStudentSection.parentClass === eachAttendancePermission.parentClass &&
+                    eachStudentSection.parentDivision === eachAttendancePermission.parentDivision
+                ) {
+                    return true;
+                }
+                return false;
+            });
+        });
+    }
 
     populateClassSectionList(classList: any, sectionList: any): void {
         classList.forEach((classs) => {

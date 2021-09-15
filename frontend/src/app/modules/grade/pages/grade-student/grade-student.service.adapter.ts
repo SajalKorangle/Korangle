@@ -14,12 +14,10 @@ export class GradeStudentServiceAdapter {
 
     //initialize data
     // Code Review
-    // Please write the start and end comments, refer code review file to understand
-
-    // Start of Fetching and populating the Student,Permitted Classes,grade details
+    // Please write the start and end comments, refer code review file to understand --> Done
     async initializeData() {
         this.vm.isInitialLoading = true;
-
+        // ------------------- Start of Fetching and storing inPagePermission (Admin or User) of this page  ---------------------
         const routeInformation = CommonFunctions.getModuleTaskPaths();
         const in_page_permission_request = {
             parentTask__parentModule__path: routeInformation.modulePath,
@@ -29,7 +27,9 @@ export class GradeStudentServiceAdapter {
 
          this.vm.inPagePermissionMappedByKey = (await
              this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+        // ------------------- End of Fetching and storing inPagePermission (Admin or User) of this page  ---------------------
 
+        // ------------------- Start of Fetching and storing required Data (permittedClasses,gradeD,subGrad,examination)  ---------------------
         let attendance_permission_data = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -66,6 +66,9 @@ export class GradeStudentServiceAdapter {
                     this.vm.isInitialLoading = false;
                     return;
                 }
+        // ------------------- End of Fetching and storing required Data (permittedClasses,gradeD,subGrad,examination)  ---------------------
+
+        // ------------------- Start of Fetching and storing Student and Student Section Data ---------------------
 
                 const request_student_section_data = {
                     parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
@@ -96,6 +99,16 @@ export class GradeStudentServiceAdapter {
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
 
+                        // If the user has adminPermission Not needed to check the attendancePermissionList,
+                        // else filter only the permittedStudentSection using attendancePermissionList
+                        value_studentSection = this.vm.hasAdminPermission() ? value_studentSection : value_studentSection.filter((eachStudentSection) => {
+                            return this.vm.attendancePermissionList.some((eachAttendancePermission) => {
+                                return eachStudentSection.parentClass === eachAttendancePermission.parentClass &&
+                                    eachStudentSection.parentDivision === eachAttendancePermission.parentDivision;
+
+                            });
+                        });
+
                         if (value_studentSection.length === 0) {
                             this.vm.isInitialLoading = false;
                             // alert('No students have been allocated');
@@ -121,7 +134,7 @@ export class GradeStudentServiceAdapter {
                                     student['studentSection'] = student_studentSection_map[student.id];
                                     return student;
                                 });
-
+                                // ------------------- End of Fetching and storing Student and Student Section Data ---------------------
                                 this.vm.isInitialLoading = false;
                             },
                             (error) => {
@@ -133,6 +146,7 @@ export class GradeStudentServiceAdapter {
                         console.log('Error fetching student section data');
                     }
                 );
+                //Populating the GradeList
                 this.populateGradeList(value[3], value[4]);
             },
             (error) => {
@@ -143,11 +157,10 @@ export class GradeStudentServiceAdapter {
 
     // Code Review
     // Why are we not checking through attendance permission list.
-    // --> because if we check through attendance permission list, we cannot handle the case of adminstrator permission (he needs to see all the classes)
+    // --> because if we check through attendance permission list, we cannot handle the case of administrator permission (he needs to see all the classes)
     // Is the case of Class - 10, Section - A; Class - 9, Section - B;
-    // but not Class - 10, Section - B; and Class - 9, Section - A have been handled? --> yes it has been handled
-    // --> here we will be checking whether the any student (Only the students for which the user has permission) is present in that section,
-    // if yes we are adding the section
+    // but not Class - 10, Section - B; and Class - 9, Section - A have been handled?
+    // --> Handled at line no.104 (If he is not admin, then filtering only the studentSection who are in permitted Section)
     populateFilteredClassSectionList(student_section_list): void {
         this.vm.filteredClassSectionList = [];
         this.vm.classList.forEach((classs) => {
