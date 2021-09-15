@@ -1,3 +1,5 @@
+from fees_third_app.models import OnlineFeePaymentTransaction
+from .models import FeeSettings
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
@@ -82,6 +84,7 @@ class FeeReceiptView(CommonView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
+
 class FeeReceiptListView(CommonListView, APIView):
     Model = FeeReceipt
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
@@ -144,11 +147,11 @@ class SubDiscountListView(CommonListView, APIView):
 
 ########### Fee Settings #############
 
-from .models import FeeSettings
 
 class FeeSettingsView(CommonView, APIView):
     Model = FeeSettings
     RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
+
 
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
@@ -156,20 +159,23 @@ class FeeSettingsListView(CommonListView, APIView):
 
 
 ########### Transaction #############
-from fees_third_app.models import OnlineFeePaymentTransaction
+
+
 class OnlineFeePaymentTransactionView(CommonView, APIView):
     Model = OnlineFeePaymentTransaction
     RelationsToSchool = ['parentSchool__id']
     # Code Review
     # Is 'get' or 'post' being called from frontend or from anywhere else?
     # If it is being called from cashfree then it needs to be in api free version url.
+    # @answer : It is called from frontend only
     permittedMethods = ['get', 'post']
-        
+
+
 class OnlineFeePaymentTransactionListView(CommonListView, APIView):
     Model = OnlineFeePaymentTransaction
-    RelationsToSchool = ['parentSchool__id'] 
+    RelationsToSchool = ['parentSchool__id']
     # Code Review
     # Is 'get' being called from frontend or from anywhere else?
     # If it is being called from cashfree then it needs to be in api free version url.
+    # @answer : It is called from frontend only
     permittedMethods = ['get', 'post']
-
