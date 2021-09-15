@@ -35,11 +35,11 @@
                                 type="text"
                                 matInput
                                 style="text-transform: uppercase"
-                                pattern="/^[A-Z]{6,6}$/"
+                                [pattern]="smsIdPattern"
                                 [(ngModel)]="userInput.newSMSId.smsId"
                                 (ngModelChange)="serviceAdapter.getExistingSMSIdData()"
                             />
-                           <mat-error>SMS ID length must be 6</mat-error>
+                           <mat-error>SMS ID length must be 6 (A-Z)</mat-error>
                        </mat-form-field>
                     </div>
                     
@@ -63,7 +63,7 @@
                         style="border-radius: 10px"
                         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                         (click)="serviceAdapter.addNewSMSId()"
-                        [disabled]="htmlRenderer.checkNullAndEmptySpace() || htmlRenderer.smsIdAlreadyExist() || htmlRenderer.invalidSMSIdDetails()"
+                        [disabled]="htmlRenderer.isAddDisabled()"
                 >ADD
                 </button>
             </div>

@@ -66,4 +66,8 @@ export class ManageSmsIdHtmlRenderer {
             return smsId.smsIdRegistrationNumber == this.vm.userInput.newSMSId.smsIdRegistrationNumber;
         });
     }
+
+    isAddDisabled(): boolean {
+        return this.checkNullAndEmptySpace() || this.smsIdAlreadyExist() || this.invalidSMSIdDetails() || this.smsIdRegistrationAlreadyExist();
+    }
 }

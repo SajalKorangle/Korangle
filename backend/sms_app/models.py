@@ -160,17 +160,16 @@ class SMSDeliveryReport(models.Model):
     # Delivered Date & Time
     deliveredDateTime = models.DateTimeField(null=True, verbose_name='deliveredDateTime')
 
-    messageId = models.TextField(null=True, verbose_name='messageId')
+    messageId = models.TextField(null=False, verbose_name='messageId', unique=True)
 
     # Sender Id
-    senderId = models.CharField(max_length=10, default='KORNGL', verbose_name='senderId')
+    senderId = models.CharField(null=True, max_length=10, verbose_name='senderId')
 
     def __str__(self):
         return self.requestId
 
     class Meta:
         db_table = 'sms_delivery_report'
-        unique_together = ('mobileNumber', 'messageId')
 
 
 class SMSPurchase(models.Model):

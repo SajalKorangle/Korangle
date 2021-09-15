@@ -19,6 +19,7 @@ export class ManageSmsIdComponent implements OnInit {
 
     serviceAdapter: ManageSmsIdServiceAdapter;
     htmlRenderer: ManageSmsIdHtmlRenderer;
+    smsIdPattern = /^[a-zA-Z]{6}$/;
 
     statusChoiceList = ['ACTIVATED', 'PENDING', 'ALL'];
 

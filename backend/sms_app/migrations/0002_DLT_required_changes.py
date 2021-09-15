@@ -24,12 +24,11 @@ class Migration(migrations.Migration):
                 ('status', models.TextField(verbose_name='status')),
                 ('statusCode', models.TextField(null=True, verbose_name='statusCode')),
                 ('deliveredDateTime', models.DateTimeField(null=True, verbose_name='deliveredDateTime')),
-                ('senderId', models.CharField(default='KORNGL', max_length=10, verbose_name='senderId')),
-                ('messageId', models.TextField(null=True, verbose_name='messageId'))
+                ('senderId', models.CharField(null=True, max_length=10, verbose_name='senderId')),
+                ('messageId', models.TextField(null=False, verbose_name='messageId', unique=True))
             ],
             options={
-                'db_table': 'sms_delivery_report',
-                'unique_together': {('mobileNumber', 'messageId')},
+                'db_table': 'sms_delivery_report'
             },
         ),
         migrations.CreateModel(

@@ -50,6 +50,20 @@ class SMSDeliveryReportView(CommonView, APIView):
         return get_sms_delivery_report_list(request.GET)
 
 
+# class MsgClubDeliveryReportView(APIView):
+# 
+#     @user_permission
+#     def get(request):
+#         data = {
+#             'requestId': request.GET['requestId'],
+#         }
+#         return get_msg_club_delivery_report_list(data)
+# 
+# 
+# def handle_msg_club_delivery_report_view(request):
+#     data = json.loads(request.body.decode('utf-8'))
+#     handle_msg_club_delivery_report(data)
+#     return HttpResponse(status=201)
 
 ############## SMS Purchase ##############
 from .business.sms_purchase import get_sms_purchase_list

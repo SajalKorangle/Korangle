@@ -78,6 +78,7 @@ export class ManageSmsIdServiceAdapter {
     }
 
     async getExistingSMSIdData() {
+        this.vm.userInput.newSMSId.smsId = this.vm.userInput.newSMSId.smsId.toUpperCase();
         this.vm.backendData.existingSMSIdDetails = null;
         if (this.vm.userInput.newSMSId.smsId && this.vm.userInput.newSMSId.smsId.trim() != '' &&
             this.vm.userInput.newSMSId.smsId.length == 6 && !this.vm.htmlRenderer.smsIdAlreadyExist()) {
