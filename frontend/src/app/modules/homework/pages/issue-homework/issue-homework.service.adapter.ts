@@ -81,8 +81,9 @@ export class IssueHomeworkServiceAdapter {
 
     initialiseClassSubjectData(classSectionSubjectList: any, subjectList: any, classList: any, divisionList: any) {
         this.vm.classSectionSubjectList = [];
-        classSectionSubjectList = classSectionSubjectList.filter(cssl => this.vm.studentSectionList.some(studentSec => studentSec.parentClass ==
-            cssl.parentClass && studentSec.parentDivision == cssl.parentDivision));
+        // filtering the classSectionSubjects in which there are no Active Students
+        classSectionSubjectList = classSectionSubjectList.filter(classSectionSubject => this.vm.studentSectionList.some(studentSec => studentSec.parentClass ==
+            classSectionSubject.parentClass && studentSec.parentDivision == classSectionSubject.parentDivision));
         if (classSectionSubjectList.length === 0) {
             this.vm.noPermission = true;
             this.vm.isLoading = false;

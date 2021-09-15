@@ -75,7 +75,6 @@ export class CheckHomeworkServiceAdapter {
         };
 
         this.vm.studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
-        console.log(this.vm.studentSectionList);
         this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
         this.vm.isInitialLoading = false;
     }
