@@ -52,18 +52,12 @@ export class ForgotPasswordServiceAdapter {
         }
 
         // Code Review
-        // Is this going to be called if we are already checking this.otp in isOtpFormValid?
-        if (this.vm.password.length < 8) {
-            alert('There should be atleast 8 characters in your password');
-            return;
-        }
+        // Is this going to be called if we are already checking this.otp in isOtpFormValid? -- yes, it was merged along with Shivam's code
+        // Removed it , as we are already checking in the isOtpFormValid function
 
         // Code Review
         // Is this going to be called if we are already checking this.otp in isOtpFormValid?
-        if (!this.vm.otp) {
-            alert('OTP verification failed');
-            return;
-        }
+        // Removed it , as we are already checking in the isOtpFormValid function
 
         this.vm.isLoading = true;
         this.vm.showFrontPageProgressBar.emit('true');
