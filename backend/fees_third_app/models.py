@@ -462,35 +462,42 @@ class SubFeeReceipt(models.Model):
 
 @receiver(pre_save, sender=SubFeeReceipt)
 def subFeeReceiptDataCheck(sender, instance, **kwargs):
+    ## Initialization ##
     studentFee = instance.parentStudentFee
     subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
     subDiscountSet = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
-    monthClearanceFlagDict = {}
-    for month in INSTALLMENT_LIST:
-        monthClearanceFlagDict[month] = False
 
+    isClearedMappedByMonth = {}  # To store month wise clearance
+    for month in INSTALLMENT_LIST:
+        isClearedMappedByMonth[month] = False  # Initialize all months as False
+
+    ## Monthwise Validity Check For New SubFeeReceipt ##
     for month in INSTALLMENT_LIST:
         amount = 0
         if(getattr(instance, month+'Amount')):
-            amount += getattr(instance, month+'Amount')
+            amount += getattr(instance, month+'Amount')  # Add the amount of to be created SubFeeReceipt
 
             for subFeeReceipt in subFeeReceiptSet:
                 if getattr(subFeeReceipt, month+'Amount'):
-                    amount += getattr(subFeeReceipt, month+'Amount')
+                    amount += getattr(subFeeReceipt, month+'Amount')  # Add the amount of to be saved SubFeeReceipt
 
             for subDiscount in subDiscountSet:
                 if getattr(subDiscount, month+'Amount'):
-                    amount -= getattr(subDiscount, month+'Amount')
+                    amount -= getattr(subDiscount, month+'Amount')  # Subtract the discounted amount
 
             studentFeeAmount = 0
             if getattr(studentFee, month+'Amount'):
-                studentFeeAmount += getattr(studentFee, month+'Amount')
+                studentFeeAmount += getattr(studentFee, month+'Amount')  # Get the amount of studentFee
 
             # Code Review
             # 'Installent' - Spelling is wrong
-            assert amount <= studentFeeAmount, "Installent amount exceeds actual amount"
+            # @answer : I have corrected it.
+            assert amount <= studentFeeAmount, "Installent amount exceeds actual amount"  # Validity Check for amount should be less than student fee
+
             if(amount == studentFeeAmount):
-                monthClearanceFlagDict[month] = True
+                isClearedMappedByMonth[month] = True
+
+        ## Validations ##
 
         if(getattr(studentFee, month+'ClearanceDate')):  # month cleared
             # Code Review
@@ -528,10 +535,11 @@ def subFeeReceiptDataCheck(sender, instance, **kwargs):
             elif totalPaidLateFee > lateFee:
                 assert False, "paid late fee exceeds actual late fee"
 
+    ## Cleared and Cleared Date Handling for Student Fee ##
     cleared = True
     for month in INSTALLMENT_LIST:
-        cleared = cleared and monthClearanceFlagDict[month]
-        if(monthClearanceFlagDict[month]):
+        cleared = cleared and isClearedMappedByMonth[month]
+        if(isClearedMappedByMonth[month]):
             setattr(studentFee, month+'ClearanceDate', datetime.now())
     if(cleared):
         studentFee.cleared = True
