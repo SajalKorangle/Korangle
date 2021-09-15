@@ -76,8 +76,6 @@ export class AddStudentRemarksServiceAdapter {
 
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
-                        // Code Review
-                        // Why is the below function call commented? --> Uncommented after discussion
                         this.populateStudentSectionList(value_studentSection);
                         this.vm.studentSectionList = value_studentSection;
                         if (this.vm.studentSectionList.length === 0) {

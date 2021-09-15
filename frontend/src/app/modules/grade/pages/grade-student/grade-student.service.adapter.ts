@@ -13,8 +13,6 @@ export class GradeStudentServiceAdapter {
     }
 
     //initialize data
-    // Code Review
-    // Please write the start and end comments, refer code review file to understand --> Done
     async initializeData() {
         this.vm.isInitialLoading = true;
         // ------------------- Start of Fetching and storing inPagePermission (Admin or User) of this page  ---------------------
@@ -155,12 +153,6 @@ export class GradeStudentServiceAdapter {
         );
     }
 
-    // Code Review
-    // Why are we not checking through attendance permission list.
-    // --> because if we check through attendance permission list, we cannot handle the case of administrator permission (he needs to see all the classes)
-    // Is the case of Class - 10, Section - A; Class - 9, Section - B;
-    // but not Class - 10, Section - B; and Class - 9, Section - A have been handled?
-    // --> Handled at line no.104 (If he is not admin, then filtering only the studentSection who are in permitted Section)
     populateFilteredClassSectionList(student_section_list): void {
         this.vm.filteredClassSectionList = [];
         this.vm.classList.forEach((classs) => {
