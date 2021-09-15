@@ -120,7 +120,7 @@ export class GenerateTCServiceAdapter {
                                 parentFeeType: this.vm.tcSettings.parentFeeType,
                                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
                                 isAnnually: true,
-                                aprilAmount: this.vm.tcSettings.tcFee
+                                isClassFilter: true,
                             };
                             await this.vm.feeService.createObject(this.vm.feeService.school_fee_rules, newSchoolFeeRule).then(savedSchoolFeeRule => {
                                 this.vm.tcSchoolFeeRule = savedSchoolFeeRule;
