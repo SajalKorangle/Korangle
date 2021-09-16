@@ -267,6 +267,10 @@ class FeeReceipt(models.Model):
     # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
+    ## Relations To School and Student ##
+    RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
+
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
@@ -354,6 +358,10 @@ class SubFeeReceipt(models.Model):
     # March
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
+
+    ## Relations To School and Student ##
+    RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
+    RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
     class Meta:
         db_table = 'sub_fee_receipt__new'

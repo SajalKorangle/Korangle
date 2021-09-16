@@ -11,7 +11,7 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
 
     class ModelSerializer(serializers.ModelSerializer):
 
-        def is_valid(self, raise_exception=False):
+        def is_valid(self, raise_exception=True):
             original_response = super().is_valid(raise_exception=raise_exception)
             if not original_response:
                 return False
@@ -171,8 +171,7 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
     with db_transaction.atomic():
         ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeStudentIdList=activeStudentIdList, activeSchoolId=activeSchoolId)
         serializer = ModelSerializer(data=data)
-        assert serializer.is_valid(activeSchoolId=activeSchoolId,
-                                   activeStudentIdList=activeStudentIdList), "{0}\n data = {1}".format(serializer.errors, data)
+        assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
         serializer.save()
         response = serializer.data
 
