@@ -118,14 +118,11 @@ class CommonView(CommonBaseView):
         data = request.data
 
         received_fields = set(data.keys())
-        only_model_fields = set([field.name for field in self.Model._meta.concrete_fields])
-        related_field_list = received_fields-only_model_fields
         data_mapped_by_related_field_name = {}
 
-        if(len(related_field_list) > 0):
-            for field_name in related_field_list:
-                data_mapped_by_related_field_name[field_name] = data[field_name]
-                del data[field_name]
+        for field_name in [related_field for related_field in received_fields if received_fields.endswith('List')]:
+            data_mapped_by_related_field_name[field_name] = data[field_name]
+            del data[field_name]
 
         with db_transaction.atomic():
             response = create_object(data, self.ModelSerializer, activeSchoolID, activeStudentID)
@@ -133,13 +130,14 @@ class CommonView(CommonBaseView):
             for field_name, related_data_list in data_mapped_by_related_field_name.items():
                 model_field = self.Model._meta.fields_map.get(field_name[:-4].lower(), None)    # removing list from end and finding the related model field
                 if not model_field:
-                    raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(field_name, field_name[:-4].lower()))
+                    raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(field_name,
+                                    field_name[:-4].lower()))  # verbose message for debugging
 
                 related_model = model_field.related_model
 
                 primary_key_value = response[self.Model._meta.pk.name]
                 for related_data in related_data_list:
-                    related_data.update({'parent'+self.Model.__name__: primary_key_value})
+                    related_data.update({model_field.remote_field.name: primary_key_value})
 
                 mock_request = HttpRequest()
                 mock_request.GET = get_populated_query_dict(activeSchoolID, activeStudentID)
