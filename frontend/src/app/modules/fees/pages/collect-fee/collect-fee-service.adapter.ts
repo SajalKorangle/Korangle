@@ -193,13 +193,14 @@ export class CollectFeeServiceAdapter {
             });
 
 
-        fee_receipt_list = fee_receipt_list.map(fee_receipt => {
+        fee_receipt_list = fee_receipt_list.map(feeReceipt => {
             return {
-                ...fee_receipt,
-                subFeeReceiptList: sub_fee_receipt_list.filter(subFeeReceipt => subFeeReceipt.parentSession == fee_receipt.parentSession
+                ...feeReceipt,
+                receiptNumber: 0,
+                subFeeReceiptList: sub_fee_receipt_list.filter(subFeeReceipt => subFeeReceipt.parentSession == feeReceipt.parentSession
                     && this.vm.studentFeeList.find(item => {
                         return item.id == subFeeReceipt.parentStudentFee;
-                    }).parentStudent == fee_receipt.parentStudent)
+                    }).parentStudent == feeReceipt.parentStudent)
             };
         });
 
@@ -287,19 +288,21 @@ export class CollectFeeServiceAdapter {
 
         await Promise.all(serviceList);
 
-        const newSubFeeReceipt = [];
-        let newFeeReceiptList = value[0].map(feeReceipt => {
+        const newSubFeeReceiptList = [];
+        const newFeeReceiptList = value[0].map(feeReceipt => {
             feeReceipt = { ...feeReceipt };
-            newSubFeeReceipt.concat(feeReceipt.subFeeReceiptList);
+            newSubFeeReceiptList.push(...feeReceipt.subFeeReceiptList);
             delete feeReceipt.subFeeReceiptList;
             return feeReceipt;
         });
         this.addToFeeReceiptList(newFeeReceiptList);
-        this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(newSubFeeReceipt);
+        this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(newSubFeeReceiptList);
 
         alert('Fees submitted successfully');
+        console.log('newSubFeeReceiptList: ', newSubFeeReceiptList);
+        console.log('newFeeReceiptList: ', newFeeReceiptList);
 
-        this.vm.printFullFeeReceiptList(newFeeReceiptList, newSubFeeReceipt);
+        this.vm.printFullFeeReceiptList(newFeeReceiptList, newSubFeeReceiptList);
 
         this.vm.handleStudentFeeProfile();
 
