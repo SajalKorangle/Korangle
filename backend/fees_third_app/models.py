@@ -239,7 +239,7 @@ class StudentFee(models.Model):
 
 class FeeReceipt(models.Model):
 
-    receiptNumber = models.IntegerField(null=False, default=0, verbose_name='receiptNumber')
+    receiptNumber = models.IntegerField(blank=True, default=1, verbose_name='receiptNumber')
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
     cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
@@ -259,27 +259,43 @@ class FeeReceipt(models.Model):
     cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='cancelledBy', related_name='cancelledBy')
 
     MODE_OF_PAYMENT = (
-        ( 'Cash', 'Cash' ),
-        ( 'Cheque', 'Cheque' ),
-        ( 'Online', 'Online'),
+        ('Cash', 'Cash'),
+        ('Cheque', 'Cheque'),
+        ('Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
+    # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
+
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
     if(kwargs['raw']):
         return
+
+    ## Populating receiptNumber starts ##
+    if not instance.id:
+        from django.db import transaction
+        from django.db.models import Max
+        with transaction.atomic():
+            last_receipt_number = \
+                FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
+                .aggregate(Max('receiptNumber'))['receiptNumber__max']
+            if last_receipt_number is not None:
+                instance.receiptNumber = last_receipt_number + 1
+            else:
+                instance.receiptNumber = 1
+    ## Populating receiptNumber ends ##
+
     if instance.id and instance.cancelled:
         originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
-        if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
+        if originalFeeReceipt.cancelled == False and originalFeeReceipt.parentTransaction != None:
             originalFeeReceipt.parentTransaction.delete()
     pass
-
 
 
 class SubFeeReceipt(models.Model):
@@ -426,8 +442,7 @@ class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
-    accountingSettings = models.TextField(null=True) # json data
+    accountingSettings = models.TextField(null=True)  # json data
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
-        
