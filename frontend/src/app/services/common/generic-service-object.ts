@@ -65,7 +65,7 @@ export class GenericServiceObject extends RestApiGateway {
 
 }
 
-// String in the following string are constant strings and if rename symbol is used all the occurrences can be changed at once
+// String in the following string are constant strings and if IDE rename symbol functionality is used all the occurrences can be changed at once
 interface APP_MODEL_STRUCTURE_INTERFACE {
     'fees_third_app': 'FeeReceipt' | 'SubFeeReceipt';
 }
