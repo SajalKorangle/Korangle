@@ -264,7 +264,6 @@ class FeeReceipt(models.Model):
         ('Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
     ## Relations To School and Student ##
@@ -293,7 +292,6 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
                 instance.receiptNumber = last_receipt_number + 1
             else:
                 instance.receiptNumber = 1
-    print('created ReceiptNuber: ', instance.receiptNumber)
     ## Populating receiptNumber ends ##
 
     if instance.id and instance.cancelled:

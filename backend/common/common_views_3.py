@@ -1,9 +1,9 @@
 
-from typing import Type
-from django.http.request import QueryDict
 from rest_framework.views import APIView
 
 from decorators import user_permission_3
+
+import json
 
 from rest_framework import serializers
 
@@ -12,19 +12,7 @@ from common.common_serializer_interface_3 import get_object, get_list, create_ob
 
 from functools import reduce
 from django.http import HttpResponseForbidden
-from django.db import transaction as db_transaction
-from django.http import HttpRequest
-from rest_framework.request import Request
 
-COMMON_VIEW_MAPPED_BY_MODEL_NAME = {}
-COMMON_LIST_VIEW_MAPPED_BY_MODEL_NAME = {}
-
-
-def get_populated_query_dict(activeSchoolId, activeStudentId):
-    query_dict = QueryDict(mutable=True)
-    query_dict.update({'activeSchoolID': activeSchoolId, 'activeStudentID': activeStudentId})
-    query_dict._mutable = False
-    return query_dict
 
 
 def get_model_serializer(Model, fields__korangle, validator):
@@ -97,7 +85,7 @@ class CommonBaseView(APIView):
 
         # Here we are banking on the fact that
         # 1. if RelationsToStudent exist then RelationsToSchool always exist,
-        # 2. activeStudentId represents parent, non existence of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
+        # 2. activeStudentId represents parent, non existance of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
 
         if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only, activeStudentID can be a list of studentId's
             query_filters[self.RelationsToStudent[0]+'__in'] = activeStudentID     # takes the first relation to student only(should be the closest)
@@ -115,42 +103,7 @@ class CommonView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-
-        received_fields = set(data.keys())
-        data_mapped_by_related_field_name = {}
-
-        for field_name in [related_field for related_field in received_fields if related_field.endswith('List')]:
-            data_mapped_by_related_field_name[field_name] = data[field_name]
-            del data[field_name]
-
-        with db_transaction.atomic():
-            response = create_object(data, self.ModelSerializer, activeSchoolID, activeStudentID)
-
-            for field_name, related_data_list in data_mapped_by_related_field_name.items():
-                # removing list from end and finding the related model field
-                related_model_field = self.Model._meta.fields_map.get(field_name[:-4].lower(), None)
-                if not related_model_field:
-                    raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(field_name,
-                                    field_name[:-4].lower()))  # verbose message for debugging
-
-                related_model = related_model_field.related_model
-
-                primary_key_value = response[self.Model._meta.pk.name]
-                for related_data in related_data_list:
-                    related_data.update({related_model_field.remote_field.name: primary_key_value})
-
-                mock_request = HttpRequest()
-                mock_request.GET = get_populated_query_dict(activeSchoolID, activeStudentID)
-                mock_restframework_request = Request(mock_request)
-                mock_restframework_request._full_data = related_data_list
-                mock_restframework_request.user = request.user
-
-                relatedCommonView = getCommonListViewForModel(related_model)()
-                related_response = relatedCommonView.post(mock_restframework_request)
-                response.update({field_name: related_response.data['response']['data']})
-
-        return response
+        return create_object(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):
@@ -179,22 +132,7 @@ class CommonListView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        dataList = request.data
-        if len(dataList) == 0:
-            return []
-
-        return_data = []
-        corresponding_common_view = getCommonViewForModel(self.Model)()
-        with db_transaction.atomic():
-            for data in dataList:
-                mock_request = HttpRequest()
-                mock_request.GET = get_populated_query_dict(activeSchoolID, activeStudentID)
-                mock_restframework_request = Request(mock_request)
-                mock_restframework_request._full_data = data
-                mock_restframework_request.user = request.user
-                return_data.append(corresponding_common_view.post(mock_restframework_request).data['response']['data'])
-
-        return return_data
+        return create_list(request.data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
     @user_permission_3
     def put(self, request, activeSchoolID, activeStudentID):
@@ -210,31 +148,3 @@ class CommonListView(CommonBaseView):
     def delete(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return delete_list(request.GET, filtered_query_set)
-
-
-##  CommonView Model name mapping starts ##
-
-def getCommonViewForModel(model) -> Type[CommonView]:
-    global COMMON_VIEW_MAPPED_BY_MODEL_NAME
-
-    if COMMON_VIEW_MAPPED_BY_MODEL_NAME.get(model.__name__, None) is not None:
-        return COMMON_VIEW_MAPPED_BY_MODEL_NAME[model.__name__]
-
-    for commonView in CommonView.__subclasses__():
-        if commonView.Model.__name__ == model.__name__:
-            COMMON_VIEW_MAPPED_BY_MODEL_NAME[model.__name__] = commonView
-            return commonView
-
-
-def getCommonListViewForModel(model) -> Type[CommonListView]:
-    global COMMON_LIST_VIEW_MAPPED_BY_MODEL_NAME
-
-    if COMMON_LIST_VIEW_MAPPED_BY_MODEL_NAME.get(model.__name__, None) is not None:
-        return COMMON_LIST_VIEW_MAPPED_BY_MODEL_NAME[model.__name__]
-
-    for commonListView in CommonListView.__subclasses__():
-        if commonListView.Model.__name__ == model.__name__:
-            COMMON_LIST_VIEW_MAPPED_BY_MODEL_NAME[model.__name__] = commonListView
-            return commonListView
-
-##  CommonView Model name mapping ends ##

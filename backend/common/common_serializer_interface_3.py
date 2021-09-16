@@ -93,7 +93,7 @@ def create_list(data_list, ModelSerializer, activeSchoolID, activeStudentID):
 
 def create_object(data, ModelSerializer, activeSchoolID, activeStudentID):
     serializer = ModelSerializer(data=data)
-    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID), "{0}\n data = {1}".format(serializer.errors, data)
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID = activeStudentID), serializer.errors
     serializer.save()
     return serializer.data
 
@@ -120,7 +120,7 @@ def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, a
 
 
 def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-    serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial=True)
+    serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial= True)
     assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
     serializer.save()
     return serializer.data
@@ -131,7 +131,7 @@ def delete_object(data, query_set):
     return data['id']
 
 
-def delete_list(data, query_set):
+def delete_list(data, query_set ):
 
     filter_var_list = []
     filter_var = ''
@@ -184,3 +184,4 @@ def delete_list(data, query_set):
         query_set.delete()
 
     return return_data
+
