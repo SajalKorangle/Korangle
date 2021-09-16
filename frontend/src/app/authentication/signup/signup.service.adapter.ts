@@ -54,16 +54,6 @@ export class SignupServiceAdapter {
             return;
         }
 
-        // Code Review
-        // Is this going to be called if we are already checking this.otp in isOtpFormValid?
-        // Removed it , as we are already checking in the isOtpFormValid function
-
-
-        // Code Review
-        // Is this going to be called if we are already checking this.otp in isOtpFormValid?
-        // Removed it , as we are already checking in the isOtpFormValid function
-
-
         this.vm.isLoading = true;
         this.vm.showFrontPageProgressBar.emit('true');
         this.vm.authenticationService
