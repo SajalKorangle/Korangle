@@ -273,7 +273,7 @@ class FeeReceipt(models.Model):
 
 
 @receiver(pre_save, sender=FeeReceipt)
-def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+def FeeReceiptPreSave(sender, instance, **kwargs):
     if(kwargs['raw']):
         return
 
@@ -289,6 +289,7 @@ def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
                 instance.receiptNumber = last_receipt_number + 1
             else:
                 instance.receiptNumber = 1
+    print('created ReceiptNuber: ', instance.receiptNumber)
     ## Populating receiptNumber ends ##
 
     if instance.id and instance.cancelled:

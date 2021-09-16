@@ -97,7 +97,7 @@ class CommonBaseView(APIView):
 
         # Here we are banking on the fact that
         # 1. if RelationsToStudent exist then RelationsToSchool always exist,
-        # 2. activeStudentId represents parent, non existance of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
+        # 2. activeStudentId represents parent, non existence of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
 
         if (activeStudentID and len(self.RelationsToStudent) > 0):  # for parent only, activeStudentID can be a list of studentId's
             query_filters[self.RelationsToStudent[0]+'__in'] = activeStudentID     # takes the first relation to student only(should be the closest)
@@ -120,7 +120,7 @@ class CommonView(CommonBaseView):
         received_fields = set(data.keys())
         data_mapped_by_related_field_name = {}
 
-        for field_name in [related_field for related_field in received_fields if received_fields.endswith('List')]:
+        for field_name in [related_field for related_field in received_fields if related_field.endswith('List')]:
             data_mapped_by_related_field_name[field_name] = data[field_name]
             del data[field_name]
 
