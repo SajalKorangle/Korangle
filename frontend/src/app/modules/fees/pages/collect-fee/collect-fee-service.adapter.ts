@@ -196,7 +196,7 @@ export class CollectFeeServiceAdapter {
         fee_receipt_list = fee_receipt_list.map(fee_receipt => {
             return {
                 ...fee_receipt,
-                subfeereceipt_set: sub_fee_receipt_list.filter(subFeeReceipt => subFeeReceipt.parentSession == fee_receipt.parentSession
+                subFeeReceiptList: sub_fee_receipt_list.filter(subFeeReceipt => subFeeReceipt.parentSession == fee_receipt.parentSession
                     && this.vm.studentFeeList.find(item => {
                         return item.id == subFeeReceipt.parentStudentFee;
                     }).parentStudent == fee_receipt.parentStudent)
