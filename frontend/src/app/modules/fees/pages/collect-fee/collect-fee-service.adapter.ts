@@ -176,8 +176,9 @@ export class CollectFeeServiceAdapter {
             return CommonFunctions.getInstance().copyObject(subFeeReceipt);
         });
 
-        console.log('fee_receipt_list: ', fee_receipt_list);
-        console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
+        // console.log('fee_receipt_list: ', fee_receipt_list);
+        // console.log('sub_fee_receipt_list: ', sub_fee_receipt_list);
+
         let tempStudentFeeIdList = sub_fee_receipt_list.map(a => a.parentStudentFee);
 
         let student_fee_list = this.vm.studentFeeList
@@ -191,12 +192,24 @@ export class CollectFeeServiceAdapter {
                 return CommonFunctions.getInstance().copyObject(studentFee);
             });
 
-        this.vm.isLoading = true;
 
+        fee_receipt_list = fee_receipt_list.map(fee_receipt => {
+            return {
+                ...fee_receipt,
+                subfeereceipt_set: sub_fee_receipt_list.filter(subFeeReceipt => subFeeReceipt.parentSession == fee_receipt.parentSession
+                    && this.vm.studentFeeList.find(item => {
+                        return item.id == subFeeReceipt.parentStudentFee;
+                    }).parentStudent == fee_receipt.parentStudent)
+            };
+        });
+
+        console.log('data to backend = ', fee_receipt_list);
+        this.vm.isLoading = true;
         const value = await Promise.all([
             this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]);
+        console.log('data from backend = ', value);
 
         let transactionFromAccountId;
         let transactionToAccountId;
@@ -243,7 +256,7 @@ export class CollectFeeServiceAdapter {
                         && this.vm.studentFeeList.find(item => {
                             return item.id == subFeeReceipt.parentStudentFee;
                         }).parentStudent == fee_receipt.parentStudent) {
-                        subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
+                        // subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
                         totalAmount += this.vm.installmentList.reduce((totalInstallment, installment) => {
                             return totalInstallment
                                 + (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0)
@@ -271,35 +284,26 @@ export class CollectFeeServiceAdapter {
             );
 
         }
-        else {
-            value[0].forEach(fee_receipt => {
-                sub_fee_receipt_list.forEach(subFeeReceipt => {
-                    if (subFeeReceipt.parentSession == fee_receipt.parentSession
-                        && this.vm.studentFeeList.find(item => {
-                            return item.id == subFeeReceipt.parentStudentFee;
-                        }).parentStudent == fee_receipt.parentStudent) {
-                        subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
-                    }
-                });
-            });
-        }
 
         await Promise.all(serviceList);
 
-        await this.vm.feeService.createObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list).then(value2 => {
-
-            this.addToFeeReceiptList(value[0]);
-            this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);
-
-            alert('Fees submitted successfully');
-
-            this.vm.printFullFeeReceiptList(value[0], value2);
-
-            this.vm.handleStudentFeeProfile();
-
-            this.vm.isLoading = false;
-
+        const newSubFeeReceipt = [];
+        let newFeeReceiptList = value[0].map(feeReceipt => {
+            feeReceipt = { ...feeReceipt };
+            newSubFeeReceipt.concat(feeReceipt.subFeeReceiptList);
+            delete feeReceipt.subFeeReceiptList;
+            return feeReceipt;
         });
+        this.addToFeeReceiptList(newFeeReceiptList);
+        this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(newSubFeeReceipt);
+
+        alert('Fees submitted successfully');
+
+        this.vm.printFullFeeReceiptList(newFeeReceiptList, newSubFeeReceipt);
+
+        this.vm.handleStudentFeeProfile();
+
+        this.vm.isLoading = false;
 
     }
 
