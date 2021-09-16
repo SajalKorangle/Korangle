@@ -23,6 +23,7 @@ import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { Account } from '@services/modules/accounts/models/account';
 import { FeeSettings } from '@services/modules/fees/models/fee-settings';
 import { CollectFeeHTMLRenderer } from './collect-fee.html.renderer';
+import { GenericServiceObject } from '@services/common/generic-service-object';
 
 declare const $: any;
 
@@ -30,7 +31,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService],
+    providers: [GenericServiceObject, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService],
 })
 export class CollectFeeComponent implements OnInit {
     user;
@@ -86,6 +87,7 @@ export class CollectFeeComponent implements OnInit {
     isStudentListLoading = false;
 
     constructor(
+        public genericService: GenericServiceObject,
         public feeService: FeeService,
         public studentService: StudentService,
         public vehicleService: VehicleOldService,

@@ -207,7 +207,7 @@ export class CollectFeeServiceAdapter {
         console.log('data to backend = ', fee_receipt_list);
         this.vm.isLoading = true;
         const value = await Promise.all([
-            this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
+            this.vm.genericService.createObjectList('fees_third_app', 'FeeReceipt', fee_receipt_list),
             this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]);
         console.log('data from backend = ', value);
