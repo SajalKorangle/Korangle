@@ -128,16 +128,17 @@ class CommonView(CommonBaseView):
             response = create_object(data, self.ModelSerializer, activeSchoolID, activeStudentID)
 
             for field_name, related_data_list in data_mapped_by_related_field_name.items():
-                model_field = self.Model._meta.fields_map.get(field_name[:-4].lower(), None)    # removing list from end and finding the related model field
-                if not model_field:
+                # removing list from end and finding the related model field
+                related_model_field = self.Model._meta.fields_map.get(field_name[:-4].lower(), None)
+                if not related_model_field:
                     raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(field_name,
                                     field_name[:-4].lower()))  # verbose message for debugging
 
-                related_model = model_field.related_model
+                related_model = related_model_field.related_model
 
                 primary_key_value = response[self.Model._meta.pk.name]
                 for related_data in related_data_list:
-                    related_data.update({model_field.remote_field.name: primary_key_value})
+                    related_data.update({related_model_field.remote_field.name: primary_key_value})
 
                 mock_request = HttpRequest()
                 mock_request.GET = get_populated_query_dict(activeSchoolID, activeStudentID)
@@ -178,18 +179,18 @@ class CommonListView(CommonBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        if len(data) == 0:
+        dataList = request.data
+        if len(dataList) == 0:
             return []
 
         return_data = []
         corresponding_common_view = getCommonViewForModel(self.Model)()
         with db_transaction.atomic():
-            for instance in data:
+            for data in dataList:
                 mock_request = HttpRequest()
                 mock_request.GET = get_populated_query_dict(activeSchoolID, activeStudentID)
                 mock_restframework_request = Request(mock_request)
-                mock_restframework_request._full_data = instance
+                mock_restframework_request._full_data = data
                 mock_restframework_request.user = request.user
                 return_data.append(corresponding_common_view.post(mock_restframework_request).data['response']['data'])
 
