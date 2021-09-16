@@ -706,10 +706,10 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
             # 1. Will the status order be changed in few seconds from pending to completion or will it might take days.
             # @answer : It can take anywhere from seconds to days.
             # Current Session retrieval method can fail at the end of the session.
-            # @answer: I have changes it confirm if this is what you meant.
+            # @answer: I have changed it confirm if this is what you meant.
             # I think this code will run with in few minutes of order placement by a parent. Please confirm.
             # @answer: Majority of times yes but not always
-            currentSession = Session.objects.get(startDate__lte=instance.dataTime, endDate__gte=instance.dataTime)
+            currentSession = Session.objects.get(startDate__lte=datetime.now(), endDate__gte=datetime.now())
             debitAccount = None
             creditAccount = None
             try:
