@@ -84,7 +84,8 @@ export class SettingsServiceAdapter {
             return;
         this.vm.isLoading = true;
         const fields_request = {
-            fields_korangle: 'id',
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            fields__korangle: 'id',
         };
         const [feeSettingsList] = await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fields_request), // 0
