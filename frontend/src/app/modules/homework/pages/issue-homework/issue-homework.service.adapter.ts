@@ -2,6 +2,7 @@ import { IssueHomeworkComponent } from './issue-homework.component';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { CommonFunctions } from '../../../../classes/common-functions.js';
 import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class IssueHomeworkServiceAdapter {
     vm: IssueHomeworkComponent;
@@ -18,7 +19,7 @@ export class IssueHomeworkServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
         let request_class_subject_list = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -26,7 +27,7 @@ export class IssueHomeworkServiceAdapter {
 
         this.vm.isInitialLoading = true;
 
-        Promise.all([
+        const value = await Promise.all([
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, request_class_subject_list), //0
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //1
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
@@ -35,39 +36,54 @@ export class IssueHomeworkServiceAdapter {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //4
             this.vm.smsOldService.getSMSCount({ parentSchool: this.vm.user.activeSchool.dbId }, this.vm.user.jwt), //5
-        ]).then(
-            (value) => {
-                this.vm.smsBalance = value[5];
-                if (value[4].length > 0) {
-                    this.vm.settings = value[4][0];
-                    if (this.vm.settings.sentUpdateType == 'NULL') {
-                        this.vm.settings.sentUpdateType = 1;
-                    } else if (this.vm.settings.sentUpdateType == 'SMS') {
-                        this.vm.settings.sentUpdateType = 2;
-                    } else if (this.vm.settings.sentUpdateType == 'NOTIFICATION') {
-                        this.vm.settings.sentUpdateType = 3;
-                    } else {
-                        this.vm.settings.sentUpdateType = 4;
-                    }
-                } else {
-                    this.vm.settings = {
-                        sentUpdateType: 1,
-                        sendCreateUpdate: false,
-                        sendEditUpdate: false,
-                        sendDeleteUpdate: false,
-                    };
-                }
-                this.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
-                this.vm.isInitialLoading = false;
-            },
-            (error) => {
-                this.vm.isInitialLoading = false;
+        ]);
+        this.vm.smsBalance = value[5];
+        if (value[4].length > 0) {
+            this.vm.settings = value[4][0];
+            if (this.vm.settings.sentUpdateType == 'NULL') {
+                this.vm.settings.sentUpdateType = 1;
+            } else if (this.vm.settings.sentUpdateType == 'SMS') {
+                this.vm.settings.sentUpdateType = 2;
+            } else if (this.vm.settings.sentUpdateType == 'NOTIFICATION') {
+                this.vm.settings.sentUpdateType = 3;
+            } else {
+                this.vm.settings.sentUpdateType = 4;
             }
-        );
+        } else {
+            this.vm.settings = {
+                sentUpdateType: 1,
+                sendCreateUpdate: false,
+                sendEditUpdate: false,
+                sendDeleteUpdate: false,
+            };
+        }
+
+        let permitted_class_list = [];
+        let permitted_section_list = [];
+        value[0].forEach((element) => {
+            permitted_class_list.push(element.parentClass);
+            permitted_section_list.push(element.parentDivision);
+        });
+
+        let student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentClass__in: permitted_class_list,
+            parentDivision__in: permitted_section_list,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        this.vm.studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+        this.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
+        this.vm.isInitialLoading = false;
+
     }
 
     initialiseClassSubjectData(classSectionSubjectList: any, subjectList: any, classList: any, divisionList: any) {
         this.vm.classSectionSubjectList = [];
+        // filtering the classSectionSubjects in which there are no Active Students
+        classSectionSubjectList = classSectionSubjectList.filter(classSectionSubject => this.vm.studentSectionList.some(studentSec => studentSec.parentClass ==
+            classSectionSubject.parentClass && studentSec.parentDivision == classSectionSubject.parentDivision));
         if (classSectionSubjectList.length === 0) {
             this.vm.noPermission = true;
             this.vm.isLoading = false;
@@ -124,19 +140,11 @@ export class IssueHomeworkServiceAdapter {
         this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
     }
 
-    getHomeworks(): any {
+    async getHomeworks() {
         this.vm.isLoading = true;
         this.vm.showContent = false;
         this.vm.homeworkList = [];
         this.studentNotificationList = [];
-
-        let student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentClass: this.vm.selectedClassSection.classDbId,
-            parentDivision: this.vm.selectedClassSection.divisionDbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            fields__korangle: 'parentStudent',
-        };
 
         const homework_data = {
             parentHomeworkQuestion__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
@@ -147,18 +155,13 @@ export class IssueHomeworkServiceAdapter {
                 parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
             }), //0
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data), //1
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //2
             // this.vm.
         ]).then(
             (value) => {
                 this.vm.homeworkImagesList = value[1];
                 this.initialiseHomeworks(value[0], value[1]);
-                let studentIdList = [];
-                value[2].forEach((student) => {
-                    studentIdList.push(student.parentStudent);
-                });
                 let student_data = {
-                    id__in: studentIdList,
+                    id__in: this.vm.studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
                     fields__korangle: 'id,name,mobileNumber',
                 };
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then((value) => {

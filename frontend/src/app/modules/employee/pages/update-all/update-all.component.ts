@@ -82,11 +82,6 @@ export class UpdateAllComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
-    showAllColumns(): void {
-        this.COLUMNHANDLES.forEach((item) => {
-            item.show = true;
-        });
-    }
 
     getParameterValue = (employee, parameter) => {
         try {
@@ -135,13 +130,6 @@ export class UpdateAllComponent implements OnInit {
         catch {
             return this.noFileIcon;
         }
-    }
-
-
-    hideAllColumns(): void {
-        this.COLUMNHANDLES.forEach((item) => {
-            item.show = false;
-        });
     }
 
     checkOnlyUppercaseFields(key: any) {

@@ -10,6 +10,7 @@ import { BlockStudentBackendData } from './block-student.backend.data';
 import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'block-student',
@@ -18,7 +19,8 @@ import { OnlineClassService } from '@services/modules/online-class/online-class.
     providers: [
         StudentService,
         ClassService,
-        OnlineClassService
+        OnlineClassService,
+        TCService
     ],
 })
 
@@ -38,7 +40,8 @@ export class BlockStudentComponent implements OnInit {
     constructor(
         public studentService: StudentService,
         public classService: ClassService,
-        public onlineClassService: OnlineClassService
+        public onlineClassService: OnlineClassService,
+        public tcService: TCService
     ) { }
 
     ngOnInit(): void {
