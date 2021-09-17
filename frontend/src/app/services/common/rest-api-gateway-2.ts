@@ -10,7 +10,7 @@ import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.
 const MAX_URL_LENGTH = 2048;
 
 @Injectable()
-export class RestApiGateway {
+export class RestApiGateway2 {
     reportError = reportError;
 
     constructor(private http: HttpClient) { }
@@ -19,8 +19,9 @@ export class RestApiGateway {
         return DataStorage.getInstance().getUser().jwt;
     }
 
-    getAbsoluteURL(url: string): string {
+    getAbsoluteURL(url: string, params: { [key: string]: any; } = {}): string {
         let absolute_url = new URL(environment.DJANGO_SERVER + Constants.api_version + url);
+        Object.entries(params).forEach(([key, value]) => absolute_url.searchParams.set(key, value));
         let user = DataStorage.getInstance().getUser();
         if (user.activeSchool) {
             if (user.activeSchool.role === 'Employee') {
@@ -104,10 +105,10 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public postData(body: any, url: any): Promise<any> {
+    public postData(body: any, url: any, params?: { [key: string]: any; }): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         return this.http
-            .post(this.getAbsoluteURL(url), body, { headers: headers })
+            .post(this.getAbsoluteURL(url, params), body, { headers: headers })
             .toPromise()
             .then(
                 (response) => {

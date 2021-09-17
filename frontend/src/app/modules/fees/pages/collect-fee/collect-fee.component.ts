@@ -23,7 +23,7 @@ import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { Account } from '@services/modules/accounts/models/account';
 import { FeeSettings } from '@services/modules/fees/models/fee-settings';
 import { CollectFeeHTMLRenderer } from './collect-fee.html.renderer';
-import { GenericService } from '@services/common/generic-service-object';
+import { GenericService } from '@services/common/generic-service';
 
 declare const $: any;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { RestApiGateway } from './rest-api-gateway';
+import { RestApiGateway2 } from './rest-api-gateway-2';
 
 // const JSON_OBJECT_RESPONSE_PARSER = (responseData) => {
 //     if (responseData) { // json parse if key ends with JSON
@@ -30,7 +30,7 @@ import { RestApiGateway } from './rest-api-gateway';
 
 
 @Injectable()
-export class GenericService extends RestApiGateway {
+export class GenericService extends RestApiGateway2 {
 
     private getBaseUrl(): string {
         return '/generic';
