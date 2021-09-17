@@ -12,28 +12,28 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
     class ModelSerializer(serializers.ModelSerializer):
 
         def is_valid(self, raise_exception=True):
-            original_response = super().is_valid(raise_exception=raise_exception)
-            if not original_response:
+            super_response = super().is_valid(raise_exception=raise_exception)
+            if not super_response:
                 return False
 
-            RelationsToStudent = self.Meta.model.RelationsToStudent
-            RelationsToSchool = self.Meta.model.RelationsToSchool
+            RelationsToStudent = self.Meta.model.Meta.RelationsToStudent
+            RelationsToSchool = self.Meta.model.Meta.RelationsToSchool
 
             # Checking for Parent
             if(activeStudentIdList):  # activeStudentID can be a list of studentId's
                 for relation in RelationsToStudent:
                     splitted_relation = relation.split('__')
-                    related_object = self.validated_data.get(splitted_relation[0], None)
-                    if related_object is not None:
-                        if not (reduce(lambda a, b: getattr(a, b), splitted_relation[1:], related_object) in activeStudentIdList):
+                    parent_instance = self.validated_data.get(splitted_relation[0], None)
+                    if parent_instance is not None:
+                        if not (reduce(lambda instance, field: getattr(instance, field), splitted_relation[1:], parent_instance) in activeStudentIdList):
                             return False
 
             # Checking for Parent & Employee Both
             for relation in RelationsToSchool:
                 splitted_relation = relation.split('__')
-                related_object = self.validated_data.get(splitted_relation[0], None)
-                if related_object is not None:
-                    if (reduce(lambda a, b: getattr(a, b), splitted_relation[1:], related_object) != activeSchoolId):
+                parent_instance = self.validated_data.get(splitted_relation[0], None)
+                if parent_instance is not None:
+                    if (reduce(lambda a, b: getattr(a, b), splitted_relation[1:], parent_instance) != activeSchoolId):
                         return False
 
             return True
@@ -161,12 +161,11 @@ def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
 
 def create_object(data, Model, activeSchoolId, activeStudentIdList):
 
-    received_fields = data.keys()
-    data_mapped_by_related_field_name = {}
+    data_mapped_by_child_model_field = {}
 
-    for field_name in [related_field for related_field in received_fields if related_field.endswith('List')]:
-        data_mapped_by_related_field_name[field_name] = data[field_name]
-        del data[field_name]
+    for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
+        data_mapped_by_child_model_field[child_related_field_name] = data[child_related_field_name]
+        del data[child_related_field_name]
 
     with db_transaction.atomic():
         ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeStudentIdList=activeStudentIdList, activeSchoolId=activeSchoolId)
@@ -175,22 +174,22 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
         serializer.save()
         response = serializer.data
 
-        for field_name, related_data_list in data_mapped_by_related_field_name.items():
+        for child_related_field_name, child_model_data_list in data_mapped_by_child_model_field.items():
             # removing list from end and finding the related model field
-            related_model_field = Model._meta.fields_map.get(field_name[:-4].lower(), None)
+            related_model_field = Model._meta.fields_map.get(child_related_field_name[:-4].lower(), None)
             if not related_model_field:
-                raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(field_name,
-                                field_name[:-4].lower()))  # verbose message for debugging
+                raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(child_related_field_name,
+                                child_related_field_name[:-4].lower()))  # verbose message for debugging
 
-            related_model = related_model_field.related_model
+            child_model = related_model_field.related_model
 
             primary_key_value = response[Model._meta.pk.name]
-            for related_data in related_data_list:
-                related_data.update({related_model_field.remote_field.name: primary_key_value})
+            for child_model_data in child_model_data_list:
+                child_model_data.update({related_model_field.remote_field.name: primary_key_value})
 
-            related_response = create_object_list(related_data_list, related_model, activeSchoolId, activeStudentIdList)
+            child_response = create_object_list(child_model_data_list, child_model, activeSchoolId, activeStudentIdList)
 
-            response.update({field_name: related_response})
+            response.update({child_related_field_name: child_response})
 
     return response
 

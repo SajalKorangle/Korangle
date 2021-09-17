@@ -13,14 +13,15 @@ class GenericBaseView(APIView):
 
     Model = None
 
-    def initializeModel(self, GET):
-        GET._mutable = True
+    def initial(self, request, *args, **kwargs):
+        request.GET._mutable = True
         from django.apps import apps
-        model = apps.get_model(GET['app_name'], GET['model_name'])
-        del GET['app_name']
-        del GET['model_name']
-        GET._mutable = False
+        model = apps.get_model(request.GET['app_name'], request.GET['model_name'])
+        del request.GET['app_name']
+        del request.GET['model_name']
+        request.GET._mutable = False
         self.Model = model
+        super().initial(request, *args, **kwargs)
 
 
 class GenericView(GenericBaseView):
@@ -32,7 +33,6 @@ class GenericView(GenericBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        self.initializeModel(request.GET)
         data = request.data
         return create_object(data, self.Model, activeSchoolID, activeStudentID)
 
@@ -63,7 +63,6 @@ class GenericListView(GenericBaseView):
 
     @user_permission_3
     def post(self, request, activeSchoolID, activeStudentID):
-        self.initializeModel(request.GET)
         data_list = request.data
         return create_object_list(data_list, self.Model, activeSchoolID, activeStudentID)
 
