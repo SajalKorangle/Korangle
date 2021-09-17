@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 from school_app.model.models import School, Session, BusStop
 
@@ -266,13 +266,21 @@ class FeeReceipt(models.Model):
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
-    ## Relations To School and Student ##
-    RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
-    RelationsToStudent = ['parentStudent__id']
+    # ## Relations To School and Student ##
+    # RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
+    # RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
+
+        ## Relations To School and Student ##
+        RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
 
 @receiver(pre_save, sender=FeeReceipt)
@@ -357,12 +365,12 @@ class SubFeeReceipt(models.Model):
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
 
-    ## Relations To School and Student ##
-    RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
-    RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
-
     class Meta:
         db_table = 'sub_fee_receipt__new'
+
+        ## Relations To School and Student ##
+        RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
+        RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
 
 class Discount(models.Model):
