@@ -14,12 +14,13 @@ import { UserService } from '../../../../services/modules/user/user.service';
 import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { isMobile } from '../../../../classes/common.js';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'check-homework',
     templateUrl: './check-homework.component.html',
     styleUrls: ['./check-homework.component.css'],
-    providers: [SubjectService, StudentService, ClassService, HomeworkService, NotificationService, UserService, SmsService, SmsOldService],
+    providers: [SubjectService, StudentService, ClassService, HomeworkService, NotificationService, UserService, SmsService, SmsOldService, TCService],
 })
 export class CheckHomeworkComponent implements OnInit {
     user: any;
@@ -39,6 +40,7 @@ export class CheckHomeworkComponent implements OnInit {
     selectedHomework: any;
     currentHomework: any;
     studentList: any;
+    studentSectionList = [];
 
     HOMEWORK_CHECKED_EVENT_DBID = 10;
     HOMEWORK_RESUBMISSION_EVENT_DBID = 11;
@@ -60,7 +62,8 @@ export class CheckHomeworkComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public tcService: TCService
     ) {}
     // Server Handling - Initial
     ngOnInit(): void {

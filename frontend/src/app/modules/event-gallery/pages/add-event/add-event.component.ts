@@ -13,12 +13,13 @@ import { UserService } from '@services/modules/user/user.service';
 import { SmsService } from '@services/modules/sms/sms.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
 import {SmsOldService} from '@services/modules/sms/sms-old.service';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'app-add-event',
     templateUrl: './add-event.component.html',
     styleUrls: ['./add-event.component.css'],
-    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService, SmsOldService],
+    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService, TCService, SmsOldService],
 })
 export class AddEventComponent implements OnInit {
     user: any;
@@ -61,6 +62,7 @@ export class AddEventComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public employeeService: EmployeeService,
+        public tcService: TCService,
         public smsOldService : SmsOldService,
     ) {}
 

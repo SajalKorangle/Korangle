@@ -16,12 +16,13 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import {MessageService} from '@services/message-service';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'record-attendance',
     templateUrl: './record-attendance.component.html',
     styleUrls: ['./record-attendance.component.css'],
-    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService],
+    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, TCService],
 })
 export class RecordAttendanceComponent implements OnInit {
     // @Input() user;
@@ -42,7 +43,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     showStudentList = false;
 
-    studentAttendanceStatusList: any;
+    studentAttendanceStatusList = [];
 
     isInitialLoading = false;
 
@@ -80,7 +81,8 @@ export class RecordAttendanceComponent implements OnInit {
         public attendanceService: AttendanceService,
         public studentService: StudentService,
         public smsOldService: SmsOldService,
-        public classService: ClassService
+        public classService: ClassService,
+        public tcService: TCService
     ) {}
 
     changeSelectedSectionToFirst(): void {

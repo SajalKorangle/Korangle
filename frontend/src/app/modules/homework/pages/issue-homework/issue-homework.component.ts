@@ -18,6 +18,7 @@ import { Homework } from '../../../../services/modules/homework/models/homework'
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
 import moment = require('moment');
+import {TCService} from '@services/modules/tc/tc.service';
 
 export interface EditHomeworkDialogData {
     id: any;
@@ -43,7 +44,7 @@ export interface ImagePreviewDialogData {
     selector: 'issue-homework',
     templateUrl: './issue-homework.component.html',
     styleUrls: ['./issue-homework.component.css'],
-    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService],
+    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService, TCService],
 })
 export class IssueHomeworkComponent implements OnInit {
     // @Input() user;
@@ -52,6 +53,7 @@ export class IssueHomeworkComponent implements OnInit {
     classSectionSubjectList: any;
     selectedClassSection: any;
     selectedSubject: any;
+    studentSectionList = [];
 
     homeworkList: any;
     homeworkImagesList: any;
@@ -87,7 +89,8 @@ export class IssueHomeworkComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public tcService: TCService
     ) {}
 
     // Server Handling - Initial

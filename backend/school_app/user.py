@@ -5,6 +5,9 @@ from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from django.contrib.auth import get_user_model
+
+from tc_app.models import TransferCertificateNew
+
 User = get_user_model()
 
 from django.db.models import F
@@ -56,9 +59,17 @@ def get_school_list(user):
                                       Q(parentStudent__parentSchool__dateOfExpiry=None)
                                       | Q(parentStudent__parentSchool__dateOfExpiry__gte=date.today()),
                                       parentStudent__parentSchool__expired=False,
-                                      parentSession=F('parentStudent__parentSchool__currentSession')) \
+                                      parentSession=F('parentStudent__parentSchool__currentSession'),
+                                      parentStudent__parentTransferCertificate=None) \
                 .select_related('parentStudent__parentSchool'):
-        
+
+        transferCertificate = TransferCertificateNew.objects.filter(parentStudent=student_section_object.parentStudent,
+                                                                    parentSession=student_section_object.parentSession).\
+                               exclude(status='Cancelled')
+
+        if transferCertificate.exists():
+            continue
+
         isRestricted = False
 
         if RestrictedStudent.objects.filter(parentStudent__id = student_section_object.parentStudent_id).count()>0:

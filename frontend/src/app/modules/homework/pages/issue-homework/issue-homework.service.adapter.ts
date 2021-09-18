@@ -1,6 +1,7 @@
 import {IssueHomeworkComponent} from './issue-homework.component';
 import {Homework} from '../../../../services/modules/homework/models/homework';
 import {CommonFunctions} from '../../../../classes/common-functions.js';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class IssueHomeworkServiceAdapter {
     vm: IssueHomeworkComponent;
@@ -37,6 +38,23 @@ export class IssueHomeworkServiceAdapter {
         this.vm.dataForMapping['divisionList'] = value[3];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
+        let permitted_class_list = [];
+        let permitted_section_list = [];
+        value[0].forEach((element) => {
+            permitted_class_list.push(element.parentClass);
+            permitted_section_list.push(element.parentDivision);
+        });
+
+        let student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentClass__in: permitted_class_list,
+            parentDivision__in: permitted_section_list,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        this.vm.studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+        this.vm.dataForMapping['studentSectionList'] = this.vm.studentSectionList;
         this.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
         this.vm.isInitialLoading = false;
 
@@ -44,6 +62,9 @@ export class IssueHomeworkServiceAdapter {
 
     initialiseClassSubjectData(classSectionSubjectList: any, subjectList: any, classList: any, divisionList: any) {
         this.vm.classSectionSubjectList = [];
+        // filtering the classSectionSubjects in which there are no Active Students
+        classSectionSubjectList = classSectionSubjectList.filter(classSectionSubject => this.vm.studentSectionList.some(studentSec => studentSec.parentClass ==
+            classSectionSubject.parentClass && studentSec.parentDivision == classSectionSubject.parentDivision));
         if (classSectionSubjectList.length === 0) {
             this.vm.noPermission = true;
             this.vm.isLoading = false;
@@ -100,18 +121,11 @@ export class IssueHomeworkServiceAdapter {
         this.vm.selectedSubject = this.vm.selectedClassSection.subjectList[0];
     }
 
-    getHomeworks(): any {
+    async getHomeworks() {
         this.vm.isLoading = true;
         this.vm.showContent = false;
         this.vm.homeworkList = [];
         this.studentNotificationList = [];
-
-        let student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentClass: this.vm.selectedClassSection.classDbId,
-            parentDivision: this.vm.selectedClassSection.divisionDbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-        };
 
         const homework_data = {
             parentHomeworkQuestion__parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
@@ -122,19 +136,13 @@ export class IssueHomeworkServiceAdapter {
                 parentClassSubject: this.vm.selectedSubject.classSubjectDbId,
             }), //0
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data), //1
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //2
             // this.vm.
         ]).then(
             (value) => {
-                this.vm.dataForMapping['studentSectionList'] = value[2];
                 this.vm.homeworkImagesList = value[1];
                 this.initialiseHomeworks(value[0], value[1]);
-                let studentIdList = [];
-                value[2].forEach((student) => {
-                    studentIdList.push(student.parentStudent);
-                });
                 let student_data = {
-                    id__in: studentIdList,
+                    id__in: this.vm.studentSectionList.map(studentSection => studentSection.parentStudent).join(','),,
                     fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
                 };
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then((value) => {
