@@ -242,7 +242,7 @@ export class AddEventServiceAdapter {
             };
 
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
+                this.vm.studentService.getObjectList(this.vm.studentService.student, data),
                 this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             ]).then((value2) => {
                 this.populateNotifyPersonData(value2[0], value2[1]);
