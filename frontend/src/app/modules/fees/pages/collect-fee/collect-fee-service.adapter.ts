@@ -252,7 +252,6 @@ export class CollectFeeServiceAdapter {
                         && this.vm.studentFeeList.find(item => {
                             return item.id == subFeeReceipt.parentStudentFee;
                         }).parentStudent == fee_receipt.parentStudent) {
-                        // subFeeReceipt['parentFeeReceipt'] = fee_receipt.id;
                         totalAmount += this.vm.installmentList.reduce((totalInstallment, installment) => {
                             return totalInstallment
                                 + (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0)
@@ -294,8 +293,6 @@ export class CollectFeeServiceAdapter {
         this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(newSubFeeReceiptList);
 
         alert('Fees submitted successfully');
-        console.log('newSubFeeReceiptList: ', newSubFeeReceiptList);
-        console.log('newFeeReceiptList: ', newFeeReceiptList);
 
         this.vm.printFullFeeReceiptList(newFeeReceiptList, newSubFeeReceiptList);
 
