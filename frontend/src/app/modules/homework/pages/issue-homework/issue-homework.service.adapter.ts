@@ -142,7 +142,7 @@ export class IssueHomeworkServiceAdapter {
                 this.vm.homeworkImagesList = value[1];
                 this.initialiseHomeworks(value[0], value[1]);
                 let student_data = {
-                    id__in: this.vm.studentSectionList.map(studentSection => studentSection.parentStudent).join(','),,
+                    id__in: this.vm.studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
                     fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
                 };
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then((value) => {
