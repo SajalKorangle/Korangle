@@ -20,6 +20,7 @@ import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.compo
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './issue-homework.permissions';
 import {valueType} from '@modules/common/in-page-permission';
 import {EmployeeService} from '@services/modules/employee/employee.service';
+import {TCService} from '@services/modules/tc/tc.service';
 
 export interface EditHomeworkDialogData {
     id: any;
@@ -45,7 +46,8 @@ export interface ImagePreviewDialogData {
     selector: 'issue-homework',
     templateUrl: './issue-homework.component.html',
     styleUrls: ['./issue-homework.component.css'],
-    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService, EmployeeService],
+    providers: [SubjectService, HomeworkService, ClassService, StudentService, NotificationService, UserService, SmsService, SmsOldService,
+        EmployeeService, TCService],
 })
 export class IssueHomeworkComponent implements OnInit {
     // @Input() user;
@@ -57,6 +59,7 @@ export class IssueHomeworkComponent implements OnInit {
     classSectionSubjectList: any;
     selectedClassSection: any;
     selectedSubject: any;
+    studentSectionList = [];
 
     homeworkList: any;
     homeworkImagesList: any;
@@ -93,7 +96,8 @@ export class IssueHomeworkComponent implements OnInit {
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public dialog: MatDialog,
-        public employeeService: EmployeeService
+        public employeeService: EmployeeService,
+        public tcService: TCService
     ) {}
 
     // Server Handling - Initial

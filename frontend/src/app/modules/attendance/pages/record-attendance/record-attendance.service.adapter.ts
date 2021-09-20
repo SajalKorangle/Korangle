@@ -1,6 +1,7 @@
-import { RecordAttendanceComponent } from './record-attendance.component';
-import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
+import {RecordAttendanceComponent} from './record-attendance.component';
+import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
+import {INFORMATION_TYPE_LIST} from '../../../../classes/constants/information-type';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 import {CommonFunctions} from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
@@ -9,15 +10,15 @@ export class RecordAttendanceServiceAdapter {
     informationMessageType: any;
 
     constructor() {}
-    // Data
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
     }
 
-   async  initializeData() {
+    async initializeData() {
         this.vm.isInitialLoading = true;
+        // ------------------- Initial Data Fetching Starts ---------------------
 
         const routeInformation = CommonFunctions.getModuleTaskPaths();
         const in_page_permission_request = {
@@ -32,13 +33,11 @@ export class RecordAttendanceServiceAdapter {
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
-
         let request_attendance_permission_list_data = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentEmployee: this.vm.user.activeSchool.employeeId
         };
-
-        Promise.all([
+        const value = await Promise.all([
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //0
@@ -49,59 +48,48 @@ export class RecordAttendanceServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //4
-        ]).then(
-            (value) => {
-                this.vm.smsBalance = value[4];
-                if (value[0].length > 0) {
-                    this.vm.selectedSentType = value[0][0].sentUpdateType;
-                    this.vm.selectedReceiver = value[0][0].receiverType;
-                } else {
-                    this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
-                    this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
-                }
-                let class_permission_list = [];
-                let division_permission_list = [];
+        ]);
+        // ------------------- Initial Data Fetching Ends ---------------------
 
-                if (this.vm.hasAdminPermission()) {
-                    class_permission_list = value[2].map(classs => classs.id);
-                    division_permission_list = value[3].map(div => div.id);
-                } else {
-                    value[1].forEach((element) => {
-                        class_permission_list.push(element.parentClass);
-                        division_permission_list.push(element.parentDivision);
-                    });
-                }
+        this.vm.smsBalance = value[4];
+        if (value[0].length > 0) {
+            this.vm.selectedSentType = value[0][0].sentUpdateType;
+            this.vm.selectedReceiver = value[0][0].receiverType;
+        } else {
+            this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
+            this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
+        }
+        let class_permission_list = [];
+        let division_permission_list = [];
+        if (this.vm.hasAdminPermission()) {
+            class_permission_list = value[2].map(classs => classs.id);
+            division_permission_list = value[3].map(div => div.id);
+        } else {
+            value[1].forEach((element) => {
+                class_permission_list.push(element.parentClass);
+                division_permission_list.push(element.parentDivision);
+            });
+        }
+        // ------------------- Fetching Valid Student Data Starts ---------------------
+        let student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentClass__in: class_permission_list,
+            parentDivision__in: division_permission_list,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
 
-                let student_section_data = {
-                    parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-                    parentClass__in: class_permission_list,
-                    parentDivision__in: division_permission_list,
-                    parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                };
+        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
 
-                Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data)]).then(
-                    (secondValue) => {
-                        let student_id_list = [];
-                        let student_data = {
-                            id__in: student_id_list,
-                            fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
-                        };
-                        secondValue[0].forEach((element) => {
-                            student_id_list.push(element.parentStudent);
-                        });
-                        Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then(
-                            (thirdValue) => {
-                                this.initializeClassSectionStudentList(value[2], value[3], secondValue[0], thirdValue[0], value[1]);
-                                this.vm.isInitialLoading = false;
-                            }
-                        );
-                    }
-                );
-            },
-            (error) => {
-                this.vm.isInitialLoading = false;
-            }
-        );
+        let student_data = {
+            id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
+            fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
+        };
+        const studentDataList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
+        // ------------------- Fetching Valid Student Data Ends ---------------------
+        // ------------------- Initialization of the ClassSectionStudentList using initial and student data ---------------------
+        this.initializeClassSectionStudentList(value[2], value[3], studentSectionList, studentDataList, value[1]);
+        this.vm.isInitialLoading = false;
     }
 
     initializeClassSectionStudentList(
@@ -177,6 +165,9 @@ export class RecordAttendanceServiceAdapter {
                 this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
             }
         });
+        // ------------------- Populating  classSectionStudentList Ends ---------------------
+
+        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Starts ---------------------
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
                 section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
@@ -188,6 +179,7 @@ export class RecordAttendanceServiceAdapter {
             this.vm.selectedClass = this.vm.classSectionStudentList[0];
             this.vm.changeSelectedSectionToFirst();
         }
+        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Ends ---------------------
     }
 
     getStudentsAttendanceStatusList(): void {

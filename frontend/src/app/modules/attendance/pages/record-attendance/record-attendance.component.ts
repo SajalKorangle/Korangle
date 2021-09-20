@@ -18,12 +18,13 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 import {valueType} from '@modules/common/in-page-permission';
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
 import {EmployeeService} from '@services/modules/employee/employee.service';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'record-attendance',
     templateUrl: './record-attendance.component.html',
     styleUrls: ['./record-attendance.component.css'],
-    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, EmployeeService],
+    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, EmployeeService, TCService],
 })
 export class RecordAttendanceComponent implements OnInit {
     // @Input() user;
@@ -42,7 +43,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     showStudentList = false;
 
-    studentAttendanceStatusList: any;
+    studentAttendanceStatusList = [];
 
     isInitialLoading = false;
 
@@ -84,7 +85,8 @@ export class RecordAttendanceComponent implements OnInit {
         public studentService: StudentService,
         public smsOldService: SmsOldService,
         public classService: ClassService,
-        public employeeService: EmployeeService
+        public employeeService: EmployeeService,
+        public tcService: TCService
     ) {}
 
     changeSelectedSectionToFirst(): void {
