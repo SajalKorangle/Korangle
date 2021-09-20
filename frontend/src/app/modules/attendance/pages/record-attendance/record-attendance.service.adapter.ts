@@ -95,24 +95,25 @@ export class RecordAttendanceServiceAdapter {
     initializeClassSectionStudentList(
         classList: any,
         divisionList: any,
-        studentList: any,
+        studentSectionList: any,
         studentDetailsList: any,
         attendancePermissionList: any
     ): any {
         this.vm.classSectionStudentList = [];
-        studentList.forEach((student) => {
-            if (this.vm.hasAdminPermission() || this.vm.classSectionInPermissionList(student.parentClass, student.parentDivision, attendancePermissionList)) {
+        studentSectionList.forEach((studentSection) => {
+            if (this.vm.hasAdminPermission() || this.vm.classSectionInPermissionList(studentSection.parentClass, studentSection.parentDivision,
+                attendancePermissionList)) {
                 let classIndex = -1;
                 let tempIndex = 0;
                 this.vm.classSectionStudentList.forEach((classs) => {
-                    if (classs.dbId == student.parentClass) {
+                    if (classs.dbId == studentSection.parentClass) {
                         classIndex = tempIndex;
                         return;
                     }
                     tempIndex = tempIndex + 1;
                 });
                 if (classIndex === -1) {
-                    let classs = classList.find((classs) => classs.id === student.parentClass);
+                    let classs = classList.find((classs) => classs.id === studentSection.parentClass);
                     let tempClass = {
                         name: classs.name,
                         dbId: classs.id,
@@ -121,7 +122,7 @@ export class RecordAttendanceServiceAdapter {
                     this.vm.classSectionStudentList.push(tempClass);
                     let tempIndex = 0;
                     this.vm.classSectionStudentList.forEach((classs) => {
-                        if (classs.dbId == student.parentClass) {
+                        if (classs.dbId == studentSection.parentClass) {
                             classIndex = tempIndex;
                             return;
                         }
@@ -131,7 +132,7 @@ export class RecordAttendanceServiceAdapter {
                 let divisionIndex = -1;
                 tempIndex = 0;
                 this.vm.classSectionStudentList[classIndex].sectionList.forEach((division) => {
-                    if (division.dbId == student.parentDivision) {
+                    if (division.dbId == studentSection.parentDivision) {
                         divisionIndex = tempIndex;
                         return;
                     }
@@ -139,7 +140,7 @@ export class RecordAttendanceServiceAdapter {
                 });
 
                 if (divisionIndex === -1) {
-                    let division = divisionList.find((division) => division.id === student.parentDivision);
+                    let division = divisionList.find((division) => division.id === studentSection.parentDivision);
                     let tempDivision = {
                         name: division.name,
                         dbId: division.id,
@@ -148,14 +149,14 @@ export class RecordAttendanceServiceAdapter {
                     this.vm.classSectionStudentList[classIndex].sectionList.push(tempDivision);
                     tempIndex = 0;
                     this.vm.classSectionStudentList[classIndex].sectionList.forEach((division) => {
-                        if (division.dbId == student.parentDivision) {
+                        if (division.dbId == studentSection.parentDivision) {
                             divisionIndex = tempIndex;
                             return;
                         }
                         tempIndex = tempIndex + 1;
                     });
                 }
-                let studentDetails = studentDetailsList.find((studentDetails) => studentDetails.id == student.parentStudent);
+                let studentDetails = studentDetailsList.find((studentDetails) => studentDetails.id == studentSection.parentStudent);
                 let tempData = {
                     name: studentDetails.name,
                     dbId: studentDetails.id,
