@@ -239,24 +239,24 @@ class StudentFee(models.Model):
 
 class FeeReceipt(models.Model):
 
-    receiptNumber = models.IntegerField(blank=True, default=0, verbose_name='receiptNumber')
-    generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
-    remark = models.TextField(null=True, verbose_name='remark')
-    cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
+    receiptNumber = models.IntegerField(blank=True, default=0)
+    generationDateTime = models.DateTimeField(null=False, auto_now_add=True)
+    remark = models.TextField(null=True)
+    cancelled = models.BooleanField(null=False, default=False)
 
     # Added for the unique together field,
     # Also required in case fee receipt is cancelled, student is deleted, and we need to calculate the maximum receipt number
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='FeeReceiptList')
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee', related_name='parentEmployee')
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='FeeReceiptList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='FeeReceiptList')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='FeeReceiptList')
 
     chequeNumber = models.BigIntegerField(null=True, verbose_name='chequeNumber')
 
     cancelledDateTime = models.DateTimeField(null=True, verbose_name='cancelledDateTime')
     cancelledRemark = models.TextField(null=True, verbose_name='cancelledRemark')
-    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='cancelledBy', related_name='cancelledBy')
+    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='CancelledFeeReceiptList')
 
     MODE_OF_PAYMENT = (
         ('Cash', 'Cash'),
@@ -274,6 +274,7 @@ class FeeReceipt(models.Model):
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
+    ## Transaction atomic ensures that two parallel saves is not happening which can lead to same receipt number which is calculated in the pre save signal. ##
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -288,14 +289,13 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
     if not instance.id:
         from django.db import transaction
         from django.db.models import Max
-        with transaction.atomic():
-            last_receipt_number = \
-                FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
-                .aggregate(Max('receiptNumber'))['receiptNumber__max']
-            if last_receipt_number is not None:
-                instance.receiptNumber = last_receipt_number + 1
-            else:
-                instance.receiptNumber = 1
+        last_receipt_number = \
+            FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
+            .aggregate(Max('receiptNumber'))['receiptNumber__max']
+        if last_receipt_number is not None:
+            instance.receiptNumber = last_receipt_number + 1
+        else:
+            instance.receiptNumber = 1
     ## Populating receiptNumber ends ##
 
     if instance.id and instance.cancelled:
@@ -307,10 +307,10 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
 
 class SubFeeReceipt(models.Model):
 
-    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, verbose_name='parentFeeReceipt')
-    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, verbose_name='parentStudentFee')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
+    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, related_name='SubFeeReceiptList')
+    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, related_name='SubFeeReceiptList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='SubFeeReceiptList')
+    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, related_name='SubFeeReceiptList')
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April

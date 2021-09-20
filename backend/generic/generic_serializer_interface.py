@@ -20,12 +20,12 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
             RelationsToSchool = self.Meta.model.RelationsToSchool
 
             # Checking for Parent
-            if(activeStudentIdList):  # activeStudentID can be a list of studentId's
+            if(activeStudentIdList):
                 for relation in RelationsToStudent:
                     splitted_relation = relation.split('__')
                     parent_instance = self.validated_data.get(splitted_relation[0], None)
                     if parent_instance is not None:
-                        if not (reduce(lambda instance, field: getattr(instance, field), splitted_relation[1:], parent_instance) in activeStudentIdList):
+                        if not (reduce(lambda instance, parent_field: getattr(instance, parent_field), splitted_relation[1:], parent_instance) in activeStudentIdList):
                             return False
 
             # Checking for Parent & Employee Both
@@ -33,7 +33,7 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
                 splitted_relation = relation.split('__')
                 parent_instance = self.validated_data.get(splitted_relation[0], None)
                 if parent_instance is not None:
-                    if (reduce(lambda a, b: getattr(a, b), splitted_relation[1:], parent_instance) != activeSchoolId):
+                    if (reduce(lambda instance, parent_field: getattr(instance, parent_field), splitted_relation[1:], parent_instance) != activeSchoolId):
                         return False
 
             return True
@@ -176,7 +176,7 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
 
         for child_related_field_name, child_model_data_list in data_list_mapped_by_child_model_related_field_name.items():
             # removing list from end and finding the related model field
-            child_related_model_field = Model._meta.fields_map.get(child_related_field_name[:-4].lower(), None)
+            child_related_model_field = Model._meta.fields_map.get(child_related_field_name, None)
             if not child_related_model_field:
                 raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(child_related_field_name,
                                 child_related_field_name[:-4].lower()))  # verbose message for debugging
