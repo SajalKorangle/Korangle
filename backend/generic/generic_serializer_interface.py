@@ -161,10 +161,10 @@ def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
 
 def create_object(data, Model, activeSchoolId, activeStudentIdList):
 
-    data_list_mapped_by_child_model_related_field_name = {}
+    data_list_mapped_by_child_related_field_name = {}
 
     for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
-        data_list_mapped_by_child_model_related_field_name[child_related_field_name] = data[child_related_field_name]
+        data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
         del data[child_related_field_name]
 
     with db_transaction.atomic():
@@ -174,20 +174,20 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
         serializer.save()
         response = serializer.data
 
-        for child_related_field_name, child_model_data_list in data_list_mapped_by_child_model_related_field_name.items():
+        for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
             # removing list from end and finding the related model field
-            child_related_model_field = Model._meta.fields_map.get(child_related_field_name, None)
-            if not child_related_model_field:
+            child_related_field = Model._meta.fields_map.get(child_related_field_name, None)
+            if not child_related_field:
                 raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(child_related_field_name,
                                 child_related_field_name[:-4].lower()))  # verbose message for debugging
 
-            child_model = child_related_model_field.related_model
+            child_model = child_related_field.related_model
 
             parent_primary_key_value = response[Model._meta.pk.name]
-            for child_model_data in child_model_data_list:
-                child_model_data.update({child_related_model_field.remote_field.name: parent_primary_key_value})
+            for child_data in child_data_list:
+                child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
 
-            child_response = create_object_list(child_model_data_list, child_model, activeSchoolId, activeStudentIdList)
+            child_response = create_object_list(child_data_list, child_model, activeSchoolId, activeStudentIdList)
 
             response.update({child_related_field_name: child_response})
 

@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { DataStorage } from '../../classes/data-storage';
-import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
+import { reportError, ERROR_SOURCES } from '../modules/errors/error-reporting.service';
 
 const MAX_URL_LENGTH = 2048;
 
