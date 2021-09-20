@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
+
 public class MyInstanceIDListenerService extends FirebaseMessagingService {
 
     @Override
@@ -18,6 +20,14 @@ public class MyInstanceIDListenerService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Map<String, String> data = remoteMessage.getData();
+        String updateMessage = data.get("data");
+
+        if (updateMessage != null && updateMessage.equals("UPDATE")) {
+            MainActivity.volleyFace.checkingUpdates(); // checking updates
+            return;
+        }
+
         String title = remoteMessage.getNotification().getTitle();
         String message = remoteMessage.getNotification().getBody();
 
