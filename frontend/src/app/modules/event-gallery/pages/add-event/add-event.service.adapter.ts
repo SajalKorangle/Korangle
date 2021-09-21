@@ -1,5 +1,6 @@
 import { AddEventComponent } from '@modules/event-gallery/pages/add-event/add-event.component';
 import { INFORMATION_TYPE_LIST } from '@classes/constants/information-type';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class AddEventServiceAdapter {
     vm: AddEventComponent;
@@ -15,14 +16,14 @@ export class AddEventServiceAdapter {
         this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('General') + 1;
     }
 
-    initializeData(): void {
+    async initializeData() {
         this.vm.isLoading = true;
         this.vm.eventList = [];
         this.vm.imageList = [];
         this.vm.eventNotifyList = [];
         this.vm.loadMoreEvents = true;
         this.fetchLoadingCount();
-        this.getNotificationPersonData();
+        await this.getNotificationPersonData();
     }
 
     fetchLoadingCount() {
@@ -259,8 +260,9 @@ export class AddEventServiceAdapter {
         }
     }
 
-    getNotificationPersonData() {
-        let student_data = {
+    async getNotificationPersonData() {
+        let student_section_data = {
+            parentStudent__parentTransferCertificate: 'null__korangle',
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
@@ -269,9 +271,10 @@ export class AddEventServiceAdapter {
             fields__korangle: 'id,name,mobileNumber',
         };
 
-        Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_data)]).then((value1) => {
+        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+
             let data = {
-                id__in: value1[0].map((section) => section.parentStudent).join(),
+                id__in: studentSectionList.map((section) => section.parentStudent).join(),
                 fields__korangle: 'id,name,mobileNumber',
             };
 
@@ -280,10 +283,9 @@ export class AddEventServiceAdapter {
                 this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
             ]).then((value2) => {
                 this.populateNotifyPersonData(value2[0], value2[1]);
-                this.populateStudentClassList(this.notifyPersonData, value1[0]);
+                this.populateStudentClassList(this.notifyPersonData, studentSectionList);
                 this.vm.updateService.fetchGCMDevicesNew(this.notifyPersonData);
             });
-        });
     }
 
     populateStudentClassList(notifyPersonData: any, studentSection: any) {

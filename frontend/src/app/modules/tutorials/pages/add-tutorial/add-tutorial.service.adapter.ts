@@ -1,5 +1,6 @@
 import { AddTutorialComponent } from './add-tutorial.component';
 import {CommonFunctions} from '@modules/common/common-functions';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class AddTutorialServiceAdapter {
     vm: AddTutorialComponent;
@@ -31,24 +32,30 @@ export class AddTutorialServiceAdapter {
         const fetch_student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentStudent__parentTransferCertificate: 'null__korangle'
         };
 
         const value = await Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
-            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //2
-            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data), //4
+            await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data), //0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
+            this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //3
+            this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //4
             this.vm.tutorialService.getObjectList(this.vm.tutorialService.tutorial_settings, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }), //5
             this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //6
         ]);
 
+        this.vm.backendData.fullStudentSectionList = value[0];
+        this.vm.backendData.classList = value[1];
+        this.vm.backendData.sectionList = value[2];
+        this.vm.backendData.classSubjectList = value[3];
+        this.vm.backendData.subjectList = value[4];
+        this.vm.settings = value[5][0];
         this.vm.smsBalance = value[6];
-        if (value[5].length > 0) {
-            this.vm.settings = value[5][0];
-        } else {
+
+        if (this.vm.smsBalance.length < 0) {
             this.vm.settings = {
                 sentUpdateType: 1,
                 sendCreateUpdate: false,
@@ -56,11 +63,7 @@ export class AddTutorialServiceAdapter {
                 sendDeleteUpdate: false,
             };
         }
-        this.vm.backendData.classList = value[0];
-        this.vm.backendData.sectionList = value[1];
-        this.vm.backendData.classSubjectList = value[2];
-        this.vm.backendData.subjectList = value[3];
-        this.vm.backendData.fullStudentList = value[4];
+
         this.populateClassSectionSubjectList();
         this.populateDefaults();
         this.vm.stateKeeper.isLoading = false;
@@ -116,7 +119,7 @@ export class AddTutorialServiceAdapter {
     }
 
     containsStudent(sectionTemp: any) {
-        return this.vm.backendData.fullStudentList.some((student) => {
+        return this.vm.backendData.fullStudentSectionList.some((student) => {
             return student.parentDivision === sectionTemp.id && student.parentClass === sectionTemp.parentClass;
         });
     }
@@ -304,7 +307,7 @@ export class AddTutorialServiceAdapter {
 
     async prepareStudentList() {
         this.vm.currentClassStudentList = [];
-        let student_list = this.vm.backendData.fullStudentList.filter((student) => {
+        let student_list = this.vm.backendData.fullStudentSectionList.filter((student) => {
             if (student.parentClass == this.vm.userInput.selectedClass.id && student.parentDivision == this.vm.userInput.selectedSection.id) return true;
             return false;
         });
