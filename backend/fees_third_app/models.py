@@ -274,7 +274,8 @@ class FeeReceipt(models.Model):
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
-    ## Transaction atomic ensures that two parallel saves is not happening which can lead to same receipt number which is calculated in the pre save signal. ##
+    # Transaction atomic ensures that two parallel saves is not happening which can lead to same receipt number
+    # which is calculated in the pre save signal.
     @transaction.atomic
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
