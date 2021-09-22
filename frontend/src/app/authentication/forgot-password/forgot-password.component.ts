@@ -79,4 +79,12 @@ export class ForgotPasswordComponent implements OnInit {
         }
         return true;
     }
+
+    reTypeMobileNumber() {
+        this.section = 'mobileNumber';
+        this.mobileNumber = '';
+        this.otp = '';
+        this.password = '';
+        this.confirmPassword = '';
+    }
 }

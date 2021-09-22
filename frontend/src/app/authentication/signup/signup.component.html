@@ -201,12 +201,6 @@
                         </div>
 
                         <div class="clearfix"></div>
-
-                        <div class="row">
-                            <div class="col-md-12" align="center">
-                                <a style="cursor: pointer" (click)="section = 'userDetails'">Go Back</a>
-                            </div>
-                        </div>
                     </ng-container>
 
                     <ng-container *ngIf="!isMobile()">
@@ -276,7 +270,7 @@
 
                     <div class="row">
                         <div class="col-md-12" align="center">
-                            <a style="cursor: pointer" (click)="section = 'userDetails'">Go Back</a>
+                            <a style="cursor: pointer" (click)="goBack()">Go Back</a>
                         </div>
                     </div>
                 </form>

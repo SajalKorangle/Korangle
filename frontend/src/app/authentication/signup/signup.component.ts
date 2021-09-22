@@ -93,4 +93,15 @@ export class SignupComponent implements OnInit {
         }
         return true;
     }
+
+    goBack() {
+        this.section = 'userDetails';
+        this.mobileNumber = '';
+        this.firstName = '';
+        this.lastName = '';
+        this.emailAddress = '';
+        this.otp = '';
+        this.password = '';
+        this.confirmPassword = '';
+    }
 }
