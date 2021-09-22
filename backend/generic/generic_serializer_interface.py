@@ -25,7 +25,7 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
                     splitted_relation = relation.split('__')
                     parent_instance = self.validated_data.get(splitted_relation[0], None)
                     if parent_instance is not None:
-                        if not (reduce(lambda instance, parent_field: getattr(instance, parent_field), splitted_relation[1:], parent_instance) in activeStudentIdList):
+                        if not (reduce(lambda instance, parent_field: getattr(instance, parent_field) if(instance is not None) else None, splitted_relation[1:], parent_instance) in activeStudentIdList):
                             return False
 
             # Checking for Parent & Employee Both
@@ -33,7 +33,7 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
                 splitted_relation = relation.split('__')
                 parent_instance = self.validated_data.get(splitted_relation[0], None)
                 if parent_instance is not None:
-                    if (reduce(lambda instance, parent_field: getattr(instance, parent_field), splitted_relation[1:], parent_instance) != activeSchoolId):
+                    if (reduce(lambda instance, parent_field: getattr(instance, parent_field) if(instance is not None) else None, splitted_relation[1:], parent_instance) != activeSchoolId):
                         return False
 
             return True
