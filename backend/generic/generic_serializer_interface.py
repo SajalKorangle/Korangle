@@ -152,11 +152,11 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
 
 
 def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
-    return_data = []
+    response = []
     with db_transaction.atomic():
         for data in data_list:
-            return_data.append(create_object(data, Model, activeSchoolId, activeStudentIdList))
-    return return_data
+            response.append(create_object(data, Model, activeSchoolId, activeStudentIdList))
+    return response
 
 
 def create_object(data, Model, activeSchoolId, activeStudentIdList):
@@ -178,8 +178,7 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
             # removing list from end and finding the related model field
             child_related_field = Model._meta.fields_map.get(child_related_field_name, None)
             if not child_related_field:
-                raise Exception('Invalid Field Name for Related Fields: {0} -> {1}'.format(child_related_field_name,
-                                child_related_field_name[:-4].lower()))  # verbose message for debugging
+                raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
 
             child_model = child_related_field.related_model
 
