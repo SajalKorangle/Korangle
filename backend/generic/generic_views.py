@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 
-from decorators import user_permission_3
+from decorators import user_permission_4
 
 
 from .generic_serializer_interface import create_object, create_object_list
@@ -31,7 +31,7 @@ class GenericView(GenericBaseView):
     #     self.initializeModel(request.GET)
     #     return get_object(request.GET, self.Model, activeSchoolID, activeStudentID)
 
-    @user_permission_3
+    @user_permission_4
     def post(self, request, activeSchoolID, activeStudentID):
         data = request.data
         return create_object(data, self.Model, activeSchoolID, activeStudentID)
@@ -61,7 +61,7 @@ class GenericListView(GenericBaseView):
     #         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'], validator=self.validator)
     #     return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
-    @user_permission_3
+    @user_permission_4
     def post(self, request, activeSchoolID, activeStudentID):
         data_list = request.data
         return create_object_list(data_list, self.Model, activeSchoolID, activeStudentID)

@@ -10,7 +10,7 @@ import { reportError, ERROR_SOURCES } from '../modules/errors/error-reporting.se
 const MAX_URL_LENGTH = 2048;
 
 @Injectable()
-export class RestApiGateway2 {
+export class RestApiGateway {
     reportError = reportError;
 
     constructor(private http: HttpClient) { }
@@ -36,6 +36,20 @@ export class RestApiGateway2 {
     }
 
     public returnResponse(response: any, url: any = null, prompt: string = null): any {
+        if ('success' in response) {
+            return response['success'];
+        } else if ('fail' in response) {
+            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt, false, location.href);
+            alert(response['fail']);
+            throw new Error();
+        } else {
+            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true, location.href);
+            alert('Unexpected response from server');
+            throw new Error();
+        }
+    }
+
+    /*public returnResponse(response: any, url: any = null, prompt: string = null): any {
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;
@@ -49,9 +63,9 @@ export class RestApiGateway2 {
             alert('Unexpected response from server');
             return null;
         }
-    }
+    }*/
 
-    public deleteData(url: any): Promise<any> {
+    /*public deleteData(url: any): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         return this.http
             .delete(this.getAbsoluteURL(url), { headers: headers })
@@ -103,7 +117,7 @@ export class RestApiGateway2 {
                 }
             )
             .catch(this.handleError);
-    }
+    }*/
 
     public postData(body: any, url: any, params?: { [key: string]: any; }): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
@@ -116,14 +130,14 @@ export class RestApiGateway2 {
                 },
                 (error) => {
                     this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from postData', false, location.href, JSON.stringify(body));
-                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                    alert('Error: Action Failed');
                     return null;
                 }
             )
             .catch(this.handleError);
     }
 
-    public getDataWithPost(url: any, data?: any) {
+    /*public getDataWithPost(url: any, data?: any) {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
         absoluteURL.searchParams.append('method', 'GET');
@@ -173,7 +187,7 @@ export class RestApiGateway2 {
                 }
             )
             .catch(this.handleError);
-    }
+    }*/
 
     public handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only
