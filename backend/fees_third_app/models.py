@@ -307,10 +307,10 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
 
 class SubFeeReceipt(models.Model):
 
-    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, related_name='SubFeeReceiptList')
-    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, related_name='SubFeeReceiptList')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='SubFeeReceiptList')
-    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, related_name='SubFeeReceiptList')
+    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, related_name='subFeeReceiptList')
+    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, related_name='subFeeReceiptList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='subFeeReceiptList')
+    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, related_name='subFeeReceiptList')
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
