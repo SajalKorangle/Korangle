@@ -75,8 +75,10 @@ export class ViewFeeServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
             // Code Review
-            // Shouldn't there be a school filter applied in below api requests?
+            // Shouldn't there be a school filter applied in below api request?
             this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}), // 13
+            // Code Review
+            // Shouldn't there be a student id filter applied in below api request?
             this.vm.feeService.getObjectList(this.vm.feeService.online_fee_payment_transaction, {}), //14
         ]).then(
             (value) => {

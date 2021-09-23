@@ -1,7 +1,7 @@
 from .cashfree.cashfree import getResponseSignature
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from .cashfree.cashfree import createAndSignSelfCashfreeOrder
-from .cashfree.cashfree import createAndSignCashfreeOrder
+from .cashfree.cashfree import createAndSignCashfreeOrderForKorangle
+from .cashfree.cashfree import createAndSignCashfreeOrderForSchool
 from .models import Order
 from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import create_object, get_object
@@ -23,9 +23,6 @@ class OnlinePaymentAccountView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        # Code Review
-        # Are we creating a random vendor id here? Why not create it like order id?
-        # @answer : This is not random vendor id, it uses time_stamp(epoch time in microseconds); It is same as orderId, only difference is this is not primary key
         vendorId = str(int(time()*1000000))
         vendorData = data['vendorData']
 
@@ -59,13 +56,10 @@ class OnlinePaymentAccountView(CommonView, APIView):
         return data
 
 
-# Code Review
-# Please comment that order School is for online fee payment.
-# 2. Should the order id be created from here or from pre save signal of FeeReceiptOrder
+# 1. Should the order id be created from here or from pre save signal of FeeReceiptOrder
 # @answer : Order and order id is a generic thing. Why would we create order id from pre save signal of FeeReceiptOrder? Reason
 # It is will also not be feasible to do so as there will be no way of knowing if a order is for fee payment or sms payment until the connecting models are created i.e, OnlineFeePaymentTransaction
 ## Currently used only for online fee payment ##
-
 class OrderSchoolView(CommonView, APIView):
     Model = Order
     permittedMethods = ['get', 'post', ]
@@ -81,17 +75,13 @@ class OrderSchoolView(CommonView, APIView):
 
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
-        responseOrderData = createAndSignCashfreeOrder(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
+        responseOrderData = createAndSignCashfreeOrderForSchool(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
         return responseOrderData
 
 
-# Code Review
-# 1. Please comment that order self is for sms purchases.
-# 2. Should the order id be created from here or from pre save signal of SchoolSMSPurchaseOrder
+# 1. Should the order id be created from here or from pre save signal of SchoolSMSPurchaseOrder
 # @answer : Same as previous answer.
 ## Currently used only for sms purchase ##
-
-
 class OrderSelfView(CommonView, APIView):
     Model = Order
     permittedMethods = ['get', 'post', ]
@@ -105,7 +95,7 @@ class OrderSelfView(CommonView, APIView):
 
         createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
 
-        responseOrderData = createAndSignSelfCashfreeOrder(request.data, createdOrderResponse['orderId'])
+        responseOrderData = createAndSignCashfreeOrderForKorangle(request.data, createdOrderResponse['orderId'])
         return responseOrderData
 
 
@@ -114,11 +104,7 @@ class OrderListView(CommonListView, APIView):
     permittedMethods = ['get']
 
 
-# Code Review
-# Please comment that order Completion is for Cashfree webhook.
-# @answer : Done
-## This is a cashfree webhook which is called from cashfree after payment completion or failour##
-
+## This is a cashfree webhook which is called from cashfree after payment completion or failure##
 class OrderCompletionView(APIView):
     permission_classes = []
 
@@ -131,12 +117,10 @@ class OrderCompletionView(APIView):
         if(request.POST['txStatus'] == 'SUCCESS'):
             orderInstance.status = 'Completed'
             orderInstance.referenceId = request.POST['referenceId']
-            # Code Review
-            # Write a comment why the first orderInstance.save() is different than the other one.
-            # @answer : Done
             try:
-                # On save django pre save signals will be fired. It will try to use the received amount to create fee receipt or purchase sms.
-                # In case of failour we will refund the amount.
+                # On save django pre save signals will be fired.
+                # It will try to use the received amount to create fee receipt or purchase sms.
+                # In case of failure we will refund the amount.
                 with transaction.atomic():
                     orderInstance.save()
             except:

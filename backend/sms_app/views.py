@@ -5,13 +5,7 @@ from .business.msg_club_delivery_report import handle_msg_club_delivery_report, 
 from .business.send_sms import send_sms_old
 from .business.sms_count import get_sms_count
 from common.common_views_3 import CommonView, CommonListView
-# Code Review
-# Remove update_object import
-# @answer : Done
 from common.common_serializer_interface_3 import create_object
-# Code Review
-# Remove user_permission_new import
-# @answer : Done
 from decorators import user_permission, user_permission_3
 from django.http import HttpResponse
 
