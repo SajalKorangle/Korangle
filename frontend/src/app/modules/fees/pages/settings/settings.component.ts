@@ -60,7 +60,7 @@ export class SettingsComponent implements OnInit {
 
     toggleAccounting(checked: boolean): void {
         if (checked) {
-            this.backendData.initilizeAccouting();
+            this.backendData.initializeAccounting();
         } else {
             this.backendData.feeSettings.accountingSettingsJSON = null;
         }
@@ -82,8 +82,6 @@ export class SettingsComponent implements OnInit {
         this.backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode].push(customAccountSession.id);
     }
 
-    // Code Review
-    // Move the function to service adapter.
     settingsValidityCheck(): boolean {
         let errormsg = '';
         let dataValid = true;

@@ -38,11 +38,9 @@ export class ViewPurchasesComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new ViewPurchasesServiceAdapter(this);
-        this.serviceAdapter.initilizeDate();
+        this.serviceAdapter.initializeDate();
     }
 
-    // Code Review
-    // This function should be in service adapter.
     formStructureFromBackendData() {
         this.parsedIncompleteTransactions
             = this.backendData.incompleteOnlineSmsPaymentTransactionList.map(transaction => {

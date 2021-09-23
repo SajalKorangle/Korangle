@@ -1,7 +1,3 @@
-<!--
-    Code Review
-    Please write the start and end comments
--->
 <div class="card-content table-responsive">
     <ng-container *ngIf="!isLoading">
         <!-- Student Fee Structures-->
@@ -238,7 +234,7 @@
                         [subFeeReceiptList]="subFeeReceiptList" [studentList]="selectedStudentList"
                         [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList"
                         [classList]="classList" [number]="3" [sectionList]="sectionList" [sessionList]="sessionList"
-                        [boardList]="boardList" [isParent]="true"></app-fee-receipt-list>
+                        [boardList]="boardList" [printSingleReceipt]="true"></app-fee-receipt-list>
                 </div>
             </mat-expansion-panel>
 

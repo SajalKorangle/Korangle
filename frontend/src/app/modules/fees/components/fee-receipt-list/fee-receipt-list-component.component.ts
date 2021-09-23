@@ -30,9 +30,7 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() boardList;
     @Input() sessionList = [];
     @Input() isPrinting = false;
-    // Code Review
-    // What is the use of this variable?
-    @Input() isParent = false;
+    @Input() printSingleReceipt = false;
 
     @Output() receiptCancelled = new EventEmitter<any>();
 
@@ -67,7 +65,7 @@ export class FeeReceiptListComponent implements OnInit {
             employeeList: this.employeeList,
             boardList: this.boardList,
             sessionList: this.sessionList,
-            isParent: this.isParent
+            printSingleReceipt: this.printSingleReceipt
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, { user: this.user, value: data });

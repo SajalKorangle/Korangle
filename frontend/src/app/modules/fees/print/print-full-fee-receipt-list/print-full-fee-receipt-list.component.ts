@@ -26,9 +26,8 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
 
     checkView = false;
 
-    // Code Review
-    // This variable can be called single receipt or double receipt. if it is only used in html.
-    parentView = false;
+    // this variable is used to determine whether to print single receipt or double receipt.
+    printSingleReceipt = false;
 
     constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
@@ -47,7 +46,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         this.boardList = value['boardList'];
         this.sessionList = value['sessionList'];
         this.checkView = true;
-        this.parentView = value['isParent'];
+        this.printSingleReceipt = value['printSingleReceipt'];
     }
 
     ngAfterViewChecked(): void {

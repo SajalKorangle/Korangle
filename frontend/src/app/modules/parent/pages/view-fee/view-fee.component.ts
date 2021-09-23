@@ -39,8 +39,6 @@ declare const $: any;
     providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService, UserService, PaymentService],
 })
 
-// Code Review
-// Change the name of the page from View Fees to Pay Fees.
 export class ViewFeeComponent implements OnInit {
     user;
 
@@ -64,8 +62,6 @@ export class ViewFeeComponent implements OnInit {
 
     // Fee Payment
     email: string = '';
-    // Code Review
-    // Please correct the spelling - studnt
     amountMappedByStudntId: { [key: number]: number; } = {};
     newSubFeeReceiptListMappedByStudntId: { [key: number]: Array<Partial<SubFeeReceipt>>; } = {};
 
