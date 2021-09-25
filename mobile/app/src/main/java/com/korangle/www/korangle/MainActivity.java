@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     Bitmap mImageBitmap;
 
-    public static VolleyFace volleyFace;
+    public VolleyFace volleyFace;
 
     private long pressedTime;
 
