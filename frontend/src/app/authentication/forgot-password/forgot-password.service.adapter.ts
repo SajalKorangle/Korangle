@@ -51,11 +51,6 @@ export class ForgotPasswordServiceAdapter {
             return;
         }
 
-        if (this.vm.password.length < 8) {
-            alert('There should be atleast 8 characters in your password');
-            return;
-        }
-
         this.vm.isLoading = true;
         this.vm.showFrontPageProgressBar.emit('true');
         this.vm.authenticationService

@@ -172,10 +172,12 @@
                                         id="password"
                                         type="{{ visibilityMode ? 'text' : 'password' }}"
                                         placeholder="Password"
+                                        [pattern]="validators.password"
                                         [(ngModel)]="password"
                                         name="password"
                                     />
                                     <i matSuffix class="material-icons" (click)="toggleVisibilityMode()">{{ getVisibilityMode() }}</i>
+                                    <mat-error>Password should contain atleast 8 characters</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -188,21 +190,17 @@
                                         id="confirmPassword"
                                         type="{{ visibilityMode ? 'text' : 'password' }}"
                                         placeholder="Confirm Password"
+                                        [pattern]="validators.password"
                                         [(ngModel)]="confirmPassword"
                                         name="confirmPassword"
                                     />
                                     <i matSuffix class="material-icons" (click)="toggleVisibilityMode()">{{ getVisibilityMode() }}</i>
+                                     <mat-error>Password should contain atleast 8 characters</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
 
                         <div class="clearfix"></div>
-
-                        <div class="row">
-                            <div class="col-md-12" align="center">
-                                <a style="cursor: pointer" (click)="section = 'userDetails'">Go Back</a>
-                            </div>
-                        </div>
                     </ng-container>
 
                     <ng-container *ngIf="!isMobile()">
@@ -229,12 +227,14 @@
                                         id="password"
                                         type="{{ visibilityMode ? 'text' : 'password' }}"
                                         placeholder="Password"
+                                        [pattern]="validators.password"
                                         [(ngModel)]="password"
                                         name="password"
                                     />
                                     <i matSuffix style="cursor: pointer" class="material-icons" (click)="toggleVisibilityMode()">{{
                                         getVisibilityMode()
                                     }}</i>
+                                    <mat-error>Password should atleast contain 8 characters</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -247,12 +247,14 @@
                                         id="confirmPassword"
                                         type="{{ visibilityMode ? 'text' : 'password' }}"
                                         placeholder="Confirm Password"
+                                        [pattern]="validators.password"
                                         [(ngModel)]="confirmPassword"
                                         name="confirmPassword"
                                     />
                                     <i matSuffix style="cursor: pointer" class="material-icons" (click)="toggleVisibilityMode()">{{
                                         getVisibilityMode()
                                     }}</i>
+                                    <mat-error>Password should atleast contain 8 characters</mat-error>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -260,7 +262,7 @@
 
                     <div class="row">
                         <div class="col-md-12" align="center">
-                            <button type="submit" class="btn btn-danger">Submit</button>
+                            <button type="submit" [disabled]="!isOtpFormValid()" class="btn btn-danger">Submit</button>
                         </div>
                     </div>
 
@@ -268,7 +270,7 @@
 
                     <div class="row">
                         <div class="col-md-12" align="center">
-                            <a style="cursor: pointer" (click)="section = 'userDetails'">Go Back</a>
+                            <a style="cursor: pointer" (click)="goBack()">Go Back</a>
                         </div>
                     </div>
                 </form>

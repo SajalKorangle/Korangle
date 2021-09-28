@@ -1,8 +1,6 @@
 from django.db import models
 
 # Create your models here.
-from django.db.models import DateField
-
 from school_app.model.models import School
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -42,16 +40,3 @@ def sendNotification(sender, instance, created, **kwargs):
         return
     if(created):
         send_notification(instance)
-
-
-class DailyJobsReport(models.Model):
-    STATUS_CHOICES = (
-        ('INITIATED', 'INITIATED'),
-        ('SENT', 'SENT'),
-    )
-
-    date = DateField(auto_now_add=True, unique=True)
-    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='INITIATED', blank=True)
-
-    def __str__(self):
-        return '{0} : {1}'.format(self.date.strftime("%d-%m-%Y"), self.status)
