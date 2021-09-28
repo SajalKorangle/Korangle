@@ -35,13 +35,12 @@ export class CheckHomeworkServiceAdapter {
         ]);
 
         this.vm.smsBalance = value[5].count;
-        console.log(value[5]);
         this.vm.dataForMapping['subjectList'] = value[0];
         this.vm.dataForMapping['classList'] = value[1];
         this.vm.dataForMapping['divisionList'] = value[2];
         this.vm.dataForMapping['classSubjectList'] = value[4];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
-        
+
         let permitted_class_list = [];
         let permitted_section_list = [];
         value[4].forEach((element) => {
@@ -58,6 +57,7 @@ export class CheckHomeworkServiceAdapter {
         };
 
         this.vm.studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+        this.vm.dataForMapping['studentSectionList'] = this.vm.studentSectionList;
         this.initialiseClassSubjectData(value[0], value[1], value[2], value[3], value[4]);
         this.vm.isInitialLoading = false;
     }
@@ -160,7 +160,6 @@ export class CheckHomeworkServiceAdapter {
             this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_question_image, homework_data)
         ]).then(
             (value) => {
-                this.vm.dataForMapping['studentSectionList'] = value[1];
                 this.vm.currentHomework.images = value[0];
                 this.vm.currentHomework.images.sort((a, b) => (a.orderNumber < b.orderNumber ? -1 : a.orderNumber > b.orderNumber ? 1 : 0));
                 let studentIdList = [];

@@ -67,7 +67,7 @@ export class RecordAttendanceServiceAdapter {
         };
 
         let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
-        this.vm.dataForMapping['sudentSectionList'] = studentSectionList;
+        this.vm.dataForMapping['studentSectionList'] = studentSectionList;
         let student_data = {
             id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
             fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
@@ -75,7 +75,7 @@ export class RecordAttendanceServiceAdapter {
         const studentDataList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
         // ------------------- Fetching Valid Student Data Ends ---------------------
         // ------------------- Initialization of the ClassSectionStudentList using initial and student data ---------------------
-        this.initializeClassSectionStudentList(value[2], value[3], studentSectionList, studentDataList, value[1]);
+        this.initializeClassSectionStudentList(value[1], value[2], studentSectionList, studentDataList, value[0]);
         this.vm.isInitialLoading = false;
 
     }

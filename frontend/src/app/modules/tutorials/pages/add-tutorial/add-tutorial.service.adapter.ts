@@ -36,7 +36,7 @@ export class AddTutorialServiceAdapter {
         };
 
         const value = await Promise.all([
-            await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data), //0
+            getValidStudentSectionList(this.vm.tcService, this.vm.studentService, fetch_student_section_data), //0
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_list), //3
@@ -51,10 +51,10 @@ export class AddTutorialServiceAdapter {
         this.vm.backendData.subjectList = value[4];
         this.vm.smsBalance = value[5].count;
 
-        this.vm.dataForMapping['classList'] = value[0];
-        this.vm.dataForMapping['divisionList'] = value[1];
-        this.vm.dataForMapping['subjectList'] = value[3];
-        this.vm.dataForMapping['classSubjectList'] = value[2];
+        this.vm.dataForMapping['classList'] = value[1];
+        this.vm.dataForMapping['divisionList'] = value[2];
+        this.vm.dataForMapping['classSubjectList'] = value[3];
+        this.vm.dataForMapping['subjectList'] = value[4];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
 
@@ -281,13 +281,9 @@ export class AddTutorialServiceAdapter {
             id__in: studentIdList,
             fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
         };
-        const value = await Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //0
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, {parentStudent__in: studentIdList}) //1
-        ]);
-        this.vm.currentClassStudentList = value[0];
-        this.vm.backendData.currentClassStudentSectionList = value[1];
-        this.vm.dataForMapping['studentSectionList'] = value[1];
+        this.vm.currentClassStudentList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
+        this.vm.backendData.currentClassStudentSectionList = student_list;
+        this.vm.dataForMapping['studentSectionList'] = student_list;
         this.vm.messageService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
         this.vm.dataForMapping['studentList'] = this.vm.currentClassStudentList;
     }
