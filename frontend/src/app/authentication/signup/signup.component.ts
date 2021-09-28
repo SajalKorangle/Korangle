@@ -82,4 +82,26 @@ export class SignupComponent implements OnInit {
         }
         return true;
     }
+
+    isOtpFormValid() {
+        if (!this.otp || this.otp.trim().length == 0) {
+            return false;
+        } else if (!this.password || this.password.trim().length < 8) {
+            return false;
+        } else if (!this.confirmPassword || this.confirmPassword.trim().length < 8) {
+            return false;
+        }
+        return true;
+    }
+
+    goBack() {
+        this.section = 'userDetails';
+        this.mobileNumber = '';
+        this.firstName = '';
+        this.lastName = '';
+        this.emailAddress = '';
+        this.otp = '';
+        this.password = '';
+        this.confirmPassword = '';
+    }
 }
