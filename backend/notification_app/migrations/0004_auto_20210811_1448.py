@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notification_app', '0003_dailyjobsreport'),
+        ('notification_app', '0002_notification_parentuser'),
     ]
 
     operations = [
