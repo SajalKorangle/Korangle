@@ -230,7 +230,7 @@ export class MessageService {
                 Text: this.getMessageFromTemplate(messageContent, item),
                 DLTTemplateId: smsTemplate.templateId
             };
-            let duplicateData = smsMappedDataList.some(x => x.mobileNumber == temp.Number && x.Text == temp.Text);
+            let duplicateData = smsMappedDataList.some(x => x.Number == temp.Number && x.Text == temp.Text);
             if (!duplicateData) { // if there is no duplicate data with same number and same message then pushing
                 sms_mobile_string += item.mobileNumber + ', ';
                 smsMappedDataList.push(temp);
@@ -243,6 +243,11 @@ export class MessageService {
             smsMappedDataList = [];
             smsCount = 0;
             sms_mobile_string = '';
+        }
+
+        if (smsCount == 0 && notificationMappedDataList.length == 0) {
+            console.log("Zero Count");
+            return;
         }
 
         sms_mobile_string = sms_mobile_string.slice(0, -2);
@@ -274,6 +279,9 @@ export class MessageService {
                 parentSchool: schoolId,
             };
         });
+
+        console.log(sms_data);
+        console.log(notification_data);
 
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));

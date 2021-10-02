@@ -72,7 +72,6 @@ export class AddTutorialComponent implements OnInit {
         newTutorial: {} as any,
         selectedSection: {} as any,
         editedTutorial: {} as any,
-        selectedClass: {} as any,
         selectedSubject: {} as any,
     };
 

@@ -215,7 +215,6 @@ export class CheckHomeworkServiceAdapter {
                             this.vm.isLoading = false;
                         }
                         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
-                        this.vm.dataForMapping['studentList'] = this.vm.studentList;
                     },
                     (error) => {
                         this.vm.isLoading = false;
@@ -298,6 +297,8 @@ export class CheckHomeworkServiceAdapter {
                } else if (studentHomework.status == this.vm.HOMEWORK_STATUS[3]) {
                    eventID = this.vm.HOMEWORK_RESUBMISSION_EVENT_DBID;
                }
+
+               this.vm.dataForMapping['studentList'] = [this.vm.studentList.find(stud => stud.id == studentHomework.parentStudent)];
 
                this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                    this.vm.dataForMapping,

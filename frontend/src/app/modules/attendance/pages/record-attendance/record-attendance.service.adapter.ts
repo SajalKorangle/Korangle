@@ -264,6 +264,7 @@ export class RecordAttendanceServiceAdapter {
         if (this.vm.by == 'date' && this.vm.startDate == this.vm.formatDate(currentDate, '')) {
 
             if (createdStudentList.length > 0) {
+                console.log(createdStudentList);
                 this.vm.dataForMapping['studentList'] =  createdStudentList;
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                    this.vm.dataForMapping,
@@ -275,6 +276,7 @@ export class RecordAttendanceServiceAdapter {
             }
 
             if (updatedStudentList.length > 0) {
+                console.log(updatedStudentList);
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                     this.vm.dataForMapping,

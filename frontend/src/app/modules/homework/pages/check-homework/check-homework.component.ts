@@ -162,7 +162,10 @@ export class CheckHomeworkComponent implements OnInit {
     }
 
     askForResubmission(temp: any): void {
-        temp.status = this.HOMEWORK_STATUS[3];
+        if (temp.status != this.HOMEWORK_STATUS[3]) {
+            temp.status = this.HOMEWORK_STATUS[3];
+            this.serviceAdapter.changeStudentHomeworkStatus(temp);
+        }
     }
 
     getButtonString(status: any): any {
