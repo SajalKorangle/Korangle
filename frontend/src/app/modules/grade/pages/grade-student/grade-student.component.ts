@@ -6,12 +6,15 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { ExaminationService } from '@services/modules/examination/examination.service';
+import {valueType} from '@modules/common/in-page-permission';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './grade-student.permissions';
+import {EmployeeService} from '@services/modules/employee/employee.service';
 
 @Component({
     selector: 'app-grade-student',
     templateUrl: './grade-student.component.html',
     styleUrls: ['./grade-student.component.css'],
-    providers: [GradeService, ClassService, AttendanceService, StudentService, ExaminationService],
+    providers: [GradeService, ClassService, AttendanceService, StudentService, ExaminationService, EmployeeService],
 })
 export class GradeStudentComponent implements OnInit {
     user;
@@ -21,6 +24,7 @@ export class GradeStudentComponent implements OnInit {
     showTestDetails = false;
 
     serviceAdapter: GradeStudentServiceAdapter;
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     classList = [];
     sectionList = [];
@@ -42,7 +46,8 @@ export class GradeStudentComponent implements OnInit {
         public studentService: StudentService,
         public attendanceService: AttendanceService,
         public classService: ClassService,
-        private cdRef: ChangeDetectorRef
+        private cdRef: ChangeDetectorRef,
+        public employeeService: EmployeeService
     ) {}
 
     ngOnInit() {
@@ -64,6 +69,10 @@ export class GradeStudentComponent implements OnInit {
                 student.studentSection.parentDivision === this.selectedClassSection.section.id
             );
         });
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 
     /*selectClass(classs: any){
