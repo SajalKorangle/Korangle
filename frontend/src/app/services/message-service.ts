@@ -246,7 +246,7 @@ export class MessageService {
         }
 
         if (smsCount == 0 && notificationMappedDataList.length == 0) {
-            console.log("Zero Count");
+            // console.log("Zero Count");
             return;
         }
 
@@ -280,8 +280,8 @@ export class MessageService {
             };
         });
 
-        console.log(sms_data);
-        console.log(notification_data);
+        // console.log(sms_data);
+        // console.log(notification_data);
 
         let service_list = [];
         service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));

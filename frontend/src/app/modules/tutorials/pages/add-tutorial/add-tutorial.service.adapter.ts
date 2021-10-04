@@ -44,7 +44,6 @@ export class AddTutorialServiceAdapter {
             this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //5
         ]);
 
-        console.log(value[0]);
         this.vm.backendData.fullStudentSectionList = value[0];
         this.vm.backendData.classList = value[1];
         this.vm.backendData.sectionList = value[2];
@@ -274,7 +273,6 @@ export class AddTutorialServiceAdapter {
             return student.parentClass == this.vm.userInput.selectedSection.parentClass && student.parentDivision == this.vm.userInput.selectedSection.id;
         });
         let studentIdList = [];
-        console.log(student_list);
         student_list.forEach((student) => {
             studentIdList.push(student.parentStudent);
         });
@@ -283,7 +281,6 @@ export class AddTutorialServiceAdapter {
             fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
         };
         this.vm.currentClassStudentList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
-        console.log(this.vm.currentClassStudentList);
         this.vm.backendData.currentClassStudentSectionList = student_list;
         this.vm.dataForMapping['studentSectionList'] = student_list;
         this.vm.messageService.fetchGCMDevicesNew(this.vm.currentClassStudentList);
@@ -291,7 +288,6 @@ export class AddTutorialServiceAdapter {
     }
 
     sendNotificationToParents(currentTutorial: any, eventId: number) {
-        console.log(this.vm.dataForMapping);
         this.vm.dataForMapping['tutorial'] = currentTutorial;
         this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
             this.vm.dataForMapping,

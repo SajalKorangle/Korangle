@@ -225,7 +225,7 @@ export class RecordAttendanceServiceAdapter {
         );
     }
 
-    notifyParents(): void {
+    async notifyParents() {
         let createdStudentList = [];
         let updatedStudentList = [];
         let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_CREATION_EVENT_DBID);
@@ -264,9 +264,8 @@ export class RecordAttendanceServiceAdapter {
         if (this.vm.by == 'date' && this.vm.startDate == this.vm.formatDate(currentDate, '')) {
 
             if (createdStudentList.length > 0) {
-                console.log(createdStudentList);
                 this.vm.dataForMapping['studentList'] =  createdStudentList;
-                this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+                await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                    this.vm.dataForMapping,
                     ['student'],
                     this.vm.ATTENDANCE_CREATION_EVENT_DBID,
@@ -276,7 +275,6 @@ export class RecordAttendanceServiceAdapter {
             }
 
             if (updatedStudentList.length > 0) {
-                console.log(updatedStudentList);
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                     this.vm.dataForMapping,
