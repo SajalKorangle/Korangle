@@ -280,23 +280,23 @@ export class MessageService {
             };
         });
 
-        console.log(sms_data);
-        console.log(notification_data);
+        // console.log(sms_data);
+        // console.log(notification_data);
 
-        // let service_list = [];
-        // service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
-        // if (notification_data.length > 0) {
-        //     service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
-        // }
-        //
-        // const value = await Promise.all(service_list);
-        // if ((sendUpdateTypeId == 2 || sendUpdateTypeId == 4) && sms_list.length > 0) {
-        //     if (value[0].sentStatus) {
-        //         smsBalance -= value[0].count;
-        //     } else {
-        //         throw 'NOT SENT';
-        //     }
-        // }
+        let service_list = [];
+        service_list.push(this.smsService.createObject(this.smsService.sms, sms_data));
+        if (notification_data.length > 0) {
+            service_list.push(this.notificationService.createObjectList(this.notificationService.notification, notification_data));
+        }
+
+        const value = await Promise.all(service_list);
+        if ((sendUpdateTypeId == 2 || sendUpdateTypeId == 4) && sms_list.length > 0) {
+            if (value[0].sentStatus) {
+                smsBalance -= value[0].count;
+            } else {
+                throw 'NOT SENT';
+            }
+        }
 
         return smsBalance;
     }
