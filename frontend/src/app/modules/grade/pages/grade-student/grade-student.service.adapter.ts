@@ -1,4 +1,5 @@
 import { GradeStudentComponent } from './grade-student.component';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class GradeStudentServiceAdapter {
     vm: GradeStudentComponent;
@@ -12,8 +13,21 @@ export class GradeStudentServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
         this.vm.isInitialLoading = true;
+        // ------------------- Start of Fetching and storing inPagePermission (Admin or User) of this page  ---------------------
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+        // ------------------- End of Fetching and storing inPagePermission (Admin or User) of this page  ---------------------
+
+        // ------------------- Start of Fetching and storing required Data (permittedClasses,gradeD,subGrad,examination)  ---------------------
         let attendance_permission_data = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -44,13 +58,15 @@ export class GradeStudentServiceAdapter {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.attendancePermissionList = value[2];
-                this.populateFilteredClassSectionList();
                 this.vm.examinationList = value[5];
 
-                if (this.vm.attendancePermissionList.length === 0) {
+                if (!this.vm.hasAdminPermission() && this.vm.attendancePermissionList.length === 0) {
                     this.vm.isInitialLoading = false;
                     return;
                 }
+        // ------------------- End of Fetching and storing required Data (permittedClasses,gradeD,subGrad,examination)  ---------------------
+
+        // ------------------- Start of Fetching and storing Student and Student Section Data ---------------------
 
                 const request_student_section_data = {
                     parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
@@ -72,18 +88,23 @@ export class GradeStudentServiceAdapter {
                     parentStudent__parentTransferCertificate: 'null__korangle',
                 };
 
+                if (this.vm.hasAdminPermission()) {
+                    request_student_section_data['parentClass__in'] = value[0].map(classs => classs.id).join();
+                    request_student_section_data['parentDivision__in'] = value[1].map(div => div.id).join();
+                }
+
                 const student_studentSection_map = {};
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data).then(
                     (value_studentSection) => {
-                        value_studentSection = value_studentSection.filter((item) => {
-                            if (
-                                this.vm.attendancePermissionList.find((permission) => {
-                                    return permission.parentClass === item.parentClass && permission.parentDivision === item.parentDivision;
-                                }) !== undefined
-                            ) {
-                                return true;
-                            }
-                            return false;
+
+                        // If the user has adminPermission Not needed to check the attendancePermissionList,
+                        // else filter only the permittedStudentSection using attendancePermissionList
+                        value_studentSection = this.vm.hasAdminPermission() ? value_studentSection : value_studentSection.filter((eachStudentSection) => {
+                            return this.vm.attendancePermissionList.some((eachAttendancePermission) => {
+                                return eachStudentSection.parentClass === eachAttendancePermission.parentClass &&
+                                    eachStudentSection.parentDivision === eachAttendancePermission.parentDivision;
+
+                            });
                         });
 
                         if (value_studentSection.length === 0) {
@@ -91,6 +112,7 @@ export class GradeStudentServiceAdapter {
                             // alert('No students have been allocated');
                             return;
                         }
+                        this.populateFilteredClassSectionList(value_studentSection);
 
                         const student_id = [];
                         value_studentSection.forEach((item) => {
@@ -110,7 +132,7 @@ export class GradeStudentServiceAdapter {
                                     student['studentSection'] = student_studentSection_map[student.id];
                                     return student;
                                 });
-
+                                // ------------------- End of Fetching and storing Student and Student Section Data ---------------------
                                 this.vm.isInitialLoading = false;
                             },
                             (error) => {
@@ -122,6 +144,7 @@ export class GradeStudentServiceAdapter {
                         console.log('Error fetching student section data');
                     }
                 );
+                //Populating the GradeList
                 this.populateGradeList(value[3], value[4]);
             },
             (error) => {
@@ -130,12 +153,19 @@ export class GradeStudentServiceAdapter {
         );
     }
 
-    populateFilteredClassSectionList(): void {
+    populateFilteredClassSectionList(student_section_list): void {
         this.vm.filteredClassSectionList = [];
-        this.vm.attendancePermissionList.forEach((attendancePermission) => {
-            this.vm.filteredClassSectionList.push({
-                class: this.vm.classList.find((classs) => classs.id === attendancePermission.parentClass),
-                section: this.vm.sectionList.find((section) => section.id === attendancePermission.parentDivision),
+        this.vm.classList.forEach((classs) => {
+            this.vm.sectionList.forEach((section) => {
+                let any_student = student_section_list.find((studentSection) => studentSection.parentClass == classs.id &&
+                    studentSection.parentDivision == section.id);
+                if (any_student) {
+                    // checking if any student is present in the class and section then pushing
+                    this.vm.filteredClassSectionList.push({
+                        class: classs,
+                        section: section,
+                    });
+                }
             });
         });
     }
@@ -154,6 +184,7 @@ export class GradeStudentServiceAdapter {
         // console.log(this.vm.gradeList);
         // this.vm.selectedGrade = this.vm.gradeList[0];
     }
+     // End of Fetching and populating the Student,Permitted Classes,grade details
 
     // Get Student Sub-Grade Details
     getStudentSubGradeDetails(): void {

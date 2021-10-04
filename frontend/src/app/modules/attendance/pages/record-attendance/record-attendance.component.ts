@@ -16,13 +16,16 @@ import { AttendanceService } from '../../../../services/modules/attendance/atten
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import {MessageService} from '@services/message-service';
+import {valueType} from '@modules/common/in-page-permission';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
+import {EmployeeService} from '@services/modules/employee/employee.service';
 import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'record-attendance',
     templateUrl: './record-attendance.component.html',
     styleUrls: ['./record-attendance.component.css'],
-    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, TCService],
+    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, EmployeeService, TCService],
 })
 export class RecordAttendanceComponent implements OnInit {
     // @Input() user;
@@ -71,6 +74,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     currentAttendanceList = [];
     messageService: any;
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     constructor(
         private excelService: ExcelService,
@@ -82,6 +86,7 @@ export class RecordAttendanceComponent implements OnInit {
         public studentService: StudentService,
         public smsOldService: SmsOldService,
         public classService: ClassService,
+        public employeeService: EmployeeService,
         public tcService: TCService
     ) {}
 
@@ -376,5 +381,9 @@ export class RecordAttendanceComponent implements OnInit {
         let dateStr = this.formatDate(attendance.date.toString(), '');
         dateStr = dateStr.substr(dateStr.length - 2, 2);
         return student.name + ', ' + dateStr;
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 }

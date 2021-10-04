@@ -10,6 +10,8 @@ import { EmployeeService } from '@services/modules/employee/employee.service';
 import { AttendanceService } from '@services/modules/attendance/attendance.service';
 import { StudentService } from '@services/modules/student/student.service';
 import { AddStudentRemarksHtmlAdapter } from '@modules/examination/pages/add-student-remarks/add-student-remarks.html.adapter';
+import {valueType} from '@modules/common/in-page-permission';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './add-student-remarks.permissions';
 
 @Component({
     selector: 'add-student-remarks',
@@ -26,6 +28,8 @@ export class AddStudentRemarksComponent implements OnInit {
     studentList = [];
     studentRemarkList = [];
     examinationList = [];
+
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     serviceAdapter: AddStudentRemarksServiceAdapter;
     htmlAdapter: AddStudentRemarksHtmlAdapter;
@@ -50,5 +54,9 @@ export class AddStudentRemarksComponent implements OnInit {
         this.serviceAdapter.initializeData();
         this.htmlAdapter = new AddStudentRemarksHtmlAdapter();
         this.htmlAdapter.initializeAdapter(this);
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 }

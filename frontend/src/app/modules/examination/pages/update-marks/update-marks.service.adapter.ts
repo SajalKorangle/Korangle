@@ -1,6 +1,7 @@
 import { UpdateMarksComponent } from './update-marks.component';
 
 import { TEST_TYPE_LIST } from '../../../../classes/constants/test-type';
+import {CommonFunctions} from '@modules/common/common-functions';
 
 export class UpdateMarksServiceAdapter {
     vm: UpdateMarksComponent;
@@ -36,18 +37,33 @@ export class UpdateMarksServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
         this.vm.isInitialLoading = true;
         this.vm.isUpdated = false;
+
+        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+
         let request_examination_data = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         let request_class_subject_data = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        if (!this.vm.hasAdminPermission()) {
+            request_class_subject_data['parentEmployee'] = this.vm.user.activeSchool.employeeId;
+        }
 
         Promise.all([
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
