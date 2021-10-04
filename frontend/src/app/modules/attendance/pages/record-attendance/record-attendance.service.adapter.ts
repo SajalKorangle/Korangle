@@ -2,7 +2,7 @@ import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
 import {CommonFunctions} from '@classes/common-functions';
 import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
-import {CommonFunctions} from '@modules/common/common-functions';
+import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
@@ -17,7 +17,7 @@ export class RecordAttendanceServiceAdapter {
         this.vm.isInitialLoading = true;
         // ------------------- Initial Data Fetching Starts ---------------------
 
-        const routeInformation = CommonFunctions.getModuleTaskPaths();
+        const routeInformation = moduleCommonFunctions.getModuleTaskPaths();
         const in_page_permission_request = {
             parentTask__parentModule__path: routeInformation.modulePath,
             parentTask__path: routeInformation.taskPath,
@@ -163,6 +163,7 @@ export class RecordAttendanceServiceAdapter {
                 }
                 let studentDetails = studentDetailsList.find((studentDetails) => studentDetails.id == studentSection.parentStudent);
                 let tempData = {
+                    id: studentDetails.id,
                     name: studentDetails.name,
                     dbId: studentDetails.id,
                     scholarNumber: studentDetails.scholarNumber,
@@ -319,6 +320,7 @@ export class RecordAttendanceServiceAdapter {
         if (this.vm.by == 'date' && this.vm.startDate == this.vm.formatDate(currentDate, '')) {
 
             if (createdStudentList.length > 0) {
+                console.log(createdStudentList);
                 this.vm.dataForMapping['studentList'] =  createdStudentList;
                 await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                    this.vm.dataForMapping,
@@ -330,7 +332,9 @@ export class RecordAttendanceServiceAdapter {
             }
 
             if (updatedStudentList.length > 0) {
+                console.log(updatedStudentList);
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
+                console.log( this.vm.dataForMapping);
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                     this.vm.dataForMapping,
                     ['student'],
