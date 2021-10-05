@@ -160,7 +160,7 @@ class SMSDeliveryReport(models.Model):
     # Delivered Date & Time
     deliveredDateTime = models.DateTimeField(null=True, verbose_name='deliveredDateTime')
 
-    messageId = models.TextField(null=False, verbose_name='messageId', unique=True)
+    messageId = models.TextField(null=True, verbose_name='messageId', unique=True)
 
     # Sender Id
     senderId = models.CharField(null=True, max_length=10, verbose_name='senderId')

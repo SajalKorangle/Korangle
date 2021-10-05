@@ -15,21 +15,39 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='SMSDeliveryReport',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('requestId', models.TextField(null=True, verbose_name='requestId')),
-                ('mobileNumber', models.BigIntegerField(null=True, verbose_name='mobileNumber')),
-                ('status', models.TextField(verbose_name='status')),
-                ('statusCode', models.TextField(null=True, verbose_name='statusCode')),
-                ('deliveredDateTime', models.DateTimeField(null=True, verbose_name='deliveredDateTime')),
-                ('senderId', models.CharField(null=True, max_length=10, verbose_name='senderId')),
-                ('messageId', models.TextField(null=False, verbose_name='messageId', unique=True))
-            ],
-            options={
-                'db_table': 'sms_delivery_report'
-            },
+        migrations.RenameModel('MsgClubDeliveryReport', 'SMSDeliveryReport'),
+        migrations.AddField(
+            model_name='smsdeliveryreport',
+            name='messageId',
+            field=models.TextField(null=True, unique=True, verbose_name='messageId'),
+        ),
+        migrations.AlterField(
+            model_name='smsdeliveryreport',
+            name='mobileNumber',
+            field=models.BigIntegerField(null=True, verbose_name='mobileNumber'),
+        ),
+        migrations.AlterField(
+            model_name='smsdeliveryreport',
+            name='requestId',
+            field=models.TextField(null=True, verbose_name='requestId'),
+        ),
+        migrations.AlterField(
+            model_name='smsdeliveryreport',
+            name='senderId',
+            field=models.CharField(max_length=10, null=True, verbose_name='senderId'),
+        ),
+        migrations.AlterField(
+            model_name='smsdeliveryreport',
+            name='statusCode',
+            field=models.TextField(null=True, verbose_name='statusCode'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='smsdeliveryreport',
+            unique_together=set(),
+        ),
+        migrations.AlterModelTable(
+            name='smsdeliveryreport',
+            table='sms_delivery_report',
         ),
         migrations.CreateModel(
             name='SMSEventSettings',
@@ -84,9 +102,6 @@ class Migration(migrations.Migration):
             options={
                 'db_table': 'sms_template',
             },
-        ),
-        migrations.DeleteModel(
-            name='MsgClubDeliveryReport',
         ),
         migrations.AddField(
             model_name='sms',
