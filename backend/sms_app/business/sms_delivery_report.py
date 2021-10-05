@@ -14,12 +14,12 @@ class SMSDeliveryReportModelSerializer(serializers.ModelSerializer):
 
 def get_sms_delivery_report_list(data):
     sms_delivery_report_list = []
-    mobile_number_json = ast.literal_eval(data["mobileNumberContentJson"])
     if bool(util.strtobool(data['smsGateWayHubVendor'])) is False:
         for sms_delivery_object in \
                 SMSDeliveryReport.objects.filter(requestId=data['requestId']).order_by('mobileNumber'):
             sms_delivery_report_list.append(SMSDeliveryReportModelSerializer(sms_delivery_object).data)
     else:
+        mobile_number_json = ast.literal_eval(data["mobileNumberContentJson"])
         # mobile number json contains MobileNumber,MessageId,Message (Mapped)
         for number in mobile_number_json:
             try:
