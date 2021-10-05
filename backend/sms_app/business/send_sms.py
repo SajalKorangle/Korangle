@@ -51,6 +51,7 @@ def send_sms(instance_dict):
     response = conn.getresponse().read()
 
     message_data = json.loads(response.decode("utf-8"))['MessageData']
+    errorMessage = json.loads(response.decode("utf-8"))['ErrorMessage']
 
     for data in message_data:
         for num in sent_sms_num_list:
@@ -59,4 +60,4 @@ def send_sms(instance_dict):
 
     job_id = str(json.loads(response.decode("utf-8"))['JobId'])
 
-    return {'remark': 'SUCCESS', 'requestId': job_id, 'mobileNumberContentJson': sent_sms_num_list}
+    return {'remark': errorMessage, 'requestId': job_id, 'mobileNumberContentJson': sent_sms_num_list}

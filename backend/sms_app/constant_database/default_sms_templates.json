@@ -45,7 +45,7 @@
     "templateName": "Homework_checked",
     "templateId": "1007084014239192894",
     "rawContent": "Your Homework {#var#} of Subject {#var#} has been checked korngl",
-    "mappedContent": "Your Homework {#homeworkName#} of Subject {#subject#} has been checked krongl"
+    "mappedContent": "Your Homework {#homeworkName#} of Subject {#subject#} has been checked korngl"
   },
   {
     "id":7,

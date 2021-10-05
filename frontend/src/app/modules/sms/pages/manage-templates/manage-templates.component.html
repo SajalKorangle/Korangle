@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!stateKeeper.isLoading">
+<div class="card-content main-page table-responsive" *ngIf="!stateKeeper.isLoading">
 
     <ng-container *ngIf="!userInput.selectedPage">
         <b style="font-size:16px;margin-left:12px">SMS EVENT</b>
@@ -163,32 +163,43 @@
                         </div>
                     </div>
 
-                    <table class="table table-hover visible-sm visible-xs">
-                        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                        <tr>
-                            <th>S No.</th>
-                            <th>SMS ID</th>
-                            <th class="text-center">Template Name</th>
-                            <th class="text-center">Template Content</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let template of htmlRenderer.getFilteredTemplateList(); let i = index;"
-                            style="padding: 0">
-                            <td class="text-center">{{i + 1}}</td>
-                            <td class="text-center">{{htmlRenderer.getTemplateSMSId(template)}}</td>
-                            <td class="text-center">{{template.templateName}}</td>
-                            <td class="text-left">{{template.rawContent}}</td>
-                            <td class="text-center">
-                                <button class="custom-button"
-                                        style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px"
-                                        (click)="serviceAdapter.deleteTemplate(template)"><i
-                                        class="material-icons">delete</i>
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <div class="responsive-table-wrapper">
+                            <table class="table table-hover visible-sm visible-xs">
+                                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                                <tr>
+                                    <th>S No.</th>
+                                    <th class="text-center" *ngIf="columnFilter.creationDate">Created Date</th>
+                                    <th *ngIf="columnFilter.SMSId">SMS ID</th>
+                                    <th class="text-center" *ngIf="columnFilter.templateName">Template Name</th>
+                                    <th class="text-center" *ngIf="columnFilter.templateContent">Template Content</th>
+                                    <th class="text-center" *ngIf="columnFilter.templateId">Registration ID</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let template of htmlRenderer.getFilteredTemplateList(); let i = index;"
+                                    style="padding: 0">
+                                    <td class="text-center">{{i + 1}}</td>
+                                    <td class="text-center"
+                                        *ngIf="columnFilter.creationDate">{{template.createdDate | date: 'dd - MMM - yyyy' }}</td>
+                                    <td class="text-center"
+                                        *ngIf="columnFilter.SMSId">{{htmlRenderer.getTemplateSMSId(template)}}</td>
+                                    <td class="text-center"
+                                        *ngIf="columnFilter.templateName">{{template.templateName}}</td>
+                                    <td class="text-left"
+                                        *ngIf="columnFilter.templateContent">{{template.rawContent}}</td>
+                                    <td class="text-center"
+                                        *ngIf="columnFilter.templateId">{{template.templateId}}</td>
+                                    <td class="text-center">
+                                        <button class="custom-button"
+                                                style="padding: 6px 4px 2px 5px; float: left; margin-left: 10px"
+                                                (click)="serviceAdapter.deleteTemplate(template)"><i
+                                                class="material-icons">delete</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                     <ng-container *ngIf="!htmlRenderer.isMobile()">
                         <mat-accordion displayMode="flat" class="mat-table hidden-sm hidden-xs">
