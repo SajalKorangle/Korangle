@@ -81,11 +81,8 @@
 	{ "model": "team_app.task", "pk": 96, "fields": { "path": "update_via_excel", "title": "Upload Excel", "parentModule": "15", "orderNumber": 15, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 97, "fields": { "path": "issue_homework", "title": "Issue Homework", "parentModule": "20", "orderNumber": 1, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 98, "fields": { "path": "check_homework", "title": "Check Homework", "parentModule": "20", "orderNumber": 2, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 99, "fields": { "path": "settings", "title": "Settings", "parentModule": "20", "orderNumber": 3, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 100, "fields": { "path": "add_tutorial", "title": "Add Tutorial", "parentModule": "21", "orderNumber": 1, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 101, "fields": { "path": "settings", "title": "Settings", "parentModule": "21", "orderNumber": 2, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 102, "fields": { "path": "schedule_test", "title": "Schedule Test", "parentModule": "14", "orderNumber": 6, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 103, "fields": { "path": "settings", "title": "Settings", "parentModule": "11", "orderNumber": 5, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 104, "fields": { "path": "add_event", "title": "Add Event", "parentModule": "22", "orderNumber": 1, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 105, "fields": { "path": "manage_event", "title": "Manage Event", "parentModule": "22", "orderNumber": 2, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 106, "fields": { "path": "view_event", "title": "View Event", "parentModule": "22", "orderNumber": 3, "parentBoard": null } },
@@ -97,5 +94,8 @@
 	{ "model": "team_app.task", "pk": 112, "fields": { "path": "grant_approval", "title": "Grant Approval", "parentModule": "23", "orderNumber": 6, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 113, "fields": { "path": "manage_accounts", "title": "Manage Accounts", "parentModule": "23", "orderNumber": 7, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 114, "fields": { "path": "transfer_balance", "title": "Transfer Balance", "parentModule": "23", "orderNumber": 8, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 115, "fields": { "path": "settings", "title": "Settings", "parentModule": "23", "orderNumber": 9, "parentBoard": null } }
+	{ "model": "team_app.task", "pk": 115, "fields": { "path": "settings", "title": "Settings", "parentModule": "23", "orderNumber": 9, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 116, "fields": { "path": "manage_sms_id", "title": "Manage SMS ID", "parentModule": "9", "orderNumber": 4, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 117, "fields": { "path": "manage_templates", "title": "Manage Templates", "parentModule": "9", "orderNumber": 5, "parentBoard": null } }
+
 ]

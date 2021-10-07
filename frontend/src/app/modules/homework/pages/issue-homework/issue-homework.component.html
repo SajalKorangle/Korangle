@@ -82,6 +82,7 @@
                     placeholder="Choose Deadline Time"
                 />
             </mat-form-field>
+            <span style="color:red" *ngIf="checkDateTimeInvalid(currentHomework)">Invalid Date/Time</span>
         </div>
 
         <mat-form-field style="width: 100%">
@@ -161,7 +162,7 @@
         <button
             type="submit"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            [disabled]="isCreateButtonDisabled(currentHomework.homeworkName)"
+            [disabled]="isCreateButtonDisabled(currentHomework)"
             style="margin-top: 15px; margin-right: 15px; margin-bottom: 10px"
             (click)="serviceAdapter.createHomework()"
         >

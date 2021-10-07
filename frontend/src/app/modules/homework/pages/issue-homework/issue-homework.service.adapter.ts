@@ -2,21 +2,17 @@ import { IssueHomeworkComponent } from './issue-homework.component';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { CommonFunctions } from '../../../../classes/common-functions.js';
 import { CommonFunctions as moduleCommonFunctions } from '@modules/common/common-functions';
-import { INFORMATION_TYPE_LIST } from '../../../../classes/constants/information-type';
 import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
 
 export class IssueHomeworkServiceAdapter {
     vm: IssueHomeworkComponent;
     constructor() {}
 
-    informationMessageType: any;
-
     studentNotificationList: any;
     // Data
 
     initializeAdapter(vm: IssueHomeworkComponent): void {
         this.vm = vm;
-        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Homework') + 1;
     }
 
     //initialize data
@@ -47,31 +43,15 @@ export class IssueHomeworkServiceAdapter {
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //1
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
-            this.vm.homeworkService.getObjectList(this.vm.homeworkService.homework_settings, {
-                parentSchool: this.vm.user.activeSchool.dbId,
-            }), //4
-            this.vm.smsOldService.getSMSCount({ parentSchool: this.vm.user.activeSchool.dbId }, this.vm.user.jwt), //5
+            this.vm.smsOldService.getSMSCount({parentSchool: this.vm.user.activeSchool.dbId}, this.vm.user.jwt), //4
         ]);
-        this.vm.smsBalance = value[5];
-        if (value[4].length > 0) {
-            this.vm.settings = value[4][0];
-            if (this.vm.settings.sentUpdateType == 'NULL') {
-                this.vm.settings.sentUpdateType = 1;
-            } else if (this.vm.settings.sentUpdateType == 'SMS') {
-                this.vm.settings.sentUpdateType = 2;
-            } else if (this.vm.settings.sentUpdateType == 'NOTIFICATION') {
-                this.vm.settings.sentUpdateType = 3;
-            } else {
-                this.vm.settings.sentUpdateType = 4;
-            }
-        } else {
-            this.vm.settings = {
-                sentUpdateType: 1,
-                sendCreateUpdate: false,
-                sendEditUpdate: false,
-                sendDeleteUpdate: false,
-            };
-        }
+        this.vm.smsBalance = value[4].count;
+
+        this.vm.dataForMapping['classSubjectList'] = value[0];
+        this.vm.dataForMapping['subjectList'] = value[1];
+        this.vm.dataForMapping['classList'] = value[2];
+        this.vm.dataForMapping['divisionList'] = value[3];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
         let permitted_class_list = [];
         let permitted_section_list = [];
@@ -89,6 +69,7 @@ export class IssueHomeworkServiceAdapter {
         };
 
         this.vm.studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+        this.vm.dataForMapping['studentSectionList'] = this.vm.studentSectionList;
         this.initialiseClassSubjectData(value[0], value[1], value[2], value[3]);
         this.vm.isInitialLoading = false;
 
@@ -176,23 +157,18 @@ export class IssueHomeworkServiceAdapter {
                 this.vm.homeworkImagesList = value[1];
                 this.initialiseHomeworks(value[0], value[1]);
                 let student_data = {
-                    id__in: this.vm.studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
-                    fields__korangle: 'id,name,mobileNumber',
+                    id__in: this.vm.studentSectionList.filter(studentSection => studentSection.parentClass ==
+                        this.vm.selectedClassSection.classDbId && studentSection.parentDivision == this.vm.selectedClassSection.divisionDbId)
+                        .map(studentSection => studentSection.parentStudent).join(','),
+                    fields__korangle: 'id,name,mobileNumber,fathersName,scholarNumber',
                 };
                 Promise.all([this.vm.studentService.getObjectList(this.vm.studentService.student, student_data)]).then((value) => {
                     value[0].forEach((element) => {
-                        let tempData = {
-                            dbId: element.id,
-                            name: element.name,
-                            mobileNumber: element.mobileNumber,
-                            subject: this.vm.selectedSubject.name,
-                            homeworkName: null,
-                            deadLine: null,
-                        };
+                        let tempData = CommonFunctions.getInstance().copyObject(element);
                         this.studentNotificationList.push(tempData);
                     });
-                    // this.fetchGCMDevices(this.studentNotificationList);
-                    this.vm.updateService.fetchGCMDevicesNew(this.studentNotificationList);
+                    this.vm.messageService.fetchGCMDevicesNew(this.studentNotificationList);
+                    this.vm.dataForMapping['studentList'] = this.studentNotificationList;
                     this.vm.isLoading = false;
                 });
                 this.sortHomeworks();
@@ -235,7 +211,7 @@ export class IssueHomeworkServiceAdapter {
             image.parentHomeworkQuestion = this.vm.currentHomework.id;
             image.orderNumber = index;
             let temp_form_data = new FormData();
-            const layout_data = { ...image };
+            const layout_data = {...image};
             Object.keys(layout_data).forEach((key) => {
                 if (key === 'questionImage') {
                     temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'questionImage' + index + '.jpeg'));
@@ -250,7 +226,7 @@ export class IssueHomeworkServiceAdapter {
         return promises;
     }
 
-    createHomework(): any {
+    async createHomework() {
         this.vm.isLoading = true;
         this.vm.currentHomework.parentClassSubject = this.vm.selectedSubject.classSubjectDbId;
         let currentDate = new Date();
@@ -261,39 +237,17 @@ export class IssueHomeworkServiceAdapter {
             this.vm.currentHomework.endTime = '23:59';
         }
 
-        Promise.all([this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question, this.vm.currentHomework)]).then(
-            (value) => {
-                this.vm.currentHomework.id = value[0].id;
-                this.populateCurrentHomework();
+        const value = await Promise.all([this.vm.homeworkService.createObject(this.vm.homeworkService.homework_question, this.vm.currentHomework)]);
+        this.vm.currentHomework.id = value[0].id;
+        this.populateCurrentHomework();
+        const sValue = await Promise.all(this.getHomeworkServices());
+        alert('Homework has been successfully created');
 
-                Promise.all(this.getHomeworkServices()).then(
-                    (sValue) => {
-                        alert('Homework has been successfully created');
-                        this.populateStudentList(this.studentNotificationList, this.vm.currentHomework);
-                        this.populateCurrentHomeworkImages(value[0].id, sValue);
-                        this.vm.currentHomework = new Homework();
-                        this.vm.currentHomeworkImages = [];
-                        this.vm.isLoading = false;
-                        if (this.vm.settings.sendCreateUpdate == true && this.vm.settings.sentUpdateType != 1) {
-                            this.vm.updateService.sendSMSNotificationNew(
-                                this.studentNotificationList,
-                                this.vm.homeworkCreatedMessage,
-                                this.informationMessageType,
-                                this.vm.settings.sentUpdateType,
-                                this.vm.user.activeSchool.dbId,
-                                this.vm.smsBalance
-                            );
-                        }
-                    },
-                    (error) => {
-                        this.vm.isLoading = false;
-                    }
-                );
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+        this.sendNotificationToParents(this.vm.currentHomework, this.vm.HOMEWORK_CREATION_EVENT_DBID);
+        this.populateCurrentHomeworkImages(value[0].id, sValue);
+        this.vm.currentHomework = new Homework();
+        this.vm.currentHomeworkImages = [];
+        this.vm.isLoading = false;
     }
 
     sortHomeworks(): any {
@@ -310,53 +264,35 @@ export class IssueHomeworkServiceAdapter {
     populateCurrentHomeworkImages(homeworkId: any, imagesList: any): any {
         let tempHomework = this.vm.homeworkList.find((homework) => homework.id == homeworkId);
         imagesList.forEach((image) => {
-            if (image.questionImage != undefined) tempHomework.homeworkImages.push(image);
+            if (image.questionImage != undefined) {
+                tempHomework.homeworkImages.push(image);
+            }
         });
         this.sortHomeworks();
     }
 
-    populateStudentList(studentList: any, homeworkData: any): any {
-        studentList.forEach((student) => {
-            student.homeworkName = homeworkData.homeworkName;
-            student.deadLine = this.vm.displayDateTime(homeworkData.endDate, homeworkData.endTime);
-        });
-    }
 
-    deleteHomework(homeworkId: any): any {
+    async deleteHomework(homeworkId: any) {
         if (!confirm('Are you sure you want to delete this homework?')) {
             return;
         }
-
-        let tempHomeworkName;
+        let tempHomework;
 
         this.vm.isLoading = true;
-        this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question, { id: homeworkId }).then((value) => {
-            this.vm.homeworkList.forEach((homework, index) => {
-                if (homework.id == homeworkId) {
-                    tempHomeworkName = homework.homeworkName;
-                    this.vm.homeworkList.splice(index, 1);
-                }
-            });
-            this.populateStudentList(this.studentNotificationList, { homeworkName: tempHomeworkName });
-            if (this.vm.settings.sendDeleteUpdate == true && this.vm.settings.sentUpdateType != 1) {
-                this.vm.updateService.sendSMSNotificationNew(
-                    this.studentNotificationList,
-                    this.vm.homeworkDeleteMessage,
-                    this.informationMessageType,
-                    this.vm.settings.sentUpdateType,
-                    this.vm.user.activeSchool.dbId,
-                    this.vm.smsBalance
-                );
+        const value = await this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question, {id: homeworkId});
+        this.vm.homeworkList.forEach((homework, index) => {
+            if (homework.id == homeworkId) {
+                tempHomework = homework;
+                this.vm.homeworkList.splice(index, 1);
             }
-            alert('Homework Deleted');
-            this.vm.isLoading = false;
-        }),
-            (error) => {
-                this.vm.isLoading = false;
-            };
+        });
+
+        this.sendNotificationToParents(tempHomework, this.vm.HOMEWORK_DELETION_EVENT_DBID);
+        alert('Homework Deleted');
+        this.vm.isLoading = false;
     }
 
-    updateHomework(data: any): any {
+    async updateHomework(data: any) {
         const promises = [];
         let previousHomework = this.vm.homeworkList.find((homework) => homework.id === data.id);
 
@@ -376,7 +312,7 @@ export class IssueHomeworkServiceAdapter {
                     questionImage: image.questionImage,
                 };
                 let temp_form_data = new FormData();
-                const layout_data = { ...tempData };
+                const layout_data = {...tempData};
                 Object.keys(layout_data).forEach((key) => {
                     if (key === 'questionImage') {
                         temp_form_data.append(key, CommonFunctions.dataURLtoFile(layout_data[key], 'questionImage' + index + '.jpeg'));
@@ -401,25 +337,11 @@ export class IssueHomeworkServiceAdapter {
             promises.push(this.vm.homeworkService.deleteObject(this.vm.homeworkService.homework_question_image, image));
         });
 
-        Promise.all(promises).then((value) => {
-            this.populateEditedHomework(value);
-            this.populateStudentList(this.studentNotificationList, value[0]);
-            if (this.vm.settings.sendEditUpdate == true && this.vm.settings.sentUpdateType != 1) {
-                this.vm.updateService.sendSMSNotificationNew(
-                    this.studentNotificationList,
-                    this.vm.homeworkUpdateMessage,
-                    this.informationMessageType,
-                    this.vm.settings.sentUpdateType,
-                    this.vm.user.activeSchool.dbId,
-                    this.vm.smsBalance
-                );
-            }
-            alert('Homework Edited Successfully');
-            this.vm.isLoading = false;
-        }),
-            (error) => {
-                this.vm.isLoading = false;
-            };
+        const value = await Promise.all(promises);
+        this.populateEditedHomework(value);
+        this.sendNotificationToParents(value[0], this.vm.HOMEWORK_UPDATION_EVENT_DBID);
+        alert('Homework Edited Successfully');
+        this.vm.isLoading = false;
     }
 
     populateEditedHomework(data: any): any {
@@ -431,7 +353,20 @@ export class IssueHomeworkServiceAdapter {
         previousHomework.homeworkText = tempHomeworkData.homeworkText;
         previousHomework.homeworkImages = [];
         data.forEach((image) => {
-            if (image.questionImage != undefined) previousHomework.homeworkImages.push(image);
+            if (image.questionImage != undefined) {
+                previousHomework.homeworkImages.push(image);
+            }
         });
+    }
+
+    sendNotificationToParents(currentHomework: any, eventId: any) {
+        this.vm.dataForMapping['homework'] = currentHomework;
+        this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+            this.vm.dataForMapping,
+            ['student'],
+            eventId,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
     }
 }

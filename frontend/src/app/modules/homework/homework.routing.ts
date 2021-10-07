@@ -15,13 +15,6 @@ const routes: Routes = [
         loadChildren: 'app/modules/homework/pages/check-homework/check-homework.module#CheckHomeworkModule',
         data: { moduleName: 'homework' },
     },
-
-    {
-        path: 'settings',
-        loadChildren: 'app/modules/homework/pages/settings/settings.module#SettingsModule',
-        data: { moduleName: 'homework' },
-    },
-
     {
         path: '',
         component: HomeworkComponent,

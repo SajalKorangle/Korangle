@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
 
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -23,7 +23,6 @@ import {TCService} from '@services/modules/tc/tc.service';
     providers: [SubjectService, StudentService, ClassService, HomeworkService, NotificationService, UserService, SmsService, SmsOldService, TCService],
 })
 export class CheckHomeworkComponent implements OnInit {
-    // @Input() user;
     user: any;
 
     serviceAdapter: CheckHomeworkServiceAdapter;
@@ -31,12 +30,9 @@ export class CheckHomeworkComponent implements OnInit {
     isLoading: any;
     isChecking: any;
 
-    STUDENT_LIMITER = 200;
-    notif_usernames = [];
     smsBalance = 0;
 
-    checkUpdateMessage = 'Your Homework <homeworkName> of Subject <subject> has been checked';
-    resubmissionUpdateMessage = 'Your Homework <homeworkName> of Subject <subject> has been asked for resubmission';
+    dataForMapping =  {} as any;
 
     classSectionHomeworkList: any;
     selectedClassSection: any;
@@ -46,9 +42,8 @@ export class CheckHomeworkComponent implements OnInit {
     studentList: any;
     studentSectionList = [];
 
-    sendUpdateType: any;
-    sendCheckUpdate: any;
-    sendResubmissionUpdate: any;
+    HOMEWORK_CHECKED_EVENT_DBID = 10;
+    HOMEWORK_RESUBMISSION_EVENT_DBID = 11;
 
     studentHomeworkList: any;
 
@@ -56,7 +51,7 @@ export class CheckHomeworkComponent implements OnInit {
 
     HOMEWORK_STATUS = ['GIVEN', 'SUBMITTED', 'CHECKED', 'ASKED FOR RESUBMISSION'];
 
-    updateService: any;
+    messageService: any;
 
     constructor(
         public classService: ClassService,
@@ -78,7 +73,7 @@ export class CheckHomeworkComponent implements OnInit {
         this.classSectionHomeworkList = [];
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new CheckHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -167,7 +162,10 @@ export class CheckHomeworkComponent implements OnInit {
     }
 
     askForResubmission(temp: any): void {
-        temp.status = this.HOMEWORK_STATUS[3];
+        if (temp.status != this.HOMEWORK_STATUS[3]) {
+            temp.status = this.HOMEWORK_STATUS[3];
+            this.serviceAdapter.changeStudentHomeworkStatus(temp);
+        }
     }
 
     getButtonString(status: any): any {
@@ -187,56 +185,6 @@ export class CheckHomeworkComponent implements OnInit {
                 break;
         }
         return str;
-    }
-
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for (let key in obj) {
-            ret = ret.replace('<' + key + '>', obj[key]);
-        }
-        return ret;
-    }
-
-    hasUnicode(message): boolean {
-        for (let i = 0; i < message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getEstimatedSMSCount = (message: any) => {
-        let count = 0;
-        if (this.sendUpdateType == 'NOTIFICATION') return 0;
-        this.studentList
-            .filter((item) => item.mobileNumber)
-            .forEach((item, i) => {
-                if (this.sendUpdateType == 'SMS' || item.notification == false) {
-                    count += this.getMessageCount(this.getMessageFromTemplate(message, item));
-                }
-            });
-
-        return count;
-    }
-
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)) {
-            return Math.ceil(message.length / 70);
-        } else {
-            return Math.ceil(message.length / 160);
-        }
-    }
-
-    getEstimatedNotificationCount = () => {
-        let count = 0;
-        if (this.sendUpdateType == 'SMS') return 0;
-
-        count = this.studentList.filter((item) => {
-            return item.mobileNumber && item.notification;
-        }).length;
-
-        return count;
     }
 
     openImagePreviewDialog(homeworkImages: any, index: any, editable: any): void {

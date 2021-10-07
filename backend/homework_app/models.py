@@ -78,31 +78,3 @@ class HomeworkAnswerImage(models.Model):
 
     class Meta:
         db_table = 'homework_answer_image'
-
-class HomeworkSettings(models.Model):
-    
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
-
-    SMS_UPDATE = 'SMS'
-    NOTIFICATION_UPDATE = 'NOTIFICATION'
-    NOTIFSMS_UPDATE = 'NOTIF./SMS'
-    NO_UPDATE = 'NULL'
-    SENTUPDATE_CHOICES = [
-        (SMS_UPDATE, 'SMS'),
-        (NOTIFICATION_UPDATE, 'NOTIFICATION'),
-        (NOTIFSMS_UPDATE, 'NOTIF./SMS'),
-        (NO_UPDATE, 'NULL')
-    ]
-
-    sentUpdateType = models.CharField(max_length=20, choices=SENTUPDATE_CHOICES, null=False, default=NO_UPDATE, verbose_name='sentUpdateType')
-
-    sendCreateUpdate = models.BooleanField(null=False, default=False, verbose_name='sendCreateUpdate')
-    sendEditUpdate = models.BooleanField(null=False, default=False, verbose_name='sendEditUpdate')
-    sendDeleteUpdate = models.BooleanField(null=False, default=False, verbose_name='sendDeleteUpdate')
-    sendCheckUpdate = models.BooleanField(null=False, default=False, verbose_name='sendCheckUpdate')
-    sendResubmissionUpdate = models.BooleanField(null=False, default=False, verbose_name='sendResubmissionUpdate')
-    
-
-
-    class Meta:
-        db_table = 'homework_settings'

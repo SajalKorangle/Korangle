@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -17,6 +17,7 @@ import { isMobile } from '../../../../classes/common.js';
 import { Homework } from '../../../../services/modules/homework/models/homework';
 import { ImagePreviewDialogComponent } from '../../../../components/modal/image-preview-dialog.component';
 import { EditHomeworkDialogComponent } from './edit-homework/edit-homework.component';
+import moment = require('moment');
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './issue-homework.permissions';
 import {valueType} from '@modules/common/in-page-permission';
 import {EmployeeService} from '@services/modules/employee/employee.service';
@@ -53,9 +54,6 @@ export class IssueHomeworkComponent implements OnInit {
     // @Input() user;
     user: any;
 
-    STUDENT_LIMITER = 200;
-    notif_usernames = [];
-
     classSectionSubjectList: any;
     selectedClassSection: any;
     selectedSubject: any;
@@ -73,17 +71,18 @@ export class IssueHomeworkComponent implements OnInit {
     editableHomework: any;
 
     noPermission: any;
-    settings: any;
     smsBalance: any;
 
-    homeworkCreatedMessage = "New Homework is added in <subject>,\n Title - '<homeworkName>' \n Last date to submit - <deadLine> ";
-    homeworkUpdateMessage = "Please note, there are changes in the Homework '<homeworkName>' of <subject>";
-    homeworkDeleteMessage = "Please note, the homework '<homeworkName>' of subject <subject> has been removed";
+    HOMEWORK_CREATION_EVENT_DBID = 7;
+    HOMEWORK_UPDATION_EVENT_DBID = 8;
+    HOMEWORK_DELETION_EVENT_DBID = 9;
+
+    dataForMapping =  {} as any;
 
     // studentList: any;
     serviceAdapter: IssueHomeworkServiceAdapter;
 
-    updateService: any;
+    messageService: any;
     inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     constructor(
@@ -103,7 +102,6 @@ export class IssueHomeworkComponent implements OnInit {
     // Server Handling - Initial
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        // this.updateService = new UpdateService(this.userService, this.notificationService, this.smsService);
 
         this.isInitialLoading = true;
         this.isLoading = false;
@@ -112,7 +110,7 @@ export class IssueHomeworkComponent implements OnInit {
         this.currentHomework = new Homework();
         this.currentHomeworkImages = [];
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new IssueHomeworkServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -209,12 +207,16 @@ export class IssueHomeworkComponent implements OnInit {
         return isMobile();
     }
 
-    isCreateButtonDisabled(str: string): boolean {
-        if (str == null) {
-            return true;
-        }
-        if (str.trim().length == 0) {
-            return true;
+    isCreateButtonDisabled(currentHomework: any): boolean {
+        return currentHomework.homeworkName == null || currentHomework.homeworkName.trim().length == 0 ||
+            this.checkDateTimeInvalid(currentHomework);
+    }
+
+    checkDateTimeInvalid(currentHomework: any) {
+        if (currentHomework.endDate && currentHomework.endTime) {
+            let deadLine = moment(currentHomework.endDate + ' ' + currentHomework.endTime);
+            let dateNow = moment();
+            return deadLine < dateNow;
         }
         return false;
     }

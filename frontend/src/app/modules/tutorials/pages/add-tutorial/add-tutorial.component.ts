@@ -6,7 +6,7 @@ import { StudentService } from '@services/modules/student/student.service';
 import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { SmsService } from 'app/services/modules/sms/sms.service';
@@ -51,20 +51,19 @@ export class AddTutorialComponent implements OnInit {
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-    createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
-    deleteMessage = 'The following tutorial has been deleted -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
-    editMessage = 'The following tutorial has been edited -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
-    settings: any;
     smsBalance: any;
-    informationMessageType = INFORMATION_TYPE_LIST.indexOf('Tutorial') + 1;
 
-    updateService: any;
+    messageService: any;
+
+    dataForMapping =  {} as any;
 
     backendData = {
         classList: [],
         sectionList: [],
         classSubjectList: [],
         subjectList: [],
+        fullStudentList: [],
+        currentClassStudentSectionList: [],
         fullStudentSectionList: [],
         inPagePermissionMappedByKey: {} as any,
     };
@@ -73,7 +72,6 @@ export class AddTutorialComponent implements OnInit {
         newTutorial: {} as any,
         selectedSection: {} as any,
         editedTutorial: {} as any,
-        selectedClass: {} as any,
         selectedSubject: {} as any,
     };
 
@@ -86,6 +84,10 @@ export class AddTutorialComponent implements OnInit {
         editable: false,
         tutorialEditing: false,
     };
+
+    TUTORIAL_CREATION_ID = 12;
+    TUTORIAL_UPDATION_ID = 13;
+    TUTORIAL_DELETION_ID = 14;
 
     constructor(
         public subjectService: SubjectService,
@@ -104,7 +106,7 @@ export class AddTutorialComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.htmlRenderer = new AddTutorialHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
