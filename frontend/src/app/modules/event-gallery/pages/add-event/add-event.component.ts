@@ -7,25 +7,26 @@ import { FormControl } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { AddEventHtmlAdapter } from '@modules/event-gallery/pages/add-event/add-event.html.adapter';
 import { StudentService } from '@services/modules/student/student.service';
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 import { NotificationService } from '@services/modules/notification/notification.service';
 import { UserService } from '@services/modules/user/user.service';
 import { SmsService } from '@services/modules/sms/sms.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
+import {SmsOldService} from '@services/modules/sms/sms-old.service';
 import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'app-add-event',
     templateUrl: './add-event.component.html',
     styleUrls: ['./add-event.component.css'],
-    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService, TCService],
+    providers: [ClassService, EventGalleryService, StudentService, NotificationService, UserService, SmsService, EmployeeService, TCService, SmsOldService],
 })
 export class AddEventComponent implements OnInit {
     user: any;
 
     serviceAdapter: AddEventServiceAdapter;
     htmlAdapter: AddEventHtmlAdapter;
-    updateService: any;
+    messageService: any;
 
     imageList: any;
     notifySelectionList: any;
@@ -42,12 +43,16 @@ export class AddEventComponent implements OnInit {
     eventCount = 0;
     loadingCount = 10;
 
+    EVENT_GALLERY_CREATION_EVENT_DBID = 15;
+    EVENT_GALLERY_UPDATION_EVENT_DBID = 16;
+    EVENT_GALLERY_DELETION_EVENT_DBID = 17;
+
     isLoading = false;
     loadMoreEvents = false;
     isEventListLoading = false;
 
-    eventPostedMessage = 'A New Event "<eventTitle>" has been posted , view the event details in Events page ';
-    eventDeletedMessage = 'The Event "<eventTitle>" has been removed from the event list';
+    dataForMapping = {} as any;
+    smsBalance = 0;
 
     constructor(
         public classService: ClassService,
@@ -58,6 +63,7 @@ export class AddEventComponent implements OnInit {
         public smsService: SmsService,
         public employeeService: EmployeeService,
         public tcService: TCService,
+        public smsOldService : SmsOldService,
     ) {}
 
     ngOnInit() {
@@ -67,7 +73,7 @@ export class AddEventComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.htmlAdapter = new AddEventHtmlAdapter();
         this.htmlAdapter.initializeAdapter(this);

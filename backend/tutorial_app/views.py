@@ -3,7 +3,7 @@ from common.common_views import CommonView, CommonListView, APIView
 
 
 # Create your views here.
-from .models import Tutorial, TutorialSettings
+from .models import Tutorial
 
 
 class TutorialView(CommonView, APIView):
@@ -12,9 +12,3 @@ class TutorialView(CommonView, APIView):
 
 class TutorialListView(CommonListView, APIView):
     Model = Tutorial
-
-class TutorialSettingsView(CommonView, APIView):
-    Model = TutorialSettings
-
-class TutorialSettingsListView(CommonListView , APIView):
-    Model = TutorialSettings

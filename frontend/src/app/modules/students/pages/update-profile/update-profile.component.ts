@@ -514,7 +514,6 @@ export class UpdateProfileComponent implements OnInit {
         let docText = element.parentElement;
         let docContainer = docText.parentElement.parentElement;
         if (docContainer && docText) {
-            console.log(docText.clientHeight);
             let textHeight = docText.clientHeight + 26;
             if (textHeight > 120) {
                 docContainer.style.height = textHeight + 'px';

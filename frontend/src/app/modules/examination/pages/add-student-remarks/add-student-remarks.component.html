@@ -1,9 +1,9 @@
 <div class="card-content">
     <ng-container *ngIf="!isInitialLoading">
         <ng-container *ngIf="examinationList.length == 0"> You do not have any exams created. </ng-container>
-        <ng-container *ngIf="attendancePermissionList.length == 0"> You do not have any allotted class. </ng-container>
+        <ng-container *ngIf="!hasAdminPermission() && attendancePermissionList.length == 0"> You do not have any allotted class. </ng-container>
 
-        <ng-container *ngIf="classSectionList.length > 0 && attendancePermissionList.length > 0 && examinationList.length > 0">
+        <ng-container *ngIf="classSectionList.length > 0 && (attendancePermissionList.length > 0 || hasAdminPermission()) && examinationList.length > 0">
             <mat-form-field style="margin-right: 10px">
                 <mat-select
                     placeholder="Select Examination"

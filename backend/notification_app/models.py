@@ -18,7 +18,10 @@ class Notification(models.Model):
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
-    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
+    # ParentMessageType is Deprecated (Don't Use it)
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.SET_NULL, default=1, null=True)
+
+    SMSEventId = models.IntegerField(null=False, default=0)
 
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')

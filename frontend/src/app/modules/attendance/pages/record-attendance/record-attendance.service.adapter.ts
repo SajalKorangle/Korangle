@@ -1,58 +1,79 @@
-import {RecordAttendanceComponent} from './record-attendance.component';
-import {ATTENDANCE_STATUS_LIST} from '../../classes/constants';
-import {INFORMATION_TYPE_LIST} from '../../../../classes/constants/information-type';
+import { RecordAttendanceComponent } from './record-attendance.component';
+import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
+import {CommonFunctions} from '@classes/common-functions';
 import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
+import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
-
-    informationMessageType: any;
 
     constructor() {}
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
-        this.informationMessageType = INFORMATION_TYPE_LIST.indexOf('Attendance') + 1;
     }
 
     async initializeData() {
         this.vm.isInitialLoading = true;
         // ------------------- Initial Data Fetching Starts ---------------------
+
+        const routeInformation = moduleCommonFunctions.getModuleTaskPaths();
+        const in_page_permission_request = {
+            parentTask__parentModule__path: routeInformation.modulePath,
+            parentTask__path: routeInformation.taskPath,
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+        };
+
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
         let request_attendance_permission_list_data = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentEmployee: this.vm.user.activeSchool.employeeId
         };
+
         const value = await Promise.all([
-            this.vm.attendanceService.getObjectList(this.vm.attendanceService.attendance_settings, {
-                parentSchool: this.vm.user.activeSchool.dbId,
-            }), //0
             this.vm.attendanceService.getObjectList(
                 this.vm.attendanceService.attendance_permission,
                 request_attendance_permission_list_data
-            ), //1
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //2
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //3
-            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //4
+            ), //0
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //1
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //2
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //3
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
+                { id__in: this.vm.ATTENDANCE_UPDATION_EVENT_DBID + ',' + this.vm.ATTENDANCE_CREATION_EVENT_DBID }) //4
         ]);
         // ------------------- Initial Data Fetching Ends ---------------------
 
-        this.vm.smsBalance = value[4];
-        if (value[0].length > 0) {
-            this.vm.selectedSentType = value[0][0].sentUpdateType;
-            this.vm.selectedReceiver = value[0][0].receiverType;
-        } else {
-            this.vm.selectedSentType = this.vm.sentTypeList[0]; // NULL
-            this.vm.selectedReceiver = this.vm.receiverList[1]; // Only Absent Students
+        this.vm.smsBalance = value[3].count;
+        this.vm.backendData.attendanceSMSEventList = value[4];
+
+        this.vm.dataForMapping['classList'] = value[1];
+        this.vm.dataForMapping['divisionList'] = value[2];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
+        let fetch_event_settings_list = {
+            SMSEventId__in: this.vm.backendData.attendanceSMSEventList.map(a => a.id).join(),
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+        if (this.vm.backendData.attendanceSMSEventList.length > 0) {
+            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, fetch_event_settings_list);
         }
+        // ------------------- Initial Data Fetching Ends ---------------------
         let class_permission_list = [];
         let division_permission_list = [];
-        value[1].forEach((element) => {
-            class_permission_list.push(element.parentClass);
-            division_permission_list.push(element.parentDivision);
-        });
+        if (this.vm.hasAdminPermission()) {
+            class_permission_list = value[2].map(classs => classs.id);
+            division_permission_list = value[3].map(div => div.id);
+        } else {
+            value[1].forEach((element) => {
+                class_permission_list.push(element.parentClass);
+                division_permission_list.push(element.parentDivision);
+            });
+        }
         // ------------------- Fetching Valid Student Data Starts ---------------------
         let student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
@@ -63,7 +84,7 @@ export class RecordAttendanceServiceAdapter {
         };
 
         let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
-
+        this.vm.dataForMapping['studentSectionList'] = studentSectionList;
         let student_data = {
             id__in: studentSectionList.map(studentSection => studentSection.parentStudent).join(','),
             fields__korangle: 'id,name,mobileNumber,scholarNumber,parentTransferCertificate',
@@ -71,44 +92,84 @@ export class RecordAttendanceServiceAdapter {
         const studentDataList = await this.vm.studentService.getObjectList(this.vm.studentService.student, student_data);
         // ------------------- Fetching Valid Student Data Ends ---------------------
         // ------------------- Initialization of the ClassSectionStudentList using initial and student data ---------------------
-        this.initializeClassSectionStudentList(value[2], value[3], studentSectionList, studentDataList, value[1]);
+        this.initializeClassSectionStudentList(value[1], value[2], studentSectionList, studentDataList, value[0]);
         this.vm.isInitialLoading = false;
+
     }
 
     initializeClassSectionStudentList(
         classList: any,
         divisionList: any,
-        studentList: any,
+        studentSectionList: any,
         studentDetailsList: any,
         attendancePermissionList: any
     ): any {
         this.vm.classSectionStudentList = [];
-
-        // ------------------- Populating  classSectionStudentList Starts ---------------------
-        attendancePermissionList.forEach(perm => {
-            let permittedStudentList = studentList.filter(studentSec => studentSec.parentClass == perm.parentClass &&
-                perm.parentDivision == studentSec.parentDivision).map(stud => studentDetailsList.find(student => stud.parentStudent == student.id));
-            if (permittedStudentList.length > 0) {
-                let classs = classList.find(cl => cl.id == perm.parentClass);
-                let tempClass = {
-                    name: classs.name,
-                    dbId: classs.id,
-                    sectionList: [],
-                };
-                let division = divisionList.find(div => div.id == perm.parentDivision);
-                permittedStudentList.forEach(st => st['dbId'] = st.id);
-                let tempDivision = {
-                    name: division.name,
-                    dbId: division.id,
-                    studentList: permittedStudentList,
-                };
-                let alreadyPresentClass = this.vm.classSectionStudentList.find(c => c.dbId == tempClass.dbId);
-                if (alreadyPresentClass) {
-                    alreadyPresentClass.sectionList.push(tempDivision);
-                } else {
-                    tempClass.sectionList.push(tempDivision);
+        studentSectionList.forEach((studentSection) => {
+            if (this.vm.hasAdminPermission() || this.vm.classSectionInPermissionList(studentSection.parentClass, studentSection.parentDivision,
+                attendancePermissionList)) {
+                let classIndex = -1;
+                let tempIndex = 0;
+                this.vm.classSectionStudentList.forEach((classs) => {
+                    if (classs.dbId == studentSection.parentClass) {
+                        classIndex = tempIndex;
+                        return;
+                    }
+                    tempIndex = tempIndex + 1;
+                });
+                if (classIndex === -1) {
+                    let classs = classList.find((classs) => classs.id === studentSection.parentClass);
+                    let tempClass = {
+                        name: classs.name,
+                        dbId: classs.id,
+                        sectionList: [],
+                    };
                     this.vm.classSectionStudentList.push(tempClass);
+                    let tempIndex = 0;
+                    this.vm.classSectionStudentList.forEach((classs) => {
+                        if (classs.dbId == studentSection.parentClass) {
+                            classIndex = tempIndex;
+                            return;
+                        }
+                        tempIndex = tempIndex + 1;
+                    });
                 }
+                let divisionIndex = -1;
+                tempIndex = 0;
+                this.vm.classSectionStudentList[classIndex].sectionList.forEach((division) => {
+                    if (division.dbId == studentSection.parentDivision) {
+                        divisionIndex = tempIndex;
+                        return;
+                    }
+                    tempIndex = tempIndex + 1;
+                });
+
+                if (divisionIndex === -1) {
+                    let division = divisionList.find((division) => division.id === studentSection.parentDivision);
+                    let tempDivision = {
+                        name: division.name,
+                        dbId: division.id,
+                        studentList: [],
+                    };
+                    this.vm.classSectionStudentList[classIndex].sectionList.push(tempDivision);
+                    tempIndex = 0;
+                    this.vm.classSectionStudentList[classIndex].sectionList.forEach((division) => {
+                        if (division.dbId == studentSection.parentDivision) {
+                            divisionIndex = tempIndex;
+                            return;
+                        }
+                        tempIndex = tempIndex + 1;
+                    });
+                }
+                let studentDetails = studentDetailsList.find((studentDetails) => studentDetails.id == studentSection.parentStudent);
+                let tempData = {
+                    id: studentDetails.id,
+                    name: studentDetails.name,
+                    dbId: studentDetails.id,
+                    scholarNumber: studentDetails.scholarNumber,
+                    mobileNumber: studentDetails.mobileNumber,
+                };
+                this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
             }
         });
         // ------------------- Populating  classSectionStudentList Ends ---------------------
@@ -159,23 +220,18 @@ export class RecordAttendanceServiceAdapter {
             classs.sectionList.forEach((section) => {
                 if (this.vm.selectedSection.dbId === section.dbId && classs.dbId === this.vm.selectedClass.dbId) {
                     section.studentList.forEach((student) => {
-                        let tempItem = {
-                            dbId: student.dbId,
-                            name: student.name,
-                            scholarNumber: student.scholarNumber,
-                            mobileNumber: student.mobileNumber,
-                            attendanceStatusList: [],
-                        };
+                        let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+                        tempStudent['attendanceStatusList'] = [];
                         let dateList = this.vm.getDateList();
                         dateList.forEach((date) => {
-                            tempItem.attendanceStatusList.push(this.vm.getStudentAttendanceStatusObject(student, date, attendanceList));
+                            tempStudent.attendanceStatusList.push(this.vm.getStudentAttendanceStatusObject(student, date, attendanceList));
                         });
-                        this.vm.studentAttendanceStatusList.push(tempItem);
+                        this.vm.studentAttendanceStatusList.push(tempStudent);
                     });
                 }
             });
         });
-        this.fetchGCMDevices(this.vm.studentAttendanceStatusList);
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentAttendanceStatusList);
     }
 
     updateStudentAttendanceList(): void {
@@ -225,40 +281,35 @@ export class RecordAttendanceServiceAdapter {
         );
     }
 
-    notifyParents(): void {
-        this.vm.studentList = [];
+    async notifyParents() {
+        let createdStudentList = [];
+        let updatedStudentList = [];
+        let createdSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_CREATION_EVENT_DBID);
+        let updatedSettings = this.vm.backendData.eventSettingsList.find(sett => sett.SMSEventId == this.vm.ATTENDANCE_UPDATION_EVENT_DBID);
         this.vm.studentAttendanceStatusList.forEach((student) => {
             student.attendanceStatusList.forEach((attendanceStatus) => {
                 let previousAttendanceIndex = this.vm.getPreviousAttendanceIndex(student, attendanceStatus.date);
                 if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== attendanceStatus.status) {
                     if (attendanceStatus.status !== null && this.checkMobileNumber(student.mobileNumber) == true) {
+                        let tempData = CommonFunctions.getInstance().copyObject(student);
+                        tempData['attendance'] = {
+                            attendanceDate: this.vm.formatDate(attendanceStatus.date.toString(), ''),
+                            attendanceStatus: attendanceStatus.status
+                        };
                         if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
-                            let tempData = {
-                                name: student.name,
-                                dateOfAttendance: this.vm.formatDate(attendanceStatus.date.toString(), ''),
-                                attendanceStatus: attendanceStatus.status,
-                                mobileNumber: student.mobileNumber,
-                                notification: student.notification,
-                                messageType: 1,
-                            };
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null) {
-                                tempData.messageType = 2;
+                                updatedStudentList.push(tempData);
+                            }else {
+                                createdStudentList.push(tempData);
                             }
-                            this.vm.studentList.push(tempData);
                         }
-                        if (this.vm.selectedReceiver == this.vm.receiverList[0] && attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
-                            let tempData = {
-                                name: student.name,
-                                dateOfAttendance: this.vm.formatDate(attendanceStatus.date.toString(), ''),
-                                attendanceStatus: attendanceStatus.status,
-                                mobileNumber: student.mobileNumber,
-                                notification: student.notification,
-                                messageType: 1,
-                            };
-                            if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null) {
-                                tempData.messageType = 2;
+                        if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[0]) {
+                            if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null &&
+                                updatedSettings.receiverType == this.vm.receiverList[0]) {
+                                updatedStudentList.push(tempData);
+                            }else if (createdSettings.receiverType == this.vm.receiverList[0]) {
+                                createdStudentList.push(tempData);
                             }
-                            this.vm.studentList.push(tempData);
                         }
                     }
                     this.vm.currentAttendanceList[previousAttendanceIndex].status = attendanceStatus.status;
@@ -266,206 +317,33 @@ export class RecordAttendanceServiceAdapter {
             });
         });
         let currentDate = new Date();
-        if (
-            this.vm.studentList.length > 0 &&
-            this.vm.selectedSentType != this.vm.sentTypeList[0] &&
-            this.vm.by == 'date' &&
-            this.vm.startDate == this.vm.formatDate(currentDate, '')
-        ) {
-            this.sendSMSNotification(this.vm.studentList);
-        }
-    }
+        if (this.vm.by == 'date' && this.vm.startDate == this.vm.formatDate(currentDate, '')) {
 
-    fetchGCMDevices: any = (studentList: any) => {
-        const service_list = [];
-        const iterationCount = Math.ceil(studentList.length / this.vm.STUDENT_LIMITER);
-        let loopVariable = 0;
-
-        while (loopVariable < iterationCount) {
-            const mobile_list = studentList.filter((item) => item.mobileNumber).map((obj) => obj.mobileNumber.toString());
-            const gcm_data = {
-                user__username__in: mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
-                active: 'true__boolean',
-            };
-            const user_data = {
-                fields__korangle: 'username,id',
-                username__in: mobile_list.slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1)),
-            };
-            service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_data));
-            service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
-            loopVariable = loopVariable + 1;
-        }
-
-        Promise.all(service_list).then((value) => {
-            let temp_gcm_list = [];
-            let temp_user_list = [];
-            let loopVariable = 0;
-            while (loopVariable < iterationCount) {
-                temp_gcm_list = temp_gcm_list.concat(value[loopVariable * 2]);
-                temp_user_list = temp_user_list.concat(value[loopVariable * 2 + 1]);
-                loopVariable = loopVariable + 1;
-            }
-
-            const notif_usernames = temp_user_list.filter((user) => {
-                return (
-                    temp_gcm_list.find((item) => {
-                        return item.user == user.id;
-                    }) != undefined
+            if (createdStudentList.length > 0) {
+                console.log(createdStudentList);
+                this.vm.dataForMapping['studentList'] =  createdStudentList;
+                await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+                   this.vm.dataForMapping,
+                    ['student'],
+                    this.vm.ATTENDANCE_CREATION_EVENT_DBID,
+                    this.vm.user.activeSchool.dbId,
+                    this.vm.smsBalance
                 );
-            });
-            // Storing because they're used later
-            this.vm.notif_usernames = notif_usernames;
+            }
 
-            let notification_list;
-
-            notification_list = studentList.filter((obj) => {
-                return (
-                    notif_usernames.find((user) => {
-                        return user.username == obj.mobileNumber;
-                    }) != undefined
+            if (updatedStudentList.length > 0) {
+                console.log(updatedStudentList);
+                this.vm.dataForMapping['studentList'] = updatedStudentList;
+                console.log( this.vm.dataForMapping);
+                this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+                    this.vm.dataForMapping,
+                    ['student'],
+                    this.vm.ATTENDANCE_UPDATION_EVENT_DBID,
+                    this.vm.user.activeSchool.dbId,
+                    this.vm.smsBalance
                 );
-            });
-            studentList.forEach((item, i) => {
-                item.notification = false;
-            });
-            notification_list.forEach((item, i) => {
-                item.notification = true;
-            });
-
-            this.vm.isLoading = false;
-        });
-    }
-
-    sendSMSNotification: any = (mobile_list: any) => {
-        if (mobile_list.length == 0) {
-            return;
-        }
-        let service_list = [];
-        let notification_list = [];
-        let sms_list = [];
-        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) {
-            sms_list = mobile_list;
-            notification_list = [];
-        } else if (this.vm.selectedSentType == this.vm.sentTypeList[2]) {
-            sms_list = [];
-            notification_list = mobile_list.filter((obj) => {
-                return obj.notification;
-            });
-        } else {
-            notification_list = mobile_list.filter((obj) => {
-                return obj.notification;
-            });
-            sms_list = mobile_list.filter((obj) => {
-                return !obj.notification;
-            });
-        }
-        if (sms_list.length == 0 && notification_list.length == 0) {
-            return;
-        }
-        let notif_mobile_string = '';
-        let sms_mobile_string = '';
-        notification_list.forEach((item, index) => {
-            notif_mobile_string += item.mobileNumber + ', ';
-        });
-        sms_list.forEach((item, index) => {
-            sms_mobile_string += item.mobileNumber + ', ';
-        });
-        sms_mobile_string = sms_mobile_string.slice(0, -2);
-        notif_mobile_string = notif_mobile_string.slice(0, -2);
-        if (sms_list.length > 0 && this.getEstimatedSMSCount() > this.vm.smsBalance) {
-            alert('You are short by ' + (this.getEstimatedSMSCount() - this.vm.smsBalance) + ' SMS');
-        }
-        let sms_data = {};
-        const sms_converted_data = sms_list.map((item) => {
-            if (item.messageType === 1) {
-                return {
-                    mobileNumber: item.mobileNumber.toString(),
-                    isAdvanceSms: this.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
-                };
-            } else {
-                return {
-                    mobileNumber: item.mobileNumber.toString(),
-                    isAdvanceSms: this.getMessageFromTemplate(this.vm.studentAlternateMessage, item),
-                };
-            }
-        });
-        if (sms_list.length != 0) {
-            sms_data = {
-                contentType: 'english',
-                data: sms_converted_data,
-                content: sms_converted_data[0]['isAdvanceSms'],
-                parentMessageType: this.informationMessageType,
-                count: this.getEstimatedSMSCount(),
-                notificationCount: this.getEstimatedNotificationCount(),
-                notificationMobileNumberList: notif_mobile_string,
-                mobileNumberList: sms_mobile_string,
-                parentSchool: this.vm.user.activeSchool.dbId,
-            };
-        } else {
-            sms_data = {
-                contentType: 'english',
-                data: sms_converted_data,
-                content: this.getMessageFromTemplate(this.vm.studentUpdateMessage, notification_list[0]),
-                parentMessageType: this.informationMessageType,
-                count: this.getEstimatedSMSCount(),
-                notificationCount: this.getEstimatedNotificationCount(),
-                notificationMobileNumberList: notif_mobile_string,
-                mobileNumberList: sms_mobile_string,
-                parentSchool: this.vm.user.activeSchool.dbId,
-            };
-            if (notification_list.length > 0 && notification_list[0].messageType === 2) {
-                sms_data['content'] = this.getMessageFromTemplate(this.vm.studentAlternateMessage, notification_list[0]);
             }
         }
-
-        const notification_data = notification_list.map((item) => {
-            if (item.messageType === 1) {
-                return {
-                    parentMessageType: this.informationMessageType,
-                    content: this.getMessageFromTemplate(this.vm.studentUpdateMessage, item),
-                    parentUser: this.vm.notif_usernames.find((user) => {
-                        return user.username == item.mobileNumber.toString();
-                    }).id,
-                    parentSchool: this.vm.user.activeSchool.dbId,
-                };
-            } else {
-                return {
-                    parentMessageType: this.informationMessageType,
-                    content: this.getMessageFromTemplate(this.vm.studentAlternateMessage, item),
-                    parentUser: this.vm.notif_usernames.find((user) => {
-                        return user.username == item.mobileNumber.toString();
-                    }).id,
-                    parentSchool: this.vm.user.activeSchool.dbId,
-                };
-            }
-        });
-        service_list = [];
-        service_list.push(this.vm.smsService.createObject(this.vm.smsService.diff_sms, sms_data));
-        if (notification_data.length > 0) {
-            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
-        }
-
-        this.vm.isLoading = true;
-
-        Promise.all(service_list).then(
-            (value) => {
-                if (
-                    (this.vm.selectedSentType === this.vm.sentTypeList[1] || this.vm.selectedSentType === this.vm.sentTypeList[3]) &&
-                    sms_list.length > 0
-                ) {
-                    if (value[0].status === 'success') {
-                        this.vm.smsBalance -= value[0].data.count;
-                    } else if (value[0].status === 'failure') {
-                        this.vm.smsBalance = value[0].count;
-                    }
-                }
-
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
     }
 
     getStudentIdList(): any {
@@ -483,59 +361,6 @@ export class RecordAttendanceServiceAdapter {
     }
 
     checkMobileNumber(mobileNumber: number): boolean {
-        if (mobileNumber && mobileNumber.toString().length == 10) {
-            return true;
-        }
-        return false;
-    }
-
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for (let key in obj) {
-            ret = ret.replace('<' + key + '>', obj[key]);
-        }
-        return ret;
-    }
-
-    hasUnicode(message): boolean {
-        for (let i = 0; i < message.length; ++i) {
-            if (message.charCodeAt(i) > 127) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    getEstimatedSMSCount = () => {
-        let count = 0;
-        if (this.vm.selectedSentType == this.vm.sentTypeList[2]) return 0;
-        this.vm.studentList
-            .filter((item) => item.mobileNumber)
-            .forEach((item, i) => {
-                if (this.vm.selectedSentType == this.vm.sentTypeList[1] || item.notification == false) {
-                    count += this.getMessageCount(this.getMessageFromTemplate(this.vm.studentUpdateMessage, item));
-                }
-            });
-
-        return count;
-    }
-
-    getMessageCount = (message) => {
-        if (this.hasUnicode(message)) {
-            return Math.ceil(message.length / 70);
-        } else {
-            return Math.ceil(message.length / 160);
-        }
-    }
-
-    getEstimatedNotificationCount = () => {
-        let count = 0;
-        if (this.vm.selectedSentType == this.vm.sentTypeList[1]) return 0;
-
-        count = this.vm.studentList.filter((item) => {
-            return item.mobileNumber && item.notification;
-        }).length;
-
-        return count;
+        return mobileNumber && mobileNumber.toString().length == 10;
     }
 }

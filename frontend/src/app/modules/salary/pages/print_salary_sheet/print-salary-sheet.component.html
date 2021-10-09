@@ -5,13 +5,7 @@
         <table class="table table-hover">
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
-                    <th>S No.</th>
-                    <th class="text-left">Name</th>
-                    <th class="text-left">Father's/Huband's Name</th>
-                    <th class="text-left">Monthly Salary</th>
-                    <th class="text-left">Working Days</th>
-                    <th class="text-left">Net Salary</th>
-                    <th class="text-left">Signature</th>
+                    <th *ngFor="let header of columnHeaderList" class="text-left">{{header}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +28,15 @@
             (click)="printSalarySheet()"
         >
             Print
+        </button>
+
+        <button
+                type="submit"
+                style="margin-left: 10px"
+                *ngIf="getFilteredEmployeeList().length > 0"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="downloadExcel()">
+            Download Excel
         </button>
     </ng-container>
 </div>

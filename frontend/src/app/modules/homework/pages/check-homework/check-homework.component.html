@@ -193,7 +193,7 @@
                                 *ngIf="isMobile()"
                                 [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]"
                                 style="font-size: 30px; margin-top: 10px"
-                                (click)="askForResubmission(studentHomework); serviceAdapter.changeStudentHomeworkStatus(studentHomework)"
+                                (click)="askForResubmission(studentHomework)"
                                 [disabled]="studentHomework.status == HOMEWORK_STATUS[3]"
                                 >Ask For Resubmission</mat-slide-toggle
                             >
@@ -201,7 +201,7 @@
                                 *ngIf="!isMobile()"
                                 [(ngModel)]="studentHomework.status == HOMEWORK_STATUS[3]"
                                 style="float: right; font-size: 30px; margin-top: 10px"
-                                (click)="askForResubmission(studentHomework); serviceAdapter.changeStudentHomeworkStatus(studentHomework)"
+                                (click)="askForResubmission(studentHomework)"
                                 [disabled]="studentHomework.status == HOMEWORK_STATUS[3]"
                                 >Ask For Resubmission</mat-slide-toggle
                             >

@@ -1,4 +1,4 @@
-
+from django.apps import apps
 from rest_framework.views import APIView
 
 from decorators import user_permission_3
@@ -148,3 +148,26 @@ class CommonListView(CommonBaseView):
     def delete(self, request, activeSchoolID, activeStudentID):
         filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
         return delete_list(request.GET, filtered_query_set)
+
+
+def common_json_view_function(request_json, app_name, file_name):
+    json_data = open(apps.get_app_config(app_name).path + '/constant_database/' + file_name)
+    content = json.load(json_data)
+    result = [x for x in content if filter_json_func(x, request_json)]
+    return result
+
+
+def filter_json_func(db_content, request_json):
+    for key in request_json:
+        try:
+            if key == 'e' or key == 'activeSchoolID':
+                continue
+            if key.endswith('__in'):
+                array = request_json[key].split(",")
+                if str(db_content[key[:-4]]) not in array:
+                    return False
+            elif str(db_content[key]) != request_json[key]:
+                return False
+        except KeyError:
+            return False
+    return True
