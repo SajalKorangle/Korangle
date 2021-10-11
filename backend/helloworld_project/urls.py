@@ -3,11 +3,14 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from generic.generic_views import GenericView, GenericListView
 
 api_version = 'v6.4/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^'+api_version+'generic/batch', GenericListView.as_view(), name='generic_list_view'),
+    url(r'^'+api_version+'generic/', GenericView.as_view(), name='generic_view'),
     url(r'^'+api_version+'school/', include('school_app.urls')),
     url(r'^'+api_version+'student/', include('student_app.urls')),
     url(r'^'+api_version+'expense/', include('expense_app.urls')),
@@ -42,4 +45,3 @@ urlpatterns = [
     url(r'^'+api_version+'online-class/', include('online_classes_app.urls')),
     url(r'^'+api_version+'payment/', include('payment_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

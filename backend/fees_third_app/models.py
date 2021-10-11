@@ -1,9 +1,13 @@
+<< << << < HEAD
 from django.core.serializers import serialize
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import OnlinePaymentAccount
 from accounts_app.views import TransactionAccountDetailsView
 from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
 from django.db import models
+== == == =
+from django.db import models, transaction
+>>>>>> > 3efb840e28f7d8bb46cae3fd5afe5cfc519b59b6
 
 from school_app.model.models import School, Session, BusStop
 
@@ -271,24 +275,24 @@ class FeeReceipt(models.Model):
     # @answer: null=False is the default behavior, no need to specify it. Blank=True is needed because
     # now this field is not comming from frontend and is not present in the data during save.
     # Receipt number is calculated in the signal.
-    receiptNumber = models.IntegerField(blank=True, default=0, verbose_name='receiptNumber')
-    generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
-    remark = models.TextField(null=True, verbose_name='remark')
-    cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
+    receiptNumber = models.IntegerField(blank=True, default=0)
+    generationDateTime = models.DateTimeField(null=False, auto_now_add=True)
+    remark = models.TextField(null=True)
+    cancelled = models.BooleanField(null=False, default=False)
 
     # Added for the unique together field,
     # Also required in case fee receipt is cancelled, student is deleted, and we need to calculate the maximum receipt number
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='FeeReceiptList')
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee', related_name='parentEmployee')
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='FeeReceiptList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='FeeReceiptList')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='FeeReceiptList')
 
     chequeNumber = models.BigIntegerField(null=True, verbose_name='chequeNumber')
 
     cancelledDateTime = models.DateTimeField(null=True, verbose_name='cancelledDateTime')
     cancelledRemark = models.TextField(null=True, verbose_name='cancelledRemark')
-    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='cancelledBy', related_name='cancelledBy')
+    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='CancelledFeeReceiptList')
 
     MODE_OF_PAYMENT = (
         ('Cash', 'Cash'),
@@ -297,19 +301,21 @@ class FeeReceipt(models.Model):
         ('KORANGLE', 'KORANGLE'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
+
+    ## Relations To School and Student ##
+    RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
+    RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
+    # Transaction atomic ensures that two parallel saves is not happening which can lead to same receipt number
+    # which is calculated in the pre save signal.
+    @db_transaction.atomic
     def save(self, *args, **kwargs):
-        if self.id is None:
-            with db_transaction.atomic():
-                super().save(*args, **kwargs)
-        else:
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 @receiver(pre_save, sender=FeeReceipt)
@@ -357,6 +363,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         ## Deleting Transaction Starts ##
         if originalInstance.parentTransaction:
             originalInstance.parentTransaction.delete()
+            instance.parentTransaction = None
         ## Deleting Transaction Ends ##
 
         ## Handling Student Fee Clearance Date and Cleared Starts ##
@@ -375,10 +382,10 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
 
 class SubFeeReceipt(models.Model):
 
-    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, verbose_name='parentFeeReceipt')
-    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, verbose_name='parentStudentFee')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
+    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, related_name='subFeeReceiptList')
+    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, related_name='subFeeReceiptList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='subFeeReceiptList')
+    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, related_name='subFeeReceiptList')
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
@@ -428,6 +435,10 @@ class SubFeeReceipt(models.Model):
     # March
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
+
+    ## Relations To School and Student ##
+    RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
+    RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
     class Meta:
         db_table = 'sub_fee_receipt__new'

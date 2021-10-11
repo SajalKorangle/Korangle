@@ -90,9 +90,8 @@ class FeeReceiptListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
+
 ########### Sub Fee Receipt #############
-
-
 class SubFeeReceiptView(CommonView, APIView):
     Model = SubFeeReceipt
     RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
