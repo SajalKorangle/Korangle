@@ -203,9 +203,6 @@ class SMSPurchase(models.Model):
         db_table = 'sms_purchase'
 
 
-# Code Review
-# Would it more understandable if we change this name
-# to SchoolSmsPurchaseOrder ? (Point No. 22 from code practice file)
 class OnlineSmsPaymentTransaction(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT)
     parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, unique=True)
@@ -214,10 +211,6 @@ class OnlineSmsPaymentTransaction(models.Model):
 
 
 SMSPurchaseModelSerializer = SMSPurchaseView().ModelSerializer
-
-# Code Review
-# 1. Make the h capital in 'handler'
-# @answer : Done
 
 
 @receiver(pre_save, sender=Order)
@@ -236,11 +229,6 @@ def SMSOrderCompletionHandler(sender, instance, **kwargs):
                 smsPurchase = SMSPurchase.objects.get(id=response['id'])
                 onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchase
                 onlineSmsPaymentTransaction.save()
-
-
-# Code Review
-# Does Refund Initiation not required for SchoolSMSPurchaseOrder? Why not?
-# @answer : I added the code below for a sense of completion. however, I cannot think of a case when it will be triggered
 
 
 @receiver(pre_save, sender=Order)

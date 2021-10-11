@@ -169,8 +169,6 @@ export class CollectFeeServiceAdapter {
             if (feeReceipt['remark'] == '') {
                 feeReceipt['remark'] = null;
             }
-            // Code Review
-            // Why are we explicitly deleting the receipt number from tempObject now.
             delete tempObject.receiptNumber;
             return tempObject;
         });

@@ -154,9 +154,6 @@ export class User {
         } else if (this.checkUserSchoolSessionPermission(urlParams)) {
             // checking the school id  and session id in the url is valid for this user
             switch (
-            // Code Review
-            // Revert the unnecessary change
-            // Answer: I have reverted the unnecessary changes
                 modulePath // from here we are populating module
             ) {
                 // if the user refreshes the notification or user - settings
@@ -274,12 +271,6 @@ export class User {
                 this.section['videoUrl'] = task.videoUrl;
             }
         }
-        // # Code Review
-        // # I think this is written for orderId. Please confirm. Should this be handled in their
-        // # respective pages. Also, where the extra query param is getting used?
-        // # Answers1: Yes, it is written for order id.
-        // # Answers2: Earlier any extra query params was removed from the url. That's why I have made the change here which will not remove any extra url params. Now any page can use and add and delete extra query params for communication with other pages or services.
-        // # Answer3: It is used when we get payment confirmation from cashfree. Cashfree hit backend post api, then backend makes changes to the database and redirects user to korangle.com?orderId=<orderId>&<other params>
         let urlParams = new URLSearchParams(window.location.search);
         urlParams.forEach((value, key) => {
             if (['school_id', 'session', 'student_id'].includes(key))

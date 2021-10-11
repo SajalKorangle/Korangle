@@ -27,10 +27,6 @@ import { PrintFeesReportComponent } from './print/print-fees-report/print-fees-r
     ],
 
     imports: [FeeRoutingModule, ComponentsModule, FeesComponentsModule, MatExpansionModule, MatSortModule],
-    // Code Review
-    // Will this kind of implementation create circulary dependency in future.
-    // Directly import PrintFullFeeReceiptListComponent.
-    // Move the PrintFullFeeReceiptListComponent above in heirarchy.
     exports: [PrintFullFeeReceiptListComponent, ],
     providers: [ExcelService],
     bootstrap: [FeeComponent],

@@ -32,7 +32,7 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.orderId = parseInt(new URLSearchParams(location.search).get('orderId'));
-    this.initilizeData();
+    this.initializeData();
   }
 
   ngOnDestroy() {
@@ -42,9 +42,7 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
     window.history.pushState({}, document.title, url);
   }
 
-  // Code Review
-  // 1. Correct the spelling initilize
-  async initilizeData() {
+  async initializeData() {
     const order_request = {
       orderId: this.orderId,
     };
@@ -52,9 +50,7 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-  // Code Review
-  // 1. Correct the spelling - tranaction
-  isTranactionSuccessfull() {
+  isTransactionSuccessfull() {
     return this.backendData.order.status == STATUS_CHOICES[1];
   }
 

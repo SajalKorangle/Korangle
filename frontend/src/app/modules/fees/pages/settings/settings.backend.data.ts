@@ -22,9 +22,7 @@ export class SettingsBackendData {
         this.feeSettings.accountingSettingsJSON = null; // null value signifies accounting is disabled
     }
 
-    // Code Review
-    // Correct the spelling - initilize
-    initilizeAccouting(): void {
+    initializeAccounting(): void {
         this.feeSettings.accountingSettingsJSON = new AccountingSettings();
     }
 

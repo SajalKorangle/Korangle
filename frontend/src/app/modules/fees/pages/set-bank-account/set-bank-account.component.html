@@ -1,9 +1,5 @@
 <div class="card-content table-responsive" *ngIf="!isLoading else Loader">
 
-    <!--
-        Code Review
-        Please comment the sections starting and end.
-    -->
     <form (submit)="$event.preventDefault(); serviceAdapter.createUpdateOnlinePaymentAccount();">
         <h4>Account Information</h4>
         <div style="display: flex; flex-wrap: wrap;">
@@ -30,14 +26,10 @@
         </div>
 
         <mat-form-field style="width: 300px;">
-            <!--
-                Code Review
-                Please Correct the spelling - settelment
-            -->
-            <mat-label>Settelment Cycle</mat-label>
-            <mat-select name="settelmentId" required [(ngModel)]="onlinePaymentAccount.vendorData.settlementCycleId">
-                <ng-container *ngFor="let settelmentOption of settelmentCycleList">
-                    <mat-option [value]="settelmentOption.id">{{settelmentOption.desc}}</mat-option>
+            <mat-label>Settlement Cycle</mat-label>
+            <mat-select name="settlementId" required [(ngModel)]="onlinePaymentAccount.vendorData.settlementCycleId">
+                <ng-container *ngFor="let settlementOption of settlementCycleList">
+                    <mat-option [value]="settlementOption.id">{{settlementOption.desc}}</mat-option>
                 </ng-container>
             </mat-select>
         </mat-form-field>
@@ -66,10 +58,6 @@
 
         </div>
 
-        <!--
-            Code Review
-            Disable the button if the information is invalid.
-         -->
         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit">
             {{onlinePaymentAccount.id?'Update':'Submit'}}
         </button>

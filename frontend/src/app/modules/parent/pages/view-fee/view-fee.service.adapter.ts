@@ -74,8 +74,6 @@ export class ViewFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
-            // Code Review
-            // Shouldn't there be a school filter applied in below api requests?
             this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}), // 13
             this.vm.feeService.getObjectList(this.vm.feeService.online_fee_payment_transaction, {}), //14
         ]).then(
@@ -141,8 +139,6 @@ export class ViewFeeServiceAdapter {
     async initiatePayment() {
         const totalAmount = this.vm.getTotalPaymentAmount();
 
-        // Code Review
-        // Good Commenting
         // ---------------- Data Validation ----------------
         if (totalAmount <= 0) {
             alert('Invalid amount');
@@ -198,9 +194,6 @@ export class ViewFeeServiceAdapter {
             orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`
         };
 
-        // Code Review
-        // Since this is a custom api, should we handle the Order and
-        // FeeReceiptOnlineOrder (you are calling it OnlinePaymentTransaction for now) in the same api?
         const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order_school, newOrder);
 
         const onlineFeePaymentTransactionList = [];

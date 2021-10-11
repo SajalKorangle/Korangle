@@ -5,9 +5,6 @@ from common.common_views_3 import CommonView, CommonListView, common_json_view_f
 # Remove update_object import
 # @answer : Done
 from common.common_serializer_interface_3 import create_object
-# Code Review
-# Remove user_permission_new import
-# @answer : Done
 from decorators import user_permission, user_permission_3
 from django.http import HttpResponse
 

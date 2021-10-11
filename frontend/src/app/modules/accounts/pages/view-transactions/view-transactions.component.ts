@@ -12,10 +12,6 @@ import { SchoolService } from './../../../../services/modules/school/school.serv
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
 import { HEADS_LIST } from './../../classes/constants';
 
-// Code Review
-// Please indent the whole file with 4 spaces instead of 2.
-// @answer  Done
-
 @Component({
     selector: 'view-transactions',
     templateUrl: './view-transactions.component.html',
@@ -180,8 +176,6 @@ export class ViewTransactionsComponent implements OnInit {
         this.filterColumnsList = columnFilter;
     }
 
-    // Code Review
-    // Can we create a html renderer file and shift this function there?
     getFilteredTransactionList(): any {
         let tempList = [];
         tempList = this.applyAccountFilter(this.transactionsList);

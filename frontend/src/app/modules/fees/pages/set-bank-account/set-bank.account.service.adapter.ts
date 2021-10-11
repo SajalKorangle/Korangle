@@ -31,8 +31,6 @@ export class SetBankAccountServiceAdapter {
 
         if (onlinePaymentAccount) {
             this.vm.onlinePaymentAccount = onlinePaymentAccount;
-            // Code Review
-            // Why are we verifying ifsc here?
             this.verifyIFSC();
         }
         this.vm.isLoading = false;
@@ -40,9 +38,6 @@ export class SetBankAccountServiceAdapter {
 
     async verifyIFSC() {
         this.vm.isIFSCLoading = true;
-        // Code Review
-        // Should you not be using the ifsc error function here?
-        // This 3 time ifsc verification is hard to understand. Please explain.
         if (this.vm.onlinePaymentAccount.vendorData.bank.ifsc.length == 11
             && (!this.vm.cache.ifsc || this.vm.cache.ifsc.ifsc != this.vm.onlinePaymentAccount.vendorData.bank.ifsc)) {
 
@@ -64,9 +59,6 @@ export class SetBankAccountServiceAdapter {
         this.vm.isLoading = true;
 
         const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
-        // Code Review
-        // Remove the console log statement, if not necessary.
-        console.log('newOnlinePayment Account: ', newOnlinePaymentAccount);
         await this.verifyIFSC();
         if (!this.vm.cache.ifsc) {
             alert('ifsc verification failed');

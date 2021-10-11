@@ -5,7 +5,6 @@ import json
 import requests
 import time
 
-# Code Review
 # Do you know why they didn't just use CASHFREE_APP_ID and CASHFREE_SECRET_KEY instead of CLIENT_ID & CLIENT_SECRET
 # for bearer token
 # @answer : They have microservice kind of an architecture where different services are completely disjoint
@@ -27,7 +26,6 @@ def getResponseSignature(postData):  # used for validating that a response indee
     )
     return signature
 
-# Code Review
 # Does this code has the possibility to be used in future?
 # @answer: Yes, it can be used in future when we introduce our won status check kind of thing to ensure every thing is working file. May be on our admin panel it will show the status checks
 # def verifyCredentials():
@@ -49,16 +47,10 @@ def getResponseSignature(postData):  # used for validating that a response indee
 #     assert response.json()['status'] == "OK", "invalid cashfree credentials: {0}".format(response.json())
 
 
-# Code Review
-# 1. 'comming' - Spelling is wrong
-# @answer : Fixed
 def getSignature(orderData):  # used to authenticate that the data is a valid data coming from korangle
     sortedKeys = sorted(orderData)
     signatureData = ""
     for key in sortedKeys:
-        # Code Review
-        # 1. Please indent with 4 spaces.
-        # 2. Previously you have not used key to create signatureData. Please confirm.
         signatureData += key+str(orderData[key])
 
     message = signatureData.encode('utf-8')
@@ -68,9 +60,8 @@ def getSignature(orderData):  # used to authenticate that the data is a valid da
     return signature.decode('utf-8')
 
 
-def createAndSignCashfreeOrder(data, orderId, vendorId):
+def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
 
-    # Code Review
     # Is it not required to mention the vendor id and amount for Korangle here?
     # @answer : No, the leftover amount will be settled in korangle's account
     paymentSplit = [
@@ -103,7 +94,7 @@ def createAndSignCashfreeOrder(data, orderId, vendorId):
     return orderData
 
 
-def createAndSignSelfCashfreeOrder(data, orderId):
+def createAndSignCashfreeOrderForKorangle(data, orderId):
 
     orderData = {}
     orderData.update(data)
@@ -162,19 +153,6 @@ def getOrderStatus(orderId, disableAssertion=False):
     return response.json()
 
 
-# Code Review
-# Does this code has the possibility to be used in future?
-# @answer: No, I don't think so. It should be removed. I am not removing it now otherwise the code the reason for this code review comment will be hard to recall.
-# def isOrderCompleted(orderId):
-#     result = False # either false or orderResonseData
-#     try:
-#         orderStatusData = getOrderStatus(orderId)
-#         assert orderStatusData['txStatus'] == 'SUCCESS'
-#         return orderStatusData
-#     except:
-#         pass
-#     return result
-
 def initiateRefund(orderId, splitData):
     orderStatusData = getOrderStatus(orderId)
     orderDetails = getOrderDetails(orderId)
@@ -203,15 +181,8 @@ def initiateRefund(orderId, splitData):
         headers=headers
     )
 
-    # Code Review
-    # Will the execution stop, if assertion fails?
-    # @answer: This assertion will raise an Assertion Exception. If this exception is not caught any where(try, catch), it will fail.
     assert response.json()['status'] == 'OK', 'Cashfree Refund Initiation Failed, response : {0}'.format(response.json())
     return response.json()
-
-# Code Review
-# What was the purpose of disable assertion? Doesn't seem to be called from anywhere.
-# @answer : It is used in cashfree_refund.py job that runs every day
 
 
 def getRefundStatus(refundId, disableAssertion=False):
@@ -359,10 +330,6 @@ def ifscVerification(ifsc):
         return response.json()['data']
     else:
         return None
-
-# Code Review
-# Jab sab jagah bankAccountVerification likha hai, to yahan par bhi wahi chalne do.
-# @answer : Done
 
 
 def bankAccountVerification(accountNumber, ifsc):

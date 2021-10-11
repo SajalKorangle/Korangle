@@ -164,18 +164,10 @@ class FeeSettingsListView(CommonListView, APIView):
 class OnlineFeePaymentTransactionView(CommonView, APIView):
     Model = OnlineFeePaymentTransaction
     RelationsToSchool = ['parentSchool__id']
-    # Code Review
-    # Is 'get' or 'post' being called from frontend or from anywhere else?
-    # If it is being called from cashfree then it needs to be in api free version url.
-    # @answer : It is called from frontend only
     permittedMethods = ['get', 'post']
 
 
 class OnlineFeePaymentTransactionListView(CommonListView, APIView):
     Model = OnlineFeePaymentTransaction
     RelationsToSchool = ['parentSchool__id']
-    # Code Review
-    # Is 'get' being called from frontend or from anywhere else?
-    # If it is being called from cashfree then it needs to be in api free version url.
-    # @answer : It is called from frontend only
     permittedMethods = ['get', 'post']
