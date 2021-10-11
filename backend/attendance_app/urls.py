@@ -33,12 +33,3 @@ urlpatterns += [
     url(r'^attendance-permission/batch', AttendancePermissionListView.as_view()),
     url(r'^attendance-permission', AttendancePermissionView.as_view()),
 ]
-
-from attendance_app.views import AttendanceSettingsListView, AttendanceSettingsView
-
-urlpatterns += [
-    url(r'^attendance-settings/batch', AttendanceSettingsListView.as_view()),
-    url(r'^attendance-settings', AttendanceSettingsView.as_view()),    
-]
-
-

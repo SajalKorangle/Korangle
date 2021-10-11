@@ -8,4 +8,5 @@ export class InformationService extends ServiceObject {
 
     // objects urls
     public message_type = '/message-type';
+    public send_update_type = '/send-update-type';
 }

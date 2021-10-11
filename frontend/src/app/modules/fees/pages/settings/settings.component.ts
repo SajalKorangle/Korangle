@@ -9,6 +9,8 @@ import { AccountSession } from '@services/modules/accounts/models/account-sessio
 import { SettingsServiceAdapter } from "./settings.service.adapter";
 import { SettingsBackendData } from './settings.backend.data';
 
+import {CommonFunctions} from '@classes/common-functions';
+
 @Component({
     selector: 'lock-fees',
     templateUrl: './settings.component.html',
@@ -28,6 +30,8 @@ export class SettingsComponent implements OnInit {
 
     backendData: SettingsBackendData;
     serviceAdapter: SettingsServiceAdapter;
+
+    commonFunctions = CommonFunctions.getInstance();
 
     isActiveSession: boolean;
     isLoading = false;

@@ -150,12 +150,12 @@ class SubDiscountListView(CommonListView, APIView):
 
 class FeeSettingsView(CommonView, APIView):
     Model = FeeSettings
-    RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
 
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
-    RelationsToSchool = ['parentSchool__id', 'fromAccount__parentSchool__id']
+    RelationsToSchool = ['parentSchool__id']
 
 
 ########### Transaction #############

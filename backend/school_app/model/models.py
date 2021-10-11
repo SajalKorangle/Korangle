@@ -88,7 +88,6 @@ class School(models.Model):
     currentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, verbose_name='currentSession', default=1)
     registrationNumber = models.TextField(null=False, default='426/13.01.1993')
     affiliationNumber = models.TextField(null=True, blank=True)
-    smsId = models.CharField(max_length=10, null=False, default='KORNGL', verbose_name='smsId')
 
     opacity = models.DecimalField(max_digits=3, decimal_places=2,null=False, verbose_name='opacity', default=0.1)
 

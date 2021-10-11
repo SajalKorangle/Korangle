@@ -21,11 +21,20 @@ const routes: Routes = [
         data: { moduleName: 'sms' },
     },
     {
+        path: 'manage_sms_id',
+        loadChildren: 'app/modules/sms/pages/manage-sms-id/manage-sms-id.module#ManageSmsIdModule',
+        data: { moduleName: 'sms' },
+    },
+    {
+        path: 'manage_templates',
+        loadChildren: 'app/modules/sms/pages/manage-templates/manage-templates.module#ManageTemplatesModule',
+        data: { moduleName: 'sms' },
+    },
+    {
         path: 'purchase_sms',
         loadChildren: 'app/modules/sms/pages/purchase-sms/purchase-sms.module#PurchaseSmsModule',
-        data: {moduleName: 'sms'},
+        data: { moduleName: 'sms' },
     },
-
     {
         path: '',
         component: SmsComponent,
@@ -36,4 +45,4 @@ const routes: Routes = [
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class SmsRoutingModule {}
+export class SmsRoutingModule { }

@@ -1,4 +1,4 @@
-import { ViewSentComponent } from './view-sent.component';
+import {ViewSentComponent} from './view-sent.component';
 
 export class ViewSentServiceAdapter {
     vm: ViewSentComponent;
@@ -12,34 +12,76 @@ export class ViewSentServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
-        Promise.all([this.vm.informationService.getObjectList(this.vm.informationService.message_type, {})]).then((value) => {
-            this.vm.messageTypeList = value[0];
+    async initializeData() {
+        this.vm.stateKeeper.isLoading = true;
+        Promise.all([this.vm.informationService.getObjectList(this.vm.informationService.message_type, {}),
+        this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {})]).then((value) => {
+            this.vm.backendData.messageTypeList = value[0];
+            this.vm.backendData.SMSEventList = value[1];
+            this.populateMessageTypeAndSMSEventList();
+            this.getSMSList();
+            this.vm.stateKeeper.isLoading = false;
         });
     }
 
+    async getSMSList() {
+        const data = {
+            startDateTime: this.vm.startDate.toString() + ' 00:00:00+05:30',
+            endDateTime: this.vm.endDate.toString() + ' 23:59:59+05:30',
+            parentSchool: this.vm.user.activeSchool.dbId,
+            sentStatus: 'PENDING',
+            sentStatus__or: 'SUCCESS',
+        };
+
+        this.vm.stateKeeper.isLoading = true;
+        this.vm.backendData.smsList = null;
+        this.vm.populatedSMSList = null;
+        const smsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms, data);
+        this.vm.stateKeeper.isLoading = false;
+        this.vm.backendData.smsList = smsList;
+        this.vm.populatedSMSList = JSON.parse(JSON.stringify(smsList));
+
+    }
+
+
     // Get Delivery Report
-    getDeliveryReport(sms: any): void {
+    async   getDeliveryReport(sms: any) {
+        sms['isLoading'] = true;
         if (sms.deliveryReportList) {
-            this.vm.selectedStatus = this.vm.getStatusList(sms)[0];
+            this.vm.userInput.selectedStatus = this.vm.getStatusList(sms)[0];
+            sms.isLoading = false;
             return;
         }
 
-        sms['isLoading'] = true;
+        if (sms.remark == 'FAILED' || sms.remark == 'ONLY NOTIFICATION') {
+            sms.isLoading = false;
+            return;
+        }
+
 
         let data = {
+            parentSMSDbId: sms.id,
             requestId: sms.requestId,
+            fetchedDeliveryStatus: sms.fetchedDeliveryStatus,
+            smsGateWayHubVendor: sms.smsGateWayHubVendor,
+            mobileNumberContentJson: sms.mobileNumberContentJson,
+            parentSMSId: sms.parentSMSId,
+            scheduledDateTime: sms.scheduledDateTime
         };
 
-        this.vm.smsService.getMsgClubDeliveryReport(data).then(
-            (value) => {
-                sms['deliveryReportList'] = value;
-                this.vm.selectedStatus = this.vm.getStatusList(sms)[0];
-                sms.isLoading = false;
-            },
-            (error) => {
-                sms.isLoading = false;
-            }
-        );
+        sms['deliveryReportList'] = await this.vm.smsService.getObjectList(this.vm.smsService.sms_delivery_report, data);
+        this.vm.userInput.selectedStatus = this.vm.getStatusList(sms)[0];
+        sms.isLoading = false;
+    }
+
+    populateMessageTypeAndSMSEventList(): void {
+        this.vm.populatedSMSEventList = JSON.parse(JSON.stringify(this.vm.backendData.SMSEventList));
+        this.vm.populatedSMSEventList.forEach(event => {
+            event['selected'] = true;
+        });
+        this.vm.populatedMessageTypeList = JSON.parse(JSON.stringify(this.vm.backendData.messageTypeList));
+        this.vm.populatedMessageTypeList.forEach(type => {
+            type['selected'] = true;
+        });
     }
 }

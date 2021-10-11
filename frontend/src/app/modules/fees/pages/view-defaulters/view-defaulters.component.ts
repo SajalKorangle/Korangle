@@ -1,29 +1,32 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ViewDefaultersServiceAdapter } from './view-defaulters.service.adapter';
-import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { SmsService } from '../../../../services/modules/sms/sms.service';
-import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { NotificationService } from '../../../../services/modules/notification/notification.service';
-import { UserService } from '../../../../services/modules/user/user.service';
-import { INSTALLMENT_LIST } from '../../classes/constants';
-import { ExcelService } from '../../../../excel/excel-service';
-import { DataStorage } from '../../../../classes/data-storage';
-import { SchoolService } from '../../../../services/modules/school/school.service';
-import { PrintService } from '../../../../print/print-service';
-import { PRINT_FEES_REPORT } from '../../print/print-routes.constants';
-import { isMobile } from '../../../../classes/common.js';
+import {ChangeDetectorRef, Component, ViewChild, OnInit} from '@angular/core';
+import {ViewDefaultersServiceAdapter} from './view-defaulters.service.adapter';
+import {FeeService} from '../../../../services/modules/fees/fee.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
+import {SmsService} from '../../../../services/modules/sms/sms.service';
+import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
+import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {UserService} from '../../../../services/modules/user/user.service';
+import {INSTALLMENT_LIST} from '../../classes/constants';
+import {ExcelService} from '../../../../excel/excel-service';
+import {DataStorage} from '../../../../classes/data-storage';
+import {SchoolService} from '../../../../services/modules/school/school.service';
+import {PrintService} from '../../../../print/print-service';
+import {PRINT_FEES_REPORT} from '../../print/print-routes.constants';
+import {ViewDefaultersHtmlRenderer} from '@modules/fees/pages/view-defaulters/view-defaulters.html.renderer';
+import {MessageService} from '@services/message-service';
+import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FeeType } from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
+import {InformationService} from '@services/modules/information/information.service';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService],
+    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService, InformationService],
     //animation for row expansion on clicking row on mat table
     animations: [
         trigger('detailExpand', [
@@ -48,9 +51,6 @@ export class ViewDefaultersComponent implements OnInit {
     lateFeeVisible = true;
     sessionListWithDues = [];
 
-
-
-
     installmentList = INSTALLMENT_LIST;
 
     NULL_CONSTANT = null;
@@ -62,18 +62,13 @@ export class ViewDefaultersComponent implements OnInit {
     sessionList = [];
 
     STUDENT_LIMITER = 200;
+    NOTIFY_DEFAULTERS_EVENT_DBID = 4;
 
     nullValue = null;
 
     user;
 
-    sentTypeList = ['SMS', 'NOTIFICATION', 'NOTIF./SMS'];
-
-    studentMessage = "Hi <fathersName>,\n<name>'s fees due till date is <feesDueTillMonth>";
-    parentMessage = 'Hi <name>,\nYour fees due till date is <feesDueTillMonth>\n<childrenData>';
-
-    selectedSentType = 'SMS';
-    extraDefaulterMessage = '';
+    defaultersPageVariables = VARIABLE_MAPPED_EVENT_LIST.find(x => x.eventId == this.NOTIFY_DEFAULTERS_EVENT_DBID).variableList;
 
     smsBalance = 0;
 
@@ -88,16 +83,13 @@ export class ViewDefaultersComponent implements OnInit {
     studentParameterList: any;
     studentParameterValueList: any;
 
-    notif_usernames = [];
-
     parentList = [];
 
     filterTypeList = ['Student', 'Parent'];
 
     selectedFilterType = this.filterTypeList[0];
 
-    // d1 = new Date();
-    // d2 = new Date();
+    messageService: any;
 
     installmentNumber = 0;
 
@@ -106,8 +98,35 @@ export class ViewDefaultersComponent implements OnInit {
 
     selectedClassSection = null;
     filteredClassSectionList = [];
+    dataForMapping =  {} as any;
+
+    SEND_UPDATE_SMS_TYPE_DBID = 2;
+    SEND_UPDATE_NOTIFICATION_TYPE_DBID = 3;
+    SEND_UPDATE_SMS_AND_NOTIFICATION_TYPE_DBID = 4;
+
+    message = '';
+
+    userInput = {
+        selectedTemplate: {} as any,
+        selectedSendUpdateType: {} as any,
+        scheduleSMS: false,
+        scheduledDate: null,
+        scheduledTime: null,
+    };
+
+    backendData = {
+        smsIdList: [],
+        templateList: [],
+        eventSettingsList: [],
+        smsIdSchoolList: [],
+        sendUpdateTypeList: [],
+        defaultersSMSEvent: {} as any
+    };
+
+    populatedTemplateList = [];
 
     serviceAdapter: ViewDefaultersServiceAdapter;
+    htmlRenderer: ViewDefaultersHtmlRenderer;
 
     currentSession: any;
 
@@ -117,11 +136,6 @@ export class ViewDefaultersComponent implements OnInit {
     columnsToDisplay = ['select', 's.no', 'name', 'fathersName', 'class.name', 'section.name', 'mobileNumber', 'secondMobileNumber', 'feesDueTillMonth', `feesDueOverall`];
 
     feesDueBySession = [];
-
-
-
-
-
 
     constructor(
         public schoolService: SchoolService,
@@ -133,6 +147,7 @@ export class ViewDefaultersComponent implements OnInit {
         public userService: UserService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
+        public informationService: InformationService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) {}
@@ -140,9 +155,14 @@ export class ViewDefaultersComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
+
         this.serviceAdapter = new ViewDefaultersServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new ViewDefaultersHtmlRenderer();
+        this.htmlRenderer.initializeAdapter(this);
 
         const monthNumber = new Date().getMonth();
         this.installmentNumber = monthNumber > 2 ? monthNumber - 3 : monthNumber + 9;
@@ -160,25 +180,6 @@ export class ViewDefaultersComponent implements OnInit {
             return true;
         }
         return false;
-    }
-
-    policeNumberInput(event: any): boolean {
-        let value = event.key;
-        if (
-            value !== '0' &&
-            value !== '1' &&
-            value !== '2' &&
-            value !== '3' &&
-            value !== '4' &&
-            value !== '5' &&
-            value !== '6' &&
-            value !== '7' &&
-            value !== '8' &&
-            value !== '9'
-        ) {
-            return false;
-        }
-        return true;
     }
 
     handleLoading(): void {
@@ -515,22 +516,6 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
-    getStudentString = (studentList) => {
-        let ret = '';
-        studentList.forEach((student) => {
-            ret += student.name + ': ' + this.getCurrencyInINR(student.feesDueTillMonth) + '\n';
-        });
-        return ret;
-    }
-
-    getMessageFromTemplate = (message, obj) => {
-        let ret = message;
-        for (let key in obj) {
-            ret = ret.replace('<' + key + '>', obj[key]);
-        }
-        return ret;
-    }
-
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
             if (message.charCodeAt(i) > 127) {
@@ -548,52 +533,6 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
-    notifyDefaulters(): void {
-        if (this.selectedFilterType == this.filterTypeList[0]) {
-            let message = this.studentMessage;
-            if (this.extraDefaulterMessage) {
-                message += '\n' + this.extraDefaulterMessage;
-            }
-            let test = this.getFilteredStudentList().filter((item) => {
-                return item.selected;
-            });
-            let mobile_numbers = test
-                .filter((item) => item.mobileNumber)
-                .map((obj) => {
-                    return {
-                        fathersName: obj.fathersName,
-                        name: obj.name,
-                        mobileNumber: obj.mobileNumber,
-                        notification: obj.notification,
-                        feesDueTillMonth: this.getCurrencyInINR(obj.feesDueTillMonth),
-                        feesDueOverall: this.getCurrencyInINR(obj.feesDueOverall),
-                    };
-                });
-            this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
-        } else {
-            let message = this.parentMessage;
-            if (this.extraDefaulterMessage) {
-                message += this.extraDefaulterMessage;
-            }
-            let test = this.getFilteredParentList().filter((item) => {
-                return item.selected;
-            });
-            let mobile_numbers = test
-                .filter((item) => item.mobileNumber)
-                .map((obj) => {
-                    return {
-                        name: obj.name,
-                        mobileNumber: obj.mobileNumber,
-                        notification: obj.notification,
-                        feesDueTillMonth: this.getCurrencyInINR(this.getParentFeesDueTillMonth(obj)),
-                        feesDueOverall: this.getCurrencyInINR(this.getParentFeesDueOverall(obj)),
-                        childrenData: this.getStudentString(obj.studentList),
-                    };
-                });
-            this.serviceAdapter.sendSMSNotificationDefaulter(mobile_numbers, message);
-        }
-    }
-
     getParameterValue = (student, parameter) => {
         try {
             return this.studentParameterValueList.find((x) => x.parentStudent === student.id && x.parentStudentParameter === parameter.id)
@@ -601,15 +540,6 @@ export class ViewDefaultersComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    }
-
-    getFilteredFilterValues(parameter: any): any {
-        if (parameter.filterFilterValues === '') {
-            return parameter.filterValues;
-        }
-        return parameter.filterValues.filter((x) => {
-            return x.name.includes(parameter.filterFilterValues);
-        });
     }
 
     getFilteredStudentList(): any {
@@ -651,36 +581,6 @@ export class ViewDefaultersComponent implements OnInit {
         return tempList;
     }
 
-    selectAllHandler = () => {
-        if (this.selectedFilterType == this.filterTypeList[0]) {
-            this.getFilteredStudentList().forEach((item) => {
-                item.selected = true;
-            });
-        } else {
-            this.getFilteredParentList().forEach((item) => {
-                item.selected = true;
-            });
-        }
-    }
-
-    clearAllHandler = () => {
-        if (this.selectedFilterType == this.filterTypeList[0]) {
-            this.getFilteredStudentList().forEach((item) => {
-                item.selected = false;
-            });
-        } else {
-            this.getFilteredParentList().forEach((item) => {
-                item.selected = false;
-            });
-        }
-    }
-
-    getFilteredStudentListFeesDueTillMonth(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
-            return total + student.feesDueTillMonth;
-        }, 0);
-    }
-
     getCurrentSessionName() {
         return this.sessionList.find((session) => {
             return session.id == this.user.activeSchool.currentSessionDbId;
@@ -709,9 +609,9 @@ export class ViewDefaultersComponent implements OnInit {
         }, 0);
     }
 
-    getFilteredParentListFeesDueTillMonth(): any {
-        return this.getFilteredParentList().reduce((total, parent) => {
-            return total + this.getParentFeesDueTillMonth(parent);
+    getParentTotalFees(parent: any): any {
+        return parent.studentList.reduce((total, student) => {
+            return total + student['totalFeesThisSession'];
         }, 0);
     }
 
@@ -720,92 +620,15 @@ export class ViewDefaultersComponent implements OnInit {
             return total + student['feesDueOverall'];
         }, 0);
     }
-    getFilteredParentFeesDueOverall(): any {
-        return this.getFilteredParentList().reduce((total, parent) => {
-            return (
-                total +
-                parent.studentList.reduce((total, student) => {
-                    return total + student['feesDueOverall'];
-                }, 0)
-            );
-        }, 0);
-    }
 
     getParentFeesPaid(parent: any): any {
         return parent.studentList.reduce((total, student) => {
             return total + student['feesPaidThisSession'];
         }, 0);
     }
-    getFilteredParentTotalFeesPaid(): any {
-        return this.getFilteredParentList().reduce((total, parent) => {
-            return (
-                total +
-                parent.studentList.reduce((total, student) => {
-                    return total + student['feesPaidThisSession'];
-                }, 0)
-            );
-        }, 0);
-    }
 
     getParentDiscount(parent: any): any {
         return parent.studentList.reduce((total, student) => {
-            return total + student['discountThisSession'];
-        }, 0);
-    }
-
-    getFilteredParentTotalDiscount(): any {
-        return this.getFilteredParentList().reduce((total, parent) => {
-            return (
-                total +
-                parent.studentList.reduce((total, student) => {
-                    return total + student['discountThisSession'];
-                }, 0)
-            );
-        }, 0);
-    }
-
-    getParentTotalFees(parent: any): any {
-        return parent.studentList.reduce((total, student) => {
-            return total + student['totalFeesThisSession'];
-        }, 0);
-    }
-
-    getFilteredParentTotalFees(): any {
-        return this.getFilteredParentList().reduce((total, parent) => {
-            return (
-                total +
-                parent.studentList.reduce((total, student) => {
-                    return total + student['totalFeesThisSession'];
-                }, 0)
-            );
-        }, 0);
-    }
-
-    getFilteredStudentListTotalFeesDueTillMonth(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
-            return total + student['feesDueTillMonth'];
-        }, 0);
-    }
-
-    getFilteredStudentListTotalFeesDue(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
-            return total + student['feesDueOverall'];
-        }, 0);
-    }
-    getFilteredStudentListTotalFeesDemand(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
-            return total + student['totalFeesThisSession'];
-        }, 0);
-    }
-
-    getFilteredStudentListTotalFeesPaid(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
-            return total + student['feesPaidThisSession'];
-        }, 0);
-    }
-
-    getFilteredStudentListTotalDiscount(): any {
-        return this.getFilteredStudentList().reduce((total, student) => {
             return total + student['discountThisSession'];
         }, 0);
     }
@@ -816,24 +639,6 @@ export class ViewDefaultersComponent implements OnInit {
         } else {
             this.printParentFeesReport();
         }
-    }
-
-    downloadFeesReport(): void {
-        if (this.selectedFilterType == this.filterTypeList[0]) {
-            this.downloadStudentFeesReport();
-        } else {
-            this.downloadParentFeesReport();
-        }
-    }
-
-    getSelectedParentCount = () => {
-        return this.getFilteredParentList().filter((item) => {
-            return item.selected && item.selected == true;
-        }).length;
-    }
-
-    getSelectedChildrenCount = () => {
-        return this.getFilteredStudentList().filter((item) => item.selected).length;
     }
 
     printStudentFeesReport(): void {
@@ -1023,85 +828,83 @@ export class ViewDefaultersComponent implements OnInit {
         this.excelService.downloadFile(template, 'korangle_parent_fees.csv');
     }
 
-    getExtraMessageLength = () => {
-        return this.extraDefaulterMessage.length;
-    }
-
-    getNumberOfMobileDevice = () => {
-        if (this.selectedFilterType == this.filterTypeList[0]) {
-            return this.getFilteredStudentList().filter((item) => {
-                return item.mobileNumber && item.selected;
-            }).length;
-        } else {
-            return this.getFilteredParentList().filter((item) => {
-                return item.mobileNumber && item.selected;
-            }).length;
-        }
-    }
-
     getEstimatedNotificationCount = () => {
         let count = 0;
-        if (this.selectedSentType == this.sentTypeList[0]) return 0;
+        let studentList = [];
+        if (this.userInput.selectedSendUpdateType.id == this.SEND_UPDATE_SMS_TYPE_DBID) {
+            return 0;
+        }
         if (this.selectedFilterType == this.filterTypeList[0]) {
-            count = this.getFilteredStudentList().filter((item) => {
+            this.getFilteredStudentList().filter((item) => {
                 return item.mobileNumber && item.selected && item.notification;
-            }).length;
+            }).forEach(student => {
+                if (!this.messageService.checkForDuplicate(this.defaultersPageVariables,
+                    studentList, this.dataForMapping, student, this.message, 'student')) {
+                    count++;
+                    studentList.push(student);
+                }
+            });
         } else {
-            count = this.getFilteredParentList().filter((item) => {
-                return item.mobileNumber && item.selected && item.notification;
-            }).length;
+            this.getFilteredParentList().filter((item) => {
+                return item.mobileNumber && item.selected;
+            }).forEach(parent => {
+                parent.studentList.forEach(student => {
+                    if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList,
+                        this.dataForMapping, student, this.message, 'student')) {
+                        count++;
+                        studentList.push(student);
+                    }
+                });
+            });
         }
         return count;
     }
 
     getEstimatedSMSCount = () => {
         let count = 0;
-        if (this.selectedSentType == this.sentTypeList[1]) return 0;
+        let studentList = [];
+        if (this.userInput.selectedSendUpdateType.id == this.SEND_UPDATE_NOTIFICATION_TYPE_DBID) {
+            return 0;
+        }
         if (this.selectedFilterType == this.filterTypeList[0]) {
+            this.dataForMapping['studentList'] = this.getFilteredStudentList().filter((item) => item.mobileNumber && item.selected);
             this.getFilteredStudentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
-                    if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
-                        count += this.getMessageCount(
-                            this.getMessageFromTemplate(this.studentMessage, item) + '\n' + this.extraDefaulterMessage
-                        );
+                    if (this.userInput.selectedSendUpdateType.id == this.SEND_UPDATE_SMS_TYPE_DBID || item.notification == false) {
+                        if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList,
+                            this.dataForMapping, item, this.message, 'student'))
+                        {
+                            count += this.getMessageCount(
+                                this.messageService.getMessageFromTemplate(this.message,
+                                    this.messageService.getMappingData(this.defaultersPageVariables, this.dataForMapping, 'student', item))
+                            );
+                            studentList.push(item);
+                        }
                     }
                 });
         } else {
             this.getFilteredParentList()
                 .filter((item) => item.mobileNumber && item.selected)
                 .forEach((item, i) => {
-                    if (this.selectedSentType == this.sentTypeList[0] || item.notification == false) {
-                        count += this.getMessageCount(
-                            this.getMessageFromTemplate(this.parentMessage, item) + '\n' + this.extraDefaulterMessage
-                        );
+                    if (this.userInput.selectedSendUpdateType.id == this.SEND_UPDATE_SMS_TYPE_DBID || item.notification == false) {
+                        this.dataForMapping['studentList'] = item.studentList;
+                        item.studentList.forEach(student => {
+                        if (!this.messageService.checkForDuplicate(this.defaultersPageVariables, studentList, this.dataForMapping, student, this.message, 'student'))
+                        {
+                            count += this.getMessageCount(
+                                this.messageService.getMessageFromTemplate(this.message,
+                                    this.messageService.getMappingData(this.defaultersPageVariables, this.dataForMapping, 'student', student))
+                            );
+                            studentList.push(student);
+                        }
+                        });
                     }
                 });
         }
         return count;
     }
-
-    getButtonText(): any {
-        return 'Send ' + this.getEstimatedSMSCount() + ' SMS and ' + this.getEstimatedNotificationCount() + ' notifications';
-    }
-
-    getCurrencyInINR = (data) => {
-        return 'Rs. ' + Number(data).toLocaleString('en-IN');
-    }
-
-    isMobile(): boolean {
-        return isMobile();
-    }
-
-    hasPermission(): boolean {
-        let moduleIdx = this.user.activeSchool.moduleList.findIndex((module) => module.path == 'fees');
-
-        if (this.user.activeSchool.moduleList[moduleIdx].taskList.findIndex((task) => task.path == 'generate_fees_report') == -1)
-            return false;
-
-        return true;
-    }
-    showOrHideStudentFeeDetails(studentFee: any): void {
+ showOrHideStudentFeeDetails(studentFee: any): void {
         if (
             this.studentFeeDetailsVisibleList.find((item) => {
                 return item == studentFee.id;

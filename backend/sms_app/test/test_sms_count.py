@@ -24,10 +24,6 @@ class SMSTestCase(ParentTestCase):
 
         sms_purchase_list.extend(SMSPurchaseFactory.create_batch(3, parentSchool=school_object, numberOfSMS=1000))
 
-        data = {
-            'parentSchool': school_object.id,
-        }
-
-        response = get_sms_count(data)
+        response = get_sms_count(school_object.id)
 
         self.assertEqual(response['count'], 2700)

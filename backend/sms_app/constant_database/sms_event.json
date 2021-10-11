@@ -1,0 +1,19 @@
+[
+  {"id":1, "eventName":"Student General SMS", "defaultSMSTemplateId": null, "defaultNotificationContent":null},
+  {"id":2, "eventName":"Employee General SMS", "defaultSMSTemplateId": null, "defaultNotificationContent":null},
+  {"id":3, "eventName":"Common General SMS", "defaultSMSTemplateId": null, "defaultNotificationContent":null},
+  {"id":4, "eventName":"Notify Defaulters", "defaultSMSTemplateId": null, "defaultNotificationContent":null},
+  {"id":5, "eventName":"Attendance Creation", "defaultSMSTemplateId": 1, "defaultNotificationContent":"Your ward, {#studentName#} is marked {#attendanceStatus#} on {#attendanceDate#}"},
+  {"id":6, "eventName":"Attendance Updation", "defaultSMSTemplateId": 2, "defaultNotificationContent":"Your ward's attendance has been corrected to {#attendanceStatus#} korngl"},
+  {"id":7, "eventName":"Homework Creation", "defaultSMSTemplateId": 3, "defaultNotificationContent":"New Homework is added in {#subject#},Title -\n '{#homeworkName#}' Last date to submit -\n {#deadLine#}"},
+  {"id":8, "eventName":"Homework Updation", "defaultSMSTemplateId": 4, "defaultNotificationContent":"Please note, there are changes in the Homework '{#homeworkName#}' of {#subject#}'"},
+  {"id":9, "eventName":"Homework Deletion", "defaultSMSTemplateId": 5, "defaultNotificationContent":"Please note, the homework '{#homeworkName#}' of subject {#subject#} has been removed"},
+  {"id":10, "eventName":"Homework Checked", "defaultSMSTemplateId": 6, "defaultNotificationContent":"Your Homework {#homeworkName#} of Subject {#subject#} has been checked"},
+  {"id":11, "eventName":"Homework Resubmission", "defaultSMSTemplateId": 7, "defaultNotificationContent":"Your Homework {#homeworkName#} of Subject {#subject#} has been asked for resubmission"},
+  {"id":12, "eventName":"Tutorial Creation", "defaultSMSTemplateId": 8, "defaultNotificationContent":"A new tutorial has been created in the Subject {#subject#};"},
+  {"id":13, "eventName":"Tutorial Updation", "defaultSMSTemplateId": 9, "defaultNotificationContent":"The following tutorial has been edited -\n Topic {#tutorialTopic#}; Subject {#subject#}; Chapter {#tutorialChapter#}"},
+  {"id":14, "eventName":"Tutorial Deletion", "defaultSMSTemplateId": 10, "defaultNotificationContent":"The following tutorial has been deleted -\n Topic {#tutorialTopic#};"},
+  {"id":15, "eventName":"Event Gallery Creation", "defaultSMSTemplateId": 11, "defaultNotificationContent":"A New Event {#eventTitle#} has been posted, view the event details in Event Gallery page"},
+  {"id":16, "eventName":"Event Gallery Updation", "defaultSMSTemplateId": 12, "defaultNotificationContent":"The Event {#eventTitle#} has been updated/edited, view the event details in Event Gallery page"},
+  {"id":17, "eventName":"Event Gallery Deletion", "defaultSMSTemplateId": 13, "defaultNotificationContent":"The Event {#eventTitle#} has been removed from the event list"}
+]

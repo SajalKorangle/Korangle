@@ -1,3 +1,0 @@
-[
-	{ "model": "attendance_app.attendancesettings", "pk": 1, "fields": { "parentSchool": 1 , "sentUpdateType": "NULL", "receiverType": "Only Absent Students" } }
-]

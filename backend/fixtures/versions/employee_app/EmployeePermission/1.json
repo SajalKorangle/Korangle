@@ -77,11 +77,8 @@
 	{ "model": "employee_app.employeepermission", "pk": 76, "fields": { "parentEmployee": 1, "parentTask": 96 } },
 	{ "model": "employee_app.employeepermission", "pk": 77, "fields": { "parentEmployee": 1, "parentTask": 97 } },
 	{ "model": "employee_app.employeepermission", "pk": 78, "fields": { "parentEmployee": 1, "parentTask": 98 } },
-	{ "model": "employee_app.employeepermission", "pk": 79, "fields": { "parentEmployee": 1, "parentTask": 99 } },
 	{ "model": "employee_app.employeepermission", "pk": 80, "fields": { "parentEmployee": 1, "parentTask": 100 } },
-	{ "model": "employee_app.employeepermission", "pk": 81, "fields": { "parentEmployee": 1, "parentTask": 101 } },
 	{ "model": "employee_app.employeepermission", "pk": 82, "fields": { "parentEmployee": 1, "parentTask": 102 } },
-	{ "model": "employee_app.employeepermission", "pk": 83, "fields": { "parentEmployee": 1, "parentTask": 103 } },
 	{ "model": "employee_app.employeepermission", "pk": 84, "fields": { "parentEmployee": 1, "parentTask": 104 } },
 	{ "model": "employee_app.employeepermission", "pk": 85, "fields": { "parentEmployee": 1, "parentTask": 105 } },
 	{ "model": "employee_app.employeepermission", "pk": 86, "fields": { "parentEmployee": 1, "parentTask": 106 } },
@@ -93,5 +90,7 @@
 	{ "model": "employee_app.employeepermission", "pk": 92, "fields": { "parentEmployee": 1, "parentTask": 112 } },
 	{ "model": "employee_app.employeepermission", "pk": 93, "fields": { "parentEmployee": 1, "parentTask": 113 } },
 	{ "model": "employee_app.employeepermission", "pk": 94, "fields": { "parentEmployee": 1, "parentTask": 114 } },
-	{ "model": "employee_app.employeepermission", "pk": 95, "fields": { "parentEmployee": 1, "parentTask": 115 } }
+	{ "model": "employee_app.employeepermission", "pk": 95, "fields": { "parentEmployee": 1, "parentTask": 115 } },
+	{ "model": "employee_app.employeepermission", "pk": 96, "fields": { "parentEmployee": 1, "parentTask": 116 } },
+	{ "model": "employee_app.employeepermission", "pk": 97, "fields": { "parentEmployee": 1, "parentTask": 117 } }
 ]

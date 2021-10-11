@@ -1,48 +1,21 @@
 import { SendSmsComponent } from './send-sms.component';
+import moment = require('moment');
+
 
 export class SendSmsServiceAdapter {
-    classList: any;
-    sectionList: any;
 
     vm: SendSmsComponent;
     purchasedSMS: number = 0;
+    generalSMSEventIdList = [1, 2, 3];
 
     constructor() { }
-
-    // Data
 
     initializeAdapter(vm: SendSmsComponent): void {
         this.vm = vm;
     }
 
-    getAllStringMobileNumberList(): any {
-        let mobileNumberList = [];
-        this.vm.studentSectionList.forEach((studentSection) => {
-            if (studentSection.selected) {
-                if (mobileNumberList.indexOf(studentSection.student.mobileNumber) === -1) {
-                    mobileNumberList.push(studentSection.student.mobileNumber.toString());
-                }
-                if (this.vm.isMobileNumberValid(studentSection.student.secondMobileNumber)) {
-                    if (mobileNumberList.indexOf(studentSection.student.secondMobileNumber) === -1) {
-                        mobileNumberList.push(studentSection.student.secondMobileNumber.toString());
-                    }
-                }
-            }
-        });
-        this.vm.employeeList.forEach((employee) => {
-            if (employee.selected) {
-                if (this.vm.isMobileNumberValid(employee.mobileNumber)) {
-                    if (mobileNumberList.indexOf(employee.mobileNumber) === -1) {
-                        mobileNumberList.push(employee.mobileNumber.toString());
-                    }
-                }
-            }
-        });
-        return mobileNumberList;
-    }
-
     //initialize data
-    initializeData(): void {
+    async initializeData() {
         let student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -66,104 +39,87 @@ export class SendSmsServiceAdapter {
             fields__korangle: 'id,name,fathersName,mobileNumber',
         };
 
-        this.vm.isLoading = true;
+        this.vm.stateKeeper.isLoading = true;
 
-        Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),
-            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
+        const value = await Promise.all([
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
+            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //2
+            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //3
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data), //4
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //5
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, { //6
                 parentSchool: this.vm.user.activeSchool.dbId,
                 parameterType: 'FILTER',
             }),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {
-                'parentStudentParameter__parentSchool': this.vm.user.activeSchool.dbId,
-                'parentStudentParamter__parameterType': 'FILTER'
-            })
-        ]).then(value => {
-            this.classList = value[0];
-            this.sectionList = value[1];
-            this.vm.studentSectionList = value[2];
-            this.populateStudentList(value[3]);
-            this.populateEmployeeList(value[4]);
-            this.vm.smsBalance = value[5].count;
-            this.vm.studentParameterList = value[6]
-                .map(x => ({
-                    ...x,
-                    filterValues: JSON.parse(x.filterValues).map(x => ({ name: x, show: false })),
-                    showNone: false,
-                    filterFilterValues: ''
-                }));
-            this.vm.studentParameterValueList = value[7];
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, { //7
+                parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
+                parentStudentParamter__parameterType: 'FILTER',
+            }),
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, { parentSchool: this.vm.user.activeSchool.dbId }), //8
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {
+                id__in: this.generalSMSEventIdList.join(',')
+            }), //9
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {
+                SMSEventId__in: this.generalSMSEventIdList.join(",")
+            }), //10
+            this.vm.informationService.getObjectList(this.vm.informationService.send_update_type, {}) //11
+        ]);
 
-            this.populateClassSectionList();
-            this.populateStudentSectionList();
+        this.vm.backendData.classList = value[0];
+        this.vm.backendData.sectionList = value[1];
 
-            let stringMobileNumberList = this.getAllStringMobileNumberList();
+        this.vm.dataForMapping['classList'] = value[0];
+        this.vm.dataForMapping['divisionList'] = value[1];
+        this.vm.dataForMapping['studentSectionList'] = value[2];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
 
-            let service_list = [];
+        this.vm.studentSectionList = value[2];
+        this.vm.backendData.studentList = value[3];
+        this.populateEmployeeList(value[4]);
+        this.vm.backendData.smsBalance = value[5].count;
 
-            let iterationCount = Math.ceil(stringMobileNumberList.length / this.vm.NUM_OF_MOBILE_NO);
+        this.vm.studentParameterList = value[6].map((x) => ({
+            ...x,
+            filterValues: JSON.parse(x.filterValues).map((x) => ({ name: x, show: false })),
+            showNone: false,
+            filterFilterValues: '',
+        }));
 
-            let loopVariable = 0;
-            while (loopVariable < iterationCount) {
-                let gcm_device_data = {
-                    user__username__in: stringMobileNumberList.slice(
-                        this.vm.NUM_OF_MOBILE_NO * loopVariable,
-                        this.vm.NUM_OF_MOBILE_NO * (loopVariable + 1)
-                    ),
-                    active: 'true__boolean',
-                };
+        this.vm.studentParameterValueList = value[7];
+        this.vm.backendData.smsIdSchool = value[8];
+        this.vm.backendData.generalSMSEventList = value[9];
+        this.vm.backendData.eventSettingList = value[10];
+        this.vm.backendData.sendUpdateTypeList = value[11].filter(x => x.name != "NULL");
+        this.vm.userInput.selectedSendUpdateType = this.vm.backendData.sendUpdateTypeList[0];
 
-                let user_data = {
-                    fields__korangle: 'username,id',
-                    username__in: stringMobileNumberList.slice(
-                        this.vm.NUM_OF_MOBILE_NO * loopVariable,
-                        this.vm.NUM_OF_MOBILE_NO * (loopVariable + 1)
-                    ),
-                };
+        this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
+            id__in: this.vm.backendData.smsIdSchool.map(a => a.parentSMSId),
+            smsIdStatus: 'ACTIVATED'
+        });
+        this.vm.backendData.templateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, {
+            id__in: this.vm.backendData.eventSettingList.map(a => a.parentSMSTemplate),
+            'korangle__order': '-id',
+        });
 
-                service_list.push(this.vm.notificationService.getObjectList(this.vm.notificationService.gcm_device, gcm_device_data));
-                service_list.push(this.vm.userService.getObjectList(this.vm.userService.user, user_data));
+        this.populateClassSectionList();
+        this.populateStudentSectionList();
+        this.populateTemplateList();
 
-                loopVariable = loopVariable + 1;
-            }
+        this.vm.userInput.selectedSendTo = this.vm.sendToList[0];
+        this.vm.stateKeeper.isLoading = false;
+    }
 
-
-            Promise.all(service_list).then(value2 => {
-
-                let gcmDeviceList = [];
-                let userList = [];
-
-                let loopVariable = 0;
-                while (loopVariable < iterationCount) {
-                    gcmDeviceList = gcmDeviceList.concat(value2[loopVariable * 2]);
-                    userList = userList.concat(value2[loopVariable * 2 + 1]);
-                    loopVariable = loopVariable + 1;
-                }
-
-                this.vm.gcmDeviceList = gcmDeviceList;
-                this.populateFilteredUserList(userList);
-
-                this.vm.isLoading = false;
-            },
-                (error) => {
-                    this.vm.isLoading = false;
-                }
-            );
-        },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+    populateTemplateList(): void {
+        this.vm.populatedTemplateList = this.vm.backendData.templateList;
+        this.vm.populatedTemplateList.forEach(template => {
+            template['selected'] = false;
+        });
     }
 
     populateClassSectionList(): void {
-        this.classList.forEach((classs) => {
-            this.sectionList.forEach((section) => {
+        this.vm.backendData.classList.forEach((classs) => {
+            this.vm.backendData.sectionList.forEach((section) => {
                 if (
                     this.vm.studentSectionList.find((studentSection) => {
                         return studentSection.parentClass == classs.id && studentSection.parentDivision == section.id;
@@ -179,123 +135,81 @@ export class SendSmsServiceAdapter {
         });
     }
 
-    populateStudentList(studentList: any): void {
-        this.vm.studentList = studentList;
-    }
-
     populateEmployeeList(employeeList: any): void {
         this.vm.employeeList = employeeList;
         this.vm.employeeList.forEach((employee) => {
             employee['selected'] = true;
             employee['validMobileNumber'] = this.vm.isMobileNumberValid(employee.mobileNumber);
         });
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.backendData.studentList.concat(this.vm.employeeList));
     }
 
     populateStudentSectionList(): void {
         this.vm.studentSectionList.forEach((studentSection) => {
-            studentSection['student'] = this.vm.studentList.find((student) => {
+            studentSection['student'] = this.vm.backendData.studentList.find((student) => {
                 return student.id == studentSection.parentStudent;
             });
             studentSection['validMobileNumber'] = this.vm.isMobileNumberValid(studentSection['student'].mobileNumber);
-            if (studentSection['validMobileNumber']) {
-                studentSection['selected'] = true;
-            } else {
-                studentSection['selected'] = false;
-            }
+            studentSection['selected'] = !!studentSection['validMobileNumber'];
         });
         this.vm.studentSectionList = this.vm.studentSectionList.sort((a, b) => {
             return (
                 10 *
-                (this.classList.find((item) => item.id == a.parentClass).orderNumber -
-                    this.classList.find((item) => item.id == b.parentClass).orderNumber) +
-                (this.sectionList.find((item) => item.id == a.parentDivision).orderNumber = this.sectionList.find(
+                (this.vm.backendData.classList.find((item) => item.id == a.parentClass).orderNumber -
+                    this.vm.backendData.classList.find((item) => item.id == b.parentClass).orderNumber) +
+                (this.vm.backendData.sectionList.find((item) => item.id == a.parentDivision).orderNumber = this.vm.backendData.sectionList.find(
                     (item) => item.id == b.parentDivision
                 ).orderNumber)
             );
         });
     }
 
-    populateFilteredUserList(userList: any): void {
-        this.vm.filteredUserList = userList.filter((user) => {
-            return (
-                this.vm.gcmDeviceList.find((item) => {
-                    return item.user == user.id;
-                }) != undefined
+    async sendSMSAndNotification() {
+        if (this.vm.getMobileNumberList('sms').length > 0 &&
+            !confirm('Please confirm that you are '
+                + (this.vm.userInput.scheduleSMS ? 'Scheduling ' : 'Sending ') + this.vm.htmlRenderer.getEstimatedSMSCount() + ' SMS.')) {
+            return;
+        }
+        this.vm.stateKeeper.isLoading = true;
+        let scheduledDataTime = null;
+        if (this.vm.userInput.scheduleSMS && this.vm.userInput.scheduledDate && this.vm.userInput.scheduledDate) {
+            scheduledDataTime = moment(this.vm.userInput.scheduledDate + ' ' + this.vm.userInput.scheduledTime).format('YYYY-MM-DD HH:mm');
+        }
+
+        let personType;
+        if (this.vm.userInput.selectedSendTo.id == 1) {
+            this.vm.dataForMapping['studentList'] = this.vm.getMobileNumberList('both').filter(x => x.student);
+            personType = 'student';
+        }
+        if (this.vm.userInput.selectedSendTo.id == 2) {
+            this.vm.dataForMapping['employeeList'] = this.vm.getMobileNumberList('both').filter(x => x.employee);
+            personType = 'employee';
+        } else if (this.vm.userInput.selectedSendTo.id == 3) {
+            this.vm.dataForMapping['commonPersonList'] = this.vm.getMobileNumberList('both');
+            personType = 'commonPerson';
+        }
+
+
+        try {
+            this.vm.backendData.smsBalance = await this.vm.messageService.sendEventSMSNotification(
+                this.vm.dataForMapping,
+                personType,
+                this.vm.backendData.generalSMSEventList.find(event => event.id == this.vm.userInput.selectedSendTo.id),
+                this.vm.userInput.selectedSendUpdateType.id,
+                this.vm.userInput.selectedTemplate,
+                this.vm.message,
+                scheduledDataTime,
+                this.vm.user.activeSchool.dbId,
+                this.vm.backendData.smsBalance
             );
-        });
-    }
-
-    sendSMSAndNotification(): void {
-        // let smsContentType = (this.vm.hasUnicode()? 'unicode':'english');
-
-        let mobileNumberList = '';
-        let notifMobileNumberList = '';
-
-        this.vm.smsMobileNumberList.forEach((mobileNumber, index) => {
-            mobileNumberList += mobileNumber.toString() + (index != this.vm.smsMobileNumberList.length - 1 ? ',' : '');
-        });
-
-        this.vm.notificationMobileNumberList.forEach((mobileNumber, index) => {
-            notifMobileNumberList += mobileNumber.toString() + (index != this.vm.notificationMobileNumberList.length - 1 ? ',' : '');
-        });
-
-        let sms_data = {
-            contentType: this.vm.hasUnicode() ? 'unicode' : 'english',
-            content: this.vm.message,
-            parentMessageType: 1,
-            count: this.vm.getSMSCount() * this.vm.smsMobileNumberList.length,
-            notificationCount: this.vm.notificationMobileNumberList.length,
-            mobileNumberList: mobileNumberList,
-            notificationMobileNumberList: notifMobileNumberList,
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
-
-        let notification_data = this.vm.notificationMobileNumberList.map((mobileNumber) => {
-            return {
-                parentMessageType: 1,
-                content: this.vm.message,
-                parentUser: this.vm.filteredUserList.find((user) => {
-                    return user.username == mobileNumber.toString();
-                }).id,
-                parentSchool: this.vm.user.activeSchool.dbId,
-            };
-        });
-
-        if (this.vm.smsMobileNumberList.length > 0) {
-            if (!confirm('Please confirm that you are sending ' + (this.vm.getSMSCount() * this.vm.getMobileNumberList('sms').length) + ' SMS.')) {
-                return;
-            }
+        } catch (exception) {
+            console.error(exception);
+            alert('SMS Failed Try again');
+            this.vm.stateKeeper.isLoading = false;
+            return;
         }
-
-        let service_list = [];
-        service_list.push(this.vm.smsService.createObject(this.vm.smsService.sms, sms_data));
-        if (this.vm.notificationMobileNumberList.length > 0) {
-            service_list.push(this.vm.notificationService.createObjectList(this.vm.notificationService.notification, notification_data));
-        }
-
-        this.vm.isLoading = true;
-
-        Promise.all(service_list).then(
-            (value) => {
-                alert('Operation Successful');
-
-                if (
-                    (this.vm.selectedSentType == this.vm.sentTypeList[0] || this.vm.selectedSentType == this.vm.sentTypeList[2]) &&
-                    this.vm.smsMobileNumberList.length > 0
-                ) {
-                    if (value[0].status == 'success') {
-                        this.vm.smsBalance -= value[0].data.count;
-                    } else if (value[0].status == 'failure') {
-                        this.vm.smsBalance = value[0].count;
-                    }
-                }
-
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+        alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Successfully');
+        this.vm.stateKeeper.isLoading = false;
     }
 
 
