@@ -69,7 +69,8 @@ class OrderSchoolView(CommonView, APIView):
         activeSchoolId = kwargs['activeSchoolID']
         schoolOnlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=activeSchoolId)
         orderData = {
-            'orderId': str(int(time() * 1000000)),
+            'id': str(int(time() * 1000000)),
+            'parentUser': request.user.id,
             'amount': request.data['orderAmount']
         }
 
@@ -89,7 +90,8 @@ class OrderSelfView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         orderData = {
-            'orderId': str(int(time() * 1000000)),
+            'id': str(int(time() * 1000000)),
+            'parentUser': request.user.id,
             'amount': request.data['orderAmount']
         }
 
