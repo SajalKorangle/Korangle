@@ -3,7 +3,7 @@ from django.db import transaction
 
 from payment_app.models import Order
 from payment_app.cashfree.cashfree import getOrderStatus, getRefundStatus
-from payment_app.models import CashfreeRefundDailyJobsReport
+from payment_app.models import CashfreeDailyJobsReport
 import time
 import random
 
@@ -17,7 +17,7 @@ class Job(DailyJob):  # Should be run between 3am to 5am
         print('Waiting for {0}s'.format(waitTime))
         time.sleep(waitTime)
         try:
-            dailyJobsReport = CashfreeRefundDailyJobsReport.objects.create()
+            dailyJobsReport = CashfreeDailyJobsReport.objects.create()
         except:
             print('Executing Failed')
             return

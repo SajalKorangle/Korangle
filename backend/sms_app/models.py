@@ -1,5 +1,4 @@
 from payment_app.cashfree.cashfree import initiateRefund
-from .views import SMSPurchaseView
 import json
 from django.db import models
 from django.db import transaction as db_transaction
@@ -210,9 +209,6 @@ class SmsPurchaseOrder(models.Model):
     parentSmsPurchase = models.ForeignKey(SMSPurchase, on_delete=models.PROTECT, null=True, blank=True)
 
 
-SMSPurchaseModelSerializer = SMSPurchaseView().ModelSerializer
-
-
 @receiver(pre_save, sender=Order)
 def SMSOrderCompletionHandler(sender, instance, **kwargs):
     if not instance._state.adding and instance.status == 'Completed':
@@ -224,6 +220,8 @@ def SMSOrderCompletionHandler(sender, instance, **kwargs):
                 return
             activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
             smsPurchaseData = json.loads(onlineSmsPaymentTransaction.smsPurchaseJSON)
+            from .views import SMSPurchaseView
+            SMSPurchaseModelSerializer = SMSPurchaseView().ModelSerializer
             with db_transaction.atomic():
                 response = create_object(smsPurchaseData, SMSPurchaseModelSerializer, activeSchoolID, None)
                 smsPurchase = SMSPurchase.objects.get(id=response['id'])

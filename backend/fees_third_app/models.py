@@ -1,7 +1,6 @@
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from accounts_app.views import TransactionAccountDetailsView
-from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
 from django.db import models
 
 from school_app.model.models import School, Session, BusStop
@@ -300,77 +299,6 @@ class FeeReceipt(models.Model):
         super().save(*args, **kwargs)
 
 
-def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
-    ## Initialization Starts ##
-    subFeeReceiptList = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
-    subDiscountList = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
-
-    isClearedMappedByMonth = {}  # To store month wise clearance
-    for month in INSTALLMENT_LIST:
-        isClearedMappedByMonth[month] = False  # Initialize all months as False
-
-    ## Initialization Ends ##
-
-    ## Monthwise Validity Check For New SubFeeReceipt and Student Fee Updation Starts##
-    for month in INSTALLMENT_LIST:
-        paidAmount = 0
-
-        paidAmount += getattr(newSubFeeReceipt, month + 'Amount') or 0  # Add the amount of to be created SubFeeReceipt
-
-        for subFeeReceipt in subFeeReceiptList:
-            paidAmount += getattr(subFeeReceipt, month + 'Amount') or 0  # Add the amount of to be saved SubFeeReceipt
-
-        for subDiscount in subDiscountList:
-            paidAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
-
-        studentFeeAmount = getattr(studentFee, month + 'Amount') or 0  # Get the amount of studentFee
-
-        ## Validations Starts ##
-
-        assert paidAmount <= studentFeeAmount, "Installment amount exceeds actual amount"  # Validity Check for amount should be less than student fee
-
-        if paidAmount == studentFeeAmount:
-            isClearedMappedByMonth[month] = True
-
-        if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
-            assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
-            assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
-
-        if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
-                and getattr(studentFee, month + 'LateFee'):  # late fee
-            delta = (getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')
-            lateFee = delta.days * getattr(studentFee, month + 'LateFee')
-            if(getattr(studentFee, month + 'MaximumLateFee')):
-                lateFee = max(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
-
-            for subDiscount in subDiscountList:
-                lateFee -= getattr(subDiscount, month + 'LateFee') or 0
-
-            totalPaidLateFee = 0
-            for subFeeReceipt in subFeeReceiptList:
-                totalPaidLateFee += getattr(subFeeReceipt, month + 'LateFee') or 0
-
-            totalPaidLateFee += getattr(newSubFeeReceipt, month + 'LateFee') or 0
-
-            if totalPaidLateFee < lateFee:
-                isClearedMappedByMonth[month] = False
-                assert getattr(newSubFeeReceipt, month + 'Amount') == 0, "incoming fee amount without clearing late fee"
-            elif totalPaidLateFee > lateFee:
-                assert False, "paid late fee exceeds actual late fee"
-
-    ## Cleared and Cleared Date Handling for Student Fee ##
-    cleared = True
-    for month in INSTALLMENT_LIST:
-        cleared = cleared and isClearedMappedByMonth[month]
-        if isClearedMappedByMonth[month] and getattr(studentFee, month + 'Amount') is not None:
-            setattr(studentFee, month + 'ClearanceDate', getattr(studentFee, month + 'ClearanceDate') or datetime.now())
-        else:
-            setattr(studentFee, month + 'ClearanceDate', None)
-    if(cleared):
-        studentFee.cleared = True
-    studentFee.save()
-
-
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptPreSave(sender, instance, **kwargs):
     if(kwargs['raw']):
@@ -577,6 +505,77 @@ class SubDiscount(models.Model):
         db_table = 'sub_discount_new'
 
 
+def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
+    ## Initialization Starts ##
+    subFeeReceiptList = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
+    subDiscountList = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
+
+    isClearedMappedByMonth = {}  # To store month wise clearance
+    for month in INSTALLMENT_LIST:
+        isClearedMappedByMonth[month] = False  # Initialize all months as False
+
+    ## Initialization Ends ##
+
+    ## Monthwise Validity Check For New SubFeeReceipt and Student Fee Updation Starts##
+    for month in INSTALLMENT_LIST:
+        paidAmount = 0
+
+        paidAmount += getattr(newSubFeeReceipt, month + 'Amount') or 0  # Add the amount of to be created SubFeeReceipt
+
+        for subFeeReceipt in subFeeReceiptList:
+            paidAmount += getattr(subFeeReceipt, month + 'Amount') or 0  # Add the amount of to be saved SubFeeReceipt
+
+        for subDiscount in subDiscountList:
+            paidAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
+
+        studentFeeAmount = getattr(studentFee, month + 'Amount') or 0  # Get the amount of studentFee
+
+        ## Validations Starts ##
+
+        assert paidAmount <= studentFeeAmount, "Installment amount exceeds actual amount"  # Validity Check for amount should be less than student fee
+
+        if paidAmount == studentFeeAmount:
+            isClearedMappedByMonth[month] = True
+
+        if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
+            assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
+            assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
+
+        if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
+                and getattr(studentFee, month + 'LateFee'):  # late fee
+            delta = (getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')
+            lateFee = delta.days * getattr(studentFee, month + 'LateFee')
+            if(getattr(studentFee, month + 'MaximumLateFee')):
+                lateFee = max(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
+
+            for subDiscount in subDiscountList:
+                lateFee -= getattr(subDiscount, month + 'LateFee') or 0
+
+            totalPaidLateFee = 0
+            for subFeeReceipt in subFeeReceiptList:
+                totalPaidLateFee += getattr(subFeeReceipt, month + 'LateFee') or 0
+
+            totalPaidLateFee += getattr(newSubFeeReceipt, month + 'LateFee') or 0
+
+            if totalPaidLateFee < lateFee:
+                isClearedMappedByMonth[month] = False
+                assert getattr(newSubFeeReceipt, month + 'Amount') == 0, "incoming fee amount without clearing late fee"
+            elif totalPaidLateFee > lateFee:
+                assert False, "paid late fee exceeds actual late fee"
+
+    ## Cleared and Cleared Date Handling for Student Fee ##
+    cleared = True
+    for month in INSTALLMENT_LIST:
+        cleared = cleared and isClearedMappedByMonth[month]
+        if isClearedMappedByMonth[month] and getattr(studentFee, month + 'Amount') is not None:
+            setattr(studentFee, month + 'ClearanceDate', getattr(studentFee, month + 'ClearanceDate') or datetime.now())
+        else:
+            setattr(studentFee, month + 'ClearanceDate', None)
+    if(cleared):
+        studentFee.cleared = True
+    studentFee.save()
+
+
 class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
@@ -625,6 +624,7 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
             except:
                 pass
 
+            from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
             FeeReceiptModelSerializer = FeeReceiptView().ModelSerializer
             SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
 

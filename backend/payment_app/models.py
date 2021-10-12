@@ -36,7 +36,7 @@ class Order(models.Model):
         return self.status + ' | ' + self.id + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
 
 
-class CashfreeRefundDailyJobsReport(models.Model):
+class CashfreeDailyJobsReport(models.Model):
 
     STATUS_CHOICES = (
         ('INITIATED', 'INITIATED'),
