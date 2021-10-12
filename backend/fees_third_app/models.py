@@ -339,7 +339,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=FeeReceipt)
-def FeeReceiptPostSave(sender, instance, **kwargs):
+def FeeReceiptPostSave(sender, instance: FeeReceipt, **kwargs):
     subFeeReceiptList = instance.subFeeReceiptList.all()
     for subFeeReceipt in subFeeReceiptList:
         receiptValidateAndUpdate(subFeeReceipt.parentStudentFee)
@@ -414,7 +414,7 @@ class SubFeeReceipt(models.Model):
 
 
 @receiver(pre_save, sender=SubFeeReceipt)
-def subFeeReceiptDataCheck(sender, instance, **kwargs):
+def subFeeReceiptDataCheck(sender, instance: SubFeeReceipt, **kwargs):
     receiptValidateAndUpdate(instance.parentStudentFee, instance)
 
 
@@ -439,7 +439,7 @@ class Discount(models.Model):
 
 
 @receiver(post_save, sender=Discount)
-def discountPostSave(sender, instance, **kwargs):
+def discountPostSave(sender, instance: Discount, **kwargs):
     subDiscountList = instance.subDiscountList.all()
     for subDiscount in subDiscountList:
         receiptValidateAndUpdate(subDiscount.parentStudentFee)
@@ -505,6 +505,11 @@ class SubDiscount(models.Model):
         db_table = 'sub_discount_new'
 
 
+@receiver(post_save, sender=SubDiscount)
+def subDiscountPostSave(sender, instance: SubDiscount, **kwargs):
+    receiptValidateAndUpdate(instance.parentStudentFee)
+
+
 def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
     ## Initialization Starts ##
     subFeeReceiptList = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
@@ -525,17 +530,14 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
         for subFeeReceipt in subFeeReceiptList:
             paidAmount += getattr(subFeeReceipt, month + 'Amount') or 0  # Add the amount of to be saved SubFeeReceipt
 
-        for subDiscount in subDiscountList:
-            paidAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
-
         studentFeeAmount = getattr(studentFee, month + 'Amount') or 0  # Get the amount of studentFee
+        for subDiscount in subDiscountList:
+            studentFeeAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
+
+        if paidAmount >= studentFeeAmount:
+            isClearedMappedByMonth[month] = True
 
         ## Validations Starts ##
-
-        assert paidAmount <= studentFeeAmount, "Installment amount exceeds actual amount"  # Validity Check for amount should be less than student fee
-
-        if paidAmount == studentFeeAmount:
-            isClearedMappedByMonth[month] = True
 
         if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
             assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
@@ -559,9 +561,7 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
 
             if totalPaidLateFee < lateFee:
                 isClearedMappedByMonth[month] = False
-                assert getattr(newSubFeeReceipt, month + 'Amount') == 0, "incoming fee amount without clearing late fee"
-            elif totalPaidLateFee > lateFee:
-                assert False, "paid late fee exceeds actual late fee"
+                assert (getattr(newSubFeeReceipt, month + 'Amount') or 0) == 0, "incoming fee amount without clearing late fee"
 
     ## Cleared and Cleared Date Handling for Student Fee ##
     cleared = True
