@@ -97,13 +97,13 @@ def transactionPreSave(sender, instance, **kwargs):
     if(kwargs['raw']):
         return 
     if instance.id is None:
-        instance.voucherNumber = 1
+        ## Generating Voucher Number Starts ##
         transactionSession = Session.objects.get(startDate__lte=instance.transactionDate, endDate__gte=instance.transactionDate)
         last_voucher_number = \
                     Transaction.objects.filter(parentSchool=instance.parentSchool).filter(transactionDate__range=(transactionSession.startDate, transactionSession.endDate)) \
                         .aggregate(Max('voucherNumber'))['voucherNumber__max']
-        if last_voucher_number is not None:
-            instance.voucherNumber = last_voucher_number + 1
+        instance.voucherNumber = (last_voucher_number or 0) + 1
+        ## Generating Voucher Number Ends ##
         
 @receiver(post_save, sender=Transaction)
 def transactionPostSave(sender, instance, **kwargs):

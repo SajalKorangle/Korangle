@@ -1,4 +1,3 @@
-from .models import OnlineSmsPaymentTransaction
 from .business.sms_purchase import get_sms_purchase_list
 from common.common_views_3 import CommonView, CommonListView, common_json_view_function
 # Code Review
@@ -146,18 +145,6 @@ class SMSEventView(APIView):
         return common_json_view_function(request.GET, "sms_app", "sms_event.json")[0]
 
 
-class OnlineSmsPaymentTransactionView(CommonView, APIView):
-    Model = OnlineSmsPaymentTransaction
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['post', 'get']
-
-
-class OnlineSmsPaymentTransactionListView(CommonListView, APIView):
-    Model = OnlineSmsPaymentTransaction
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['post', 'get']
-
-
 class SMSPurchaseView(CommonView, APIView):
     Model = SMSPurchase
     RelationsToSchool = ['parentSchool__id']
@@ -186,3 +173,18 @@ class SMSDefaultTemplateListView(APIView):
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
         return common_json_view_function(request.GET, "sms_app", "default_sms_templates.json")
+
+
+from .models import SmsPurchaseOrder
+
+
+class SmsPurchaseOrderView(CommonView, APIView):
+    Model = SmsPurchaseOrder
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['get']
+
+
+class SmsPurchaseOrderListView(CommonListView, APIView):
+    Model = SmsPurchaseOrder
+    RelationsToSchool = ['parentSchool__id']
+    permittedMethods = ['get']

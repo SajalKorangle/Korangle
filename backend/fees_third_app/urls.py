@@ -74,7 +74,6 @@ urlpatterns += [
 ]
 
 
-
 from .views import FeeSettingsView, FeeSettingsListView
 
 urlpatterns += [
@@ -82,8 +81,8 @@ urlpatterns += [
     url(r'^fee-settings', FeeSettingsView.as_view()),
 ]
 
-from .views import OnlineFeePaymentTransactionView, OnlineFeePaymentTransactionListView
+from .views import FeeReceiptOrderView, FeeReceiptOrderListView
 urlpatterns += [
-    url(r'^online-fee-payment-transaction/batch', OnlineFeePaymentTransactionListView.as_view()),
-    url(r'^online-fee-payment-transaction', OnlineFeePaymentTransactionView.as_view()),
+    url(r'^fee-receipt-order/batch', FeeReceiptOrderListView.as_view()),
+    url(r'^fee-receipt-order', FeeReceiptOrderView.as_view()),
 ]

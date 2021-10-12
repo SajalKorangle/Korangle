@@ -11,19 +11,19 @@ from time import time
 
 
 ########### Online Payment Account #############
-from .models import OnlinePaymentAccount
+from .models import SchoolMerchantAccount
 from .cashfree.cashfree import addVendor, getVendor, updateVendor
 
 
 class OnlinePaymentAccountView(CommonView, APIView):
-    Model = OnlinePaymentAccount
+    Model = SchoolMerchantAccount
     RelationsToSchool = ['parentSchool__id']
     permittedMethods = ['get', 'post', 'put']
 
     @user_permission_3
     def post(self, request, *args, **kwargs):
         data = request.data
-        vendorId = str(int(time()*1000000))
+        vendorId = str(int(time() * 1000000))
         vendorData = data['vendorData']
 
         addVendor(vendorData, vendorId)
@@ -38,7 +38,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
 
     @user_permission_3
     def get(self, request, *args, **kwargs):
-        responseData = get_object(request.GET, self.permittedQuerySet(**kwargs),  self.ModelSerializer)
+        responseData = get_object(request.GET, self.permittedQuerySet(**kwargs), self.ModelSerializer)
         if(responseData):
             responseData.update({
                 'vendorData': getVendor(responseData['vendorId'])
@@ -67,9 +67,9 @@ class OrderSchoolView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         activeSchoolId = kwargs['activeSchoolID']
-        schoolOnlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool=activeSchoolId)
+        schoolOnlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=activeSchoolId)
         orderData = {
-            'orderId': str(int(time()*1000000)),
+            'orderId': str(int(time() * 1000000)),
             'amount': request.data['orderAmount']
         }
 
@@ -89,7 +89,7 @@ class OrderSelfView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         orderData = {
-            'orderId': str(int(time()*1000000)),
+            'orderId': str(int(time() * 1000000)),
             'amount': request.data['orderAmount']
         }
 

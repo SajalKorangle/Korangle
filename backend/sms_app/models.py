@@ -203,7 +203,7 @@ class SMSPurchase(models.Model):
         db_table = 'sms_purchase'
 
 
-class OnlineSmsPaymentTransaction(models.Model):
+class SmsPurchaseOrder(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT)
     parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, unique=True)
     smsPurchaseJSON = models.TextField()
@@ -219,7 +219,7 @@ def SMSOrderCompletionHandler(sender, instance, **kwargs):
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
         if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Completed'
             try:
-                onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder=preSavedOrder)
+                onlineSmsPaymentTransaction = SmsPurchaseOrder.objects.get(parentOrder=preSavedOrder)
             except:  # Order was not for SMS
                 return
             activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
@@ -239,7 +239,7 @@ def SMSRefundHandler(sender, instance, **kwargs):
         if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Refund Pending'
 
             try:
-                onlineSmsPaymentTransaction = OnlineSmsPaymentTransaction.objects.get(parentOrder=preSavedOrder)
+                onlineSmsPaymentTransaction = SmsPurchaseOrder.objects.get(parentOrder=preSavedOrder)
             except:  # Order was not for SMS
                 return
 

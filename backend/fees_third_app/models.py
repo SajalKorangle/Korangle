@@ -1,13 +1,8 @@
-<< << << < HEAD
-from django.core.serializers import serialize
 from payment_app.cashfree.cashfree import initiateRefund
-from payment_app.models import OnlinePaymentAccount
+from payment_app.models import SchoolMerchantAccount
 from accounts_app.views import TransactionAccountDetailsView
 from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
 from django.db import models
-== == == =
-from django.db import models, transaction
->>>>>> > 3efb840e28f7d8bb46cae3fd5afe5cfc519b59b6
 
 from school_app.model.models import School, Session, BusStop
 
@@ -32,20 +27,7 @@ from common.common_serializer_interface_3 import create_object, create_list
 
 from django.db import transaction as db_transaction
 
-INSTALLMENT_LIST = [
-    'april',
-    'may',
-    'june',
-    'july',
-    'august',
-    'september',
-    'october',
-    'november',
-    'december',
-    'january',
-    'february',
-    'march',
-]
+from .business.constant import INSTALLMENT_LIST
 
 
 class FeeType(models.Model):
@@ -301,7 +283,7 @@ class FeeReceipt(models.Model):
         ('KORANGLE', 'KORANGLE'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL, related_name='FeeReceiptList')
 
     ## Relations To School and Student ##
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
@@ -318,6 +300,77 @@ class FeeReceipt(models.Model):
         super().save(*args, **kwargs)
 
 
+def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
+    ## Initialization Starts ##
+    subFeeReceiptList = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
+    subDiscountList = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
+
+    isClearedMappedByMonth = {}  # To store month wise clearance
+    for month in INSTALLMENT_LIST:
+        isClearedMappedByMonth[month] = False  # Initialize all months as False
+
+    ## Initialization Ends ##
+
+    ## Monthwise Validity Check For New SubFeeReceipt and Student Fee Updation Starts##
+    for month in INSTALLMENT_LIST:
+        paidAmount = 0
+
+        paidAmount += getattr(newSubFeeReceipt, month + 'Amount') or 0  # Add the amount of to be created SubFeeReceipt
+
+        for subFeeReceipt in subFeeReceiptList:
+            paidAmount += getattr(subFeeReceipt, month + 'Amount') or 0  # Add the amount of to be saved SubFeeReceipt
+
+        for subDiscount in subDiscountList:
+            paidAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
+
+        studentFeeAmount = getattr(studentFee, month + 'Amount') or 0  # Get the amount of studentFee
+
+        ## Validations Starts ##
+
+        assert paidAmount <= studentFeeAmount, "Installment amount exceeds actual amount"  # Validity Check for amount should be less than student fee
+
+        if paidAmount == studentFeeAmount:
+            isClearedMappedByMonth[month] = True
+
+        if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
+            assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
+            assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
+
+        if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
+                and getattr(studentFee, month + 'LateFee'):  # late fee
+            delta = (getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')
+            lateFee = delta.days * getattr(studentFee, month + 'LateFee')
+            if(getattr(studentFee, month + 'MaximumLateFee')):
+                lateFee = max(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
+
+            for subDiscount in subDiscountList:
+                lateFee -= getattr(subDiscount, month + 'LateFee') or 0
+
+            totalPaidLateFee = 0
+            for subFeeReceipt in subFeeReceiptList:
+                totalPaidLateFee += getattr(subFeeReceipt, month + 'LateFee') or 0
+
+            totalPaidLateFee += getattr(newSubFeeReceipt, month + 'LateFee') or 0
+
+            if totalPaidLateFee < lateFee:
+                isClearedMappedByMonth[month] = False
+                assert getattr(newSubFeeReceipt, month + 'Amount') == 0, "incoming fee amount without clearing late fee"
+            elif totalPaidLateFee > lateFee:
+                assert False, "paid late fee exceeds actual late fee"
+
+    ## Cleared and Cleared Date Handling for Student Fee ##
+    cleared = True
+    for month in INSTALLMENT_LIST:
+        cleared = cleared and isClearedMappedByMonth[month]
+        if isClearedMappedByMonth[month] and getattr(studentFee, month + 'Amount') is not None:
+            setattr(studentFee, month + 'ClearanceDate', getattr(studentFee, month + 'ClearanceDate') or datetime.now())
+        else:
+            setattr(studentFee, month + 'ClearanceDate', None)
+    if(cleared):
+        studentFee.cleared = True
+    studentFee.save()
+
+
 @receiver(pre_save, sender=FeeReceipt)
 def FeeReceiptPreSave(sender, instance, **kwargs):
     if(kwargs['raw']):
@@ -330,54 +383,38 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         instance.receiptNumber = (last_receipt_number or 0) + 1
         ## Getting Receipt Number Ends ##
 
-        ## Transaction Creation Starts ##
-        currentSession = Session.objects.get(startDate__lte=datetime.now(), endDate__gte=datetime.now())
-        feeSettings = None
-        try:
-            feeSettings = FeeSettings.objects.get(parentSchool=instance.parentSchool, parentSession=currentSession)
-        except:
-            pass
-        if(feeSettings and feeSettings.accountingSettingsJSON):
-            accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
-            modeOfPayment = instance.modeOfPayment
-
-            ## Transaction Handling based on FeeSettings on School ##
-            if (modeOfPayment == 'KORANGLE' and accountingSettings.get('parentOnlinePaymentCreditAccount', None))\
-                or (modeOfPayment != 'KORANGLE' and accountingSettings['toAccountsStructure'].get(modeOfPayment, None)
-                    and len(accountingSettings['toAccountsStructure'].get(modeOfPayment)) > 0):
-                instance.parentTransaction = Transaction.objects.create(
-                    parentEmployee=instance.parentEmployee,
-                    parentSchool=instance.parentSchool,
-                    transactionDate=datetime.now(),
-                    remark='Student Fee, receipt no.: {0}'.format(instance.receiptNumber)
-                )
-        ## Transaction Creation Ends ##
-
     # Getting original instance as will be used at many places.
     if instance.id:
         originalInstance = FeeReceipt.objects.get(id=instance.id)
 
-    ## Handling Fee Receipt Cancellation Starts ##
-    if instance.id and instance.cancelled and not originalInstance.cancelled:
+        ## Handling Fee Receipt Cancellation Starts ##
+        if instance.cancelled and not originalInstance.cancelled:
 
-        ## Deleting Transaction Starts ##
-        if originalInstance.parentTransaction:
-            originalInstance.parentTransaction.delete()
-            instance.parentTransaction = None
-        ## Deleting Transaction Ends ##
+            ## Deleting Transaction Starts ##
+            if originalInstance.parentTransaction:
+                originalInstance.parentTransaction.delete()
+                instance.parentTransaction = None
+            ## Deleting Transaction Ends ##
 
-        ## Handling Student Fee Clearance Date and Cleared Starts ##
-        subFeeReceiptSet = originalInstance.subfeereceipt_set.all()
-        for subFeeReceipt in subFeeReceiptSet:
-            studentFee = subFeeReceipt.parentStudentFee
-            for month in INSTALLMENT_LIST:
-                if(getattr(subFeeReceipt, month + 'Amount') or getattr(subFeeReceipt, month + 'LateFee')):
-                    setattr(studentFee, month + 'ClearanceDate', None)
-                    studentFee.cleared = False
-            studentFee.save()
-        ## Handling Student Fee Clearance Date and Cleared Ends ##
+            ## Handling Student Fee Clearance Date and Cleared Starts ##
+            subFeeReceiptList = originalInstance.subFeeReceiptList.all()
+            for subFeeReceipt in subFeeReceiptList:
+                studentFee = subFeeReceipt.parentStudentFee
+                for month in INSTALLMENT_LIST:
+                    if(getattr(subFeeReceipt, month + 'Amount') or getattr(subFeeReceipt, month + 'LateFee')):
+                        setattr(studentFee, month + 'ClearanceDate', None)
+                        studentFee.cleared = False
+                studentFee.save()
+            ## Handling Student Fee Clearance Date and Cleared Ends ##
 
-    ## Handling Fee Receipt Cancellation Ends ##
+        ## Handling Fee Receipt Cancellation Ends ##
+
+
+@receiver(post_save, sender=FeeReceipt)
+def FeeReceiptPostSave(sender, instance, **kwargs):
+    subFeeReceiptList = instance.subFeeReceiptList.all()
+    for subFeeReceipt in subFeeReceiptList:
+        receiptValidateAndUpdate(subFeeReceipt.parentStudentFee)
 
 
 class SubFeeReceipt(models.Model):
@@ -440,103 +477,17 @@ class SubFeeReceipt(models.Model):
     RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
     RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
+    @db_transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
     class Meta:
         db_table = 'sub_fee_receipt__new'
 
 
 @receiver(pre_save, sender=SubFeeReceipt)
 def subFeeReceiptDataCheck(sender, instance, **kwargs):
-    ## Initialization ##
-    studentFee = instance.parentStudentFee
-    subFeeReceiptSet = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
-    subDiscountSet = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
-
-    isClearedMappedByMonth = {}  # To store month wise clearance
-    for month in INSTALLMENT_LIST:
-        isClearedMappedByMonth[month] = False  # Initialize all months as False
-
-    ## Monthwise Validity Check For New SubFeeReceipt ##
-    for month in INSTALLMENT_LIST:
-        amount = 0
-        if(getattr(instance, month + 'Amount')):
-            amount += getattr(instance, month + 'Amount')  # Add the amount of to be created SubFeeReceipt
-
-            for subFeeReceipt in subFeeReceiptSet:
-                if getattr(subFeeReceipt, month + 'Amount'):
-                    amount += getattr(subFeeReceipt, month + 'Amount')  # Add the amount of to be saved SubFeeReceipt
-
-            for subDiscount in subDiscountSet:
-                if getattr(subDiscount, month + 'Amount'):
-                    amount -= getattr(subDiscount, month + 'Amount')  # Subtract the discounted amount
-
-            studentFeeAmount = 0
-            if getattr(studentFee, month + 'Amount'):
-                studentFeeAmount += getattr(studentFee, month + 'Amount')  # Get the amount of studentFee
-
-            assert amount <= studentFeeAmount, "Installment amount exceeds actual amount"  # Validity Check for amount should be less than student fee
-
-            if(amount == studentFeeAmount):
-                isClearedMappedByMonth[month] = True
-
-        ## Validations ##
-
-        if(getattr(studentFee, month + 'ClearanceDate')):  # month cleared
-            assert not getattr(instance, month + 'LateFee'), "incoming late fee after month fee is cleared"
-
-        elif getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
-                and getattr(studentFee, month + 'LateFee'):  # late fee not cleared
-            delta = datetime.now().date() - getattr(studentFee, month + 'LastDate')
-            lateFee = delta.days * getattr(studentFee, month + 'LateFee')
-            if(getattr(studentFee, month + 'MaximumLateFee')):
-                lateFee = max(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
-
-            for subDiscount in subDiscountSet:
-                if getattr(subDiscount, month + 'LateFee'):
-                    lateFee -= getattr(subDiscount, month + 'LateFee')
-
-            totalPaidLateFee = 0
-            for subFeeReceipt in subFeeReceiptSet:
-                if getattr(subFeeReceipt, month + 'LateFee'):
-                    totalPaidLateFee += getattr(subFeeReceipt, month + 'LateFee')
-
-            if getattr(instance, month + 'LateFee'):
-                totalPaidLateFee += getattr(instance, month + 'LateFee')
-
-            if totalPaidLateFee < lateFee:
-                assert amount == 0, "incoming fee amount without clearing late fee"
-            elif totalPaidLateFee > lateFee:
-                assert False, "paid late fee exceeds actual late fee"
-
-    ## Cleared and Cleared Date Handling for Student Fee ##
-    cleared = True
-    for month in INSTALLMENT_LIST:
-        cleared = cleared and isClearedMappedByMonth[month]
-        if(isClearedMappedByMonth[month]):
-            setattr(studentFee, month + 'ClearanceDate', datetime.now())
-    if(cleared):
-        studentFee.cleared = True
-    studentFee.save()
-
-
-@receiver(post_save, sender=SubFeeReceipt)
-def populateAmountInTransactionAccounts(sender, instance, created, **kwargs):
-    if(created and instance.parentFeeReceipt.parentTransaction):
-        amount = 0
-        for month in INSTALLMENT_LIST:
-            if(getattr(instance, month + 'Amount') is not None):
-                amount += getattr(instance, month + 'Amount')
-            if(getattr(instance, month + 'LateFee') is not None):
-                amount += getattr(instance, month + 'LateFee')
-        creditAccountDetail = instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
-            transactionType='CREDIT'
-        )
-        debitAccountDetail = instance.parentFeeReceipt.parentTransaction.transactionaccountdetails_set.get(
-            transactionType='DEBIT'
-        )
-        creditAccountDetail.amount += amount
-        debitAccountDetail.amount += amount
-        creditAccountDetail.save()
-        debitAccountDetail.save()
+    receiptValidateAndUpdate(instance.parentStudentFee, instance)
 
 
 class Discount(models.Model):
@@ -557,6 +508,13 @@ class Discount(models.Model):
     class Meta:
         db_table = 'discount_new'
         unique_together = ('discountNumber', 'parentSchool')
+
+
+@receiver(post_save, sender=Discount)
+def discountPostSave(sender, instance, **kwargs):
+    subDiscountList = instance.subDiscountList.all()
+    for subDiscount in subDiscountList:
+        receiptValidateAndUpdate(subDiscount.parentStudentFee)
 
 
 class SubDiscount(models.Model):
@@ -629,7 +587,7 @@ class FeeSettings(models.Model):
         unique_together = ('parentSchool', 'parentSession')
 
 
-class OnlineFeePaymentTransaction(models.Model):
+class FeeReceiptOrder(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
     parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
     feeDetailJSON = models.TextField()
@@ -642,7 +600,7 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
         if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Completed'
 
-            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder=preSavedOrder)
+            onlinePaymentTransactionList = FeeReceiptOrder.objects.filter(parentOrder=preSavedOrder)
             if len(onlinePaymentTransactionList) == 0:  # Order is made for some other purpose
                 return
 
@@ -723,11 +681,11 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
 
         if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Refund Pending'
 
-            onlinePaymentTransactionList = OnlineFeePaymentTransaction.objects.filter(parentOrder=preSavedOrder)
+            onlinePaymentTransactionList = FeeReceiptOrder.objects.filter(parentOrder=preSavedOrder)
             if len(onlinePaymentTransactionList) == 0:  # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
                 return
 
-            onlinePaymentAccount = OnlinePaymentAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
+            onlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
 
             splitDetails = [
                 {

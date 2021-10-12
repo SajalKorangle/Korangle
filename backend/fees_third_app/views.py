@@ -1,5 +1,3 @@
-from fees_third_app.models import OnlineFeePaymentTransaction
-from .models import FeeSettings
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 from fees_third_app.business.discount import create_discount_object, create_discount_list
@@ -145,6 +143,7 @@ class SubDiscountListView(CommonListView, APIView):
 
 
 ########### Fee Settings #############
+from .models import FeeSettings
 
 
 class FeeSettingsView(CommonView, APIView):
@@ -157,16 +156,17 @@ class FeeSettingsListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id']
 
 
-########### Transaction #############
+########### FeeReceiptOrder #############
+from fees_third_app.models import FeeReceiptOrder
 
 
-class OnlineFeePaymentTransactionView(CommonView, APIView):
-    Model = OnlineFeePaymentTransaction
+class FeeReceiptOrderView(CommonView, APIView):
+    Model = FeeReceiptOrder
     RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get', 'post']
+    permittedMethods = ['get']
 
 
-class OnlineFeePaymentTransactionListView(CommonListView, APIView):
-    Model = OnlineFeePaymentTransaction
+class FeeReceiptOrderListView(CommonListView, APIView):
+    Model = FeeReceiptOrder
     RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get', 'post']
+    permittedMethods = ['get']

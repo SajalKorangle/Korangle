@@ -2,9 +2,10 @@ from django.db import models
 from django.db.models.fields import DateField
 from school_app.model.models import School
 from django.utils.timezone import make_aware, make_naive
+from django.contrib.auth import get_user_model
 
 
-class OnlinePaymentAccount(models.Model):
+class SchoolMerchantAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
     vendorId = models.CharField(max_length=20, unique=True)
 
@@ -22,7 +23,8 @@ class Order(models.Model):
         ('Refund Initiated', 'Refund Initiated'),   # Just after Refund has been initiated but cashfree has not confirmed the refund
         ('Refunded', 'Refunded'),                   # cashfree has confirmed the refund
     )
-    orderId = models.CharField(max_length=20, unique=True, primary_key=True)
+    id = models.CharField(max_length=20, unique=True, primary_key=True)
+    parentUser = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
     referenceId = models.CharField(max_length=30, null=True, blank=True)
@@ -31,7 +33,7 @@ class Order(models.Model):
 
     def __str__(self):
         ## make_naive: removed timezone info from datetime; make_aware: makes datetime aware of time zone, uses timezone from django settings ##
-        return self.status + ' | ' + self.orderId + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
+        return self.status + ' | ' + self.id + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
 
 
 class CashfreeRefundDailyJobsReport(models.Model):

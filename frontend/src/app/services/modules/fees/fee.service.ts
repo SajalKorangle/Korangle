@@ -19,5 +19,5 @@ export class FeeService extends ServiceObject {
     public fee_features = '/fee-features';
     public fee_settings = '/fee-settings';
 
-    public online_fee_payment_transaction = '/online-fee-payment-transaction';
+    public online_fee_payment_transaction = '/fee-receipt-order';
 }

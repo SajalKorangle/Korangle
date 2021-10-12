@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OnlinePaymentAccount, CashfreeDailyJobsReport
+from .models import Order, SchoolMerchantAccount, CashfreeDailyJobsReport
 
 
 class OrderAdminTabular(admin.ModelAdmin):
@@ -9,5 +9,5 @@ class OrderAdminTabular(admin.ModelAdmin):
 
 
 admin.site.register(Order, OrderAdminTabular)
-admin.site.register(OnlinePaymentAccount)
+admin.site.register(SchoolMerchantAccount)
 admin.site.register(CashfreeDailyJobsReport)

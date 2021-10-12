@@ -1,5 +1,7 @@
 from django.conf.urls import url
 
+from backend.sms_app.models import SmsPurchaseOrder
+
 urlpatterns = []
 
 ######## SMS Purchase ###############
@@ -94,9 +96,9 @@ urlpatterns += [
 ]
 
 #########  OnlineSmsPaymentTransaction ############
-from .views import OnlineSmsPaymentTransactionView, OnlineSmsPaymentTransactionListView
+from .views import SmsPurchaseOrderView, SmsPurchaseOrderListView
 
 urlpatterns += [
-	url(r'^online-sms-payment-transaction/batch', OnlineSmsPaymentTransactionListView.as_view()),
-	url(r'^online-sms-payment-transaction', OnlineSmsPaymentTransactionView.as_view()),
+	url(r'^online-sms-payment-transaction/batch', SmsPurchaseOrderViewListView.as_view()),
+	url(r'^online-sms-payment-transaction', SmsPurchaseOrderView.as_view()),
 ]
