@@ -263,17 +263,17 @@ class FeeReceipt(models.Model):
 
     # Added for the unique together field,
     # Also required in case fee receipt is cancelled, student is deleted, and we need to calculate the maximum receipt number
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='FeeReceiptList')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='feeReceiptList')
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='FeeReceiptList')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='FeeReceiptList')
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='FeeReceiptList')
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='feeReceiptList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='feeReceiptList')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='feeReceiptList')
 
     chequeNumber = models.BigIntegerField(null=True, verbose_name='chequeNumber')
 
     cancelledDateTime = models.DateTimeField(null=True, verbose_name='cancelledDateTime')
     cancelledRemark = models.TextField(null=True, verbose_name='cancelledRemark')
-    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='CancelledFeeReceiptList')
+    cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='cancelledFeeReceiptList')
 
     MODE_OF_PAYMENT = (
         ('Cash', 'Cash'),
@@ -282,7 +282,7 @@ class FeeReceipt(models.Model):
         ('KORANGLE', 'KORANGLE'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL, related_name='FeeReceiptList')
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL, related_name='feeReceiptList')
 
     ## Relations To School and Student ##
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
