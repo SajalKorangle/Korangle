@@ -324,17 +324,6 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
                 instance.parentTransaction = None
             ## Deleting Transaction Ends ##
 
-            ## Handling Student Fee Clearance Date and Cleared Starts ##
-            subFeeReceiptList = originalInstance.subFeeReceiptList.all()
-            for subFeeReceipt in subFeeReceiptList:
-                studentFee = subFeeReceipt.parentStudentFee
-                for month in INSTALLMENT_LIST:
-                    if(getattr(subFeeReceipt, month + 'Amount') or getattr(subFeeReceipt, month + 'LateFee')):
-                        setattr(studentFee, month + 'ClearanceDate', None)
-                        studentFee.cleared = False
-                studentFee.save()
-            ## Handling Student Fee Clearance Date and Cleared Ends ##
-
         ## Handling Fee Receipt Cancellation Ends ##
 
 

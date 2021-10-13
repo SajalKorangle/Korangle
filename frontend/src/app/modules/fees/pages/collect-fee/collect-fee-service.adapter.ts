@@ -1,5 +1,6 @@
 import { CollectFeeComponent } from './collect-fee.component';
 import { CommonFunctions } from "../../../../classes/common-functions";
+import { INSTALLMENT_LIST } from '@modules/fees/classes/constants';
 
 export class CollectFeeServiceAdapter {
     vm: CollectFeeComponent;
@@ -164,8 +165,7 @@ export class CollectFeeServiceAdapter {
         this.vm.isLoading = true;
 
         let fee_receipt_list = this.vm.newFeeReceiptList.map((feeReceipt) => {
-            // return CommonFunctions.getInstance().copyObject(feeReceipt);
-            let tempObject = CommonFunctions.getInstance().copyObject(feeReceipt);
+            let tempObject = CommonFunctions.getInstance().deepCopy(feeReceipt);
             if (feeReceipt['remark'] == '') {
                 feeReceipt['remark'] = null;
             }
@@ -174,7 +174,7 @@ export class CollectFeeServiceAdapter {
         });
 
         let sub_fee_receipt_list = this.vm.newSubFeeReceiptList.map((subFeeReceipt) => {
-            return CommonFunctions.getInstance().copyObject(subFeeReceipt);
+            return CommonFunctions.getInstance().deepCopy(subFeeReceipt);
         });
 
 
@@ -190,15 +190,14 @@ export class CollectFeeServiceAdapter {
         });
 
         this.vm.isLoading = true;
-        const value = await Promise.all([
-            this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-        ]);
+        let newFeeReceiptListResponse;
+        // const value = await Promise.all([
+        //     this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
+        // ]);
 
         let transactionFromAccountId;
         let transactionToAccountId;
-        const toCreateTransactionAccountDetails = [];
 
-        const serviceList = [];
         let transactionFromAccountSession;
         if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON) {
             transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList
@@ -209,32 +208,45 @@ export class CollectFeeServiceAdapter {
             transactionFromAccountId = this.vm.studentFeePaymentAccount;
             transactionToAccountId = transactionFromAccountSession.parentAccount;
 
-            value[0].forEach(fee_receipt => {
+            const toCreateTransactionList = [];
+
+            fee_receipt_list.forEach(fee_receipt => {
+                const newTransaction = {
+                    parentEmployee: this.vm.user.activeSchool.employeeId,
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                    transactionDate: new Date().toLocaleDateString().replace(/\//g, '-'),
+                    feeReceiptList: [fee_receipt],
+                    transactionAccountDetailsList: [],
+                };
+                const totalAmount = fee_receipt.subFeeReceiptList.reduce((acc, subFeeReceipt) => {
+                    return acc + INSTALLMENT_LIST.reduce((acc, installment) => {
+                        return acc + (subFeeReceipt[installment + 'Amount'] || 0) + (subFeeReceipt[installment + 'LateFee'] || 0);
+                    }, 0);
+                }, 0);
                 const newCreditTransactionAccountDetails = {
-                    parentTransaction: fee_receipt.parentTransaction,
                     parentAccount: transactionToAccountId,
-                    amount: 0,
+                    amount: totalAmount,
                     transactionType: 'CREDIT',
                 };
-                toCreateTransactionAccountDetails.push(newCreditTransactionAccountDetails);
                 const newDebitTransactionAccountDetails = {
-                    parentTransaction: fee_receipt.parentTransaction,
                     parentAccount: transactionFromAccountId,
-                    amount: 0,
+                    amount: totalAmount,
                     transactionType: 'DEBIT',
                 };
-                toCreateTransactionAccountDetails.push(newDebitTransactionAccountDetails);
+                newTransaction.transactionAccountDetailsList = [newCreditTransactionAccountDetails, newDebitTransactionAccountDetails];
+                toCreateTransactionList.push(newTransaction);
             });
-            serviceList.push(
-                this.vm.accountsService.createObjectList(this.vm.accountsService.transaction_account_details, toCreateTransactionAccountDetails)
-            );
+
+            const newTransactionListResponse = this.vm.genericService.createObjectList();// create transaction
+            newFeeReceiptListResponse = newTransactionListResponse.reduce((acc: Array<any>, transaction: any) => acc.concat(transaction.feeReceiptList), []);
 
         }
-
-        await Promise.all(serviceList);
+        else {
+            newFeeReceiptListResponse = this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list);
+        }
 
         const newSubFeeReceiptList = [];
-        const newFeeReceiptList = value[0].map(feeReceipt => {
+        const newFeeReceiptList = newFeeReceiptListResponse.map(feeReceipt => {
             feeReceipt = { ...feeReceipt };
             newSubFeeReceiptList.push(...feeReceipt.subFeeReceiptList);
             delete feeReceipt.subFeeReceiptList;
