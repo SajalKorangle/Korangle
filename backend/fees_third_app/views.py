@@ -1,6 +1,5 @@
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
-from fees_third_app.business.discount import create_discount_object, create_discount_list
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
     SubFeeReceipt, Discount, SubDiscount
@@ -104,16 +103,10 @@ class SubFeeReceiptListView(CommonListView, APIView):
 
 ########### Discount #############
 
-
 class DiscountView(CommonView, APIView):
     Model = Discount
     RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
-
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_discount_object(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
 
 
 class DiscountListView(CommonListView, APIView):
@@ -121,14 +114,8 @@ class DiscountListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_discount_list(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
-
 
 ########### Sub Discount #############
-
 
 class SubDiscountView(CommonView, APIView):
     Model = SubDiscount

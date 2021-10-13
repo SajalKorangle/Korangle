@@ -133,66 +133,44 @@ export class GiveDiscountServiceAdapter {
     }
 
     // Generate Fee Receipt/s
-    generateDiscounts(): void {
+    async generateDiscounts() {
         this.vm.isLoading = true;
+
+        let sub_discount_list = this.vm.newSubDiscountList.map((subDiscount) => {
+            return CommonFunctions.getInstance().deepCopy(subDiscount);
+        });
 
         let discount_list = this.vm.newDiscountList.map((discount) => {
             // return CommonFunctions.getInstance().copyObject(feeReceipt);
-            let tempObject = CommonFunctions.getInstance().copyObject(discount);
+            discount = CommonFunctions.getInstance().deepCopy(discount);
             if (discount['remark'] == '') {
                 discount['remark'] = null;
             }
-            return tempObject;
+            return {
+                ...discount,
+                discountNumber: 0,
+                subDiscountList: sub_discount_list.filter(subDiscount => subDiscount.parentSession == discount.parentSession
+                    && this.vm.studentFeeList.find((studentFee) => studentFee.id == subDiscount.parentStudentFee).parentStudent == discount.parentStudent)
+            };
         });
 
-        let sub_discount_list = this.vm.newSubDiscountList.map((subDiscount) => {
-            return CommonFunctions.getInstance().copyObject(subDiscount);
-        });
-
-        let student_fee_list = this.vm.studentFeeList
-            .filter((studentFee) => {
-                return this.vm.getStudentFeeFeesDue(studentFee) + this.vm.getStudentFeeLateFeesDue(studentFee) == 0;
-            })
-            .map((item) => {
-                item.cleared = true;
-                return CommonFunctions.getInstance().copyObject(item);
-            });
 
         this.vm.isLoading = true;
 
-        Promise.all([
-            this.vm.feeService.createObjectList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
-        ]).then(
-            (value) => {
-                value[0].forEach((discount) => {
-                    sub_discount_list.forEach((subDiscount) => {
-                        if (
-                            subDiscount.parentSession == discount.parentSession &&
-                            this.vm.studentFeeList.find((item) => {
-                                return item.id == subDiscount.parentStudentFee;
-                            }).parentStudent == discount.parentStudent
-                        ) {
-                            subDiscount['parentDiscount'] = discount.id;
-                        }
-                    });
-                });
+        const newDiscountResponse = await this.vm.genericService.createObjectList({ fees_third_app: 'Discount' }, discount_list);
 
-                this.vm.feeService.createObjectList(this.vm.feeService.sub_discounts, sub_discount_list).then((value2) => {
-                    this.addToDiscountList(value[0]);
-                    this.vm.subDiscountList = this.vm.subDiscountList.concat(value2);
+        const subDiscountList = newDiscountResponse.reduce((acc: Array<any>, discount) => acc.concat(discount.subDiscountList), []);
+        const newDiscountList = newDiscountResponse.map(discount => {
+            delete discount.subDiscountList;
+            return discount;
+        });
+        this.addToDiscountList(newDiscountList);
+        this.vm.subDiscountList = this.vm.subDiscountList.concat(subDiscountList);
 
-                    alert('Discount given successfully');
+        alert('Discount given successfully');
+        this.vm.handleStudentFeeProfile();
+        this.vm.isLoading = false;
 
-                    this.vm.handleStudentFeeProfile();
-
-                    this.vm.isLoading = false;
-                });
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
     }
 
     addToDiscountList(discount_list: any): void {

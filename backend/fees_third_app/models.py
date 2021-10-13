@@ -1,3 +1,4 @@
+from django.db.models.fields import related
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from accounts_app.views import TransactionAccountDetailsView
@@ -284,9 +285,9 @@ class FeeReceipt(models.Model):
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL, related_name='feeReceiptList')
 
-    ## Relations To School and Student ##
-    RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
-    RelationsToStudent = ['parentStudent__id']
+    class Relations:
+        RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'fee_receipt_new'
@@ -390,9 +391,9 @@ class SubFeeReceipt(models.Model):
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
 
-    ## Relations To School and Student ##
-    RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
-    RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
+    class Relations:
+        RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
+        RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
     @db_transaction.atomic
     def save(self, *args, **kwargs):
@@ -409,26 +410,44 @@ def subFeeReceiptDataCheck(sender, instance: SubFeeReceipt, **kwargs):
 
 class Discount(models.Model):
 
-    discountNumber = models.IntegerField(null=False, default=0, verbose_name='discountNumber')
-    generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
+    discountNumber = models.IntegerField(default=0, verbose_name='discountNumber')
+    generationDateTime = models.DateTimeField(auto_now_add=True, verbose_name='generationDateTime')
     remark = models.TextField(null=True, verbose_name='remark')
-    cancelled = models.BooleanField(null=False, default=False, verbose_name='cancelled')
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, verbose_name='parentStudent')
+    cancelled = models.BooleanField(default=False, verbose_name='cancelled')
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='discountList')
 
     # Added for the unique together field,
     # Also required in case discount is cancelled, student is deleted, and we need to calculate the maximum discount number
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='discountList')
 
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, related_name='discountList')
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='discountList')
+
+    class Relations:
+        RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'discount_new'
         unique_together = ('discountNumber', 'parentSchool')
 
 
+@receiver(pre_save, sender=Discount)
+def discountPreSave(sender, instance: Discount, **kwargs):
+    if(kwargs['raw']):
+        return
+    if instance.id is None:
+        ## Getting Discount Number Starts ##
+        last_discount_number = Discount.objects.filter(parentSchool=instance.parentSchool)\
+            .aggregate(Max('discountNumber'))['discountNumber__max']
+        instance.discountNumber = (last_discount_number or 0) + 1
+        ## Getting Discount Number Ends ##
+
+
 @receiver(post_save, sender=Discount)
 def discountPostSave(sender, instance: Discount, **kwargs):
+    if(kwargs['raw']):
+        return
     subDiscountList = instance.subDiscountList.all()
     for subDiscount in subDiscountList:
         receiptValidateAndUpdate(subDiscount.parentStudentFee)
@@ -436,10 +455,10 @@ def discountPostSave(sender, instance: Discount, **kwargs):
 
 class SubDiscount(models.Model):
 
-    parentDiscount = models.ForeignKey(Discount, on_delete=models.PROTECT, default=0, verbose_name='parentDiscount')
-    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, verbose_name='parentStudentFee')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
-    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, verbose_name='parentFeeType')
+    parentDiscount = models.ForeignKey(Discount, on_delete=models.PROTECT, default=0, related_name='subDiscountList')
+    parentStudentFee = models.ForeignKey(StudentFee, on_delete=models.SET_NULL, null=True, related_name='subDiscountList')
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, related_name='subDiscountList')
+    parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, default=0, related_name='subDiscountList')
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
@@ -490,12 +509,18 @@ class SubDiscount(models.Model):
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
 
+    class Relations:
+        RelationsToSchool = ['parentDiscount__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
+        RelationsToStudent = ['parentDiscount__parentStudent__id', 'parentStudentFee__parentStudent__id']
+
     class Meta:
         db_table = 'sub_discount_new'
 
 
 @receiver(post_save, sender=SubDiscount)
 def subDiscountPostSave(sender, instance: SubDiscount, **kwargs):
+    if(kwargs['raw']):
+        return
     receiptValidateAndUpdate(instance.parentStudentFee)
 
 

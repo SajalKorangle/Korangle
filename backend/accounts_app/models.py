@@ -91,9 +91,9 @@ class Transaction(models.Model):
     transactionDate = models.DateField()
     approvalId = models.IntegerField(null=True, blank=True)
 
-    ## Relations To School and Student ##
-    RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
-    RelationsToStudent = []
+    class Relations:
+        RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'transaction'
@@ -142,9 +142,9 @@ class TransactionAccountDetails(models.Model):
 
     transactionType = models.TextField(choices=ACCOUNT_TYPE)
 
-    ## Relations To School and Student ##
-    RelationsToSchool = ['parentTransaction__parentSchool__id', 'parentTransaction__parentEmployee__parentSchool__id', 'parentAccount__parentSchool__id']
-    RelationsToStudent = []
+    class Relations:
+        RelationsToSchool = ['parentTransaction__parentSchool__id', 'parentTransaction__parentEmployee__parentSchool__id', 'parentAccount__parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'transaction_account_details'

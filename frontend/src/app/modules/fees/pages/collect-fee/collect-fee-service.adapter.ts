@@ -164,21 +164,16 @@ export class CollectFeeServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let fee_receipt_list = this.vm.newFeeReceiptList.map((feeReceipt) => {
-            let tempObject = CommonFunctions.getInstance().deepCopy(feeReceipt);
-            if (feeReceipt['remark'] == '') {
-                feeReceipt['remark'] = null;
-            }
-            delete tempObject.receiptNumber;
-            return tempObject;
-        });
-
         let sub_fee_receipt_list = this.vm.newSubFeeReceiptList.map((subFeeReceipt) => {
             return CommonFunctions.getInstance().deepCopy(subFeeReceipt);
         });
 
-
-        fee_receipt_list = fee_receipt_list.map(feeReceipt => {
+        let fee_receipt_list = this.vm.newFeeReceiptList.map((feeReceipt) => {
+            feeReceipt = CommonFunctions.getInstance().deepCopy(feeReceipt);
+            if (feeReceipt['remark'] == '') {
+                feeReceipt['remark'] = null;
+            }
+            delete feeReceipt.receiptNumber;
             return {
                 ...feeReceipt,
                 receiptNumber: 0,

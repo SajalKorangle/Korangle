@@ -17,8 +17,8 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
             if not super_response:
                 return False
 
-            RelationsToStudent = self.Meta.model.RelationsToStudent
-            RelationsToSchool = self.Meta.model.RelationsToSchool
+            RelationsToStudent = self.Meta.model.Relations.RelationsToStudent
+            RelationsToSchool = self.Meta.model.Relations.RelationsToSchool
 
             # Checking for Parent
             if(activeStudentIdList):
