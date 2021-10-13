@@ -36,7 +36,11 @@ export class GenericService extends RestApiGateway {
         return '/generic';
     }
 
-    createObject<T extends keyof APP_MODEL_STRUCTURE_INTERFACE>(app_name: T, model_name: APP_MODEL_STRUCTURE_INTERFACE[T], data: any): Promise<any> {
+    createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        if (Object.entries(config).length != 1) {
+            throw new Error("Invalid APP NAME, MODEL NAME pair");
+        }
+        const [app_name, model_name] = Object.entries(config)[0];
         // Object.keys(data).forEach(key => {  // json parse if key ends with JSON
         //     if (key.endsWith("JSON")) {
         //         data[key] = JSON.stringify(data[key]);
@@ -46,7 +50,12 @@ export class GenericService extends RestApiGateway {
         // .then(JSON_OBJECT_RESPONSE_PARSER);
     }
 
-    createObjectList<T extends keyof APP_MODEL_STRUCTURE_INTERFACE>(app_name: T, model_name: APP_MODEL_STRUCTURE_INTERFACE[T], data: any): Promise<any> {
+    createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+
+        if (Object.entries(config).length != 1) {
+            throw new Error("Invalid APP NAME, MODEL NAME pair");
+        }
+        const [app_name, model_name] = Object.entries(config)[0];
 
         // if (data.length > 0) { // json parse if key ends with JSON
         //     const jsonKeys = [];
@@ -66,7 +75,11 @@ export class GenericService extends RestApiGateway {
 
 }
 
-// String in the following string are constant strings and if IDE rename symbol functionality is used all the occurrences can be changed at once
+
+
 interface APP_MODEL_STRUCTURE_INTERFACE {
-    'fees_third_app': 'FeeReceipt' | 'SubFeeReceipt';
-}
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt';
+    accounts_app: 'Transaction' | 'TransactionAccountDetails';
+};
+
+// APP_MODEL_STRUCTURE_INTERFACE

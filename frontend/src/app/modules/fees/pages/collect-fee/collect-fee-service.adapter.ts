@@ -237,12 +237,12 @@ export class CollectFeeServiceAdapter {
                 toCreateTransactionList.push(newTransaction);
             });
 
-            const newTransactionListResponse = this.vm.genericService.createObjectList();// create transaction
+            const newTransactionListResponse = await this.vm.genericService.createObjectList({ accounts_app: 'Transaction' }, toCreateTransactionList);
             newFeeReceiptListResponse = newTransactionListResponse.reduce((acc: Array<any>, transaction: any) => acc.concat(transaction.feeReceiptList), []);
 
         }
         else {
-            newFeeReceiptListResponse = this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list);
+            newFeeReceiptListResponse = this.vm.genericService.createObjectList({ fees_third_app: 'FeeReceipt' }, fee_receipt_list);
         }
 
         const newSubFeeReceiptList = [];
