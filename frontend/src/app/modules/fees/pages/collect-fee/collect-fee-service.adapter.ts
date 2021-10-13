@@ -191,9 +191,6 @@ export class CollectFeeServiceAdapter {
 
         this.vm.isLoading = true;
         let newFeeReceiptListResponse;
-        // const value = await Promise.all([
-        //     this.vm.feeService.createObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-        // ]);
 
         let transactionFromAccountId;
         let transactionToAccountId;
@@ -211,10 +208,12 @@ export class CollectFeeServiceAdapter {
             const toCreateTransactionList = [];
 
             fee_receipt_list.forEach(fee_receipt => {
+                const student = this.vm.getStudentById(fee_receipt.parentStudent);
                 const newTransaction = {
                     parentEmployee: this.vm.user.activeSchool.employeeId,
                     parentSchool: this.vm.user.activeSchool.dbId,
-                    transactionDate: new Date().toLocaleDateString().replace(/\//g, '-'),
+                    remark: `Student Fee Payment for ${student.name} with Scholar No. ${student.scholarNumber} of ${this.vm.getClassNameByStudentAndSessionId(student, fee_receipt.parentSession)}`,
+                    transactionDate: new Date().toISOString().substring(0, 10),
                     feeReceiptList: [fee_receipt],
                     transactionAccountDetailsList: [],
                 };

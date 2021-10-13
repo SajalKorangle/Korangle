@@ -25,9 +25,9 @@ export class RestApiGateway {
         let user = DataStorage.getInstance().getUser();
         if (user.activeSchool) {
             if (user.activeSchool.role === 'Employee') {
-                absolute_url.searchParams.append('activeSchoolID', user.activeSchool.dbId);
+                absolute_url.searchParams.append('activeSchoolId', user.activeSchool.dbId);
             } else if (user.activeSchool.role === 'Parent') {
-                absolute_url.searchParams.append('activeStudentID', user.activeSchool.studentList.map((s) => s.id).join(','));
+                absolute_url.searchParams.append('activeStudentIdList', user.activeSchool.studentList.map((s) => s.id).join(','));
             } else {
                 alert('Alert: Contact Admin');
             }

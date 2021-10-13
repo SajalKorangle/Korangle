@@ -137,28 +137,28 @@ def user_permission_4(function):
 
         # no need to check authentication because the RestAPIView class by default check for authentication
 
-        if ('activeSchoolID' in request.GET.keys()):    # User is requesting as employee
-            activeSchoolID = request.GET['activeSchoolID']
-            if employeeHasSchoolPermission(request.user, activeSchoolID):
+        if ('activeSchoolId' in request.GET.keys()):    # User is requesting as employee
+            activeSchoolId = request.GET['activeSchoolId']
+            if employeeHasSchoolPermission(request.user, activeSchoolId):
                 request.GET._mutable = True
-                del request.GET['activeSchoolID']
+                del request.GET['activeSchoolId']
                 request.GET._mutable = False
-                data = {'success': function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=None)}
+                data = {'success': function(*args, **kwargs, activeSchoolId=int(activeSchoolId), activeStudentIdList=None)}
                 return Response(data)
             else:
                 return Response({'fail': 'User not permitted for this action'})
 
-        elif ('activeStudentID' in request.GET.keys()):  # User is requesting as parent
-            activeStudentID = list(map(int, request.GET['activeStudentID'].split(',')))  # activeStudentID can be a single id or a list of id's seperated by ','
+        elif ('activeStudentIdList' in request.GET.keys()):  # User is requesting as parent
+            activeStudentIdList = list(map(int, request.GET['activeStudentIdList'].split(',')))
             hasPermission = True
-            for studentID in activeStudentID:
-                hasPermission = hasPermission and parentHasStudentPermission(request.user, studentID)
+            for studentId in activeStudentIdList:
+                hasPermission = hasPermission and parentHasStudentPermission(request.user, studentId)
             if (hasPermission):
                 request.GET._mutable = True
-                del request.GET['activeStudentID']
+                del request.GET['activeStudentIdList']
                 request.GET._mutable = False
-                activeSchoolID = Student.objects.get(id=activeStudentID[0]).parentSchool.id
-                data = {'success': function(*args, **kwargs, activeSchoolID=int(activeSchoolID), activeStudentID=activeStudentID)}
+                activeSchoolId = Student.objects.get(id=activeStudentIdList[0]).parentSchool.id
+                data = {'success': function(*args, **kwargs, activeSchoolId=int(activeSchoolId), activeStudentIdList=activeStudentIdList)}
                 return Response(data)
             else:
                 return Response({'fail': 'User not permitted for this action'})

@@ -11,8 +11,9 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
 
     class ModelSerializer(serializers.ModelSerializer):
 
-        def is_valid(self, raise_exception=True):
-            super_response = super().is_valid(raise_exception=raise_exception)
+        def is_valid(self, *args, **kwargs):
+
+            super_response = super().is_valid(raise_exception=False)
             if not super_response:
                 return False
 
@@ -160,7 +161,6 @@ def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
 
 
 def create_object(data, Model, activeSchoolId, activeStudentIdList):
-
     data_list_mapped_by_child_related_field_name = {}
 
     for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
@@ -168,7 +168,7 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
         del data[child_related_field_name]
 
     with db_transaction.atomic():
-        ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeStudentIdList=activeStudentIdList, activeSchoolId=activeSchoolId)
+        ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
         serializer = ModelSerializer(data=data)
         assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
         serializer.save()
@@ -189,7 +189,6 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
             child_response = create_object_list(child_data_list, child_model, activeSchoolId, activeStudentIdList)
 
             response.update({child_related_field_name: child_response})
-
     return response
 
 

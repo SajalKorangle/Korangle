@@ -1,4 +1,5 @@
 
+from django.db.models.signals import pre_init
 from rest_framework.views import APIView
 
 from decorators import user_permission_4
@@ -32,9 +33,9 @@ class GenericView(GenericBaseView):
     #     return get_object(request.GET, self.Model, activeSchoolID, activeStudentID)
 
     @user_permission_4
-    def post(self, request, activeSchoolID, activeStudentID):
+    def post(self, request, activeSchoolId, activeStudentIdList):
         data = request.data
-        return create_object(data, self.Model, activeSchoolID, activeStudentID)
+        return create_object(data, self.Model, activeSchoolId, activeStudentIdList)
 
     # @user_permission_3
     # def put(self, request, activeSchoolID, activeStudentID):
@@ -62,9 +63,9 @@ class GenericListView(GenericBaseView):
     #     return get_list(request.GET, filtered_query_set, self.ModelSerializer)
 
     @user_permission_4
-    def post(self, request, activeSchoolID, activeStudentID):
+    def post(self, request, activeSchoolId, activeStudentIdList):
         data_list = request.data
-        return create_object_list(data_list, self.Model, activeSchoolID, activeStudentID)
+        return create_object_list(data_list, self.Model, activeSchoolId, activeStudentIdList)
 
     # @user_permission_3
     # def put(self, request, activeSchoolID, activeStudentID):

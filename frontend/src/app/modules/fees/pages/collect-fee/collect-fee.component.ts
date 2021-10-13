@@ -182,6 +182,10 @@ export class CollectFeeComponent implements OnInit {
         }).stopName;
     }
 
+    getStudentById(studentId) {
+        return this.selectedStudentList.find(student => student.id == studentId);
+    }
+
     getClassNameByStudentAndSessionId(student: any, sessionId: any): any {
         return this.classList.find((classs) => {
             return (

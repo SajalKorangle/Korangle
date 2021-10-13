@@ -501,7 +501,7 @@ def subDiscountPostSave(sender, instance: SubDiscount, **kwargs):
 
 def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
     ## Initialization Starts ##
-    subFeeReceiptList = studentFee.subfeereceipt_set.filter(parentFeeReceipt__cancelled=False)
+    subFeeReceiptList = studentFee.subFeeReceiptList.filter(parentFeeReceipt__cancelled=False)
     subDiscountList = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
 
     isClearedMappedByMonth = {}  # To store month wise clearance
