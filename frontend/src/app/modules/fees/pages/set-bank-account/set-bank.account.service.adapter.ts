@@ -39,7 +39,7 @@ export class SetBankAccountServiceAdapter {
     async verifyIFSC() {
         this.vm.isIFSCLoading = true;
         if (this.vm.onlinePaymentAccount.vendorData.bank.ifsc.length == 11
-            && (!this.vm.cache.ifsc || this.vm.cache.ifsc.ifsc != this.vm.onlinePaymentAccount.vendorData.bank.ifsc)) {
+            && !this.vm.isIFSCValidationPasses()) {
 
             const request_data = {
                 ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
@@ -50,7 +50,7 @@ export class SetBankAccountServiceAdapter {
     }
 
     async createUpdateOnlinePaymentAccount() {
-        if (!this.vm.offlineValidation())
+        if (!this.vm.isDataValid())
             return;
 
         this.vm.intermediateUpdateState.accountVerificationLoading = true;
@@ -60,9 +60,9 @@ export class SetBankAccountServiceAdapter {
 
         const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
         await this.verifyIFSC();
-        if (!this.vm.cache.ifsc) {
+        if (!this.vm.isIFSCValidationPasses()) {
             alert('ifsc verification failed');
-            this.vm.resetintermediateUpdateState();
+            this.vm.resetIntermediateUpdateState();
             return;
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
@@ -73,7 +73,7 @@ export class SetBankAccountServiceAdapter {
         const accountVerificationData = await this.vm.paymentService.createObject(this.vm.paymentService.bank_account_verification, account_verification_data);
         if (accountVerificationData.accountStatusCode != "ACCOUNT_IS_VALID") {
             alert(`Account verification failed\n message: ${accountVerificationData.message}`);
-            this.vm.resetintermediateUpdateState();
+            this.vm.resetIntermediateUpdateState();
             return;
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
@@ -88,7 +88,7 @@ export class SetBankAccountServiceAdapter {
                 await this.vm.paymentService.createObject(this.vm.paymentService.online_payment_account, newOnlinePaymentAccount);
             this.vm.snackBar.open('Payment Account Created Successfully', undefined, { duration: 5000 });
         }
-        this.vm.resetintermediateUpdateState();
+        this.vm.resetIntermediateUpdateState();
     }
 
 

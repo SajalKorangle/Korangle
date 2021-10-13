@@ -1,25 +1,23 @@
 <div class="card-content table-responsive" *ngIf="!isLoading else Loader">
 
     <form (submit)="$event.preventDefault(); serviceAdapter.createUpdateOnlinePaymentAccount();">
+        <!--Account Information Starts-->
         <h4>Account Information</h4>
         <div style="display: flex; flex-wrap: wrap;">
             <mat-form-field>
                 <mat-label>Account Holder Name</mat-label>
-                <input name="name" required matInput type="text"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountHolder">
+                <input name="name" required matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountHolder">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Account Number</mat-label>
-                <input name="accountNumber" required matInput type="text"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountNumber">
+                <input name="accountNumber" required matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountNumber">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>IFSC</mat-label>
-                <input name="ifsc" required matInput type="text" [errorStateMatcher]="{isErrorState: ifscError}"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.bank.ifsc"
-                    (ngModelChange)="serviceAdapter.verifyIFSC()">
+                <input name="ifsc" required matInput type="text" [errorStateMatcher]="{isErrorState: displayIfscError}"
+                    [(ngModel)]="onlinePaymentAccount.vendorData.bank.ifsc" (ngModelChange)="serviceAdapter.verifyIFSC()">
                 <mat-error>Invalid IFSC</mat-error>
             </mat-form-field>
 
@@ -34,6 +32,7 @@
             </mat-select>
         </mat-form-field>
 
+        <!--Bank Details from ifsc Starts-->
         <div *ngIf="cache.ifsc as bankData">
             <span>Bank: {{bankData.bank}}</span><br />
             <span>Address: {{bankData.address}}</span><br />
@@ -41,42 +40,45 @@
             <span>City: {{bankData.city}} State: {{bankData.state}}</span>
         </div>
         <hr />
+        <!--Bank Details from ifsc Ends-->
 
+        <!--Account Information Ends-->
+
+        <!--Personal Information Starts-->
         <h4>Personal Info</h4>
         <div style="display: flex; flex-wrap: wrap;">
             <mat-form-field>
                 <mat-label>Mobile Number</mat-label>
-                <input name="mobileNumber" required matInput type="text" maxlength="10"
-                    [pattern]="validators.phoneNumber" [(ngModel)]="onlinePaymentAccount.vendorData.phone">
+                <input name="mobileNumber" required matInput type="text" maxlength="10" [pattern]="validators.phoneNumber"
+                    [(ngModel)]="onlinePaymentAccount.vendorData.phone">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Email</mat-label>
-                <input name="email" required matInput type="email" [pattern]="validators.email"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.email">
+                <input name="email" required matInput type="email" [pattern]="validators.email" [(ngModel)]="onlinePaymentAccount.vendorData.email">
             </mat-form-field>
 
         </div>
+        <!--Personal Information Ends-->
 
-        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit">
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit" [disabled]="!isDataValid()">
             {{onlinePaymentAccount.id?'Update':'Submit'}}
         </button>
+        <br /><span *ngIf="errorMessage">{{errorMessage}}</span>
     </form>
 </div>
 
 <ng-template #Loader>
     <div class="card-content table-responsive" style="height: 90vh;">
         <div *ngIf="isUpdating()">
-            <span class="intermediate-loaders-wrapper">IFSC Verification: <mat-spinner
-                    style="display: inline; margin: 12px;" [diameter]="20"
+            <span class="intermediate-loaders-wrapper">IFSC Verification: <mat-spinner style="display: inline; margin: 12px;" [diameter]="20"
                     *ngIf="intermediateUpdateState.ifscVerificationLoading else CheckIcon">
                 </mat-spinner> </span><br />
-            <span class="intermediate-loaders-wrapper">Account Verification: <mat-spinner
-                    style="display: inline; margin: 12px;" [diameter]="20"
+            <span class="intermediate-loaders-wrapper">Account Verification: <mat-spinner style="display: inline; margin: 12px;" [diameter]="20"
                     *ngIf="intermediateUpdateState.accountVerificationLoading else CheckIcon"></mat-spinner>
             </span><br />
-            <span class="intermediate-loaders-wrapper">Registration: <mat-spinner style="display: inline; margin: 12px;"
-                    [diameter]="20" *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
+            <span class="intermediate-loaders-wrapper">Registration: <mat-spinner style="display: inline; margin: 12px;" [diameter]="20"
+                    *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
                 </mat-spinner> </span><br />
         </div>
         <app-loading-spinner *ngIf="!isUpdating()" [user]="user"></app-loading-spinner>

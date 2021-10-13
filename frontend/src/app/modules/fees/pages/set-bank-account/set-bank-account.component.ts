@@ -17,6 +17,7 @@ export class SetBankAccountComponent implements OnInit {
 
     user;
     validators = VALIDATORS_REGX;
+    errorMessage: string = '';
 
     onlinePaymentAccount: OnlinePaymentAccount = new OnlinePaymentAccount();
 
@@ -58,7 +59,7 @@ export class SetBankAccountComponent implements OnInit {
         // console.log('this: ', this);
     }
 
-    resetintermediateUpdateState(): void {
+    resetIntermediateUpdateState(): void {
         this.intermediateUpdateState.accountVerificationLoading = false;
         this.intermediateUpdateState.ifscVerificationLoading = false;
         this.intermediateUpdateState.registrationLoading = false;
@@ -75,44 +76,52 @@ export class SetBankAccountComponent implements OnInit {
         return requiredOnlyFields;
     }
 
-    ifscError = (): boolean => {
+    isIFSCValidationPasses(): boolean {
+        if (this.onlinePaymentAccount.vendorData.bank.ifsc.length == 11
+            && this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
+            return true;
+        return false;
+    }
+
+    displayIfscError = (): boolean => {
         if (!this.onlinePaymentAccount.vendorData.bank.ifsc || this.isIFSCLoading)
             return false;
-        if (this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
+        if (this.isIFSCValidationPasses())
             return false;
         return true;
     };
 
-    offlineValidation(): boolean {
+    isDataValid(): boolean {
         if (this.onlinePaymentAccount.vendorData.bank.ifsc.length != 11) {
-            alert('Invalid IFSC');
+            this.errorMessage = 'IFSC Validation Failed';
             return false;
         }
 
         if (!this.onlinePaymentAccount.vendorData.phone || !this.validators.phoneNumber.test(this.onlinePaymentAccount.vendorData.phone)) {
-            alert('Invalid Mobile Number');
+            this.errorMessage = "Invalid Mobile Number";
             return false;
         }
 
         if (!this.onlinePaymentAccount.vendorData.email || !this.validators.email.test(this.onlinePaymentAccount.vendorData.email)) {
-            alert("Invalid Email");
+            this.errorMessage = "Invalid Email";
             return false;
         }
 
         if (!this.onlinePaymentAccount.vendorData.settlementCycleId) {
-            alert("Settlement Cycle is Required");
+            this.errorMessage = "Settlement Cycle is Required";
             return false;
         }
 
         if (!this.onlinePaymentAccount.vendorData.bank.accountHolder) {
-            alert("Account Holder Name is required");
+            this.errorMessage = "Account Holder Name is required";
             return false;
         }
 
         if (!this.onlinePaymentAccount.vendorData.bank.accountNumber || this.onlinePaymentAccount.vendorData.bank.accountNumber.length < 6) {
-            alert("Invalid Account Number");
+            this.errorMessage = "Invalid Account Number";
             return false;
         }
+        this.errorMessage = "";
         return true;
     }
 
