@@ -19,10 +19,10 @@ export class SetBankAccountServiceAdapter {
         let onlinePaymentAccount;
         [
             onlinePaymentAccount,
-            this.vm.settelmentCycleList,
+            this.vm.settlementCycleList,
         ] = await Promise.all([
             this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}),
-            this.vm.paymentService.getObjectList(this.vm.paymentService.settelment_cycle, {})
+            this.vm.paymentService.getObjectList(this.vm.paymentService.settlement_cycle, {})
                 .then(data => data.map(d => {
                     return { ...d, id: parseInt(d.id) };
                 })
