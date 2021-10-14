@@ -48,13 +48,11 @@
                                 color: blue !important;
                             ">
                             <td align="left">{{ student.name }}
-                                <mat-form-field *ngIf="hasOnlinePaymentAccount" style="margin-left: 16px;"
-                                    [style.width]="isMobile()?'80px':'auto'">
+                                <mat-form-field *ngIf="hasOnlinePaymentAccount" style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
                                     <mat-label *ngIf="isMobile()">Amount</mat-label>
                                     <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
-                                    <input matInput type="number" [(ngModel)]="amountMappedByStudntId[student.id]"
-                                        (ngModelChange)="handleOverallPaymentChange(student)"
-                                        [errorStateMatcher]="{isErrorState: amountError(student)}">
+                                    <input matInput type="number" [(ngModel)]="amountMappedByStudentId[student.id]"
+                                        (ngModelChange)="handleOverallPaymentChange(student)" [errorStateMatcher]="{isErrorState: amountError(student)}">
                                     <mat-error>Invalid Amount</mat-error>
                                 </mat-form-field>
                             </td>
@@ -69,8 +67,7 @@
                             <td></td>
                         </tr>
 
-                        <ng-container
-                            *ngFor="let session of getFilteredSessionListByStudent(student); let sessionIndex = index">
+                        <ng-container *ngFor="let session of getFilteredSessionListByStudent(student); let sessionIndex = index">
                             <!-- Session -->
 
                             <tr style="font-weight: 500 !important; font-size: 16px !important">
@@ -89,8 +86,7 @@
                                 <td></td>
                             </tr>
 
-                            <ng-container
-                                *ngFor="let studentFee of getFilteredStudentFeeListBySession(student, session); let studentFeeIndex = index">
+                            <ng-container *ngFor="let studentFee of getFilteredStudentFeeListBySession(student, session); let studentFeeIndex = index">
                                 <ng-container *ngIf="studentFee.isAnnually">
                                     <!-- Student Fee Annually -->
 
@@ -136,9 +132,7 @@
                                         <td *ngIf="lateFeeVisible" align="center">{{
                                             getStudentFeeLateFeeTotal(studentFee) }}</td>
                                         <td align="center">
-                                            <button type="button"
-                                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                                                style="padding: 3px 8px"
+                                            <button type="button" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="padding: 3px 8px"
                                                 (click)="showOrHideStudentFeeDetails(studentFee)">
                                                 <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-
                                                 </ng-container>
@@ -198,8 +192,7 @@
                     <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
                 </mat-form-field>
 
-                <button class="btn" [disabled]="getTotalPaymentAmount()==0"
-                    style="background-color: blue; color: white; display: block; margin-top: 16px;"
+                <button class="btn" [disabled]="getTotalPaymentAmount()==0" style="background-color: blue; color: white; display: block; margin-top: 16px;"
                     (click)="serviceAdapter.initiatePayment()">
                     Pay Now
                 </button>
@@ -221,20 +214,18 @@
                     <mat-panel-title *ngIf="feeReceiptList.length === 0">**No fees submitted yet</mat-panel-title>
                     <mat-panel-title *ngIf="feeReceiptList.length !== 0">
                         <span class="hidden-xs" style="color: #7b7b7b">Last Receipt Date: &nbsp;</span><i>{{
-                            feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy' }}</i>, &nbsp; <span
-                            class="hidden-xs" style="color: #7b7b7b">Amount: &nbsp;</span>{{
+                            feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy' }}</i>, &nbsp; <span class="hidden-xs" style="color: #7b7b7b">Amount:
+                            &nbsp;</span>{{
                         getLastDaySubmittedAmount(feeReceiptList[0]) | currency: 'INR':'':'1.0-0' }} &nbsp; / &nbsp;
                         <span class="hidden-xs" style="color: #7b7b7b">Receipts: &nbsp;</span>{{
                         getLastDaySubmittedReceipts(feeReceiptList[0]).length }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div style="overflow: auto;">
-                    <app-fee-receipt-list [user]="user" [receiptColumnFilter]="receiptColumnFilter"
-                        [feeTypeList]="feeTypeList" [feeReceiptList]="feeReceiptList"
-                        [subFeeReceiptList]="subFeeReceiptList" [studentList]="selectedStudentList"
-                        [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList"
-                        [classList]="classList" [number]="3" [sectionList]="sectionList" [sessionList]="sessionList"
-                        [boardList]="boardList" [printSingleReceipt]="true"></app-fee-receipt-list>
+                    <app-fee-receipt-list [user]="user" [receiptColumnFilter]="receiptColumnFilter" [feeTypeList]="feeTypeList"
+                        [feeReceiptList]="feeReceiptList" [subFeeReceiptList]="subFeeReceiptList" [studentList]="selectedStudentList"
+                        [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList" [classList]="classList" [number]="3"
+                        [sectionList]="sectionList" [sessionList]="sessionList" [boardList]="boardList" [printSingleReceipt]="true"></app-fee-receipt-list>
                 </div>
             </mat-expansion-panel>
 
@@ -246,11 +237,9 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-discount-list [user]="user" [discountColumnFilter]="discountColumnFilter"
-                    [discountList]="discountList" [subDiscountList]="subDiscountList"
-                    [studentList]="selectedStudentList" [studentSectionList]="selectedStudentSectionList"
-                    [employeeList]="employeeList" [classList]="classList" [sectionList]="sectionList"
-                    [sessionList]="sessionList"></app-discount-list>
+                <app-discount-list [user]="user" [discountColumnFilter]="discountColumnFilter" [discountList]="discountList" [subDiscountList]="subDiscountList"
+                    [studentList]="selectedStudentList" [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList" [classList]="classList"
+                    [sectionList]="sectionList" [sessionList]="sessionList"></app-discount-list>
             </mat-expansion-panel>
 
             <mat-expansion-panel *ngIf="hasOnlinePaymentAccount" [disabled]="parsedOrder.length==0">

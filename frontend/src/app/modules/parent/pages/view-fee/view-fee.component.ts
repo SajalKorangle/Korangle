@@ -62,8 +62,8 @@ export class ViewFeeComponent implements OnInit {
 
     // Fee Payment
     email: string = '';
-    amountMappedByStudntId: { [key: number]: number; } = {};
-    newSubFeeReceiptListMappedByStudntId: { [key: number]: Array<Partial<SubFeeReceipt>>; } = {};
+    amountMappedByStudentId: { [key: number]: number; } = {};
+    newSubFeeReceiptListMappedByStudentId: { [key: number]: Array<Partial<SubFeeReceipt>>; } = {};
 
     // Validator
     validatorRegex = VALIDATORS_REGX;
@@ -116,6 +116,11 @@ export class ViewFeeComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
+        const urlParams = new URLSearchParams(location.search);
+        if (urlParams.has('orderId')) {
+            this.htmlRenderer.openPaymentResponseDialog();
+        }
+
         this.receiptColumnFilter.receiptNumber = false;
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.printButton = true;
@@ -139,7 +144,7 @@ export class ViewFeeComponent implements OnInit {
         }
 
         this.selectedStudentList.forEach(student => {
-            this.newSubFeeReceiptListMappedByStudntId[student.id] = [];
+            this.newSubFeeReceiptListMappedByStudentId[student.id] = [];
         });
     }
 
@@ -158,9 +163,9 @@ export class ViewFeeComponent implements OnInit {
 
     amountError(student: Student) {
         const amountErrorHandler = () => {  // callback error checking function, checkf if fee payment amount exceeds the maximum amount
-            if (this.amountMappedByStudntId[student.id] < 0)
+            if (this.amountMappedByStudentId[student.id] < 0)
                 return true;
-            if (this.amountMappedByStudntId[student.id] > (this.getStudentFeesDue(student) + this.getStudentLateFeesDue(student)))
+            if (this.amountMappedByStudentId[student.id] > (this.getStudentFeesDue(student) + this.getStudentLateFeesDue(student)))
                 return true;
             return false;
         };
@@ -170,8 +175,8 @@ export class ViewFeeComponent implements OnInit {
     handleOverallPaymentChange(student: Student): void {
         if (this.amountError(student)())
             return;
-        let paymentLeft = this.amountMappedByStudntId[student.id];
-        this.newSubFeeReceiptListMappedByStudntId[student.id] = []; // start with empty
+        let paymentLeft = this.amountMappedByStudentId[student.id];
+        this.newSubFeeReceiptListMappedByStudentId[student.id] = []; // start with empty
 
         if (paymentLeft == 0)
             return;
@@ -207,7 +212,7 @@ export class ViewFeeComponent implements OnInit {
     handleStudentFeeInstallmentLateFeePaymentChange(studentFee: StudentFee, installment: string, payment: number): void {
         if (payment == 0)
             return;
-        let subFeeReceipt = this.newSubFeeReceiptListMappedByStudntId[studentFee.parentStudent].find((subFeeReceipt) => {
+        let subFeeReceipt = this.newSubFeeReceiptListMappedByStudentId[studentFee.parentStudent].find((subFeeReceipt) => {
             return subFeeReceipt.parentStudentFee == studentFee.id;
         });
 
@@ -226,13 +231,13 @@ export class ViewFeeComponent implements OnInit {
         subFeeReceipt.parentSession = studentFee.parentSession;
         subFeeReceipt.isAnnually = studentFee.isAnnually;
         subFeeReceipt[installment] = payment;
-        this.newSubFeeReceiptListMappedByStudntId[studentFee.parentStudent].push(subFeeReceipt);
+        this.newSubFeeReceiptListMappedByStudentId[studentFee.parentStudent].push(subFeeReceipt);
     }
 
     handleStudentFeeInstallmentPaymentChange(studentFee: StudentFee, installment: string, payment: number): void {
         if (payment == 0)
             return;
-        let subFeeReceipt = this.newSubFeeReceiptListMappedByStudntId[studentFee.parentStudent].find((subFeeReceipt) => {
+        let subFeeReceipt = this.newSubFeeReceiptListMappedByStudentId[studentFee.parentStudent].find((subFeeReceipt) => {
             return subFeeReceipt.parentStudentFee == studentFee.id;
         });
 
@@ -263,11 +268,11 @@ export class ViewFeeComponent implements OnInit {
     }
 
     getSessionFilteredNewSubFeeReceiptList(student, session: Session): Array<Partial<SubFeeReceipt>> {
-        return this.newSubFeeReceiptListMappedByStudntId[student.id].filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
+        return this.newSubFeeReceiptListMappedByStudentId[student.id].filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
     }
 
     getStudentFeeFilteredNewSubFeeReceiptList(student: Student, studentFee: StudentFee): Array<Partial<SubFeeReceipt>> {
-        return this.newSubFeeReceiptListMappedByStudntId[student.id].filter(subFeeReceipt => subFeeReceipt.parentStudentFee == studentFee.id);
+        return this.newSubFeeReceiptListMappedByStudentId[student.id].filter(subFeeReceipt => subFeeReceipt.parentStudentFee == studentFee.id);
     }
 
     getSubFeeReceiptTotalFee(subFeeReceiptList: Array<Partial<SubFeeReceipt>>, installmentList: string[] = this.installmentList) {
@@ -293,12 +298,12 @@ export class ViewFeeComponent implements OnInit {
     }
 
     getNewSubFeeReceiptTotalFee(student): number {
-        const subFeeReceiptList = this.newSubFeeReceiptListMappedByStudntId[student.id];
+        const subFeeReceiptList = this.newSubFeeReceiptListMappedByStudentId[student.id];
         return this.getSubFeeReceiptTotalFee(subFeeReceiptList);
     }
 
     getNewSubFeeReceiptTotalLateFee(student): number {
-        const subFeeReceiptList = this.newSubFeeReceiptListMappedByStudntId[student.id];
+        const subFeeReceiptList = this.newSubFeeReceiptListMappedByStudentId[student.id];
         return this.getSubFeeReceiptTotalLateFee(subFeeReceiptList);
     }
 
@@ -329,7 +334,7 @@ export class ViewFeeComponent implements OnInit {
     }
 
     getTotalPaymentAmount(): number {
-        return Object.values(this.amountMappedByStudntId).reduce((acc: number, next: number) => acc + next, 0);
+        return Object.values(this.amountMappedByStudentId).reduce((acc: number, next: number) => acc + next, 0);
     }
 
     formatDate(dateStr: any): any {

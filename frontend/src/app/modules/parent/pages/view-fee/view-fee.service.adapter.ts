@@ -1,6 +1,5 @@
 import { ViewFeeComponent } from './view-fee.component';
 import { environment } from 'environments/environment';
-import { Constants } from '@classes/constants';
 
 export class ViewFeeServiceAdapter {
     vm: ViewFeeComponent;
@@ -17,7 +16,6 @@ export class ViewFeeServiceAdapter {
     async initializeData() {
 
         let schoolId = this.vm.user.activeSchool.dbId;
-        let sessionId = this.vm.user.activeSchool.currentSessionDbId;
 
         let studentListId = this.vm.user.section.student.studentList.map((a) => a.id).join();
 
@@ -74,7 +72,7 @@ export class ViewFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
-            this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}), // 13
+            this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {}), // 13
             this.vm.feeService.getObjectList(this.vm.feeService.online_fee_payment_transaction, {}), //14
         ]).then(
             (value) => {
@@ -107,11 +105,6 @@ export class ViewFeeServiceAdapter {
         };
         this.vm.orderList = await this.vm.paymentService.getObjectList(this.vm.paymentService.order_school, order_request);
         this.vm.parseOrder();
-
-        const urlParams = new URLSearchParams(location.search);
-        if (urlParams.has('orderId')) {
-            this.vm.htmlRenderer.openPaymentResponseDialog();
-        }
 
         this.vm.isLoading = false;
     }
@@ -177,7 +170,7 @@ export class ViewFeeServiceAdapter {
 
         // backend url api which will be hit by cashfree to verify the completion of payment on their portal.
         const returnUrl = new URL(
-            environment.DJANGO_SERVER + Constants.api_version + this.vm.paymentService.module_url + this.vm.paymentService.order_completion);
+            environment.DJANGO_SERVER + this.vm.paymentService.module_url + this.vm.paymentService.version_free_api.order_completion);
 
         const redirectParams = new URLSearchParams(location.search);
 
@@ -185,46 +178,45 @@ export class ViewFeeServiceAdapter {
         // redirect_to params decides the frontend page and state at which the user is redirected after payment
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
 
-        const newOrder = {
-            orderAmount: totalAmount,
-            customerName: this.vm.user.activeSchool.studentList[0].fathersName,
-            customerPhone: this.vm.user.username,
-            customerEmail: this.vm.email,
-            returnUrl: returnUrl.toString(),
-            orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`
-        };
-
-        const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order_school, newOrder);
-
         const onlineFeePaymentTransactionList = [];
 
 
-        Object.keys(this.vm.amountMappedByStudntId).forEach(studentId => {
-            if (this.vm.amountMappedByStudntId[studentId] == 0)
+        Object.keys(this.vm.amountMappedByStudentId).forEach(studentId => {
+            if (this.vm.amountMappedByStudentId[studentId] == 0)
                 return; // return from forEach
             this.vm.sessionList.forEach(session => {
                 const filteredSubFeeReceiptList
-                    = this.vm.newSubFeeReceiptListMappedByStudntId[studentId]
+                    = this.vm.newSubFeeReceiptListMappedByStudentId[studentId]
                         .filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
                 if (filteredSubFeeReceiptList.length > 0) {
                     const onlineFeePaymentTransaction = {
                         parentSchool: this.vm.user.activeSchool.dbId,
-                        parentOrder: newCashfreeOrder.orderId,
-                        feeDetail: filteredSubFeeReceiptList,
+                        parentStudent: studentId,
+                        feeReceiptData: {
+                            receiptNumber: 0,
+                            parentSchool: this.vm.user.activeSchool.dbId,
+                            parentStudent: studentId,
+                            parentSession: session.id,
+                            subFeeReceiptList: filteredSubFeeReceiptList
+                        },
                     };
                     onlineFeePaymentTransactionList.push(onlineFeePaymentTransaction);
                 }
             });
         });
 
-        const onlineFeePaymentTransactionResponse = await this.vm.feeService.createObjectList(
-            this.vm.feeService.online_fee_payment_transaction,
-            onlineFeePaymentTransactionList
-        );
-        if (!onlineFeePaymentTransactionResponse) {
-            this.vm.isLoading = false;
-            return;
-        }
+        const newOrder = {
+            orderAmount: totalAmount,
+            customerName: this.vm.user.activeSchool.studentList[0].fathersName,
+            customerPhone: this.vm.user.username,
+            customerEmail: this.vm.email,
+            returnUrl: returnUrl.toString(),
+            orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`,
+            feeReceiptOrderList: onlineFeePaymentTransactionList,
+        };
+
+        const newCashfreeOrder = await this.vm.paymentService.createObject(this.vm.paymentService.order_school, newOrder);
+
 
         const form = document.createElement('form');
 
