@@ -170,7 +170,7 @@ export class ViewFeeServiceAdapter {
 
         // backend url api which will be hit by cashfree to verify the completion of payment on their portal.
         const returnUrl = new URL(
-            environment.DJANGO_SERVER + this.vm.paymentService.module_url + this.vm.paymentService.version_free_api.order_completion);
+            environment.DJANGO_SERVER + this.vm.paymentService.module_url + this.vm.paymentService.version_free_api.order_completion + '/');
 
         const redirectParams = new URLSearchParams(location.search);
 

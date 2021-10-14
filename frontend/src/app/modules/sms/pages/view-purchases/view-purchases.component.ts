@@ -4,7 +4,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { ViewPurchasesServiceAdapter } from './view-purchases.service.adapter';
 import { PaymentService } from '@services/modules/payment/payment.service';
 import { Order } from '@services/modules/payment/models/order';
-import { OnlineSmsPaymentTransaction } from '@services/modules/sms/models/online-sms-payment-transaction';
+import { SmsPurchaseOrder } from '@services/modules/sms/models/sms-purchase-order';
 @Component({
     selector: 'view-purchases',
     templateUrl: './view-purchases.component.html',
@@ -16,7 +16,7 @@ export class ViewPurchasesComponent implements OnInit {
 
     backendData: {
         smsPurchaseList: any[],
-        incompleteOnlineSmsPaymentTransactionList: Array<OnlineSmsPaymentTransaction>,
+        incompleteOnlineSmsPaymentTransactionList: Array<SmsPurchaseOrder>,
         orderList: Array<Order>,
     } = {
             smsPurchaseList: null,
@@ -52,6 +52,6 @@ export class ViewPurchasesComponent implements OnInit {
     }
 }
 
-interface ParsedTransaction extends OnlineSmsPaymentTransaction {
+interface ParsedTransaction extends SmsPurchaseOrder {
     parentOrderInstance: Order;
 }

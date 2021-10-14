@@ -1,4 +1,3 @@
-import { Constants } from '@classes/constants';
 import { environment } from 'environments/environment';
 import { SMS_CHARGE } from './constants';
 
@@ -20,6 +19,7 @@ export class GeneralSMSPurchaseServiceAdapter {
     }
 
     async makeSMSPurchase(noOfSMS: number, email: string) {
+        // Data Validation Starts
         if (noOfSMS <= 0) {
             alert('Invalid SMS Count');
             return;
@@ -28,24 +28,17 @@ export class GeneralSMSPurchaseServiceAdapter {
         if (!this.vm.user.email)
             this.updateUserEmail(email);
 
+        // Data Validation Ends
+
+        // New SMS Purchase Order Starts
+
         const returnUrl = new URL(
-            environment.DJANGO_SERVER + Constants.api_version + this.vm.paymentService.module_url + this.vm.paymentService.order_completion);
+            environment.DJANGO_SERVER + this.vm.paymentService.module_url + this.vm.paymentService.version_free_api.order_completion + '/');
 
         const redirectParams = new URLSearchParams(location.search);
 
         // redirect_to params decides the frontend page and state at which the user is redirected after payment
         returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
-
-        const newOrder = {
-            orderAmount: this.getPrice(noOfSMS),
-            customerName: this.vm.user.activeSchool.name,
-            customerPhone: this.vm.user.username,
-            customerEmail: this.vm.email,
-            returnUrl: returnUrl.toString(),
-            orderNote: `payment towards sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`
-        };
-
-        const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.order_self, newOrder);
 
         const smsPurchase = {
             numberOfSMS: noOfSMS,
@@ -53,16 +46,25 @@ export class GeneralSMSPurchaseServiceAdapter {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-        const onlineSmsPaymentTransaction = {
+        const smsPurchaseOrder = {
             parentSchool: this.vm.user.activeSchool.dbId,
-            parentOrder: newOrderResponse.orderId,
-            smsPurchaseJSON: smsPurchase,
+            smsPurchaseData: smsPurchase,
         };
 
-        const onlineSmsPaymentTransactionResponse =
-            this.vm.smsService.createObject(this.vm.smsService.online_sms_payment_transaction, onlineSmsPaymentTransaction);
-        if (!onlineSmsPaymentTransactionResponse)
-            return;
+        const newOrder = {
+            orderAmount: this.getPrice(noOfSMS),
+            customerName: this.vm.user.activeSchool.name,
+            customerPhone: this.vm.user.username,
+            customerEmail: this.vm.email,
+            returnUrl: returnUrl.toString(),
+            orderNote: `payment towards sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`,
+            smsPurchaseOrderList: [smsPurchaseOrder],
+        };
+
+        const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.order_self, newOrder);
+        // New SMS Purchase Order Ends
+
+        // Redirecting to Cashfree Payment Page Starts
 
         const form = document.createElement('form');
 
@@ -80,6 +82,7 @@ export class GeneralSMSPurchaseServiceAdapter {
 
         document.body.appendChild(form);
         form.submit();
+        // Redirecting to Cashfree Payment Page Ends
 
     }
 }

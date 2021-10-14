@@ -7,9 +7,6 @@ class BasePermission:
 
     def is_valid(self, validated_data, activeSchoolId, activeStudentIdList):
 
-        print('rekations to school = ', self.RelationsToSchool)
-        print('rekations to student = ', self.RelationsToStudent)
-        print('validated data = ', validated_data)
         # Checking for Parent
         if(activeStudentIdList):
             for relation in self.RelationsToStudent:

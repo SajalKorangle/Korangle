@@ -102,9 +102,10 @@ class OrderSelfView(CommonView, APIView):
             orderData[child_field] = request.data[child_field]
             del request.data[child_field]
 
-        createdOrderResponse = create_object(orderData, self.ModelSerializer, kwargs['activeSchoolID'], kwargs['activeStudentID'])
+        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
 
         responseOrderData = createAndSignCashfreeOrderForKorangle(request.data, createdOrderResponse['orderId'])
+        print('response Order Data =', responseOrderData)
         return responseOrderData
 
 

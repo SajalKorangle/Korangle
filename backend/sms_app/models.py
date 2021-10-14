@@ -1,3 +1,5 @@
+from django.db.models.fields import related
+from common.common import BasePermission
 from payment_app.cashfree.cashfree import initiateRefund
 import json
 from django.db import models
@@ -14,7 +16,7 @@ from payment_app.models import Order
 
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
-from common.common_serializer_interface_3 import create_object
+from generic.generic_serializer_interface import create_object
 
 
 # Create your models here
@@ -183,30 +185,36 @@ class SMSDeliveryReport(models.Model):
 
 class SMSPurchase(models.Model):
     # SMS No.
-    numberOfSMS = models.IntegerField(null=False, default=0, verbose_name='numberOfSMS')
+    numberOfSMS = models.IntegerField(null=False, default=0)
 
     # Price
     price = models.IntegerField(null=False, default=0, verbose_name='price')
 
     # Purchase Date & Time
-    purchaseDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='purchaseDateTime')
+    purchaseDateTime = models.DateTimeField(null=False, auto_now_add=True)
 
     # School
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='smsPurchaseList')
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(
             self.numberOfSMS) + ' -- ' + str(self.price)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'sms_purchase'
 
 
 class SmsPurchaseOrder(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT)
-    parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, unique=True)
-    smsPurchaseJSON = models.TextField()
-    parentSmsPurchase = models.ForeignKey(SMSPurchase, on_delete=models.PROTECT, null=True, blank=True)
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, related_name='smsPurchaseOrderList')
+    parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, unique=True, related_name='smsPurchaseOrderList')
+    smsPurchaseData = models.JSONField()
+    parentSmsPurchase = models.ForeignKey(SMSPurchase, on_delete=models.PROTECT, null=True, blank=True, related_name='smsPurchaseOrderList')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id', 'parentSmsPurchase__parentSchool__id']
 
 
 @receiver(pre_save, sender=Order)
@@ -219,11 +227,9 @@ def SMSOrderCompletionHandler(sender, instance, **kwargs):
             except:  # Order was not for SMS
                 return
             activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
-            smsPurchaseData = json.loads(onlineSmsPaymentTransaction.smsPurchaseJSON)
-            from .views import SMSPurchaseView
-            SMSPurchaseModelSerializer = SMSPurchaseView().ModelSerializer
+            smsPurchaseData = onlineSmsPaymentTransaction.smsPurchaseData
             with db_transaction.atomic():
-                response = create_object(smsPurchaseData, SMSPurchaseModelSerializer, activeSchoolID, None)
+                response = create_object(smsPurchaseData, SMSPurchase, activeSchoolID, None)
                 smsPurchase = SMSPurchase.objects.get(id=response['id'])
                 onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchase
                 onlineSmsPaymentTransaction.save()

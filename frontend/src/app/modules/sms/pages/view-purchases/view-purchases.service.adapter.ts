@@ -17,7 +17,7 @@ export class ViewPurchasesServiceAdapter {
             this.vm.backendData.incompleteOnlineSmsPaymentTransactionList,
         ] = await Promise.all([
             this.vm.smsService.getObjectList(this.vm.smsService.sms_purchase, {}),
-            this.vm.smsService.getObjectList(this.vm.smsService.online_sms_payment_transaction, incompleteTransactionRequest)
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_purchase_order, incompleteTransactionRequest)
         ]);
 
         const orderRequest = {

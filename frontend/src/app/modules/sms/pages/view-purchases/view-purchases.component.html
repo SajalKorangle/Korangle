@@ -14,8 +14,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let smsPurchase of backendData.smsPurchaseList; let i = index"
-                                style="padding: 0px">
+                            <tr *ngFor="let smsPurchase of backendData.smsPurchaseList; let i = index" style="padding: 0px">
                                 <td>{{ i + 1 }}</td>
                                 <td align="center">{{ smsPurchase.purchaseDateTime | date: 'dd - MMM - yyyy' }}</td>
                                 <td style="padding-right: 15px" align="right">{{ smsPurchase.numberOfSMS }}</td>
@@ -44,13 +43,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let transaction of parsedIncompleteTransactions; let i = index"
-                                style="padding: 0px">
+                            <tr *ngFor="let transaction of parsedIncompleteTransactions; let i = index" style="padding: 0px">
                                 <td>{{ i + 1 }}</td>
                                 <td align="center">{{ transaction.parentOrderInstance.dateTime | date: 'dd - MMM - yyyy'
                                     }}</td>
                                 <td style="padding-right: 15px" align="center">
-                                    {{ transaction.smsPurchaseJSON.numberOfSMS}}
+                                    {{ transaction.smsPurchaseData.numberOfSMS}}
                                 </td>
                                 <td align="center">Rs. {{ transaction.parentOrderInstance.amount }}/-</td>
                                 <td align="center">{{ transaction.parentOrderInstance.status }}</td>

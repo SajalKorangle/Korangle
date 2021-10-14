@@ -1,7 +1,7 @@
-export class OnlineSmsPaymentTransaction {
+export class SmsPurchaseOrder {
     id?: number;
     parentSchool: number;
     parentOrder: string;
-    smsPurchaseJSON: { [key: string]: any; };
+    smsPurchaseData: { [key: string]: any; };
     parentSmsPurchase: number;
 }

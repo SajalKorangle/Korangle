@@ -46,6 +46,13 @@ urlpatterns += [
     url(r'^sms-id', SMSIdView.as_view()),
 ]
 
+#########  OnlineSmsPaymentTransaction ############
+from .views import SmsPurchaseOrderView, SmsPurchaseOrderListView
+
+urlpatterns += [
+    url(r'^sms-purchase-order/batch', SmsPurchaseOrderListView.as_view()),
+    url(r'^sms-purchase-order', SmsPurchaseOrderView.as_view()),
+]
 
 ######## SMS PURCHASE ##############
 from .views import SMSPurchaseView, SMSPurchaseListView
@@ -91,12 +98,4 @@ from .views import SMSDefaultTemplateView, SMSDefaultTemplateListView
 urlpatterns += [
     url(r'^sms-default-template/batch', SMSDefaultTemplateListView.as_view()),
     url(r'^sms-default-template', SMSDefaultTemplateView.as_view()),
-]
-
-#########  OnlineSmsPaymentTransaction ############
-from .views import SmsPurchaseOrderView, SmsPurchaseOrderListView
-
-urlpatterns += [
-    url(r'^online-sms-payment-transaction/batch', SmsPurchaseOrderListView.as_view()),
-    url(r'^online-sms-payment-transaction', SmsPurchaseOrderView.as_view()),
 ]
