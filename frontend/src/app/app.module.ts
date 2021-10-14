@@ -24,6 +24,7 @@ import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/wha
 import { ReactiveFormsModule } from '@angular/forms';
 import { SignupComponent } from './authentication/signup/signup.component';
 import { DecimalPipe } from '@angular/common';
+import { Frontpage2Component } from './frontpage2/frontpage2.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { DecimalPipe } from '@angular/common';
         PricingComponent,
         TextCarouselComponent,
         WhatKorangleCanDoComponent,
+        Frontpage2Component,
     ],
     imports: [
         BasicComponentsModule,
