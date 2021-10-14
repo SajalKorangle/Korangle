@@ -16,7 +16,7 @@ from .models import SchoolMerchantAccount
 from .cashfree.cashfree import addVendor, getVendor, updateVendor
 
 
-class SchoolMerchantAccount(CommonView, APIView):
+class SchoolMerchantAccountView(CommonView, APIView):
     Model = SchoolMerchantAccount
     RelationsToSchool = ['parentSchool__id']
     permittedMethods = ['get', 'post', 'put']
@@ -78,7 +78,7 @@ class OrderSchoolView(CommonView, APIView):
             orderData[child_field] = request.data[child_field]
             del request.data[child_field]
 
-        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeSchoolID'])
+        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
 
         responseOrderData = createAndSignCashfreeOrderForSchool(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
         return responseOrderData
@@ -102,7 +102,7 @@ class OrderSelfView(CommonView, APIView):
             orderData[child_field] = request.data[child_field]
             del request.data[child_field]
 
-        createdOrderResponse = create_object(orderData, self.ModelSerializer, kwargs['activeSchoolID'], kwargs['activeSchoolID'])
+        createdOrderResponse = create_object(orderData, self.ModelSerializer, kwargs['activeSchoolID'], kwargs['activeStudentID'])
 
         responseOrderData = createAndSignCashfreeOrderForKorangle(request.data, createdOrderResponse['orderId'])
         return responseOrderData

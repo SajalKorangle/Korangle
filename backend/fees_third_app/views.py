@@ -149,11 +149,13 @@ from fees_third_app.models import FeeReceiptOrder
 
 class FeeReceiptOrderView(CommonView, APIView):
     Model = FeeReceiptOrder
-    RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool = FeeReceiptOrder.Permissions.RelationsToSchool
+    RelationsToStudent = FeeReceiptOrder.Permissions.RelationsToStudent
     permittedMethods = ['get']
 
 
 class FeeReceiptOrderListView(CommonListView, APIView):
     Model = FeeReceiptOrder
-    RelationsToSchool = ['parentSchool__id']
+    RelationsToSchool = FeeReceiptOrder.Permissions.RelationsToSchool
+    RelationsToStudent = FeeReceiptOrder.Permissions.RelationsToStudent
     permittedMethods = ['get']

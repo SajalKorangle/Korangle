@@ -92,7 +92,7 @@ class Transaction(models.Model):
     transactionDate = models.DateField()
     approvalId = models.IntegerField(null=True, blank=True)
 
-    class Permission(BasePermission):
+    class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
 
     class Meta:
@@ -142,7 +142,7 @@ class TransactionAccountDetails(models.Model):
 
     transactionType = models.TextField(choices=ACCOUNT_TYPE)
 
-    class Permission(BasePermission):
+    class Permissions(BasePermission):
         RelationsToSchool = ['parentTransaction__parentSchool__id', 'parentTransaction__parentEmployee__parentSchool__id', 'parentAccount__parentSchool__id']
 
     class Meta:

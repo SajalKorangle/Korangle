@@ -6,10 +6,10 @@ urlpatterns = [
 ]
 
 
-from .views import SchoolMerchantAccount
+from .views import SchoolMerchantAccountView
 
 urlpatterns += [
-    url(r'^school-merchant-account', SchoolMerchantAccount.as_view()),
+    url(r'^school-merchant-account', SchoolMerchantAccountView.as_view()),
 ]
 
 from .views import OrderSchoolView, OrderSelfView, OrderListView

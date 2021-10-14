@@ -17,7 +17,7 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
             if not super_response:
                 return False
 
-            return self.Meta.model.Permission().is_valid(self.validated_data, activeSchoolId, activeStudentIdList)
+            return self.Meta.model.Permissions().is_valid(self.validated_data, activeSchoolId, activeStudentIdList)
 
         class Meta:
             model = Model

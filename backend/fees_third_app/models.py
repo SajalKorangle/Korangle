@@ -286,7 +286,7 @@ class FeeReceipt(models.Model):
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL, related_name='feeReceiptList')
 
-    class Permission(BasePermission):
+    class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
         RelationsToStudent = ['parentStudent__id']
 
@@ -392,7 +392,7 @@ class SubFeeReceipt(models.Model):
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
 
-    class Permission(BasePermission):
+    class Permissions(BasePermission):
         RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
         RelationsToStudent = ['parentStudentFee__parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
@@ -424,7 +424,7 @@ class Discount(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, default=0, related_name='discountList')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='discountList')
 
-    class Permission(BasePermission):
+    class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
         RelationsToStudent = ['parentStudent__id']
 
@@ -510,7 +510,7 @@ class SubDiscount(models.Model):
     marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
 
-    class Permission(BasePermission):
+    class Permissions(BasePermission):
         RelationsToSchool = ['parentDiscount__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
         RelationsToStudent = ['parentDiscount__parentStudent__id', 'parentStudentFee__parentStudent__id']
 
@@ -609,7 +609,7 @@ class FeeReceiptOrder(models.Model):
     parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, null=True, blank=True, related_name='feeReceiptOrderList')
 
     class Permissions(BasePermission):
-        RelationsToSchool = ['parentSchool__id', 'parentFeeReceipt__ParentSchool__id']
+        RelationsToSchool = ['parentSchool__id', 'parentFeeReceipt__parentSchool__id']
         RelationsToStudent = ['parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
 
