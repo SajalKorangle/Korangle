@@ -210,7 +210,7 @@ export class ViewFeeServiceAdapter {
                     const onlineFeePaymentTransaction = {
                         parentSchool: this.vm.user.activeSchool.dbId,
                         parentOrder: newCashfreeOrder.orderId,
-                        feeDetailJSON: filteredSubFeeReceiptList,
+                        feeDetail: filteredSubFeeReceiptList,
                     };
                     onlineFeePaymentTransactionList.push(onlineFeePaymentTransaction);
                 }

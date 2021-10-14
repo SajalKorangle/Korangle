@@ -1,7 +1,7 @@
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from accounts_app.views import TransactionAccountDetailsView
-from django.db import models
+from django.db import models, transaction
 
 from school_app.model.models import School, Session, BusStop
 
@@ -27,7 +27,8 @@ from common.common_serializer_interface_3 import create_object, create_list
 from django.db import transaction as db_transaction
 
 from .business.constant import INSTALLMENT_LIST
-from backend.common.common import BasePermission
+from common.common import BasePermission
+from generic.generic_serializer_interface import create_object
 
 
 class FeeType(models.Model):
@@ -601,10 +602,15 @@ class FeeSettings(models.Model):
 
 
 class FeeReceiptOrder(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
-    parentOrder = models.ForeignKey(Order, on_delete=models.CASCADE)
-    feeDetailJSON = models.TextField()
-    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, null=True, blank=True)
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, related_name='feeReceiptOrderList')
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='feeReceiptOrderList')
+    parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='feeReceiptOrderList')
+    feeReceiptData = models.JSONField()
+    parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, null=True, blank=True, related_name='feeReceiptOrderList')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id', 'parentFeeReceipt__ParentSchool__id']
+        RelationsToStudent = ['parentStudent__id', 'parentFeeReceipt__parentStudent__id']
 
 
 @receiver(pre_save, sender=Order)
@@ -613,11 +619,11 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
         preSavedOrder = Order.objects.get(orderId=instance.orderId)
         if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Completed'
 
-            onlinePaymentTransactionList = FeeReceiptOrder.objects.filter(parentOrder=preSavedOrder)
-            if len(onlinePaymentTransactionList) == 0:  # Order is made for some other purpose
+            feeReceiptOrderList = FeeReceiptOrder.objects.filter(parentOrder=preSavedOrder)
+            if len(feeReceiptOrderList) == 0:  # No Linked FeeReceiptOrder, Order is made for some other purpose
                 return
 
-            activeSchoolID = onlinePaymentTransactionList[0].parentSchool.id
+            activeSchoolId = feeReceiptOrderList[0].parentSchool.id
 
             # Code Review
             # 1. Will the status order be changed in few seconds from pending to completion or will it might take days.
@@ -630,7 +636,7 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
             debitAccount = None
             creditAccount = None
             try:
-                feeSettings = FeeSettings.objects.get(parentSchool=activeSchoolID, parentSession=currentSession)
+                feeSettings = FeeSettings.objects.get(parentSchool=activeSchoolId, parentSession=currentSession)
                 if(feeSettings.accountingSettingsJSON):
                     accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
                     debitAccount = AccountSession.objects.get(id=accountingSettings['parentAccountFrom']).parentAccount
@@ -638,53 +644,54 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
             except:
                 pass
 
-            from fees_third_app.views import FeeReceiptView, SubFeeReceiptView
-            FeeReceiptModelSerializer = FeeReceiptView().ModelSerializer
-            SubFeeReceiptModelSerializer = SubFeeReceiptView().ModelSerializer
-
             with db_transaction.atomic():
-                for onlinePaymentTransaction in onlinePaymentTransactionList:
-                    feeDetailsList = json.loads(onlinePaymentTransaction.feeDetailJSON)
-                    activeStudentID = StudentFee.objects.get(id=feeDetailsList[0]['parentStudentFee']).parentStudent.id
-                    transaction_dict = {}
-                    for field in FeeReceipt._meta.concrete_fields:  # all fields filed set to None
-                        transaction_dict[field] = None
+                for feeReceiptOrder in feeReceiptOrderList:
+                    activeStudentId = feeReceiptOrder.parentStudent.id
 
-                    transaction_dict.update({
-                        'parentSchool': activeSchoolID,
-                        'parentStudent': activeStudentID,
-                        'parentSession': feeDetailsList[0]['parentSession'],
+                    feeReceiptData = feeReceiptOrder.feeReceiptData
+                    feeReceiptData.update({
                         'remark': 'Reference id: {0}'.format(instance.referenceId),
                         'modeOfPayment': 'KORANGLE',
                     })
 
-                    response = create_object(transaction_dict, FeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
-                    newFeeReceipt = FeeReceipt.objects.get(id=response['id'])
-                    onlinePaymentTransaction.parentFeeReceipt = newFeeReceipt
-                    onlinePaymentTransaction.save()
+                    if debitAccount and creditAccount:
+                        feeReceiptSession = Session.objects.get(id=feeReceiptData['parentSession'])
 
-                    if response['parentTransaction']:
-                        transactionAccountDetailsModelSerializer = TransactionAccountDetailsView().ModelSerializer
-                        create_object({
-                            'parentTransaction': response['parentTransaction'],
-                            'parentAccount': debitAccount.id,
-                            'amount': 0,
-                            'transactionType': 'CREDIT'
-                        }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
-                        )
+                        from functools import reduce
+                        transactionAmount = reduce(
+                            lambda total, subFeeReceipt: total + reduce(lambda installmentTotal, installment: installmentTotal + (
+                                subFeeReceipt[installment + 'Amount'] or 0) + (subFeeReceipt[installment + 'LateFee'] or 0), INSTALLMENT_LIST, 0),
+                            feeReceiptData['subFeeReceiptList'], 0)
 
-                        create_object({
-                            'parentTransaction': response['parentTransaction'],
-                            'parentAccount': creditAccount.id,
-                            'amount': 0,
-                            'transactionType': 'DEBIT'
-                        }, transactionAccountDetailsModelSerializer, activeSchoolID, [activeStudentID]
-                        )
+                        transactionData = {
+                            'parentEmployee': feeReceiptData['parentEmployee'],
+                            'parentSchool': activeSchoolId,
+                            'remark': 'Student Fee Payment for {0} with Scholar No. {1} of {2}'.format(feeReceiptOrder.parentStudent.name, feeReceiptOrder.parentStudent.scholarNumber, feeReceiptOrder.parentStudent.getClassObjects(feeReceiptSession).name),
+                            'transactionDate': datetime.now().strftime('%Y-%m-%d'),
+                            'feeReceiptList': feeReceiptData,
+                            'transactionAccountDetailsList': [
+                                {
+                                    'parentAccount': debitAccount.id,
+                                    'amount': transactionAmount,
+                                    'transactionType': 'CREDIT'
+                                },
+                                {
+                                    'parentAccount': creditAccount.id,
+                                    'amount': transactionAmount,
+                                    'transactionType': 'DEBIT'
+                                }
+                            ]
+                        }
+                        transactionRespone = create_object(transactionData, Transaction, activeSchoolId, [activeStudentId])
+                        feeReceiptResponse = transactionRespone['feeReceiptList'][0]
+                    else:
+                        feeReceiptResponse = create_object(feeReceiptData, FeeReceipt, activeSchoolId, [activeStudentId])
 
-                    ## populating parentFeeReceipt ##
-                    for subFeeReceipt in feeDetailsList:
-                        subFeeReceipt['parentFeeReceipt'] = newFeeReceipt.id
-                    create_list(feeDetailsList, SubFeeReceiptModelSerializer, activeSchoolID, [activeStudentID])
+                    newFeeReceipt = FeeReceipt.objects.get(id=feeReceiptResponse['id'])
+                    feeReceiptOrder.parentFeeReceipt = newFeeReceipt
+                    feeReceiptOrder.save()
+
+    pass
 
 
 # For handling refund in case an order fails

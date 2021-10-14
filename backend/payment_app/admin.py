@@ -4,7 +4,7 @@ from .models import Order, SchoolMerchantAccount, CashfreeDailyJobsReport
 
 class OrderAdminTabular(admin.ModelAdmin):
     model = Order
-    list_display = ('id', 'status', 'dateTime')
+    list_display = ('orderId', 'status', 'dateTime')
     list_filter = ('status', 'dateTime')
 
 
