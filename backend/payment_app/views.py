@@ -16,7 +16,7 @@ from .models import SchoolMerchantAccount
 from .cashfree.cashfree import addVendor, getVendor, updateVendor
 
 
-class OnlinePaymentAccountView(CommonView, APIView):
+class SchoolMerchantAccount(CommonView, APIView):
     Model = SchoolMerchantAccount
     RelationsToSchool = ['parentSchool__id']
     permittedMethods = ['get', 'post', 'put']

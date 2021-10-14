@@ -16,12 +16,12 @@ export class SetBankAccountServiceAdapter {
 
     //initialize data
     async initializeData() {
-        let onlinePaymentAccount;
+        let schoolMerchantAccount;
         [
-            onlinePaymentAccount,
+            schoolMerchantAccount,
             this.vm.settlementCycleList,
         ] = await Promise.all([
-            this.vm.paymentService.getObject(this.vm.paymentService.online_payment_account, {}),
+            this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {}),
             this.vm.paymentService.getObjectList(this.vm.paymentService.settlement_cycle, {})
                 .then(data => data.map(d => {
                     return { ...d, id: parseInt(d.id) };
@@ -29,8 +29,8 @@ export class SetBankAccountServiceAdapter {
                 ),
         ]);
 
-        if (onlinePaymentAccount) {
-            this.vm.onlinePaymentAccount = onlinePaymentAccount;
+        if (schoolMerchantAccount) {
+            this.vm.schoolMerchantAccount = schoolMerchantAccount;
             this.verifyIFSC();
         }
         this.vm.isLoading = false;
@@ -38,11 +38,11 @@ export class SetBankAccountServiceAdapter {
 
     async verifyIFSC() {
         this.vm.isIFSCLoading = true;
-        if (this.vm.onlinePaymentAccount.vendorData.bank.ifsc.length == 11
+        if (this.vm.schoolMerchantAccount.vendorData.bank.ifsc.length == 11
             && !this.vm.isIFSCValidationPasses()) {
 
             const request_data = {
-                ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
+                ifsc: this.vm.schoolMerchantAccount.vendorData.bank.ifsc
             };
             this.vm.cache.ifsc = await this.vm.paymentService.getObject(this.vm.paymentService.ifsc_verification, request_data);
         }
@@ -67,8 +67,8 @@ export class SetBankAccountServiceAdapter {
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
         const account_verification_data = {
-            accountNumber: this.vm.onlinePaymentAccount.vendorData.bank.accountNumber,
-            ifsc: this.vm.onlinePaymentAccount.vendorData.bank.ifsc
+            accountNumber: this.vm.schoolMerchantAccount.vendorData.bank.accountNumber,
+            ifsc: this.vm.schoolMerchantAccount.vendorData.bank.ifsc
         };
         const accountVerificationData = await this.vm.paymentService.createObject(this.vm.paymentService.bank_account_verification, account_verification_data);
         if (accountVerificationData.accountStatusCode != "ACCOUNT_IS_VALID") {
@@ -78,14 +78,14 @@ export class SetBankAccountServiceAdapter {
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
 
-        if (this.vm.onlinePaymentAccount.id) {
-            this.vm.onlinePaymentAccount =
-                await this.vm.paymentService.updateObject(this.vm.paymentService.online_payment_account, newOnlinePaymentAccount);
+        if (this.vm.schoolMerchantAccount.id) {
+            this.vm.schoolMerchantAccount =
+                await this.vm.paymentService.updateObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
             this.vm.snackBar.open('Payment Account Updated Successfully', undefined, { duration: 5000 });
         }
         else {
-            this.vm.onlinePaymentAccount =
-                await this.vm.paymentService.createObject(this.vm.paymentService.online_payment_account, newOnlinePaymentAccount);
+            this.vm.schoolMerchantAccount =
+                await this.vm.paymentService.createObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
             this.vm.snackBar.open('Payment Account Created Successfully', undefined, { duration: 5000 });
         }
         this.vm.resetIntermediateUpdateState();

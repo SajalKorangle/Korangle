@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from 'app/classes/data-storage';
 import { PaymentService } from '@services/modules/payment/payment.service';
 import { SetBankAccountServiceAdapter } from './set-bank.account.service.adapter';
-import { OnlinePaymentAccount } from '@services/modules/payment/models/online-payment-account';
+import { SchoolMerchantAccount } from '@services/modules/payment/models/school-merchant-account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
@@ -19,7 +19,7 @@ export class SetBankAccountComponent implements OnInit {
     validators = VALIDATORS_REGX;
     errorMessage: string = '';
 
-    onlinePaymentAccount: OnlinePaymentAccount = new OnlinePaymentAccount();
+    schoolMerchantAccount: SchoolMerchantAccount = new SchoolMerchantAccount();
 
     settlementCycleList: Array<SettlementOption> = [];
 
@@ -54,8 +54,8 @@ export class SetBankAccountComponent implements OnInit {
         this.serviceAdapter.initializeData();
 
         // populate data
-        this.onlinePaymentAccount.parentSchool = this.user.activeSchool.dbId;
-        this.onlinePaymentAccount.vendorData.name = this.user.activeSchool.name;
+        this.schoolMerchantAccount.parentSchool = this.user.activeSchool.dbId;
+        this.schoolMerchantAccount.vendorData.name = this.user.activeSchool.name;
         // console.log('this: ', this);
     }
 
@@ -67,7 +67,7 @@ export class SetBankAccountComponent implements OnInit {
     }
 
     getRequiredPaymentAccountData() {
-        const requiredOnlyFields: OnlinePaymentAccount = JSON.parse(JSON.stringify(this.onlinePaymentAccount));
+        const requiredOnlyFields: SchoolMerchantAccount = JSON.parse(JSON.stringify(this.schoolMerchantAccount));
         delete requiredOnlyFields.vendorData.addedOn;
         delete requiredOnlyFields.vendorData.balance;
         delete requiredOnlyFields.vendorData.status;
@@ -77,14 +77,14 @@ export class SetBankAccountComponent implements OnInit {
     }
 
     isIFSCValidationPasses(): boolean {
-        if (this.onlinePaymentAccount.vendorData.bank.ifsc.length == 11
-            && this.cache.ifsc && this.cache.ifsc.ifsc == this.onlinePaymentAccount.vendorData.bank.ifsc)
+        if (this.schoolMerchantAccount.vendorData.bank.ifsc.length == 11
+            && this.cache.ifsc && this.cache.ifsc.ifsc == this.schoolMerchantAccount.vendorData.bank.ifsc)
             return true;
         return false;
     }
 
     displayIfscError = (): boolean => {
-        if (!this.onlinePaymentAccount.vendorData.bank.ifsc || this.isIFSCLoading)
+        if (!this.schoolMerchantAccount.vendorData.bank.ifsc || this.isIFSCLoading)
             return false;
         if (this.isIFSCValidationPasses())
             return false;
@@ -92,32 +92,32 @@ export class SetBankAccountComponent implements OnInit {
     };
 
     isDataValid(): boolean {
-        if (this.onlinePaymentAccount.vendorData.bank.ifsc.length != 11) {
+        if (this.schoolMerchantAccount.vendorData.bank.ifsc.length != 11) {
             this.errorMessage = 'IFSC Validation Failed';
             return false;
         }
 
-        if (!this.onlinePaymentAccount.vendorData.phone || !this.validators.phoneNumber.test(this.onlinePaymentAccount.vendorData.phone)) {
+        if (!this.schoolMerchantAccount.vendorData.phone || !this.validators.phoneNumber.test(this.schoolMerchantAccount.vendorData.phone)) {
             this.errorMessage = "Invalid Mobile Number";
             return false;
         }
 
-        if (!this.onlinePaymentAccount.vendorData.email || !this.validators.email.test(this.onlinePaymentAccount.vendorData.email)) {
+        if (!this.schoolMerchantAccount.vendorData.email || !this.validators.email.test(this.schoolMerchantAccount.vendorData.email)) {
             this.errorMessage = "Invalid Email";
             return false;
         }
 
-        if (!this.onlinePaymentAccount.vendorData.settlementCycleId) {
+        if (!this.schoolMerchantAccount.vendorData.settlementCycleId) {
             this.errorMessage = "Settlement Cycle is Required";
             return false;
         }
 
-        if (!this.onlinePaymentAccount.vendorData.bank.accountHolder) {
+        if (!this.schoolMerchantAccount.vendorData.bank.accountHolder) {
             this.errorMessage = "Account Holder Name is required";
             return false;
         }
 
-        if (!this.onlinePaymentAccount.vendorData.bank.accountNumber || this.onlinePaymentAccount.vendorData.bank.accountNumber.length < 6) {
+        if (!this.schoolMerchantAccount.vendorData.bank.accountNumber || this.schoolMerchantAccount.vendorData.bank.accountNumber.length < 6) {
             this.errorMessage = "Invalid Account Number";
             return false;
         }

@@ -11,9 +11,11 @@ export class PaymentService extends ServiceObject {
     public ifsc_verification = '/cashfree/ifsc-verification';
     public bank_account_verification = '/cashfree/bank-account-verification';
 
-    public online_payment_account = '/online-payment-account';
+    public school_merchant_account = '/school-merchant-account';
     public order_school = '/order-school';
     public order_self = '/order-self';
 
-    public order_completion = '/order-completion';
+    public version_free_api = {
+        order_completion: '/order-completion'
+    };
 }

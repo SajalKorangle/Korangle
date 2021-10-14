@@ -1,4 +1,4 @@
-export class OnlinePaymentAccount {
+export class SchoolMerchantAccount {
     id?: number;
     parentSchool: number;
     vendorId: string;

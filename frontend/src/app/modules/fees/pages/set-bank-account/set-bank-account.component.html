@@ -6,18 +6,18 @@
         <div style="display: flex; flex-wrap: wrap;">
             <mat-form-field>
                 <mat-label>Account Holder Name</mat-label>
-                <input name="name" required matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountHolder">
+                <input name="name" required matInput type="text" [(ngModel)]="schoolMerchantAccount.vendorData.bank.accountHolder">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Account Number</mat-label>
-                <input name="accountNumber" required matInput type="text" [(ngModel)]="onlinePaymentAccount.vendorData.bank.accountNumber">
+                <input name="accountNumber" required matInput type="text" [(ngModel)]="schoolMerchantAccount.vendorData.bank.accountNumber">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>IFSC</mat-label>
                 <input name="ifsc" required matInput type="text" [errorStateMatcher]="{isErrorState: displayIfscError}"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.bank.ifsc" (ngModelChange)="serviceAdapter.verifyIFSC()">
+                    [(ngModel)]="schoolMerchantAccount.vendorData.bank.ifsc" (ngModelChange)="serviceAdapter.verifyIFSC()">
                 <mat-error>Invalid IFSC</mat-error>
             </mat-form-field>
 
@@ -25,7 +25,7 @@
 
         <mat-form-field style="width: 300px;">
             <mat-label>Settlement Cycle</mat-label>
-            <mat-select name="settlementId" required [(ngModel)]="onlinePaymentAccount.vendorData.settlementCycleId">
+            <mat-select name="settlementId" required [(ngModel)]="schoolMerchantAccount.vendorData.settlementCycleId">
                 <ng-container *ngFor="let settlementOption of settlementCycleList">
                     <mat-option [value]="settlementOption.id">{{settlementOption.desc}}</mat-option>
                 </ng-container>
@@ -50,19 +50,19 @@
             <mat-form-field>
                 <mat-label>Mobile Number</mat-label>
                 <input name="mobileNumber" required matInput type="text" maxlength="10" [pattern]="validators.phoneNumber"
-                    [(ngModel)]="onlinePaymentAccount.vendorData.phone">
+                    [(ngModel)]="schoolMerchantAccount.vendorData.phone">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Email</mat-label>
-                <input name="email" required matInput type="email" [pattern]="validators.email" [(ngModel)]="onlinePaymentAccount.vendorData.email">
+                <input name="email" required matInput type="email" [pattern]="validators.email" [(ngModel)]="schoolMerchantAccount.vendorData.email">
             </mat-form-field>
 
         </div>
         <!--Personal Information Ends-->
 
         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit" [disabled]="!isDataValid()">
-            {{onlinePaymentAccount.id?'Update':'Submit'}}
+            {{schoolMerchantAccount.id?'Update':'Submit'}}
         </button>
         <br /><span *ngIf="errorMessage">{{errorMessage}}</span>
     </form>

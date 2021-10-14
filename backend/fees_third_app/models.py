@@ -706,11 +706,11 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
             if len(onlinePaymentTransactionList) == 0:  # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
                 return
 
-            onlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
+            schoolMerchantAccount = SchoolMerchantAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
 
             splitDetails = [
                 {
-                    "merchantVendorId": onlinePaymentAccount.vendorId,
+                    "merchantVendorId": schoolMerchantAccount.vendorId,
                     "amount": instance.amount,
                 }
             ]
