@@ -4,7 +4,8 @@ from .cashfree.cashfree import createAndSignCashfreeOrderForKorangle
 from .cashfree.cashfree import createAndSignCashfreeOrderForSchool
 from .models import Order
 from common.common_views_3 import CommonView, CommonListView, APIView
-from common.common_serializer_interface_3 import create_object, get_object
+from common.common_serializer_interface_3 import get_object
+from generic.generic_serializer_interface import create_object
 from decorators import user_permission_3
 from django.db import transaction
 from time import time
@@ -30,7 +31,7 @@ class OnlinePaymentAccountView(CommonView, APIView):
 
         del data['vendorData']
         data.update({"vendorId": vendorId})
-        responseData = create_object(data, self.ModelSerializer, *args, **kwargs)
+        responseData = create_object(data, self.Model, kwargs['activeSchoolID'], kwargs['activeSchoolID'])
         responseData.update({
             'vendorData': getVendor(vendorId)
         })
@@ -69,12 +70,15 @@ class OrderSchoolView(CommonView, APIView):
         activeSchoolId = kwargs['activeSchoolID']
         schoolOnlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=activeSchoolId)
         orderData = {
-            'id': str(int(time() * 1000000)),
+            'orderId': str(int(time() * 1000000)),
             'parentUser': request.user.id,
             'amount': request.data['orderAmount']
         }
+        for child_field in [key for key in request.data if key in self.Model._meta.fields_map]:
+            orderData[child_field] = request.data[child_field]
+            del request.data[child_field]
 
-        createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
+        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeSchoolID'])
 
         responseOrderData = createAndSignCashfreeOrderForSchool(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
         return responseOrderData
@@ -90,12 +94,15 @@ class OrderSelfView(CommonView, APIView):
     @user_permission_3
     def post(self, request, *args, **kwargs):
         orderData = {
-            'id': str(int(time() * 1000000)),
+            'orderId': str(int(time() * 1000000)),
             'parentUser': request.user.id,
             'amount': request.data['orderAmount']
         }
+        for child_field in [key for key in request.data if key in self.Model._meta.fields_map]:
+            orderData[child_field] = request.data[child_field]
+            del request.data[child_field]
 
-        createdOrderResponse = create_object(orderData, self.ModelSerializer, **kwargs)
+        createdOrderResponse = create_object(orderData, self.ModelSerializer, kwargs['activeSchoolID'], kwargs['activeSchoolID'])
 
         responseOrderData = createAndSignCashfreeOrderForKorangle(request.data, createdOrderResponse['orderId'])
         return responseOrderData

@@ -3,11 +3,15 @@ from django.db.models.fields import DateField
 from school_app.model.models import School
 from django.utils.timezone import make_aware, make_naive
 from django.contrib.auth import get_user_model
+from common.common import BasePermission
 
 
 class SchoolMerchantAccount(models.Model):
-    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE)
+    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolMerchantAccountList')
     vendorId = models.CharField(max_length=20, unique=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     def __str__(self):
         return '{0} - {1}'.format(self.parentSchool.id, self.parentSchool.name)
@@ -23,7 +27,7 @@ class Order(models.Model):
         ('Refund Initiated', 'Refund Initiated'),   # Just after Refund has been initiated but cashfree has not confirmed the refund
         ('Refunded', 'Refunded'),                   # cashfree has confirmed the refund
     )
-    id = models.CharField(max_length=20, unique=True, primary_key=True)
+    orderId = models.CharField(max_length=20, unique=True, primary_key=True)
     parentUser = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     amount = models.PositiveIntegerField()
     status = models.CharField(max_length=30, choices=TransactionStatus, default='Pending')
@@ -31,9 +35,12 @@ class Order(models.Model):
     refundId = models.PositiveBigIntegerField(null=True, blank=True)
     dateTime = models.DateTimeField(auto_now_add=True)
 
+    class Permissions(BasePermission):
+        pass
+
     def __str__(self):
         ## make_naive: removed timezone info from datetime; make_aware: makes datetime aware of time zone, uses timezone from django settings ##
-        return self.status + ' | ' + self.id + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
+        return self.status + ' | ' + self.orderId + ' | ' + make_aware(make_naive(self.dateTime)).strftime("%d/%m/%Y, %H:%M:%S")
 
 
 class CashfreeDailyJobsReport(models.Model):

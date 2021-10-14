@@ -10,6 +10,7 @@ from django.db.models.signals import pre_save, post_save
 
 import os
 from django.utils.timezone import now
+from common.common import BasePermission
 
 
 def upload_image_to(instance, filename):
@@ -91,9 +92,8 @@ class Transaction(models.Model):
     transactionDate = models.DateField()
     approvalId = models.IntegerField(null=True, blank=True)
 
-    class Relations:
+    class Permission(BasePermission):
         RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
-        RelationsToStudent = []
 
     class Meta:
         db_table = 'transaction'
@@ -142,9 +142,8 @@ class TransactionAccountDetails(models.Model):
 
     transactionType = models.TextField(choices=ACCOUNT_TYPE)
 
-    class Relations:
+    class Permission(BasePermission):
         RelationsToSchool = ['parentTransaction__parentSchool__id', 'parentTransaction__parentEmployee__parentSchool__id', 'parentAccount__parentSchool__id']
-        RelationsToStudent = []
 
     class Meta:
         db_table = 'transaction_account_details'

@@ -17,27 +17,7 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
             if not super_response:
                 return False
 
-            RelationsToStudent = self.Meta.model.Relations.RelationsToStudent
-            RelationsToSchool = self.Meta.model.Relations.RelationsToSchool
-
-            # Checking for Parent
-            if(activeStudentIdList):
-                for relation in RelationsToStudent:
-                    splitted_relation = relation.split('__')
-                    parent_instance = self.validated_data.get(splitted_relation[0], None)
-                    if parent_instance is not None:
-                        if not (reduce(lambda instance, parent_field: getattr(instance, parent_field) if(instance is not None) else None, splitted_relation[1:], parent_instance) in activeStudentIdList):
-                            return False
-
-            # Checking for Parent & Employee Both
-            for relation in RelationsToSchool:
-                splitted_relation = relation.split('__')
-                parent_instance = self.validated_data.get(splitted_relation[0], None)
-                if parent_instance is not None:
-                    if (reduce(lambda instance, parent_field: getattr(instance, parent_field) if(instance is not None) else None, splitted_relation[1:], parent_instance) != activeSchoolId):
-                        return False
-
-            return True
+            return self.Meta.model.Permission().is_valid(self.validated_data, activeSchoolId, activeStudentIdList)
 
         class Meta:
             model = Model
