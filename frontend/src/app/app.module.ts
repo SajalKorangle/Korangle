@@ -25,6 +25,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SignupComponent } from './authentication/signup/signup.component';
 import { DecimalPipe } from '@angular/common';
 import { Frontpage2Component } from './frontpage2/frontpage2.component';
+import {ComponentsModule} from '@components/components.module';
 
 @NgModule({
     declarations: [
@@ -49,6 +50,7 @@ import { Frontpage2Component } from './frontpage2/frontpage2.component';
         BrowserModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
+        ComponentsModule,
         // RecaptchaModule,  // this is the recaptcha main module
     ],
     exports: [],
