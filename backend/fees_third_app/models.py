@@ -711,7 +711,7 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
             splitDetails = [
                 {
                     "merchantVendorId": schoolMerchantAccount.vendorId,
-                    "amount": instance.amount,
+                    "amount": float(instance.amount),
                 }
             ]
 

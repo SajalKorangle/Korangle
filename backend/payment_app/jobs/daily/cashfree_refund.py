@@ -19,7 +19,7 @@ class Job(DailyJob):  # Should be run between 3am to 5am
         try:
             dailyJobsReport = CashfreeDailyJobsReport.objects.create()
         except:
-            print('Executing Failed')
+            print('Executing Failed, Daily Job already executed once')
             return
 
         # Refund Status Check

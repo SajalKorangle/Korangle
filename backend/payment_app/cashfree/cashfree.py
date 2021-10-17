@@ -51,7 +51,7 @@ def getSignature(orderData):  # used to authenticate that the data is a valid da
     sortedKeys = sorted(orderData)
     signatureData = ""
     for key in sortedKeys:
-        signatureData += key+str(orderData[key])
+        signatureData += key + str(orderData[key])
 
     message = signatureData.encode('utf-8')
     # get secret key from your config
@@ -84,13 +84,14 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': round(data['orderAmount']*(1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE/100), 2),
+            'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),
         }
     )
 
     orderData.update({
         'signature': getSignature(orderData)
     })
+    print('order for school = ', orderData)
     return orderData
 
 
@@ -121,7 +122,7 @@ def getOrderDetails(orderId):
     }
 
     response = requests.post(
-        url=base_url+'/api/v1/order/info',
+        url=base_url + '/api/v1/order/info',
         data=orderData,
         headers=headers
     )
@@ -142,7 +143,7 @@ def getOrderStatus(orderId, disableAssertion=False):
     }
 
     response = requests.post(
-        url=base_url+'/api/v1/order/info/status',
+        url=base_url + '/api/v1/order/info/status',
         data=orderData,
         headers=headers
     )
@@ -155,7 +156,6 @@ def getOrderStatus(orderId, disableAssertion=False):
 
 def initiateRefund(orderId, splitData):
     orderStatusData = getOrderStatus(orderId)
-    orderDetails = getOrderDetails(orderId)
 
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -165,18 +165,20 @@ def initiateRefund(orderId, splitData):
         'appId': CASHFREE_APP_ID,
         'secretKey': CASHFREE_SECRET_KEY,
         'referenceId': orderStatusData['referenceId'],
-        'refundAmount': str(orderDetails['orderAmount']),
+        'refundAmount': float(orderStatusData['orderAmount']),
         'refundNote': 'refund towards payment made on korangle',
     }
 
     if(len(splitData) > 0):
         orderData.update({
             'isSplit': True,
-            'splitDetails': splitData
+            'splitDetails': json.dumps(splitData)
         })
 
+    print(orderData)
+
     response = requests.post(
-        url=base_url+'/api/v1/order/refund',
+        url=base_url + '/api/v1/order/refund',
         data=orderData,
         headers=headers
     )
@@ -198,7 +200,7 @@ def getRefundStatus(refundId, disableAssertion=False):
     }
 
     response = requests.post(
-        url=base_url+'/api/v1/refundStatus',
+        url=base_url + '/api/v1/refundStatus',
         data=refundData,
         headers=headers
     )
@@ -224,7 +226,7 @@ def addVendor(newVendorData, vendorId):
     }
 
     response = requests.post(
-        url=base_url+'/api/v2/easy-split/vendors',
+        url=base_url + '/api/v2/easy-split/vendors',
         json=newVendorData,
         headers=headers
     )
@@ -250,7 +252,7 @@ def updateVendor(vendorData):
     }
 
     response = requests.put(
-        url=base_url+'/api/v2/easy-split/vendors/{0}'.format(vendorId),
+        url=base_url + '/api/v2/easy-split/vendors/{0}'.format(vendorId),
         json=toUpdateVendorData,
         headers=headers
     )
@@ -289,7 +291,7 @@ def getSettlementsCycleList():
 
 AUTH_DATA = {   # Default Auth Data
     "token": "",
-    "expiry": time.time()-1
+    "expiry": time.time() - 1
 }
 
 
@@ -300,7 +302,7 @@ def authenticate():
         'Content-Type': 'application/json',
     }
     response = requests.post(
-        url=bank_verification_base_url+'/payout/v1/authorize',
+        url=bank_verification_base_url + '/payout/v1/authorize',
         headers=headers,
     )
     assert response.json()["status"] == "SUCCESS", "cashfree authentication failed: {0}".format(response.json())
@@ -322,7 +324,7 @@ def ifscVerification(ifsc):
     }
 
     response = requests.get(
-        url=bank_verification_base_url+'/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
+        url=bank_verification_base_url + '/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
         headers=headers
     )
 
@@ -343,7 +345,7 @@ def bankAccountVerification(accountNumber, ifsc):
     }
 
     response = requests.get(
-        url=bank_verification_base_url+'/payout/v1.2/validation/bankDetails',
+        url=bank_verification_base_url + '/payout/v1.2/validation/bankDetails',
         headers=headers,
         params=params,
     )
