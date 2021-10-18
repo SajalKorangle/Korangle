@@ -175,8 +175,6 @@ def initiateRefund(orderId, splitData):
             'splitDetails': json.dumps(splitData)
         })
 
-    print(orderData)
-
     response = requests.post(
         url=base_url + '/api/v1/order/refund',
         data=orderData,

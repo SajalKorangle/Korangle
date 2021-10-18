@@ -247,6 +247,10 @@ class StudentFee(models.Model):
     marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
     marchClearanceDate = models.DateField(null=True, verbose_name='marchClearanceDate')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentFeeType__parentSchool__id', 'parentStudent__parentSchool__id', 'parentSchoolFeeRule__parentFeeType__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
+
     class Meta:
         db_table = 'student_fee'
         unique_together = ('parentSchoolFeeRule', 'parentStudent')
