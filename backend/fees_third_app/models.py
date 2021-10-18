@@ -258,9 +258,7 @@ class StudentFee(models.Model):
 
 class FeeReceipt(models.Model):
 
-    # Why null=False replaced by blank=True in receiptNumber field of FeeReceipt Table?
-    # @answer: null=False is the default behavior, no need to specify it. Blank=True is needed because
-    # now this field is not comming from frontend and is not present in the data during save.
+    # Blank=True is needed because now this field is not coming from frontend and is not present in the data during save.
     # Receipt number is calculated in the signal.
     receiptNumber = models.IntegerField(blank=True, default=0)
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True)
@@ -629,13 +627,6 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
 
             activeSchoolId = feeReceiptOrderList[0].parentSchool.id
 
-            # Code Review
-            # 1. Will the status order be changed in few seconds from pending to completion or will it might take days.
-            # @answer : It can take anywhere from seconds to days.
-            # Current Session retrieval method can fail at the end of the session.
-            # @answer: I have changed it confirm if this is what you meant.
-            # I think this code will run with in few minutes of order placement by a parent. Please confirm.
-            # @answer: Majority of times yes but not always
             currentSession = Session.objects.get(startDate__lte=datetime.now(), endDate__gte=datetime.now())
             debitAccount = None
             creditAccount = None

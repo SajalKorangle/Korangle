@@ -57,10 +57,6 @@ class SchoolMerchantAccountView(CommonView, APIView):
         return data
 
 
-# 1. Should the order id be created from here or from pre save signal of FeeReceiptOrder
-# @answer : Order and order id is a generic thing. Why would we create order id from pre save signal of FeeReceiptOrder? Reason
-# It is will also not be feasible to do so as there will be no way of knowing if a order is for fee payment or sms payment until the connecting models are created i.e, OnlineFeePaymentTransaction
-## Currently used only for online fee payment ##
 class OrderSchoolView(CommonView, APIView):
     Model = Order
     permittedMethods = ['get', 'post', ]
@@ -84,9 +80,6 @@ class OrderSchoolView(CommonView, APIView):
         return responseOrderData
 
 
-# 1. Should the order id be created from here or from pre save signal of SchoolSMSPurchaseOrder
-# @answer : Same as previous answer.
-## Currently used only for sms purchase ##
 class OrderSelfView(CommonView, APIView):
     Model = Order
     permittedMethods = ['get', 'post', ]

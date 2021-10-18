@@ -20,7 +20,5 @@ class IFSCVerification(APIView):
 class BankAccountVerification(APIView):
 
     @user_permission_3
-    # jab sab jagah baaki jagah get chal raha tha to yahan par post kyun kiya?
-    # @answer : In post data is encrypted. It was not required though but it will keep the data safe.
     def post(self, request, *args, **kwargs):
         return bankAccountVerification(**request.data)

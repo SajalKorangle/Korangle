@@ -159,7 +159,7 @@ export class ViewFeeServiceAdapter {
         // --------------- Data Validation Ends ---------------
         this.vm.isLoading = true;
 
-        if (!this.vm.user.email) {  // updating user email if previouly empty
+        if (!this.vm.user.email) {  // updating user email if previously empty
             const user_email_update_request = {
                 'id': this.vm.user.id,
                 'email': this.vm.email
