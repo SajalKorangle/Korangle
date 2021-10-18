@@ -1,21 +1,19 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
-import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
-import { SmsService } from '../../../../services/modules/sms/sms.service';
-import { DataStorage } from '../../../../classes/data-storage';
-import { SendSmsServiceAdapter } from './send-sms.service.adapter';
-import { NotificationService } from '../../../../services/modules/notification/notification.service';
-import { UserService } from '../../../../services/modules/user/user.service';
-import { MessageService } from '@services/message-service';
-import { SendSmsHtmlRenderer } from '@modules/sms/pages/send-sms/send-sms.html.renderer';
-import { VARIABLE_MAPPED_EVENT_LIST } from '@modules/classes/constants';
-import { InformationService } from '@services/modules/information/information.service';
+import {ClassService} from '../../../../services/modules/class/class.service';
+import {StudentService} from '../../../../services/modules/student/student.service';
+import {EmployeeService} from '../../../../services/modules/employee/employee.service';
+import {SmsOldService} from '../../../../services/modules/sms/sms-old.service';
+import {SmsService} from '../../../../services/modules/sms/sms.service';
+import {DataStorage} from '../../../../classes/data-storage';
+import {SendSmsServiceAdapter} from './send-sms.service.adapter';
+import {NotificationService} from '../../../../services/modules/notification/notification.service';
+import {UserService} from '../../../../services/modules/user/user.service';
+import {MessageService} from '@services/message-service';
+import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.renderer';
+import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
+import {InformationService} from '@services/modules/information/information.service';
 
-
-import { WindowRefService } from "../../../../services/modules/sms/window-ref.service";
 import { MatDialog } from '@angular/material';
 
 import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
@@ -25,7 +23,7 @@ import { PaymentResponseDialogComponent } from './../../components/payment-respo
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
     styleUrls: ['./send-sms.component.css'],
-    providers: [StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService, WindowRefService, InformationService],
+    providers: [StudentService, ClassService, EmployeeService, NotificationService, UserService, SmsService, InformationService],
 })
 export class SendSmsComponent implements OnInit {
     user;
@@ -127,7 +125,6 @@ export class SendSmsComponent implements OnInit {
         public informationService: InformationService,
         public userService: UserService,
         public cdRef: ChangeDetectorRef,
-        public winRef: WindowRefService,
         public dialog: MatDialog) { }
 
     onPage(event) {

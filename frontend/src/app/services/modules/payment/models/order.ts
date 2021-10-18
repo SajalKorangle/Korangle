@@ -1,5 +1,4 @@
 export class Order {
-    id?: number;
     orderId: string;
     amount: number;
     status: typeof STATUS_CHOICES[number];

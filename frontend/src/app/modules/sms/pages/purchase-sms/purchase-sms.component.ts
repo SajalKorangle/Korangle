@@ -3,7 +3,6 @@ import { ChangeDetectorRef } from '@angular/core';
 import { PurchaseSmsServiceAdapter } from './purchase-sms.service.adapter';
 import { UserService } from "../../../../services/modules/user/user.service";
 import { SmsService } from "../../../../services/modules/sms/sms.service";
-import { WindowRefService } from "../../../../services/modules/sms/window-ref.service";
 import { DataStorage } from 'app/classes/data-storage';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { CommonFunctions } from '@classes/common-functions';
@@ -19,7 +18,7 @@ import { MatDialog } from '@angular/material';
     selector: 'app-purchase-sms',
     templateUrl: './purchase-sms.component.html',
     styleUrls: ['./purchase-sms.component.css'],
-    providers: [UserService, SmsService, PaymentService, WindowRefService],
+    providers: [UserService, SmsService, PaymentService],
 
 })
 
@@ -49,7 +48,6 @@ export class PurchaseSmsComponent implements OnInit {
         public paymentService: PaymentService,
         public smsOldService: SmsOldService,
         public userService: UserService,
-        public winRef: WindowRefService,
         public cdRef: ChangeDetectorRef,
         public dialog: MatDialog,) { }
 

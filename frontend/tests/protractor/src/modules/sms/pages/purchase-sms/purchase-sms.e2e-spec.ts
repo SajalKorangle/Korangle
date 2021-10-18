@@ -1,8 +1,7 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst} from '../../../../contains';
+import { openModuleAndPage } from '../../../../open-page';
 
 
 
@@ -10,7 +9,7 @@ describe('SMS -> Purchase SMS', () => {
 
     let page: any;
 
-    afterEach( async () => {
+    afterEach(async () => {
         await BeforeAfterEach.afterEach();
     });
 
@@ -35,19 +34,6 @@ describe('SMS -> Purchase SMS', () => {
         await page.mouse.up();
 
         await page.waitForTimeout(3000);
-
-        (await containsFirst('button', 'Pay')).click();
-
-        await page.waitForTimeout(3000);
-        await BeforeAfterEach.page.waitForXPath('//input[@id="contact"]');
-        const inputElement = await BeforeAfterEach.page.$x('//input[@id=contact"]');
-        await inputElement.type('7050701850');
-        await inputElement.press('Enter');
-
-
-
-
-
 
     });
 });

@@ -24,8 +24,18 @@ export class ViewPurchasesServiceAdapter {
             orderId__in: this.vm.backendData.incompleteOnlineSmsPaymentTransactionList.map(t => t.parentOrder)
         };
         this.vm.backendData.orderList = await this.vm.paymentService.getObjectList(this.vm.paymentService.order_school, orderRequest);
-        this.vm.formStructureFromBackendData();
+        this.formStructureFromBackendData();
         this.vm.isLoading = false;
+    }
+
+    formStructureFromBackendData() {
+        this.vm.parsedIncompleteTransactions
+            = this.vm.backendData.incompleteOnlineSmsPaymentTransactionList.map(transaction => {
+                return {
+                    ...transaction,
+                    parentOrderInstance: this.vm.backendData.orderList.find(order => order.orderId == transaction.parentOrder)
+                };
+            });
     }
 
 }

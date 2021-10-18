@@ -353,6 +353,7 @@
             </table>
 
             <div class="row">
+                <!-- Payment Mode Starts -->
                 <div class="col-sm-3">
                     <mat-form-field style="margin-top: 22px;">
                         <mat-select placeholder="Select Payment Mode" [ngModel]="newModeOfPayment" [disabled]="!(newFeeReceiptList.length>0)"
@@ -363,6 +364,8 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <!-- Payment Mode Ends -->
+                <!-- Payment Account Starts -->
                 <div class="col-sm-3" *ngIf="feeSettings && feeSettings.accountingSettingsJSON">
                     <mat-form-field style="margin-top: 22px;">
                         <mat-select placeholder="Select Payment Account" [(ngModel)]="studentFeePaymentAccount">
@@ -372,6 +375,7 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <!--Payment Account Ends -->
                 <div class="col-sm-3" *ngIf="newModeOfPayment==modeOfPaymentList[1]">
                     <div class="form-group form-black label-floating">
                         <label class="control-label">Cheque No.</label>

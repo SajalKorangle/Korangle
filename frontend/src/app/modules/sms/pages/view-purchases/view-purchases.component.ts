@@ -41,15 +41,6 @@ export class ViewPurchasesComponent implements OnInit {
         this.serviceAdapter.initializeDate();
     }
 
-    formStructureFromBackendData() {
-        this.parsedIncompleteTransactions
-            = this.backendData.incompleteOnlineSmsPaymentTransactionList.map(transaction => {
-                return {
-                    ...transaction,
-                    parentOrderInstance: this.backendData.orderList.find(order => order.orderId == transaction.parentOrder)
-                };
-            });
-    }
 }
 
 interface ParsedTransaction extends SmsPurchaseOrder {

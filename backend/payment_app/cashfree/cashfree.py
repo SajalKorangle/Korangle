@@ -15,7 +15,7 @@ bank_verification_base_url = 'https://payout-gamma.cashfree.com'
 KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 0.5
 
 
-def getResponseSignature(postData):  # used for validating that a response indeed came from cashfree
+def getResponseSignature(postData):  # used for validating that a response, indeed came from cashfree
     signatureData = postData["orderId"] + postData["orderAmount"] + postData["referenceId"] + \
         postData["txStatus"] + postData["paymentMode"] + postData["txMsg"] + postData["txTime"]
     message = signatureData.encode('utf-8')
@@ -84,7 +84,7 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),
+            'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),  # adding korangle's commission
         }
     )
 
