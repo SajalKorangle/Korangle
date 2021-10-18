@@ -36,7 +36,7 @@ export class SendSmsServiceAdapter {
         const employee_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
             dateOfLeaving: 'null__korangle',
-            fields__korangle: 'id,name,fathersName,mobileNumber',
+            fields__korangle: 'id,name,fatherName,mobileNumber',
         };
 
         this.vm.stateKeeper.isLoading = true;
