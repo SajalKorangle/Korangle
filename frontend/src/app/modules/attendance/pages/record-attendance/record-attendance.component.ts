@@ -15,12 +15,17 @@ import { RecordAttendanceServiceAdapter } from './record-attendance.service.adap
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
+import {MessageService} from '@services/message-service';
+import {valueType} from '@modules/common/in-page-permission';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
+import {EmployeeService} from '@services/modules/employee/employee.service';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'record-attendance',
     templateUrl: './record-attendance.component.html',
     styleUrls: ['./record-attendance.component.css'],
-    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService],
+    providers: [NotificationService, SmsService, UserService, AttendanceService, StudentService, SmsOldService, ClassService, EmployeeService, TCService],
 })
 export class RecordAttendanceComponent implements OnInit {
     // @Input() user;
@@ -32,6 +37,8 @@ export class RecordAttendanceComponent implements OnInit {
 
     selectedSection: any;
 
+    dataForMapping =  {} as any;
+
     by = 'date';
 
     startDate = null;
@@ -39,7 +46,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     showStudentList = false;
 
-    studentAttendanceStatusList: any;
+    studentAttendanceStatusList = [];
 
     isInitialLoading = false;
 
@@ -48,27 +55,26 @@ export class RecordAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     mobileNumberList = [];
-    STUDENT_LIMITER = 200;
-
-    studentUpdateMessage = 'Your ward, <name> is marked <attendanceStatus> on <dateOfAttendance>';
-    studentAlternateMessage = "Your ward's attendance has been corrected to <attendanceStatus>";
-
-    sentTypeList = ['NULL', 'SMS', 'NOTIFICATION', 'NOTIF./SMS'];
 
     studentList: any;
 
-    selectedSentType: any;
     smsBalance = 0;
 
     receiverList = RECEIVER_LIST;
 
-    selectedReceiver: any;
+    ATTENDANCE_CREATION_EVENT_DBID = 5;
+    ATTENDANCE_UPDATION_EVENT_DBID = 6;
 
-    notif_usernames = [];
+    backendData = {
+        eventSettingsList: [],
+        attendanceSMSEventList: []
+    };
 
     serviceAdapter: RecordAttendanceServiceAdapter;
 
     currentAttendanceList = [];
+    messageService: any;
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     constructor(
         private excelService: ExcelService,
@@ -79,7 +85,9 @@ export class RecordAttendanceComponent implements OnInit {
         public attendanceService: AttendanceService,
         public studentService: StudentService,
         public smsOldService: SmsOldService,
-        public classService: ClassService
+        public classService: ClassService,
+        public employeeService: EmployeeService,
+        public tcService: TCService
     ) {}
 
     changeSelectedSectionToFirst(): void {
@@ -93,6 +101,8 @@ export class RecordAttendanceComponent implements OnInit {
         this.isInitialLoading = true;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
     }
 
     classSectionInPermissionList(classDbId: number, sectionDbId: number, attendancePermissionList: any): boolean {
@@ -371,5 +381,9 @@ export class RecordAttendanceComponent implements OnInit {
         let dateStr = this.formatDate(attendance.date.toString(), '');
         dateStr = dateStr.substr(dateStr.length - 2, 2);
         return student.name + ', ' + dateStr;
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 }

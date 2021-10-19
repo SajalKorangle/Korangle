@@ -107,7 +107,7 @@ def update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStu
 
 def update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
     serializer = ModelSerializer(query_set.get(id=data['id']), data=data)
-    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID), "errors: {0}, data: {1}".format(serializer.errors, data)
     serializer.save()
     return serializer.data
 

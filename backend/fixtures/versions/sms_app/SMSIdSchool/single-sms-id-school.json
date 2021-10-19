@@ -1,0 +1,3 @@
+[
+	{ "model": "sms_app.smsidschool", "pk": 1, "fields": { "parentSchool":1  , "parentSMSId": 1 }}
+]

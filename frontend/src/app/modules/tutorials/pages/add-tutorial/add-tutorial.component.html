@@ -2,7 +2,7 @@
     <ng-container *ngIf="!stateKeeper.isLoading">
         <div class="row">
             <div class="col-md-9" *ngIf="!htmlRenderer.subjectsExist()">
-                <span>[ There are no Subjects Assigned to you ]</span>
+                <span>No permission for any subject with active students in a class</span>
             </div>
             <div class="col-md-9" *ngIf="htmlRenderer.subjectsExist()">
                 <mat-form-field>

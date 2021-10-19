@@ -112,4 +112,6 @@ input {
   margin-left: 5px;
 }
 
-
+.disabledButton{
+    background-color: #c4c4c4 !important; 
+}
