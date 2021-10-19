@@ -32,13 +32,10 @@ export class GeneralSMSPurchaseServiceAdapter {
 
         // New SMS Purchase Order Starts
 
-        const returnUrl = new URL(
-            environment.DJANGO_SERVER + this.vm.paymentService.module_url + this.vm.paymentService.version_free_api.order_completion + '/');
-
-        const redirectParams = new URLSearchParams(location.search);
-
+        const currentRedirectParams = new URLSearchParams(location.search);
+        const frontendReturnUrlParams = new URLSearchParams();
         // redirect_to params decides the frontend page and state at which the user is redirected after payment
-        returnUrl.searchParams.append('redirect_to', location.origin + location.pathname + '?' + redirectParams.toString());
+        frontendReturnUrlParams.append('redirect_to', location.origin + location.pathname + '?' + currentRedirectParams.toString());
 
         const smsPurchase = {
             numberOfSMS: noOfSMS,
@@ -56,7 +53,10 @@ export class GeneralSMSPurchaseServiceAdapter {
             customerName: this.vm.user.activeSchool.name,
             customerPhone: this.vm.user.username,
             customerEmail: this.vm.email,
-            returnUrl: returnUrl.toString(),
+            returnData: {
+                origin: environment.DJANGO_SERVER,  // backend url api which will be hit by cashfree to verify the completion of payment on their portal
+                searchParams: frontendReturnUrlParams.toString()
+            },
             orderNote: `payment towards sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`,
             smsPurchaseOrderList: [smsPurchaseOrder],
         };

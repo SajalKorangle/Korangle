@@ -9,6 +9,7 @@ from generic.generic_serializer_interface import create_object
 from decorators import user_permission_3
 from django.db import transaction
 from time import time
+from django.urls import reverse
 
 
 ########### Online Payment Account #############
@@ -74,9 +75,14 @@ class OrderSchoolView(CommonView, APIView):
             orderData[child_field] = request.data[child_field]
             del request.data[child_field]
 
+        cashfreeOrderData = request.data
+        cashfreeOrderData['returnUrl'] = request.data['returnData']['origin'] + \
+            reverse('cashfree_order_completion') + '?' + request.data['returnData']['searchParams']
+        del cashfreeOrderData['returnData']
+
         createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
 
-        responseOrderData = createAndSignCashfreeOrderForSchool(request.data, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
+        responseOrderData = createAndSignCashfreeOrderForSchool(cashfreeOrderData, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
         return responseOrderData
 
 
@@ -95,10 +101,13 @@ class OrderSelfView(CommonView, APIView):
             orderData[child_field] = request.data[child_field]
             del request.data[child_field]
 
-        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
+        cashfreeOrderData = request.data
+        cashfreeOrderData['returnUrl'] = request.data['returnData']['origin'] + \
+            reverse('cashfree_order_completion') + '?' + request.data['returnData']['searchParams']
+        del cashfreeOrderData['returnData']
 
-        responseOrderData = createAndSignCashfreeOrderForKorangle(request.data, createdOrderResponse['orderId'])
-        print('response Order Data =', responseOrderData)
+        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
+        responseOrderData = createAndSignCashfreeOrderForKorangle(cashfreeOrderData, createdOrderResponse['orderId'])
         return responseOrderData
 
 

@@ -91,7 +91,6 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
     orderData.update({
         'signature': getSignature(orderData)
     })
-    print('order for school = ', orderData)
     return orderData
 
 
