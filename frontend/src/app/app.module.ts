@@ -24,6 +24,7 @@ import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/wha
 import { ReactiveFormsModule } from '@angular/forms';
 import { SignupComponent } from './authentication/signup/signup.component';
 import { DecimalPipe } from '@angular/common';
+import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 
 @NgModule({
     declarations: [
@@ -49,8 +50,9 @@ import { DecimalPipe } from '@angular/common';
         ReactiveFormsModule,
         // RecaptchaModule,  // this is the recaptcha main module
     ],
+    entryComponents: [PaymentResponseDialogComponent],
     exports: [],
     providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

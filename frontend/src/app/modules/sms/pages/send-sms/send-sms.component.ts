@@ -17,7 +17,6 @@ import {InformationService} from '@services/modules/information/information.serv
 import { MatDialog } from '@angular/material';
 
 import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
-import { PaymentResponseDialogComponent } from './../../components/payment-response-dialog/payment-response-dialog.component';
 
 @Component({
     selector: 'send-sms',
@@ -166,10 +165,6 @@ export class SendSmsComponent implements OnInit {
         this.htmlRenderer = new SendSmsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
 
-        const urlParams = new URLSearchParams(location.search);
-        if (urlParams.has('orderId')) {
-            this.openPaymentResponseDialog();
-        }
     }
 
     getMobileNumberList(returnType: string): any {
@@ -404,14 +399,6 @@ export class SendSmsComponent implements OnInit {
         this.dialog.open(PurchaseSmsDialogComponent, {
             data: {
                 vm: this,
-            }
-        });
-    }
-
-    openPaymentResponseDialog() {
-        this.dialog.open(PaymentResponseDialogComponent, {
-            data: {
-                vm: this
             }
         });
     }

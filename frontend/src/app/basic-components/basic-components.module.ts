@@ -15,9 +15,10 @@ import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.c
 import { MatDialogModule } from '@angular/material';
 import { SafePipe } from '../pipes/safe.pipe';
 import {YouTubePlayerModule} from '@angular/youtube-player';
+import { PaymentResponseDialogComponent } from './payment-response-dialog/payment-response-dialog.component'
 
 @NgModule({
-    declarations: [NavbarComponent, SidebarComponent, LoadingSpinnerComponent, ModalVideoComponent, SafePipe],
+    declarations: [NavbarComponent, SidebarComponent, LoadingSpinnerComponent, ModalVideoComponent, SafePipe, PaymentResponseDialogComponent,],
     entryComponents: [ModalVideoComponent],
     imports: [
         CommonModule,
@@ -47,6 +48,7 @@ import {YouTubePlayerModule} from '@angular/youtube-player';
         SafePipe,
         MatButtonModule,
         MatIconModule,
+        PaymentResponseDialogComponent,
     ],
 })
 export class BasicComponentsModule {}
