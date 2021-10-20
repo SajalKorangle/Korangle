@@ -1,4 +1,15 @@
 .example-card{
     margin: 0 auto;
     width: 40%;
+    vertical-align:middle;
+}
+mat-card {
+    width: 70vw;
+    height: 80vh;
+}
+.main-div{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
