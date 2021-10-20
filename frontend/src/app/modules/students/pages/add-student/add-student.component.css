@@ -89,6 +89,7 @@ mat-form-field {
     left: 102px;
     top: 47px;
     z-index: 3;
+    white-space: nowrap;
 }
 
 .documentLabel {
@@ -97,6 +98,7 @@ mat-form-field {
     top: 19px;
     font-size: 14px;
     color: black;
+    white-space: nowrap;
 }
 
 .documentName {
@@ -105,6 +107,7 @@ mat-form-field {
     line-height: 12px;
     color: #959393;
     margin-top: 5px;
+    white-space: nowrap;
 }
 
 .documentButton {
