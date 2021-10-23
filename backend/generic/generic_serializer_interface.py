@@ -1,10 +1,12 @@
-
-# from django.db.models import Q
-# from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 from functools import reduce
 from rest_framework import serializers
 from django.db import transaction as db_transaction
+from common.json_encoding import make_dict_serializable, make_dict_list_serializable
+
+from django.db.models import Count
 
 
 def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStudentIdList=None):
@@ -26,110 +28,110 @@ def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStu
     return ModelSerializer
 
 
-# def permittedQuerySet(model, activeStudentIdList, activeSchoolId):
-#     query_filters = {}
+def parseFilter(data):
+    filter_kwargs = {}
+    filter_args = []
+    for attr, value in data.items():
 
-#     RelationsToStudent = model.RelationsToStudent
-#     RelationsToSchool = model.RelationsToSchool
+        if attr == '__or__':
+            or_filter_aggregate = ~Q()
+            for or_filter in value:
+                db_filter = parseFilter(or_filter)
+                or_filter_aggregate = or_filter_aggregate | Q(*db_filter['filter_args'], **db_filter['filter_kwargs'])
+            filter_args.append(or_filter_aggregate)
+        else:
+            filter_kwargs.update({attr: value})
 
-#     # Here we are banking on the fact that
-#     # 1. if RelationsToStudent exist then RelationsToSchool always exist,
-#     # 2. activeStudentId represents parent, non existence of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
-
-#     if (activeStudentIdList and len(RelationsToStudent) > 0):  # for parent only, activeStudentID can be a list of studentId's
-#         query_filters[RelationsToStudent[0]+'__in'] = activeStudentIdList     # takes the first relation to student only(should be the closest)
-#     elif (len(RelationsToSchool) > 0):
-#         query_filters[RelationsToSchool[0]] = activeSchoolId    # takes the first relation to school only(should be the the closest)
-#     return model.objects.filter(**query_filters)
-
-
-# def get_object(GET, Model, activeSchoolId, activeStudentIdList):
-#     data = GET.dict()
-#     query_set = permittedQuerySet(Model, activeSchoolId, activeStudentIdList)
-#     ModelSerializer = get_model_serializer(Model=Model, fields__korangle=data.get('fields__korangle', None),
-#                                            activeStudentIdList=activeStudentIdList, activeSchoolId=activeSchoolId)
-#     if 'fields__korangle' in data:
-#         del data['fields__korangle']
-
-#     try:
-#         object = query_set.get(**data)
-#     except ObjectDoesNotExist:
-#         return None
-#     return ModelSerializer(object).data
+    return {'filter_args': filter_args, 'filter_kwargs': filter_kwargs}
 
 
-# def get_list(data, Model, activeSchoolId, activeStudentIdList):
-#     query_set = permittedQuerySet(Model, activeSchoolId, activeStudentIdList)
+def parse_query(Model, data, *args, **kwargs):
+    query_set = Model.Permissions().getPermittedQuerySet(*args, **kwargs)
+    child_query_field_name_mapped_by_filter = {}
 
-#     filter_var_list = []
-#     filter_var = ''
-#     order_var = ''
-#     count_var = ''
+    field_list = ['__all__']
+    if 'fields_list' in data:
+        field_list = data['fields_list']
+        del data['fields__korangle']
+    if '__all__' in field_list:
+        all_index = field_list.index('__all__')
+        field_list[all_index:all_index + 1] = [field.name for field in Model._meta.concrete_fields]
 
-#     if data != '' and data is not None:
-#         for index, attr in enumerate(data):
+    for key, value in data.items():
+        if key.startswith('filter'):
+            parsed_filter = parseFilter(value)
+            query_set = query_set.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
+        elif key.startswith('exclude'):
+            parsed_filter = parseFilter(value)
+            query_set = query_set.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
+        elif key.endsWith('__count__annotate__'):  # query format: field_name__count__annotate__ = {<filter>}
+            parsed_filter = parseFilter(value)
+            query_set = query_set.annotate(**{key: Count(key.removesuffix('__count__annotate__'),
+                                           filter=Q(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+        elif key.endswith('__count__alias__'):
+            parsed_filter = parseFilter(value)
+            query_set = query_set.alias(**{key: Count(key.removesuffix('__count__alias__'), filter=Q(*
+                                        parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+        elif key in Model._meta.fields_map:
+            child_query_field_name_mapped_by_filter[key] = value
+        elif key in ['order_by', 'pagination']:
+            pass
+        else:
+            raise Exception('Invalid key in GET object Query')
+    return query_set, child_query_field_name_mapped_by_filter, field_list
 
-#             if attr == 'e' or attr == 'fields__korangle':
-#                 continue
-#             elif attr[:15] == 'korangle__order':
-#                 order_var = ''
-#             elif attr == 'korangle__count':
-#                 count_var = ''
-#             elif attr[-4:] == '__in':
-#                 if data[attr] != '':
-#                     filter_var = {attr: list(data[attr].split(','))}
-#                 else:
-#                     filter_var = {attr: []}
-#             elif attr[-4:] == '__or':
-#                 filter_var = {attr[:-4]: data[attr]}
-#                 filter_var_list.append(filter_var)
-#                 continue
-#             else:
-#                 if data[attr] == 'null__korangle':
-#                     filter_var = {attr: None}
-#                 elif data[attr] == 'false__boolean':
-#                     filter_var = {attr: False}
-#                 elif data[attr] == 'true__boolean':
-#                     filter_var = {attr: True}
-#                 else:
-#                     filter_var = {attr: data[attr]}
 
-#             if filter_var_list.__len__() > 0:
-#                 filter_var_list.append(filter_var)
-#                 q_total = Q()
-#                 for q_variable in filter_var_list:
-#                     q_total = q_total | Q(**q_variable)
-#                 try:
-#                     query_set = query_set.filter(q_total)
-#                 except:
-#                     print('filter exception in or:')
-#                     print(filter_var_list)
-#                 filter_var_list = []
-#             elif attr[:15] == 'korangle__order':
-#                 try:
-#                     query_set = query_set.order_by(data[attr])
-#                 except:
-#                     print('order exception:')
-#                     print(data[attr])
-#             elif attr == 'korangle__count':
-#                 try:
-#                     count_array = list(map(int, data[attr].split(',')))
-#                     query_set = query_set[count_array[0]:count_array[1]]
-#                 except:
-#                     print('count exception: ')
-#                     print(data[attr])
-#             else:
-#                 try:
-#                     query_set = query_set.filter(**filter_var)
-#                 except:
-#                     print('filter exception:')
-#                     print(filter_var)
+def get_object(data, Model, *args, **kwargs):
+    query_set, child_query_field_name_mapped_by_filter, field_list = parse_query(Model, data, *args, **kwargs)
 
-#     ModelSerializer = get_model_serializer(Model=Model, fields__korangle=data.get('fields__korangle', None),
-#                                            activeStudentIdList=activeStudentIdList, activeSchoolId=activeSchoolId)
-#     return_data = ModelSerializer(query_set, many=True).data
+    try:
+        object = query_set.values(*field_list).get()
+    except ObjectDoesNotExist:
+        return None
+    return_data = make_dict_serializable(object)
 
-#     return return_data
+    for key in child_query_field_name_mapped_by_filter.keys():
+        child_query_field_name_mapped_by_filter[key].update({   # added parent<Model> filter
+            'filter__child_query__': {
+                Model._meta.fields_map[key].field.name: return_data[Model._meta.pk.name]
+            }
+        })
+        return_data[key] = get_list(child_query_field_name_mapped_by_filter[key], Model._meta.fields_map[key].related_model, *args, **kwargs)
+
+    return return_data
+
+
+def get_list(data, Model, *args, **kwargs):
+    query_set, child_query_field_name_mapped_by_filter, field_list = parse_query(Model, data, *args, **kwargs)
+
+    if 'order_by' in data:
+        query_set = query_set.order_by(*data['order_by'])
+    if 'pagination' in data:
+        query_set = query_set[data['pagination']['start']:data['pagination']['end']]
+
+    return_data = query_set.values(*field_list)
+    return_data = make_dict_list_serializable(return_data)
+
+    id_list = [getattr(instance, Model._meta.pk.name) for instance in query_set]
+
+    for key in child_query_field_name_mapped_by_filter.keys():
+        child_order_by = child_query_field_name_mapped_by_filter.get('order_by', [])
+        child_query_field_name_mapped_by_filter[key].update({   # added parent<Model> filter
+            'filter__child_query__': {
+                Model._meta.fields_map[key].field.name + "__in": id_list
+            },
+            'order_by': [Model._meta.fields_map[key].field.name] + child_order_by
+        })
+        aggregated_child_data_list = get_list(child_query_field_name_mapped_by_filter[key], Model._meta.fields_map[key].related_model, *args, **kwargs)
+        child_data_list_mapped_by_foreign_key = {}
+        for instance in query_set:
+            child_data_list_mapped_by_foreign_key[getattr(instance, Model._meta.pk.name)] = []
+        for child_data in aggregated_child_data_list:
+            child_data_list_mapped_by_foreign_key[child_data[Model._meta.fields_map[key].field.name]].append(child_data)
+        for index, instance in enumerate(query_set):
+            return_data[index][key] = child_data_list_mapped_by_foreign_key[getattr(instance, Model._meta.pk.name)]
+
+    return return_data
 
 
 def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
