@@ -46,7 +46,6 @@ def parseFilter(data):
 
 
 def parse_query(Model, data, *args, **kwargs):
-    print('--data-- = ', data)
     query = Model.objects.filter(**Model.Permissions().getPermittedQuerySet(*args, **kwargs))
     child_query_field_name_mapped_by_filter = {}
     parent_field_name_mapped_by_filter = {}
@@ -61,7 +60,6 @@ def parse_query(Model, data, *args, **kwargs):
 
     for key, value in data.items():
         if key.startswith('filter'):
-            print('--value-- ', value)
             parsed_filter = parseFilter(value)
             query = query.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
         elif key.startswith('exclude'):
