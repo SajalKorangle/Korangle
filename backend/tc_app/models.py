@@ -6,18 +6,20 @@ from fees_third_app.models import FeeType
 from employee_app.models import Employee
 from django.utils.timezone import now
 
+
 def upload_thumbnail_to(instance, filename):
     return '%s/tc_layouts/imageAssets/%s_%s' % (instance.parentSchool.id, now().timestamp(), filename)
+
 
 class TCLayout(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
-    thumbnail = models.ImageField(upload_to=upload_thumbnail_to,null=True)
+    thumbnail = models.ImageField(upload_to=upload_thumbnail_to, null=True)
     publiclyShared = models.BooleanField(default=False)
     content = models.TextField()  # Contains the JSON content for the layout
     parentStudentSection = models.ForeignKey(Student, on_delete=models.SET_NULL,
-        null=True, blank=True, default=None)  # student section on which this layout is designed
-        
+                                             null=True, blank=True, default=None)  # student section on which this layout is designed
+
     class Meta:
         unique_together = ('parentSchool', 'name')
 
@@ -33,25 +35,26 @@ class TCLayoutSharing(models.Model):
 def upload_image_assets_to(instance, filename):
     return 'tc_layouts/imageAssets/%s_%s' % (now().timestamp(), filename)
 
-class TCImageAssets(models.Model): # implement image data size
+
+class TCImageAssets(models.Model):  # implement image data size
     image = models.ImageField(upload_to=upload_image_assets_to)
 
 
 class TransferCertificateSettings(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, unique=True)  
-    
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, unique=True)
+
     tcFee = models.IntegerField(default=0)  # For fee collection
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, null=True)
-    
-    nextCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
+    nextCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
 
 def upload_certificate_to(instance, filename):
     return 'tc_app/TransferCertificateNew/certificateFile/%s-%s' % (now().timestamp(), filename)
 
+
 class TransferCertificateNew(models.Model):
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
+    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='transferCertificateNewList')
     parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.SET_NULL, null=True)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     certificateNumber = models.IntegerField()

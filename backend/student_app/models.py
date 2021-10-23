@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import os
 from django.utils.timezone import now
+from common.common import BasePermission
 
 
 '''def upload_avatar_to(instance, filename):
@@ -21,8 +22,9 @@ def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
     return 'students/profile_image/%s%s' % (now().timestamp(), filename_ext.lower())
 
-def upload_document_to(instance,filename):
-    return 'student_app/StudentParameterValue/document_value/%s_%s' % (now().timestamp(),filename)
+
+def upload_document_to(instance, filename):
+    return 'student_app/StudentParameterValue/document_value/%s_%s' % (now().timestamp(), filename)
 
 
 class TransferCertificate(models.Model):
@@ -64,22 +66,22 @@ class Student(models.Model):
     caste = models.TextField(null=True, blank=True)
 
     CATEGORY = (
-        ( 'SC', 'Scheduled Caste' ),
-        ( 'ST', 'Scheduled Tribe' ),
-        ( 'OBC', 'Other Backward Classes' ),
-        ( 'Gen.', 'General' ),
+        ('SC', 'Scheduled Caste'),
+        ('ST', 'Scheduled Tribe'),
+        ('OBC', 'Other Backward Classes'),
+        ('Gen.', 'General'),
     )
     newCategoryField = models.CharField(max_length=5, choices=CATEGORY, null=True)
 
     RELIGION = (
-        ( 'Hinduism', 'Hinduism' ),
-        ( 'Islam', 'Islam' ),
-        ( 'Christianity', 'Christianity' ),
-        ( 'Jainism', 'Jainism' ),
+        ('Hinduism', 'Hinduism'),
+        ('Islam', 'Islam'),
+        ('Christianity', 'Christianity'),
+        ('Jainism', 'Jainism'),
     )
     newReligionField = models.CharField(max_length=20, choices=RELIGION, null=True)
 
-    fatherOccupation = models.TextField(null=True,blank=True)
+    fatherOccupation = models.TextField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
     familySSMID = models.BigIntegerField(null=True)
     childSSMID = models.BigIntegerField(null=True)
@@ -107,11 +109,10 @@ class Student(models.Model):
 
     parentTransferCertificate = \
         models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate')
-    
 
     def __str__(self):
         """A string representation of the model."""
-        return self.parentSchool.name+" --- "+self.name
+        return self.parentSchool.name + " --- " + self.name
 
     def get_section_id(self, session_object):
         return self.studentsection_set\
@@ -140,13 +141,17 @@ class Student(models.Model):
         return self.studentsection_set \
             .get(parentSession=session_object).rollNumber
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = ['id']
+
     class Meta:
         db_table = 'student'
 
 
 class StudentSection(models.Model):
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, related_name='studentSectionList')
 
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass')
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')
@@ -154,6 +159,10 @@ class StudentSection(models.Model):
 
     rollNumber = models.TextField(null=True, blank=True)
     attendance = models.IntegerField(null=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_section'
@@ -168,9 +177,9 @@ class StudentParameter(models.Model):
     name = models.CharField(max_length=100)
 
     PARAMETER_TYPE = (
-        ( 'TEXT', 'TEXT' ),
-        ( 'FILTER', 'FILTER' ),
-        ( 'DOCUMENT','DOCUMENT')
+        ('TEXT', 'TEXT'),
+        ('FILTER', 'FILTER'),
+        ('DOCUMENT', 'DOCUMENT')
     )
     parameterType = models.CharField(max_length=20, choices=PARAMETER_TYPE, null=False)
 
@@ -185,11 +194,10 @@ class StudentParameterValue(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
-    value = models.TextField(null=True,blank=True)
+    value = models.TextField(null=True, blank=True)
     document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
-    document_size = models.TextField(null=True,blank=True)
+    document_size = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'student_parameter_value'
         unique_together = ('parentStudent', 'parentStudentParameter')
-

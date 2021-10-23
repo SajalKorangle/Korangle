@@ -1,14 +1,14 @@
 
-from django.db.models.signals import pre_init
 from rest_framework.views import APIView
 
 from decorators import user_permission_4
 
 
 from .generic_serializer_interface import create_object, create_object_list, get_object, get_list
-
+from django.apps import apps
 
 ########### Common View ########
+
 
 class GenericBaseView(APIView):
 
@@ -16,7 +16,6 @@ class GenericBaseView(APIView):
 
     def initial(self, request, *args, **kwargs):
         request.GET._mutable = True
-        from django.apps import apps
         model = apps.get_model(request.GET['app_name'], request.GET['model_name'])
         del request.GET['app_name']
         del request.GET['model_name']

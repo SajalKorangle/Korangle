@@ -30,7 +30,7 @@ class BasePermission:
 
         # Here we are banking on the fact that
         # 1. if RelationsToStudent exist then RelationsToSchool always exist,
-        # 2. activeStudentId represents parent, non existance of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
+        # 2. activeStudentId represents parent, non existence of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
 
         if (activeStudentIdList and len(self.RelationsToStudent) > 0):  # for parent only, activeStudentID can be a list of studentId's
             query_filters[self.RelationsToStudent[0] + '__in'] = activeStudentIdList     # takes the first relation to student only(should be the closest)

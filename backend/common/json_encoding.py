@@ -8,7 +8,7 @@ import uuid
 # This function is copied from django.core.serializers.json.DjangoJSONEncoder,
 
 
-def custom_type_json_encoder(self, o):
+def custom_type_json_encoder(o):
     # See "Date Time String Format" in the ECMA-262 specification.
     if isinstance(o, datetime.datetime):
         r = o.isoformat()
