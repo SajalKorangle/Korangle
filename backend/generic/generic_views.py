@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from decorators import user_permission_4
 
 
-from .generic_serializer_interface import create_object, create_object_list
+from .generic_serializer_interface import create_object, create_object_list, get_object, get_list
 
 
 ########### Common View ########
@@ -27,10 +27,9 @@ class GenericBaseView(APIView):
 
 class GenericView(GenericBaseView):
 
-    # @user_permission_3
-    # def get(self, request, activeSchoolID, activeStudentID):
-    #     self.initializeModel(request.GET)
-    #     return get_object(request.GET, self.Model, activeSchoolID, activeStudentID)
+    @user_permission_4
+    def get(self, request, activeSchoolId, activeStudentIdList):
+        return get_object(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)
 
     @user_permission_4
     def post(self, request, activeSchoolId, activeStudentIdList):
@@ -55,12 +54,9 @@ class GenericView(GenericBaseView):
 
 class GenericListView(GenericBaseView):
 
-    # @user_permission_3
-    # def get(self, request, activeSchoolID, activeStudentID):
-    #     filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-    #     if 'fields__korangle' in request.GET:
-    #         self.ModelSerializer = get_model_serializer(self.Model, fields__korangle=request.GET['fields__korangle'], validator=self.validator)
-    #     return get_list(request.GET, filtered_query_set, self.ModelSerializer)
+    @user_permission_4
+    def get(self, request, activeSchoolId, activeStudentIdList):
+        return get_list(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)
 
     @user_permission_4
     def post(self, request, activeSchoolId, activeStudentIdList):
