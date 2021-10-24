@@ -67,8 +67,8 @@ def parse_query(Model, data, *args, **kwargs):
                 parsed_filter = parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
                 alias_field_name = alias_generator_data['field']
                 alias_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
-                query = query.alias(**{alias_name: alias_function(alias_field_name, filter=Q(*
-                                                                                             parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+                query = query.annotate(**{alias_name: alias_function(alias_field_name, filter=Q(*
+                                                                                                parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
         elif key in ['order_by', 'pagination']:
             pass
         else:
@@ -108,10 +108,10 @@ def get_list(data, Model, *args, **kwargs):
             processed_field_list.append(field_data)
         elif type(field_data) == dict:  # parent/child nested field
             if field_data['name'] in Model._meta.fields_map:
-                child_field_name_mapped_by_query[field_data['name']] = field_data['query']
+                child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
                 field_list.append(field_data['name'])  # Ensuring this foreign key in .values for later regrouping
             elif type(Model._meta.get_field(field_data['name'])) == ForeignKey:
-                parent_field_name_mapped_by_query[field_data['name']] = field_data['query']
+                parent_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
             else:
                 raise Exception('Invalid parent/child data dict in GET Query')
         else:
@@ -132,12 +132,10 @@ def get_list(data, Model, *args, **kwargs):
     for key, value in child_field_name_mapped_by_query.items():
         child_field_name = Model._meta.fields_map[key].field.name
         child_model = Model._meta.fields_map[key].related_model
-        child_order_by = child_field_name_mapped_by_query.get('order_by', [])
         value.update({   # added parent<Model> filter
-            'filter': {
+            'filter': dict(value.get('filter', {}), **{
                 child_field_name + "__in": id_list
-            }.update(value.get('filter', {})),
-            'order_by': [child_field_name] + child_order_by
+            })
         })
 
         aggregated_child_data_list = get_list(child_field_name_mapped_by_query[key], child_model, *args, **kwargs)
@@ -154,25 +152,25 @@ def get_list(data, Model, *args, **kwargs):
     ## Child Nested Data Query Ends ##
 
     ## Parent Nested Data Query Starts ##
-    for key in parent_field_name_mapped_by_query.keys():
+    for key, value in parent_field_name_mapped_by_query.items():
         ## Initialization for Parent Model Nesting Starts ##
         parent_model = Model._meta.get_field(key).related_model
         parent_model_pk_field_name = parent_model._meta.pk.name
-        parent_pk_list = [getattr(getattr(instance, key), parent_model_pk_field_name) for instance in query_set if getattr(instance, key) is not None]
+        parent_pk_list = [instance_data[key] for instance_data in return_data if instance_data[key] is not None]
         ## Initialization for Parent Model Nesting Ends ##
 
-        parent_field_name_mapped_by_query[key].update({  # Updating Filter
-            'filter': {
+        value.update({  # Updating Filter
+            'filter': dict(value.get('filter', {}), **{
                 parent_model_pk_field_name + '__in': parent_pk_list
-            }.update(parent_field_name_mapped_by_query[key].get('filter', {}))
+            })
         })
 
         ## Ensuring parent<model> field is added in fields_list for later regrouping Starts ##
-        if 'field_list' in parent_field_name_mapped_by_query[key]:
-            parent_field_name_mapped_by_query[key]['field_list'].append(parent_model_pk_field_name)
+        if 'field_list' in value:
+            value['field_list'].append(parent_model_pk_field_name)
         ## Ensuring parent<model> field is added in fields_list for later regrouping Ends ##
 
-        aggregated_parent_data_list = get_list(parent_field_name_mapped_by_query[key], parent_model, *args, **kwargs)
+        aggregated_parent_data_list = get_list(value, parent_model, *args, **kwargs)
 
         ## Regrouping Starts ##
         parent_data_mapped_by_pk = {}
