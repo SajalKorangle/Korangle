@@ -128,7 +128,7 @@ def get_object_list(data, Model, *args, **kwargs):
     return_data = list(query_set.values(*processed_field_list))
     return_data = make_dict_list_serializable(return_data)  # making json serializable
 
-    id_list = [instance_data[pk_field_name] for instance_data in return_data]
+    pk_list = [instance_data[pk_field_name] for instance_data in return_data]
 
     ## Child Nested Data Query Starts ##
     for key, value in child_field_name_mapped_by_query.items():
@@ -136,11 +136,11 @@ def get_object_list(data, Model, *args, **kwargs):
         child_model = Model._meta.fields_map[key].related_model
         value.update({   # added parent<Model> filter
             'filter': dict(value.get('filter', {}), **{
-                child_field_name + "__in": id_list
+                child_field_name + "__in": pk_list
             })
         })
 
-        aggregated_child_data_list = get_object_list(child_field_name_mapped_by_query[key], child_model, *args, **kwargs)
+        aggregated_child_data_list = get_object_list(value, child_model, *args, **kwargs)
 
         ## Regrouping starts ##
         child_data_list_mapped_by_foreign_key = {}  # Grouping by parentModel.pk
@@ -269,9 +269,36 @@ def delete_operation(data, Model, activeSchoolId, activeStudentIdList):
     return data
 
 
-def delete_object(data, Model, activeSchoolId, activeStudentIdList):
-    return operate_object(data, Model, activeSchoolId, activeStudentIdList, delete_operation)
+def delete_object_list(data, Model, *args, **kwargs):
+    child_field_name_mapped_by_query = {}
 
+    for field_data in data.get('fields_list', []):
+        if type(field_data) == dict:  # parent/child nested field
+            if field_data['name'] in Model._meta.fields_map:
+                child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+            else:
+                raise Exception('Invalid child data dict in Delete Query')
+        else:
+            raise Exception('Invalid field name in DELETE Query')
+    ## Response Structure(fields_list) Processing Ends ##
 
-def delete_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
-    return operate_list(data_list, Model, activeSchoolId, activeStudentIdList, delete_operation)
+    query_set = parse_query(Model, data, *args, **kwargs)
+    count = query_set.count()
+
+    pk_field_name = Model._meta.pk.name
+    pk_list = query_set.values_list(pk_field_name, flat=True)
+
+    query_set.delete()
+
+    for key, value in child_field_name_mapped_by_query.items():
+        child_field_name = Model._meta.fields_map[key].field.name
+        child_model = Model._meta.fields_map[key].related_model
+        value.update({   # added parent<Model> filter
+            'filter': dict(value.get('filter', {}), **{
+                child_field_name + "__in": pk_list
+            })
+        })
+
+        delete_object_list(value, child_model, *args, **kwargs)
+
+    return count

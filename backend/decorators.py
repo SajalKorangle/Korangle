@@ -143,8 +143,6 @@ def user_permission_4(function):
 
         if '__query__' in request.GET:
             request.GET['__query__'] = json.loads(request.GET['__query__'])
-        elif '__data__' in request.GET:
-            request.GET['__data__'] = json.loads(request.GET['__data__'])
 
         # no need to check authentication because the RestAPIView class by default check for authentication
 
