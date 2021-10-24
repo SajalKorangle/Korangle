@@ -28,7 +28,7 @@ class GenericView(GenericBaseView):
 
     @user_permission_4
     def get(self, request, activeSchoolId, activeStudentIdList):
-        return get_object(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)
+        return get_object(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList)
 
     @user_permission_4
     def post(self, request, activeSchoolId, activeStudentIdList):
@@ -55,7 +55,7 @@ class GenericListView(GenericBaseView):
 
     @user_permission_4
     def get(self, request, activeSchoolId, activeStudentIdList):
-        return get_list(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)
+        return get_list(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList)
 
     @user_permission_4
     def post(self, request, activeSchoolId, activeStudentIdList):

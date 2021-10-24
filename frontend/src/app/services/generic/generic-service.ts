@@ -43,14 +43,14 @@ export class GenericService extends RestApiGateway {
         return Object.entries(config)[0];
     }
 
-    getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+    getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: GET_QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl(), { app_name, model_name, __data__: JSON.stringify(DataView) });
+        return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(DataView) });
     }
 
-    getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+    getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: GET_QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __data__: JSON.stringify(DataView) });
+        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(DataView) });
     }
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -74,3 +74,23 @@ interface APP_MODEL_STRUCTURE_INTERFACE {
 };
 
 // APP_MODEL_STRUCTURE_INTERFACE
+
+type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
+
+export interface GET_QUERY_INTERFACE {
+    fields_list: Array<string | { name: string, query?: GET_QUERY_INTERFACE; } | '__all__'>;
+    filter: FILTER_TYPE;
+    exclude: FILTER_TYPE;
+    annotate: {
+        [key: string]: {
+            field: string,
+            function: string,
+            filter?: FILTER_TYPE,
+        };
+    };
+    order_by: Array<string>;
+    pagination: {
+        start: number,
+        end: number,
+    };
+}

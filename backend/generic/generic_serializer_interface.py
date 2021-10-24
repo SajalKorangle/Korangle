@@ -62,7 +62,7 @@ def parse_query(Model, data, *args, **kwargs):
         elif key == 'exclude':
             parsed_filter = parseFilter(value)
             query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
-        elif key == 'alias':
+        elif key == 'annotate':
             for alias_name, alias_generator_data in value.items():
                 parsed_filter = parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
                 alias_field_name = alias_generator_data['field']
