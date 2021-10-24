@@ -16,7 +16,7 @@ def get_default_filter():
     return {'filter_args': [], 'filter_kwargs': {}}
 
 
-def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStudentIdList=None):
+def get_model_serializer(Model, fields__korangle=None, activeSchoolId=None, activeStudentIdList=None):
 
     class ModelSerializer(serializers.ModelSerializer):
 
@@ -189,15 +189,15 @@ def get_object_list(data, Model, *args, **kwargs):
     return return_data
 
 
-def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
+def operate_list(data_list, Model, activeSchoolId, activeStudentIdList, operation_function):
     response = []
     with db_transaction.atomic():
         for data in data_list:
-            response.append(create_object(data, Model, activeSchoolId, activeStudentIdList))
+            response.append(operate_object(data, Model, activeSchoolId, activeStudentIdList, operation_function))
     return response
 
 
-def create_object(data, Model, activeSchoolId, activeStudentIdList):
+def operate_object(data, Model, activeSchoolId, activeStudentIdList, operation_function):
     data_list_mapped_by_child_related_field_name = {}
 
     for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
@@ -205,12 +205,7 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
         del data[child_related_field_name]
 
     with db_transaction.atomic():
-        ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
-        serializer = ModelSerializer(data=data)
-        assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
-        serializer.save()
-        response = serializer.data
-
+        response = operation_function(data, Model, activeSchoolId, activeStudentIdList)
         for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
             # removing list from end and finding the related model field
             child_related_field = Model._meta.fields_map.get(child_related_field_name, None)
@@ -223,53 +218,47 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
             for child_data in child_data_list:
                 child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
 
-            child_response = create_object_list(child_data_list, child_model, activeSchoolId, activeStudentIdList)
+            child_response = operate_list(child_data_list, child_model, activeSchoolId, activeStudentIdList, operation_function)
 
             response.update({child_related_field_name: child_response})
     return response
 
 
-def update_object_list(data_list, Model, activeSchoolId, activeStudentIdList, partial=False):
-    response = []
-    with db_transaction.atomic():
-        for data in data_list:
-            response.append(update_object(data, Model, activeSchoolId, activeStudentIdList, partial=partial))
-    return response
+def create_object_operation(data, Model, activeSchoolId, activeStudentIdList):
+    ModelSerializer = get_model_serializer(Model=Model, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
+    serializer = ModelSerializer(data=data)
+    assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
+    serializer.save()
+    return serializer.data
 
 
-def update_object(data, Model, activeSchoolId, activeStudentIdList, partial=False):
-    data_list_mapped_by_child_related_field_name = {}
+def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
+    return operate_list(data_list, Model, activeSchoolId, activeStudentIdList, create_object_operation)
 
-    for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
-        data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
-        del data[child_related_field_name]
 
-    permitted_query_set = Model.objects.filter(Model.Permissions().getPermittedQuerySet(activeSchoolId, activeStudentIdList))
-    main_model_pk_field_name = Model._meta.pk.name
+def create_object(data, Model, activeSchoolId, activeStudentIdList):
+    return operate_object(data, Model, activeSchoolId, activeStudentIdList, create_object_operation)
 
-    with db_transaction.atomic():
-        ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
+
+def get_update_object_operation(partial: bool):
+    def update_object_operation(data, Model, activeSchoolId, activeStudentIdList):
+        permitted_query_set = Model.objects.filter(Model.Permissions().getPermittedQuerySet(activeSchoolId, activeStudentIdList))
+        main_model_pk_field_name = Model._meta.pk.name
+
+        ModelSerializer = get_model_serializer(Model=Model, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
         serializer = ModelSerializer(permitted_query_set.get(**{main_model_pk_field_name: data[main_model_pk_field_name]}), data=data, partial=partial)
         assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
         serializer.save()
-        response = serializer.data
+        return serializer.data
+    return update_object_operation
 
-        for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
-            # removing list from end and finding the related model field
-            child_related_field = Model._meta.fields_map.get(child_related_field_name, None)
-            if not child_related_field:
-                raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
 
-            child_model = child_related_field.related_model
+def update_object_list(data_list, Model, activeSchoolId, activeStudentIdList, partial=False):
+    return operate_list(data_list, Model, activeSchoolId, activeStudentIdList, get_update_object_operation(partial))
 
-            parent_primary_key_value = response[main_model_pk_field_name]
-            for child_data in child_data_list:
-                child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
 
-            child_response = update_object_list(child_data_list, child_model, activeSchoolId, activeStudentIdList, partial=partial)
-
-            response.update({child_related_field_name: child_response})
-    return response
+def update_object(data, Model, activeSchoolId, activeStudentIdList, partial=False):
+    return operate_object(data, Model, activeSchoolId, activeStudentIdList, get_update_object_operation(partial))
 
 
 # def delete_object(GET, Model, activeSchoolId, activeStudentIdList):
