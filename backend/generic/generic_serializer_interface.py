@@ -1,10 +1,8 @@
 from django.db.models import Q
-from django.core.exceptions import ObjectDoesNotExist
 
-from functools import reduce
 from rest_framework import serializers
 from django.db import transaction as db_transaction
-from common.json_encoding import make_dict_serializable, make_dict_list_serializable
+from common.json_encoding import make_dict_list_serializable
 
 from django.db.models import Count
 
@@ -33,7 +31,7 @@ def parseFilter(data):
     filter_args = []
     for attr, value in data.items():
 
-        if attr == '__or__':
+        if attr == '__or__':  # __or__: [{<filter1>}, {<filter2>}, ...]
             or_filter_aggregate = ~Q()
             for or_filter in value:
                 db_filter = parseFilter(or_filter)
@@ -82,50 +80,24 @@ def parse_query(Model, data, *args, **kwargs):
             pass
         else:
             raise Exception('Invalid key in GET object Query')
+
+    if 'order_by' in data:
+        query = query.order_by(*data['order_by'])
+    if 'pagination' in data:
+        query = query[data['pagination']['start']:data['pagination']['end']]
+
     return query, child_query_field_name_mapped_by_filter, parent_field_name_mapped_by_filter, field_list
 
 
 def get_object(data, Model, *args, **kwargs):
-    query_set, child_query_field_name_mapped_by_filter, parent_field_name_mapped_by_filter, field_list = parse_query(Model, data, *args, **kwargs)
-
-    try:
-        object = query_set.values(*field_list).get()
-    except ObjectDoesNotExist:
+    list_response = get_list(data, Model, *args, **kwargs)
+    if(len(list_response) != 1):
         return None
-    return_data = make_dict_serializable(object)
-
-    for key in child_query_field_name_mapped_by_filter.keys():
-        child_field_name = Model._meta.fields_map[key].field.name
-        child_model = Model._meta.fields_map[key].related_model
-        child_query_field_name_mapped_by_filter[key].update({   # added parent<Model> filter
-            'filter__child_query__': {
-                child_field_name: return_data[Model._meta.pk.name]
-            }
-        })
-        return_data[key] = get_list(child_query_field_name_mapped_by_filter[key], child_model, *args, **kwargs)
-
-    for key in parent_field_name_mapped_by_filter.keys():
-        if getattr(query_set.get(), key) is not None:
-            parent_model = Model._meta.get_field(key).related_model
-            parent_model_pk_field_name = parent_model._meta.pk.name
-            parent_pk = getattr(getattr(query_set.get(), key), parent_model_pk_field_name)
-            parent_field_name_mapped_by_filter[key].update({
-                'filter__parent_query__': {
-                    parent_model_pk_field_name: parent_pk
-                }
-            })
-            return_data[key] = get_object(parent_field_name_mapped_by_filter[key], parent_model, *args, **kwargs)
-
-    return return_data
+    return list_response[0]
 
 
 def get_list(data, Model, *args, **kwargs):
     query_set, child_query_field_name_mapped_by_filter, parent_field_name_mapped_by_filter, field_list = parse_query(Model, data, *args, **kwargs)
-
-    if 'order_by' in data:
-        query_set = query_set.order_by(*data['order_by'])
-    if 'pagination' in data:
-        query_set = query_set[data['pagination']['start']:data['pagination']['end']]
 
     return_data = list(query_set.values(*field_list))
     return_data = make_dict_list_serializable(return_data)

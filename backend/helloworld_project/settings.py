@@ -158,9 +158,9 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-	'JWT_AUTH_HEADER_PREFIX': 'JWT',
-	'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
-	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
 }
 
 
@@ -237,6 +237,7 @@ else:
     except ImportError:
         print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
         exit()
+    MIDDLEWARE.append('querycount.middleware.QueryCountMiddleware')
 
 
 #ZOOM
