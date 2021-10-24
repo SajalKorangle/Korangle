@@ -108,6 +108,7 @@ def get_list(data, Model, *args, **kwargs):
         elif type(field_data) == dict:  # parent/child nested field
             if field_data['name'] in Model._meta.fields_map:
                 child_field_name_mapped_by_query[field_data['name']] = field_data['query']
+                field_list.append(field_data['name'])  # Ensuring this foreign key in .values for later regrouping
             elif type(Model._meta.get_field(field_data['name'])) == ForeignKey:
                 parent_field_name_mapped_by_query[field_data['name']] = field_data['query']
             else:
@@ -117,18 +118,20 @@ def get_list(data, Model, *args, **kwargs):
 
     query_set = parse_query(Model, data, *args, **kwargs)
 
-    return_data = list(query_set.values(*field_list))
+    pk_field_name = Model._meta.pk.name
+    processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
+
+    return_data = list(query_set.values(*processed_field_list))
     return_data = make_dict_list_serializable(return_data)
 
-    pk_field_name = Model._meta.pk.name
-    id_list = [getattr(instance, pk_field_name) for instance in query_set]
+    id_list = [instance_data[pk_field_name] for instance_data in return_data]
 
     for key in child_field_name_mapped_by_query.keys():
         child_field_name = Model._meta.fields_map[key].field.name
         child_model = Model._meta.fields_map[key].related_model
         child_order_by = child_field_name_mapped_by_query.get('order_by', [])
         child_field_name_mapped_by_query[key].update({   # added parent<Model> filter
-            'filter__child_query__': {
+            'filter': {
                 child_field_name + "__in": id_list
             },
             'order_by': [child_field_name] + child_order_by
@@ -143,23 +146,33 @@ def get_list(data, Model, *args, **kwargs):
             return_data[index][key] = child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)]
 
     for key in parent_field_name_mapped_by_query.keys():
+        ## Initialization for Parent Model Nesting Starts ##
         parent_model = Model._meta.get_field(key).related_model
         parent_model_pk_field_name = parent_model._meta.pk.name
         parent_pk_list = [getattr(getattr(instance, key), parent_model_pk_field_name) for instance in query_set if getattr(instance, key) is not None]
-        parent_field_name_mapped_by_query[key].update({
-            'filter__parent_query__': {
+        ## Initialization for Parent Model Nesting Ends ##
+
+        parent_field_name_mapped_by_query[key].update({  # Updating Filter
+            'filter': {
                 parent_model_pk_field_name + '__in': parent_pk_list
-            }
+            }.update(parent_field_name_mapped_by_query[key].get('filter', {}))
         })
+
+        ## Ensuring parent<model> field is added in fields_list for later regrouping Starts ##
+        if 'field_list' in parent_field_name_mapped_by_query[key]:
+            parent_field_name_mapped_by_query[key]['field_list'].append(parent_model_pk_field_name)
+        ## Ensuring parent<model> field is added in fields_list for later regrouping Ends ##
+
         aggregated_parent_data_list = get_list(parent_field_name_mapped_by_query[key], parent_model, *args, **kwargs)
+
+        ## Regrouping Starts ##
         parent_data_mapped_by_pk = {}
         for data in aggregated_parent_data_list:
             parent_data_mapped_by_pk[data[parent_model_pk_field_name]] = data
-        for index, instance in enumerate(query_set):
-            if getattr(instance, key) is not None:
-                return_data[index][key] = parent_data_mapped_by_pk[getattr(getattr(instance, key), parent_model_pk_field_name)]
-            else:
-                return_data[index][key] = None
+        for data in return_data:
+            if data[key] is not None:
+                data[key] = parent_data_mapped_by_pk[data[key]]
+        ## Regrouping Ends ##
 
     # Total No of DB Queries = 1 + No of child Queries + No of parent Queries
 
