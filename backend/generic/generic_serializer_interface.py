@@ -47,7 +47,7 @@ def parseFilter(data):
                 or_filter_aggregate = or_filter_aggregate | Q(*db_filter['filter_args'], **db_filter['filter_kwargs'])
             filter_args.append(or_filter_aggregate)
         else:
-            filter_kwargs.update({attr: value})
+            filter_kwargs.update({attr: value})  # filters like id__in, parentSession etc.
 
     return {'filter_args': filter_args, 'filter_kwargs': filter_kwargs}
 
@@ -84,8 +84,10 @@ def parse_query(Model, data, *args, **kwargs):
 
 def get_object(data, Model, *args, **kwargs):
     list_response = get_list(data, Model, *args, **kwargs)
-    if(len(list_response) != 1):
+    if(len(list_response) == 0):
         return None
+    elif len(list_response) > 1:
+        raise Exception('Multiple objects found for get_object')
     return list_response[0]
 
 
@@ -94,7 +96,7 @@ def get_list(data, Model, *args, **kwargs):
     child_field_name_mapped_by_query = {}
     parent_field_name_mapped_by_query = {}
 
-    ## Fields and Response Structure Processing Starts ##
+    ## Response Structure(fields_list) Processing Starts ##
     field_list = ['__all__']
     processed_field_list: list[str] = []
     if 'fields_list' in data:
@@ -116,7 +118,7 @@ def get_list(data, Model, *args, **kwargs):
                 raise Exception('Invalid parent/child data dict in GET Query')
         else:
             raise Exception('Invalid field_list data in GET Query')
-    ## Fields and Response Structure Processing Ends ##
+    ## Response Structure(fields_list) Processing Ends ##
 
     query_set = parse_query(Model, data, *args, **kwargs)
 
@@ -124,7 +126,7 @@ def get_list(data, Model, *args, **kwargs):
     processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
 
     return_data = list(query_set.values(*processed_field_list))
-    return_data = make_dict_list_serializable(return_data)
+    return_data = make_dict_list_serializable(return_data)  # making json serializable
 
     id_list = [instance_data[pk_field_name] for instance_data in return_data]
 
