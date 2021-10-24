@@ -189,7 +189,7 @@ def get_object_list(data, Model, *args, **kwargs):
     return return_data
 
 
-def operate_list(data_list, Model, activeSchoolId, activeStudentIdList, operation_function):
+def operate_list(data_list, Model, activeSchoolId, activeStudentIdList, operation_function):  # Generic function for list operations
     response = []
     with db_transaction.atomic():
         for data in data_list:
@@ -197,7 +197,7 @@ def operate_list(data_list, Model, activeSchoolId, activeStudentIdList, operatio
     return response
 
 
-def operate_object(data, Model, activeSchoolId, activeStudentIdList, operation_function):
+def operate_object(data, Model, activeSchoolId, activeStudentIdList, operation_function):  # Generic function for object operations
     data_list_mapped_by_child_related_field_name = {}
 
     for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
@@ -261,69 +261,17 @@ def update_object(data, Model, activeSchoolId, activeStudentIdList, partial=Fals
     return operate_object(data, Model, activeSchoolId, activeStudentIdList, get_update_object_operation(partial))
 
 
-# def delete_object(GET, Model, activeSchoolId, activeStudentIdList):
-#     data = GET.dict()
-#     query_set = permittedQuerySet(Model, activeSchoolId,  activeStudentIdList)
-
-#     try:
-#         object = query_set.get(**data)
-#     except ObjectDoesNotExist:
-#         return None
-#     id = object.id
-#     object.delete()
-#     return id
+def delete_operation(data, Model, activeSchoolId, activeStudentIdList):
+    permitted_query_set = Model.objects.filter(Model.Permissions().getPermittedQuerySet(activeSchoolId, activeStudentIdList))
+    main_model_pk_field_name = Model._meta.pk.name
+    to_delete_pk = data[main_model_pk_field_name]
+    permitted_query_set.filter(**{main_model_pk_field_name: to_delete_pk}).delete()
+    return data
 
 
-# def delete_list(data, query_set):
+def delete_object(data, Model, activeSchoolId, activeStudentIdList):
+    return operate_object(data, Model, activeSchoolId, activeStudentIdList, delete_operation)
 
-#     filter_var_list = []
-#     filter_var = ''
 
-#     if data != '' and data is not None:
-#         for index, attr in enumerate(data):
-
-#             if attr == 'e':
-#                 continue
-#             elif attr[-4:] == '__in':
-#                 if data[attr] != '':
-#                     filter_var = {attr: list(map(int, data[attr].split(',')))}
-#                 else:
-#                     filter_var = {attr: []}
-#             elif attr[-4:] == '__or':
-#                 filter_var = {attr[:-4]: data[attr]}
-#                 filter_var_list.append(filter_var)
-#                 continue
-#             else:
-#                 if data[attr] == 'null__korangle':
-#                     filter_var = {attr: None}
-#                 elif data[attr] == 'false__boolean':
-#                     filter_var = {attr: False}
-#                 elif data[attr] == 'true__boolean':
-#                     filter_var = {attr: True}
-#                 else:
-#                     filter_var = {attr: data[attr]}
-
-#             if filter_var_list.__len__() > 0:
-#                 filter_var_list.append(filter_var)
-#                 q_total = Q()
-#                 for q_variable in filter_var_list:
-#                     q_total = q_total | Q(**q_variable)
-#                 try:
-#                     query_set = query_set.filter(q_total)
-#                 except:
-#                     print('filter exception in or:')
-#                     print(filter_var_list)
-#                 filter_var_list = []
-#             else:
-#                 try:
-#                     query_set = query_set.filter(**filter_var)
-#                 except:
-#                     print('filter exception:')
-#                     print(filter_var)
-
-#     return_data = query_set.count()
-
-#     if return_data > 0:
-#         query_set.delete()
-
-#     return return_data
+def delete_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
+    return operate_list(data_list, Model, activeSchoolId, activeStudentIdList, delete_operation)
