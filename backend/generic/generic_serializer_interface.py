@@ -1,10 +1,15 @@
 from django.db.models import Q
-
 from rest_framework import serializers
+from django.db.models.fields.related import ForeignKey
 from django.db import transaction as db_transaction
 from common.json_encoding import make_dict_list_serializable
 
 from django.db.models import Count
+
+
+AGGREGATOR_FUNCTION_MAPPED_BY_NAME = {
+    'Count': Count,
+}
 
 
 def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStudentIdList=None):
@@ -45,37 +50,21 @@ def parseFilter(data):
 
 def parse_query(Model, data, *args, **kwargs):
     query = Model.objects.filter(**Model.Permissions().getPermittedQuerySet(*args, **kwargs))
-    child_query_field_name_mapped_by_filter = {}
-    parent_field_name_mapped_by_filter = {}
-
-    field_list = ['__all__']
-    if 'fields_list' in data:
-        field_list = data['fields_list']
-        del data['fields_list']
-    if '__all__' in field_list:
-        all_index = field_list.index('__all__')
-        field_list[all_index:all_index + 1] = [field.name for field in Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
 
     for key, value in data.items():
-        if key.startswith('filter'):
+        if key == 'filter':
             parsed_filter = parseFilter(value)
             query = query.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
-        elif key.startswith('exclude'):
+        elif key == 'exclude':
             parsed_filter = parseFilter(value)
             query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
-        elif key.endswith('__count__annotate__'):  # query format: field_name__count__annotate__ = {<filter>}
-            parsed_filter = parseFilter(value)
-            query = query.annotate(**{key.removesuffix('__annotate__'): Count(key.removesuffix('__count__annotate__'),
-                                                                              filter=Q(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
-            field_list.append(key.removesuffix('__annotate__'))
-        elif key.endswith('__count__alias__'):
-            parsed_filter = parseFilter(value)
-            query = query.alias(**{key.removesuffix('__alias__'): Count(key.removesuffix('__count__alias__'), filter=Q(*
-                                                                                                                       parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
-        elif key.endswith('__instance__'):
-            parent_field_name_mapped_by_filter[key.removesuffix('__instance__')] = value
-        elif key in Model._meta.fields_map:
-            child_query_field_name_mapped_by_filter[key] = value
+        elif key == 'alias':
+            for alias_name, alias_generator_data in value.items():
+                parsed_filter = parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else {'filter_args': [], 'filter_kwargs': {}}
+                alias_field_name = alias_generator_data['field']
+                alias_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
+                query = query.alias(**{alias_name: alias_function(alias_field_name, filter=Q(*
+                                                                                             parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
         elif key in ['order_by', 'pagination']:
             pass
         else:
@@ -86,7 +75,7 @@ def parse_query(Model, data, *args, **kwargs):
     if 'pagination' in data:
         query = query[data['pagination']['start']:data['pagination']['end']]
 
-    return query, child_query_field_name_mapped_by_filter, parent_field_name_mapped_by_filter, field_list
+    return query
 
 
 def get_object(data, Model, *args, **kwargs):
@@ -97,7 +86,32 @@ def get_object(data, Model, *args, **kwargs):
 
 
 def get_list(data, Model, *args, **kwargs):
-    query_set, child_query_field_name_mapped_by_filter, parent_field_name_mapped_by_filter, field_list = parse_query(Model, data, *args, **kwargs)
+
+    child_field_name_mapped_by_query = {}
+    parent_field_name_mapped_by_query = {}
+
+    field_list = ['__all__']
+    processed_field_list: list[str] = []
+    if 'fields_list' in data:
+        field_list = data['fields_list']
+        del data['fields_list']
+
+    for field_data in field_list:
+        if field_data == '__all__':  # all model fields
+            processed_field_list += [field.name for field in Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
+        elif type(field_data) == str:  # string represents one model field
+            processed_field_list.append(field_data)
+        elif type(field_data) == dict:  # parent/child nested field
+            if field_data['name'] in Model._meta.fields_map:
+                child_field_name_mapped_by_query[field_data['name']] = field_data['query']
+            elif type(Model._meta.get_field(field_data['name'])) == ForeignKey:
+                parent_field_name_mapped_by_query[field_data['name']] = field_data['query']
+            else:
+                raise Exception('Invalid parent/child data dict in GET Query')
+        else:
+            raise Exception('Invalid field_list data in GET Query')
+
+    query_set = parse_query(Model, data, *args, **kwargs)
 
     return_data = list(query_set.values(*field_list))
     return_data = make_dict_list_serializable(return_data)
@@ -105,17 +119,17 @@ def get_list(data, Model, *args, **kwargs):
     pk_field_name = Model._meta.pk.name
     id_list = [getattr(instance, pk_field_name) for instance in query_set]
 
-    for key in child_query_field_name_mapped_by_filter.keys():
+    for key in child_field_name_mapped_by_query.keys():
         child_field_name = Model._meta.fields_map[key].field.name
         child_model = Model._meta.fields_map[key].related_model
-        child_order_by = child_query_field_name_mapped_by_filter.get('order_by', [])
-        child_query_field_name_mapped_by_filter[key].update({   # added parent<Model> filter
+        child_order_by = child_field_name_mapped_by_query.get('order_by', [])
+        child_field_name_mapped_by_query[key].update({   # added parent<Model> filter
             'filter__child_query__': {
                 child_field_name + "__in": id_list
             },
             'order_by': [child_field_name] + child_order_by
         })
-        aggregated_child_data_list = get_list(child_query_field_name_mapped_by_filter[key], child_model, *args, **kwargs)
+        aggregated_child_data_list = get_list(child_field_name_mapped_by_query[key], child_model, *args, **kwargs)
         child_data_list_mapped_by_foreign_key = {}  # Grouping by parentModel.pk
         for instance in query_set:
             child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)] = []     # Initialization
@@ -124,16 +138,16 @@ def get_list(data, Model, *args, **kwargs):
         for index, instance in enumerate(query_set):
             return_data[index][key] = child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)]
 
-    for key in parent_field_name_mapped_by_filter.keys():
+    for key in parent_field_name_mapped_by_query.keys():
         parent_model = Model._meta.get_field(key).related_model
         parent_model_pk_field_name = parent_model._meta.pk.name
         parent_pk_list = [getattr(getattr(instance, key), parent_model_pk_field_name) for instance in query_set if getattr(instance, key) is not None]
-        parent_field_name_mapped_by_filter[key].update({
+        parent_field_name_mapped_by_query[key].update({
             'filter__parent_query__': {
                 parent_model_pk_field_name + '__in': parent_pk_list
             }
         })
-        aggregated_parent_data_list = get_list(parent_field_name_mapped_by_filter[key], parent_model, *args, **kwargs)
+        aggregated_parent_data_list = get_list(parent_field_name_mapped_by_query[key], parent_model, *args, **kwargs)
         parent_data_mapped_by_pk = {}
         for data in aggregated_parent_data_list:
             parent_data_mapped_by_pk[data[parent_model_pk_field_name]] = data
