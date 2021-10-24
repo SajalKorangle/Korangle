@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from decorators import user_permission_4
 
 
-from .generic_serializer_interface import create_object, create_object_list, get_object, get_list
+from .generic_serializer_interface import create_object, create_object_list, get_object, get_object_list, update_object, update_object_list
 from django.apps import apps
 
 ########### Common View ########
@@ -32,18 +32,15 @@ class GenericView(GenericBaseView):
 
     @user_permission_4
     def post(self, request, activeSchoolId, activeStudentIdList):
-        data = request.data
-        return create_object(data, self.Model, activeSchoolId, activeStudentIdList)
+        return create_object(request.data, self.Model, activeSchoolId, activeStudentIdList)
 
-    # @user_permission_3
-    # def put(self, request, activeSchoolID, activeStudentID):
-    #     filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-    #     return update_object(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+    @user_permission_4
+    def put(self, request, activeSchoolId, activeStudentIdList):
+        return update_object(request.data, self.Model, activeSchoolId, activeStudentIdList)
 
-    # @user_permission_3
-    # def patch(self, request, activeSchoolID, activeStudentID):
-    #     filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-    #     return partial_update_object(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+    @user_permission_4
+    def patch(self, request, activeSchoolId, activeStudentIdList):
+        return update_object(request.data, self.Model, activeSchoolId, activeStudentIdList, partial=True)
 
     # @user_permission_3
     # def delete(self, request, activeSchoolID, activeStudentID):
@@ -55,22 +52,20 @@ class GenericListView(GenericBaseView):
 
     @user_permission_4
     def get(self, request, activeSchoolId, activeStudentIdList):
-        return get_list(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList)
+        return get_object_list(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList)
 
     @user_permission_4
     def post(self, request, activeSchoolId, activeStudentIdList):
         data_list = request.data
         return create_object_list(data_list, self.Model, activeSchoolId, activeStudentIdList)
 
-    # @user_permission_3
-    # def put(self, request, activeSchoolID, activeStudentID):
-    #     filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-    #     return update_list(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+    @user_permission_4
+    def put(self, request, activeSchoolId, activeStudentIdList):
+        return update_object_list(request.data, self.Model, activeSchoolId, activeStudentIdList)
 
-    # @user_permission_3
-    # def patch(self, request, activeSchoolID, activeStudentID):
-    #     filtered_query_set = self.permittedQuerySet(activeSchoolID, activeStudentID)
-    #     return partial_update_list(request.data, filtered_query_set, self.ModelSerializer, activeSchoolID, activeStudentID)
+    @user_permission_4
+    def patch(self, request, activeSchoolId, activeStudentIdList):
+        return update_object_list(request.data, self.Model, activeSchoolId, activeStudentIdList, partial=True)
 
     # @user_permission_3
     # def delete(self, request, activeSchoolID, activeStudentID):

@@ -1,4 +1,5 @@
 from functools import reduce
+from django.db.models import Q
 
 
 class BasePermission:
@@ -36,4 +37,4 @@ class BasePermission:
             query_filters[self.RelationsToStudent[0] + '__in'] = activeStudentIdList     # takes the first relation to student only(should be the closest)
         elif (len(self.RelationsToSchool) > 0):
             query_filters[self.RelationsToSchool[0]] = activeSchoolId    # takes the first relation to school only(should be the the closest)
-        return query_filters
+        return Q(**query_filters)

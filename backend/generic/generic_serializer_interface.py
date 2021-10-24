@@ -53,7 +53,7 @@ def parseFilter(data):
 
 
 def parse_query(Model, data, *args, **kwargs):
-    query = Model.objects.filter(**Model.Permissions().getPermittedQuerySet(*args, **kwargs))
+    query = Model.objects.filter(Model.Permissions().getPermittedQuerySet(*args, **kwargs))
 
     for key, value in data.items():
         if key == 'filter':
@@ -83,7 +83,7 @@ def parse_query(Model, data, *args, **kwargs):
 
 
 def get_object(data, Model, *args, **kwargs):
-    list_response = get_list(data, Model, *args, **kwargs)
+    list_response = get_object_list(data, Model, *args, **kwargs)
     if(len(list_response) == 0):
         return None
     elif len(list_response) > 1:
@@ -91,7 +91,7 @@ def get_object(data, Model, *args, **kwargs):
     return list_response[0]
 
 
-def get_list(data, Model, *args, **kwargs):
+def get_object_list(data, Model, *args, **kwargs):
 
     child_field_name_mapped_by_query = {}
     parent_field_name_mapped_by_query = {}
@@ -140,7 +140,7 @@ def get_list(data, Model, *args, **kwargs):
             })
         })
 
-        aggregated_child_data_list = get_list(child_field_name_mapped_by_query[key], child_model, *args, **kwargs)
+        aggregated_child_data_list = get_object_list(child_field_name_mapped_by_query[key], child_model, *args, **kwargs)
 
         ## Regrouping starts ##
         child_data_list_mapped_by_foreign_key = {}  # Grouping by parentModel.pk
@@ -172,7 +172,7 @@ def get_list(data, Model, *args, **kwargs):
             value['field_list'].append(parent_model_pk_field_name)
         ## Ensuring parent<model> field is added in fields_list for later regrouping Ends ##
 
-        aggregated_parent_data_list = get_list(value, parent_model, *args, **kwargs)
+        aggregated_parent_data_list = get_object_list(value, parent_model, *args, **kwargs)
 
         ## Regrouping Starts ##
         parent_data_mapped_by_pk = {}
@@ -229,32 +229,47 @@ def create_object(data, Model, activeSchoolId, activeStudentIdList):
     return response
 
 
-# def update_list(data_list, Model, activeSchoolId, activeStudentIdList):
-#     return_data = []
-#     for data in data_list:
-#         return_data.append(update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID))
-#     return return_data
+def update_object_list(data_list, Model, activeSchoolId, activeStudentIdList, partial=False):
+    response = []
+    with db_transaction.atomic():
+        for data in data_list:
+            response.append(update_object(data, Model, activeSchoolId, activeStudentIdList, partial=partial))
+    return response
 
 
-# def update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-#     serializer = ModelSerializer(query_set.get(id=data['id']), data=data)
-#     assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
-#     serializer.save()
-#     return serializer.data
+def update_object(data, Model, activeSchoolId, activeStudentIdList, partial=False):
+    data_list_mapped_by_child_related_field_name = {}
 
+    for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
+        data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
+        del data[child_related_field_name]
 
-# def partial_update_list(data_list, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-#     return_data = []
-#     for data in data_list:
-#         return_data.append(partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID))
-#     return return_data
+    permitted_query_set = Model.objects.filter(Model.Permissions().getPermittedQuerySet(activeSchoolId, activeStudentIdList))
+    main_model_pk_field_name = Model._meta.pk.name
 
+    with db_transaction.atomic():
+        ModelSerializer = get_model_serializer(Model=Model, fields__korangle=None, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
+        serializer = ModelSerializer(permitted_query_set.get(**{main_model_pk_field_name: data[main_model_pk_field_name]}), data=data, partial=partial)
+        assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
+        serializer.save()
+        response = serializer.data
 
-# def partial_update_object(data, query_set, ModelSerializer, activeSchoolID, activeStudentID):
-#     serializer = ModelSerializer(query_set.get(id=data['id']), data=data, partial=True)
-#     assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID)
-#     serializer.save()
-#     return serializer.data
+        for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
+            # removing list from end and finding the related model field
+            child_related_field = Model._meta.fields_map.get(child_related_field_name, None)
+            if not child_related_field:
+                raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
+
+            child_model = child_related_field.related_model
+
+            parent_primary_key_value = response[main_model_pk_field_name]
+            for child_data in child_data_list:
+                child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
+
+            child_response = update_object_list(child_data_list, child_model, activeSchoolId, activeStudentIdList, partial=partial)
+
+            response.update({child_related_field_name: child_response})
+    return response
 
 
 # def delete_object(GET, Model, activeSchoolId, activeStudentIdList):
