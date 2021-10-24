@@ -137,13 +137,10 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    /*public getDataWithPost(url: any, data?: any) {
+    public getDataWithPost(url: any, data?: any) {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
         absoluteURL.searchParams.append('method', 'GET');
-        if (data) {
-            Object.keys(data).forEach(key => absoluteURL.searchParams.delete(key));
-        }
         let postData;
         if (data && !(data instanceof FormData)) {
             postData = new FormData();
@@ -169,7 +166,7 @@ export class RestApiGateway {
 
     public getData(url: any, params?: any): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
-        const absoluteURL = this.getAbsoluteURL(url);
+        const absoluteURL = this.getAbsoluteURL(url, params);
         if (absoluteURL.length > MAX_URL_LENGTH) {
             return this.getDataWithPost(url, params);
         }
@@ -187,7 +184,7 @@ export class RestApiGateway {
                 }
             )
             .catch(this.handleError);
-    }*/
+    }
 
     public handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only

@@ -36,40 +36,31 @@ export class GenericService extends RestApiGateway {
         return '/generic';
     }
 
-    createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+    parseConfig(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>): [string, string] {
         if (Object.entries(config).length != 1) {
             throw new Error("Invalid APP NAME, MODEL NAME pair");
         }
-        const [app_name, model_name] = Object.entries(config)[0];
-        // Object.keys(data).forEach(key => {  // json parse if key ends with JSON
-        //     if (key.endsWith("JSON")) {
-        //         data[key] = JSON.stringify(data[key]);
-        //     }
-        // });
+        return Object.entries(config)[0];
+    }
+
+    getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.getData(this.getBaseUrl(), { app_name, model_name, __data__: JSON.stringify(DataView) });
+    }
+
+    getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __data__: JSON.stringify(DataView) });
+    }
+
+    createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
         return super.postData(data, this.getBaseUrl(), { app_name, model_name });
-        // .then(JSON_OBJECT_RESPONSE_PARSER);
     }
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-
-        if (Object.entries(config).length != 1) {
-            throw new Error("Invalid APP NAME, MODEL NAME pair");
-        }
-        const [app_name, model_name] = Object.entries(config)[0];
-
-        // if (data.length > 0) { // json parse if key ends with JSON
-        //     const jsonKeys = [];
-        //     Object.keys(data[0]).forEach(key => {
-        //         if (key.endsWith("JSON")) {
-        //             jsonKeys.push(key);
-        //         }
-        //     });
-        //     data.forEach(instance => {
-        //         jsonKeys.forEach(key => instance[key] = JSON.stringify(instance[key]));
-        //     });
-        // }
+        const [app_name, model_name] = this.parseConfig(config);
         return super.postData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
-        // .then(JSON_OBJECT_LIST_RESPONSE_PARSER);
     }
 
 
