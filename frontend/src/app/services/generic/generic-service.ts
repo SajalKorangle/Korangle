@@ -63,6 +63,35 @@ export class GenericService extends RestApiGateway {
         return super.postData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
     }
 
+    updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.putData(data, this.getBaseUrl(), { app_name, model_name });
+    }
+
+    updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.putData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+    }
+
+    partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
+    }
+
+    partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.patchData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+    }
+
+    deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.getData(this.getBaseUrl(), { app_name, model_name, __data__: JSON.stringify(DataView) });
+    }
+
+    deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+        const [app_name, model_name] = this.parseConfig(config);
+        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __data__: JSON.stringify(DataView) });
+    }
 
 }
 

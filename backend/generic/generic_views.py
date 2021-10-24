@@ -45,7 +45,7 @@ class GenericView(GenericBaseView):
 
     @user_permission_4
     def delete(self, request, activeSchoolId, activeStudentIdList):
-        return delete_object(request.data, self.Model, activeSchoolId, activeStudentIdList)
+        return delete_object(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)
 
 
 class GenericListView(GenericBaseView):
@@ -69,4 +69,4 @@ class GenericListView(GenericBaseView):
 
     @user_permission_4
     def delete(self, request, activeSchoolId, activeStudentIdList):
-        return delete_object_list(request.data, self.Model, activeSchoolId, activeStudentIdList)
+        return delete_object_list(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)

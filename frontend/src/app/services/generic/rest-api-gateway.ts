@@ -49,26 +49,15 @@ export class RestApiGateway {
         }
     }
 
-    /*public returnResponse(response: any, url: any = null, prompt: string = null): any {
-        const jsonResponse = response.response;
-        if (jsonResponse.status === 'success') {
-            if (jsonResponse.data) return jsonResponse.data;
-            else return jsonResponse.message;
-        } else if (jsonResponse.status === 'fail') {
-            this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt, false, location.href);
-            alert(jsonResponse.message);
-            throw new Error();
-        } else {
-            this.reportError(ERROR_SOURCES[0], url, `unexpected api response: = ${JSON.stringify(response)}`, prompt, true, location.href);
-            alert('Unexpected response from server');
-            return null;
-        }
-    }*/
 
-    /*public deleteData(url: any): Promise<any> {
+    public deleteData(url: any, data?: any): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+        const absoluteURL = this.getAbsoluteURL(url, data);
+        if (absoluteURL.length > MAX_URL_LENGTH) {
+            return this.deleteDataWithPost(url, data);
+        }
         return this.http
-            .delete(this.getAbsoluteURL(url), { headers: headers })
+            .delete(absoluteURL, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -83,10 +72,41 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public putData(body: any, url: any): Promise<any> {
+    public deleteDataWithPost(url: any, data?: any) {
+        const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+        const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
+        absoluteURL.searchParams.append('method', 'DELETE');
+        absoluteURL.searchParams.append('app_name', data.app_name);
+        absoluteURL.searchParams.append('model_name', data.model_name);
+        delete data.app_name;
+        delete data.model_name;
+        let postData;
+        if (data && !(data instanceof FormData)) {
+            postData = new FormData();
+            Object.entries(data).forEach(([key, value]) => postData.append(key, value));
+        } else {
+            postData = data;
+        }
+        return this.http
+            .post(absoluteURL.toString(), postData, { headers: headers })
+            .toPromise()
+            .then(
+                (response) => {
+                    return this.returnResponse(response, url, 'from deleteDataWithPost');
+                },
+                (error) => {
+                    this.reportError(ERROR_SOURCES[0], url, JSON.stringify(error), 'from deleteDataWithPost', false, location.href);
+                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                    return null;
+                }
+            )
+            .catch(this.handleError);
+    }
+
+    public putData(body: any, url: any, params?: { [key: string]: any; }): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         return this.http
-            .put(this.getAbsoluteURL(url), body, { headers: headers })
+            .put(this.getAbsoluteURL(url, params), body, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -101,10 +121,10 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
-    public patchData(body: any, url: any): Promise<any> {
+    public patchData(body: any, url: any, params?: { [key: string]: any; }): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         return this.http
-            .patch(this.getAbsoluteURL(url), body, { headers: headers })
+            .patch(this.getAbsoluteURL(url, params), body, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -117,7 +137,7 @@ export class RestApiGateway {
                 }
             )
             .catch(this.handleError);
-    }*/
+    }
 
     public postData(body: any, url: any, params?: { [key: string]: any; }): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
@@ -141,6 +161,10 @@ export class RestApiGateway {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = new URL(this.getAbsoluteURL(url)); // only host, no search params
         absoluteURL.searchParams.append('method', 'GET');
+        absoluteURL.searchParams.append('app_name', data.app_name);
+        absoluteURL.searchParams.append('model_name', data.model_name);
+        delete data.app_name;
+        delete data.model_name;
         let postData;
         if (data && !(data instanceof FormData)) {
             postData = new FormData();

@@ -129,14 +129,22 @@ def user_permission_4(function):
         request = args[1]
         request.GET._mutable = True
 
-        if ('method' in request.GET and request.GET['method'] == 'GET'):
+        if ('method' in request.GET):
             for key in request.data:
                 request.GET[key] = request.data[key]
+            method = request.GET['method']
             del request.GET['method']
-            return args[0].get(request)
+            if method == 'GET':
+                return args[0].get(request)
+            elif method == 'DELETE':
+                return args[0].delete(request)
+            else:
+                raise Exception('Invalid method in GET')
 
         if '__query__' in request.GET:
             request.GET['__query__'] = json.loads(request.GET['__query__'])
+        elif '__data__' in request.GET:
+            request.GET['__data__'] = json.loads(request.GET['__data__'])
 
         # no need to check authentication because the RestAPIView class by default check for authentication
 
