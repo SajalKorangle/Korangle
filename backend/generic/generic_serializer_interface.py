@@ -94,6 +94,7 @@ def get_list(data, Model, *args, **kwargs):
     child_field_name_mapped_by_query = {}
     parent_field_name_mapped_by_query = {}
 
+    ## Fields and Response Structure Processing Starts ##
     field_list = ['__all__']
     processed_field_list: list[str] = []
     if 'fields_list' in data:
@@ -115,6 +116,7 @@ def get_list(data, Model, *args, **kwargs):
                 raise Exception('Invalid parent/child data dict in GET Query')
         else:
             raise Exception('Invalid field_list data in GET Query')
+    ## Fields and Response Structure Processing Ends ##
 
     query_set = parse_query(Model, data, *args, **kwargs)
 
@@ -126,17 +128,21 @@ def get_list(data, Model, *args, **kwargs):
 
     id_list = [instance_data[pk_field_name] for instance_data in return_data]
 
-    for key in child_field_name_mapped_by_query.keys():
+    ## Child Nested Data Query Starts ##
+    for key, value in child_field_name_mapped_by_query.items():
         child_field_name = Model._meta.fields_map[key].field.name
         child_model = Model._meta.fields_map[key].related_model
         child_order_by = child_field_name_mapped_by_query.get('order_by', [])
-        child_field_name_mapped_by_query[key].update({   # added parent<Model> filter
+        value.update({   # added parent<Model> filter
             'filter': {
                 child_field_name + "__in": id_list
-            },
+            }.update(value.get('filter', {})),
             'order_by': [child_field_name] + child_order_by
         })
+
         aggregated_child_data_list = get_list(child_field_name_mapped_by_query[key], child_model, *args, **kwargs)
+
+        ## Regrouping starts ##
         child_data_list_mapped_by_foreign_key = {}  # Grouping by parentModel.pk
         for instance in query_set:
             child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)] = []     # Initialization
@@ -144,7 +150,10 @@ def get_list(data, Model, *args, **kwargs):
             child_data_list_mapped_by_foreign_key[child_data[child_field_name]].append(child_data)  # adding to corresponding group
         for index, instance in enumerate(query_set):
             return_data[index][key] = child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)]
+        ## Regrouping ends ##
+    ## Child Nested Data Query Ends ##
 
+    ## Parent Nested Data Query Starts ##
     for key in parent_field_name_mapped_by_query.keys():
         ## Initialization for Parent Model Nesting Starts ##
         parent_model = Model._meta.get_field(key).related_model
@@ -173,6 +182,7 @@ def get_list(data, Model, *args, **kwargs):
             if data[key] is not None:
                 data[key] = parent_data_mapped_by_pk[data[key]]
         ## Regrouping Ends ##
+    ## Parent Nested Data Query Ends ##
 
     # Total No of DB Queries = 1 + No of child Queries + No of parent Queries
 
