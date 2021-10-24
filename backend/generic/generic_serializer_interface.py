@@ -12,6 +12,10 @@ AGGREGATOR_FUNCTION_MAPPED_BY_NAME = {
 }
 
 
+def get_default_filter():
+    return {'filter_args': [], 'filter_kwargs': {}}
+
+
 def get_model_serializer(Model, fields__korangle, activeSchoolId=None, activeStudentIdList=None):
 
     class ModelSerializer(serializers.ModelSerializer):
@@ -60,7 +64,7 @@ def parse_query(Model, data, *args, **kwargs):
             query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
         elif key == 'alias':
             for alias_name, alias_generator_data in value.items():
-                parsed_filter = parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else {'filter_args': [], 'filter_kwargs': {}}
+                parsed_filter = parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
                 alias_field_name = alias_generator_data['field']
                 alias_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
                 query = query.alias(**{alias_name: alias_function(alias_field_name, filter=Q(*
