@@ -16,177 +16,188 @@ def get_default_filter():
     return {'filter_args': [], 'filter_kwargs': {}}
 
 
-def get_model_serializer(Model, fields__korangle=None, activeSchoolId=None, activeStudentIdList=None):
+class GenericSerializerInterface():
+    Model = None
+    data = None
+    activeSchoolId = None
+    activeStudentIdList = None
 
-    class ModelSerializer(serializers.ModelSerializer):
+    def __init__(self, data, Model, activeSchoolId, activeStudentIdList):
+        self.data = data
+        self.Model = Model
+        self.activeSchoolId = activeSchoolId
+        self.activeStudentIdList = activeStudentIdList
 
-        def is_valid(self, *args, **kwargs):
+    def get_model_serializer(self, fields__korangle=None):
 
-            super_response = super().is_valid(raise_exception=False)
-            if not super_response:
-                return False
+        class ModelSerializer(serializers.ModelSerializer):
 
-            return self.Meta.model.Permissions().is_valid(self.validated_data, activeSchoolId, activeStudentIdList)
+            def is_valid(self, *args, **kwargs):
 
-        class Meta:
-            model = Model
-            fields = '__all__' if fields__korangle is None else fields__korangle
+                super_response = super().is_valid(raise_exception=False)
+                if not super_response:
+                    return False
 
-    return ModelSerializer
+                return self.Meta.model.Permissions().is_valid(self.validated_data, self.activeSchoolId, self.activeStudentIdList)
 
+            class Meta:
+                model = self.Model
+                fields = '__all__' if fields__korangle is None else fields__korangle
 
-def parseFilter(data):
-    filter_kwargs = {}
-    filter_args = []
-    for attr, value in data.items():
+        return ModelSerializer
 
-        if attr == '__or__':  # __or__: [{<filter1>}, {<filter2>}, ...]
-            or_filter_aggregate = ~Q()
-            for or_filter in value:
-                db_filter = parseFilter(or_filter)
-                or_filter_aggregate = or_filter_aggregate | Q(*db_filter['filter_args'], **db_filter['filter_kwargs'])
-            filter_args.append(or_filter_aggregate)
-        else:
-            filter_kwargs.update({attr: value})  # filters like id__in, parentSession etc.
+    def parseFilter(self, data):
+        filter_kwargs = {}
+        filter_args = []
+        for attr, value in data.items():
 
-    return {'filter_args': filter_args, 'filter_kwargs': filter_kwargs}
-
-
-def parse_query(Model, data, *args, **kwargs):
-    query = Model.objects.filter(Model.Permissions().getPermittedQuerySet(*args, **kwargs))
-
-    for key, value in data.items():
-        if key == 'filter':
-            parsed_filter = parseFilter(value)
-            query = query.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
-        elif key == 'exclude':
-            parsed_filter = parseFilter(value)
-            query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
-        elif key == 'annotate':
-            for alias_name, alias_generator_data in value.items():
-                parsed_filter = parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
-                alias_field_name = alias_generator_data['field']
-                alias_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
-                query = query.annotate(**{alias_name: alias_function(alias_field_name, filter=Q(*
-                                                                                                parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
-        elif key in ['order_by', 'pagination']:
-            pass
-        else:
-            raise Exception('Invalid key in GET object Query')
-
-    if 'order_by' in data:
-        query = query.order_by(*data['order_by'])
-    if 'pagination' in data:
-        query = query[data['pagination']['start']:data['pagination']['end']]
-
-    return query
-
-
-def get_object(data, Model, *args, **kwargs):
-    list_response = get_object_list(data, Model, *args, **kwargs)
-    if(len(list_response) == 0):
-        return None
-    elif len(list_response) > 1:
-        raise Exception('Multiple objects found for get_object')
-    return list_response[0]
-
-
-def get_object_list(data, Model, *args, **kwargs):
-
-    child_field_name_mapped_by_query = {}
-    parent_field_name_mapped_by_query = {}
-
-    ## Response Structure(fields_list) Processing Starts ##
-    field_list = ['__all__']
-    processed_field_list: list[str] = []
-    if 'fields_list' in data:
-        field_list = data['fields_list']
-        del data['fields_list']
-
-    for field_data in field_list:
-        if field_data == '__all__':  # all model fields
-            processed_field_list += [field.name for field in Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
-        elif type(field_data) == str:  # string represents one model field
-            processed_field_list.append(field_data)
-        elif type(field_data) == dict:  # parent/child nested field
-            if field_data['name'] in Model._meta.fields_map:
-                child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
-                field_list.append(field_data['name'])  # Ensuring this foreign key in .values for later regrouping
-            elif type(Model._meta.get_field(field_data['name'])) == ForeignKey:
-                parent_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+            if attr == '__or__':  # __or__: [{<filter1>}, {<filter2>}, ...]
+                or_filter_aggregate = ~Q()
+                for or_filter in value:
+                    db_filter = self.parseFilter(or_filter)
+                    or_filter_aggregate = or_filter_aggregate | Q(*db_filter['filter_args'], **db_filter['filter_kwargs'])
+                filter_args.append(or_filter_aggregate)
             else:
-                raise Exception('Invalid parent/child data dict in GET Query')
-        else:
-            raise Exception('Invalid field_list data in GET Query')
-    ## Response Structure(fields_list) Processing Ends ##
+                filter_kwargs.update({attr: value})  # filters like id__in, parentSession etc.
 
-    query_set = parse_query(Model, data, *args, **kwargs)
+        return {'filter_args': filter_args, 'filter_kwargs': filter_kwargs}
 
-    pk_field_name = Model._meta.pk.name
-    processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
+    def parse_query(self):
+        query = self.Model.objects.filter(self.Model.Permissions().getPermittedQuerySet(self.activeSchoolId, self.activeStudentIdList))
 
-    return_data = list(query_set.values(*processed_field_list))
-    return_data = make_dict_list_serializable(return_data)  # making json serializable
+        for key, value in self.data.items():
+            if key == 'filter':
+                parsed_filter = self.parseFilter(value)
+                query = query.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
+            elif key == 'exclude':
+                parsed_filter = self.parseFilter(value)
+                query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
+            elif key == 'annotate':
+                for alias_name, alias_generator_data in value.items():
+                    parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
+                    alias_field_name = alias_generator_data['field']
+                    alias_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
+                    query = query.annotate(**{alias_name: alias_function(alias_field_name, filter=Q(*
+                                                                                                    parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+            elif key in ['order_by', 'pagination']:
+                pass
+            else:
+                raise Exception('Invalid key in GET object Query')
 
-    pk_list = [instance_data[pk_field_name] for instance_data in return_data]
+        if 'order_by' in self.data:
+            query = query.order_by(*self.data['order_by'])
+        if 'pagination' in self.data:
+            start, end = self.data['pagination']['start'], self.data['pagination']['end']
+            query = query[start:end]
 
-    ## Child Nested Data Query Starts ##
-    for key, value in child_field_name_mapped_by_query.items():
-        child_field_name = Model._meta.fields_map[key].field.name
-        child_model = Model._meta.fields_map[key].related_model
-        value.update({   # added parent<Model> filter
-            'filter': dict(value.get('filter', {}), **{
-                child_field_name + "__in": pk_list
+        return query
+
+    def get_object(self):
+        list_response = self.get_object_list()
+        if(len(list_response) == 0):
+            return None
+        elif len(list_response) > 1:
+            raise Exception('Multiple objects found for get_object')
+        return list_response[0]
+
+    def get_object_list(self):
+
+        child_field_name_mapped_by_query = {}
+        parent_field_name_mapped_by_query = {}
+
+        ## Response Structure(fields_list) Processing Starts ##
+        field_list = ['__all__']
+        processed_field_list: list[str] = []
+        if 'fields_list' in self.data:
+            field_list = self.data['fields_list']
+            del self.data['fields_list']
+
+        for field_data in field_list:
+            if field_data == '__all__':  # all model fields
+                processed_field_list += [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
+            elif type(field_data) == str:  # string represents one model field
+                processed_field_list.append(field_data)
+            elif type(field_data) == dict:  # parent/child nested field
+                if field_data['name'] in self.Model._meta.fields_map:
+                    child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+                    field_list.append(field_data['name'])  # Ensuring this foreign key in .values for later regrouping
+                elif type(self.Model._meta.get_field(field_data['name'])) == ForeignKey:
+                    parent_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+                else:
+                    raise Exception('Invalid parent/child data dict in GET Query')
+            else:
+                raise Exception('Invalid field_list data in GET Query')
+        ## Response Structure(fields_list) Processing Ends ##
+
+        query_set = self.parse_query()
+
+        pk_field_name = self.Model._meta.pk.name
+        processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
+
+        return_data = list(query_set.values(*processed_field_list))
+        return_data = make_dict_list_serializable(return_data)  # making json serializable
+
+        pk_list = [instance_data[pk_field_name] for instance_data in return_data]
+
+        ## Child Nested Data Query Starts ##
+        for key, value in child_field_name_mapped_by_query.items():
+            child_field_name = self.Model._meta.fields_map[key].field.name
+            child_model = self.Model._meta.fields_map[key].related_model
+            value.update({   # added parent<Model> filter
+                'filter': dict(value.get('filter', {}), **{
+                    child_field_name + "__in": pk_list
+                })
             })
-        })
 
-        aggregated_child_data_list = get_object_list(value, child_model, *args, **kwargs)
+            aggregated_child_data_list = GenericSerializerInterface(
+                data=value, Model=child_model, activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList).get_object_list()
 
-        ## Regrouping starts ##
-        child_data_list_mapped_by_foreign_key = {}  # Grouping by parentModel.pk
-        for instance in query_set:
-            child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)] = []     # Initialization
-        for child_data in aggregated_child_data_list:
-            child_data_list_mapped_by_foreign_key[child_data[child_field_name]].append(child_data)  # adding to corresponding group
-        for index, instance in enumerate(query_set):
-            return_data[index][key] = child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)]
-        ## Regrouping ends ##
-    ## Child Nested Data Query Ends ##
+            ## Regrouping starts ##
+            child_data_list_mapped_by_foreign_key = {}  # Grouping by parentModel.pk
+            for instance in query_set:
+                child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)] = []     # Initialization
+            for child_data in aggregated_child_data_list:
+                child_data_list_mapped_by_foreign_key[child_data[child_field_name]].append(child_data)  # adding to corresponding group
+            for index, instance in enumerate(query_set):
+                return_data[index][key] = child_data_list_mapped_by_foreign_key[getattr(instance, pk_field_name)]
+            ## Regrouping ends ##
+        ## Child Nested Data Query Ends ##
 
-    ## Parent Nested Data Query Starts ##
-    for key, value in parent_field_name_mapped_by_query.items():
-        ## Initialization for Parent Model Nesting Starts ##
-        parent_model = Model._meta.get_field(key).related_model
-        parent_model_pk_field_name = parent_model._meta.pk.name
-        parent_pk_list = [instance_data[key] for instance_data in return_data if instance_data[key] is not None]
-        ## Initialization for Parent Model Nesting Ends ##
+        ## Parent Nested Data Query Starts ##
+        for key, value in parent_field_name_mapped_by_query.items():
+            ## Initialization for Parent Model Nesting Starts ##
+            parent_model = self.Model._meta.get_field(key).related_model
+            parent_model_pk_field_name = parent_model._meta.pk.name
+            parent_pk_list = [instance_data[key] for instance_data in return_data if instance_data[key] is not None]
+            ## Initialization for Parent Model Nesting Ends ##
 
-        value.update({  # Updating Filter
-            'filter': dict(value.get('filter', {}), **{
-                parent_model_pk_field_name + '__in': parent_pk_list
+            value.update({  # Updating Filter
+                'filter': dict(value.get('filter', {}), **{
+                    parent_model_pk_field_name + '__in': parent_pk_list
+                })
             })
-        })
 
-        ## Ensuring parent<model> field is added in fields_list for later regrouping Starts ##
-        if 'field_list' in value:
-            value['field_list'].append(parent_model_pk_field_name)
-        ## Ensuring parent<model> field is added in fields_list for later regrouping Ends ##
+            ## Ensuring parent<model> field is added in fields_list for later regrouping Starts ##
+            if 'field_list' in value:
+                value['field_list'].append(parent_model_pk_field_name)
+            ## Ensuring parent<model> field is added in fields_list for later regrouping Ends ##
 
-        aggregated_parent_data_list = get_object_list(value, parent_model, *args, **kwargs)
+            aggregated_parent_data_list = GenericSerializerInterface(
+                data=value, Model=parent_model, activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList).get_object_list()
 
-        ## Regrouping Starts ##
-        parent_data_mapped_by_pk = {}
-        for data in aggregated_parent_data_list:
-            parent_data_mapped_by_pk[data[parent_model_pk_field_name]] = data
-        for data in return_data:
-            if data[key] is not None:
-                data[key] = parent_data_mapped_by_pk[data[key]]
-        ## Regrouping Ends ##
-    ## Parent Nested Data Query Ends ##
+            ## Regrouping Starts ##
+            parent_data_mapped_by_pk = {}
+            for data in aggregated_parent_data_list:
+                parent_data_mapped_by_pk[data[parent_model_pk_field_name]] = data
+            for data in return_data:
+                if data[key] is not None:
+                    data[key] = parent_data_mapped_by_pk[data[key]]
+            ## Regrouping Ends ##
+        ## Parent Nested Data Query Ends ##
 
-    # Total No of DB Queries = 1 + No of child Queries + No of parent Queries
+        # Total No of DB Queries = 1 + No of child Queries + No of parent Queries
 
-    return return_data
+        return return_data
 
 
 def operate_list(data_list, Model, activeSchoolId, activeStudentIdList, operation_function):  # Generic function for list operations
