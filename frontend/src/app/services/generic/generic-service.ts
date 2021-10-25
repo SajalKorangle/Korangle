@@ -43,40 +43,40 @@ export class GenericService extends RestApiGateway {
         return Object.entries(config)[0];
     }
 
-    getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
-    }
+    // getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
+    //     const [app_name, model_name] = this.parseConfig(config);
+    //     return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
+    // }
 
     getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
         return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
-    createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.postData(data, this.getBaseUrl(), { app_name, model_name });
-    }
+    // createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+    //     const [app_name, model_name] = this.parseConfig(config);
+    //     return super.postData(data, this.getBaseUrl(), { app_name, model_name });
+    // }
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
         return super.postData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
     }
 
-    updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.putData(data, this.getBaseUrl(), { app_name, model_name });
-    }
+    // updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+    //     const [app_name, model_name] = this.parseConfig(config);
+    //     return super.putData(data, this.getBaseUrl(), { app_name, model_name });
+    // }
 
     updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
         return super.putData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
     }
 
-    partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
-    }
+    // partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
+    //     const [app_name, model_name] = this.parseConfig(config);
+    //     return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
+    // }
 
     partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);

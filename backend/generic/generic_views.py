@@ -24,23 +24,23 @@ class GenericBaseView(APIView):
         super().initial(request, *args, **kwargs)
 
 
-class GenericView(GenericBaseView):
+# class GenericView(GenericBaseView):
 
-    @user_permission_4
-    def get(self, request, activeSchoolId, activeStudentIdList):
-        return GenericSerializerInterface(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList).get_object()
+#     @user_permission_4
+#     def get(self, request, activeSchoolId, activeStudentIdList):
+#         return GenericSerializerInterface(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList).get_object()
 
-    @user_permission_4
-    def post(self, request, activeSchoolId, activeStudentIdList):
-        return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).create_object()
+#     @user_permission_4
+#     def post(self, request, activeSchoolId, activeStudentIdList):
+#         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).create_object()
 
-    @user_permission_4
-    def put(self, request, activeSchoolId, activeStudentIdList):
-        return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).update_object()
+#     @user_permission_4
+#     def put(self, request, activeSchoolId, activeStudentIdList):
+#         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).update_object()
 
-    @user_permission_4
-    def patch(self, request, activeSchoolId, activeStudentIdList):
-        return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList, partial=True).update_object()
+#     @user_permission_4
+#     def patch(self, request, activeSchoolId, activeStudentIdList):
+#         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList, partial=True).update_object()
 
     # @user_permission_4
     # def delete(self, request, activeSchoolId, activeStudentIdList):
