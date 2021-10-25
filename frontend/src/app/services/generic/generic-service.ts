@@ -90,7 +90,7 @@ export class GenericService extends RestApiGateway {
 
     deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
+        return super.deleteData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
 }
