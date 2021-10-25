@@ -5,6 +5,7 @@ from student_app.models import Student, StudentSection
 from fees_third_app.models import FeeType
 from employee_app.models import Employee
 from django.utils.timezone import now
+from common.common import BasePermission
 
 
 def upload_thumbnail_to(instance, filename):
@@ -55,7 +56,7 @@ def upload_certificate_to(instance, filename):
 
 class TransferCertificateNew(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='transferCertificateNewList')
-    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.SET_NULL, null=True)
+    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.SET_NULL, null=True, related_name='transferCertificateNewList')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     certificateNumber = models.IntegerField()
     certificateFile = models.FileField(upload_to=upload_certificate_to)
@@ -74,3 +75,7 @@ class TransferCertificateNew(models.Model):
     generatedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='generated_tc_set')
     issuedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='issued_tc_set')
     cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='cancelled_tc_set')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id', 'parentStudentSection__parentStudent__id']

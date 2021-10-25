@@ -79,10 +79,10 @@ class GenericSerializerInterface():
             elif key == 'annotate':
                 for alias_name, alias_generator_data in value.items():
                     parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
-                    alias_field_name = alias_generator_data['field']
-                    alias_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
-                    query = query.annotate(**{alias_name: alias_function(alias_field_name, filter=Q(*
-                                                                                                    parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+                    annotate_field_name = alias_generator_data['field']
+                    annotate_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
+                    query = query.annotate(**{alias_name: annotate_function(annotate_field_name, filter=Q(*
+                                                                                                          parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
             elif key in ['order_by', 'pagination']:
                 pass
             else:
@@ -110,13 +110,13 @@ class GenericSerializerInterface():
         parent_field_name_mapped_by_query = {}
 
         ## Response Structure(fields_list) Processing Starts ##
-        field_list = ['__all__']
-        processed_field_list: list[str] = []
+        fields_list = ['__all__']
         if 'fields_list' in self.data:
-            field_list = self.data['fields_list']
+            fields_list = self.data['fields_list']
             del self.data['fields_list']
 
-        for field_data in field_list:
+        processed_field_list: list[str] = []
+        for field_data in fields_list:
             if field_data == '__all__':  # all model fields
                 processed_field_list += [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
             elif type(field_data) == str:  # string represents one model field
@@ -124,9 +124,9 @@ class GenericSerializerInterface():
             elif type(field_data) == dict:  # parent/child nested field
                 if field_data['name'] in self.Model._meta.fields_map:
                     child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
-                    field_list.append(field_data['name'])  # Ensuring this foreign key in .values for later regrouping
                 elif type(self.Model._meta.get_field(field_data['name'])) == ForeignKey:
                     parent_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+                    processed_field_list.append(field_data['name'])
                 else:
                     raise Exception('Invalid parent/child data dict in GET Query')
             else:
@@ -137,7 +137,6 @@ class GenericSerializerInterface():
 
         pk_field_name = self.Model._meta.pk.name
         processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
-
         return_data = list(query_set.values(*processed_field_list))
         return_data = make_dict_list_serializable(return_data)  # making json serializable
 
@@ -275,14 +274,16 @@ class GenericSerializerInterface():
     def delete_object_list(self):
         child_field_name_mapped_by_query = {}
 
-        for field_data in self.data.get('fields_list', []):
-            if type(field_data) == dict:  # parent/child nested field
-                if field_data['name'] in self.Model._meta.fields_map:
-                    child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+        if 'fields_list' in self.data:
+            for field_data in self.data['fields_list']:
+                if type(field_data) == dict:  # parent/child nested field
+                    if field_data['name'] in self.Model._meta.fields_map:
+                        child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+                    else:
+                        raise Exception('Invalid child data dict in Delete Query')
                 else:
-                    raise Exception('Invalid child data dict in Delete Query')
-            else:
-                raise Exception('Invalid field name in DELETE Query')
+                    raise Exception('Invalid field name in DELETE Query')
+            del self.data['fields_list']
         ## Response Structure(fields_list) Processing Ends ##
 
         query_set = self.parse_query()
@@ -291,18 +292,19 @@ class GenericSerializerInterface():
         pk_field_name = self.Model._meta.pk.name
         pk_list = query_set.values_list(pk_field_name, flat=True)
 
-        query_set.delete()
+        with db_transaction.atomic():
 
-        for key, value in child_field_name_mapped_by_query.items():
-            child_field_name = self.Model._meta.fields_map[key].field.name
-            child_model = self.Model._meta.fields_map[key].related_model
-            value.update({   # added parent<Model> filter
-                'filter': dict(value.get('filter', {}), **{
-                    child_field_name + "__in": pk_list
+            for key, value in child_field_name_mapped_by_query.items():
+                child_field_name = self.Model._meta.fields_map[key].field.name
+                child_model = self.Model._meta.fields_map[key].related_model
+                value.update({   # added parent<Model> filter
+                    'filter': dict(value.get('filter', {}), **{
+                        child_field_name + "__in": pk_list
+                    })
                 })
-            })
 
-            GenericSerializerInterface(Model=child_model, data=value, activeSchoolId=self.activeSchoolId,
-                                       activeStudentIdList=self.activeStudentIdList).delete_object_list()
+                GenericSerializerInterface(Model=child_model, data=value, activeSchoolId=self.activeSchoolId,
+                                           activeStudentIdList=self.activeStudentIdList).delete_object_list()
 
+            query_set.delete()
         return count
