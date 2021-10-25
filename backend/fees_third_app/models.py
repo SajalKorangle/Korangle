@@ -22,13 +22,11 @@ from django.db.models.signals import post_save, pre_save
 from django.db.models import Max
 import json
 
-from common.common_serializer_interface_3 import create_object, create_list
-
 from django.db import transaction as db_transaction
 
 from .business.constant import INSTALLMENT_LIST
 from common.common import BasePermission
-from generic.generic_serializer_interface import create_object
+from generic.generic_serializer_interface import GenericSerializerInterface
 
 
 class FeeType(models.Model):
@@ -677,10 +675,12 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
                                 }
                             ]
                         }
-                        transactionRespone = create_object(transactionData, Transaction, activeSchoolId, [activeStudentId])
+                        transactionRespone = GenericSerializerInterface(Model=Transaction, data=transactionData,
+                                                                        activeSchoolId=activeSchoolId, activeStudentIdList=[activeStudentId]).create_object()
                         feeReceiptResponse = transactionRespone['feeReceiptList'][0]
                     else:
-                        feeReceiptResponse = create_object(feeReceiptData, FeeReceipt, activeSchoolId, [activeStudentId])
+                        feeReceiptResponse = GenericSerializerInterface(Model=FeeReceipt, data=feeReceiptData,
+                                                                        activeSchoolId=activeSchoolId, activeStudentIdList=[activeStudentId]).create_object()
 
                     newFeeReceipt = FeeReceipt.objects.get(id=feeReceiptResponse['id'])
                     feeReceiptOrder.parentFeeReceipt = newFeeReceipt

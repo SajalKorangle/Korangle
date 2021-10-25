@@ -16,7 +16,7 @@ from payment_app.models import Order
 
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
-from generic.generic_serializer_interface import create_object
+from generic.generic_serializer_interface import GenericSerializerInterface
 
 
 # Create your models here
@@ -229,7 +229,7 @@ def SMSOrderCompletionHandler(sender, instance, **kwargs):
             activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
             smsPurchaseData = onlineSmsPaymentTransaction.smsPurchaseData
             with db_transaction.atomic():
-                response = create_object(smsPurchaseData, SMSPurchase, activeSchoolID, None)
+                response = GenericSerializerInterface(Model=SMSPurchase, data=smsPurchaseData, activeSchoolId=activeSchoolID).create_object()
                 smsPurchase = SMSPurchase.objects.get(id=response['id'])
                 onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchase
                 onlineSmsPaymentTransaction.save()
