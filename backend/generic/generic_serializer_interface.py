@@ -5,7 +5,7 @@ from django.db import transaction as db_transaction
 from common.json_encoding import make_dict_list_serializable
 
 from django.db.models import Count
-
+from typing import Union
 
 AGGREGATOR_FUNCTION_MAPPED_BY_NAME = {
     'Count': Count,
@@ -21,12 +21,16 @@ class GenericSerializerInterface():
     data = None
     activeSchoolId = None
     activeStudentIdList = None
+    partial = False
 
-    def __init__(self, data, Model, activeSchoolId, activeStudentIdList):
+    method: None
+
+    def __init__(self, data, Model, activeSchoolId, activeStudentIdList, partial=False):
         self.data = data
         self.Model = Model
         self.activeSchoolId = activeSchoolId
         self.activeStudentIdList = activeStudentIdList
+        self.partial = partial
 
     def get_model_serializer(self, fields__korangle=None):
 
@@ -199,117 +203,106 @@ class GenericSerializerInterface():
 
         return return_data
 
+    def operate_list(self, operation_function):  # Generic function for list operations
+        response = []
+        with db_transaction.atomic():
+            for instance_data in self.data:
+                response.append(self.operate_object(instance_data, operation_function))
+        return response
 
-def operate_list(data_list, Model, activeSchoolId, activeStudentIdList, operation_function):  # Generic function for list operations
-    response = []
-    with db_transaction.atomic():
-        for data in data_list:
-            response.append(operate_object(data, Model, activeSchoolId, activeStudentIdList, operation_function))
-    return response
+    def operate_object(self, data, operation_function):  # Generic function for object operations
+        data_list_mapped_by_child_related_field_name = {}
 
+        for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
+            data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
+            del data[child_related_field_name]
 
-def operate_object(data, Model, activeSchoolId, activeStudentIdList, operation_function):  # Generic function for object operations
-    data_list_mapped_by_child_related_field_name = {}
+        with db_transaction.atomic():
+            response = operation_function(data)
+            for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
+                # removing list from end and finding the related model field
+                child_related_field = self.Model._meta.fields_map.get(child_related_field_name, None)
+                if not child_related_field:
+                    raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
 
-    for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
-        data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
-        del data[child_related_field_name]
+                child_model = child_related_field.related_model
 
-    with db_transaction.atomic():
-        response = operation_function(data, Model, activeSchoolId, activeStudentIdList)
-        for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
-            # removing list from end and finding the related model field
-            child_related_field = Model._meta.fields_map.get(child_related_field_name, None)
-            if not child_related_field:
-                raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
+                parent_primary_key_value = response[self.Model._meta.pk.name]
+                for child_data in child_data_list:
+                    child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
 
-            child_model = child_related_field.related_model
+                child_serializer = GenericSerializerInterface(Model=child_model, data=child_data_list,
+                                                              activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList, partia=self.partial)
+                child_response = getattr(child_serializer, self.method + '_object_list')()
+                response.update({child_related_field_name: child_response})
+        return response
 
-            parent_primary_key_value = response[Model._meta.pk.name]
-            for child_data in child_data_list:
-                child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
-
-            child_response = operate_list(child_data_list, child_model, activeSchoolId, activeStudentIdList, operation_function)
-
-            response.update({child_related_field_name: child_response})
-    return response
-
-
-def create_object_operation(data, Model, activeSchoolId, activeStudentIdList):
-    ModelSerializer = get_model_serializer(Model=Model, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
-    serializer = ModelSerializer(data=data)
-    assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
-    serializer.save()
-    return serializer.data
-
-
-def create_object_list(data_list, Model, activeSchoolId, activeStudentIdList):
-    return operate_list(data_list, Model, activeSchoolId, activeStudentIdList, create_object_operation)
-
-
-def create_object(data, Model, activeSchoolId, activeStudentIdList):
-    return operate_object(data, Model, activeSchoolId, activeStudentIdList, create_object_operation)
-
-
-def get_update_object_operation(partial: bool):
-    def update_object_operation(data, Model, activeSchoolId, activeStudentIdList):
-        permitted_query_set = Model.objects.filter(Model.Permissions().getPermittedQuerySet(activeSchoolId, activeStudentIdList))
-        main_model_pk_field_name = Model._meta.pk.name
-
-        ModelSerializer = get_model_serializer(Model=Model, activeSchoolId=activeSchoolId, activeStudentIdList=activeStudentIdList)
-        serializer = ModelSerializer(permitted_query_set.get(**{main_model_pk_field_name: data[main_model_pk_field_name]}), data=data, partial=partial)
+    def create_object_operation(self, data):
+        ModelSerializer = self.get_model_serializer()
+        serializer = ModelSerializer(data=data)
         assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
         serializer.save()
         return serializer.data
-    return update_object_operation
 
+    def create_object_list(self):
+        self.method = 'create'
+        return self.operate_list(self.create_object_operation)
 
-def update_object_list(data_list, Model, activeSchoolId, activeStudentIdList, partial=False):
-    return operate_list(data_list, Model, activeSchoolId, activeStudentIdList, get_update_object_operation(partial))
+    def create_object(self):
+        self.method = 'create'
+        return self.operate_object(self.data, self.create_object_operation)
 
+    def get_update_object_operation(self):
+        def update_object_operation(data):
+            permitted_query_set = self.Model.objects.filter(self.Model.Permissions().getPermittedQuerySet(self.activeSchoolId, self.activeStudentIdList))
+            main_model_pk_field_name = self.Model._meta.pk.name
 
-def update_object(data, Model, activeSchoolId, activeStudentIdList, partial=False):
-    return operate_object(data, Model, activeSchoolId, activeStudentIdList, get_update_object_operation(partial))
+            ModelSerializer = self.get_model_serializer()
+            serializer = ModelSerializer(permitted_query_set.get(**{main_model_pk_field_name: data[main_model_pk_field_name]}), data=data, partial=self.partial)
+            assert serializer.is_valid(), "{0}\n data = {1}".format(serializer.errors, data)
+            serializer.save()
+            return serializer.data
+        return update_object_operation
 
+    def update_object_list(self):
+        self.method = 'update'
+        return self.operate_list(self.get_update_object_operation())
 
-def delete_operation(data, Model, activeSchoolId, activeStudentIdList):
-    permitted_query_set = Model.objects.filter(Model.Permissions().getPermittedQuerySet(activeSchoolId, activeStudentIdList))
-    main_model_pk_field_name = Model._meta.pk.name
-    to_delete_pk = data[main_model_pk_field_name]
-    permitted_query_set.filter(**{main_model_pk_field_name: to_delete_pk}).delete()
-    return data
+    def update_object(self):
+        self.method = 'update'
+        return self.operate_object(self.data, self.get_update_object_operation())
 
+    def delete_object_list(self):
+        child_field_name_mapped_by_query = {}
 
-def delete_object_list(data, Model, *args, **kwargs):
-    child_field_name_mapped_by_query = {}
-
-    for field_data in data.get('fields_list', []):
-        if type(field_data) == dict:  # parent/child nested field
-            if field_data['name'] in Model._meta.fields_map:
-                child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+        for field_data in self.data.get('fields_list', []):
+            if type(field_data) == dict:  # parent/child nested field
+                if field_data['name'] in self.Model._meta.fields_map:
+                    child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
+                else:
+                    raise Exception('Invalid child data dict in Delete Query')
             else:
-                raise Exception('Invalid child data dict in Delete Query')
-        else:
-            raise Exception('Invalid field name in DELETE Query')
-    ## Response Structure(fields_list) Processing Ends ##
+                raise Exception('Invalid field name in DELETE Query')
+        ## Response Structure(fields_list) Processing Ends ##
 
-    query_set = parse_query(Model, data, *args, **kwargs)
-    count = query_set.count()
+        query_set = self.parse_query()
+        count = query_set.count()
 
-    pk_field_name = Model._meta.pk.name
-    pk_list = query_set.values_list(pk_field_name, flat=True)
+        pk_field_name = self.Model._meta.pk.name
+        pk_list = query_set.values_list(pk_field_name, flat=True)
 
-    query_set.delete()
+        query_set.delete()
 
-    for key, value in child_field_name_mapped_by_query.items():
-        child_field_name = Model._meta.fields_map[key].field.name
-        child_model = Model._meta.fields_map[key].related_model
-        value.update({   # added parent<Model> filter
-            'filter': dict(value.get('filter', {}), **{
-                child_field_name + "__in": pk_list
+        for key, value in child_field_name_mapped_by_query.items():
+            child_field_name = self.Model._meta.fields_map[key].field.name
+            child_model = self.Model._meta.fields_map[key].related_model
+            value.update({   # added parent<Model> filter
+                'filter': dict(value.get('filter', {}), **{
+                    child_field_name + "__in": pk_list
+                })
             })
-        })
 
-        delete_object_list(value, child_model, *args, **kwargs)
+            GenericSerializerInterface(Model=child_model, data=value, activeSchoolId=self.activeSchoolId,
+                                       activeStudentIdList=self.activeStudentIdList).delete_object_list()
 
-    return count
+        return count
