@@ -5,7 +5,6 @@ from django.db import transaction as db_transaction
 from common.json_encoding import make_dict_list_serializable
 
 from django.db.models import Count
-from typing import Union
 
 AGGREGATOR_FUNCTION_MAPPED_BY_NAME = {
     'Count': Count,
@@ -32,21 +31,22 @@ class GenericSerializerInterface():
         self.activeStudentIdList = activeStudentIdList
         self.partial = partial
 
-    def get_model_serializer(self, fields__korangle=None):
+    def get_model_serializer(self, fields_list=None):
+        GenericSerializerInterface_self = self
 
         class ModelSerializer(serializers.ModelSerializer):
 
-            def is_valid(self, *args, **kwargs):
+            def is_valid(self):
 
                 super_response = super().is_valid(raise_exception=False)
                 if not super_response:
                     return False
 
-                return self.Meta.model.Permissions().is_valid(self.validated_data, self.activeSchoolId, self.activeStudentIdList)
+                return self.Meta.model.Permissions().is_valid(self.validated_data, GenericSerializerInterface_self.activeSchoolId, GenericSerializerInterface_self.activeStudentIdList)
 
             class Meta:
                 model = self.Model
-                fields = '__all__' if fields__korangle is None else fields__korangle
+                fields = '__all__' if fields_list is None else fields_list
 
         return ModelSerializer
 
@@ -194,7 +194,7 @@ class GenericSerializerInterface():
                 parent_data_mapped_by_pk[data[parent_model_pk_field_name]] = data
             for data in return_data:
                 if data[key] is not None:
-                    data[key] = parent_data_mapped_by_pk[data[key]]
+                    data[key + 'Instance'] = parent_data_mapped_by_pk[data[key]]
             ## Regrouping Ends ##
         ## Parent Nested Data Query Ends ##
 
