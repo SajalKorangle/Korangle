@@ -1,6 +1,7 @@
 
 import { SettingsComponent } from './settings.component';
 import { Session } from '@services/modules/school/models/session';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class SettingsServiceAdapter {
 
@@ -49,7 +50,7 @@ export class SettingsServiceAdapter {
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
         } else if (feeSettingsList.length == 1) {
-            this.vm.backendData.feeSettings = { ...feeSettingsList[0], accountingSettings: JSON.parse(feeSettingsList[0].accountingSettings) };
+            this.vm.backendData.feeSettings = feeSettingsList[0];
             this.vm.backendData.filterInvalidAccounts();
         } else {
             alert('Error: Report admin');
@@ -63,10 +64,7 @@ export class SettingsServiceAdapter {
 
     populateActiveSession(activeSession: Session): void {
         this.vm.activeSession = activeSession;
-        const today = new Date();
-        const endDate = new Date(activeSession.endDate);
-        const startDate = new Date(activeSession.startDate);
-        this.vm.isActiveSession = today >= startDate && today <= endDate;
+        this.vm.isActiveSession = activeSession.id == CommonFunctions.getActiveSession().id;
     }
 
     populateCustomAccountSession(accountsList, accountSessionList): void {
@@ -101,18 +99,12 @@ export class SettingsServiceAdapter {
             newFeeSettings.id = feeSettingsList[0].id;
             serviceList.push(
                 this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings)
-                    .then(res => this.vm.backendData.feeSettings = {
-                        ...res,
-                        accountingSettings: JSON.parse(res.accountingSettings)
-                    })
+                    .then(res => this.vm.backendData.feeSettings = res)
             );
         } else {
             serviceList.push(   //
                 this.vm.feeService.createObject(this.vm.feeService.fee_settings, newFeeSettings)
-                    .then(res => this.vm.backendData.feeSettings = {
-                        ...res,
-                        accountingSettings: JSON.parse(res.accountingSettings)
-                    })
+                    .then(res => this.vm.backendData.feeSettings = res)
             );
         }
         await Promise.all(serviceList);

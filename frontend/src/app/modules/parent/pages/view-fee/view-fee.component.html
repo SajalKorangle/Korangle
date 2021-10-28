@@ -6,13 +6,16 @@
                 <tbody>
                     <tr style="font-weight: 800 !important; font-size: 22px !important">
                         <td align="left">
-                            Fees Due Till Month: <span style="color: red">{{ getOverallFeesDueTillMonth() | indianCurrency }}</span>
+                            Fees Due Till Month: <span style="color: red">{{
+                                minZeroCorrection(getOverallFeesDueTillMonth() - getTotalPaymentAmount())
+                                |indianCurrency }}</span>
                         </td>
                         <td align="right">Total Fees: {{ getOverallTotalFees() | indianCurrency }}</td>
                     </tr>
                     <tr style="font-weight: 800 !important; font-size: 22px !important">
-                        <td align="left">Total Fees Due: {{ getOverallFeesDue() | indianCurrency }}</td>
-                        <td align="left"></td>
+                        <td align="left">Total Fees Due: {{ getOverallFeesDue() - getTotalPaymentAmount() |
+                            indianCurrency }}</td>
+                        <td align="right"></td>
                     </tr>
                 </tbody>
             </table>
@@ -21,14 +24,16 @@
                 <tbody>
                     <tr *ngIf="lateFeeVisible">
                         <td rowspan="2" align="center">Title</td>
-                        <td colspan="2" align="center">Fees</td>
-                        <td colspan="2" align="center">Late Fees</td>
+                        <td colspan="3" align="center">Fees</td>
+                        <td colspan="3" align="center">Late Fees</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td *ngIf="!lateFeeVisible" align="center">Title</td>
+                        <td align="center">Payment</td>
                         <td align="center">Due</td>
                         <td align="center">Total</td>
+                        <td align="center">Payment</td>
                         <td *ngIf="lateFeeVisible" align="center">Due</td>
                         <td *ngIf="lateFeeVisible" align="center">Total</td>
                         <td></td>
@@ -36,18 +41,28 @@
                     <ng-container *ngFor="let student of getStudentList()">
                         <!-- Student -->
 
-                        <tr
-                            style="
+                        <tr style="
                                 font-weight: 800 !important;
                                 font-size: 20px !important;
                                 background-color: #f8f5e6 !important;
                                 color: blue !important;
-                            "
-                        >
-                            <td align="left">{{ student.name }}</td>
-                            <td align="center">{{ getStudentFeesDue(student) }}</td>
+                            ">
+                            <td align="left">{{ student.name }}
+                                <mat-form-field *ngIf="hasOnlinePaymentAccount" style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
+                                    <mat-label *ngIf="isMobile()">Amount</mat-label>
+                                    <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
+                                    <input matInput type="number" [(ngModel)]="amountMappedByStudentId[student.id]"
+                                        (ngModelChange)="handleOverallPaymentChange(student)" [errorStateMatcher]="{isErrorState: amountError(student)}">
+                                    <mat-error>Invalid Amount</mat-error>
+                                </mat-form-field>
+                            </td>
+                            <td align="center">{{getNewSubFeeReceiptTotalFee(student)}}</td>
+                            <td align="center">{{ getStudentFeesDue(student) - getNewSubFeeReceiptTotalFee(student)}}
+                            </td>
                             <td align="center">{{ getStudentTotalFees(student) }}</td>
-                            <td *ngIf="lateFeeVisible" align="center">{{ getStudentLateFeesDue(student) }}</td>
+                            <td align="center">{{getNewSubFeeReceiptTotalLateFee(student)}}</td>
+                            <td *ngIf="lateFeeVisible" align="center">{{
+                                getStudentLateFeesDue(student)-getNewSubFeeReceiptTotalLateFee(student) }}</td>
                             <td *ngIf="lateFeeVisible" align="center">{{ getStudentLateFeeTotal(student) }}</td>
                             <td></td>
                         </tr>
@@ -57,16 +72,21 @@
 
                             <tr style="font-weight: 500 !important; font-size: 16px !important">
                                 <td align="left">{{ sessionIndex + 1 }}. Session {{ session.name }}</td>
-                                <td align="center">{{ getSessionFeesDue(student, session) }}</td>
+                                <td align="center">{{getSessionFilteredNewTotalFee(student, session)}}</td>
+                                <td align="center">{{ getSessionFeesDue(student, session) -
+                                    getSessionFilteredNewTotalFee(student, session) }}</td>
                                 <td align="center">{{ getSessionTotalFees(student, session) }}</td>
-                                <td *ngIf="lateFeeVisible" align="center">{{ getSessionLateFeesDue(student, session) }}</td>
-                                <td *ngIf="lateFeeVisible" align="center">{{ getSessionLateFeeTotal(student, session) }}</td>
+                                <td *ngIf="lateFeeVisible" align="center">{{getSessionFilteredNewLateFee(student,
+                                    session)}}</td>
+                                <td *ngIf="lateFeeVisible" align="center">{{ getSessionLateFeesDue(student, session) -
+                                    getSessionFilteredNewLateFee(student, session)}}
+                                </td>
+                                <td *ngIf="lateFeeVisible" align="center">{{ getSessionLateFeeTotal(student, session) }}
+                                </td>
                                 <td></td>
                             </tr>
 
-                            <ng-container
-                                *ngFor="let studentFee of getFilteredStudentFeeListBySession(student, session); let studentFeeIndex = index"
-                            >
+                            <ng-container *ngFor="let studentFee of getFilteredStudentFeeListBySession(student, session); let studentFeeIndex = index">
                                 <ng-container *ngIf="studentFee.isAnnually">
                                     <!-- Student Fee Annually -->
 
@@ -74,8 +94,15 @@
                                         <td align="left" style="padding-left: 50px">
                                             {{ studentFeeIndex + 1 }}. {{ getFeeTypeByStudentFee(studentFee).name }}
                                         </td>
-                                        <td align="center">{{ getStudentFeeInstallmentFeesDue(studentFee, 'april') }}</td>
-                                        <td align="center">{{ getStudentFeeInstallmentTotalFees(studentFee, 'april') }}</td>
+                                        <td align="center">{{getStudentFeeFilteredNewTotalFee(student, studentFee)}}
+                                        </td>
+                                        <td align="center">{{ getStudentFeeInstallmentFeesDue(studentFee, 'april') -
+                                            getStudentFeeFilteredNewTotalFee(student, studentFee)}}
+                                        </td>
+                                        <td align="center">{{ getStudentFeeInstallmentTotalFees(studentFee, 'april') }}
+                                        </td>
+                                        <td *ngIf="lateFeeVisible" align="center">
+                                            {{getStudentFeeFilteredNewLateFee(student, studentFee)}}</td>
                                         <td *ngIf="lateFeeVisible" align="center">
                                             {{ getStudentFeeInstallmentLateFeesDue(studentFee, 'april') }}
                                         </td>
@@ -92,40 +119,53 @@
                                         <td align="left" style="padding-left: 50px">
                                             {{ studentFeeIndex + 1 }}. {{ getFeeTypeByStudentFee(studentFee).name }}
                                         </td>
-                                        <td align="center">{{ getStudentFeeFeesDue(studentFee) }}</td>
+                                        <td align="center">{{getStudentFeeFilteredNewTotalFee(student, studentFee)}}
+                                        </td>
+                                        <td align="center">{{ getStudentFeeFeesDue(studentFee) -
+                                            getStudentFeeFilteredNewTotalFee(student, studentFee)}}</td>
                                         <td align="center">{{ getStudentFeeTotalFees(studentFee) }}</td>
-                                        <td *ngIf="lateFeeVisible" align="center">{{ getStudentFeeLateFeesDue(studentFee) }}</td>
-                                        <td *ngIf="lateFeeVisible" align="center">{{ getStudentFeeLateFeeTotal(studentFee) }}</td>
+                                        <td *ngIf="lateFeeVisible" align="center">
+                                            {{getStudentFeeFilteredNewLateFee(student, studentFee)}}</td>
+                                        <td *ngIf="lateFeeVisible" align="center">{{
+                                            getStudentFeeLateFeesDue(studentFee) -
+                                            getStudentFeeFilteredNewLateFee(student, studentFee) }}</td>
+                                        <td *ngIf="lateFeeVisible" align="center">{{
+                                            getStudentFeeLateFeeTotal(studentFee) }}</td>
                                         <td align="center">
-                                            <button
-                                                type="button"
-                                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                                                style="padding: 3px 8px"
-                                                (click)="showOrHideStudentFeeDetails(studentFee)"
-                                            >
-                                                <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-</ng-container>
-                                                <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">+</ng-container>
+                                            <button type="button" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="padding: 3px 8px"
+                                                (click)="showOrHideStudentFeeDetails(studentFee)">
+                                                <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">-
+                                                </ng-container>
+                                                <ng-container *ngIf="!studentFeeDetailsVisible(studentFee)">+
+                                                </ng-container>
                                             </button>
                                         </td>
                                     </tr>
 
                                     <ng-container *ngIf="studentFeeDetailsVisible(studentFee)">
-                                        <ng-container
-                                            *ngFor="
+                                        <ng-container *ngFor="
                                                 let installment of getFilteredInstallmentListByStudentFee(studentFee);
                                                 let installmentIndex = index
-                                            "
-                                        >
+                                            ">
                                             <!-- Installment -->
 
                                             <tr>
                                                 <td align="left" style="padding-left: 60px">
                                                     {{ installmentIndex + 1 }}. {{ installment | titlecase }}
                                                 </td>
-                                                <td align="center">{{ getStudentFeeInstallmentFeesDue(studentFee, installment) }}</td>
-                                                <td align="center">{{ getStudentFeeInstallmentTotalFees(studentFee, installment) }}</td>
+                                                <td align="center">{{getStudentFeeFilteredNewTotalFee(student,
+                                                    studentFee, [installment])}}</td>
+                                                <td align="center">{{ getStudentFeeInstallmentFeesDue(studentFee,
+                                                    installment) - getStudentFeeFilteredNewTotalFee(student, studentFee,
+                                                    [installment]) }}</td>
+                                                <td align="center">{{ getStudentFeeInstallmentTotalFees(studentFee,
+                                                    installment) }}</td>
+                                                <td align="center">{{getStudentFeeFilteredNewLateFee(student,
+                                                    studentFee, [installment])}}</td>
                                                 <td *ngIf="lateFeeVisible" align="center">
-                                                    {{ getStudentFeeInstallmentLateFeesDue(studentFee, installment) }}
+                                                    {{ getStudentFeeInstallmentLateFeesDue(studentFee, installment) -
+                                                    getStudentFeeFilteredNewLateFee(student, studentFee, [installment])
+                                                    }}
                                                 </td>
                                                 <td *ngIf="lateFeeVisible" align="center">
                                                     {{ getStudentFeeInstallmentLateFeeTotal(studentFee, installment) }}
@@ -146,6 +186,18 @@
                     </ng-container>
                 </tbody>
             </table>
+            <ng-container *ngIf="hasOnlinePaymentAccount && getOverallFeesDue() > 0">
+                <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
+                </mat-form-field>
+
+                <button class="btn" [disabled]="getTotalPaymentAmount()==0" style="background-color: blue; color: white; display: block; margin-top: 16px;"
+                    (click)="serviceAdapter.initiatePayment()">
+                    Pay Now
+                </button>
+            </ng-container>
+
         </ng-container>
 
         <ng-container *ngIf="getOverallFeesDue() == 0">
@@ -161,30 +213,20 @@
                 <mat-expansion-panel-header>
                     <mat-panel-title *ngIf="feeReceiptList.length === 0">**No fees submitted yet</mat-panel-title>
                     <mat-panel-title *ngIf="feeReceiptList.length !== 0">
-                        <span class="hidden-xs" style="color: #7b7b7b">Last Receipt Date: &nbsp;</span
-                        ><i>{{ feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy' }}</i
-                        >, &nbsp; <span class="hidden-xs" style="color: #7b7b7b">Amount: &nbsp;</span
-                        >{{ getLastDaySubmittedAmount(feeReceiptList[0]) | currency: 'INR':'':'1.0-0' }} &nbsp; / &nbsp;
-                        <span class="hidden-xs" style="color: #7b7b7b">Receipts: &nbsp;</span
-                        >{{ getLastDaySubmittedReceipts(feeReceiptList[0]).length }}
+                        <span class="hidden-xs" style="color: #7b7b7b">Last Receipt Date: &nbsp;</span><i>{{
+                            feeReceiptList[0].generationDateTime | date: 'dd - MMM - yyyy' }}</i>, &nbsp; <span class="hidden-xs" style="color: #7b7b7b">Amount:
+                            &nbsp;</span>{{
+                        getLastDaySubmittedAmount(feeReceiptList[0]) | currency: 'INR':'':'1.0-0' }} &nbsp; / &nbsp;
+                        <span class="hidden-xs" style="color: #7b7b7b">Receipts: &nbsp;</span>{{
+                        getLastDaySubmittedReceipts(feeReceiptList[0]).length }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-
-                <app-fee-receipt-list
-                    [user]="user"
-                    [receiptColumnFilter]="receiptColumnFilter"
-                    [feeTypeList]="feeTypeList"
-                    [feeReceiptList]="feeReceiptList"
-                    [subFeeReceiptList]="subFeeReceiptList"
-                    [studentList]="selectedStudentList"
-                    [studentSectionList]="selectedStudentSectionList"
-                    [employeeList]="employeeList"
-                    [classList]="classList"
-                    [number]="3"
-                    [sectionList]="sectionList"
-                    [sessionList]="sessionList"
-                    [boardList]="boardList"
-                ></app-fee-receipt-list>
+                <div style="overflow: auto;">
+                    <app-fee-receipt-list [user]="user" [receiptColumnFilter]="receiptColumnFilter" [feeTypeList]="feeTypeList"
+                        [feeReceiptList]="feeReceiptList" [subFeeReceiptList]="subFeeReceiptList" [studentList]="selectedStudentList"
+                        [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList" [classList]="classList" [number]="3"
+                        [sectionList]="sectionList" [sessionList]="sessionList" [boardList]="boardList" [printSingleReceipt]="true"></app-fee-receipt-list>
+                </div>
             </mat-expansion-panel>
 
             <mat-expansion-panel [disabled]="discountList.length === 0">
@@ -195,18 +237,44 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-discount-list
-                    [user]="user"
-                    [discountColumnFilter]="discountColumnFilter"
-                    [discountList]="discountList"
-                    [subDiscountList]="subDiscountList"
-                    [studentList]="selectedStudentList"
-                    [studentSectionList]="selectedStudentSectionList"
-                    [employeeList]="employeeList"
-                    [classList]="classList"
-                    [sectionList]="sectionList"
-                    [sessionList]="sessionList"
-                ></app-discount-list>
+                <app-discount-list [user]="user" [discountColumnFilter]="discountColumnFilter" [discountList]="discountList" [subDiscountList]="subDiscountList"
+                    [studentList]="selectedStudentList" [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList" [classList]="classList"
+                    [sectionList]="sectionList" [sessionList]="sessionList"></app-discount-list>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel *ngIf="hasOnlinePaymentAccount" [disabled]="parsedOrder.length==0">
+                <mat-expansion-panel-header>
+                    <mat-panel-title *ngIf="parsedOrder.length === 0">**No online payment yet</mat-panel-title>
+                    <mat-panel-title *ngIf="feeReceiptList.length !== 0">
+                        Online Fee Payment History
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div style="overflow: auto;">
+                    <table class="table table-hover">
+                        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                            <tr>
+                                <th>S No.</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Amount</th>
+                                <th class="text-center">Reference No.</th>
+                                <th class="text-center">Order Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let order of parsedOrder, let i = index">
+                                <tr>
+                                    <td>{{i+1}}</td>
+                                    <td class="text-center">
+                                        {{ order.dateTime | date: 'dd - MMM - yyyy'}}
+                                    </td>
+                                    <td class="text-center">{{order.amount}}</td>
+                                    <td class="text-center">{{order.referenceId}}</td>
+                                    <td class="text-center">{{order.status}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
             </mat-expansion-panel>
         </mat-accordion>
     </ng-container>

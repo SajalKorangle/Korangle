@@ -14,6 +14,9 @@ import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.ren
 import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
 import {InformationService} from '@services/modules/information/information.service';
 
+import { MatDialog } from '@angular/material';
+
+import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
 
 @Component({
     selector: 'send-sms',
@@ -35,7 +38,7 @@ export class SendSmsComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    sendToList = [{id: 1, name: 'Students'}, {id: 2, name: 'Employees'}, {id: 3, name: 'Common'}];
+    sendToList = [{ id: 1, name: 'Students' }, { id: 2, name: 'Employees' }, { id: 3, name: 'Common' }];
 
     dataForMapping = {} as any;
 
@@ -106,12 +109,13 @@ export class SendSmsComponent implements OnInit {
         },
         rte: {
             yes: false,
-            no: false,
-        },
+            no: false
+        }
     };
+    purchase: any;
 
-    constructor(
-        public studentService: StudentService,
+
+    constructor(public studentService: StudentService,
         public employeeService: EmployeeService,
         public classService: ClassService,
         public smsOldService: SmsOldService,
@@ -119,8 +123,8 @@ export class SendSmsComponent implements OnInit {
         public notificationService: NotificationService,
         public informationService: InformationService,
         public userService: UserService,
-        private cdRef: ChangeDetectorRef
-    ) {}
+        public cdRef: ChangeDetectorRef,
+        public dialog: MatDialog) { }
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -158,9 +162,9 @@ export class SendSmsComponent implements OnInit {
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
         this.htmlRenderer = new SendSmsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
+
     }
 
     getMobileNumberList(returnType: string): any {
@@ -258,7 +262,7 @@ export class SendSmsComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    }
+    };
 
     getFilteredFilterValues(parameter: any): any {
         if (parameter.filterFilterValues === '') {
@@ -368,6 +372,35 @@ export class SendSmsComponent implements OnInit {
         return this.classSectionList.find((classSection) => {
             return classSection['class'].id == classId && classSection['section'].id == sectionId;
         }).selected;
+    }
+
+    getClassSectionName(classId: number, sectionId: number): string {
+        let classSection = this.classSectionList.find((classSection) => {
+            return classSection.class.id == classId && classSection.section.id == sectionId;
+        });
+        let multipleSections =
+            this.classSectionList.filter((classSection) => {
+                return classSection.class.id == classId;
+            }).length > 1;
+        return classSection.class.name + (multipleSections ? ', ' + classSection.section.name : '');
+    }
+
+    hasPurchaseSMSPermission(): boolean {
+        let moduleIdx = this.user.activeSchool.moduleList.findIndex(module => module.path === 'sms');
+        let taskIdx = -1;
+        taskIdx = this.user.activeSchool.moduleList[moduleIdx].taskList.findIndex(task => task.path === 'purchase_sms');
+        if (taskIdx === -1)
+            return false;
+
+        return true;
+    }
+
+    openPurchaseSMSDialog(): void {
+        this.dialog.open(PurchaseSmsDialogComponent, {
+            data: {
+                vm: this,
+            }
+        });
     }
 
 }

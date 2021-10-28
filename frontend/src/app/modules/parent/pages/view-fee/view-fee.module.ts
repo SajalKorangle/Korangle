@@ -13,4 +13,4 @@ import { FeesComponentsModule } from '../../../fees/components/fees-components.m
     providers: [],
     bootstrap: [ViewFeeComponent],
 })
-export class ViewFeeModule {}
+export class ViewFeeModule { }

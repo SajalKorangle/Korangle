@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from permissions import employeeHasSchoolPermission, parentHasStudentPermission
 from student_app.models import Student
+import json
 
 
 def get_error_response(message):
@@ -117,6 +118,60 @@ def user_permission_3(function):
         else:
             data = {'response': get_success_response(
                 function(*args, **kwargs, activeSchoolID=None, activeStudentID=None))}
+            return Response(data)
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap
+
+
+def user_permission_4(function):
+    def wrap(*args, **kwargs):
+        request = args[1]
+        request.GET._mutable = True
+
+        if ('method' in request.GET):
+            for key in request.data:
+                request.GET[key] = request.data[key]
+            method = request.GET['method']
+            del request.GET['method']
+            if method == 'GET':
+                return args[0].get(request)
+            elif method == 'DELETE':
+                return args[0].delete(request)
+            else:
+                raise Exception('Invalid method in GET')
+
+        if '__query__' in request.GET:
+            request.GET['__query__'] = json.loads(request.GET['__query__'])
+
+        # no need to check authentication because the RestAPIView class by default check for authentication
+
+        if ('activeSchoolId' in request.GET.keys()):    # User is requesting as employee
+            activeSchoolId = request.GET['activeSchoolId']
+            if employeeHasSchoolPermission(request.user, activeSchoolId):
+                del request.GET['activeSchoolId']
+                request.GET._mutable = False
+                data = {'success': function(*args, **kwargs, activeSchoolId=int(activeSchoolId), activeStudentIdList=None)}
+                return Response(data)
+            else:
+                return Response({'fail': 'User not permitted for this action'})
+
+        elif ('activeStudentIdList' in request.GET.keys()):  # User is requesting as parent
+            activeStudentIdList = list(map(int, request.GET['activeStudentIdList'].split(',')))
+            hasPermission = True
+            for studentId in activeStudentIdList:
+                hasPermission = hasPermission and parentHasStudentPermission(request.user, studentId)
+            if (hasPermission):
+                del request.GET['activeStudentIdList']
+                request.GET._mutable = False
+                activeSchoolId = Student.objects.get(id=activeStudentIdList[0]).parentSchool.id
+                data = {'success': function(*args, **kwargs, activeSchoolId=int(activeSchoolId), activeStudentIdList=activeStudentIdList)}
+                return Response(data)
+            else:
+                return Response({'fail': 'User not permitted for this action'})
+
+        else:
+            data = {'success': function(*args, **kwargs, activeSchoolID=None, activeStudentID=None)}
             return Response(data)
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__

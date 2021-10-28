@@ -143,6 +143,7 @@ const routes: Routes = [
             { path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule' },
             { path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule' },
             { path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule' },
+            { path: 'parent', loadChildren: 'app/modules/parent/parent.module#ParentModule' },
         ],
     },
 ];
