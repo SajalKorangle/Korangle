@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { CollectFeeServiceAdapter } from './collect-fee-service.adapter';
+import { CollectFeeServiceAdapter } from './collect-fee.service.adapter';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentFee } from '../../../../services/modules/fees/models/student-fee';
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';

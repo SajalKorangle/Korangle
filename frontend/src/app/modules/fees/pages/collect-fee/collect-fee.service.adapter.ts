@@ -173,7 +173,6 @@ export class CollectFeeServiceAdapter {
             if (feeReceipt['remark'] == '') {
                 feeReceipt['remark'] = null;
             }
-            delete feeReceipt.receiptNumber;
             return {
                 ...feeReceipt,
                 receiptNumber: 0,

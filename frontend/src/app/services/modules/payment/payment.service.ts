@@ -15,7 +15,4 @@ export class PaymentService extends ServiceObject {
     public order_school = '/order-school';
     public order_self = '/order-self';
 
-    public version_free_api = {
-        order_completion: '/order-completion'
-    };
 }
