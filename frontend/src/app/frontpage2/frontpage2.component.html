@@ -1,22 +1,41 @@
-<div style="background: linear-gradient(rgba(11, 13, 23, 1), rgba(112, 115, 121, 1));width:45vw;height: 100%;position: absolute">
+<div style="background: linear-gradient(rgba(11, 13, 23, 1), rgba(112, 115, 121, 1));width:43.1vw;height: 100%;position: absolute">
     <img src="/assets/img/korangleLogo.png" width="30" height="30" style="margin-left:15px;margin-top: 15px;" alt="korangle logo">
     <span style="top: 10px;
     font-size: 20px;
     position: relative;margin-left:10px;font-family: Roboto;font-weight: 700;color: rgba(255, 113, 49, 1)">Korangle</span>
 </div>
-<!--<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">-->
+
 <div class="main-div">
-    <mat-card class="mat-elevation-z4" style="background-image:url(/assets/img/mat-bg1.png);background-repeat: no-repeat;
+    <mat-card class="mat-elevation-z4" style="background-image:url(/assets/img/mat-bg3.png);background-repeat: no-repeat;
     background-position: center;
     background-size: cover;">
         <div class="row" style="height: 100%;">
-            <div class="col-md-4" style="color:white;height:100%;margin-left:10px">
+            <div class="col-md-5" style="color:white;height:100%;margin-left:10px">
                 <h2 style="font-weight: 700;">Korangle</h2>
                 <h4 style="font-weight: 500;">School System</h4>
                 <div style="position:absolute;bottom: 0">
                     <h5 style="font-weight: 500;margin-bottom:2px">Providing Best Solution</h5>
                     <h5 style="font-weight: 500;">to educational Institutions</h5>
                 </div>
+            </div>
+            <div class="col-md-5" style="margin-left:6%">
+                <mat-tab-group #tabGroup [color]="'warn'" style="margin-top: 20%;">
+                    <mat-tab label="LOGIN">
+                        <form>
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Mobile Number *</label>
+                                <input type="text" class="form-control" id="formGroupExampleInput"
+                                       placeholder="Example input">
+                            </div>
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Password *</label>
+                                <input type="text" class="form-control" id="formGroupExampleInput2"
+                                       placeholder="Another input">
+                            </div>
+                        </form>
+                    </mat-tab>
+                    <mat-tab label="SIGN UP">Sign Up</mat-tab>
+                </mat-tab-group>
             </div>
         </div>
     </mat-card>

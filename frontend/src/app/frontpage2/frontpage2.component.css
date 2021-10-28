@@ -13,3 +13,21 @@ mat-card {
   justify-content: center;
   align-items: center;
 }
+
+/deep/ .mat-tab-label {
+    font-size: 18px;
+    padding: 0 !important;
+    text-align: left !important;
+    justify-content: normal !important;
+}
+
+/deep/ .mat-tab-group {
+    flex-direction: column !important;
+    align-content: center !important;
+    flex-wrap: wrap !important;
+}
+
+/deep/ .mat-tab-label-active {
+color: #FF7131 !important;
+opacity: 0.6 !important;
+}
