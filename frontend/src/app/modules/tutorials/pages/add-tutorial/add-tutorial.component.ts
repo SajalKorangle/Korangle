@@ -6,7 +6,7 @@ import { StudentService } from '@services/modules/student/student.service';
 import { TutorialsService } from '@services/modules/tutorials/tutorials.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { UpdateService } from '../../../../update/update-service';
+import { MessageService } from '@services/message-service';
 
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { SmsService } from 'app/services/modules/sms/sms.service';
@@ -14,6 +14,9 @@ import { UserService } from 'app/services/modules/user/user.service';
 import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { AddTutorialHtmlRenderer } from '@modules/tutorials/pages/add-tutorial/add-tutorial.html.renderer';
 import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
+import {EmployeeService} from '@services/modules/employee/employee.service';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from '@modules/online-classes/pages/add-account/add-account.permissions';
+import {TCService} from '@services/modules/tc/tc.service';
 
 @Component({
     selector: 'app-add-tutorial',
@@ -28,6 +31,8 @@ import {INFORMATION_TYPE_LIST} from '@classes/constants/information-type';
         SmsService,
         UserService,
         SmsOldService,
+        EmployeeService,
+        TCService
     ],
 })
 export class AddTutorialComponent implements OnInit {
@@ -46,28 +51,27 @@ export class AddTutorialComponent implements OnInit {
     decimalRegex = /^-?[0-9]*\.?[0-9]$/;
     youtubeIdMatcher = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=|\S*?[?&]vi=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-    createMessage = 'A new tutorial has been created in the Subject <subject>; Chapter <tutorialChapter>; Topic <tutorialTopic>';
-    deleteMessage = 'The following tutorial has been deleted -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
-    editMessage = 'The following tutorial has been edited -\n Topic <tutorialTopic>; Subject <subject>; Chapter <tutorialChapter>';
-    settings: any;
     smsBalance: any;
-    informationMessageType = INFORMATION_TYPE_LIST.indexOf('Tutorial') + 1;
 
-    updateService: any;
+    messageService: any;
+
+    dataForMapping =  {} as any;
 
     backendData = {
         classList: [],
         sectionList: [],
         classSubjectList: [],
         subjectList: [],
-        fullStudentList: []
+        fullStudentList: [],
+        currentClassStudentSectionList: [],
+        fullStudentSectionList: [],
+        inPagePermissionMappedByKey: {} as any,
     };
 
     userInput = {
         newTutorial: {} as any,
         selectedSection: {} as any,
         editedTutorial: {} as any,
-        selectedClass: {} as any,
         selectedSubject: {} as any,
     };
 
@@ -81,6 +85,10 @@ export class AddTutorialComponent implements OnInit {
         tutorialEditing: false,
     };
 
+    TUTORIAL_CREATION_ID = 12;
+    TUTORIAL_UPDATION_ID = 13;
+    TUTORIAL_DELETION_ID = 14;
+
     constructor(
         public subjectService: SubjectService,
         public classService: ClassService,
@@ -90,13 +98,15 @@ export class AddTutorialComponent implements OnInit {
         public notificationService: NotificationService,
         public smsService: SmsService,
         public userService: UserService,
-        public smsOldService: SmsOldService
+        public smsOldService: SmsOldService,
+        public employeeService: EmployeeService,
+        public tcService: TCService
     ) {}
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.updateService = new UpdateService(this.notificationService, this.userService, this.smsService);
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.htmlRenderer = new AddTutorialHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
@@ -128,6 +138,10 @@ export class AddTutorialComponent implements OnInit {
             link: null,
             orderNumber: 0,
         };
+    }
+
+    hasAdminPermission(): boolean {
+        return this.backendData.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 
 }

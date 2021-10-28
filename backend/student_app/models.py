@@ -4,8 +4,6 @@ from school_app.model.models import BusStop, Session, School
 
 from class_app.models import Class, Division
 
-from django.contrib.auth.models import User
-
 from django.core.exceptions import ObjectDoesNotExist
 
 import os
@@ -29,7 +27,7 @@ def upload_document_to(instance,filename):
 
 class TransferCertificate(models.Model):
 
-    certificateNumber = models.IntegerField(null=False)
+    certificateNumber = models.BigIntegerField(null=False)
     issueDate = models.DateField(null=False)
     # admissionDate = models.DateField(null=False)
     leavingDate = models.DateField(null=False)
@@ -51,8 +49,8 @@ class Student(models.Model):
 
     name = models.CharField(max_length=100)
     fathersName = models.CharField(max_length=100)
-    mobileNumber = models.IntegerField(null=True)
-    secondMobileNumber = models.IntegerField(null=True)
+    mobileNumber = models.BigIntegerField(null=True)
+    secondMobileNumber = models.BigIntegerField(null=True)
     scholarNumber = models.TextField(null=True, blank=True)
     totalFees = models.IntegerField(default=0)
     dateOfBirth = models.DateField(null=True)
@@ -83,12 +81,12 @@ class Student(models.Model):
 
     fatherOccupation = models.TextField(null=True,blank=True)
     address = models.TextField(null=True, blank=True)
-    familySSMID = models.IntegerField(null=True)
-    childSSMID = models.IntegerField(null=True)
+    familySSMID = models.BigIntegerField(null=True)
+    childSSMID = models.BigIntegerField(null=True)
     bankName = models.TextField(null=True, blank=True)
     bankIfscCode = models.TextField(null=True, blank=True)
     bankAccountNum = models.TextField(null=True, blank=True)
-    aadharNum = models.IntegerField(null=True)
+    aadharNum = models.BigIntegerField(null=True)
     bloodGroup = models.TextField(null=True, blank=True)
     fatherAnnualIncome = models.TextField(null=True, blank=True)
 
@@ -188,7 +186,7 @@ class StudentParameterValue(models.Model):
     parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
 
     value = models.TextField(null=True,blank=True)
-    document_value = models.FileField(upload_to=upload_document_to, blank=True, null=True)
+    document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
 
     class Meta:

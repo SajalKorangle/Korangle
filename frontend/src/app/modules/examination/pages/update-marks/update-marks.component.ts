@@ -11,12 +11,15 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { SubjectService } from 'app/services/modules/subject/subject.service';
 import { StudentService } from 'app/services/modules/student/student.service';
 import { UpdateMarksHtmlRenderer } from './update-marks.html.renderer';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './update-marks.permissions';
+import {valueType} from '@modules/common/in-page-permission';
+import {EmployeeService} from '@services/modules/employee/employee.service';
 
 @Component({
     selector: 'update-class-marks',
     templateUrl: './update-marks.component.html',
     styleUrls: ['./update-marks.component.css'],
-    providers: [ClassService, SubjectService, ExaminationService, StudentService],
+    providers: [ClassService, SubjectService, ExaminationService, StudentService, EmployeeService],
 })
 export class UpdateMarksComponent implements OnInit {
     user;
@@ -27,6 +30,7 @@ export class UpdateMarksComponent implements OnInit {
     examinationClassSectionSubjectList: any;
 
     student_mini_profile_list: any = [];
+    inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     subjectList: any;
 
@@ -46,7 +50,8 @@ export class UpdateMarksComponent implements OnInit {
         public subjectService: SubjectService,
         public studentService: StudentService,
         private cdRef: ChangeDetectorRef,
-        public renderer: Renderer2
+        public renderer: Renderer2,
+        public employeeService: EmployeeService
     ) { }
 
     ngOnInit(): void {
@@ -101,5 +106,9 @@ export class UpdateMarksComponent implements OnInit {
         else {
             this.serviceAdapter.updateStudentTestDetails(studentTest, event);
         }
+    }
+
+    hasAdminPermission(): boolean {
+        return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
 }

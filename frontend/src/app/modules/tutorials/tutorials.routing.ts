@@ -11,11 +11,6 @@ const routes: Routes = [
         data: { moduleName: 'tutorials' },
     },
     {
-        path: 'settings',
-        loadChildren: 'app/modules/tutorials/pages/settings/settings.module#SettingsModule',
-        data: { moduleName: 'attendance' },
-    },
-    {
         path: '',
         component: TutorialsComponent,
     },

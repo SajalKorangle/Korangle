@@ -1,15 +1,15 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
-import {getFixtureFiles} from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
-import {containsFirst, containsAll, getNode, getNodes} from '../../../../contains';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
+import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
+import { openModuleAndPage } from '../../../../open-page';
+import { containsFirst, containsAll, getNode, getNodes } from '../../../../contains';
 
 describe('Fees 3.0 -> Total Collection', () => {
 
     let page: any;
 
     beforeAll(async () => {
-        startBackendServer(getFixtureFiles('modules/fee/pages/total-collection/total-collection.json'));
+        await startBackendServer(getFixtureFiles('modules/fee/pages/total-collection/total-collection.json'));
 
         page = await BeforeAfterEach.beforeEach();
 
@@ -63,7 +63,7 @@ describe('Fees 3.0 -> Total Collection', () => {
         nodes = await containsFirst('mat-select', 'Valid Receipts');
         await nodes.click();
         await page.waitForXPath('//mat-option');
-         node = await containsFirst('mat-option[2]', '');
+        node = await containsFirst('mat-option[2]', '');
         await node.click();
 
         // Checking the number of rows to be equals to 2 -> 1 CANCELLED Receipts, 1 header row
@@ -87,7 +87,7 @@ describe('Fees 3.0 -> Total Collection', () => {
         expect(nodes.length).toBe(8);
 
         // again selecting only valid receipts
-        node = await  containsFirst('mat-select//following::mat-select[4]', '');
+        node = await containsFirst('mat-select//following::mat-select[4]', '');
         await node.click();
         //await page.waitForXPath('//mat-option');
         node = await containsFirst('mat-option[1]', 'Valid Receipts');

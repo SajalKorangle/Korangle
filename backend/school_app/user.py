@@ -4,7 +4,11 @@ from rest_framework.response import Response
 from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+from tc_app.models import TransferCertificateNew
+
+User = get_user_model()
 
 from django.db.models import F
 from django.db.models import Q
@@ -14,6 +18,7 @@ from datetime import date
 from team_app.models import Module
 from student_app.models import StudentSection
 from employee_app.models import Employee, EmployeePermission
+from online_classes_app.models import RestrictedStudent
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
@@ -25,12 +30,13 @@ def get_data_from_school_list(schoolList, schoolDbId):
     return None
 
 
-def get_student_data(student_object):
+def get_student_data(student_object,isRestricted):
 
     student_data = dict()
     student_data['id'] = student_object.id
     student_data['name'] = student_object.name
     student_data['fathersName'] = student_object.fathersName
+    student_data['isRestricted'] = isRestricted
     if student_object.profileImage:
         student_data['profileImage'] = student_object.profileImage.url
     else:
@@ -50,9 +56,24 @@ def get_school_list(user):
     for student_section_object in \
         StudentSection.objects.filter(Q(parentStudent__mobileNumber=user.username)
                                       | Q(parentStudent__secondMobileNumber=user.username),
+                                      Q(parentStudent__parentSchool__dateOfExpiry=None)
+                                      | Q(parentStudent__parentSchool__dateOfExpiry__gte=date.today()),
                                       parentStudent__parentSchool__expired=False,
-                                      parentSession=F('parentStudent__parentSchool__currentSession')) \
+                                      parentSession=F('parentStudent__parentSchool__currentSession'),
+                                      parentStudent__parentTransferCertificate=None) \
                 .select_related('parentStudent__parentSchool'):
+
+        transferCertificate = TransferCertificateNew.objects.filter(parentStudent=student_section_object.parentStudent,
+                                                                    parentSession=student_section_object.parentSession).\
+                               exclude(status='Cancelled')
+
+        if transferCertificate.exists():
+            continue
+
+        isRestricted = False
+
+        if RestrictedStudent.objects.filter(parentStudent__id = student_section_object.parentStudent_id).count()>0:
+            isRestricted = True
 
         school_data = get_data_from_school_list(school_list, student_section_object.parentStudent.parentSchool_id)
 
@@ -60,11 +81,13 @@ def get_school_list(user):
             school_data = get_school_data_by_object(student_section_object.parentStudent.parentSchool)
             school_list.append(school_data)
 
-        school_data['studentList'].append(get_student_data(student_section_object.parentStudent))
+        school_data['studentList'].append(get_student_data(student_section_object.parentStudent,isRestricted))
         school_data['role'] = 'Parent'
 
     # Employee User
-    for employee_object in Employee.objects.filter(mobileNumber=user.username,
+    for employee_object in Employee.objects.filter(Q(parentSchool__dateOfExpiry=None)
+                                                   | Q(parentSchool__dateOfExpiry__gte=date.today()),
+                                                   mobileNumber=user.username,
                                                    parentSchool__expired=False,
                                                    dateOfLeaving=None).select_related('parentSchool'):
 
@@ -87,10 +110,6 @@ def get_employee_school_module_list(employee_object):
 
     school_object = employee_object.parentSchool
 
-    '''for access_object in \
-            Access.objects.filter(parentSchool=school_object)\
-                    .order_by('parentModule__orderNumber')\
-                    .select_related('parentModule'):'''
     for module_object in \
             Module.objects.filter(Q(parentBoard=None) | Q(parentBoard=school_object.parentBoard))\
                     .order_by('orderNumber'):
@@ -157,6 +176,7 @@ def get_school_data_by_object(school_object):
     school_data['employeeId'] = None
 
     school_data['expired'] = school_object.expired
+    school_data['dateOfExpiry'] = school_object.dateOfExpiry
 
     school_data['moduleList'] = []
     school_data['studentList'] = []

@@ -12,7 +12,6 @@ export class HomeworkService extends ServiceObject {
     public homework_question_image = '/homework-question-image';
     public homework_answer = '/homework-answer';
     public homework_answer_image = '/homework-answer-image';
-    public homework_settings = '/homework-settings';
 
     constructor(private http_class: HttpClient) {
         super(http_class);

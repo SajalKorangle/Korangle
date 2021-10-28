@@ -25,12 +25,6 @@ urlpatterns += [
     url(r'^homework-answer', HomeworkAnswerView.as_view()),
 ]
 
-from .views import HomeworkSettingsView, HomeworkSettingsListView
-
-urlpatterns += [
-    url(r'^homework-settings/batch', HomeworkSettingsListView.as_view()),
-    url(r'^homework-settings', HomeworkSettingsView.as_view()),
-]
 
 urlpatterns += [
     url(r'^homework-question/batch', HomeworkQuestionListView.as_view()),

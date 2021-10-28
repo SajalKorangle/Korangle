@@ -1,9 +1,9 @@
-import {BeforeAfterEach} from '../../../../beforeAterEach';
-import {startBackendServer} from '../../../../backend-server';
+import { BeforeAfterEach } from '../../../../beforeAterEach';
+import { startBackendServer } from '../../../../backend-server';
 import { getFixtureFiles } from '../../../../../../fixtures/fixture-map';
-import {openModuleAndPage} from '../../../../open-page';
+import { openModuleAndPage } from '../../../../open-page';
 
-import {getNode} from '../../../../contains';
+import { getNode } from '../../../../contains';
 
 
 describe('Parents -> Tutorials', () => {
@@ -13,7 +13,7 @@ describe('Parents -> Tutorials', () => {
 
     beforeAll(async () => {
 
-        startBackendServer(getFixtureFiles('modules/parent/pages/view-tutorial/view-tutorial.json'));
+        await startBackendServer(getFixtureFiles('modules/parent/pages/view-tutorial/view-tutorial.json'));
         page = await BeforeAfterEach.beforeEach();
         await page.select('select[ng-reflect-model="Employee"]', 'Parent');
         await openModuleAndPage('Tutorial', '');
@@ -34,7 +34,7 @@ describe('Parents -> Tutorials', () => {
     });
 
     afterAll(async () => {
-         await BeforeAfterEach.afterEach();
+        await BeforeAfterEach.afterEach();
     });
 
 });

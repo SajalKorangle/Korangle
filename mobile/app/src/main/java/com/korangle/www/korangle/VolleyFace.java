@@ -46,7 +46,7 @@ public class VolleyFace {
     }
 
     public void checkingUpdates() {
-        String url ="https://www.korangle.com/version.json";
+        String url = mainActivity.webapp_url + "/version.json";
 
         // Request a string response from the provided URL.
         StringRequest versionRequest = new StringRequest(Request.Method.GET, url,
@@ -91,7 +91,7 @@ public class VolleyFace {
                                 } else {
                                     // Go on as usual
                                     mainActivity.progressMessageView.setText("Signing in ...");
-                                    mainActivity.webview.loadUrl("https://www.korangle.com/index.html");
+                                    mainActivity.webview.loadUrl(mainActivity.webapp_url + "/index.html");
                                 }
 
                             }catch (JSONException err){
@@ -131,7 +131,7 @@ public class VolleyFace {
 
     public void downloadingUpdates(RequestQueue queue) {
 
-        String mUrl= "https://www.korangle.com/korangle.zip";
+        String mUrl= mainActivity.webapp_url + "/korangle.zip";
         InputStreamVolleyRequest zipRequest = new InputStreamVolleyRequest(Request.Method.GET, mUrl,
                 new Response.Listener<byte[]>() {
                     @Override
@@ -156,7 +156,7 @@ public class VolleyFace {
                                 zipManager.unzip(mainActivity.getFilesDir().getAbsolutePath()+"/korangle.zip",mainActivity.getFilesDir().getAbsolutePath()+"/" );
 
                                 mainActivity.progressMessageView.setText("Opening app");
-                                mainActivity.webview.loadUrl("https://www.korangle.com/index.html");
+                                mainActivity.webview.loadUrl(mainActivity.webapp_url + "/index.html");
 
                             }
                         } catch (Exception e) {
@@ -257,9 +257,9 @@ public class VolleyFace {
         }
     }
 
-    public void sendToken(String token) {
+    /*public void sendToken(String token) {
         // Request a string response from the provided URL.
-        StringRequest versionRequest = new StringRequest(Request.Method.GET, "https://www.korangle.com:8000/sms/notification?token="+token,
+        StringRequest versionRequest = new StringRequest(Request.Method.GET, mainActivity.webapp_url + "/sms/notification?token="+token,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -273,6 +273,6 @@ public class VolleyFace {
                     }
                 });
         queue.add(versionRequest);
-    }
+    }*/
 
 }

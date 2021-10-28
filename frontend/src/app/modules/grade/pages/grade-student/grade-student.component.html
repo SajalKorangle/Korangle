@@ -1,7 +1,8 @@
 <div class="card-content">
     <ng-container *ngIf="!isInitialLoading">
-        <div class="row">
-            <div class="col-md-12" *ngIf="examinationList.length > 0 && gradeList.length > 0 && attendancePermissionList.length > 0">
+        <ng-container *ngIf="filteredClassSectionList.length == 0">You do not have permission for any class</ng-container>
+        <div class="row" *ngIf="filteredClassSectionList.length > 0">
+            <div class="col-md-12" *ngIf="examinationList.length > 0 && gradeList.length > 0">
                 <mat-form-field style="margin-right: 10px">
                     <mat-select
                         placeholder="Select Class & Section"
@@ -53,7 +54,6 @@
 
             <div class="col-md-9" *ngIf="gradeList.length === 0">No Grade Present for you to update fields!</div>
 
-            <div class="col-md-9" *ngIf="attendancePermissionList.length === 0">No Class permission for you to update fields!</div>
         </div>
 
         <ng-container *ngIf="showTestDetails && !isLoading">

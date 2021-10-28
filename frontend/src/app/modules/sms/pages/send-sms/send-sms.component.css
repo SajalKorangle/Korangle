@@ -88,6 +88,10 @@ ngx-datatable-column:hover {
     background-color: lightgrey;
 }
 
+.disabledButton{
+    background-color: #c4c4c4 !important;
+}
+
 /deep/ .datatable-body-cell {
     margin-top: 15px;
 }

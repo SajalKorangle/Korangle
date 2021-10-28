@@ -50,12 +50,7 @@ export class SignupServiceAdapter {
 
     verifyOTP() {
         if (this.vm.password !== this.vm.confirmPassword) {
-            alert('New Password and confirm password are not same');
-            return;
-        }
-
-        if (this.vm.password.length < 8) {
-            alert('There should be atleast 8 characters in your password');
+            alert('Password and confirm password are not same');
             return;
         }
 

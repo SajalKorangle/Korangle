@@ -13,6 +13,7 @@ import { registerForNotification } from './classes/common';
 import { CommonFunctions } from './classes/common-functions';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
+import { AppHtmlRenderer } from './app.html.renderer';
 
 @Component({
     selector: 'app-root',
@@ -23,6 +24,8 @@ import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.c
 export class AppComponent implements OnInit {
     isLoading = false;
     public user = new User();
+
+    htmlRenderer: AppHtmlRenderer;
 
     constructor(
         private authenticationService: AuthenticationOldService,
@@ -58,6 +61,10 @@ export class AppComponent implements OnInit {
         const tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
         document.body.appendChild(tag);
+
+        this.htmlRenderer = new AppHtmlRenderer();
+        this.htmlRenderer.initialize(this);
+
     }
 
     showTutorial(url: any) {

@@ -8,6 +8,7 @@ import { SalaryOldService } from '../../../../services/modules/salary/salary-old
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_SALARY_SHEET } from '../../../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
+import xlsx = require('xlsx');
 
 @Component({
     selector: 'app-print-salary-sheet',
@@ -19,6 +20,8 @@ export class PrintSalarySheetComponent implements OnInit {
     user;
 
     employeeList = null;
+    columnHeaderList = ["S.No", "Name", "Father's/Husband's Name", "Monthly Salary",
+        "Working Days", "Net Salary", "Signature"];
 
     startDate = null;
     endDate = null;
@@ -90,5 +93,28 @@ export class PrintSalarySheetComponent implements OnInit {
             year: this.selectedYear,
         };
         this.printService.navigateToPrintRoute(PRINT_SALARY_SHEET, { user: this.user, value });
+    }
+
+    downloadExcel(): void {
+        let headerRowAndSalaryList = [];
+        //pushing Header List
+        headerRowAndSalaryList.push(this.columnHeaderList);
+        this.getFilteredEmployeeList().forEach((employee, index) => {
+            // pushing each Row of the Employee Salary Details according to the Headers
+            headerRowAndSalaryList.push([index + 1, employee.name, employee.fatherName, employee.monthlySalary,
+                employee.numberOfWorkingDays, employee.netSalary]);
+        });
+        let workSheet = xlsx.utils.aoa_to_sheet(headerRowAndSalaryList);
+        // formatting width of columns according to the data present
+        workSheet['!cols'] = this.fitToColumn(headerRowAndSalaryList);
+        let workBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workBook, workSheet, 'Sheet1');
+        // downloads the file
+        xlsx.writeFile(workBook, "Salary-Sheet(" + this.selectedMonth + "-" + this.selectedYear + ").xlsx");
+    }
+
+    fitToColumn(contentOfExcel) {
+        // get maximum character of each column
+        return contentOfExcel[0].map((a, i) => ({wch: Math.max(...contentOfExcel.map(a2 => a2[i] ? a2[i].toString().length : 0))}));
     }
 }

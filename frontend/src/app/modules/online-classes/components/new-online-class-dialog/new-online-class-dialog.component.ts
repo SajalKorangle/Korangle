@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SettingsComponent } from '@modules/online-classes/pages/settings/settings.component';
+import { SettingsComponent } from '@modules/online-classes/pages/set-time-table/settings.component';
 import { TimeSpan, ParsedOnlineClass, TimeComparator } from '@modules/online-classes/class/constants';
 import { ClassSubject } from '@services/modules/subject/models/class-subject';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonFunctions } from '@classes/common-functions';
 
 @Component({
   selector: 'app-new-online-class-dialog',
@@ -18,19 +19,19 @@ export class NewOnlineClassDialogComponent implements OnInit {
 
   isPasswordVisible: boolean = false;
 
+  commonFunctions = CommonFunctions.getInstance();
+
   constructor(public dialogRef: MatDialogRef<NewOnlineClassDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: {
     vm: SettingsComponent,
     weekday: string,
-    timespan: TimeSpan,
+    timeSpan: TimeSpan,
     onlineClass: ParsedOnlineClass,
   },
     public snackBar: MatSnackBar
   ) {
     this.filteredClassSubject = data.vm.backendData.classSubjectList.filter(classSubject => {
-      if (data.vm.view == 'class' && classSubject.parentClass == data.vm.userInput.selectedClass.id
+      if (classSubject.parentClass == data.vm.userInput.selectedClass.id
         && classSubject.parentDivision == data.vm.userInput.selectedSection.id)
-        return true;
-      else if (data.vm.view == 'employee' && classSubject.parentEmployee == data.vm.userInput.selectedEmployee.id)
         return true;
       return false;
     });
@@ -51,23 +52,21 @@ export class NewOnlineClassDialogComponent implements OnInit {
   }
 
   isOccupied(classSubject: ClassSubject): boolean {
-    if (this.data.vm.view == 'employee')
-      return false;
-
-    const parentEmployee = classSubject.parentEmployee;
 
     const bookedSlotOnlineClass = this.data.vm.backendData.onlineClassList.find(onlineClass => {
-      const classSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
-      if (classSubject.parentEmployee != parentEmployee) {
+      const concernedClassSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+      if (concernedClassSubject.parentEmployee != classSubject.parentEmployee) {
         return false;
       }
-      if (classSubject.parentClass == this.data.vm.userInput.selectedClass.id
-        && classSubject.parentDivision == this.data.vm.userInput.selectedSection.id) {
+      if (concernedClassSubject.parentClass == classSubject.parentClass && concernedClassSubject.parentDivision == classSubject.parentDivision) {
+        return false;
+      }
+      if (concernedClassSubject.parentClass == this.data.vm.userInput.selectedClass.id && concernedClassSubject.parentSubject == classSubject.parentSubject) {
         return false;
       }
       if (this.data.weekday == onlineClass.day
-        && TimeComparator(this.data.timespan.startTime, onlineClass.endTimeJSON) < 0
-        && TimeComparator(onlineClass.startTimeJSON, this.data.timespan.endTime) < 0) {
+        && TimeComparator(this.data.timeSpan.startTime, onlineClass.endTimeJSON) < 0
+        && TimeComparator(onlineClass.startTimeJSON, this.data.timeSpan.endTime) < 0) {
         return true;
       }
     });
@@ -75,9 +74,35 @@ export class NewOnlineClassDialogComponent implements OnInit {
     return Boolean(bookedSlotOnlineClass);
   }
 
-  selectText(text: string) {
-    navigator.clipboard.writeText(text);
-    this.snackBar.open("Copied To Clipboard", undefined, { duration: 2000 });
+  getOccupiedInfo(classSubject: ClassSubject): string {
+
+    const bookedSlotOnlineClassList = this.data.vm.backendData.onlineClassList.filter(onlineClass => {
+      const concernedClassSubject = this.data.vm.backendData.getClassSubjectById(onlineClass.parentClassSubject);
+      if (concernedClassSubject.parentEmployee != classSubject.parentEmployee) {
+        return false;
+      }
+      if (concernedClassSubject.parentClass == classSubject.parentClass && concernedClassSubject.parentDivision == classSubject.parentDivision) {
+        return false;
+      }
+      if (concernedClassSubject.parentClass == this.data.vm.userInput.selectedClass.id && concernedClassSubject.parentSubject == classSubject.parentSubject) {
+        return false;
+      }
+      if (this.data.weekday == onlineClass.day
+        && TimeComparator(this.data.timeSpan.startTime, onlineClass.endTimeJSON) < 0
+        && TimeComparator(onlineClass.startTimeJSON, this.data.timeSpan.endTime) < 0) {
+        return true;
+      }
+    });
+
+    let displayString = "";
+    bookedSlotOnlineClassList.forEach(bookedSlotOnlineClass => {
+      const info = this.data.vm.htmlRenderer.getCardSlotDisplayData(bookedSlotOnlineClass);
+      displayString += "[ " + bookedSlotOnlineClass.startTimeJSON.getDisplayString() + ' - '
+        + bookedSlotOnlineClass.endTimeJSON.getDisplayString() + ': ' + info.subject.name
+        + ` (${info.classs.name} & ${info.section.name}) ], `;
+    });
+
+    return displayString;
   }
 
   apply(): void {

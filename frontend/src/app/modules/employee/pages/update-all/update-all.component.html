@@ -2,12 +2,6 @@
     <!-- Column Filter -->
     <mat-form-field style="margin-right: 15px">
         <mat-select placeholder="Select Columns">
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" (click)="showAllColumns(); $event.stopPropagation()">Select
-                    All</button>
-                <button class="btn" style="padding: 4px 7px" (click)="hideAllColumns(); $event.stopPropagation()">Clear
-                    All</button>
-            </mat-option>
             <ng-container *ngFor="let column of COLUMNHANDLES">
                 <mat-option>
                     <mat-checkbox [(ngModel)]="column.show" (click)="$event.stopPropagation()">
@@ -22,12 +16,6 @@
                     </mat-checkbox>
                 </mat-option>
             </ng-container>
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" (click)="showAllColumns(); $event.stopPropagation()">Select
-                    All</button>
-                <button class="btn" style="padding: 4px 7px" (click)="hideAllColumns(); $event.stopPropagation()">Clear
-                    All</button>
-            </mat-option>
         </mat-select>
     </mat-form-field>
 
@@ -57,7 +45,7 @@
                                 <ng-container *ngIf="column.inputType==='list'">
                                     <mat-form-field>
                                         <mat-select [ngModel]="employee[column.key]" [attr.id]="employee.id+column.key"
-                                            (ngModelChange)="serviceAdapter.updateEmloyeeField(column.key, employee, $event,column.inputType)">
+                                            (ngModelChange)="serviceAdapter.updateEmloyeeField(column.name, column.key, employee, $event,column.inputType)">
                                             <mat-option *ngFor='let item of column.list;' [value]="item">
                                                 {{item}}
                                             </mat-option>
@@ -67,8 +55,12 @@
                                 <ng-container
                                     *ngIf="column.inputType==='text' || column.inputType==='number' || column.inputType==='date'">
                                     <input [attr.type]="column.inputType" [attr.id]="employee.id+column.key"
-                                        class="customInput"
-                                        (blur)="serviceAdapter.updateEmloyeeField(column.key,employee, $event.target.value,column.inputType)"
+                                        class="customInput" 
+                                        [min]="column.inputType==='number'?0:''"
+                                        [max]="getMaxDateForDateType(column.key, column.inputType)"   
+                                        (keydown)="handleOnKeyDown(column.inputType, $event, column.key)"
+                                        [ngStyle]="{'text-transform':(checkOnlyUppercaseFields(column.key))?'uppercase': 'none'}"  
+                                        (blur)="serviceAdapter.updateEmloyeeField(column.name,column.key,employee, $event.target.value,column.inputType)"
                                         [ngModel]="employee[column.key]" />
                                 </ng-container>
                             </td>

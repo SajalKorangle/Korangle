@@ -1,8 +1,11 @@
 from django.db import models
 
 # Create your models here.
+from django.db.models import DateField
+
 from school_app.model.models import School
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from information_app.models import MessageType
 
 from django.dispatch import receiver
@@ -15,7 +18,10 @@ class Notification(models.Model):
     # Content
     content = models.TextField(null=False, default='', verbose_name='content')
 
-    parentMessageType = models.ForeignKey(MessageType, on_delete=models.PROTECT, default=1)
+    # ParentMessageType is Deprecated (Don't Use it)
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.SET_NULL, default=1, null=True)
+
+    SMSEventId = models.IntegerField(null=False, default=0)
 
     # Sent Date & Time
     sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')
@@ -35,5 +41,20 @@ class Notification(models.Model):
 
 @receiver(post_save, sender=Notification)
 def sendNotification(sender, instance, created, **kwargs):
+    if kwargs['raw']:
+        return
     if(created):
         send_notification(instance)
+
+
+class DailyJobsReport(models.Model):
+    STATUS_CHOICES = (
+        ('INITIATED', 'INITIATED'),
+        ('SENT', 'SENT'),
+    )
+
+    date = DateField(auto_now_add=True, unique=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='INITIATED', blank=True)
+
+    def __str__(self):
+        return '{0} : {1}'.format(self.date.strftime("%d-%m-%Y"), self.status)
