@@ -10,7 +10,6 @@ import { GeneralSMSPurchaseServiceAdapter } from '@modules/sms/class/sms-purchas
 import { PaymentService } from '@services/modules/payment/payment.service';
 import { SMS_PLAN } from '@modules/sms/class/constants';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
-import { PaymentResponseDialogComponent } from './../../components/payment-response-dialog/payment-response-dialog.component';
 import { MatDialog } from '@angular/material';
 
 
@@ -52,7 +51,7 @@ export class PurchaseSmsComponent implements OnInit {
         public dialog: MatDialog,) { }
 
     ngOnInit() {
-        console.log(this);
+        // console.log(this);
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new PurchaseSmsServiceAdapter();
         this.generalSMSPurchaseServiceAdapter = new GeneralSMSPurchaseServiceAdapter(this);
@@ -62,10 +61,6 @@ export class PurchaseSmsComponent implements OnInit {
         if (this.user.email)
             this.email = this.user.email;
 
-        const urlParams = new URLSearchParams(location.search);
-        if (urlParams.has('orderId')) {
-            this.openPaymentResponseDialog();
-        }
     }
 
 
@@ -123,12 +118,5 @@ export class PurchaseSmsComponent implements OnInit {
         this.generalSMSPurchaseServiceAdapter.makeSMSPurchase(this.noOfSMS, this.email);
     }
 
-    openPaymentResponseDialog() {
-        this.dialog.open(PaymentResponseDialogComponent, {
-            data: {
-                vm: this
-            }
-        });
-    }
 
 }

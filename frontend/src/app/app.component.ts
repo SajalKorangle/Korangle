@@ -14,6 +14,7 @@ import { CommonFunctions } from './classes/common-functions';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
 import { AppHtmlRenderer } from './app.html.renderer';
+import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 
 @Component({
     selector: 'app-root',
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit {
         private versionCheckService: VersionCheckService,
         private dialog: MatDialog,
         private notificationService: NotificationService
-    ) {}
+    ) { }
 
     ngOnInit() {
         DataStorage.getInstance().setUser(this.user);
@@ -65,6 +66,17 @@ export class AppComponent implements OnInit {
         this.htmlRenderer = new AppHtmlRenderer();
         this.htmlRenderer.initialize(this);
 
+        const urlParams = new URLSearchParams(location.search);
+        if (urlParams.has('orderId')) {
+            this.openPaymentResponseDialog();
+        }
+
+    }
+
+    openPaymentResponseDialog() {
+        this.dialog.open(PaymentResponseDialogComponent, {
+            data: {}
+        });
     }
 
     showTutorial(url: any) {

@@ -29,7 +29,6 @@ import { PaymentService } from '@services/modules/payment/payment.service';
 
 import { Order } from '@services/modules/payment/models/order';
 import { OnlineFeePaymentTransaction } from '@services/modules/fees/models/online-fee-payment-transaction';
-import { PaymentResponseDialogComponent } from './components/payment-response-dialog/payment-response-dialog.component';
 
 declare const $: any;
 
@@ -117,11 +116,6 @@ export class ViewFeeComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        const urlParams = new URLSearchParams(location.search);
-        if (urlParams.has('orderId')) {
-            this.openPaymentResponseDialog();
-        }
-
         this.receiptColumnFilter.receiptNumber = false;
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.printButton = true;
@@ -146,14 +140,6 @@ export class ViewFeeComponent implements OnInit {
 
         this.selectedStudentList.forEach(student => {
             this.newSubFeeReceiptListMappedByStudentId[student.id] = [];
-        });
-    }
-
-    openPaymentResponseDialog() {
-        this.dialog.open(PaymentResponseDialogComponent, {
-            data: {
-                vm: this
-            }
         });
     }
 
