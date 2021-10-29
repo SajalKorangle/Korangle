@@ -21,7 +21,7 @@ class Order(models.Model):
     TransactionStatus = (
         ('Pending', 'Pending'),                     # just after an order is placed and cashfree has not confirmed the payment
         ('Completed', 'Completed'),                 # cashfree has confirmed the payment
-        ('Failed', 'Failed'),                       # Payment has failed and payment cannot be made on that order any longer
+        ('Failed', 'Failed'),                       # Payment has failed and payment cannot be made on that order any longer (Implemented in Cashfree Refund Job)
         # It is a temporary state which is used just for signalling the refund initiation, django signals check if status changes from pending to refund pending and tries to process the refund
         ('Refund Pending', 'Refund Pending'),
         ('Refund Initiated', 'Refund Initiated'),   # Just after Refund has been initiated but cashfree has not confirmed the refund
