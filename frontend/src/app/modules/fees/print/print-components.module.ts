@@ -10,6 +10,8 @@ import { PrintFullFeeReceiptListComponent } from './print-full-fee-receipt-list/
 import { PrintFeesCertificateComponent } from './print-fees-certificate/print-fees-certificate.component';
 import { PrintFeesReportComponent } from './print-fees-report/print-fees-report.component';
 
+import { FeesComponentsModule } from './../components/fees-components.module';
+
 @NgModule({
     declarations: [
         PrintFeeReceiptListComponent,
@@ -18,7 +20,7 @@ import { PrintFeesReportComponent } from './print-fees-report/print-fees-report.
         PrintFeesReportComponent,
     ],
 
-    imports: [ComponentsModule, MatExpansionModule, MatSortModule],
+    imports: [ComponentsModule, MatExpansionModule, MatSortModule, FeesComponentsModule],
     exports: [
         PrintFeeReceiptListComponent,
         PrintFullFeeReceiptListComponent,
