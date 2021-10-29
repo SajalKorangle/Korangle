@@ -14,8 +14,8 @@ const routes: Routes = [
         data: { moduleName: 'parent' },
     },
     {
-        path: 'view_fee',
-        loadChildren: 'app/modules/parent/pages/view-fee/view-fee.module#ViewFeeModule',
+        path: 'pay_fees',
+        loadChildren: 'app/modules/parent/pages/view-fee/pay-fees.module#PayFeesModule',
         data: { moduleName: 'parent' },
     },
     {

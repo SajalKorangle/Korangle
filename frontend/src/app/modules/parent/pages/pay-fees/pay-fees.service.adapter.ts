@@ -1,14 +1,14 @@
-import { ViewFeeComponent } from './view-fee.component';
+import { PayFeesComponent } from './pay-fees.component';
 import { environment } from 'environments/environment';
 
-export class ViewFeeServiceAdapter {
-    vm: ViewFeeComponent;
+export class PayFeesServiceAdapter {
+    vm: PayFeesComponent;
 
     constructor() { }
 
     // Data
 
-    initializeAdapter(vm: ViewFeeComponent): void {
+    initializeAdapter(vm: PayFeesComponent): void {
         this.vm = vm;
     }
 
@@ -72,8 +72,8 @@ export class ViewFeeServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
-            this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {}), // 13
-            this.vm.feeService.getObjectList(this.vm.feeService.online_fee_payment_transaction, {}), //14
+            this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipt_order, {parentSchool: schoolId}), //14
         ]).then(
             (value) => {
                 console.log(value);

@@ -157,7 +157,7 @@ export class School {
                 taskList: [
                     {
                         title: 'Pay Fees',
-                        path: 'view_fee',
+                        path: 'pay_fees',
                         icon: 'receipt',
                     },
                 ],
