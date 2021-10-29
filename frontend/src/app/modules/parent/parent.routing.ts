@@ -15,7 +15,7 @@ const routes: Routes = [
     },
     {
         path: 'pay_fees',
-        loadChildren: 'app/modules/parent/pages/view-fee/pay-fees.module#PayFeesModule',
+        loadChildren: 'app/modules/parent/pages/pay-fees/pay-fees.module#PayFeesModule',
         data: { moduleName: 'parent' },
     },
     {
