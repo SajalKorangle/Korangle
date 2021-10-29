@@ -64,6 +64,7 @@
                     <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
                         You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                         <br /></span>
+                    <!-- Purchase SMS Starts -->   
                     <span *ngIf="htmlRenderer.isSMSNeeded() &&
                             this.backendData.smsBalance < htmlRenderer.getEstimatedSMSCount()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
                         You are short by <b>{{ htmlRenderer.getEstimatedSMSCount() - this.backendData.smsBalance }}</b> SMS.
@@ -73,6 +74,7 @@
                         </div>
 
                     </span><br />
+                    <!-- Purchase SMS Ends -->
 
                 </ng-container>
                 <mat-checkbox *ngIf="userInput.selectedSendUpdateType.id == SMS_TYPE_ID" [(ngModel)]="userInput.scheduleSMS">Schedule

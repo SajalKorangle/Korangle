@@ -1,5 +1,5 @@
 import { SetBankAccountComponent } from './set-bank-account.component';
-
+import { CommonFunctions } from '@classes/common-functions';
 export class SetBankAccountServiceAdapter {
 
     vm: SetBankAccountComponent;
@@ -31,12 +31,12 @@ export class SetBankAccountServiceAdapter {
 
         if (schoolMerchantAccount) {
             this.vm.schoolMerchantAccount = schoolMerchantAccount;
-            this.verifyIFSC();
+            this.getBankDetailsFromIFSC();
         }
         this.vm.isLoading = false;
     }
 
-    async verifyIFSC() {
+    async getBankDetailsFromIFSC() {
         this.vm.isIFSCLoading = true;
         if (this.vm.schoolMerchantAccount.vendorData.bank.ifsc.length == 11
             && !this.vm.isIFSCValidationPasses()) {
@@ -44,9 +44,19 @@ export class SetBankAccountServiceAdapter {
             const request_data = {
                 ifsc: this.vm.schoolMerchantAccount.vendorData.bank.ifsc
             };
-            this.vm.cache.ifsc = await this.vm.paymentService.getObject(this.vm.paymentService.ifsc_verification, request_data);
+            this.vm.cache.bankDetails = await this.vm.paymentService.getObject(this.vm.paymentService.ifsc_verification, request_data);
         }
         this.vm.isIFSCLoading = false;
+    }
+
+    getRequiredPaymentAccountData() {
+        const requiredOnlyFields = CommonFunctions.getInstance().deepCopy(this.vm.schoolMerchantAccount);
+        delete requiredOnlyFields.vendorData.addedOn;
+        delete requiredOnlyFields.vendorData.balance;
+        delete requiredOnlyFields.vendorData.status;
+        delete requiredOnlyFields.vendorData.upi;
+        requiredOnlyFields.vendorData.settlementCycleId = parseInt(requiredOnlyFields.vendorData.settlementCycleId.toString());
+        return requiredOnlyFields;
     }
 
     async createUpdateOnlinePaymentAccount() {
@@ -58,8 +68,8 @@ export class SetBankAccountServiceAdapter {
         this.vm.intermediateUpdateState.registrationLoading = true;
         this.vm.isLoading = true;
 
-        const newOnlinePaymentAccount = this.vm.getRequiredPaymentAccountData();
-        await this.verifyIFSC();
+        const newOnlinePaymentAccount = this.getRequiredPaymentAccountData();
+        await this.getBankDetailsFromIFSC();
         if (!this.vm.isIFSCValidationPasses()) {
             alert('ifsc verification failed');
             this.vm.resetIntermediateUpdateState();

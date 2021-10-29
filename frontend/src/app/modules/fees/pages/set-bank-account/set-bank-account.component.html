@@ -17,7 +17,7 @@
             <mat-form-field>
                 <mat-label>IFSC</mat-label>
                 <input name="ifsc" required matInput type="text" [errorStateMatcher]="{isErrorState: displayIfscError}"
-                    [(ngModel)]="schoolMerchantAccount.vendorData.bank.ifsc" (ngModelChange)="serviceAdapter.verifyIFSC()">
+                    [(ngModel)]="schoolMerchantAccount.vendorData.bank.ifsc" (ngModelChange)="serviceAdapter.getBankDetailsFromIFSC()">
                 <mat-error>Invalid IFSC</mat-error>
             </mat-form-field>
 
@@ -33,7 +33,7 @@
         </mat-form-field>
 
         <!--Bank Details from ifsc Starts-->
-        <div *ngIf="cache.ifsc as bankData">
+        <div *ngIf="cache.bankDetails as bankData">
             <span>Bank: {{bankData.bank}}</span><br />
             <span>Address: {{bankData.address}}</span><br />
             <span>Branch: {{bankData.branch}}</span><br />
