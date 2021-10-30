@@ -6,6 +6,6 @@ import {InventoryModule} from './inventory/inventory.module'
     declarations: [],
     imports: [ComponentsModule, InventoryModule],
     entryComponents: [],
-    exports: [],
+    exports: [InventoryModule],
 })
 export class LocalComponentsModule { }

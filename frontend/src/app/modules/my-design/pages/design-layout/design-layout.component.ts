@@ -46,15 +46,13 @@ export class DesignLayoutComponent implements OnInit {
     user: User;
 
     backendData: {
-        layoutList: Array<Layout>,
-        layoutSharingSharedWithMeList: Array<LayoutShare>,
     } = {
-            layoutList: null,
-            layoutSharingSharedWithMeList: null,
         };
 
     serviceAdapter: DesignLayoutServiceAdapter;
     htmlRenderer: DesignLayoutHtmlRenderer;
+
+    isLoading = true;
 
     constructor(
         public genericService: GenericService,
