@@ -7,6 +7,8 @@ from decorators import user_permission_4
 from .generic_serializer_interface import GenericSerializerInterface
 from django.apps import apps
 
+from django.db import transaction as db_transaction
+
 ########### Common View ########
 
 
@@ -31,20 +33,24 @@ class GenericView(GenericBaseView):
         return GenericSerializerInterface(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList).get_object()
 
     @user_permission_4
+    @db_transaction.atomic
     def post(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).create_object()
 
     @user_permission_4
+    @db_transaction.atomic
     def put(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).update_object()
 
     @user_permission_4
+    @db_transaction.atomic
     def patch(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList, partial=True).update_object()
 
-    # @user_permission_4
-    # def delete(self, request, activeSchoolId, activeStudentIdList):
-    #     return delete_object(request.GET.get('__data__', {}), self.Model, activeSchoolId, activeStudentIdList)
+    @user_permission_4
+    @db_transaction.atomic
+    def delete(self, request, activeSchoolId, activeStudentIdList):
+        return GenericSerializerInterface(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList).delete_object()
 
 
 class GenericListView(GenericBaseView):
@@ -54,17 +60,21 @@ class GenericListView(GenericBaseView):
         return GenericSerializerInterface(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList).get_object_list()
 
     @user_permission_4
+    @db_transaction.atomic
     def post(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).create_object_list()
 
     @user_permission_4
+    @db_transaction.atomic
     def put(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList).update_object_list()
 
     @user_permission_4
+    @db_transaction.atomic
     def patch(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.data, self.Model, activeSchoolId, activeStudentIdList, partial=True).update_object_list()
 
     @user_permission_4
+    @db_transaction.atomic
     def delete(self, request, activeSchoolId, activeStudentIdList):
         return GenericSerializerInterface(request.GET.get('__query__', {}), self.Model, activeSchoolId, activeStudentIdList).delete_object_list()

@@ -1,7 +1,6 @@
 from django.db.models import Q
 from rest_framework import serializers
 from django.db.models.fields.related import ForeignKey
-from django.db import transaction as db_transaction
 from common.json_encoding import make_dict_list_serializable
 
 from django.db.models import Count
@@ -204,9 +203,8 @@ class GenericSerializerInterface():
 
     def operate_list(self, operation_function):  # Generic function for list operations
         response = []
-        with db_transaction.atomic():
-            for instance_data in self.data:
-                response.append(self.operate_object(instance_data, operation_function))
+        for instance_data in self.data:
+            response.append(self.operate_object(instance_data, operation_function))
         return response
 
     def operate_object(self, data, operation_function):  # Generic function for object operations
@@ -216,24 +214,23 @@ class GenericSerializerInterface():
             data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
             del data[child_related_field_name]
 
-        with db_transaction.atomic():
-            response = operation_function(data)
-            for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
-                # removing list from end and finding the related model field
-                child_related_field = self.Model._meta.fields_map.get(child_related_field_name, None)
-                if not child_related_field:
-                    raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
+        response = operation_function(data)
+        for child_related_field_name, child_data_list in data_list_mapped_by_child_related_field_name.items():
+            # removing list from end and finding the related model field
+            child_related_field = self.Model._meta.fields_map.get(child_related_field_name, None)
+            if not child_related_field:
+                raise Exception('Invalid Field Name for Related Fields: {0} '.format(child_related_field_name))  # verbose message for debugging
 
-                child_model = child_related_field.related_model
+            child_model = child_related_field.related_model
 
-                parent_primary_key_value = response[self.Model._meta.pk.name]
-                for child_data in child_data_list:
-                    child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
+            parent_primary_key_value = response[self.Model._meta.pk.name]
+            for child_data in child_data_list:
+                child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
 
-                child_serializer = GenericSerializerInterface(Model=child_model, data=child_data_list,
-                                                              activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList, partia=self.partial)
-                child_response = getattr(child_serializer, self.method + '_object_list')()
-                response.update({child_related_field_name: child_response})
+            child_serializer = GenericSerializerInterface(Model=child_model, data=child_data_list,
+                                                            activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList, partia=self.partial)
+            child_response = getattr(child_serializer, self.method + '_object_list')()
+            response.update({child_related_field_name: child_response})
         return response
 
     def create_object_operation(self, data):
@@ -271,7 +268,10 @@ class GenericSerializerInterface():
         self.method = 'update'
         return self.operate_object(self.data, self.get_update_object_operation())
 
-    def delete_object_list(self):
+    def delete_object(self):
+        return self.delete_object_list(onlyOne=True)
+
+    def delete_object_list(self, onlyOne=False):
         child_field_name_mapped_by_query = {}
 
         if 'fields_list' in self.data:
@@ -288,23 +288,22 @@ class GenericSerializerInterface():
 
         query_set = self.parse_query()
         count = query_set.count()
+        assert onlyOne, 'More than one object to delete while onlyOne=True'
 
         pk_field_name = self.Model._meta.pk.name
         pk_list = query_set.values_list(pk_field_name, flat=True)
 
-        with db_transaction.atomic():
-
-            for key, value in child_field_name_mapped_by_query.items():
-                child_field_name = self.Model._meta.fields_map[key].field.name
-                child_model = self.Model._meta.fields_map[key].related_model
-                value.update({   # added parent<Model> filter
-                    'filter': dict(value.get('filter', {}), **{
-                        child_field_name + "__in": pk_list
-                    })
+        for key, value in child_field_name_mapped_by_query.items():
+            child_field_name = self.Model._meta.fields_map[key].field.name
+            child_model = self.Model._meta.fields_map[key].related_model
+            value.update({   # added parent<Model> filter
+                'filter': dict(value.get('filter', {}), **{
+                    child_field_name + "__in": pk_list
                 })
+            })
 
-                GenericSerializerInterface(Model=child_model, data=value, activeSchoolId=self.activeSchoolId,
-                                           activeStudentIdList=self.activeStudentIdList).delete_object_list()
+            GenericSerializerInterface(Model=child_model, data=value, activeSchoolId=self.activeSchoolId,
+                                        activeStudentIdList=self.activeStudentIdList).delete_object_list()
 
-            query_set.delete()
+        query_set.delete()
         return count
