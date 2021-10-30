@@ -1,6 +1,29 @@
 <div class="card-content main-page" id="design-main-wrapper" style="height: 90vh;" *ngIf="!isLoading; else LoaderSpinner">
-    
+    <!-- Inventory Starts -->
     <app-inventory (openLayout)="setActiveLayout($event)"></app-inventory>
+    <!-- Inventory Ends -->
+
+    <mat-card>
+        <!-- <div *ngIf="!htmlAdapter.isFullScreen"> -->
+            <mat-form-field style="width: 100%; max-width: 250px;">
+                <mat-label>
+                    Layout Name
+                </mat-label>
+                <input matInput [(ngModel)]="activeLayout.name">
+                <!-- <mat-icon matSuffix *ngIf="doesCurrentLayoutHasUniqueName()"><span class="matrial-icons">emoji_emotions</span></mat-icon>
+                <mat-hint style="color:red; display: block;" *ngIf="!doesCurrentLayoutHasUniqueName() && activeLayout.name!=''" class="small">
+                    Layout name must be unique
+                </mat-hint> -->
+            </mat-form-field>
+
+
+            <!-- <button class="btn"
+            (click)="resetCurrentLayout()"
+            [disabled]="htmlAdapter.isSaving"
+            style="padding: 4px 7px; margin-right: 12px; float: right;">Reset All</button> -->
+
+        <!-- </div> -->
+    </mat-card>
 
 </div>
 

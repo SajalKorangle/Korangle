@@ -14,6 +14,9 @@ import { Layout } from '@services/modules/generic-design/models/layout';
 import { DesignLayoutHtmlRenderer } from './design-layout.html.renderer';
 import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
 
+// Design Core
+import { getDefaultLayoutContent } from '@modules/my-design/core/constant'
+
 @Component({
     selector: 'app-design-layout',
     templateUrl: './design-layout.component.html',
@@ -28,7 +31,7 @@ export class DesignLayoutComponent implements OnInit {
 
     user: User = DataStorage.getInstance().getUser();
 
-    activeLayout: Layout = null;
+    activeLayout: Layout = new Layout({parentSchool: this.user.activeSchool.dbId, name: '', content: getDefaultLayoutContent()});
 
     backendData: {
     } = {
