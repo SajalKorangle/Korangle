@@ -8,7 +8,7 @@ import { GenericService } from '@services/generic/generic-service';
 
 // For Types
 import { User } from '@classes/user';
-// import { Layout } from '@services/modules/generic-design/models/layout';
+import { Layout } from '@services/modules/generic-design/models/layout';
 // import { LayoutShare } from '@services/modules/generic-design/models/layout-share';
 
 import { DesignLayoutHtmlRenderer } from './design-layout.html.renderer';
@@ -26,14 +26,16 @@ import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
 })
 export class DesignLayoutComponent implements OnInit {
 
-    user: User;
+    user = DataStorage.getInstance().getUser();
+
+    activeLayout: Layout = null;
 
     backendData: {
     } = {
         };
 
-    serviceAdapter: DesignLayoutServiceAdapter;
-    htmlRenderer: DesignLayoutHtmlRenderer;
+    serviceAdapter = new DesignLayoutServiceAdapter(this);
+    htmlRenderer = new DesignLayoutHtmlRenderer(this);
 
     isLoading = true;
 
@@ -43,12 +45,12 @@ export class DesignLayoutComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.user = DataStorage.getInstance().getUser();
-        this.serviceAdapter = new DesignLayoutServiceAdapter(this);
-        this.htmlRenderer = new DesignLayoutHtmlRenderer(this);
-
         this.serviceAdapter.initializeDate();
         console.log('main component: ', this);
+    }
+
+    setActiveLayout = (layout: Layout) => {
+        this.activeLayout = layout;
     }
 
 }

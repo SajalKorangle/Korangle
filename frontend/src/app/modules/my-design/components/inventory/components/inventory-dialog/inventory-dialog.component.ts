@@ -33,9 +33,14 @@ export class InventoryDialogComponent implements OnInit {
     }
 
     newLayout(): void {
-        this.selectedLayout = { // id is not set which signifies this is a new layout
-            type: this.activeLayoutType
+        const defaultLayout: Partial<Layout> = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            name: '',
+            publiclyShared: false,
+            type: this.activeLayoutType,
+            content: // get default content,
         };
+        this.selectedLayout = new Layout(defaultLayout); // id is not set which signifies this is a new layout
     }
 
     getTypeFilteredMyLayoutList(): Array<Layout> {
@@ -71,3 +76,4 @@ export class InventoryDialogComponent implements OnInit {
         this.dialogRef.close({ layout: this.selectedLayout, copy: true });
     }
 }
+
