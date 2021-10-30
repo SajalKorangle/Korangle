@@ -17,8 +17,8 @@ import { GradeService } from '@services/modules/grade/grade.service';
 
 // For Types
 import { User } from '@classes/user';
-import { Layout } from '@services/modules/generic-design/models/layout';
-import { LayoutShare } from '@services/modules/generic-design/models/layout-share';
+// import { Layout } from '@services/modules/generic-design/models/layout';
+// import { LayoutShare } from '@services/modules/generic-design/models/layout-share';
 
 import { DesignLayoutHtmlRenderer } from './design-layout.html.renderer';
 import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
@@ -29,7 +29,7 @@ import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
     styleUrls: ['./design-layout.component.css'],
     providers: [
         GenericService,
-        // MyDesignService,
+        MyDesignService,
         ReportCardService,
         StudentService,
         ClassService,
