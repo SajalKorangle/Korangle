@@ -5,7 +5,7 @@ import { DesignLayoutComponent } from '@modules/my-design/pages/design-layout/de
 // import { LAYOUT_TYPES_MAPPED_BY_LAYERS_LIST } from '@modules/my-design/class/constant';
 
 // for types
-import { Layout, TYPE_CHOICES } from '@services/modules/my-design/models/layout';
+import { Layout, TYPE_CHOICES } from '@services/modules/generic-design/models/layout';
 @Component({
     selector: 'app-inventory-dialog',
     templateUrl: './inventory-dialog.component.html',

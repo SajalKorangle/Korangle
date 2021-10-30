@@ -1,12 +1,7 @@
 <div class="card-content main-page" id="design-main-wrapper" style="height: 90vh;" *ngIf="!htmlRenderer.isLoading; else LoaderSpinner">
-    <div>
-        <button class="btn"
-            style="padding: 4px 8px; font-size: medium; background-color: blue; display: flex; flex-direction: row; align-items: center;"
-            (click)="htmlRenderer.openInventory()">
-            <span>Inventory</span>
-            <mat-icon style="padding: 3px; margin-left: 3px;">inventory_2</mat-icon>
-        </button>
-    </div>
+    
+    <app-inventory></app-inventory>
+
 </div>
 
 <ng-template #LoaderSpinner>

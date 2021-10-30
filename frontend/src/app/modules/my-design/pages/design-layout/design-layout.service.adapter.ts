@@ -7,7 +7,7 @@ export class DesignLayoutServiceAdapter {
         this.vm = vm;
     }
 
-    async initilizeDate() {
+    async initializeDate() {
         const layout_request = {
             fields__korangle: ['id', 'type', 'parentSchool', 'name', 'thumbnail', 'publiclyShared']
         };
