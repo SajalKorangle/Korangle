@@ -5,6 +5,9 @@ import { InventoryComponent } from '@modules/my-design/components/inventory/inve
 // for types
 import { Layout, TYPE_CHOICES } from '@services/modules/generic-design/models/layout';
 
+// Design Core
+import { getDefaultLayoutContent } from '@modules/my-design/core/constant'
+
 @Component({
     selector: 'app-inventory-dialog',
     templateUrl: './inventory-dialog.component.html',
@@ -38,7 +41,7 @@ export class InventoryDialogComponent implements OnInit {
             name: '',
             publiclyShared: false,
             type: this.activeLayoutType,
-            content: // get default content,
+            content: getDefaultLayoutContent(),
         };
         this.selectedLayout = new Layout(defaultLayout); // id is not set which signifies this is a new layout
     }

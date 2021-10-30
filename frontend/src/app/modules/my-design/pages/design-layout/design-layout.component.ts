@@ -26,7 +26,7 @@ import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
 })
 export class DesignLayoutComponent implements OnInit {
 
-    user = DataStorage.getInstance().getUser();
+    user: User = DataStorage.getInstance().getUser();
 
     activeLayout: Layout = null;
 
@@ -49,7 +49,9 @@ export class DesignLayoutComponent implements OnInit {
         console.log('main component: ', this);
     }
 
-    setActiveLayout = (layout: Layout) => {
+    setActiveLayout = (data: {layout: Layout, copy?: boolean}) => {
+        const {layout, copy} = data;
+        // properly copy the layout if copy is true
         this.activeLayout = layout;
     }
 

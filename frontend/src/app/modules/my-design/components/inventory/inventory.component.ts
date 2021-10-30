@@ -22,7 +22,7 @@ import { InventoryServiceAdapter } from './inventory.service.adapter';
 })
 export class InventoryComponent implements OnInit {
 
-    @Output() openLayout = new EventEmitter<Layout>();
+    @Output() openLayout = new EventEmitter<any>();
 
     backendData: {
         myLayoutList: Array<Layout>,
@@ -56,7 +56,7 @@ export class InventoryComponent implements OnInit {
 
         const openedDialog = this.dialog.open(InventoryDialogComponent, { data });
 
-        openedDialog.afterClosed().subscribe((selection: any) => {
+        openedDialog.afterClosed().subscribe((selection) => {
             if (selection) {
                 this.openLayout.emit(selection);
             }
