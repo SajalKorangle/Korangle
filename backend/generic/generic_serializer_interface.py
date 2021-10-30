@@ -54,7 +54,7 @@ class GenericSerializerInterface():
         filter_args = []
         for attr, value in data.items():
 
-            if attr == '__or__':  # __or__: [{<filter1>}, {<filter2>}, ...]
+            if attr.startswith('__or__'):  # __or__<nonce>: [{<filter1>}, {<filter2>}, ...]
                 or_filter_aggregate = ~Q()
                 for or_filter in value:
                     db_filter = self.parseFilter(or_filter)
@@ -65,16 +65,20 @@ class GenericSerializerInterface():
 
         return {'filter_args': filter_args, 'filter_kwargs': filter_kwargs}
 
-    def parse_query(self):
+    def parse_query(self, data):
         query = self.Model.objects.filter(self.Model.Permissions().getPermittedQuerySet(self.activeSchoolId, self.activeStudentIdList))
 
-        for key, value in self.data.items():
+        for key, value in data.items():
             if key == 'filter':
                 parsed_filter = self.parseFilter(value)
                 query = query.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
             elif key == 'exclude':
                 parsed_filter = self.parseFilter(value)
                 query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
+            elif key == 'union':
+                for union_query in value:
+                    parsed_filter = self.parseFilter(union_query)
+                    query = query.union(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
             elif key == 'annotate':
                 for alias_name, alias_generator_data in value.items():
                     parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
@@ -87,10 +91,10 @@ class GenericSerializerInterface():
             else:
                 raise Exception('Invalid key in GET object Query')
 
-        if 'order_by' in self.data:
+        if 'order_by' in data:
             query = query.order_by(*self.data['order_by'])
-        if 'pagination' in self.data:
-            start, end = self.data['pagination']['start'], self.data['pagination']['end']
+        if 'pagination' in data:
+            start, end = data['pagination']['start'], data['pagination']['end']
             query = query[start:end]
 
         return query
@@ -132,7 +136,7 @@ class GenericSerializerInterface():
                 raise Exception('Invalid field_list data in GET Query')
         ## Response Structure(fields_list) Processing Ends ##
 
-        query_set = self.parse_query()
+        query_set = self.parse_query(self.data)
 
         pk_field_name = self.Model._meta.pk.name
         processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
