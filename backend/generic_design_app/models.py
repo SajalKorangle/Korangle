@@ -55,3 +55,6 @@ def upload_image_assets_to(instance, filename):
 
 class ImageAssets(models.Model):
     image = models.ImageField(upload_to=upload_image_assets_to)
+
+    class Permissions(BasePermission):
+        pass
