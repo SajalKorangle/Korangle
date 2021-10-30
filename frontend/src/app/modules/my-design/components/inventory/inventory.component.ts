@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, } from '@angular/core';
 import { DataStorage } from '../../../../classes/data-storage';
+import { MatDialog } from '@angular/material/dialog';
+
+// Dialog
+import { InventoryDialogComponent } from './components/inventory-dialog/inventory-dialog.component';
 
 // Backend Service
 import { GenericService } from '@services/generic/generic-service';
@@ -14,18 +18,15 @@ import { InventoryServiceAdapter } from './inventory.service.adapter';
     selector: 'app-inventory',
     templateUrl: './inventory.component.html',
     styleUrls: ['./inventory.component.css'],
-    providers: [GenericService]
+    providers: [GenericService, MatDialog,]
 })
 export class InventoryComponent implements OnInit {
 
-    user = DataStorage.getInstance().getUser();
-    serviceAdapter = new InventoryServiceAdapter(this);
-
-    isLoading = true;
+    @Output() openLayout = new EventEmitter<any>();
 
     backendData: {
         myLayoutList: Array<Layout>,
-        publicLayoutList: Array<Layout>
+        publicLayoutList: Array<Layout>;
         layoutSharingSharedWithMeList: Array<LayoutSharing>,
     } = {
             myLayoutList: [],
@@ -34,9 +35,14 @@ export class InventoryComponent implements OnInit {
         };
 
 
+    user = DataStorage.getInstance().getUser();
+    serviceAdapter = new InventoryServiceAdapter(this);
+
+    isLoading = true;
 
     constructor(
         public genericService: GenericService,
+        public dialog: MatDialog,
     ) { }
 
     ngOnInit() {
@@ -44,7 +50,17 @@ export class InventoryComponent implements OnInit {
     }
 
     openInventory() {
+        const data = {
+            vm: this,
+        }
 
+        const openedDialog = this.dialog.open(InventoryDialogComponent, {data});
+
+        openedDialog.afterClosed().subscribe((selection: any) => {
+            if (selection) {
+                // Open Layout in The Editor 
+            }
+        });
     }
 
 }

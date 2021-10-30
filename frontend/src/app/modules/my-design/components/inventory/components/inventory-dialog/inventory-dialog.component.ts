@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DesignLayoutComponent } from '@modules/my-design/pages/design-layout/design-layout.component';
+import { InventoryComponent } from '@modules/my-design/components/inventory/inventory.component'
 
 // import { LAYOUT_TYPES_MAPPED_BY_LAYERS_LIST } from '@modules/my-design/class/constant';
 
@@ -12,7 +12,7 @@ import { Layout, TYPE_CHOICES } from '@services/modules/generic-design/models/la
     styleUrls: ['./inventory-dialog.component.css'],
 })
 export class InventoryDialogComponent implements OnInit {
-    vm: DesignLayoutComponent;
+    vm: InventoryComponent;
 
     layoutTypeList = TYPE_CHOICES;
 
