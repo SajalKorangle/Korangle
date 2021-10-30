@@ -122,14 +122,14 @@ class GenericSerializerInterface():
             __all__index = processed_field_list.index('__all__')
             processed_field_list[__all__index: __all__index + 1] = [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
 
-        if 'parentQuery' in self.data:
-            parent_field_name_mapped_by_query = self.data['parentQuery']
+        if 'parent_query' in self.data:
+            parent_field_name_mapped_by_query = self.data['parent_query']
             processed_field_list += parent_field_name_mapped_by_query.keys()
-            del self.data['parentQuery']
+            del self.data['parent_query']
         
-        if 'childQuery' in self.data:
-            child_field_name_mapped_by_query = self.data['childQuery']
-            del self.data['childQuery']
+        if 'child_query' in self.data:
+            child_field_name_mapped_by_query = self.data['child_query']
+            del self.data['child_query']
 
         ## Response Structure(fields_list) Processing Ends ##
 
