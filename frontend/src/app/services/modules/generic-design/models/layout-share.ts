@@ -1,4 +1,4 @@
-export class LayoutSharing {
+export class LayoutShare {
     id: number;
     parentSchoolSharedWith: number;
     parentLayout: number;

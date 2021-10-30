@@ -10,7 +10,7 @@ import { GenericService } from '@services/generic/generic-service';
 
 // Types
 import { Layout } from '@services/modules/generic-design/models/layout';
-import { LayoutSharing } from '@services/modules/generic-design/models/layout-sharing';
+import { LayoutShare } from '@services/modules/generic-design/models/layout-share';
 
 import { InventoryServiceAdapter } from './inventory.service.adapter';
 
@@ -27,7 +27,7 @@ export class InventoryComponent implements OnInit {
     backendData: {
         myLayoutList: Array<Layout>,
         publicLayoutList: Array<Layout>;
-        layoutSharingSharedWithMeList: Array<LayoutSharing>,
+        layoutSharingSharedWithMeList: Array<LayoutShare>,
     } = {
             myLayoutList: [],
             publicLayoutList: [],
@@ -52,9 +52,9 @@ export class InventoryComponent implements OnInit {
     openInventory() {
         const data = {
             vm: this,
-        }
+        };
 
-        const openedDialog = this.dialog.open(InventoryDialogComponent, {data});
+        const openedDialog = this.dialog.open(InventoryDialogComponent, { data });
 
         openedDialog.afterClosed().subscribe((selection: any) => {
             if (selection) {

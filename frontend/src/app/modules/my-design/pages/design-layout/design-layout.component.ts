@@ -18,7 +18,7 @@ import { GradeService } from '@services/modules/grade/grade.service';
 // For Types
 import { User } from '@classes/user';
 import { Layout } from '@services/modules/generic-design/models/layout';
-import { LayoutSharing } from '@services/modules/generic-design/models/layout-sharing';
+import { LayoutShare } from '@services/modules/generic-design/models/layout-share';
 
 import { DesignLayoutHtmlRenderer } from './design-layout.html.renderer';
 import { DesignLayoutServiceAdapter } from './design-layout.service.adapter';
@@ -47,7 +47,7 @@ export class DesignLayoutComponent implements OnInit {
 
     backendData: {
         layoutList: Array<Layout>,
-        layoutSharingSharedWithMeList: Array<LayoutSharing>,
+        layoutSharingSharedWithMeList: Array<LayoutShare>,
     } = {
             layoutList: null,
             layoutSharingSharedWithMeList: null,

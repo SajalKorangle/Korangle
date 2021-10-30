@@ -1,11 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { InventoryComponent } from '@modules/my-design/components/inventory/inventory.component'
-
-// import { LAYOUT_TYPES_MAPPED_BY_LAYERS_LIST } from '@modules/my-design/class/constant';
+import { InventoryComponent } from '@modules/my-design/components/inventory/inventory.component';
 
 // for types
 import { Layout, TYPE_CHOICES } from '@services/modules/generic-design/models/layout';
+
 @Component({
     selector: 'app-inventory-dialog',
     templateUrl: './inventory-dialog.component.html',
@@ -40,20 +39,15 @@ export class InventoryDialogComponent implements OnInit {
     }
 
     getTypeFilteredMyLayoutList(): Array<Layout> {
-        return this.vm.backendData.layoutList.filter(layout => layout.type == this.activeLayoutType && layout.parentSchool == this.vm.user.activeSchool.dbId);
+        return this.vm.backendData.myLayoutList.filter(layout => layout.type == this.activeLayoutType);
     }
 
     getTypeFilteredMyPublicLayoutList(): Array<Layout> {
-        return this.getTypeFilteredMyLayoutList().filter(layout => layout.publiclyShared == true);
-    }
-
-    getTypeFilteredOthersPublicLayoutList(): Array<Layout> {
-        return this.vm.backendData.layoutList.filter(layout => layout.parentSchool != this.vm.user.activeSchool.dbId && layout.publiclyShared == true);
+        return this.vm.backendData.publicLayoutList.filter(layout => layout.type == this.activeLayoutType);
     }
 
     getTypeFilteredSharedWithMeLayoutList(): Array<Layout> {
-        const sharedWithMeLayoutIdList = this.vm.backendData.layoutSharingSharedWithMeList.map(layoutSharing => layoutSharing.parentLayout);
-        return this.vm.backendData.layoutList.filter(layout => layout.parentSchool != this.vm.user.activeSchool.dbId).filter(layout => sharedWithMeLayoutIdList.includes(layout.id));
+        return this.vm.backendData.layoutSharingSharedWithMeList.map(ls => ls.parentLayoutInstance).filter(layout => layout.type == this.activeLayoutType) as Array<Layout>;
     }
 
     isMyLayout(): boolean {
