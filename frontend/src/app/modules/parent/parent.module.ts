@@ -6,12 +6,12 @@ import { ParentComponent } from './parent.component';
 
 import { ParentRoutingModule } from './parent.routing';
 
-import {FeePrintModule} from '@modules/fees/print/print-components.module';
+import {PrintComponentsModule} from '@modules/fees/print/print-components.module';
 
 @NgModule({
     declarations: [ParentComponent],
 
-    imports: [ComponentsModule, ParentRoutingModule, FeePrintModule],
+    imports: [ComponentsModule, ParentRoutingModule, PrintComponentsModule],
     exports: [],
     providers: [],
     bootstrap: [ParentComponent],

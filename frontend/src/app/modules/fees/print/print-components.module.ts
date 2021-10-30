@@ -28,4 +28,4 @@ import { FeesComponentsModule } from './../components/fees-components.module';
         PrintFeesReportComponent,
     ],
 })
-export class FeePrintModule { }
+export class PrintComponentsModule { }

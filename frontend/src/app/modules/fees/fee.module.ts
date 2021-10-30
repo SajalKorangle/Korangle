@@ -12,13 +12,13 @@ import { FeeRoutingModule } from './fee.routing';
 import { ExcelService } from '../../excel/excel-service';
 import { FeesComponentsModule } from './components/fees-components.module';
 
-import { FeePrintModule } from './print/print-components.module';
+import { PrintComponentsModule } from './print/print-components.module';
 @NgModule({
     declarations: [
         FeeComponent,
     ],
 
-    imports: [FeeRoutingModule, ComponentsModule, FeesComponentsModule, MatExpansionModule, MatSortModule, FeePrintModule],
+    imports: [FeeRoutingModule, ComponentsModule, FeesComponentsModule, MatExpansionModule, MatSortModule, PrintComponentsModule],
     providers: [ExcelService],
     bootstrap: [FeeComponent],
 })
