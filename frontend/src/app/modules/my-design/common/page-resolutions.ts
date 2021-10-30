@@ -63,6 +63,10 @@ export class PageResolution {
     getCorrespondingWidth(height: number): number {  // returns width while maintaining aspect ratio
         return (height * this.aspectRatio);
     }
+
+    getDataToSave(): string {
+        return JSON.stringify(this);
+    }
 }
 
 export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
