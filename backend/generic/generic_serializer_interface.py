@@ -113,27 +113,24 @@ class GenericSerializerInterface():
         parent_field_name_mapped_by_query = {}
 
         ## Response Structure(fields_list) Processing Starts ##
-        fields_list = ['__all__']
+        processed_field_list = ['__all__']
         if 'fields_list' in self.data:
             fields_list = self.data['fields_list']
             del self.data['fields_list']
 
-        processed_field_list: list[str] = []
-        for field_data in fields_list:
-            if field_data == '__all__':  # all model fields
-                processed_field_list += [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
-            elif type(field_data) == str:  # string represents one model field
-                processed_field_list.append(field_data)
-            elif type(field_data) == dict:  # parent/child nested field
-                if field_data['name'] in self.Model._meta.fields_map:
-                    child_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
-                elif type(self.Model._meta.get_field(field_data['name'])) == ForeignKey:
-                    parent_field_name_mapped_by_query[field_data['name']] = field_data.get('query', {})
-                    processed_field_list.append(field_data['name'])
-                else:
-                    raise Exception('Invalid parent/child data dict in GET Query')
-            else:
-                raise Exception('Invalid field_list data in GET Query')
+        if '__all__' in processed_field_list:
+            __all__index = processed_field_list.index('__all__')
+            processed_field_list[__all__index: __all__index + 1] = [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
+
+        if 'parentQuery' in self.data:
+            parent_field_name_mapped_by_query = self.data['parentQuery']
+            processed_field_list += parent_field_name_mapped_by_query.keys()
+            del self.data['parentQuery']
+        
+        if 'childQuery' in self.data:
+            child_field_name_mapped_by_query = self.data['childQuery']
+            del self.data['childQuery']
+
         ## Response Structure(fields_list) Processing Ends ##
 
         query_set = self.parse_query(self.data)
@@ -147,6 +144,7 @@ class GenericSerializerInterface():
 
         ## Child Nested Data Query Starts ##
         for key, value in child_field_name_mapped_by_query.items():
+            assert key in self.Model._meta.fields_map[key], 'Invalid Child Name in Child Query, child name: {0}, query: {1}'.format(key, value)
             child_field_name = self.Model._meta.fields_map[key].field.name
             child_model = self.Model._meta.fields_map[key].related_model
             value.update({   # added parent<Model> filter
