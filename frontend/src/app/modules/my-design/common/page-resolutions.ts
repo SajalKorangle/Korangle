@@ -12,9 +12,13 @@ export const DPI_LIST: number[] = [ // standard DPIs
     600,
 ];
 
+type ORIENTATION = 'p' | 'l';   // p: portrait, l:landscape
+
+// Definition: Aspect Ratio = Width / Height
+
 export class PageResolution {
     resolutionName: string;
-    orientation: 'p' | 'l'; // p: potrait, l:landscape
+    private _orientation: ORIENTATION;
     aspectRatio: number;    // width/height(actual, not orientation dependent)
     mm: {
         height: number;
@@ -24,75 +28,40 @@ export class PageResolution {
             width: 0,
         };
 
-    constructor(name: string, mmHeight: number, mmWidth: number, orientation: 'p' | 'l' = 'p') {
+    constructor(name: string, mmHeight: number, mmWidth: number, orientation: ORIENTATION  = 'p') {
         this.resolutionName = name;
         this.mm.height = mmHeight;
         this.mm.width = mmWidth;
-        this.orientation = orientation;
+        this._orientation = orientation;
         this.aspectRatio = mmWidth / mmHeight;
     }
 
-    getmmHeight(): number {
-        if (this.orientation == 'p') {
-            return this.mm.height;
-        } else if (this.orientation = 'l') {
-            return this.mm.width;
-        }
-        return -1;
+    get orientation() {
+        return this._orientation;
     }
 
-    getmmWidth(): number {
-        if (this.orientation == 'p') {
-            return this.mm.width;
-        } else if (this.orientation = 'l') {
-            return this.mm.height;
-        }
-        return -1;
-    }
-
-    getAspectRatio(): number {
-        if (this.orientation == 'p') {
-            return this.aspectRatio;
-        } else if (this.orientation = 'l') {
-            return 1 / this.aspectRatio;
-        }
-        return -1;
+    set orientation(orientation: ORIENTATION) {
+        if(this._orientation == orientation) 
+            return;
+        this._orientation = orientation;
+        [this.mm.height, this.mm.width] = [this.mm.width, this.mm.height];  // toggle height and width
+        this.aspectRatio = 1/this.aspectRatio;
     }
 
     getHeightInPixel(dpi: number): number {  // returns height in pixels given dpi as argument
-        if (this.orientation == 'p') {
-            return (this.mm.height * dpi) / mm_IN_ONE_INCH;
-        } else if (this.orientation = 'l') {
-            return (this.mm.width * dpi) / mm_IN_ONE_INCH;
-        }
-        return -1;
+        return (this.mm.height * dpi) / mm_IN_ONE_INCH;
     }
 
     getWidthInPixel(dpi: number): number {  // returns width in pixels given dpi as argument
-        if (this.orientation == 'p') {
-            return (this.mm.width * dpi) / mm_IN_ONE_INCH;
-        } else if (this.orientation = 'l') {
-            return (this.mm.height * dpi) / mm_IN_ONE_INCH;
-        }
-        return -1;
+        return (this.mm.width * dpi) / mm_IN_ONE_INCH;
     }
 
-    getCorrospondingHeight(width: number): number { // returns height while maintaining aspect ratio
-        if (this.orientation == 'p') {
-            return (width / this.aspectRatio);
-        } else if (this.orientation = 'l') {
-            return (width * this.aspectRatio);
-        }
-        return -1;
+    getCorrespondingHeight(width: number): number { // returns height while maintaining aspect ratio
+        return (width / this.aspectRatio);
     }
 
-    getCorrospondingWidth(height: number): number {  // returns width while maintaining aspect ratio
-        if (this.orientation == 'p') {
-            return (height * this.aspectRatio);
-        } else if (this.orientation = 'l') {
-            return (height / this.aspectRatio);
-        }
-        return -1;
+    getCorrespondingWidth(height: number): number {  // returns width while maintaining aspect ratio
+        return (height * this.aspectRatio);
     }
 }
 
