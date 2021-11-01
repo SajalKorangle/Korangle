@@ -97,31 +97,31 @@ export class GenericService extends RestApiGateway {
 
 
 
-interface APP_MODEL_STRUCTURE_INTERFACE {
+export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
 };
 
 // APP_MODEL_STRUCTURE_INTERFACE
 
-type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
+export type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
 
 export interface QUERY_INTERFACE {
-    fields_list: Array<string | { name: string, query?: QUERY_INTERFACE; } | '__all__'>;
-    parent_query: { [key: string]: QUERY_INTERFACE };
-    child_query: { [key: string]: QUERY_INTERFACE };
-    filter: FILTER_TYPE;
-    exclude: FILTER_TYPE;
-    union: Array<QUERY_INTERFACE>;
-    annotate: {
+    fields_list?: Array<string | { name: string, query?: QUERY_INTERFACE; } | '__all__'>;
+    parent_query?: { [key: string]: QUERY_INTERFACE };
+    child_query?: { [key: string]: QUERY_INTERFACE };
+    filter?: FILTER_TYPE;
+    exclude?: FILTER_TYPE;
+    union?: Array<QUERY_INTERFACE>;
+    annotate?: {
         [key: string]: {
             field: string,
             function: string,
             filter?: FILTER_TYPE,
         };
     };
-    order_by: Array<string>;
-    pagination: {
+    order_by?: Array<string>;
+    pagination?: {
         start: number,
         end: number,
     };
