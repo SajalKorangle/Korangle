@@ -108,7 +108,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
 export type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
 
 export interface QUERY_INTERFACE {
-    fields_list?: Array<string> | '__all__';
+    fields_list?: Array<string | '__all__'>;
     parent_query?: { [key: string]: QUERY_INTERFACE };
     child_query?: { [key: string]: QUERY_INTERFACE };
     filter?: FILTER_TYPE;
