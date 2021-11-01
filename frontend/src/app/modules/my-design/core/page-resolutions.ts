@@ -17,21 +17,14 @@ type ORIENTATION = 'p' | 'l';   // p: portrait, l:landscape
 // Definition: Aspect Ratio = Width / Height
 
 export class PageResolution {
-    resolutionName: string;
     private _orientation: ORIENTATION;
     aspectRatio: number;    // width/height(actual, not orientation dependent)
-    mm: {
-        height: number;
-        width: number;
-    } = {
-            height: 0,
-            width: 0,
-        };
+    mmHeight: number;
+    mmWidth: number;
 
-    constructor(name: string, mmHeight: number, mmWidth: number, orientation: ORIENTATION  = 'p') {
-        this.resolutionName = name;
-        this.mm.height = mmHeight;
-        this.mm.width = mmWidth;
+    constructor(mmHeight: number, mmWidth: number, orientation: ORIENTATION  = 'p') {
+        this.mmHeight = mmHeight;
+        this.mmWidth = mmWidth;
         this._orientation = orientation;
         this.aspectRatio = mmWidth / mmHeight;
     }
@@ -44,16 +37,16 @@ export class PageResolution {
         if(this._orientation == orientation) 
             return;
         this._orientation = orientation;
-        [this.mm.height, this.mm.width] = [this.mm.width, this.mm.height];  // toggle height and width
+        [this.mmHeight, this.mmWidth] = [this.mmWidth, this.mmHeight];  // toggle height and width
         this.aspectRatio = 1/this.aspectRatio;
     }
 
     getHeightInPixel(dpi: number): number {  // returns height in pixels given dpi as argument
-        return (this.mm.height * dpi) / mm_IN_ONE_INCH;
+        return (this.mmHeight * dpi) / mm_IN_ONE_INCH;
     }
 
     getWidthInPixel(dpi: number): number {  // returns width in pixels given dpi as argument
-        return (this.mm.width * dpi) / mm_IN_ONE_INCH;
+        return (this.mmWidth * dpi) / mm_IN_ONE_INCH;
     }
 
     getCorrespondingHeight(width: number): number { // returns height while maintaining aspect ratio
@@ -64,14 +57,19 @@ export class PageResolution {
         return (height * this.aspectRatio);
     }
 
-    getDataToSave(): string {
-        return JSON.stringify(this);
+    getDataToSave() {
+        const data = {
+            mmHeight: this.mmHeight,
+            mmWidth: this.mmWidth,
+            orientation: this._orientation,
+        };
+        return data;
     }
 }
 
-export const PAGE_RESOLUTIONS: PageResolution[] = [ // standard page resolutions
-    new PageResolution('A3', 420, 297),
-    new PageResolution('A4', 297, 210),
-    new PageResolution('A5', 210, 148),
-    new PageResolution('A6', 148, 105),
-];
+export const STANDARD_PAGE_RESOLUTION_MAPPED_BY_NAME: {[key:string]: PageResolution} = {
+    A3:  new PageResolution(420, 297),
+    A4: new PageResolution(297, 210),
+    A5: new PageResolution(210, 148),
+    A6: new PageResolution(148, 105),
+};
