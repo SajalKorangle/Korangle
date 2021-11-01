@@ -97,7 +97,7 @@ export class GenericService extends RestApiGateway {
 
 
 
-interface APP_MODEL_STRUCTURE_INTERFACE {
+export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     generic_design_app: 'Layout' | 'LayoutShare' | 'ImageAssets';
@@ -105,7 +105,7 @@ interface APP_MODEL_STRUCTURE_INTERFACE {
 
 // APP_MODEL_STRUCTURE_INTERFACE
 
-type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
+export type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
 
 export interface QUERY_INTERFACE {
     fields_list?: Array<string> | '__all__';
