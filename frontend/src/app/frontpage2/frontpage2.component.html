@@ -4,7 +4,7 @@
     font-size: 20px;
     position: relative;margin-left:10px;font-family: Roboto;font-weight: 700;color: rgba(255, 113, 49, 1)">Korangle</span>
 </div>
-
+<a href="#" style="color: black;top:5px;right:50px;text-decoration: underline">Back to HOME</a>
 <div class="main-div">
     <mat-card class="mat-elevation-z4" style="background-image:url(/assets/img/mat-bg3.png);background-repeat: no-repeat;
     background-position: center;
@@ -21,20 +21,30 @@
             <div class="col-md-5" style="margin-left:6%">
                 <mat-tab-group #tabGroup [color]="'warn'" style="margin-top: 20%;">
                     <mat-tab label="LOGIN">
-                        <form>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput">Mobile Number *</label>
-                                <input type="text" class="form-control" id="formGroupExampleInput"
-                                       placeholder="Example input">
-                            </div>
-                            <div class="form-group">
-                                <label for="formGroupExampleInput2">Password *</label>
-                                <input type="text" class="form-control" id="formGroupExampleInput2"
-                                       placeholder="Another input">
-                            </div>
+                        <br>
+                        <label style="color:black" for="formGroupExampleInput">Mobile Number *</label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input  id="formGroupExampleInput" matInput placeholder="Mobile Number">
+                        </mat-form-field><br>
+                        <label style="color:black" for="formGroupExampleInput2">Password *</label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExampleInput2" matInput placeholder="Password">
+                        </mat-form-field>
+                    </mat-tab>
+                    <mat-tab label="SIGN UP"><br>
+                        <form class="example-container">
+                            <label style="color:black" for="formGroupExampleInput3">Mobile Number *</label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput3" matInput placeholder="Mobile Number">
+                            </mat-form-field>
+                            <br>
+                            <label style="color:black" for="formGroupExampleInput4">Email ID</label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput4" matInput placeholder="Email ID">
+                            </mat-form-field>
                         </form>
                     </mat-tab>
-                    <mat-tab label="SIGN UP">Sign Up</mat-tab>
+
                 </mat-tab-group>
             </div>
         </div>

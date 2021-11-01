@@ -31,3 +31,15 @@ mat-card {
 color: #FF7131 !important;
 opacity: 0.6 !important;
 }
+
+/deep/ .mat-tab-label {
+color: #000000;
+}
+
+/deep/ .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: #F9F9F9 !important;
+}
+
+.example-container .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
