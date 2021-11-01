@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataStorage } from '../../../../classes/data-storage';
 
@@ -40,6 +40,9 @@ export class DesignLayoutComponent implements OnInit {
     serviceAdapter = new DesignLayoutServiceAdapter(this);
     htmlRenderer = new DesignLayoutHtmlRenderer(this);
 
+    @ViewChild('CanvasWrapper', {static: false}) canvasWrapper: ElementRef<HTMLElement>;
+    mainCanvas = document.createElement('canvas');
+
     isLoading = true;
 
     constructor(
@@ -50,6 +53,11 @@ export class DesignLayoutComponent implements OnInit {
     ngOnInit() {
         this.serviceAdapter.initializeDate();
         console.log('main component: ', this);
+    }
+
+    ngAfterViewInit() {
+        this.mainCanvas.id = 'mainCanvas';
+        this.canvasWrapper.nativeElement.appendChild(this.mainCanvas);
     }
 
     setActiveLayout = (data: {layout: Layout, copy?: boolean}) => {
