@@ -12,7 +12,7 @@ const injector = Injector.create({
 
 class QueryGeneratorMixin {
 
-    data: { [key: string]: any; };
+    data: any;
     query_data: QUERY_INTERFACE = {};
 
     constructor(data?: any) {
@@ -24,23 +24,23 @@ class QueryGeneratorMixin {
     }
 
     filter(filter: FILTER_TYPE) {
-        if (!this.data.filter) {
-            this.data.filter = {};
+        if (!this.query_data.filter) {
+            this.query_data.filter = {};
         }
-        Object.assign(this.data.filter, filter);
+        Object.assign(this.query_data.filter, filter);
         return this;
     }
 
     exclude(filter: FILTER_TYPE) {
-        if (!this.data.exclude) {
-            this.data.exclude = {};
+        if (!this.query_data.exclude) {
+            this.query_data.exclude = {};
         }
-        Object.assign(this.data.exclude, filter);
+        Object.assign(this.query_data.exclude, filter);
         return this;
     }
 
     setFields(...fields_list: Array<string>) {
-        this.data.fields_list = fields_list;
+        this.query_data.fields_list = fields_list;
         return this;
     }
 
@@ -48,7 +48,7 @@ class QueryGeneratorMixin {
         if (!this.query_data.parent_query) {
             this.query_data.parent_query = {};
         }
-        this.data.parent_query[name] = parent_query;
+        this.query_data.parent_query[name] = parent_query.getQuery();
         return this;
     }
 
@@ -56,7 +56,7 @@ class QueryGeneratorMixin {
         if (!this.query_data.child_query) {
             this.query_data.parent_query = {};
         }
-        this.data.child_query[name] = child_query;
+        this.query_data.child_query[name] = child_query.getQuery();
         return this;
     }
 
