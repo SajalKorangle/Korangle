@@ -1,19 +1,18 @@
 import {QUERY_INTERFACE, APP_MODEL_STRUCTURE_INTERFACE, FILTER_TYPE, GenericService} from './generic-service';
 
 
-export class Query<T extends keyof APP_MODEL_STRUCTURE_INTERFACE> {
+export class Query{
 
-    data: { [key: string]: any } = {};
+    data: { [key: string]: any };
     query_data: QUERY_INTERFACE = {};
 
-    app_name: T;
-    model_name: APP_MODEL_STRUCTURE_INTERFACE[T];
+    config: Partial<APP_MODEL_STRUCTURE_INTERFACE>;
 
     serviceObject: GenericService;
-    constructor(serviceObject: GenericService, app_name: T, model_name: APP_MODEL_STRUCTURE_INTERFACE[T]) {
+    constructor(serviceObject: GenericService, config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data?: any) {
         this.serviceObject = serviceObject;
-        this.app_name = app_name;
-        this.model_name = model_name;
+        this.config = config;
+        this.data = data;
     }
 
     getQuery(){
@@ -41,7 +40,7 @@ export class Query<T extends keyof APP_MODEL_STRUCTURE_INTERFACE> {
         return this;
     }
 
-    addParentQuery(name: string, parent_query: Query<T>){
+    addParentQuery(name: string, parent_query: Query){
         if(!this.query_data.parent_query){
             this.query_data.parent_query = {};
         }
@@ -49,7 +48,7 @@ export class Query<T extends keyof APP_MODEL_STRUCTURE_INTERFACE> {
         return this;
     }
 
-    addChildQuery(name: string, child_query: Query<T>){
+    addChildQuery(name: string, child_query: Query){
         if(!this.query_data.child_query){
             this.query_data.parent_query = {};
         }
@@ -57,7 +56,7 @@ export class Query<T extends keyof APP_MODEL_STRUCTURE_INTERFACE> {
         return this;
     }
 
-    union(...query_list: Array<Query<T>>){
+    union(...query_list: Array<Query>){
         if(!this.query_data.union){
             this.query_data.union = [];
         }
@@ -84,6 +83,47 @@ export class Query<T extends keyof APP_MODEL_STRUCTURE_INTERFACE> {
     paginate(start: number, end: number){
         this.query_data.pagination = { start, end};
         return this;
+    }
+
+    getObject() {
+        return this.serviceObject.getObject(this.config, this.getQuery());
+    }
+
+    getObjectList() {
+        return this.serviceObject.getObjectList(this.config, this.getQuery());
+    }
+
+    createObject() {
+        return this.serviceObject.createObject(this.config, this.data);
+    }
+
+    createObjectList() {
+        return this.serviceObject.createObjectList(this.config, this.data);
+    }
+
+    updateObject() {
+        return this.serviceObject.updateObject(this.config, this.data);
+    }
+
+    updateObjectList(){
+        return this.serviceObject.updateObjectList(this.config, this.data);
+    }
+
+    partiallyUpdateObject() {
+        return this.serviceObject.partiallyUpdateObject(this.config, this.data);
+    }
+
+    partiallyUpdateObjectList(){    
+        return this.serviceObject.partiallyUpdateObjectList(this.config, this.data);
+    }
+
+    // deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: any): Promise<any> {
+    //     const [app_name, model_name] = this.parseConfig(config);
+    //     return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
+    // }
+
+    deleteObjectList() {
+        return this.serviceObject.deleteObjectList(this.config, this.getQuery());
     }
 
 }
