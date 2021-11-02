@@ -1,10 +1,11 @@
-<div style="background: linear-gradient(rgba(11, 13, 23, 1), rgba(112, 115, 121, 1));width:43.1vw;height: 100%;position: absolute">
-    <img src="/assets/img/korangleLogo.png" width="30" height="30" style="margin-left:15px;margin-top: 15px;" alt="korangle logo">
-    <span style="top: 10px;
-    font-size: 20px;
-    position: relative;margin-left:10px;font-family: Roboto;font-weight: 700;color: rgba(255, 113, 49, 1)">Korangle</span>
-</div>
-<a href="#" style="color: black;top:5px;right:50px;text-decoration: underline">Back to HOME</a>
+<!--<div style="background: linear-gradient(rgba(11, 13, 23, 1), rgba(112, 115, 121, 1));width:43.1vw;height: 100%;position: absolute">-->
+<!--    <img src="/assets/img/korangleLogo.png" width="30" height="30" style="margin-left:15px;margin-top: 15px;" alt="korangle logo">-->
+<!--    <span style="top: 10px;-->
+<!--    font-size: 20px;-->
+<!--    position: relative;margin-left:10px;font-family: Roboto;font-weight: 700;color: rgba(255, 113, 49, 1)">Korangle</span>-->
+<!--</div>-->
+<img src="/assets/img/korangleLogo.png" width="30" height="30" style="margin-left:15px;margin-top: 15px;position:absolute;" alt="korangle logo">
+<a href="#" style="float:right;color:black;text-decoration: underline;right:15%;top:4%;font-size:16px;position: absolute">Back to HomePage</a>
 <div class="main-div">
     <mat-card class="mat-elevation-z4" style="background-image:url(/assets/img/mat-bg3.png);background-repeat: no-repeat;
     background-position: center;
@@ -19,21 +20,36 @@
                 </div>
             </div>
             <div class="col-md-5" style="margin-left:6%">
-                <mat-tab-group #tabGroup [color]="'warn'" style="margin-top: 20%;">
+                <mat-tab-group #tabGroup [color]="'warn'" style="margin-top: 5%;">
                     <mat-tab label="LOGIN">
                         <br>
-                        <label style="color:black" for="formGroupExampleInput">Mobile Number *</label><br>
+                        <label style="color:black" for="formGroupExampleInput">Mobile Number <span style="color:#f88c7c">*</span></label><br>
                         <mat-form-field appearance="outline" style="width:100%">
                             <input  id="formGroupExampleInput" matInput placeholder="Mobile Number">
                         </mat-form-field><br>
-                        <label style="color:black" for="formGroupExampleInput2">Password *</label><br>
+                        <label style="color:black" for="formGroupExampleInput2">Password <span style="color:#f88c7c">*</span></label><br>
                         <mat-form-field appearance="outline" style="width:100%">
                             <input id="formGroupExampleInput2" matInput placeholder="Password">
                         </mat-form-field>
+                        <a href="#" style="float:right;color:black;text-decoration: underline;">Forgot Password</a>
+                        <button type="button" class="btn" style="background-color: #FF7131">Login</button>
                     </mat-tab>
                     <mat-tab label="SIGN UP"><br>
-                        <form class="example-container">
-                            <label style="color:black" for="formGroupExampleInput3">Mobile Number *</label><br>
+                        <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                            <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label style="color:black" for="formGroupExampleInput5">First Name <span style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput5" matInput placeholder="First Name">
+                            </mat-form-field>
+                                </div>
+                            <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label style="color:black" for="formGroupExampleInput6">Last Name <span style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput6" matInput placeholder="Last Name">
+                            </mat-form-field>
+                            </div>
+                        </div>
+                            <label style="color:black" for="formGroupExampleInput3">Mobile Number <span style="color:#f88c7c">*</span></label><br>
                             <mat-form-field appearance="outline" style="width:100%">
                                 <input id="formGroupExampleInput3" matInput placeholder="Mobile Number">
                             </mat-form-field>
@@ -42,7 +58,7 @@
                             <mat-form-field appearance="outline" style="width:100%">
                                 <input id="formGroupExampleInput4" matInput placeholder="Email ID">
                             </mat-form-field>
-                        </form>
+                        <button type="button" class="btn" style="background-color: #FF7131">Sign Up</button>
                     </mat-tab>
 
                 </mat-tab-group>
