@@ -41,7 +41,7 @@ class QueryGeneratorMixin {
 
     addChildQuery(name: string, child_query: Query) {   // child_query
         if (!this.query_data.child_query) {
-            this.query_data.parent_query = {};
+            this.query_data.child_query = {};
         }
         this.query_data.child_query[name] = child_query.getQuery();
         return this;

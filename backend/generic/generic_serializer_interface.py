@@ -77,8 +77,8 @@ class GenericSerializerInterface():
                 query = query.exclude(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
             elif key == 'union':
                 for union_query in value:
-                    parsed_filter = self.parseFilter(union_query)
-                    query = query.union(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
+                    parsed_query = self.parse_query(union_query)
+                    query = query.union(parsed_query)
             elif key == 'annotate':
                 for alias_name, alias_generator_data in value.items():
                     parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
