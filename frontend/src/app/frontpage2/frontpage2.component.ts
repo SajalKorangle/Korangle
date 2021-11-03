@@ -9,6 +9,8 @@ export class Frontpage2Component implements OnInit {
 
   constructor() { }
 
+  section = 'normal';
+
   ngOnInit() {
   }
 

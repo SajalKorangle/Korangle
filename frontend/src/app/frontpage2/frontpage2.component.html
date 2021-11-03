@@ -20,7 +20,17 @@
                 </div>
             </div>
             <div class="col-md-5" style="margin-left:6%">
-                <mat-tab-group #tabGroup [color]="'warn'" style="margin-top: 5%;">
+                <mat-tab-group *ngIf="section=='forgot'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
+                    <mat-tab label="Forgot Password">
+                        <br>
+                        <label style="color:black" for="formGroupExampleInput">Mobile Number <span style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input  id="exs1" matInput placeholder="Mobile Number">
+                        </mat-form-field>
+                        <button type="button" class="btn" style="background-color: #FF7131">Submit</button>
+                    </mat-tab>
+                </mat-tab-group>
+                <mat-tab-group *ngIf="section=='normal'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
                     <mat-tab label="LOGIN">
                         <br>
                         <label style="color:black" for="formGroupExampleInput">Mobile Number <span style="color:#f88c7c">*</span></label><br>
