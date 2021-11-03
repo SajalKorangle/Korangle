@@ -16,6 +16,12 @@ import { EmployeeService } from '../../../../services/modules/employee/employee.
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { SmsService } from '../../../../services/modules/sms/sms.service';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { UserService } from '@services/modules/user/user.service';
+import { MessageService } from '@services/message-service';
+import { TCService } from '@services/modules/tc/tc.service';
 
 declare const $: any;
 
@@ -68,6 +74,20 @@ export class GiveDiscountComponent implements OnInit {
 
     isStudentListLoading = false;
 
+    // Data needed to send a SMS
+    GIVE_DISCOUNT_EVENT_DBID = 18;
+
+    backendData = {
+        eventSettingsList: [],
+        discountSMSEventList: []
+    };
+
+    smsBalance = 0;
+
+    dataForMapping =  {} as any;
+
+    messageService: any;
+
     constructor(
         public schoolService: SchoolService,
         public feeService: FeeService,
@@ -75,7 +95,12 @@ export class GiveDiscountComponent implements OnInit {
         public vehicleService: VehicleOldService,
         public classService: ClassService,
         public employeeService: EmployeeService,
-        private cdRef: ChangeDetectorRef
+        private cdRef: ChangeDetectorRef,
+        public smsService: SmsService,
+        public notificationService: NotificationService,
+        public smsOldService: SmsOldService,
+        public userService: UserService,
+        public tcService: TCService,
     ) {}
 
     ngOnInit(): void {
@@ -103,6 +128,8 @@ export class GiveDiscountComponent implements OnInit {
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
     }
 
     detectChanges(): void {

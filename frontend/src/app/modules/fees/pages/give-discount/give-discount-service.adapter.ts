@@ -1,5 +1,6 @@
 import { GiveDiscountComponent } from './give-discount.component';
 import { CommonFunctions } from '../../../../classes/common-functions';
+import { getValidStudentSectionList } from '@modules/classes/valid-student-section-service';
 
 export class GiveDiscountServiceAdapter {
     vm: GiveDiscountComponent;
@@ -13,7 +14,10 @@ export class GiveDiscountServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
+
+        // ------------------- Initial Data Fetching Starts ---------------------
+
         this.vm.isLoading = true;
 
         let schoolId = this.vm.user.activeSchool.dbId;
@@ -49,6 +53,56 @@ export class GiveDiscountServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
+
+        const sms_count_request_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        const value = await Promise.all([
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
+                { id__in: this.vm.GIVE_DISCOUNT_EVENT_DBID}), //3        
+        ]);
+
+        this.vm.smsBalance = value[3].count;
+        this.vm.backendData.discountSMSEventList = value[3];
+        
+        this.vm.dataForMapping['classList'] = value[0];
+        this.vm.dataForMapping['divisionList'] = value[1];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
+        let fetch_event_settings_list = {
+            SMSEventId__in: this.vm.backendData.discountSMSEventList.map(a => a.id).join(),
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        if (this.vm.backendData.discountSMSEventList.length > 0) {
+            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, fetch_event_settings_list);
+        }
+
+        // ------------------- Initial Data Fetching Ends ---------------------
+
+        // ------------------- Fetching Valid Student Data Starts ---------------------
+        let class_list = [];
+        let division_list = [];
+        
+        class_list = value[0].map(classs => classs.id);
+        division_list = value[1].map(div => div.id);
+
+        let student_section_data = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__parentTransferCertificate: 'null__korangle',
+            parentClass__in: class_list,
+            parentDivision__in: division_list,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
+        this.vm.dataForMapping['studentSectionList'] = studentSectionList;
+
+        // ------------------- Fetching Valid Student Data Ends ---------------------
     }
 
     // Get Student Fee Profile
@@ -182,6 +236,7 @@ export class GiveDiscountServiceAdapter {
                     this.addToDiscountList(value[0]);
                     this.vm.subDiscountList = this.vm.subDiscountList.concat(value2);
 
+                    this.notifyParents();
                     alert('Discount given successfully');
 
                     this.vm.handleStudentFeeProfile();
@@ -192,7 +247,47 @@ export class GiveDiscountServiceAdapter {
             (error) => {
                 this.vm.isLoading = false;
             }
+
         );
+    }
+
+    // Notify parents about Discount Details 
+
+    async notifyParents() {
+        let tempStudentList = this.vm.getStudentList();
+        let studentList = [];
+        
+        tempStudentList.forEach((student) => {
+            if(this.checkMobileNumber(student.mobileNumber) == true) {
+                let tempData = CommonFunctions.getInstance().copyObject(student);
+                studentList.push(tempData);
+            }
+        }); // Filtering those students who have valid mobile numbers
+
+        this.vm.messageService.fetchGCMDevicesNew(studentList);
+
+        if (studentList.length > 0) {
+
+            let student = studentList[0];
+
+            let discountAmount = this.vm.getStudentPayment(student);
+            this.vm.dataForMapping['discountAmount'] = discountAmount;
+            
+            this.vm.dataForMapping['studentList'] =  studentList;
+            
+            await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+                this.vm.dataForMapping,
+                ['student'],
+                this.vm.GIVE_DISCOUNT_EVENT_DBID,
+                this.vm.user.activeSchool.dbId,
+                this.vm.smsBalance
+            );
+        }
+
+    }
+
+    checkMobileNumber(mobileNumber: number): boolean {
+        return mobileNumber && mobileNumber.toString().length == 10;
     }
 
     addToDiscountList(discount_list: any): void {

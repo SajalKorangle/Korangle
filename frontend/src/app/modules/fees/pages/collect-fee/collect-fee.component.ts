@@ -23,6 +23,12 @@ import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { Account } from '@services/modules/accounts/models/account';
 import { FeeSettings } from '@services/modules/fees/models/fee-settings';
 import { CollectFeeHTMLRenderer } from './collect-fee.html.renderer';
+import { SmsService } from '@services/modules/sms/sms.service';
+import { SmsOldService } from '@services/modules/sms/sms-old.service';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { UserService } from '@services/modules/user/user.service';
+import { TCService } from '@services/modules/tc/tc.service';
+import { MessageService } from '@services/message-service';
 
 declare const $: any;
 
@@ -85,6 +91,20 @@ export class CollectFeeComponent implements OnInit {
 
     isStudentListLoading = false;
 
+    // Data needed to send a SMS
+    FEE_RECEIPT_NOTIFICATION_EVENT_DBID = 19;
+
+    backendData = {
+        eventSettingsList: [],
+        feeReceiptSMSEventList: []
+    };
+
+    smsBalance = 0;
+
+    dataForMapping =  {} as any;
+
+    messageService: any;
+
     constructor(
         public feeService: FeeService,
         public studentService: StudentService,
@@ -93,6 +113,11 @@ export class CollectFeeComponent implements OnInit {
         public employeeService: EmployeeService,
         public schoolService: SchoolService,
         public accountsService: AccountsService,
+        public smsService: SmsService,
+        public smsOldService: SmsOldService,
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public tcService: TCService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) { }
@@ -124,11 +149,17 @@ export class CollectFeeComponent implements OnInit {
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
     }
 
     detectChanges(): void {
         this.cdRef.detectChanges();
     }
+
+    ngAfterContentChecked(): void {
+        this.cdRef.detectChanges();
+    }  
 
     isMobileMenu() {
         if ($(window).width() > 991) {

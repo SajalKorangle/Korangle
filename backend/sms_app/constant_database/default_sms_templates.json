@@ -102,5 +102,21 @@
     "templateId": "1007969381016948761",
     "rawContent": "The Event {#var#} has been removed from the event list KORANGLE",
     "mappedContent": "The Event {#eventTitle#} has been removed from the event list KORANGLE"
+  },
+  {
+    "id":14,
+    "parentSMSId": 1,
+    "templateName": "discount_notification",
+    "templateId": "1007969381016948762",
+    "rawContent": "Discount of Rs. {#var#} has been given to {#var#} by {#var#}",
+    "mappedContent": "Discount of Rs. {#discountAmount#} has been given to {#studentName#} by {#schoolName#}"
+  },
+  {
+    "id":15,
+    "parentSMSId": 1,
+    "templateName": "fee_receipt_notification",
+    "templateId": "1007969381016948763",
+    "rawContent": "Rs. {#var#} of {#var#}'s fees has been paid. Total fees due is {#var#}",
+    "mappedContent": "Rs. {#feeAmount#} of {#studentName#}'s fees has been paid. Total fees due is {#dueFeeAmount#}"
   }
 ]
