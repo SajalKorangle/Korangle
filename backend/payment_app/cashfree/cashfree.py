@@ -4,6 +4,7 @@ import base64
 import json
 import requests
 import time
+import math
 
 # Do you know why they didn't just use CASHFREE_APP_ID and CASHFREE_SECRET_KEY instead of CLIENT_ID & CLIENT_SECRET
 # for bearer token
@@ -87,6 +88,8 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
             'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),  # adding korangle's commission
         }
     )
+    if(orderData['orderAmount'] == math.floor(orderData['orderAmount'])):   # Removing decimal incase amount is int, (cashfree constraints)
+        orderData['orderAmount'] = math.floor(orderData['orderAmount'])
 
     orderData.update({
         'signature': getSignature(orderData)
