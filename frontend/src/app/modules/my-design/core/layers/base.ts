@@ -1,11 +1,14 @@
-import {PositionPanelComponent} from '@modules/my-design/core/components/panels/position-panel/position-panel.component';
+// Panel List
+import { PositionPanelComponent } from '@modules/my-design/core/components/panels/position-panel/position-panel.component';
+import { SettingsPanelComponent } from '@modules/my-design/core/components/panels/settings-panel/settings-panel.component';
+
 
 const DATA_SOURCE_TYPE = [    // used in all canvas layers
     'N/A',  // no data source, constant element
     'DATA'  // data source available, get data from the provided data source
 ];
 
-interface BaseCanvasAdapter{
+interface BaseCanvasAdapter {
     pixelToMmFactor: number;
 }
 
@@ -27,7 +30,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     alternateText: string = 'N/A';
     displayName: string;
     LAYER_TYPE: string;
-    static panelList: Array<Class> = [PositionPanelComponent, 'settings'];  // position right toolbar panel is present in all layers
+    static panelList: Array<Class> = [PositionPanelComponent, SettingsPanelComponent];  // position right toolbar panel is present in all layers
     static toolBarList: string[] = [];     // change strings to component later
     isPositionLocked: boolean = false;
     dataSourceType: string = 'N/A';
