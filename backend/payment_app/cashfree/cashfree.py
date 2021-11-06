@@ -350,7 +350,7 @@ def bankAccountVerification(accountNumber, ifsc):
         params=params,
     )
 
-    assert response.json()['status'] == "SUCCESS", "Bank Verification Error: {0}".format(response.json())
+    # assert response.json()['status'] == "SUCCESS", "Bank Verification Error: {0}".format(response.json())
 
     data = response.json()['data']
     data.update({
