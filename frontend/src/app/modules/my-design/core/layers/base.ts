@@ -1,18 +1,66 @@
-// Panel List
+// Panel List Starts
 import { PositionPanelComponent } from '@modules/my-design/core/components/panels/position-panel/position-panel.component';
 import { SettingsPanelComponent } from '@modules/my-design/core/components/panels/settings-panel/settings-panel.component';
+// Panel List Ends
 
-
+// Constants Starts
 const DATA_SOURCE_TYPE = [    // used in all canvas layers
     'N/A',  // no data source, constant element
     'DATA'  // data source available, get data from the provided data source
 ];
 
+// Constants Ends
+
+// Types Starts
 interface BaseCanvasAdapter {
     pixelToMmFactor: number;
 }
 
 type Class = { new(...args: any[]): any; };
+type keyValue = { [key: string | number]: any; };
+// Types Ends
+
+
+// Property Decorators Starts
+
+function dataPropertyDecorator(targetPrototype: keyValue, propertyName: string) {   // to subscribe to property changes
+    const targetClass: any = targetPrototype.valueOf().constructor;
+    const maxId = targetClass.maxId;
+    const defaultObj = new targetClass();
+    targetClass.maxId = maxId;  // restoring maxId
+
+    targetPrototype['_' + propertyName] = defaultObj[propertyName];
+    Object.defineProperty(targetPrototype, propertyName, {
+        get: function () {
+            return this['_' + propertyName];
+        },
+        set: function (value) {
+            this['_' + propertyName] = value;
+            this.layerDataUpdate(); // update layer data and redraw canvas
+        }
+    });
+}
+
+function designPropertyDecorator(targetPrototype: keyValue, propertyName: string) {   // to subscribe to property changes
+    const targetClass: any = targetPrototype.valueOf().constructor;
+    const maxId = targetClass.maxId;
+    const defaultObj = new targetClass();
+    targetClass.maxId = maxId;  // restoring maxId
+
+    targetPrototype['_' + propertyName] = defaultObj[propertyName];
+    Object.defineProperty(targetPrototype, propertyName, {
+        get: function () {
+            return this['_' + propertyName];
+        },
+        set: function (value) {
+            this['_' + propertyName] = value;
+            this.ca.scheduleCanvasReDraw(25);    // redraw canvas immediately
+        }
+    });
+}
+
+
+// Property Decorators Ends
 
 export class BaseLayer {    // this layer is inherited by all canvas layers
     id: number = null;
@@ -20,14 +68,14 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
 
     ca: BaseCanvasAdapter;
 
-    error: boolean = false;
-    x: number = 0;
-    y: number = 0;
+    @designPropertyDecorator error: boolean = false;
+    @designPropertyDecorator x: number = 0;
+    @designPropertyDecorator y: number = 0;
 
-    height: number = null;
-    width: number = null;
+    @designPropertyDecorator height: number = null;
+    @designPropertyDecorator width: number = null;
 
-    alternateText: string = 'N/A';
+    @designPropertyDecorator alternateText: string = 'N/A';
     displayName: string;
     LAYER_TYPE: string;
     static panelList: Array<Class> = [PositionPanelComponent, SettingsPanelComponent];  // position right toolbar panel is present in all layers
