@@ -1,0 +1,167 @@
+<!--<div style="background: linear-gradient(rgba(11, 13, 23, 1), rgba(112, 115, 121, 1));width:43.1vw;height: 100%;position: absolute">-->
+<!--    <img src="/assets/img/korangleLogo.png" width="30" height="30" style="margin-left:15px;margin-top: 15px;" alt="korangle logo">-->
+<!--    <span style="top: 10px;-->
+<!--    font-size: 20px;-->
+<!--    position: relative;margin-left:10px;font-family: Roboto;font-weight: 700;color: rgba(255, 113, 49, 1)">Korangle</span>-->
+<!--</div>-->
+
+<div *ngIf="isMobile()" style="min-height: 100%;background-image:url(/assets/img/mobile_bg.png);background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;">
+    <div style="position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(147.48deg, #0B0D17 -15.91%, #707379 97.45%);
+"><img src="/assets/img/korangleLogo.png" width="30" height="30"
+       style="margin-top:10px;margin-left:15px;position:relative;" alt="korangle logo"> <span style="font-weight: bold;font-size: 20px;color: #FF7131;top: 9px;
+    margin-left: 6px;
+    position: relative;">Korangle</span>
+    </div>
+    <div class="main-div">
+        <mat-tab-group *ngIf="section=='contact'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
+            <mat-tab label="Create School">
+
+                <label style="color:black" for="formGroupExampleInput31">Mobile Number <span
+                        style="color:#f88c7c">*</span></label><br>
+                <mat-form-field appearance="outline" style="width:100%">
+                    <input id="formGroupExampleInput31" matInput placeholder="Mobile Number">
+                </mat-form-field>
+                <br>
+                <span>An OTP will be sent For verification </span>
+                <button type="button" class="btn" style="background-color: #FF7131">Send OTP</button>
+                <br>
+                <label style="color:black">OTP <span
+                        style="color:#f88c7c">*</span></label><br>
+                <ng-otp-input (onInputChange)="onOtpChange($event)"
+                              [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
+                <br>
+                <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                    <div class="col-md-4" style="padding-left:0 !important;padding-right: 15px !important;">
+                        <label style="color:black" for="formGroupExampleInput51">First Name <span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExampleInput51" matInput placeholder="First Name">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4" style="padding-left:0 !important;padding-right: 0 !important;">
+                        <label style="color:black" for="formGroupExampleInput61">Last Name <span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExampleInput61" matInput placeholder="Last Name">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <label style="color:black" for="formGroupExampleIn2pkut41">Email ID</label><br>
+                <mat-form-field appearance="outline" style="width:100%">
+                    <input id="formGroupExampleIn2pkut41" matInput placeholder="Email ID">
+                </mat-form-field>
+                <label style="color:black" for="formGroupExampleIn2pult41">Full Name of School <span
+                        style="color:#f88c7c">*</span></label><br>
+                <mat-form-field appearance="outline" style="width:100%">
+                    <input id="formGroupExampleIn2pult41" matInput placeholder="Email ID">
+                </mat-form-field>
+                <label style="color:black" for="formGroupExampleInput41">Name
+                    <span>( in short less than 15 Characters )</span>
+                    <span
+                            style="color:#f88c7c">*</span></label><br>
+                <mat-form-field appearance="outline" style="width:100%">
+                    <input id="formGroupExampleInput41" matInput placeholder="Email ID">
+                </mat-form-field>
+                <label style="color:black" for="formGroupExalmpleIn2put41">Address</label><br>
+                <mat-form-field appearance="outline" style="width:100%">
+                    <input id="formGroupExalmpleIn2put41" matInput placeholder="Email ID">
+                </mat-form-field>
+                <button type="button" class="btn" style="background-color: #FF7131">Sign Up</button>
+            </mat-tab>
+
+        </mat-tab-group>
+        <br>
+        <a href="#"
+           style="color:black;text-decoration: underline;bottom:6%;font-size:16px;position: absolute">Back
+            to HomePage</a>
+    </div>
+    <div style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background-color: #c4c4c4;"></div>
+</div>
+
+<div *ngIf="!isMobile()" style="min-height: 100%;background-image:url(/assets/img/sss.png);background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;">
+    <img src="/assets/img/korangleLogo.png" width="30" height="30"
+         style="margin-left:15px;margin-top: 15px;position:absolute;" alt="korangle logo"> <span style="font-weight: bold;font-size: 23px;color: #FF7131;top: 13px;
+    margin-left: 10px;
+    position: absolute;">Korangle</span>
+    <a href="#"
+       style="float:right;color:black;text-decoration: underline;right:15%;top:4%;font-size:16px;position: absolute">Back
+        to HomePage</a>
+    <div class="main-div">
+        <mat-tab-group *ngIf="section=='contact'" #tabGroup [color]="'warn'">
+            <mat-tab label="Contact Us">
+                <br>
+                <span style="margin-bottom: 5px">Enter your details and we will get contact you</span><br>
+                <label style="color:black" for="formGroupExampleInput">Mobile Number <span
+                        style="color:#f88c7c">*</span></label><br>
+                <mat-form-field appearance="outline" style="width:100%">
+                    <input id="formGroupExampleInput" matInput placeholder="Mobile Number">
+                </mat-form-field>
+                <br>
+                <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                        <label style="color:black" for="formGroupExampleInput5">First Name <span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExampleInput5" matInput placeholder="First Name">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                        <label style="color:black" for="formGroupExampleInput6">Last Name <span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExampleInput6" matInput placeholder="Last Name">
+                        </mat-form-field>
+                    </div>
+                </div>
+                              <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                        <label style="color:black" for="formGroupExampxleInput5">Email ID</label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExampxleInput5" matInput placeholder="Email ID">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                        <label style="color:black" for="formGroupExamxpleInput6">School Name</label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="formGroupExamxpleInput6" matInput placeholder="School Name">
+                        </mat-form-field>
+                    </div>
+                </div>
+<!--                <label style="color:black" for="formGroupExampleInput3">Mobile Number <span-->
+<!--                        style="color:#f88c7c">*</span></label><br>-->
+<!--                <mat-form-field appearance="outline" style="width:100%">-->
+<!--                    <input id="formGroupExampleInput3" matInput placeholder="Mobile Number">-->
+<!--                </mat-form-field>-->
+<!--                <span>An OTP will be sent For verification </span>-->
+<!--                <button type="button" class="btn" style="background-color: #FF7131">Send OTP</button>-->
+<!--                <br>-->
+<!--                <label style="color:black">OTP <span-->
+<!--                        style="color:#f88c7c">*</span></label><br>-->
+<!--                <ng-otp-input (onInputChange)="onOtpChange($event)"-->
+<!--                              [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>-->
+<!--                <br>-->
+<!--                <label style="color:black" for="formGroupExampleInput4">Email ID</label><br>-->
+<!--                <mat-form-field appearance="outline" style="width:100%">-->
+<!--                    <input id="formGroupExampleInput4" matInput placeholder="Email ID">-->
+<!--                </mat-form-field>-->
+                <button type="button" class="btn" style="background-color: #FF7131">Submit</button>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+<!--    </section>-->

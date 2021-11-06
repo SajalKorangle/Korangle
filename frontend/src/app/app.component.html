@@ -56,14 +56,12 @@
         </div>
     </div>
 
-    <div *ngIf="!user.isAuthenticated" style="min-height: 100%;background-image:url(/assets/img/igk.png);background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;">
+    <div *ngIf="!user.isAuthenticated">
         <ng-container *ngIf="isMobile()">
-            <app-frontpage2></app-frontpage2>
+            <app-contact-create></app-contact-create>
         </ng-container>
         <ng-container *ngIf="!isMobile()">
-            <app-frontpage2></app-frontpage2>
+            <app-contact-create></app-contact-create>
         </ng-container>
     </div>
 </div>

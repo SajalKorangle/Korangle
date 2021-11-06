@@ -4,76 +4,255 @@
 <!--    font-size: 20px;-->
 <!--    position: relative;margin-left:10px;font-family: Roboto;font-weight: 700;color: rgba(255, 113, 49, 1)">Korangle</span>-->
 <!--</div>-->
-<img src="/assets/img/korangleLogo.png" width="30" height="30" style="margin-left:15px;margin-top: 15px;position:absolute;" alt="korangle logo">
-<a href="#" style="float:right;color:black;text-decoration: underline;right:15%;top:4%;font-size:16px;position: absolute">Back to HomePage</a>
-<div class="main-div">
-    <mat-card class="mat-elevation-z4" style="background-image:url(/assets/img/mat-bg3.png);background-repeat: no-repeat;
+
+<div *ngIf="path=='login' && isMobile()" style="min-height: 100%;background-image:url(/assets/img/mobile_bg.png);background-repeat: no-repeat;
     background-position: center;
     background-size: cover;">
-        <div class="row" style="height: 100%;">
-            <div class="col-md-5" style="color:white;height:100%;margin-left:10px">
-                <h2 style="font-weight: 700;">Korangle</h2>
-                <h4 style="font-weight: 500;">School System</h4>
-                <div style="position:absolute;bottom: 0">
-                    <h5 style="font-weight: 500;margin-bottom:2px">Providing Best Solution</h5>
-                    <h5 style="font-weight: 500;">to educational Institutions</h5>
-                </div>
-            </div>
-            <div class="col-md-5" style="margin-left:6%">
-                <mat-tab-group *ngIf="section=='forgot'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
-                    <mat-tab label="Forgot Password">
-                        <br>
-                        <label style="color:black" for="formGroupExampleInput">Mobile Number <span style="color:#f88c7c">*</span></label><br>
+    <div style="position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(147.48deg, #0B0D17 -15.91%, #707379 97.45%);
+"><img src="/assets/img/korangleLogo.png" width="30" height="30"
+       style="margin-top:10px;margin-left:15px;position:relative;" alt="korangle logo"> <span style="font-weight: bold;font-size: 20px;color: #FF7131;top: 9px;
+    margin-left: 6px;
+    position: relative;">Korangle</span>
+    </div>
+    <div class="main-div">
+        <mat-card style="border:1px solid #c4c4c4;width: 85vw">
+            <mat-tab-group *ngIf="section=='forgot'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
+                <mat-tab label="Forgot Password">
+                    <ng-container *ngIf="!changePassword">
+                        <label style="color:black" for="ex1s1">Mobile Number <span
+                                style="color:#f88c7c">*</span></label><br>
                         <mat-form-field appearance="outline" style="width:100%">
-                            <input  id="exs1" matInput placeholder="Mobile Number">
+                            <input id="ex1s1" matInput placeholder="Mobile Number">
+                        </mat-form-field>
+                        <span style="float:right;color:black;text-decoration: underline;"
+                              (click)="section='forgot'">Back to Login</span>
+                        <button type="button" class="btn" (click)="changePassword=true" style="background-color: #FF7131">Submit</button>
+                    </ng-container>
+                    <ng-container *ngIf="changePassword">
+                        <span>OTP Sent to mobile Number - </span> <br><br>
+                        <span style="font-size: 15px">89392 16589</span> <span
+                            style="float:right;color:black;text-decoration: underline;"
+                            (click)="section='normal'">Re-Type</span><br><br>
+                        <label style="color:black">OTP Received<span
+                                style="color:#f88c7c">*</span></label><br>
+                        <ng-otp-input (onInputChange)="onOtpChange($event)"
+                                      [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
+                        <br>
+                        <label style="color:black" for="221">New Password<span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="221" matInput placeholder="New Password">
+                        </mat-form-field>
+                        <label style="color:black" for="322">Confirm Password<span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline" style="width:100%">
+                            <input id="322" matInput placeholder="Confirm Password">
                         </mat-form-field>
                         <button type="button" class="btn" style="background-color: #FF7131">Submit</button>
-                    </mat-tab>
-                </mat-tab-group>
-                <mat-tab-group *ngIf="section=='normal'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
-                    <mat-tab label="LOGIN">
-                        <br>
-                        <label style="color:black" for="formGroupExampleInput">Mobile Number <span style="color:#f88c7c">*</span></label><br>
-                        <mat-form-field appearance="outline" style="width:100%">
-                            <input  id="formGroupExampleInput" matInput placeholder="Mobile Number">
-                        </mat-form-field><br>
-                        <label style="color:black" for="formGroupExampleInput2">Password <span style="color:#f88c7c">*</span></label><br>
-                        <mat-form-field appearance="outline" style="width:100%">
-                            <input id="formGroupExampleInput2" matInput placeholder="Password">
-                        </mat-form-field>
-                        <a href="#" style="float:right;color:black;text-decoration: underline;">Forgot Password</a>
-                        <button type="button" class="btn" style="background-color: #FF7131">Login</button>
-                    </mat-tab>
-                    <mat-tab label="SIGN UP"><br>
-                        <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
-                            <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
-                            <label style="color:black" for="formGroupExampleInput5">First Name <span style="color:#f88c7c">*</span></label><br>
+                    </ng-container>
+                </mat-tab>
+            </mat-tab-group>
+            <mat-tab-group *ngIf="section=='normal'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
+                <mat-tab label="LOGIN">
+                    <br>
+                    <label style="color:black" for="formGroupExampleInput11">Mobile Number <span
+                            style="color:#f88c7c">*</span></label><br>
+                    <mat-form-field appearance="outline" style="width:100%">
+                        <input id="formGroupExampleInput11" matInput placeholder="Mobile Number">
+                    </mat-form-field>
+                    <br>
+                    <label style="color:black" for="formGroupExampleInput2">Password <span
+                            style="color:#f88c7c">*</span></label><br>
+                    <mat-form-field appearance="outline" style="width:100%">
+                        <input id="formGroupExampleInput21" matInput placeholder="Password">
+                    </mat-form-field>
+                    <span style="float:right;color:black;text-decoration: underline;"
+                          (click)="section='forgot'">Forgot Password</span>
+                    <button type="button" class="btn" style="background-color: #FF7131">Login</button>
+                </mat-tab>
+                <mat-tab label="SIGN UP"><br>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-4" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label style="color:black" for="formGroupExampleInput51">First Name <span
+                                    style="color:#f88c7c">*</span></label><br>
                             <mat-form-field appearance="outline" style="width:100%">
-                                <input id="formGroupExampleInput5" matInput placeholder="First Name">
+                                <input id="formGroupExampleInput51" matInput placeholder="First Name">
                             </mat-form-field>
-                                </div>
-                            <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
-                            <label style="color:black" for="formGroupExampleInput6">Last Name <span style="color:#f88c7c">*</span></label><br>
-                            <mat-form-field appearance="outline" style="width:100%">
-                                <input id="formGroupExampleInput6" matInput placeholder="Last Name">
-                            </mat-form-field>
-                            </div>
                         </div>
-                            <label style="color:black" for="formGroupExampleInput3">Mobile Number <span style="color:#f88c7c">*</span></label><br>
+                        <div class="col-md-4" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label style="color:black" for="formGroupExampleInput61">Last Name <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput61" matInput placeholder="Last Name">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <label style="color:black" for="formGroupExampleInput31">Mobile Number <span
+                            style="color:#f88c7c">*</span></label><br>
+                    <mat-form-field appearance="outline" style="width:100%">
+                        <input id="formGroupExampleInput31" matInput placeholder="Mobile Number">
+                    </mat-form-field>
+                    <br>
+                    <span>An OTP will be sent For verification </span>
+                    <button type="button" class="btn" style="background-color: #FF7131">Send OTP</button>
+                    <br>
+                    <label style="color:black">OTP <span
+                            style="color:#f88c7c">*</span></label><br>
+                    <ng-otp-input (onInputChange)="onOtpChange($event)"
+                                  [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
+                    <br>
+                    <label style="color:black" for="formGroupExampleInput41">Email ID</label><br>
+                    <mat-form-field appearance="outline" style="width:100%">
+                        <input id="formGroupExampleInput41" matInput placeholder="Email ID">
+                    </mat-form-field>
+                    <button type="button" class="btn" style="background-color: #FF7131">Sign Up</button>
+                </mat-tab>
+
+            </mat-tab-group>
+        </mat-card>
+        <br>
+            <a href="#"
+               style="color:black;text-decoration: underline;bottom:6%;font-size:16px;position: absolute">Back
+                to HomePage</a>
+    </div>
+    <div style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background-color: #c4c4c4;"></div>
+</div>
+
+<div *ngIf="path=='/login' && !isMobile()" style="min-height: 100%;background-image:url(/assets/img/igk.png);background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;">
+    <img src="/assets/img/korangleLogo.png" width="30" height="30"
+         style="margin-left:15px;margin-top: 15px;position:relative;" alt="korangle logo"> <span style="font-weight: bold;font-size: 23px;color: #FF7131;top: 13px;
+    margin-left: 10px;
+    position: relative;">Korangle</span>
+    <a href="#"
+       style="float:right;color:black;text-decoration: underline;right:15%;top:4%;font-size:16px;position: absolute">Back
+        to HomePage</a>
+    <div class="main-div">
+        <mat-card class="mat-elevation-z4" style="background-image:url(/assets/img/mat-bg3.png);background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 70vw;
+    min-height: 600px;">
+            <div class="row" style="height: 100%;">
+                <div class="col-md-5" style="color:white;height:100%;margin-left:10px">
+                    <h2 style="font-weight: 700;">Korangle</h2>
+                    <h4 style="font-weight: 500;">School System</h4>
+                </div>
+                <div class="col-md-5" style="margin-left:6%">
+                    <mat-tab-group *ngIf="section=='forgot'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
+                        <mat-tab label="Forgot Password">
+                            <br>
+                            <ng-container *ngIf="!changePassword">
+                                <label style="color:black" for="formGroupExampleInput">Mobile Number <span
+                                        style="color:#f88c7c">*</span></label><br>
+                                <mat-form-field appearance="outline" style="width:100%">
+                                    <input id="exs1" matInput placeholder="Mobile Number">
+                                </mat-form-field>
+                                <span style="float:right;color:black;text-decoration: underline;"
+                                      (click)="section='normal'">Back to Login</span>
+                                <button type="button" (click)="changePassword=true" class="btn"
+                                        style="background-color: #FF7131">Submit
+                                </button>
+                            </ng-container>
+                            <ng-container *ngIf="changePassword">
+                                <span>OTP Sent to mobile Number - </span> <br><br>
+                                <span style="font-size: 15px">89392 16589</span> <span
+                                    style="float:right;color:#FF7131;text-decoration: underline;"
+                                    (click)="section='normal'">Re-Type</span><br><br>
+                                <label style="color:black">OTP Received<span
+                                        style="color:#f88c7c">*</span></label><br>
+                                <ng-otp-input (onInputChange)="onOtpChange($event)"
+                                              [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
+                                <br>
+                                <label style="color:black" for="21">New Password<span
+                                        style="color:#f88c7c">*</span></label><br>
+                                <mat-form-field appearance="outline" style="width:100%">
+                                    <input id="21" matInput placeholder="New Password">
+                                </mat-form-field>
+                                <label style="color:black" for="32">Confirm Password<span
+                                        style="color:#f88c7c">*</span></label><br>
+                                <mat-form-field appearance="outline" style="width:100%">
+                                    <input id="32" matInput placeholder="Confirm Password">
+                                </mat-form-field>
+                                <button type="button" class="btn" style="background-color: #FF7131">Submit</button>
+                            </ng-container>
+                        </mat-tab>
+                    </mat-tab-group>
+                    <mat-tab-group *ngIf="section=='normal'" #tabGroup [color]="'warn'" style="margin-top: 5%;">
+                        <mat-tab label="LOGIN">
+                            <br>
+                            <label style="color:black" for="formGroupExampleInput">Mobile Number <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput" matInput placeholder="Mobile Number">
+                            </mat-form-field>
+                            <br>
+                            <label style="color:black" for="formGroupExampleInput2">Password <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline" style="width:100%">
+                                <input id="formGroupExampleInput2" matInput placeholder="Password">
+                            </mat-form-field>
+                            <span style="float:right;color:black;text-decoration: underline;"
+                                  (click)="section='forgot'">Forgot Password</span>
+                            <button type="button" class="btn" style="background-color: #FF7131">Login</button>
+                        </mat-tab>
+                        <mat-tab label="SIGN UP"><br>
+                            <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                                <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                                    <label style="color:black" for="formGroupExampleInput5">First Name <span
+                                            style="color:#f88c7c">*</span></label><br>
+                                    <mat-form-field appearance="outline" style="width:100%">
+                                        <input id="formGroupExampleInput5" matInput placeholder="First Name">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                                    <label style="color:black" for="formGroupExampleInput6">Last Name <span
+                                            style="color:#f88c7c">*</span></label><br>
+                                    <mat-form-field appearance="outline" style="width:100%">
+                                        <input id="formGroupExampleInput6" matInput placeholder="Last Name">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <label style="color:black" for="formGroupExampleInput3">Mobile Number <span
+                                    style="color:#f88c7c">*</span></label><br>
                             <mat-form-field appearance="outline" style="width:100%">
                                 <input id="formGroupExampleInput3" matInput placeholder="Mobile Number">
                             </mat-form-field>
+                            <span>An OTP will be sent For verification </span>
+                            <button type="button" class="btn" style="background-color: #FF7131">Send OTP</button>
+                            <br>
+                            <label style="color:black">OTP <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <ng-otp-input (onInputChange)="onOtpChange($event)"
+                                          [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
                             <br>
                             <label style="color:black" for="formGroupExampleInput4">Email ID</label><br>
                             <mat-form-field appearance="outline" style="width:100%">
                                 <input id="formGroupExampleInput4" matInput placeholder="Email ID">
                             </mat-form-field>
-                        <button type="button" class="btn" style="background-color: #FF7131">Sign Up</button>
-                    </mat-tab>
+                            <button type="button" class="btn" style="background-color: #FF7131">Sign Up</button>
+                        </mat-tab>
 
-                </mat-tab-group>
+                    </mat-tab-group>
+                </div>
             </div>
-        </div>
-    </mat-card>
+            <div style="position:absolute;bottom: 0;color:white">
+                <h5 style="font-weight: 500;margin-bottom:2px">Providing Best Solution</h5>
+                <h5 style="font-weight: 500;">to educational Institutions</h5>
+            </div>
+        </mat-card>
+    </div>
 </div>
 <!--    </section>-->

@@ -26,6 +26,8 @@ import { SignupComponent } from './authentication/signup/signup.component';
 import { DecimalPipe } from '@angular/common';
 import { Frontpage2Component } from './frontpage2/frontpage2.component';
 import {ComponentsModule} from '@components/components.module';
+import {NgOtpInputModule} from 'ng-otp-input';
+import { ContactCreateComponent } from './frontpage2/contact-create/contact-create.component';
 
 @NgModule({
     declarations: [
@@ -42,6 +44,7 @@ import {ComponentsModule} from '@components/components.module';
         TextCarouselComponent,
         WhatKorangleCanDoComponent,
         Frontpage2Component,
+        ContactCreateComponent,
     ],
     imports: [
         BasicComponentsModule,
@@ -51,6 +54,7 @@ import {ComponentsModule} from '@components/components.module';
         BrowserAnimationsModule,
         ReactiveFormsModule,
         ComponentsModule,
+        NgOtpInputModule,
         // RecaptchaModule,  // this is the recaptcha main module
     ],
     exports: [],
