@@ -103,8 +103,13 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
                 && el.field.fieldStructureKey == this.source.field.fieldStructureKey);
             if (!this.source)
                 this.error = true;
+            else
+                this.layerDataUpdate();
         }
     }
+
+
+    layerDataUpdate(): void {}
 
     updatePosition(dx = 0, dy = 0): void {
         if (this.isPositionLocked) 
