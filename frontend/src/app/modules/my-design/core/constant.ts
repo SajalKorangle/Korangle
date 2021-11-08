@@ -1,12 +1,5 @@
 import { STANDARD_PAGE_RESOLUTION_MAPPED_BY_NAME, PageResolution } from "./page-resolutions";
 
-export const DEFAULT_BACKGROUND_COLOR = '#ffffff'; // white
-export const DEFAULT_TEXT_COLOR = '#000000'; // black
-export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 2; // in pixels
-export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';
-export const PERMISSIBLE_CLICK_ERROR = 4;    // in pixels
-export const DEFAULT_IMAGE_URL = 'https://korangleplus.s3.amazonaws.com/assets/img/ef3f502028770e76bbeeeea68744c2c3.jpg';
-
 export interface LAYOUT_INTERFACE{
     [key: string]: any;
     pageList: Array<{
@@ -25,3 +18,21 @@ export function getDefaultLayoutContent() {
         }]
     };
 }
+
+// Types
+
+export type CLASS = { new(...args: any[]): any; };
+export type KEY_VALUE_TYPE = { [key: string | number]: any; };
+
+
+// Constants
+export const DEFAULT_BACKGROUND_COLOR = '#ffffff'; // white
+export const DEFAULT_TEXT_COLOR = '#000000'; // black
+export const ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH = 2; // in pixels
+export const ACTIVE_LAYER_HIGHLIGHTER_COLOR = 'cyan';
+export const PERMISSIBLE_CLICK_ERROR = 4;    // in pixels
+
+export const DATA_SOURCE_TYPE = {    // used in all canvas layers
+    constant: 'N/A',  // no data source, constant element
+    data: 'DATA'  // data source available, get data from the provided data source
+};

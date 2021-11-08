@@ -1,0 +1,49 @@
+<mat-card style="padding: 0; width: 100%; margin-top: 6px; overflow: hidden">
+    <div style="background-color: grey; text-align: center">
+        <i class="material-icons" style="margin-top: 4px">settings_overscan</i>
+    </div>
+
+    <div style="margin: 4px; padding: 4px">
+
+        <mat-form-field>
+            <input type="number" matInput
+                [ngModel]="getMeasurementInMm(layer.height)"
+                (ngModelChange)="layer.updateHeight(getMeasurementInPx($event));"
+                placeholder="Height(mm)" />
+        </mat-form-field>
+
+        <button class="btn material-icons"
+            style="padding: 4px; display: block; margin: auto"
+            [style.backgroundColor]="layer.maintainAspectRatio == true ? 'blue' : ''"
+            (click)="layer.maintainAspectRatio = !layer.maintainAspectRatio;">
+            link
+        </button>
+
+        <mat-form-field style="margin-top: 16px">
+            <input type="number" matInput
+                [ngModel]="getMeasurementInMm(layer.width)"
+                (ngModelChange)="layer.updateWidth(getMeasurementInPx($event));"
+                placeholder="Width(mm)" />
+        </mat-form-field>
+
+        <mat-form-field style="margin-top: 16px">
+            <input type="number" matInput
+                [ngModel]="getMeasurementInMm(layer.radius)"
+                (ngModelChange)="layer.radius = getMeasurementInPx($event);"
+                placeholder="Border Radius(mm)" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="number" step="1" matInput
+                [ngModel]="getMeasurementInMm(layer.borderStyle.lineWidth)"
+                (ngModelChange)="layer.borderStyle.lineWidth = getMeasurementInPx($event);"
+                placeholder="Line Width(mm)" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="color" matInput [value]="layer.borderStyle.strokeStyle"
+                (input)="updateStrokeColor($event.target.value);"
+                placeholder="Stroke Color" />
+        </mat-form-field>
+    </div>
+</mat-card>

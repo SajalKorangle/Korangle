@@ -3,31 +3,47 @@ import { PositionPanelComponent } from '@modules/my-design/core/components/panel
 import { SettingsPanelComponent } from '@modules/my-design/core/components/panels/settings-panel/settings-panel.component';
 // Panel List Ends
 
-import { PERMISSIBLE_CLICK_ERROR, ACTIVE_LAYER_HIGHLIGHTER_COLOR, ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH } from '@modules/my-design/core/constant';
+import { PERMISSIBLE_CLICK_ERROR, ACTIVE_LAYER_HIGHLIGHTER_COLOR, ACTIVE_LAYER_HIGHLIGHTER_LINE_WIDTH, CLASS, KEY_VALUE_TYPE, DATA_SOURCE_TYPE } from '@modules/my-design/core/constant';
 
-// Constants Starts
-const DATA_SOURCE_TYPE = {    // used in all canvas layers
-    constant: 'N/A',  // no data source, constant element
-    data: 'DATA'  // data source available, get data from the provided data source
-};
-
-// Constants Ends
 
 // Types Starts
-interface BaseCanvasAdapterInterface {
+export interface BaseCanvasAdapterInterface {
+    DATA: KEY_VALUE_TYPE;
     pixelToMmFactor: number;
-    scheduleCanvasReDraw: (delay: number) => Promise<any>;
     parameterList: any[];
-}
 
-type Class = { new(...args: any[]): any; };
-type keyValue = { [key: string | number]: any; };
+    canvasWidth: number;
+    canvasHeight: number;
+
+    scheduleCanvasReDraw: (delay?: number) => Promise<any>;
+}
 // Types Ends
 
 
 // Property Decorators Starts
 
-export function dataPropertyDecorator(targetPrototype: keyValue, propertyName: string) {   // to subscribe to property changes
+export function classProperty(targetPrototype: KEY_VALUE_TYPE, propertyName: string) {
+    const targetClass: any = targetPrototype.valueOf().constructor;
+    const maxId = targetClass.maxId;
+    const defaultObj = new targetClass();
+    targetClass.maxId = maxId;  // restoring maxId
+
+    targetPrototype['_' + propertyName] = defaultObj[propertyName];
+    Object.defineProperty(targetPrototype, propertyName, {
+        get: function () {
+            return this['_' + propertyName];
+        },
+        set: function (value) {
+            if(!this['_' + propertyName])
+                this['_' + propertyName] = value;
+            else
+                throw new Error('INVALID OPERATION: Trying to initialize already initialized class Property');
+            this.layerDataUpdate(); // update layer data and redraw canvas
+        }
+    });
+}
+
+export function dataPropertyDecorator(targetPrototype: KEY_VALUE_TYPE, propertyName: string) {   // to subscribe to property changes
     const targetClass: any = targetPrototype.valueOf().constructor;
     const maxId = targetClass.maxId;
     const defaultObj = new targetClass();
@@ -45,7 +61,7 @@ export function dataPropertyDecorator(targetPrototype: keyValue, propertyName: s
     });
 }
 
-export function designPropertyDecorator(targetPrototype: keyValue, propertyName: string) {   // to subscribe to property changes
+export function designPropertyDecorator(targetPrototype: KEY_VALUE_TYPE, propertyName: string) {   // to subscribe to property changes
     const targetClass: any = targetPrototype.valueOf().constructor;
     const maxId = targetClass.maxId;
     const defaultObj = new targetClass();
@@ -68,7 +84,11 @@ export function designPropertyDecorator(targetPrototype: keyValue, propertyName:
 
 export class BaseLayer {    // this layer is inherited by all canvas layers
     id: number = null;
+
     static maxID: number = 0;   // for auto incrementing id
+    static LAYER_TYPE: string;
+    static panelList: Array<CLASS> = [PositionPanelComponent, SettingsPanelComponent];  // position right toolbar panel is present in all layers
+    static toolBarList: string[] = [];     // change strings to component later
 
     ca: BaseCanvasAdapterInterface;
 
@@ -81,17 +101,25 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
 
     @designPropertyDecorator alternateText: string = 'N/A';
     displayName: string;
-    LAYER_TYPE: string;
-    static panelList: Array<Class> = [PositionPanelComponent, SettingsPanelComponent];  // position right toolbar panel is present in all layers
-    static toolBarList: string[] = [];     // change strings to component later
     isPositionLocked: boolean = false;
     dataSourceType: string = DATA_SOURCE_TYPE.constant;
     source?: { [key: string]: any; };
 
-    constructor(ca: BaseCanvasAdapterInterface) {
+    get LAYER_TYPE(): string {
+        return (this.valueOf().constructor as unknown as BaseLayer).LAYER_TYPE;
+    }
+
+    set LAYER_TYPE(value: string) {
+        if(value != this.LAYER_TYPE)
+            throw new Error('Invalid Layer Type Initialization');
+    }
+
+    constructor(ca: BaseCanvasAdapterInterface, attributes: object = {}) {
         this.ca = ca;
         BaseLayer.maxID += 1;
         this.id = BaseLayer.maxID;
+
+        this.initializeSelf(attributes);
     }
 
     initializeSelf(attributes: object): void { // initializes all class variables according to provided attribute object
@@ -108,13 +136,12 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
         }
     }
 
-
-    layerDataUpdate(): void {}
+    layerDataUpdate(): void { }
 
     updatePosition(dx = 0, dy = 0): void {
-        if (this.isPositionLocked) 
+        if (this.isPositionLocked)
             return;
- 
+
         this.x += dx;
         this.y += dy;
     }
@@ -145,8 +172,10 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
             dataSourceType: this.dataSourceType,
             isLocked: this.isPositionLocked
         };
-        if(this.dataSourceType == DATA_SOURCE_TYPE.data) 
-            Object.assign(savingData, {source: this.source});
+        if (this.dataSourceType == DATA_SOURCE_TYPE.data){
+            Object.assign(savingData, { source: {...this.source} });
+            delete savingData.source.layerType;
+        }
         return savingData;
     }
 }
