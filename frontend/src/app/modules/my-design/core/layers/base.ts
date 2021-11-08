@@ -54,7 +54,7 @@ function designPropertyDecorator(targetPrototype: keyValue, propertyName: string
         },
         set: function (value) {
             this['_' + propertyName] = value;
-            this.ca.scheduleCanvasReDraw(25);    // redraw canvas immediately
+            this.ca.scheduleCanvasReDraw(25);    // redraw canvas
         }
     });
 }
