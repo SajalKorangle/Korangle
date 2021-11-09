@@ -84,26 +84,7 @@ export class GiveDiscountServiceAdapter {
 
         // ------------------- Initial Data Fetching Ends ---------------------
 
-        // ------------------- Fetching Valid Student Data Starts ---------------------
-        let class_list = [];
-        let division_list = [];
-        
-        class_list = value[0].map(classs => classs.id);
-        division_list = value[1].map(div => div.id);
-
-        let student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentStudent__parentTransferCertificate: 'null__korangle',
-            parentClass__in: class_list,
-            parentDivision__in: division_list,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
-        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
-        this.vm.dataForMapping['studentSectionList'] = studentSectionList;
-
-        // ------------------- Fetching Valid Student Data Ends ---------------------
-    }
+}
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
@@ -251,39 +232,51 @@ export class GiveDiscountServiceAdapter {
         );
     }
 
-    // Notify parents about Discount Details 
-
+    // Notify parents about Discount Details  
     async notifyParents() {
         let tempStudentList = this.vm.getStudentList();
         let studentList = [];
-        
-        tempStudentList.forEach((student) => {
-            if(this.checkMobileNumber(student.mobileNumber) == true) {
-                let tempData = CommonFunctions.getInstance().copyObject(student);
-                studentList.push(tempData);
-            }
-        }); // Filtering those students who have valid mobile numbers
+         
+        // Calculating and storing neccessary variables for SMS/Notification template
+        if(tempStudentList.length > 0) {
 
-        this.vm.messageService.fetchGCMDevicesNew(studentList);
+            tempStudentList.forEach((student) => {
 
-        if (studentList.length > 0) {
+                if(this.checkMobileNumber(student.mobileNumber) == false) {
+                    return;
+                }
 
-            let student = studentList[0];
+                let sessionList = this.vm.getFilteredSessionListByStudent(student);
 
-            let discountAmount = this.vm.getStudentPayment(student);
-            this.vm.dataForMapping['discountAmount'] = discountAmount;
-            
-            this.vm.dataForMapping['studentList'] =  studentList;
-            
-            await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
-                this.vm.dataForMapping,
-                ['student'],
-                this.vm.GIVE_DISCOUNT_EVENT_DBID,
-                this.vm.user.activeSchool.dbId,
-                this.vm.smsBalance
-            );
+                sessionList.forEach((session) => {
+
+                    let discountAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
+
+                    let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+                    
+                    if(discountAmount > 0) {
+                        tempStudent['discountAmount'] = discountAmount;
+                        tempStudent['session'] = session;
+                        studentList.push(tempStudent);
+                    }
+
+                });
+            });
         }
 
+        this.vm.messageService.fetchGCMDevicesNew(studentList);
+        
+        this.vm.dataForMapping['studentList'] =  studentList;
+        this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
+        
+        await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+            this.vm.dataForMapping,
+            ['student'],
+            this.vm.GIVE_DISCOUNT_EVENT_DBID,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
+        
     }
 
     checkMobileNumber(mobileNumber: number): boolean {

@@ -29,7 +29,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService],
+    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, SmsService, NotificationService, SmsOldService, UserService, TCService],
 })
 export class GiveDiscountComponent implements OnInit {
     user;

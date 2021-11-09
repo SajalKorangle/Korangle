@@ -14,12 +14,7 @@ import { TCService } from '@services/modules/tc/tc.service';
 
     imports: [CollectFeeRoutingModule, ComponentsModule, FeesComponentsModule],
     exports: [],
-    providers: [
-        SmsService,
-        SmsOldService,
-        UserService,
-        TCService
-    ],
+    providers: [],
     bootstrap: [CollectFeeComponent],
 })
 export class CollectFeeModule {}

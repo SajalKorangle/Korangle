@@ -108,26 +108,6 @@ export class CollectFeeServiceAdapter {
 
         // ------------------- Initial Data Fetching Ends ---------------------
 
-        // ------------------- Fetching Valid Student Data Starts ---------------------
-        let class_list = [];
-        let division_list = [];
-        
-        class_list = val[0].map(classs => classs.id);
-        division_list = val[1].map(div => div.id);
-
-        let student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentStudent__parentTransferCertificate: 'null__korangle',
-            parentClass__in: class_list,
-            parentDivision__in: division_list,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
-        let studentSectionList = await getValidStudentSectionList(this.vm.tcService, this.vm.studentService, student_section_data);
-        this.vm.dataForMapping['studentSectionList'] = studentSectionList;
-
-        // ------------------- Fetching Valid Student Data Ends ---------------------
-
     }
 
     // Get Student Fee Profile
@@ -362,34 +342,48 @@ export class CollectFeeServiceAdapter {
         let tempStudentList = this.vm.getStudentList();
         let studentList = [];
         
-        tempStudentList.forEach((student) => {
-            if(this.checkMobileNumber(student.mobileNumber) == true) {
-                let tempData = CommonFunctions.getInstance().copyObject(student);
-                studentList.push(tempData);
-            }
-        }); // Filtering those students who have valid mobile numbers
+        // Calculating and storing neccessary variables for SMS/Notification template
+        if(tempStudentList.length > 0) {
+
+            tempStudentList.forEach((student) => {
+
+                if(this.checkMobileNumber(student.mobileNumber) == false) {
+                    return;
+                }
+
+                let sessionList = this.vm.getFilteredSessionListByStudent(student);
+
+                sessionList.forEach((session) => {
+
+                    let feeAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
+                    let dueFeeAmount = this.vm.getSessionFeesDue(student, session, false) + this.vm.getSessionLateFeesDue(student, session, false);
+                    
+
+                    let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+                    if(feeAmount > 0) {
+                        tempStudent['feeAmount'] = feeAmount;
+                        tempStudent['dueFeeAmount'] = dueFeeAmount;
+                        tempStudent['session'] = session;
+                        studentList.push(tempStudent);
+                    }
+
+                });
+            });
+        }
 
         this.vm.messageService.fetchGCMDevicesNew(studentList);
+        
+        this.vm.dataForMapping['studentList'] =  studentList;
+        this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
 
-        if (studentList.length > 0) {
-
-            let student = studentList[0];
-
-            let feeAmount = this.vm.getStudentPayment(student);
-            let dueFeeAmount = this.vm.getStudentFeesDue(student, false) + this.vm.getStudentLateFeesDue(student, false);
-            
-            this.vm.dataForMapping['feeAmount'] = feeAmount;
-            this.vm.dataForMapping['dueFeeAmount'] = dueFeeAmount;
-            this.vm.dataForMapping['studentList'] =  studentList;
-            
-            await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
-                this.vm.dataForMapping,
-                ['student'],
-                this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID,
-                this.vm.user.activeSchool.dbId,
-                this.vm.smsBalance
-            );
-        }
+        await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+            this.vm.dataForMapping,
+            ['student'],
+            this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
+        
     }
 
     checkMobileNumber(mobileNumber: number): boolean {

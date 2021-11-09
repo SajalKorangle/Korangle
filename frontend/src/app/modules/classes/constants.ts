@@ -179,18 +179,25 @@ export const EVENT_GALLERY_VARIABLE_LIST = [
 
 export const DISCOUNT_VARIABLE_LIST = [
     SettingsStructure.getStructure('discountAmount', 'discountAmount', (dataObject) => {
-        return dataObject.discountAmount;
+        return Number(dataObject['student'].discountAmount).toLocaleString('en-IN');
+    }),
+    SettingsStructure.getStructure('session', 'session', (dataObject) => {
+        return dataObject['student'].session.name;
     })
-];  // Creating a variable list so that discountAmount variable can be accessed while parsing the SMS template content
+];  // Creating a variable list so that discountAmount, session variables can be accessed while parsing the SMS template content
 
 export const FEE_RECEIPT_VARIABLE_LIST = [
     SettingsStructure.getStructure('feeAmount', 'feeAmount', (dataObject) => {
-        return dataObject.feeAmount;
+        return Number(dataObject['student'].feeAmount).toLocaleString('en-IN');
     }),
     SettingsStructure.getStructure('dueFeeAmount', 'dueFeeAmount', (dataObject) => {
-        return dataObject.dueFeeAmount;
+        return Number(dataObject['student'].dueFeeAmount).toLocaleString('en-IN');
+    }),
+    SettingsStructure.getStructure('session', 'session', (dataObject) => {
+        return dataObject['student'].session.name;
     })
-];  // Creating a variable list so that feeAmount and dueFeeAmount variables can be accessed while parsing the SMS template content
+
+];  // Creating a variable list so that feeAmount, dueFeeAmount and session variables can be accessed while parsing the SMS template content
 
 
 class MappingEventWithVariableStructure {

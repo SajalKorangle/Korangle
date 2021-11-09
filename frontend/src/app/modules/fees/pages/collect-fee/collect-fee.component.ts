@@ -36,7 +36,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService],
+    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
 })
 export class CollectFeeComponent implements OnInit {
     user;
