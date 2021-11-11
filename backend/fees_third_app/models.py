@@ -659,11 +659,11 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
                             feeReceiptData['subFeeReceiptList'], 0)
 
                         transactionData = {
-                            'parentEmployee': feeReceiptData['parentEmployee'],
+                            'parentEmployee': None,
                             'parentSchool': activeSchoolId,
-                            'remark': 'Student Fee Payment for {0} with Scholar No. {1} of {2}'.format(feeReceiptOrder.parentStudent.name, feeReceiptOrder.parentStudent.scholarNumber, feeReceiptOrder.parentStudent.getClassObjects(feeReceiptSession).name),
+                            'remark': 'Student Fee Payment for {0} with Scholar No. {1} of {2}'.format(feeReceiptOrder.parentStudent.name, feeReceiptOrder.parentStudent.scholarNumber, feeReceiptOrder.parentStudent.get_class_object(feeReceiptSession).name),
                             'transactionDate': datetime.now().strftime('%Y-%m-%d'),
-                            'feeReceiptList': feeReceiptData,
+                            'feeReceiptList': [feeReceiptData],
                             'transactionAccountDetailsList': [
                                 {
                                     'parentAccount': debitAccount.id,
