@@ -99,7 +99,7 @@ export class BaseLayer {    // this layer is inherited by all canvas layers
     @designPropertyDecorator height: number = null;
     @designPropertyDecorator width: number = null;
 
-    @designPropertyDecorator alternateText: string = 'N/A';
+    @dataPropertyDecorator alternateText: string = 'N/A';
     displayName: string;
     isPositionLocked: boolean = false;
     dataSourceType: string = DATA_SOURCE_TYPE.constant;

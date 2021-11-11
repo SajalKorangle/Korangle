@@ -1,4 +1,3 @@
-
 import { BaseLayer, LayerInterface, designPropertyDecorator, dataPropertyDecorator, BaseCanvasAdapterInterface } from './base';
 import { ImagePanelComponent } from '@modules/my-design/core/components/panels/image-panel/image-panel.component';
 import { CLASS, DATA_SOURCE_TYPE, } from '@modules/my-design/core/constant';
