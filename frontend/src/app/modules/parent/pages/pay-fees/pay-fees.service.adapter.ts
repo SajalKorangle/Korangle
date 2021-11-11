@@ -57,6 +57,10 @@ export class PayFeesServiceAdapter {
             parentDiscount__cancelled: 'false__boolean',
         };
 
+        const student_list = {
+            id__in: this.vm.user.section.student.studentList.map(s=> s.id),
+        }
+
         await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),   // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
@@ -74,6 +78,7 @@ export class PayFeesServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
             this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipt_order, {parentSchool: schoolId}), //14
+            this.vm.studentService.getObjectList(this.vm.studentService.student, student_list), // 15
         ]).then(
             (value) => {
                 console.log(value);
@@ -96,6 +101,7 @@ export class PayFeesServiceAdapter {
                 this.vm.sessionList = value[11];
                 this.vm.boardList = value[12];
                 this.vm.paymentTransactionList = value[14];
+                this.vm.selectedStudentList = value[15];
                 this.vm.handleStudentFeeProfile();
             }
         );

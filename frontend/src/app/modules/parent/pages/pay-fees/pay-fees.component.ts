@@ -108,8 +108,6 @@ export class PayFeesComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.selectedStudentList = this.user.section.student.studentList;
-
         this.htmlRenderer = new PayFeesHTMLRenderer(this);
 
         this.serviceAdapter = new PayFeesServiceAdapter();
@@ -138,7 +136,7 @@ export class PayFeesComponent implements OnInit {
             this.email = this.user.email;
         }
 
-        this.selectedStudentList.forEach(student => {
+        this.user.section.student.studentList.forEach(student => {
             this.newSubFeeReceiptListMappedByStudentId[student.id] = [];
         });
     }
