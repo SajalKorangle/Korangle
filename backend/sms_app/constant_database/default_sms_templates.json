@@ -107,16 +107,16 @@
     "id":14,
     "parentSMSId": 1,
     "templateName": "discount_notification",
-    "templateId": "1007969381016948762",
-    "rawContent": "Discount of Rs. {#var#} has been given to {#var#} by {#var#} for the Academic {#var#} KORANGLE",
-    "mappedContent": "Discount of Rs. {#discountAmount#} has been given to {#studentName#} by {#schoolName#} for the Academic {#session#} KORANGLE"
+    "templateId": "1007784599332550985",
+    "rawContent": "Discount of Rs. {#var#} has been given to {#var#} by {#var#} for the Academic {#var#}.\n\nKorangle",
+    "mappedContent": "Discount of Rs. {#discountAmount#} has been given to {#studentName#} by {#schoolName#} for the Academic {#session#}.\n\nKorangle"
   },
   {
     "id":15,
     "parentSMSId": 1,
     "templateName": "fee_receipt_notification",
-    "templateId": "1007969381016948763",
-    "rawContent": "Rs. {#var#} of {#var#}'s fees has been paid for the Academic {#var#} of {#var#}. For {#var#}, total fees due for this session is {#var#} KORANGLE",
-    "mappedContent": "Rs. {#feeAmount#} of {#studentName#}'s fees has been paid for the Academic {#session#} of {#schoolName#}. For {#studentName#}, total fees due for this session is {#dueFeeAmount#} KORANGLE"
+    "templateId": "1007896151647629076",
+    "rawContent": "Rs. {#var#} deposited in the fee account of {#var#}, scholar no {#var#} vide receipt no {#var#}, dated {#var#}.\n\n{#var#}\nKorangle",
+    "mappedContent": "Rs. {#feeAmount#} deposited in the fee account of {#studentName#}, scholar no {#studentScholarId#} vide receipt no {#feeReceiptNumber#}, dated {#date#}.\n\n{#schoolName#}\nKorangle"
   }
 ]

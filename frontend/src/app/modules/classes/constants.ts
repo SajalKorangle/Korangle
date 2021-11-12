@@ -195,6 +195,9 @@ export const FEE_RECEIPT_VARIABLE_LIST = [
     }),
     SettingsStructure.getStructure('session', 'session', (dataObject) => {
         return dataObject['student'].session.name;
+    }),
+    SettingsStructure.getStructure('feeReceiptNumber', 'feeReceiptNumber', (dataObject) => {
+        return dataObject['student'].feeReceipt.receiptNumber;
     })
 
 ];  // Creating a variable list so that feeAmount, dueFeeAmount and session variables can be accessed while parsing the SMS template content

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { User } from './classes/user';
 import { DataStorage } from './classes/data-storage';
@@ -31,8 +31,7 @@ export class AppComponent implements OnInit {
         private authenticationService: AuthenticationOldService,
         private versionCheckService: VersionCheckService,
         private dialog: MatDialog,
-        private notificationService: NotificationService,
-        private cdRef: ChangeDetectorRef
+        private notificationService: NotificationService
     ) {}
 
     ngOnInit() {
@@ -67,10 +66,6 @@ export class AppComponent implements OnInit {
         this.htmlRenderer.initialize(this);
 
     }
-
-    ngAfterContentChecked(): void {
-        this.cdRef.detectChanges();
-     }  
 
     showTutorial(url: any) {
         this.dialog.open(ModalVideoComponent, {

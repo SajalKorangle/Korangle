@@ -1,6 +1,5 @@
 import { CollectFeeComponent } from './collect-fee.component';
 import { CommonFunctions } from "../../../../classes/common-functions";
-import { getValidStudentSectionList } from '@modules/classes/valid-student-section-service';
 
 export class CollectFeeServiceAdapter {
     vm: CollectFeeComponent;
@@ -324,7 +323,7 @@ export class CollectFeeServiceAdapter {
             this.addToFeeReceiptList(value[0]);
             this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(value2);
 
-            this.notifyParents();
+            this.notifyParents(value[0]);
             alert('Fees submitted successfully');
 
             this.vm.printFullFeeReceiptList(value[0], value2);
@@ -338,7 +337,7 @@ export class CollectFeeServiceAdapter {
     }
 
     // Notify parents about Fee Receipt  
-    async notifyParents() {
+    async notifyParents(fee_receipt_list) {
         let tempStudentList = this.vm.getStudentList();
         let studentList = [];
         
@@ -358,12 +357,14 @@ export class CollectFeeServiceAdapter {
                     let feeAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
                     let dueFeeAmount = this.vm.getSessionFeesDue(student, session, false) + this.vm.getSessionLateFeesDue(student, session, false);
                     
+                    let feeReceipt = fee_receipt_list.find(x => (x.parentStudent == student.id && x.parentSession == session.id))
 
                     let tempStudent =  CommonFunctions.getInstance().copyObject(student);
                     if(feeAmount > 0) {
                         tempStudent['feeAmount'] = feeAmount;
                         tempStudent['dueFeeAmount'] = dueFeeAmount;
                         tempStudent['session'] = session;
+                        tempStudent['feeReceipt'] = feeReceipt;
                         studentList.push(tempStudent);
                     }
 
