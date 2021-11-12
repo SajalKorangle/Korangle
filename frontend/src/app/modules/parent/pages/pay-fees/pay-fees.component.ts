@@ -107,6 +107,8 @@ export class PayFeesComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        
+        this.selectedStudentList = this.user.section.student.studentList;
 
         this.htmlRenderer = new PayFeesHTMLRenderer(this);
 
@@ -118,6 +120,7 @@ export class PayFeesComponent implements OnInit {
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.printButton = true;
         this.receiptColumnFilter.status = false;
+        this.receiptColumnFilter.mobileNumber = false;
 
         if (CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.employee = false;
@@ -136,7 +139,7 @@ export class PayFeesComponent implements OnInit {
             this.email = this.user.email;
         }
 
-        this.user.section.student.studentList.forEach(student => {
+        this.selectedStudentList.forEach(student => {
             this.newSubFeeReceiptListMappedByStudentId[student.id] = [];
         });
     }
