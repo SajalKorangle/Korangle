@@ -161,3 +161,15 @@ class BusStop(models.Model):
     class Meta:
         db_table = 'bus_stop'
         unique_together = ( 'parentSchool', 'stopName' )
+
+class DailyJobsReport(models.Model):
+    STATUS_CHOICES = (
+        ('INITIATED', 'INITIATED'),
+        ('SENT', 'SENT'),
+    )
+
+    date = models.DateField(auto_now_add=True, unique=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='INITIATED', blank=True)
+
+    def __str__(self):
+        return '{0} : {1}'.format(self.date.strftime("%d-%m-%Y"), self.status)
