@@ -337,7 +337,6 @@ def FeeReceiptPostSave(sender, instance: FeeReceipt, **kwargs):
     for subFeeReceipt in subFeeReceiptList:
         receiptValidateAndUpdate(subFeeReceipt.parentStudentFee)
 
-
 class SubFeeReceipt(models.Model):
 
     parentFeeReceipt = models.ForeignKey(FeeReceipt, on_delete=models.PROTECT, default=0, related_name='subFeeReceiptList')
