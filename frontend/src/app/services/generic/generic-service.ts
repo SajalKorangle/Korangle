@@ -99,8 +99,6 @@ export class GenericService extends RestApiGateway {
 
 export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
-    accounts_app: 'Transaction' | 'TransactionAccountDetails';
-    generic_design_app: 'Layout' | 'LayoutShare' | 'ImageAssets';
 };
 
 // APP_MODEL_STRUCTURE_INTERFACE

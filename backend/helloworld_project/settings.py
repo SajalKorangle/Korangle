@@ -145,22 +145,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-    ),
-    'COERCE_DECIMAL_TO_STRING': False,
+	'DEFAULT_PERMISSION_CLASSES': (
+		'rest_framework.permissions.IsAuthenticated',
+	),
+  'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    # 'rest_framework.authentication.BasicAuthentication',
+    # 'rest_framework.authentication.SessionAuthentication',
+    # 'rest_framework.authentication.TokenAuthentication',
+  ),
+  'COERCE_DECIMAL_TO_STRING': False,
 }
 
 JWT_AUTH = {
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+	'JWT_AUTH_HEADER_PREFIX': 'JWT',
+	'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
 }
 
 
@@ -191,7 +191,7 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl
 if hasattr(ssl, '_create_unverified_context'):
-    ssl._create_default_https_context = ssl._create_unverified_context
+   ssl._create_default_https_context = ssl._create_unverified_context
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -215,7 +215,7 @@ EMAIL_PORT = 587
 # Check running environment & load config
 if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
     print("KORANGLE PRODUCTION")
-
+    
     # korangle/backend/helloworld_project/prod_conf.py
     try:
         from helloworld_project.prod_conf import *
