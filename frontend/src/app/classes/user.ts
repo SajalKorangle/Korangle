@@ -271,12 +271,6 @@ export class User {
                 this.section['videoUrl'] = task.videoUrl;
             }
         }
-        let urlParams = new URLSearchParams(window.location.search);
-        urlParams.forEach((value, key) => {
-            if (['school_id', 'session', 'student_id'].includes(key))
-                return;
-            queryParams[key] = value;
-        });
         EmitterService.get('initialize-router').emit({ queryParams: queryParams });
     }
 }

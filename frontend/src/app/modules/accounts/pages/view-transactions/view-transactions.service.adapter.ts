@@ -164,7 +164,7 @@ export class ViewTransactionsServiceAdapter {
     loadTransactions(): any {
         this.vm.isLoading = true;
         let transaction_data = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
+            'parentEmployee__parentSchool': this.vm.user.activeSchool.dbId,
             'transactionDate__gte': this.vm.startDate,
             'transactionDate__lte': this.vm.endDate,
             'korangle__order': '-id',
@@ -218,8 +218,8 @@ export class ViewTransactionsServiceAdapter {
                 parentEmployeeName: null,
                 parentEmployee: transaction.parentEmployee,
             };
-            const employee = this.vm.employeeList.find(employee => employee.id == transaction.parentEmployee);
-            tempData.parentEmployeeName = employee ? employee.name : '';
+
+            tempData.parentEmployeeName = this.vm.employeeList.find(employee => employee.id == transaction.parentEmployee).name;
 
             transactionAccounts.forEach(account => {
                 if (account.parentTransaction == transaction.id) {
@@ -263,7 +263,7 @@ export class ViewTransactionsServiceAdapter {
         let headerValues = [];
         for (let filter in this.vm.columnFilter) {
             if (this.vm.columnFilter[filter].value == true) {
-                headerValues.push(this.vm.columnFilter[filter].displayName);
+            headerValues.push(this.vm.columnFilter[filter].displayName);
             }
         }
         return headerValues;
@@ -346,9 +346,9 @@ export class ViewTransactionsServiceAdapter {
             let receivedLength = 0;
             let chunks = [];
             while (true) {
-                const { done, value } = await reader.read();
-                if (done) {
-                    break;
+                const {done, value} = await reader.read();
+                 if (done) {
+                     break;
                 }
                 chunks.push(value);
                 receivedLength += value.length;
@@ -376,108 +376,108 @@ export class ViewTransactionsServiceAdapter {
             let flag = 1;
             var Folder = zip.folder('Documents');
             // this.studentParameterDocumentList.forEach(parameter => {
-            if (this.vm.columnFilter.bill.value) {
-                this.vm.getFilteredTransactionList().forEach(transaction => {
-                    transaction.billImages.forEach(image => {
-                        let document_url = image.imageURL;
-                        if (document_url) {
-                            check1 = check1 + 1;
-                            this.download_each_file(document_url).then(blob => {
-                                if (blob) {
-                                    let type = document_url.split(".");
-                                    type = type[type.length - 1];
-                                    let file = new Blob([blob], { type: type });
-                                    Folder.file('transaction_' + transaction.voucherNumber + "_bill_" + image.orderNumber + '.' + type, file);
-                                    this.downloadedFiles = this.downloadedFiles + 1;
-                                }
-                                if (check1 === this.downloadedFiles + this.totalFailed) {
-                                    zip.generateAsync({ type: "blob" })
+                if (this.vm.columnFilter.bill.value) {
+                    this.vm.getFilteredTransactionList().forEach(transaction => {
+                        transaction.billImages.forEach(image => {
+                            let document_url = image.imageURL;
+                            if (document_url) {
+                                check1 = check1 + 1;
+                                this.download_each_file(document_url).then(blob => {
+                                    if (blob) {
+                                        let type = document_url.split(".");
+                                        type = type[type.length - 1];
+                                        let file = new Blob([blob], { type: type});
+                                        Folder.file('transaction_' + transaction.voucherNumber + "_bill_" + image.orderNumber + '.' + type, file);
+                                        this.downloadedFiles = this.downloadedFiles + 1;
+                                    }
+                                    if (check1 === this.downloadedFiles + this.totalFailed) {
+                                        zip.generateAsync({ type: "blob"})
                                         .then(content => {
                                             FileSaver.saveAs(content, "Documents.zip");
                                             this.download = 'NOT';
                                         });
+                                        this.vm.isLoading = false;
+                                        this.download = 'END';
+                                        this.downloadedFiles = 0;
+                                        this.totalFiles = 0;
+                                    }
+                                }, error => {
+                                    this.download = "FAIL";
                                     this.vm.isLoading = false;
-                                    this.download = 'END';
                                     this.downloadedFiles = 0;
                                     this.totalFiles = 0;
-                                }
-                            }, error => {
-                                this.download = "FAIL";
-                                this.vm.isLoading = false;
-                                this.downloadedFiles = 0;
-                                this.totalFiles = 0;
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
 
-                });
-            }
-            if (this.vm.columnFilter.quotation.value) {
-                this.vm.getFilteredTransactionList().forEach(transaction => {
-                    transaction.quotationImages.forEach(image => {
-                        let document_url = image.imageURL;
-                        if (document_url) {
-                            check1 = check1 + 1;
-                            this.download_each_file(document_url).then(blob => {
-                                if (blob) {
-                                    let type = document_url.split(".");
-                                    type = type[type.length - 1];
-                                    let file = new Blob([blob], { type: type });
-                                    Folder.file('transaction_' + transaction.voucherNumber + '_quotation_' + image.orderNumber + '.' + type, file);
-                                    this.downloadedFiles = this.downloadedFiles + 1;
-                                }
-                                if (check1 === this.downloadedFiles + this.totalFailed) {
-                                    zip.generateAsync({ type: "blob" })
+                    });
+                }
+                if (this.vm.columnFilter.quotation.value) {
+                    this.vm.getFilteredTransactionList().forEach(transaction => {
+                        transaction.quotationImages.forEach(image => {
+                            let document_url = image.imageURL;
+                            if (document_url) {
+                                check1 = check1 + 1;
+                                this.download_each_file(document_url).then(blob => {
+                                    if (blob) {
+                                        let type = document_url.split(".");
+                                        type = type[type.length - 1];
+                                        let file = new Blob([blob], { type: type});
+                                        Folder.file('transaction_' + transaction.voucherNumber + '_quotation_' + image.orderNumber + '.' + type, file);
+                                        this.downloadedFiles = this.downloadedFiles + 1;
+                                    }
+                                    if (check1 === this.downloadedFiles + this.totalFailed) {
+                                        zip.generateAsync({ type: "blob"})
                                         .then(content => {
                                             FileSaver.saveAs(content, "Documents.zip");
                                             this.download = 'NOT';
                                         });
+                                        this.vm.isLoading = false;
+                                        this.download = 'END';
+                                        this.downloadedFiles = 0;
+                                        this.totalFiles = 0;
+                                    }
+                                }, error => {
+                                    this.download = "FAIL";
                                     this.vm.isLoading = false;
-                                    this.download = 'END';
                                     this.downloadedFiles = 0;
                                     this.totalFiles = 0;
-                                }
-                            }, error => {
-                                this.download = "FAIL";
-                                this.vm.isLoading = false;
-                                this.downloadedFiles = 0;
-                                this.totalFiles = 0;
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
 
-                });
-            }
+                    });
+                }
             // });
         } else {
-            alert("No documents are available for download.");
-            this.download = "NOT";
+        alert("No documents are available for download.");
+        this.download = "NOT";
         }
     }
 
     printTransactionsList() {
         let value = {
-            transactionsList: this.vm.getFilteredTransactionList(),
+          transactionsList: this.vm.getFilteredTransactionList(),
             startDate: this.vm.startDate,
             endDate: this.vm.endDate,
             columnFilter: this.vm.columnFilter,
-        };
-        this.vm.printService.navigateToPrintRoute(PRINT_TRANSACTIONS, { user: this.vm.user, value });
+          };
+          this.vm.printService.navigateToPrintRoute(PRINT_TRANSACTIONS, {user: this.vm.user, value});
     }
 
     deleteTransaction(transaction) {
         if (!confirm('Are you sure you want to delete this transaction?')) {
-            return;
+          return ;
         }
         this.vm.isLoading = true;
         let transaction_data = {
-            id: transaction.dbId,
+          id: transaction.dbId,
         };
         Promise.all([
-            this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
+          this.vm.accountsService.deleteObject(this.vm.accountsService.transaction, transaction_data),
         ]).then(val => {
-            const transactionIndex = this.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
-            this.vm.transactionsList.splice(transactionIndex, 1);
+          const transactionIndex = this.vm.transactionsList.findIndex(t => t.dbId == transaction_data.id);
+          this.vm.transactionsList.splice(transactionIndex, 1);
             alert('Transaction Deleted Successfully');
             this.vm.isLoading = false;
         });
