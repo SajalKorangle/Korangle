@@ -1,13 +1,12 @@
-from .business.sms_purchase import get_sms_purchase_list
+from django.http import HttpResponse
 from common.common_views_3 import CommonView, CommonListView, common_json_view_function
 from decorators import user_permission, user_permission_3
-from django.http import HttpResponse
 
 from rest_framework.views import APIView
 
 
 ############## SMS Old ##############
-from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool, SMSPurchase
+from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool
 from .business.sms import get_sms_list
 
 
@@ -21,9 +20,6 @@ class SMSOldListView(APIView):
             'endDateTime': request.GET['endDateTime'],
         }
         return get_sms_list(data)
-
-
-from .business.sms_delivery_report import handle_sms_delivery_report
 
 
 def handle_sms_delivery_report_view(request):
@@ -44,7 +40,7 @@ class SMSCountView(APIView):
 
 
 ############## SMS Delivery Report ##############
-from .business.sms_delivery_report import get_sms_delivery_report_list
+from .business.sms_delivery_report import get_sms_delivery_report_list, handle_sms_delivery_report
 
 
 class SMSDeliveryReportView(CommonView, APIView):
@@ -55,24 +51,25 @@ class SMSDeliveryReportView(CommonView, APIView):
 
 
 # class MsgClubDeliveryReportView(APIView):
-#
+# 
 #     @user_permission
 #     def get(request):
 #         data = {
 #             'requestId': request.GET['requestId'],
 #         }
 #         return get_msg_club_delivery_report_list(data)
-#
-#
+# 
+# 
 # def handle_msg_club_delivery_report_view(request):
 #     data = json.loads(request.body.decode('utf-8'))
 #     handle_msg_club_delivery_report(data)
 #     return HttpResponse(status=201)
 
 ############## SMS Purchase ##############
+from .business.sms_purchase import get_sms_purchase_list
 
 
-class SMSPurchaseOldView(APIView):
+class SMSPurchaseView(APIView):
 
     @user_permission
     def get(request, school_id):
@@ -144,18 +141,6 @@ class SMSEventView(APIView):
         return common_json_view_function(request.GET, "sms_app", "sms_event.json")[0]
 
 
-class SMSPurchaseView(CommonView, APIView):
-    Model = SMSPurchase
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get']
-
-
-class SMSPurchaseListView(CommonListView, APIView):
-    Model = SMSPurchase
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get']
-
-
 class SMSEventListView(APIView):
     @user_permission_3
     def get(self, request, activeSchoolID, activeStudentID):
@@ -173,17 +158,3 @@ class SMSDefaultTemplateListView(APIView):
     def get(self, request, activeSchoolID, activeStudentID):
         return common_json_view_function(request.GET, "sms_app", "default_sms_templates.json")
 
-
-from .models import SmsPurchaseOrder
-
-
-class SmsPurchaseOrderView(CommonView, APIView):
-    Model = SmsPurchaseOrder
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get']
-
-
-class SmsPurchaseOrderListView(CommonListView, APIView):
-    Model = SmsPurchaseOrder
-    RelationsToSchool = ['parentSchool__id']
-    permittedMethods = ['get']
