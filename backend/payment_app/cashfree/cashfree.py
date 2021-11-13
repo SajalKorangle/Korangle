@@ -155,6 +155,20 @@ def getOrderStatus(orderId, disableAssertion=False):
 
     return response.json()
 
+def getOrderPaymetSplitDetails(orderId):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-client-id': CASHFREE_APP_ID,
+        'x-client-secret': CASHFREE_SECRET_KEY
+    }
+
+    url = base_url + '/api/v2/easy-split/orders/{orderId}'.format(orderId=orderId)
+    response = requests.get(url=url, headers=headers)
+
+    assert response.json()['status'] == 'OK', 'Cashfree Order Payment Split Details Request Failed, response : {0}'.format(response.json())
+    return response.json()
+
+    
 
 def initiateRefund(orderId, splitData):
     orderStatusData = getOrderStatus(orderId)
