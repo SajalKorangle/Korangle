@@ -42,15 +42,6 @@ urlpatterns = [
     url(r'^'+api_version+'errors/', include('errors_app.urls')),
     url(r'^'+api_version+'accounts/', include('accounts_app.urls')),
     url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),
-    url(r'^' + api_version + 'online-class/', include('online_classes_app.urls')),
-    url(r'^' + api_version + 'payment/', include('payment_app.urls')),
-    url(r'^'+api_version+'generic-design/', include('generic_design_app.urls')),
+    url(r'^'+api_version+'online-class/', include('online_classes_app.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
-## VERSION FREE URLS STARTS ##
-from payment_app.views import OrderCompletionView
-urlpatterns += [
-    url(r'^payment/order-completion/', OrderCompletionView.as_view(), name='cashfree_order_completion'),
-]
-## VERSION FREE URLS ENDS ##
