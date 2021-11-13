@@ -4,8 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 
-import { ViewFeeServiceAdapter } from './view-fee.service.adapter';
-import { ViewFeeHTMLRenderer } from './view-fee.html.renderer';
+import { PayFeesServiceAdapter } from './pay-fees.service.adapter';
+import { PayFeesHTMLRenderer } from './pay-fees.html.renderer';
 
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt';
@@ -34,12 +34,12 @@ declare const $: any;
 
 @Component({
     selector: 'view-fee',
-    templateUrl: './view-fee.component.html',
-    styleUrls: ['./view-fee.component.css'],
+    templateUrl: './pay-fees.component.html',
+    styleUrls: ['./pay-fees.component.css'],
     providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService, UserService, PaymentService],
 })
 
-export class ViewFeeComponent implements OnInit {
+export class PayFeesComponent implements OnInit {
     user;
 
     // Constant Lists
@@ -87,8 +87,8 @@ export class ViewFeeComponent implements OnInit {
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
-    htmlRenderer: ViewFeeHTMLRenderer;
-    serviceAdapter: ViewFeeServiceAdapter;
+    htmlRenderer: PayFeesHTMLRenderer;
+    serviceAdapter: PayFeesServiceAdapter;
 
     isLoading = true;
 
@@ -107,12 +107,12 @@ export class ViewFeeComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
+        
         this.selectedStudentList = this.user.section.student.studentList;
 
-        this.htmlRenderer = new ViewFeeHTMLRenderer(this);
+        this.htmlRenderer = new PayFeesHTMLRenderer(this);
 
-        this.serviceAdapter = new ViewFeeServiceAdapter();
+        this.serviceAdapter = new PayFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
@@ -120,6 +120,7 @@ export class ViewFeeComponent implements OnInit {
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.printButton = true;
         this.receiptColumnFilter.status = false;
+        this.receiptColumnFilter.mobileNumber = false;
 
         if (CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.employee = false;

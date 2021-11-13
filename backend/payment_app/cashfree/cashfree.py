@@ -4,6 +4,7 @@ import base64
 import json
 import requests
 import time
+import math
 
 # Do you know why they didn't just use CASHFREE_APP_ID and CASHFREE_SECRET_KEY instead of CLIENT_ID & CLIENT_SECRET
 # for bearer token
@@ -87,6 +88,8 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
             'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),  # adding korangle's commission
         }
     )
+    if(orderData['orderAmount'] == math.floor(orderData['orderAmount'])):   # Removing decimal incase amount is int, (cashfree constraints)
+        orderData['orderAmount'] = math.floor(orderData['orderAmount'])
 
     orderData.update({
         'signature': getSignature(orderData)
@@ -152,6 +155,20 @@ def getOrderStatus(orderId, disableAssertion=False):
 
     return response.json()
 
+def getOrderPaymetSplitDetails(orderId):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-client-id': CASHFREE_APP_ID,
+        'x-client-secret': CASHFREE_SECRET_KEY
+    }
+
+    url = base_url + '/api/v2/easy-split/orders/{orderId}'.format(orderId=orderId)
+    response = requests.get(url=url, headers=headers)
+
+    assert response.json()['status'] == 'OK', 'Cashfree Order Payment Split Details Request Failed, response : {0}'.format(response.json())
+    return response.json()
+
+    
 
 def initiateRefund(orderId, splitData):
     orderStatusData = getOrderStatus(orderId)
@@ -347,7 +364,7 @@ def bankAccountVerification(accountNumber, ifsc):
         params=params,
     )
 
-    assert response.json()['status'] == "SUCCESS", "Bank Verification Error: {0}".format(response.json())
+    # assert response.json()['status'] == "SUCCESS", "Bank Verification Error: {0}".format(response.json())
 
     data = response.json()['data']
     data.update({

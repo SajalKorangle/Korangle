@@ -26,7 +26,7 @@ export class SetBankAccountComponent implements OnInit {
     serviceAdapter: SetBankAccountServiceAdapter;
 
     cache: {
-        ifsc?: {
+        bankDetails?: {
             ifsc: string,
             bank: string,
             address: string,
@@ -66,19 +66,9 @@ export class SetBankAccountComponent implements OnInit {
         this.isLoading = false;
     }
 
-    getRequiredPaymentAccountData() {
-        const requiredOnlyFields: SchoolMerchantAccount = JSON.parse(JSON.stringify(this.schoolMerchantAccount));
-        delete requiredOnlyFields.vendorData.addedOn;
-        delete requiredOnlyFields.vendorData.balance;
-        delete requiredOnlyFields.vendorData.status;
-        delete requiredOnlyFields.vendorData.upi;
-        requiredOnlyFields.vendorData.settlementCycleId = parseInt(requiredOnlyFields.vendorData.settlementCycleId.toString());
-        return requiredOnlyFields;
-    }
-
     isIFSCValidationPasses(): boolean {
         if (this.schoolMerchantAccount.vendorData.bank.ifsc.length == 11
-            && this.cache.ifsc && this.cache.ifsc.ifsc == this.schoolMerchantAccount.vendorData.bank.ifsc)
+            && this.cache.bankDetails && this.cache.bankDetails.ifsc == this.schoolMerchantAccount.vendorData.bank.ifsc)
             return true;
         return false;
     }

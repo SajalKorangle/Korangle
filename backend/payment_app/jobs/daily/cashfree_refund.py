@@ -13,6 +13,8 @@ class Job(DailyJob):  # Should be run between 3am to 5am
 
     def execute(self):
         print('Updating Orders...')
+
+        ## Ensuring that the job is not running more than once start(in case of multiple instances running server)
         waitTime = random.randint(1, 5)
         print('Waiting for {0}s'.format(waitTime))
         time.sleep(waitTime)
@@ -21,6 +23,7 @@ class Job(DailyJob):  # Should be run between 3am to 5am
         except:
             print('Executing Failed, Daily Job already executed once')
             return
+        ## Ensuring that the job is not running more than once ends
 
         # Refund Status Check
         refundInitiatedOrderList = Order.objects.filter(status='Refund Initiated')
@@ -31,6 +34,7 @@ class Job(DailyJob):  # Should be run between 3am to 5am
                     orderInstance.status = 'Refunded'
                     orderInstance.save()
             except:
+                print('Error processing the refund status')
                 continue
 
         # Order completion check
@@ -43,24 +47,21 @@ class Job(DailyJob):  # Should be run between 3am to 5am
                     orderInstance.save()
                     continue
                 assert cashfreeOrder['orderStatus'] != "ACTIVE"
-            # If there is a network error on our side or cashfree side,
-            # we are changing the status of order to 'Failed'. Please confirm.
-            # @answer : No, in case of any unknown error we are skipping that order row. We are changing the status
-            # to failed only after checking the response from cashfree
             except:  # continue in case of order is active or order is nor registered in cashfree or network error on our side or cashfree side
                 continue
             if(cashfreeOrder['txStatus'] == 'SUCCESS'):
                 orderInstance.status = 'Completed'
                 orderInstance.referenceId = cashfreeOrder['referenceId']
                 try:
-                    # Why transaction atomic here but not at other places?
-                    # @answer : it is to avoid any partial save of models(sub fee receipts and all). I am adding at other places to make the code consistent
                     with transaction.atomic():
                         orderInstance.save()
                 except:
                     orderInstance.status = 'Refund Pending'
-                    with transaction.atomic():
-                        orderInstance.save()
+                    try:
+                        with transaction.atomic():
+                            orderInstance.save()
+                    except:
+                        print('Error processing the order')
             else:
                 orderInstance.status = 'Failed'
                 with transaction.atomic():

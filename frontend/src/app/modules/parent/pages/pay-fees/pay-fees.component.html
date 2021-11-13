@@ -48,6 +48,7 @@
                                 color: blue !important;
                             ">
                             <td align="left">{{ student.name }}
+                                <!-- Payment Amount Input Starts -->
                                 <mat-form-field *ngIf="hasOnlinePaymentAccount" style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
                                     <mat-label *ngIf="isMobile()">Amount</mat-label>
                                     <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
@@ -55,6 +56,7 @@
                                         (ngModelChange)="handleOverallPaymentChange(student)" [errorStateMatcher]="{isErrorState: amountError(student)}">
                                     <mat-error>Invalid Amount</mat-error>
                                 </mat-form-field>
+                                <!-- Payment Amount Input Ends -->
                             </td>
                             <td align="center">{{getNewSubFeeReceiptTotalFee(student)}}</td>
                             <td align="center">{{ getStudentFeesDue(student) - getNewSubFeeReceiptTotalFee(student)}}
@@ -186,6 +188,7 @@
                     </ng-container>
                 </tbody>
             </table>
+            <!-- Fee Payment Form Starts -->
             <ng-container *ngIf="hasOnlinePaymentAccount && getOverallFeesDue() > 0">
                 <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
                     <mat-label>Email</mat-label>
@@ -197,6 +200,7 @@
                     Pay Now
                 </button>
             </ng-container>
+            <!-- Fee Payment Form Ends -->
 
         </ng-container>
 
