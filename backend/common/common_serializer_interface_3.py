@@ -93,9 +93,7 @@ def create_list(data_list, ModelSerializer, activeSchoolID, activeStudentID):
 
 def create_object(data, ModelSerializer, activeSchoolID, activeStudentID):
     serializer = ModelSerializer(data=data)
-    # ", str(serializer.errors) + '\ndata: {0}'.format(data)" is needed to log the error message and the data for which the error happened for easy debugging
-    # It wont affect he production as these logs are not recorded in the production logs
-    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID=activeStudentID), str(serializer.errors) + '\ndata: {0}'.format(data)
+    assert serializer.is_valid(activeSchoolID=activeSchoolID, activeStudentID = activeStudentID), serializer.errors
     serializer.save()
     return serializer.data
 
