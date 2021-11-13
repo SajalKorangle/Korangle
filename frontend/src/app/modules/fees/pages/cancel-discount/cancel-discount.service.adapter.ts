@@ -151,16 +151,55 @@ export class CancelDiscountServiceAdapter {
             cancelled: true,
         };
 
+        /*let sub_discount_list = this.vm.subDiscountList.filter(subDiscount => {
+            return subDiscount.parentFeeReceipt == discount.id;
+        }).map(item => {
+            return {
+                'id': item.id,
+                'cancelled': true,
+            }
+        });*/
+
+        let student_fee_list = this.vm.subDiscountList
+            .filter((subDiscount) => {
+                return subDiscount.parentDiscount == discount.id;
+            })
+            .map((item) => {
+                let tempObject = {
+                    id: item.parentStudentFee,
+                    cleared: false,
+                };
+                this.vm.installmentList.forEach((installment) => {
+                    if (item[installment + 'Amount'] && item[installment + 'Amount'] > 0) {
+                        tempObject[installment + 'ClearanceDate'] = null;
+                    }
+                });
+                return tempObject;
+            });
+
         Promise.all([
-            this.vm.feeService.partiallyUpdateObject(this.vm.feeService.discounts, discount_object)
-        ]).then(value => {
-            alert('Discount is cancelled');
+            this.vm.feeService.partiallyUpdateObject(this.vm.feeService.discounts, discount_object),
+            // this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
+        ]).then(
+            (value) => {
+                alert('Discount is cancelled');
 
-            this.vm.discountList.find((item) => {
-                return item.id == discount.id;
-            }).cancelled = true;
+                this.vm.discountList.find((item) => {
+                    return item.id == discount.id;
+                }).cancelled = true;
 
-            this.vm.isLoading = false;
-        });
+                /*this.vm.subFeeReceiptList.filter(item => {
+                return item.parentFeeReceipt == feeReceipt.id;
+            }).forEach(item => {
+                item.cancelled = true;
+            });*/
+
+                this.vm.isLoading = false;
+            },
+            (error) => {
+                this.vm.isLoading = false;
+            }
+        );
     }
 }

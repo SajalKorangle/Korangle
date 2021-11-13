@@ -19,18 +19,18 @@ export class SettingsBackendData {
         this.feeSettings.parentSchool = this.vm.user.activeSchool.dbId;
         this.feeSettings.parentSession = this.vm.activeSession.id;
         this.feeSettings.sessionLocked = false;
-        this.feeSettings.accountingSettingsJSON = null; // null value signifies accounting is disabled
+        this.feeSettings.accountingSettings = null; // null value signifies accounting is disabled
     }
 
-    initializeAccounting(): void {
-        this.feeSettings.accountingSettingsJSON = new AccountingSettings();
+    initilizeAccouting(): void {
+        this.feeSettings.accountingSettings = new AccountingSettings();
     }
 
     filterInvalidAccounts(): void {
-        if (this.feeSettings.accountingSettingsJSON) {
+        if (this.feeSettings.accountingSettings) {
             this.vm.getPaymentModeList().forEach(paymentMode => {
-                this.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode] =
-                    this.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode]
+                this.feeSettings.accountingSettings.toAccountsStructure[paymentMode] =
+                    this.feeSettings.accountingSettings.toAccountsStructure[paymentMode]
                         .filter(accountSessionId => this.accountSessionList.find(accountSession => accountSession.id == accountSessionId));
             });
         }

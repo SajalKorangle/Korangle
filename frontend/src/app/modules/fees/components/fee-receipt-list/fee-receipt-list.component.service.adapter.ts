@@ -3,7 +3,7 @@ import { FeeReceiptListComponent } from '@modules/fees/components/fee-receipt-li
 export class FeeReceiptListComponentServiceAdapter {
     vm: FeeReceiptListComponent;
 
-    constructor() { }
+    constructor() {}
 
     initializeAdapter(vm: FeeReceiptListComponent): void {
         this.vm = vm;
@@ -20,8 +20,26 @@ export class FeeReceiptListComponentServiceAdapter {
             cancelledDateTime: new Date(),
         };
 
+        let student_fee_list = this.vm.subFeeReceiptList
+            .filter((subFeeReceipt) => {
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
+            })
+            .map((item) => {
+                let tempObject = {
+                    id: item.parentStudentFee,
+                    cleared: false,
+                };
+                this.vm.installmentList.forEach((installment) => {
+                    if (item[installment + 'Amount'] && item[installment + 'Amount'] > 0) {
+                        tempObject[installment + 'ClearanceDate'] = null;
+                    }
+                });
+                return tempObject;
+            });
+
         Promise.all([
             this.vm.feeService.partiallyUpdateObject(this.vm.feeService.fee_receipts, fee_receipt_object),
+            this.vm.feeService.partiallyUpdateObjectList(this.vm.feeService.student_fees, student_fee_list),
         ]).then(
             (value) => {
                 alert('Fee Receipt is cancelled');
