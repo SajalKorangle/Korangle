@@ -1,5 +1,6 @@
 import { ATTENDANCE_STATUS_LIST } from '@modules/attendance/classes/constants';
 import canvasTxt from 'canvas-txt';
+import { globalAgent } from 'http';
 
 const FormulaParser = require('hot-formula-parser').Parser;
 

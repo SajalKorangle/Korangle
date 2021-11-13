@@ -16,10 +16,15 @@ import { SmsOldService } from '../../services/modules/sms/sms-old.service';
 @NgModule({
     declarations: [
         SmsComponent,
+
+        // SendSmsComponent,
+        // ViewSentComponent,
+        // ViewPurchasesComponent,
     ],
+
     imports: [ComponentsModule, SmsRoutingModule, NgxDatatableModule],
     exports: [],
     providers: [SmsOldService],
     bootstrap: [SmsComponent],
 })
-export class SmsModule { }
+export class SmsModule {}

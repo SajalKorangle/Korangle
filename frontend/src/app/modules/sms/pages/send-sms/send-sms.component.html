@@ -71,9 +71,6 @@
                             this.backendData.smsBalance < htmlRenderer.getEstimatedSMSCount()"
                           style="font-size: 15px;color:rgba(255,0,0,0.91)">
                         You are short by <b>{{ htmlRenderer.getEstimatedSMSCount() - this.backendData.smsBalance }}</b> SMS.
-                        <div *ngIf="hasPurchaseSMSPermission()">
-                            <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="openPurchaseSMSDialog()">Purchase SMS</button>
-                        </div>
                          </span><br/>
 
                 </ng-container>

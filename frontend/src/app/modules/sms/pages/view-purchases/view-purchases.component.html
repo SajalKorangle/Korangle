@@ -1,7 +1,6 @@
 <div class="card-content">
-    <ng-container *ngIf="!isLoading && backendData.smsPurchaseList">
-        <ng-container *ngIf="backendData.smsPurchaseList.length > 0">
-            <h3>SMS Purchases</h3>
+    <ng-container *ngIf="!isLoading && smsPurchaseList">
+        <ng-container *ngIf="smsPurchaseList.length > 0">
             <div class="row">
                 <div class="col-md-12">
                     <table class="table table-hover">
@@ -14,7 +13,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let smsPurchase of backendData.smsPurchaseList; let i = index" style="padding: 0px">
+                            <tr *ngFor="let smsPurchase of smsPurchaseList; let i = index" style="padding: 0px">
                                 <td>{{ i + 1 }}</td>
                                 <td align="center">{{ smsPurchase.purchaseDateTime | date: 'dd - MMM - yyyy' }}</td>
                                 <td style="padding-right: 15px" align="right">{{ smsPurchase.numberOfSMS }}</td>
@@ -26,39 +25,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="backendData.smsPurchaseList.length === 0"> No SMS purchased yet </ng-container>
-
-        <ng-container *ngIf="backendData.incompleteOnlineSmsPaymentTransactionList.length > 0">
-            <h3>Incomplete Orders</h3>
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table table-hover">
-                        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                            <tr>
-                                <th>S No.</th>
-                                <th class="text-center">Date</th>
-                                <th class="text-center">Count</th>
-                                <th class="text-center">Price</th>
-                                <th class="text-center">Order Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let transaction of parsedIncompleteTransactions; let i = index" style="padding: 0px">
-                                <td>{{ i + 1 }}</td>
-                                <td align="center">{{ transaction.parentOrderInstance.dateTime | date: 'dd - MMM - yyyy'
-                                    }}</td>
-                                <td style="padding-right: 15px" align="center">
-                                    {{ transaction.smsPurchaseData.numberOfSMS}}
-                                </td>
-                                <td align="center">Rs. {{ transaction.parentOrderInstance.amount }}/-</td>
-                                <td align="center">{{ transaction.parentOrderInstance.status }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </ng-container>
-
+        <ng-container *ngIf="smsPurchaseList.length === 0"> No SMS purchased yet </ng-container>
     </ng-container>
 </div>
 
