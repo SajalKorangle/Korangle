@@ -5,15 +5,14 @@ import { ComponentsModule } from '../../components/components.module';
 import { ParentComponent } from './parent.component';
 
 import { ParentRoutingModule } from './parent.routing';
-
-import {PrintComponentsModule} from '@modules/fees/print/print-components.module';
+import { FeesComponentsModule } from '../fees/components/fees-components.module';
 
 @NgModule({
     declarations: [ParentComponent],
 
-    imports: [ComponentsModule, ParentRoutingModule, PrintComponentsModule],
+    imports: [ComponentsModule, FeesComponentsModule, ParentRoutingModule],
     exports: [],
     providers: [],
     bootstrap: [ParentComponent],
 })
-export class ParentModule { }
+export class ParentModule {}
