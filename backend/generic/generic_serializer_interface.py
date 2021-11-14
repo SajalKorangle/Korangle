@@ -230,7 +230,7 @@ class GenericSerializerInterface():
                 child_data.update({child_related_field.remote_field.name: parent_primary_key_value})
 
             child_serializer = GenericSerializerInterface(Model=child_model, data=child_data_list,
-                                                            activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList, partia=self.partial)
+                                                            activeSchoolId=self.activeSchoolId, activeStudentIdList=self.activeStudentIdList, partial=self.partial)
             child_response = getattr(child_serializer, self.method + '_object_list')()
             response.update({child_related_field_name: child_response})
         return response
