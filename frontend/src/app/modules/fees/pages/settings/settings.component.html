@@ -6,14 +6,14 @@
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <mat-icon style="font-size: 30px">account_balance</mat-icon>
                 <h3>&nbsp;&nbsp;Accounting</h3>
-                <mat-slide-toggle style="margin-right: 20px; margin-left: auto;" [checked]="backendData.feeSettings.accountingSettings!=null"
+                <mat-slide-toggle style="margin-right: 20px; margin-left: auto;" [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
                     (change)="toggleAccounting($event.checked)">Enable</mat-slide-toggle>
             </div>
 
-            <ng-container *ngIf="backendData.feeSettings.accountingSettings">
+            <ng-container *ngIf="backendData.feeSettings.accountingSettingsJSON">
                 <mat-form-field style="width: 200px;" (click)="searchInput1.focus();">
                     <mat-label>Student Fee Debit Account</mat-label>
-                    <mat-select [(ngModel)]="backendData.feeSettings.accountingSettings.parentAccountFrom" required>
+                    <mat-select [(ngModel)]="backendData.feeSettings.accountingSettingsJSON.parentAccountFrom" required>
                         <mat-option style="pointer-events: none;">
                             <!--Search bar-->
                             <mat-form-field style="width: 100%;">
@@ -59,18 +59,42 @@
                                 <mat-label>Mode: {{paymentMode}}</mat-label>
                                 <mat-chip-list required>
                                     <mat-chip
-                                        *ngFor="let feePaymentAccountSession of backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode], let fi=index;"
-                                        [removable]="true" (removed)="backendData.feeSettings.accountingSettings.toAccountsStructure[paymentMode].splice(fi,1)">
+                                        *ngFor="let feePaymentAccountSession of backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode], let fi=index;"
+                                        [removable]="true"
+                                        (removed)="backendData.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode].splice(fi,1)">
                                         {{getAccountName(feePaymentAccountSession)}}
                                         <mat-icon class="pre-border" matChipRemove>cancel</mat-icon>
                                     </mat-chip>
                                 </mat-chip-list>
                                 <input style="pointer-events: none; opacity: 0;">
-                                <!--Hack for propor placeholder display-->
+                                <!--Hack for proper placeholder display-->
                             </mat-form-field>
                         </div>
                     </div>
-                </ng-container>
+                </ng-container><br />
+
+                <!-- Online Fee Payment Credit Account Selector Start -->
+                <mat-form-field style="width: 200px;" (click)="searchInput3.focus();">
+                    <mat-label>Online Payment Credit Account</mat-label>
+                    <mat-select [(ngModel)]="backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount" required>
+                        <mat-option style="pointer-events: none;">
+                            <!--Search bar-->
+                            <mat-form-field style="width: 100%;">
+                                <mat-icon matPrefix (click)="searchInput3.focus();">search</mat-icon>
+                                <input style="pointer-events: auto;" #searchInput3 (click)="$event.stopPropagation();" matInput>
+                            </mat-form-field>
+                        </mat-option>
+
+                        <ng-container *ngFor="let customAccountSession of customAccountSessionList">
+                            <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput3.value.toLowerCase())"
+                                [value]="customAccountSession.id">
+                                {{customAccountSession.title}}&nbsp;A/c
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field><br />
+                <!-- Online Fee Payment Credit Account Selector Ends -->
+
             </ng-container>
 
         </div>

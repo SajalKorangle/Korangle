@@ -16,6 +16,7 @@ import { EmployeeService } from '../../../../services/modules/employee/employee.
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
 
@@ -23,7 +24,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService],
+    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService],
 })
 export class GiveDiscountComponent implements OnInit {
     user;
@@ -69,6 +70,7 @@ export class GiveDiscountComponent implements OnInit {
     isStudentListLoading = false;
 
     constructor(
+        public genericService: GenericService,
         public schoolService: SchoolService,
         public feeService: FeeService,
         public studentService: StudentService,
@@ -76,7 +78,7 @@ export class GiveDiscountComponent implements OnInit {
         public classService: ClassService,
         public employeeService: EmployeeService,
         private cdRef: ChangeDetectorRef
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

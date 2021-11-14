@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'tc_app',
     'online_classes_app',
     'generic_design_app',
+    'payment_app',
 
     'corsheaders',
 
@@ -145,22 +146,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-	'DEFAULT_PERMISSION_CLASSES': (
-		'rest_framework.permissions.IsAuthenticated',
-	),
-  'DEFAULT_AUTHENTICATION_CLASSES': (
-    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    # 'rest_framework.authentication.BasicAuthentication',
-    # 'rest_framework.authentication.SessionAuthentication',
-    # 'rest_framework.authentication.TokenAuthentication',
-  ),
-  'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+    ),
+    'COERCE_DECIMAL_TO_STRING': False,
 }
 
 JWT_AUTH = {
-	'JWT_AUTH_HEADER_PREFIX': 'JWT',
-	'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
-	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
 }
 
 
@@ -191,7 +192,7 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl
 if hasattr(ssl, '_create_unverified_context'):
-   ssl._create_default_https_context = ssl._create_unverified_context
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -207,7 +208,6 @@ EMAIL_HOST_PASSWORD = 'AqtgnMQN6VuP6cz9KOOX85r1UUCAR7NpH4xychXFJTBr'
 EMAIL_PORT = 587
 
 
-
 # AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'
 # AWS_SECRET_ACCESS_KEY = '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'
 # AWS_STORAGE_BUCKET_NAME = 'korangle'
@@ -215,7 +215,7 @@ EMAIL_PORT = 587
 # Check running environment & load config
 if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
     print("KORANGLE PRODUCTION")
-    
+
     # korangle/backend/helloworld_project/prod_conf.py
     try:
         from helloworld_project.prod_conf import *
@@ -241,7 +241,7 @@ else:
         MIDDLEWARE.append('querycount.middleware.QueryCountMiddleware')
 
 
-#ZOOM
+# ZOOM
 ZOOM_API_KEY = 'GY5heSVqQIWo8YGY_Patrg'
 ZOOM_SECRET_KEY = 'trQY4s4DkL9GrB20JrInNY7A6ZmTJZ7G6fO0'
 ZOOM_EMAIL_ID = 'korangleplus@gmail.com'

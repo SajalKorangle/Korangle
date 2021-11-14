@@ -122,6 +122,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
     },
     {
+        path: 'my_design',
+        loadChildren: 'app/modules/my-design/my-design.module#MyDesignModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
@@ -139,6 +143,7 @@ const routes: Routes = [
             { path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule' },
             { path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule' },
             { path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule' },
+            { path: 'parent', loadChildren: 'app/modules/parent/parent.module#ParentModule' },
         ],
     },
 ];

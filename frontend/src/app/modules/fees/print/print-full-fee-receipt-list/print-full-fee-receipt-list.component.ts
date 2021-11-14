@@ -26,7 +26,10 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
 
     checkView = false;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) {}
+    // this variable is used to determine whether to print single receipt or double receipt.
+    printSingleReceipt = false;
+
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
 
     ngOnInit(): void {
         // this.feeReceipt = new TempFee();
@@ -43,6 +46,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         this.boardList = value['boardList'];
         this.sessionList = value['sessionList'];
         this.checkView = true;
+        this.printSingleReceipt = value['printSingleReceipt'];
     }
 
     ngAfterViewChecked(): void {

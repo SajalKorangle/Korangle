@@ -1,0 +1,7 @@
+.active-folder{
+    background-color: rgb(230, 245, 252);
+}
+
+.grey-on-hover:hover{
+    background-color: lightgrey;
+}
