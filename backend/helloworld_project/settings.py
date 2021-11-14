@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'errors_app',
     'tc_app',
     'online_classes_app',
+    'generic_design_app',
 
     'corsheaders',
 
@@ -236,6 +237,8 @@ else:
     except ImportError:
         print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
         exit()
+    if 'KORANGLE_DB_LOG' in os.environ and os.environ['KORANGLE_DB_LOG'] == 'TRUE':
+        MIDDLEWARE.append('querycount.middleware.QueryCountMiddleware')
 
 
 #ZOOM
