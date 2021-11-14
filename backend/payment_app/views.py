@@ -5,7 +5,7 @@ from .cashfree.cashfree import createAndSignCashfreeOrderForSchool
 from .models import Order
 from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import get_object
-from generic.generic_serializer_interface import GenericSerializerInterface
+from generic.generic_serializer_interface import create_object
 from decorators import user_permission_3
 from django.db import transaction
 from time import time
@@ -32,8 +32,7 @@ class SchoolMerchantAccountView(CommonView, APIView):
 
         del data['vendorData']
         data.update({"vendorId": vendorId})
-        responseData = GenericSerializerInterface(
-            Model=self.Model, data=data, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeSchoolID']).create_object()
+        responseData = create_object(data, self.Model, kwargs['activeSchoolID'], kwargs['activeSchoolID'])
         responseData.update({
             'vendorData': getVendor(vendorId)
         })
@@ -81,8 +80,7 @@ class OrderSchoolView(CommonView, APIView):
             reverse('cashfree_order_completion') + '?' + request.data['returnData']['searchParams']
         del cashfreeOrderData['returnData']
 
-        createdOrderResponse = GenericSerializerInterface(
-            Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
+        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
 
         responseOrderData = createAndSignCashfreeOrderForSchool(cashfreeOrderData, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
         return responseOrderData
@@ -108,8 +106,7 @@ class OrderSelfView(CommonView, APIView):
             reverse('cashfree_order_completion') + '?' + request.data['returnData']['searchParams']
         del cashfreeOrderData['returnData']
 
-        createdOrderResponse = GenericSerializerInterface(
-            Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
+        createdOrderResponse = create_object(orderData, self.Model, kwargs['activeSchoolID'], kwargs['activeStudentID'])
         responseOrderData = createAndSignCashfreeOrderForKorangle(cashfreeOrderData, createdOrderResponse['orderId'])
         return responseOrderData
 

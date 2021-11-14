@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^' + api_version + 'generic/batch', GenericListView.as_view(), name='generic_list_view'),
     url(r'^' + api_version + 'generic/', GenericView.as_view(), name='generic_view'),
-    url(r'^'+api_version+'school/', include('school_app.urls')),
+ url(r'^'+api_version+'school/', include('school_app.urls')),
     url(r'^'+api_version+'student/', include('student_app.urls')),
     url(r'^'+api_version+'expense/', include('expense_app.urls')),
     url(r'^'+api_version+'class/', include('class_app.urls')),
@@ -44,7 +44,6 @@ urlpatterns = [
     url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),
     url(r'^' + api_version + 'online-class/', include('online_classes_app.urls')),
     url(r'^' + api_version + 'payment/', include('payment_app.urls')),
-    url(r'^'+api_version+'generic-design/', include('generic_design_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -1,5 +1,4 @@
 from django.db import models
-from common.common import BasePermission
 
 # Create your models here.
 from subject_app.models import ClassSubject
@@ -10,8 +9,9 @@ from student_app.models import Student, StudentSection
 class AccountInfo(models.Model):
     parentEmployee = models.ForeignKey(Employee, unique=True, on_delete=models.CASCADE)
     meetingNumber = models.BigIntegerField(blank=True, null=True)
-    passcode = models.CharField(max_length=10, blank=True, null=True)
+    passcode = models.CharField(max_length=10, blank=True,null=True)
     meetingUrl = models.CharField(max_length=200, blank=True, null=True)
+
 
 
 class OnlineClass(models.Model):
@@ -40,10 +40,6 @@ class RestrictedStudent(models.Model):
 
 
 class StudentAttendance(models.Model):
-    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.CASCADE, related_name='studentAttendanceList')
+    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.CASCADE)
     parentClassSubject = models.ForeignKey(ClassSubject, on_delete=models.CASCADE)
     dateTime = models.DateTimeField(auto_now_add=True, blank=True)
-
-    class Permissions(BasePermission):
-        RelationsToSchool = ['parentClassSubject__parentSchool__id', 'parentStudentSection__parentStudent__parentSchool__id']
-        RelationsToStudent = ['parentStudentSection__parentStudent__id']

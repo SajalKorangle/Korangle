@@ -36,94 +36,50 @@ export class GenericService extends RestApiGateway {
         return '/generic';
     }
 
-    parseConfig(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>): [string, string] {
+    createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         if (Object.entries(config).length != 1) {
             throw new Error("Invalid APP NAME, MODEL NAME pair");
         }
-        return Object.entries(config)[0];
-    }
-
-    getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
-    }
-
-    getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
-    }
-
-    createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
+        const [app_name, model_name] = Object.entries(config)[0];
+        // Object.keys(data).forEach(key => {  // json parse if key ends with JSON
+        //     if (key.endsWith("JSON")) {
+        //         data[key] = JSON.stringify(data[key]);
+        //     }
+        // });
         return super.postData(data, this.getBaseUrl(), { app_name, model_name });
+        // .then(JSON_OBJECT_RESPONSE_PARSER);
     }
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
+
+        if (Object.entries(config).length != 1) {
+            throw new Error("Invalid APP NAME, MODEL NAME pair");
+        }
+        const [app_name, model_name] = Object.entries(config)[0];
+
+        // if (data.length > 0) { // json parse if key ends with JSON
+        //     const jsonKeys = [];
+        //     Object.keys(data[0]).forEach(key => {
+        //         if (key.endsWith("JSON")) {
+        //             jsonKeys.push(key);
+        //         }
+        //     });
+        //     data.forEach(instance => {
+        //         jsonKeys.forEach(key => instance[key] = JSON.stringify(instance[key]));
+        //     });
+        // }
         return super.postData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        // .then(JSON_OBJECT_LIST_RESPONSE_PARSER);
     }
 
-    updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.putData(data, this.getBaseUrl(), { app_name, model_name });
-    }
-
-    updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.putData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
-    }
-
-    partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
-    }
-
-    partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.patchData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
-    }
-
-    // deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: any): Promise<any> {
-    //     const [app_name, model_name] = this.parseConfig(config);
-    //     return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
-    // }
-
-    deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
-        const [app_name, model_name] = this.parseConfig(config);
-        return super.deleteData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
-    }
 
 }
 
 
 
-export interface APP_MODEL_STRUCTURE_INTERFACE {
+interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
-    generic_design_app: 'Layout' | 'LayoutShare' | 'ImageAssets';
 };
 
 // APP_MODEL_STRUCTURE_INTERFACE
-
-export type FILTER_TYPE = { [key: string]: any, __or__?: Array<FILTER_TYPE>; };
-
-export interface QUERY_INTERFACE {
-    fields_list?: Array<string | '__all__'>;
-    parent_query?: { [key: string]: QUERY_INTERFACE };
-    child_query?: { [key: string]: QUERY_INTERFACE };
-    filter?: FILTER_TYPE;
-    exclude?: FILTER_TYPE;
-    union?: Array<QUERY_INTERFACE>;
-    annotate?: {
-        [key: string]: {
-            field: string,
-            function: string,
-            filter?: FILTER_TYPE,
-        };
-    };
-    order_by?: Array<string>;
-    pagination?: {
-        start: number,
-        end: number,
-    };
-}

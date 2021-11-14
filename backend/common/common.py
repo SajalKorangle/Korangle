@@ -1,5 +1,4 @@
 from functools import reduce
-from django.db.models import Q
 
 
 class BasePermission:
@@ -25,16 +24,3 @@ class BasePermission:
             if reduced_id is not None and reduced_id != activeSchoolId:
                 return False
         return True
-
-    def getPermittedQuerySet(self, activeSchoolId, activeStudentIdList):
-        query_filters = {}
-
-        # Here we are banking on the fact that
-        # 1. if RelationsToStudent exist then RelationsToSchool always exist,
-        # 2. activeStudentId represents parent, non existence of activeStudentId & existence of activeSchoolId represents employee, nothing represent simple user.
-
-        if (activeStudentIdList and len(self.RelationsToStudent) > 0):  # for parent only, activeStudentID can be a list of studentId's
-            query_filters[self.RelationsToStudent[0] + '__in'] = activeStudentIdList     # takes the first relation to student only(should be the closest)
-        elif (len(self.RelationsToSchool) > 0):
-            query_filters[self.RelationsToSchool[0]] = activeSchoolId    # takes the first relation to school only(should be the the closest)
-        return Q(**query_filters)

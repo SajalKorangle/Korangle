@@ -22,10 +22,10 @@ ALLOWED_HOSTS = ['*']
 import subprocess
 
 command = 'git rev-parse --abbrev-ref HEAD'
-proc = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+proc = subprocess.Popen(command,stdout=subprocess.PIPE,shell=True)
 (out, err) = proc.communicate()
 current_branch = str(out).rstrip("n'").rstrip('\\').lstrip("b").lstrip("'")
-print('Branch: ' + current_branch)
+print('Branch: '+current_branch)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -64,21 +64,3 @@ CASHFREE_BASE_URL = 'https://test.cashfree.com'
 # CASHFREE_CLIENT_SECRET = 'a125f1d589609adbed0f5b2890653c0fdc77cf35'
 # CASHFREE_BASE_URL = 'https://test.cashfree.com'
 ######################################################
-
-# Query Debug Info (for dev/testing)
-QUERYCOUNT = {
-    'THRESHOLDS': {
-        'MEDIUM': 50,
-        'HIGH': 200,
-        'MIN_TIME_TO_LOG': 0,
-        'MIN_QUERY_COUNT_TO_LOG': 0
-    },
-    'IGNORE_REQUEST_PATTERNS': [],
-    'IGNORE_SQL_PATTERNS': [],
-    'DISPLAY_DUPLICATES': None,
-    'RESPONSE_HEADER': 'X-DjangoQueryCount-Count'
-}
-
-QUERYCOUNT = {
-    'IGNORE_REQUEST_PATTERNS': [r'^/admin/']
-}

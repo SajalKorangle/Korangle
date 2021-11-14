@@ -11,7 +11,6 @@ from school_app.model_custom_field import CustomImageField
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.files.storage import default_storage as storage
-from common.common import BasePermission
 
 
 def upload_avatar_to(instance, filename):
@@ -122,9 +121,6 @@ class School(models.Model):
 
     def __str__(self):
         return str(self.pk) + ' - ' + self.printName
-
-    class Permissions(BasePermission):
-        RelationsToSchool = ['id']
 
     class Meta:
         db_table = 'school'
