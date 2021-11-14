@@ -85,7 +85,6 @@ INSTALLED_APPS = [
     'errors_app',
     'tc_app',
     'online_classes_app',
-    'generic_design_app',
 
     'corsheaders',
 
