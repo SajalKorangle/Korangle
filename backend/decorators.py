@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from permissions import employeeHasSchoolPermission, parentHasStudentPermission
 from student_app.models import Student
+import json
 
 
 def get_error_response(message):
@@ -126,21 +127,28 @@ def user_permission_3(function):
 def user_permission_4(function):
     def wrap(*args, **kwargs):
         request = args[1]
+        request.GET._mutable = True
 
-        if ('method' in request.GET and request.GET['method'] == 'GET'):
-            request.GET._mutable = True
+        if ('method' in request.GET):
             for key in request.data:
                 request.GET[key] = request.data[key]
+            method = request.GET['method']
             del request.GET['method']
-            request.GET._mutable = False
-            return args[0].get(request)
+            if method == 'GET':
+                return args[0].get(request)
+            elif method == 'DELETE':
+                return args[0].delete(request)
+            else:
+                raise Exception('Invalid method in GET')
+
+        if '__query__' in request.GET:
+            request.GET['__query__'] = json.loads(request.GET['__query__'])
 
         # no need to check authentication because the RestAPIView class by default check for authentication
 
         if ('activeSchoolId' in request.GET.keys()):    # User is requesting as employee
             activeSchoolId = request.GET['activeSchoolId']
             if employeeHasSchoolPermission(request.user, activeSchoolId):
-                request.GET._mutable = True
                 del request.GET['activeSchoolId']
                 request.GET._mutable = False
                 data = {'success': function(*args, **kwargs, activeSchoolId=int(activeSchoolId), activeStudentIdList=None)}
@@ -154,7 +162,6 @@ def user_permission_4(function):
             for studentId in activeStudentIdList:
                 hasPermission = hasPermission and parentHasStudentPermission(request.user, studentId)
             if (hasPermission):
-                request.GET._mutable = True
                 del request.GET['activeStudentIdList']
                 request.GET._mutable = False
                 activeSchoolId = Student.objects.get(id=activeStudentIdList[0]).parentSchool.id
