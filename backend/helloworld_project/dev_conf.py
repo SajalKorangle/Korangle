@@ -64,7 +64,6 @@ CASHFREE_BASE_URL = 'https://test.cashfree.com'
 # CASHFREE_CLIENT_SECRET = 'a125f1d589609adbed0f5b2890653c0fdc77cf35'
 # CASHFREE_BASE_URL = 'https://test.cashfree.com'
 ######################################################
-AWS_S3_SECURE_URLS = False # to use http instead of https
 
 # Query Debug Info (for dev/testing)
 QUERYCOUNT = {
