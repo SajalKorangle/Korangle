@@ -97,7 +97,7 @@ export class GenericService extends RestApiGateway {
 
 
 
-interface APP_MODEL_STRUCTURE_INTERFACE {
+export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     student_app: 'Student' | 'StudentSection';
