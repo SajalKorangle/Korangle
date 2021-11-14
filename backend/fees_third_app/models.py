@@ -1,7 +1,6 @@
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
-from accounts_app.views import TransactionAccountDetailsView
-from django.db import models, transaction
+from django.db import models
 
 from school_app.model.models import School, Session, BusStop
 
