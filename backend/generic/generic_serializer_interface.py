@@ -23,7 +23,7 @@ class GenericSerializerInterface():
 
     method: None
 
-    def __init__(self, data, Model, activeSchoolId, activeStudentIdList, partial=False):
+    def __init__(self, data, Model, activeSchoolId, activeStudentIdList=None, partial=False):
         self.data = data
         self.Model = Model
         self.activeSchoolId = activeSchoolId
