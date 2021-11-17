@@ -7,6 +7,7 @@ import json
 from django_extensions.management.jobs import DailyJob
 
 from school_app.model.models import School, DailyJobsReport
+from employee_app.models import Employee, EmployeePermission
 from sms_app.models import SMSId, SMS
 from sms_app.business.send_sms import send_sms
 from notification_app.models import Notification
@@ -20,13 +21,10 @@ class Job(DailyJob):
 
     def execute(self):
 
-        waitTime = random.randint(1, 5)
-        time.sleep(waitTime)
-
         print("Job started...")
 
         try:
-            dailyJobsReport = DailyJobsReport()
+            dailyJobsReport = DailyJobsReport.objects.create()
         except:
             print('Executing Failed')
             return
@@ -41,7 +39,6 @@ class Job(DailyJob):
         for template in templates:
             if template["id"] == SUBSCRIPTION_EXPIRY_TEMPLATE_ID:
                 defaultTemplate = template
-
 
         for school in schoolList:
 
@@ -63,62 +60,66 @@ class Job(DailyJob):
 
             if flag == 1:
                 
-                try:
-                    user = User.objects.get(username = school.mobileNumber)
-                except:
-                    continue
-
-
                 # Creating a data dictionary to fetch final message content from mapped content
-                mappedDataDict = {}
-                mappedDataDict['schoolId'] = school.id
-                mappedDataDict['days'] = days
-
+                mappedDataDict = {
+                    "schoolId": school.id,
+                    "days": days
+                }
                 messageContent = self.getMessageFromTemplate(defaultTemplate["mappedContent"], mappedDataDict)
-
-                # Creating a data dictionary which stores the necessary variables to send a notification
-                notif_data = {}
-                notif_data['content'] = messageContent
-                notif_data['parentUser'] = user
-                notif_data['parentSchool'] = school
                 
-                fcm_devices = GCMDevice.objects.filter(user=notif_data['parentUser'].id)
-                result = fcm_devices.send_message(notif_data['content'], title="Korangle")
+                # Extracting the details of the employees who have the permission for "Assign Task" page
+                overallEmployeeList = Employee.objects.filter(parentSchool = school)
+                employeeList = []
 
-                notification = Notification(**notif_data)
-                notification.save()
-                # print(result)
+                for employee in overallEmployeeList:
+                    
+                    employeePermissionList = EmployeePermission.objects.filter(parentEmployee = employee)
+                    
+                    for employeePermission in employeePermissionList:
+                        
+                        # "Assign Task" page's id = 42
+                        if employeePermission.parentTask.id == 42:                  
+                            employeeList.append(employeePermission.parentEmployee)
+
+                mobileNumberContentJson = []
+
+                for employee in employeeList:
+                    temp = {
+                        "Number": employee.mobileNumber,
+                        "Text": messageContent,
+                        "DLTTemplateId": defaultTemplate["templateId"]
+                    }
+                    
+                    mobileNumberContentJson.append(temp)
+
+                    try:
+                        user = User.objects.get(username = employee.mobileNumber)                  
+                        
+                        # Creating a data dictionary which stores the necessary variables to send a notification
+                        notif_data = {
+                            "content": messageContent,
+                            "parentUser": user,
+                            "parentSchool": school
+                        }
+                    
+                        notification = Notification(**notif_data)
+                        notification.save()
+
+                    except:
+                        continue
 
                 # Creating a data dictionary which stores the necessary variables to send a SMS
-                sms_dict = {}
-                sms_dict['parentSchool_id'] = school.id
-                sms_dict['parentSMSId_id'] = 1
-                sms_dict['mobileNumberContentJson'] = [{
-                    "Number": 7043167316,
-                    "Text": messageContent,
-                    "DLTTemplateId": defaultTemplate["templateId"]
-                }]
-                sms_dict['mobileNumberContentJson'] = json.dumps(sms_dict['mobileNumberContentJson'])
-                sms_dict['scheduledDateTime'] = None
-
-                if self.hasUnicode(messageContent):
-                    sms_dict['contentType'] = '8'
-                else:
-                    sms_dict['contentType'] = '0'
-
-                sms_dict['count'] = -1
+                sms_dict = {
+                    "parentSchool_id": school.id,
+                    "parentSMSId_id": 1,
+                    "mobileNumberContentJson": json.dumps(mobileNumberContentJson),
+                    "scheduledDateTime": None,
+                    "count": -1,
+                    "contentType": '8' if self.hasUnicode(messageContent) else '0'
+                }
 
                 response = send_sms(sms_dict)
                 # print(response)
-
-                sms_dict['sentStatus'] = 'FAILED' if response['requestId'] == -1 else 'SUCCESS'
-                sms_dict['requestId'] = response['requestId']
-                sms_dict['remark'] = response['remark']
-                sms_dict['mobileNumberContentJson'] = response['mobileNumberContentJson']
-                sms_dict['smsGateWayHubVendor'] = True
-
-                sms = SMS(**sms_dict)
-                sms.save()
 
         dailyJobsReport.status = 'SENT'
         dailyJobsReport.save()
