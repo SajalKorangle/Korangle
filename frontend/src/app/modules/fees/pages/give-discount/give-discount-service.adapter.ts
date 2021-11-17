@@ -1,6 +1,5 @@
 import { GiveDiscountComponent } from './give-discount.component';
 import { CommonFunctions } from '../../../../classes/common-functions';
-import { getValidStudentSectionList } from '@modules/classes/valid-student-section-service';
 
 export class GiveDiscountServiceAdapter {
     vm: GiveDiscountComponent;
