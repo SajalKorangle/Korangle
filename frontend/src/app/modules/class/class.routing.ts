@@ -18,6 +18,16 @@ const routes: Routes = [
         loadChildren: 'app/modules/class/pages/set-roll-number/set-roll-number.module#SetRollNumberModule',
         data: { moduleName: 'set_roll_number' },
     },
+    {
+        path: 'promote_student',
+        loadChildren: 'app/modules/class/pages/promote-student/promote-student.module#PromoteStudentModule',
+        data: { moduleName: 'class' },
+    },
+    {
+        path: 'change_class',
+        loadChildren: 'app/modules/class/pages/change-class/change-class.module#ChangeClassModule',
+        data: { moduleName: 'class' },
+    },
 ];
 
 @NgModule({
