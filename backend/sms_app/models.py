@@ -226,3 +226,42 @@ class SMSEventSettings(models.Model):
 
     class Meta:
         db_table = 'sms_event_settings'
+
+
+class SMSAdmin(models.Model):
+
+    # SMSId
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.SET_NULL, null=True, verbose_name='smsId')
+    
+    # School
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, verbose_name='parentSchool')
+
+    # Content
+    content = models.TextField(null=False, default='', verbose_name='content')
+
+    # Sent Date & Time
+    sentDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='sentDateTime')
+
+    # SMS Count
+    smsCount = models.IntegerField(null=False, default=0, verbose_name='smsCount')
+
+    # Notification Count
+    notificationCount = models.IntegerField(null=False, default=0, verbose_name='notificationCount')
+
+    # SMS Mobile Number List
+    smsMobileNumberList = models.TextField(null=False, blank=True, default='', verbose_name='smsMobileNumberList')
+
+    # Notification Mobile Number List
+    notificationMobileNumberList = models.TextField(null=False, blank=True, default='', verbose_name='notificationMobileNumberList')
+
+    # SMS Employee Name List
+    smsEmployeeList = models.TextField(null=False, blank=True, default='', verbose_name='smsEmployeeList')
+    
+    # Notification Employee Name List
+    notificationEmployeeList = models.TextField(null=False, blank=True, default='', verbose_name='notificationEmployeeList')
+
+    def __str__(self):
+        return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.smsCount) + ' / ' + str(self.notificationCount)
+
+    class Meta:
+        db_table = 'sms_admin'
