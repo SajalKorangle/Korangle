@@ -162,7 +162,7 @@ class BusStop(models.Model):
         db_table = 'bus_stop'
         unique_together = ( 'parentSchool', 'stopName' )
 
-class DailyJobsReport(models.Model):
+class SchoolExpiryInformationJobsReport(models.Model):
     STATUS_CHOICES = (
         ('INITIATED', 'INITIATED'),
         ('SENT', 'SENT'),

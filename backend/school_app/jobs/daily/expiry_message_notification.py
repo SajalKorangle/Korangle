@@ -6,11 +6,12 @@ import json
 
 from django_extensions.management.jobs import DailyJob
 
-from school_app.model.models import School, DailyJobsReport
+from school_app.model.models import School, SchoolExpiryInformationJobsReport
 from employee_app.models import Employee, EmployeePermission
-from sms_app.models import SMSId, SMS, SMSAdmin
+from sms_app.models import SMSId, SMS
 from sms_app.business.send_sms import send_sms
 from notification_app.models import Notification
+from information_app.models import AdminInformation
 from push_notifications.models import GCMDevice
 
 from django.contrib.auth import get_user_model
@@ -24,13 +25,13 @@ class Job(DailyJob):
         print("Job started...")
 
         try:
-            dailyJobsReport = DailyJobsReport.objects.create()
+            dailyJobsReport = SchoolExpiryInformationJobsReport.objects.create()
         except:
             print('Executing Failed')
             return
 
         schoolList = School.objects.all()
-        
+
         SUBSCRIPTION_EXPIRY_TEMPLATE_ID = 16
 
         with open('sms_app/constant_database/default_sms_templates.json', encoding='utf-8') as f:
@@ -58,13 +59,6 @@ class Job(DailyJob):
             else:
                 flag = 0
 
-            smsCount = 0
-            notificationCount = 0
-            smsMobileNumberList = []
-            notificationMobileNumberList = []
-            smsEmployeeList = []
-            notificationEmployeeList = []
-
             if flag == 1:
                 
                 # Creating a data dictionary to fetch final message content from mapped content
@@ -77,9 +71,15 @@ class Job(DailyJob):
                 # Extracting the details of the employees who have the permission for "Assign Task" page
                 employeePermissionList = EmployeePermission.objects.filter(parentEmployee__parentSchool=school, parentTask_id=42)
                 employeeList = []
-                for employeePermission in employeePermissionList:         
-                    employeeList.append(employeePermission.parentEmployee)
+                
+                for employeePermission in employeePermissionList:
+                    employee = employeePermission.parentEmployee
+                    employee.sms = False
+                    employee.notification = False         
+                    employeeList.append(employee)
 
+                smsCount = 0
+                notificationCount = 0
                 mobileNumberContentJson = []
 
                 for employee in employeeList:
@@ -92,8 +92,7 @@ class Job(DailyJob):
                         }
                         
                         mobileNumberContentJson.append(temp)
-                        smsMobileNumberList.append(employee.mobileNumber)
-                        smsEmployeeList.append(employee.name)
+                        employee.sms = True
                         smsCount += 1
 
                     try:
@@ -108,9 +107,7 @@ class Job(DailyJob):
 
                         notification = Notification(**notif_data)
                         notification.save()
-
-                        notificationMobileNumberList.append(employee.mobileNumber)
-                        notificationEmployeeList.append(employee.name)
+                        employee.notification = True
                         notificationCount += 1
 
                     except:
@@ -128,19 +125,15 @@ class Job(DailyJob):
 
                 response = send_sms(sms_dict)
 
-                sms_admin_dict = {
-                    "parentSMSId_id": sms_dict["parentSMSId_id"],
+                admin_info_dict = {
                     "parentSchool_id": sms_dict["parentSchool_id"],
                     "content": messageContent,
                     "smsCount": smsCount,
                     "notificationCount": notificationCount,
-                    "smsEmployeeList": smsEmployeeList,
-                    "smsMobileNumberList": smsMobileNumberList,
-                    "notificationEmployeeList": notificationEmployeeList,
-                    "notificationMobileNumberList": notificationMobileNumberList
+                    "employeeList": employeeList,
                 }
-                smsAdmin = SMSAdmin(**sms_admin_dict)
-                smsAdmin.save()
+                adminInformation = AdminInformation(**admin_info_dict)
+                adminInformation.save()
                 
         dailyJobsReport.status = 'SENT'
         dailyJobsReport.save()
