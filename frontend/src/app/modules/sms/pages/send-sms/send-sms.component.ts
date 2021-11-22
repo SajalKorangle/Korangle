@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material';
 
 import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
 
+import { CommonFunctions } from '@classes/common-functions';
 @Component({
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
@@ -26,6 +27,8 @@ import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/pur
 })
 export class SendSmsComponent implements OnInit {
     user;
+
+    commonFunction = CommonFunctions.getInstance();
 
     serviceAdapter: SendSmsServiceAdapter;
     htmlRenderer: SendSmsHtmlRenderer;
