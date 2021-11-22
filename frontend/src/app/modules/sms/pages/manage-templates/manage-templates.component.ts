@@ -41,6 +41,7 @@ export class ManageTemplatesComponent implements OnInit {
         endDate: null,
         populatedSMSEventSettingsList: [],
         selectedEvent: null,
+        selectedEventSettings: null,
     };
 
     columnFilter = {

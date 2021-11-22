@@ -58,9 +58,8 @@ export class ManageTemplatesHtmlRenderer {
         return this.vm.backendData.SMSIdList.find(smsId => smsId.id == template.parentSMSId).smsId;
     }
 
-    isGeneralOrDefaulters(): boolean {
-        // check General SMS and Notify Defaulters SMS Event ID's are present in the selectedPage
-        return this.generalAndDefaulterEventIdList.includes(this.vm.userInput.selectedPage.orderedSMSEventIdList[0]);
+    isEventGeneralOrDefaulters(smsEventId: any): boolean {
+        return this.generalAndDefaulterEventIdList.includes(smsEventId);
     }
 
     isUpdateDisabled(smsEvent: any) {
@@ -171,7 +170,9 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     selectEvent(eventId: any) {
+        
         this.vm.userInput.selectedEvent = this.vm.backendData.SMSEventList.find(x => x.id == eventId);
+        this.vm.userInput.selectedEventSettings = this.vm.userInput.populatedSMSEventSettingsList.find(x => x.id == eventId);
     }
 
     getSelectedEventTemplateList() {
@@ -186,7 +187,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     handleBackClick() {
-        if (!this.vm.userInput.selectedEvent || this.vm.userInput.selectedEvent.id == this.vm.NOTIFY_DEFAULTERS_SMS_EVENT_ID) {
+        if (!this.vm.userInput.selectedEvent) {
             this.vm.userInput.selectedPage = null;
         }
         this.vm.userInput.selectedEvent = null;
