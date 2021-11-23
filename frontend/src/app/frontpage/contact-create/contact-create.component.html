@@ -1,0 +1,40 @@
+<!----- Desktop Version ------>
+<div *ngIf="!isMobile()" id="desktop-version" class="background"
+     style="background-image:url(/assets/img/contact_create_desktop.png);">
+    <img src="/assets/img/korangleLogo.png" width="30" height="30"
+         class="logo" alt="korangle logo">
+    <span class="logo-name">Korangle</span>
+    <a href="#" class="back-button" style="float: right;right: 15%;top: 4%;">
+        Back to HomePage
+    </a>
+    <!----- Contact us ------>
+    <div class="centered-div" *ngIf="pathName == '/contact-us'" id="contact" style="height: 100vh;">
+        <contact-us-component></contact-us-component>
+    </div>
+
+    <!----- Create School ------>
+    <div style="display: flex;margin-left: 25%;min-height: 100vh" id="create" *ngIf="pathName == '/create-school'">
+        <create-school-component></create-school-component>
+    </div>
+</div>
+
+<!----- Mobile Version ------>
+<div *ngIf="isMobile()" id="mobile-version" class="background"
+     style="background-image:url(/assets/img/create_contact_mobile.png);">
+    <div class="mobile-header">
+        <img src="/assets/img/korangleLogo.png" width="30" height="30" class="mobile-logo" alt="korangle logo">
+        <span class="mobile-logo-name">Korangle</span>
+    </div>
+
+    <div class="centered-div" style="margin-bottom: 60px">
+        <div class="col-md-4">
+            <!----- Contact us ------>
+            <contact-us-component *ngIf="pathName == '/contact-us'"></contact-us-component>
+
+            <!----- Create School ------>
+            <create-school-component *ngIf="pathName == '/create-school'"></create-school-component>
+        </div>
+        <a href="#" style="bottom: 6%;" class="back-button">Back to HomePage</a>
+    </div>
+    <div class="mobile-footer"></div>
+</div>

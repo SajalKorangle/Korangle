@@ -1,0 +1,57 @@
+<!---- Desktop Version   ---->
+<div *ngIf="!isMobile()" class="background" style="background-image:url(/assets/img/auth_desktop.png);">
+    <img src="/assets/img/korangleLogo.png" width="30" height="30"
+         class="logo" alt="korangle logo">
+    <span class="logo-name">Korangle</span>
+    <a href="#"
+       style="float:right;color:black;text-decoration: underline;right:15%;top:3%;font-size:16px;position: absolute;cursor:pointer">Back
+        to HomePage</a>
+    <div class="centered-div">
+        <mat-card class="mat-elevation-z4 background"
+                  style="background-image:url(/assets/img/mat_card_auth.png);width: 70vw;min-height: 600px !important;">
+            <div class="row" style="height: 100%;">
+                <div class="col-md-5" style="color:white;height:100%;margin-left:10px">
+                    <h2 style="font-weight: 700;">Korangle</h2>
+                    <h4 style="font-weight: 500;">School System</h4>
+                </div>
+                <div class="col-md-5" style="margin-left:6%">
+                    <!----- Forgot Password ------>
+                    <forgot-password-component *ngIf="section=='forgot'"
+                                               (changeSection)="section=$event">
+                    </forgot-password-component>
+
+                    <!----- Login-SignUP ------>
+                    <login-signup *ngIf="section=='login-signup'" (changeSection)="section=$event"></login-signup>
+                </div>
+            </div>
+            <div style="position:absolute;bottom: 0;color:white">
+                <h5 style="font-weight: 500;margin-bottom:2px">Providing Best Solution</h5>
+                <h5 style="font-weight: 500;">to educational Institutions</h5>
+            </div>
+        </mat-card>
+    </div>
+</div>
+
+<!---- Mobile Version   ---->
+<div *ngIf="isMobile()" style="background-image:url(/assets/img/auth_mobile.png);">
+    <div class="mobile-header">
+        <img src="/assets/img/korangleLogo.png" width="30" height="30" class="mobile-logo" alt="korangle logo">
+        <span class="mobile-logo-name">Korangle</span>
+    </div>
+    <div class="centered-div" style="margin-bottom: 60px;margin-top:5%;min-height: 75vh">
+        <mat-card style="border:1px solid #c4c4c4;width: 85vw">
+            <br>
+            <!---- Forgot Password ---->
+            <forgot-password-component *ngIf="section=='forgot'"
+                                       (changeSection)="section=$event"></forgot-password-component>
+
+            <!----- Login-SignUP ------>
+            <login-signup *ngIf="section=='login-signup'" (changeSection)="section=$event"></login-signup>
+        </mat-card>
+        <br>
+        <a href="#"
+           style="color:black;text-decoration: underline;bottom:6%;font-size:16px;position: absolute;cursor:pointer">Back
+            to HomePage</a>
+    </div>
+    <div class="footer"></div>
+</div>

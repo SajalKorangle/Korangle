@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
-import { CustomPreload } from './custom-preload';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Routes, RouterModule} from '@angular/router';
+import {CustomPreload} from './custom-preload';
+import {AppComponent} from './app.component';
 
 const routes: Routes = [
     {
@@ -121,6 +122,11 @@ const routes: Routes = [
         path: 'online_classes',
         loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
     },
+
+    // adding frontpage path routes here to avoid route not present error
+    {path: 'contact-us', component: AppComponent},
+    {path: 'create-school', component: AppComponent},
+    {path: 'sign-up', component: AppComponent},
     {
         path: 'print',
         outlet: 'print',

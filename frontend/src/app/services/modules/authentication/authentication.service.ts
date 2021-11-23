@@ -16,12 +16,11 @@ export class AuthenticationService extends ServiceObject {
         super(http_class);
     }
 
-    public generateOTPForSignup(body: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    // Generate OTP is common for all... to distinguish the action add a element {action:'..'} in your body
+    public generateOTP(body: any): Promise<any> {
+        const headers = new HttpHeaders({'Content-Type': 'application/json'});
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/generate-otp-for-signup', body, {
-                headers: headers,
-            })
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/generate-otp', body, {headers: headers})
             .toPromise()
             .then(
                 (response) => {
@@ -54,10 +53,10 @@ export class AuthenticationService extends ServiceObject {
             .catch(this.handleError);
     }
 
-    public generateOTP(body: any): Promise<any> {
+    public verifyOTPForPassword(body: any): Promise<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/generate-otp', body, { headers: headers })
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-for-password', body, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -71,10 +70,10 @@ export class AuthenticationService extends ServiceObject {
             .catch(this.handleError);
     }
 
-    public verifyOTP(body: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    public verifyOTPForCreateSchool(body: any): Promise<any> {
+        const headers = new HttpHeaders({'Content-Type': 'application/json'});
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp', body, { headers: headers })
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-for-create-school', body, {headers: headers})
             .toPromise()
             .then(
                 (response) => {

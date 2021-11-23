@@ -1,17 +1,17 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import {Component, OnInit, Input, HostListener} from '@angular/core';
 
-import { Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart } from '@angular/router';
+import {Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart} from '@angular/router';
 
-import { EmitterService } from '../../services/emitter.service';
+import {EmitterService} from '../../services/emitter.service';
 
-import { User } from '../../classes/user';
-import { style, state, trigger, animate, transition } from '@angular/animations';
-import { SchoolService } from '../../services/modules/school/school.service';
-import { environment } from '../../../environments/environment';
-import { Constants } from '../../classes/constants';
-import { CommonFunctions } from './../../classes/common-functions';
-import { NotificationService } from '../../services/modules/notification/notification.service';
-import { unregisterForNotification } from '../../classes/common.js';
+import {User} from '../../classes/user';
+import {style, state, trigger, animate, transition} from '@angular/animations';
+import {SchoolService} from '../../services/modules/school/school.service';
+import {environment} from '../../../environments/environment';
+import {Constants} from '../../classes/constants';
+import {CommonFunctions} from './../../classes/common-functions';
+import {NotificationService} from '../../services/modules/notification/notification.service';
+import {unregisterForNotification} from '../../classes/common.js';
 
 declare const $: any;
 
@@ -22,14 +22,14 @@ declare const $: any;
     providers: [NotificationService, SchoolService],
     animations: [
         trigger('rotate', [
-            state('true', style({ transform: 'rotate(0deg)' })),
-            state('false', style({ transform: 'rotate(180deg)' })),
+            state('true', style({transform: 'rotate(0deg)'})),
+            state('false', style({transform: 'rotate(180deg)'})),
             transition('true => false', animate('400ms ease-out')),
             transition('false => true', animate('400ms ease-in')),
         ]),
         trigger('slideDown', [
-            state('true', style({ maxHeight: 200 })),
-            state('false', style({ maxHeight: 0, overflow: 'hidden' })),
+            state('true', style({maxHeight: 200})),
+            state('false', style({maxHeight: 0, overflow: 'hidden'})),
             transition('true => false', animate('800ms ease-out')),
             transition('false => true', animate('800ms ease-in')),
         ]),
@@ -81,7 +81,7 @@ export class SidebarComponent implements OnInit {
         });
         EmitterService.get('initialize-router').subscribe((value) => {
             this.router.navigateByUrl(
-                this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], { queryParams: value.queryParams })
+                this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], {queryParams: value.queryParams})
             );
         });
     }

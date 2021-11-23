@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { User } from './classes/user';
-import { DataStorage } from './classes/data-storage';
+import {User} from './classes/user';
+import {DataStorage} from './classes/data-storage';
 
-import { AuthenticationService } from '@services/modules/authentication/authentication.service';
-import { AuthenticationOldService } from '@services/authentication-old.service';
-import { VersionCheckService } from './services/version-check.service';
-import { environment } from '../environments/environment';
-import { NotificationService } from './services/modules/notification/notification.service';
-import { Constants } from './classes/constants';
-import { registerForNotification } from './classes/common';
-import { CommonFunctions } from './classes/common-functions';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
-import { AppHtmlRenderer } from './app.html.renderer';
+import {AuthenticationService} from '@services/modules/authentication/authentication.service';
+import {AuthenticationOldService} from '@services/authentication-old.service';
+import {VersionCheckService} from './services/version-check.service';
+import {environment} from '../environments/environment';
+import {NotificationService} from './services/modules/notification/notification.service';
+import {Constants} from './classes/constants';
+import {registerForNotification} from './classes/common';
+import {CommonFunctions} from './classes/common-functions';
+import {MatDialog} from '@angular/material/dialog';
+import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
+import {AppHtmlRenderer} from './app.html.renderer';
 
 @Component({
     selector: 'app-root',
@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
     isLoading = false;
     public user = new User();
 
+    pathName = ''; // uses url path to show the respective components (contact-create or authentication)
     htmlRenderer: AppHtmlRenderer;
 
     constructor(
@@ -64,6 +65,7 @@ export class AppComponent implements OnInit {
 
         this.htmlRenderer = new AppHtmlRenderer();
         this.htmlRenderer.initialize(this);
+        this.pathName = window.location.pathname;
 
     }
 
@@ -93,5 +95,14 @@ export class AppComponent implements OnInit {
 
     isMobile(): boolean {
         return CommonFunctions.getInstance().isMobileMenu();
+    }
+
+    isCreateOrContact() {
+        // as ngOnInit of appComponent won't be called all the time,
+        // we are updating pathName here to always keep the variable in sync with url
+        this.pathName = window.location.pathname;
+
+        // checking whether the pathName matches any of the contact-create paths (true -> contact-create, false -> authentication)
+        return this.pathName == '/contact-us' || this.pathName == '/create-school';
     }
 }

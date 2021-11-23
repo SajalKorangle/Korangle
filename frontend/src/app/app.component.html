@@ -57,12 +57,8 @@
     </div>
 
     <div *ngIf="!user.isAuthenticated">
-        <ng-container *ngIf="isMobile()">
-            <app-frontpage2></app-frontpage2>
-        </ng-container>
-        <ng-container *ngIf="!isMobile()">
-            <app-frontpage2></app-frontpage2>
-        </ng-container>
+        <app-authentication *ngIf="!isCreateOrContact()"></app-authentication>
+        <app-contact-create *ngIf="isCreateOrContact()"></app-contact-create>
     </div>
 </div>
 <div class="wrapper showPrint">

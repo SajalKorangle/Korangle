@@ -47,6 +47,7 @@ import { ImagePdfPreviewDialogComponent } from './image-pdf-preview-dialog/image
 
 import { LocalDatePipe } from './../pipes/local-date-format.pipe';
 import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
+import {NgOtpInputModule} from 'ng-otp-input';
 
 @NgModule({
         declarations: [
@@ -98,6 +99,7 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
                 MatSlideToggleModule,
 
                 BasicComponentsModule,
+                NgOtpInputModule,
         ],
         exports: [
                 BasicComponentsModule,

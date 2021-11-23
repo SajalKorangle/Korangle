@@ -9,41 +9,28 @@ import { BasicComponentsModule } from './basic-components/basic-components.modul
 
 import { AppComponent } from './app.component';
 
-import { LoginComponent } from './authentication/login/login.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
-import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './frontpage/authentication/components/forgot-password/forgot-password.component';
 
 import { PrintService } from './print/print-service';
-import { FrontpageComponent } from './frontpage/frontpage.component';
-import { AboutUsComponent } from './frontpage/about-us/about-us.component';
-import { WhyKorangleComponent } from './frontpage/why-korangle/why-korangle.component';
-import { ContactUsComponent } from './frontpage/contact-us/contact-us.component';
-import { PricingComponent } from './frontpage/pricing/pricing.component';
-import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
-import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SignupComponent } from './authentication/signup/signup.component';
 import { DecimalPipe } from '@angular/common';
-import { Frontpage2Component } from './frontpage2/frontpage2.component';
 import {ComponentsModule} from '@components/components.module';
 import {NgOtpInputModule} from 'ng-otp-input';
-import { ContactCreateComponent } from './frontpage2/contact-create/contact-create.component';
+import {ContactCreateComponent} from './frontpage/contact-create/contact-create.component';
+import {AuthenticationComponent} from './frontpage/authentication/authentication.component';
+import {LoginSignupComponent} from './frontpage/authentication/components/login-signup/login-signup.component';
+import {ContactUsComponent} from './frontpage/contact-create/components/contact-us/contact-us.component';
+import {CreateSchoolComponent} from './frontpage/contact-create/components/create-school/create-school.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        LoginComponent,
         ForgotPasswordComponent,
-        SignupComponent,
         AuthenticationComponent,
-        FrontpageComponent,
-        AboutUsComponent,
-        WhyKorangleComponent,
+        ForgotPasswordComponent,
+        LoginSignupComponent,
         ContactUsComponent,
-        PricingComponent,
-        TextCarouselComponent,
-        WhatKorangleCanDoComponent,
-        Frontpage2Component,
+        CreateSchoolComponent,
         ContactCreateComponent,
     ],
     imports: [
