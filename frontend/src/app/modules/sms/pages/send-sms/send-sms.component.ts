@@ -265,7 +265,7 @@ export class SendSmsComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    };
+    }
 
     getFilteredFilterValues(parameter: any): any {
         if (parameter.filterFilterValues === '') {

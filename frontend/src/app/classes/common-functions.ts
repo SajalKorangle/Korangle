@@ -124,7 +124,7 @@ export class CommonFunctions {
             return new Date(obj) as unknown as T;
         }
         else if (Array.isArray(obj)) {
-            return obj.map(el => this.deepCopy(el)) as unknown as T;;
+            return obj.map(el => this.deepCopy(el)) as unknown as T;
         }
         else {
             const clone = Object.create(obj as unknown as object);

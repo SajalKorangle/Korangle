@@ -107,7 +107,7 @@ export class PayFeesComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        
+
         this.selectedStudentList = this.user.section.student.studentList;
 
         this.htmlRenderer = new PayFeesHTMLRenderer(this);

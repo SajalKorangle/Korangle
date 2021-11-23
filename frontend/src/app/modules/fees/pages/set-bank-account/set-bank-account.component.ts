@@ -79,7 +79,7 @@ export class SetBankAccountComponent implements OnInit {
         if (this.isIFSCValidationPasses())
             return false;
         return true;
-    };
+    }
 
     isDataValid(): boolean {
         if (this.schoolMerchantAccount.vendorData.bank.ifsc.length != 11) {
