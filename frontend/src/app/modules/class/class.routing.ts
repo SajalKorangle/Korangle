@@ -28,6 +28,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/class/pages/change-class/change-class.module#ChangeClassModule',
         data: { moduleName: 'class' },
     },
+    {
+        path: 'demote_student',
+        loadChildren: 'app/modules/class/pages/demote-student/demote-student.module#DemoteStudentModule',
+        data: { moduleName: 'class' },
+    },
 ];
 
 @NgModule({
