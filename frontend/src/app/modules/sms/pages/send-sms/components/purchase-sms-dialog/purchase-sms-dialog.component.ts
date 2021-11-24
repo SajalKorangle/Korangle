@@ -7,7 +7,7 @@ import { PaymentService } from '@services/modules/payment/payment.service';
 import { SmsService } from '@services/modules/sms/sms.service';
 import { UserService } from '@services/modules/user/user.service';
 import { SendSmsComponent } from '@modules/sms/pages/send-sms/send-sms.component';
-import { SMS_PLAN } from '@modules/sms/class/constants';
+import { getDefaultSMSPlans } from '@modules/sms/class/constants';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 
 @Component({
@@ -24,7 +24,7 @@ export class PurchaseSmsDialogComponent implements OnInit {
 
     generalSMSPurchaseServiceAdapter: GeneralSMSPurchaseServiceAdapter;
 
-    smsPlan = SMS_PLAN;
+    smsPlan = getDefaultSMSPlans();
 
     noOfSMS = 100;
 
