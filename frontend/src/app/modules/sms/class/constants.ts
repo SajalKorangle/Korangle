@@ -5,6 +5,6 @@ export function getDefaultSMSPlans() {
         { noOfSms: 5000, selected: false },
         { noOfSms: 20000, selected: false },
         { noOfSms: 30000, selected: false }
-    ] as const;
+    ];
     return SMS_PLAN;
 }
