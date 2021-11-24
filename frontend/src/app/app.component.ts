@@ -1,19 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {User} from './classes/user';
-import {DataStorage} from './classes/data-storage';
+import { User } from './classes/user';
+import { DataStorage } from './classes/data-storage';
 
-import {AuthenticationService} from '@services/modules/authentication/authentication.service';
-import {AuthenticationOldService} from '@services/authentication-old.service';
-import {VersionCheckService} from './services/version-check.service';
-import {environment} from '../environments/environment';
-import {NotificationService} from './services/modules/notification/notification.service';
-import {Constants} from './classes/constants';
-import {registerForNotification} from './classes/common';
-import {CommonFunctions} from './classes/common-functions';
-import {MatDialog} from '@angular/material/dialog';
-import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.component';
-import {AppHtmlRenderer} from './app.html.renderer';
+import { AuthenticationService } from '@services/modules/authentication/authentication.service';
+import { AuthenticationOldService } from '@services/authentication-old.service';
+import { VersionCheckService } from './services/version-check.service';
+import { environment } from '../environments/environment';
+import { NotificationService } from './services/modules/notification/notification.service';
+import { Constants } from './classes/constants';
+import { registerForNotification } from './classes/common';
+import { CommonFunctions } from './classes/common-functions';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
+import { AppHtmlRenderer } from './app.html.renderer';
+import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 
 @Component({
     selector: 'app-root',
@@ -33,7 +34,7 @@ export class AppComponent implements OnInit {
         private versionCheckService: VersionCheckService,
         private dialog: MatDialog,
         private notificationService: NotificationService
-    ) {}
+    ) { }
 
     ngOnInit() {
         DataStorage.getInstance().setUser(this.user);
@@ -67,6 +68,17 @@ export class AppComponent implements OnInit {
         this.htmlRenderer.initialize(this);
         this.pathName = window.location.pathname;
 
+        const urlParams = new URLSearchParams(location.search);
+        if (urlParams.has('orderId')) {
+            this.openPaymentResponseDialog();
+        }
+
+    }
+
+    openPaymentResponseDialog() {
+        this.dialog.open(PaymentResponseDialogComponent, {
+            data: {}
+        });
     }
 
     showTutorial(url: any) {

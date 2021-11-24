@@ -21,6 +21,7 @@ import {AuthenticationComponent} from './frontpage/authentication/authentication
 import {LoginSignupComponent} from './frontpage/authentication/components/login-signup/login-signup.component';
 import {ContactUsComponent} from './frontpage/contact-create/components/contact-us/contact-us.component';
 import {CreateSchoolComponent} from './frontpage/contact-create/components/create-school/create-school.component';
+import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 
 @NgModule({
     declarations: [
@@ -44,8 +45,9 @@ import {CreateSchoolComponent} from './frontpage/contact-create/components/creat
         NgOtpInputModule,
         // RecaptchaModule,  // this is the recaptcha main module
     ],
+    entryComponents: [PaymentResponseDialogComponent],
     exports: [],
     providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

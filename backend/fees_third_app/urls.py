@@ -1,4 +1,3 @@
-
 from django.conf.urls import url
 
 urlpatterns = []
@@ -75,10 +74,15 @@ urlpatterns += [
 ]
 
 
-
 from .views import FeeSettingsView, FeeSettingsListView
 
 urlpatterns += [
     url(r'^fee-settings/batch', FeeSettingsListView.as_view()),
     url(r'^fee-settings', FeeSettingsView.as_view()),
+]
+
+from .views import FeeReceiptOrderView, FeeReceiptOrderListView
+urlpatterns += [
+    url(r'^fee-receipt-order/batch', FeeReceiptOrderListView.as_view()),
+    url(r'^fee-receipt-order', FeeReceiptOrderView.as_view()),
 ]
