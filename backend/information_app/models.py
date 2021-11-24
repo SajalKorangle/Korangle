@@ -1,8 +1,6 @@
 from django.db import models
 
 from school_app.model.models import School
-from employee_app.models import Employee
-
 
 # Deprecated Model (Do Not Use it)
 class MessageType(models.Model):

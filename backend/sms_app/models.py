@@ -226,4 +226,3 @@ class SMSEventSettings(models.Model):
 
     class Meta:
         db_table = 'sms_event_settings'
-

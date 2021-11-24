@@ -25,7 +25,7 @@ class Job(DailyJob):
         print("Job started...")
 
         try:
-            dailyJobsReport = SchoolExpiryInformationJobsReport.objects.create()
+            schoolExpiryInformationJobsReport = SchoolExpiryInformationJobsReport.objects.create()
         except:
             print('Executing Failed')
             return
@@ -135,8 +135,8 @@ class Job(DailyJob):
                 adminInformation = AdminInformation(**admin_info_dict)
                 adminInformation.save()
                 
-        dailyJobsReport.status = 'SENT'
-        dailyJobsReport.save()
+        schoolExpiryInformationJobsReport.status = 'SENT'
+        schoolExpiryInformationJobsReport.save()
 
         print("Job finished")
 
