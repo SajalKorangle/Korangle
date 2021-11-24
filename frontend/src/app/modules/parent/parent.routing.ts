@@ -4,6 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ParentComponent } from './parent.component';
 
+import { PRINT_FULL_FEE_RECIEPT_LIST } from '@modules/fees/print/print-routes.constants';
+import { PrintFullFeeReceiptListComponent } from '@modules/fees/print/print-full-fee-receipt-list/print-full-fee-receipt-list.component';
+
 const routes: Routes = [
     {
         path: 'view_profile',
@@ -11,8 +14,8 @@ const routes: Routes = [
         data: { moduleName: 'parent' },
     },
     {
-        path: 'view_fee',
-        loadChildren: 'app/modules/parent/pages/view-fee/view-fee.module#ViewFeeModule',
+        path: 'pay_fees',
+        loadChildren: 'app/modules/parent/pages/pay-fees/pay-fees.module#PayFeesModule',
         data: { moduleName: 'parent' },
     },
     {
@@ -48,6 +51,10 @@ const routes: Routes = [
     {
         path: '',
         component: ParentComponent,
+    },
+    {
+        path: PRINT_FULL_FEE_RECIEPT_LIST,
+        component: PrintFullFeeReceiptListComponent,
     },
 ];
 

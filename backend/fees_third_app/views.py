@@ -1,6 +1,5 @@
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
-from fees_third_app.business.discount import create_discount_object, create_discount_list
 
 from fees_third_app.models import FeeType, SchoolFeeRule, ClassFilterFee, BusStopFilterFee, StudentFee, FeeReceipt, \
     SubFeeReceipt, Discount, SubDiscount
@@ -77,18 +76,10 @@ class StudentFeeListView(CommonListView, APIView):
 
 
 ########### Fee Receipt #############
-from .business.fee_receipt import create_fee_receipt_list, create_fee_receipt_object
-
-
 class FeeReceiptView(CommonView, APIView):
     Model = FeeReceipt
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
-
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_fee_receipt_object(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
 
 
 class FeeReceiptListView(CommonListView, APIView):
@@ -96,15 +87,8 @@ class FeeReceiptListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_fee_receipt_list(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
-
 
 ########### Sub Fee Receipt #############
-
-
 class SubFeeReceiptView(CommonView, APIView):
     Model = SubFeeReceipt
     RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
@@ -119,16 +103,10 @@ class SubFeeReceiptListView(CommonListView, APIView):
 
 ########### Discount #############
 
-
 class DiscountView(CommonView, APIView):
     Model = Discount
     RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
-
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_discount_object(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
 
 
 class DiscountListView(CommonListView, APIView):
@@ -136,14 +114,8 @@ class DiscountListView(CommonListView, APIView):
     RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
     RelationsToStudent = ['parentStudent__id']
 
-    @user_permission_3
-    def post(self, request, activeSchoolID, activeStudentID):
-        data = request.data
-        return create_discount_list(data, self.Model, self.ModelSerializer, activeSchoolID, activeStudentID)
-
 
 ########### Sub Discount #############
-
 
 class SubDiscountView(CommonView, APIView):
     Model = SubDiscount
@@ -158,13 +130,32 @@ class SubDiscountListView(CommonListView, APIView):
 
 
 ########### Fee Settings #############
-
 from .models import FeeSettings
+
 
 class FeeSettingsView(CommonView, APIView):
     Model = FeeSettings
     RelationsToSchool = ['parentSchool__id']
 
+
 class FeeSettingsListView(CommonListView, APIView):
     Model = FeeSettings
     RelationsToSchool = ['parentSchool__id']
+
+
+########### FeeReceiptOrder #############
+from fees_third_app.models import FeeReceiptOrder
+
+
+class FeeReceiptOrderView(CommonView, APIView):
+    Model = FeeReceiptOrder
+    RelationsToSchool = FeeReceiptOrder.Permissions.RelationsToSchool
+    RelationsToStudent = FeeReceiptOrder.Permissions.RelationsToStudent
+    permittedMethods = ['get']
+
+
+class FeeReceiptOrderListView(CommonListView, APIView):
+    Model = FeeReceiptOrder
+    RelationsToSchool = FeeReceiptOrder.Permissions.RelationsToSchool
+    RelationsToStudent = FeeReceiptOrder.Permissions.RelationsToStudent
+    permittedMethods = ['get']

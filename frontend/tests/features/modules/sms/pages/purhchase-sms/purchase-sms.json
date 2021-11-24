@@ -1,0 +1,10 @@
+[
+    {
+      "statement": "Purchase SMS",
+      "testType": "protractor",
+      "steps": [
+        "Verify Purchase"
+      ],
+      "testName": "Purchase SMS Page is working"
+    }
+  ]

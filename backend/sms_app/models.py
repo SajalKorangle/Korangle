@@ -1,11 +1,22 @@
+from django.db.models.fields import related
+from common.common import BasePermission
+from payment_app.cashfree.cashfree import initiateRefund
+import json
+from django.db import models
+from django.db import transaction as db_transaction
 import traceback
 
-from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from school_app.model.models import School
 from information_app.models import MessageType
+from payment_app.models import Order
+
+
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+from generic.generic_serializer_interface import GenericSerializerInterface
 
 
 # Create your models here
@@ -174,23 +185,72 @@ class SMSDeliveryReport(models.Model):
 
 class SMSPurchase(models.Model):
     # SMS No.
-    numberOfSMS = models.IntegerField(null=False, default=0, verbose_name='numberOfSMS')
+    numberOfSMS = models.IntegerField(null=False, default=0)
 
     # Price
     price = models.IntegerField(null=False, default=0, verbose_name='price')
 
     # Purchase Date & Time
-    purchaseDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='purchaseDateTime')
+    purchaseDateTime = models.DateTimeField(null=False, auto_now_add=True)
 
     # School
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name='smsPurchaseList')
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' -- ' + str(
             self.numberOfSMS) + ' -- ' + str(self.price)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+
     class Meta:
         db_table = 'sms_purchase'
+
+
+class SmsPurchaseOrder(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, related_name='smsPurchaseOrderList')
+    parentOrder = models.ForeignKey(Order, on_delete=models.PROTECT, unique=True, related_name='smsPurchaseOrderList')
+    smsPurchaseData = models.JSONField()
+    parentSmsPurchase = models.ForeignKey(SMSPurchase, on_delete=models.PROTECT, null=True, blank=True, related_name='smsPurchaseOrderList')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id', 'parentSmsPurchase__parentSchool__id']
+
+
+@receiver(pre_save, sender=Order)
+def SMSOrderCompletionHandler(sender, instance, **kwargs):
+    if not instance._state.adding and instance.status == 'Completed':
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
+        if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Completed'
+            try:
+                onlineSmsPaymentTransaction = SmsPurchaseOrder.objects.get(parentOrder=preSavedOrder)
+            except:  # Order was not for SMS
+                return
+            activeSchoolID = onlineSmsPaymentTransaction.parentSchool.id
+            smsPurchaseData = onlineSmsPaymentTransaction.smsPurchaseData
+            with db_transaction.atomic():
+                response = GenericSerializerInterface(Model=SMSPurchase, data=smsPurchaseData, activeSchoolId=activeSchoolID).create_object()
+                smsPurchase = SMSPurchase.objects.get(id=response['id'])
+                onlineSmsPaymentTransaction.parentSmsPurchase = smsPurchase
+                onlineSmsPaymentTransaction.save()
+
+
+@receiver(pre_save, sender=Order)
+def SMSRefundHandler(sender, instance, **kwargs):
+    if (not instance._state.adding) and instance.status == 'Refund Pending':
+
+        preSavedOrder = Order.objects.get(orderId=instance.orderId)
+        if preSavedOrder.status == 'Pending':  # if status changed from 'Pending' to 'Refund Pending'
+
+            try:
+                onlineSmsPaymentTransaction = SmsPurchaseOrder.objects.get(parentOrder=preSavedOrder)
+            except:  # Order was not for SMS
+                return
+
+            # 2nd argument is split, empty split means amount will be deducted from korangle not from other vendor account(school)
+            response = initiateRefund(instance.orderId, [])
+            instance.refundId = response['refundId']
+            instance.status = 'Refund Initiated'
 
 
 class SMSTemplate(models.Model):
