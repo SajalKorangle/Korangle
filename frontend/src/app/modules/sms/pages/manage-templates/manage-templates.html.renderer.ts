@@ -58,7 +58,8 @@ export class ManageTemplatesHtmlRenderer {
         return this.vm.backendData.SMSIdList.find(smsId => smsId.id == template.parentSMSId).smsId;
     }
 
-    isEventGeneralOrDefaulters(smsEventId: any): boolean {
+    isUserChosenTemplateForEvent(smsEventId: any): boolean {
+        // To check whether ther user is using his/her own template or a default template for the event
         return this.generalAndDefaulterEventIdList.includes(smsEventId);
     }
 

@@ -32,7 +32,7 @@ export class ManageTemplatesServiceAdapter {
     async initializeEventSettings(eventPage: any) {
         this.vm.stateKeeper.isLoading = true;
         this.vm.userInput.selectedPage = eventPage;
-        this.vm.userInput.populatedSMSEventSettingsList = [];
+        this.vm.userInput.populatedSMSEventSettingsList = []; // Storing event settings for all the events belonging to the selected page
 
         let eventSettingsData = {
             'SMSEventId__in': this.vm.userInput.selectedPage.orderedSMSEventIdList.map(id => id).join(),
@@ -42,9 +42,10 @@ export class ManageTemplatesServiceAdapter {
         this.vm.backendData.selectedPageEventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, eventSettingsData);
 
         this.vm.userInput.selectedPage.orderedSMSEventIdList.forEach(smsEventId => {
-            if(!this.vm.htmlRenderer.isEventGeneralOrDefaulters(smsEventId)) {
-
+            if(!this.vm.htmlRenderer.isUserChosenTemplateForEvent(smsEventId)) {
                 let setting = this.vm.backendData.selectedPageEventSettingsList.find(set => set.SMSEventId == smsEventId);
+                // If the user chosen template for event is default and event setings has not been initialized 
+                // Then we are initializing event settings for such events 
                 if (!setting) {
                     let tempSettings = {
                         'SMSEventId': smsEventId,
@@ -62,23 +63,22 @@ export class ManageTemplatesServiceAdapter {
             'id__in': this.vm.backendData.selectedPageEventSettingsList.map(a => a.parentSMSTemplate).join(),
             'korangle__order': '-id',
         };
-
         this.vm.backendData.selectedPageTemplateList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_template, templateData);
 
         this.vm.populatedSMSIdList = JSON.parse(JSON.stringify(this.vm.backendData.SMSIdList));
         this.vm.populatedSMSIdList.push({id: 0, smsId: 'Default'});
 
-        let defaultTemplateIdList = []
+        let defaultTemplateIdList = [] // Storing default template ids for events in selected page to populate default templates later on
         this.vm.userInput.selectedPage.orderedSMSEventIdList.forEach(async smsEventId => {
-            if(this.vm.htmlRenderer.isEventGeneralOrDefaulters(smsEventId)) {
+            if(this.vm.htmlRenderer.isUserChosenTemplateForEvent(smsEventId)) {
                 this.vm.htmlRenderer.initializeNewTemplate();
                 let temp = this.vm.backendData.SMSEventList.find(x => x.id == smsEventId);
-                temp.isEventGeneralOrDefaulters = true;
+                temp.isUserChosenTemplateForEvent = true;           
                 this.vm.userInput.populatedSMSEventSettingsList.push(temp);
             }
             else {
-                let temp = this.vm.backendData.SMSEventList.filter(x => x.id == smsEventId).map(x => x.defaultSMSTemplateId);
-                defaultTemplateIdList.push(temp);
+                let defaultTemplateId = this.vm.backendData.SMSEventList.filter(x => x.id == smsEventId).map(x => x.defaultSMSTemplateId);
+                defaultTemplateIdList.push(defaultTemplateId);
                 this.populateSMSEventSettings(smsEventId);
             }
         });
@@ -106,7 +106,7 @@ export class ManageTemplatesServiceAdapter {
             notificationPanel: false,
             smsPanel: false,
         };
-        temp.isEventGeneralOrDefaulters = false;
+        temp.isUserChosenTemplateForEvent = false;
         this.vm.userInput.populatedSMSEventSettingsList.push(temp);
     }
 

@@ -29,6 +29,7 @@
             <b style="font-size:16px;margin-left:12px">{{userInput.selectedPage.name}}</b>
         </div>
 
+        <!-- If event is not selected STARTS  -->
         <ng-container *ngIf="!userInput.selectedEvent">
             <mat-nav-list *ngFor="let smsEvent of userInput.populatedSMSEventSettingsList" style="width: 100%">
                 <a mat-list-item class="list-item" (click)="htmlRenderer.selectEvent(smsEvent.id)">
@@ -42,10 +43,13 @@
                 </a>
             </mat-nav-list>
         </ng-container>
+        <!-- If event is not selected ENDS  -->
 
+        <!-- If event is selected STARTS  -->
         <ng-container *ngIf="userInput.selectedEvent">
             
-            <ng-container *ngIf="userInput.selectedEventSettings.isEventGeneralOrDefaulters">
+            <!-- User Chosen Template STARTS  -->
+            <ng-container *ngIf="userInput.selectedEventSettings.isUserChosenTemplateForEvent">
                 
                 <div class="row" style="padding-left:5px">
                     <b style="font-size:16px;margin-left:12px">{{userInput.selectedEvent.eventName}}</b>
@@ -252,7 +256,9 @@
                     </ng-container>
                 </ng-container>
             </ng-container>
+            <!-- User Chosen Template ENDS  -->
 
+            <!-- Default Template STARTS  -->
             <ng-container *ngIf="!userInput.selectedEventSettings.isEventGeneralOrDefaulters">
 
                 <div class="row" style="padding-left:5px">
@@ -329,8 +335,7 @@
                                         {{ smsId.smsId }}
                                     </mat-option>
                                 </mat-select>
-                            </mat-form-field>                          
-                            
+                            </mat-form-field>                                                      
                         </div>
                     </div>
 
@@ -410,10 +415,11 @@
                    You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
             </ng-container>
+            <!-- Default Template ENDS  -->
         </ng-container>
+        <!-- If event is selected ENDS  -->
     </ng-container>
 </div>
-
 <ng-container *ngIf="stateKeeper.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
