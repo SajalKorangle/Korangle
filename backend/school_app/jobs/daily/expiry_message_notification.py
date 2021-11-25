@@ -32,7 +32,7 @@ class Job(DailyJob):
 
         schoolList = School.objects.all()
 
-        SUBSCRIPTION_EXPIRY_TEMPLATE_ID = 16
+        SUBSCRIPTION_EXPIRY_TEMPLATE_ID = 16    # could be 16 or 17
 
         with open('sms_app/constant_database/default_sms_templates.json', encoding='utf-8') as f:
             templates = json.loads(f.read())
@@ -61,13 +61,6 @@ class Job(DailyJob):
 
             if flag == 1:
                 
-                # Creating a data dictionary to fetch final message content from mapped content
-                mappedDataDict = {
-                    "schoolId": school.id,
-                    "days": days
-                }
-                messageContent = self.getMessageFromTemplate(defaultTemplate["mappedContent"], mappedDataDict)
-                
                 # Extracting the details of the employees who have the permission for "Assign Task" page
                 employeePermissionList = EmployeePermission.objects.filter(parentEmployee__parentSchool=school, parentTask_id=42)
                 employeeList = []
@@ -81,16 +74,26 @@ class Job(DailyJob):
                 smsCount = 0
                 notificationCount = 0
                 mobileNumberContentJson = []
+                unicodeFlag = False
 
                 for employee in employeeList:
 
+                    # Creating a data dictionary to fetch final message content from mapped content
+                    mappedDataDict = {
+                        "schoolId": school.id,
+                        "days": days,
+                        "employeeName": employee.name,
+                        "salesSupportMobileNumber": "7974151131"
+                    }
+                    messageContent = self.getMessageFromTemplate(defaultTemplate["mappedContent"], mappedDataDict)
+                    
                     if self.checkMobileNumber(employee.mobileNumber):
                         temp = {
                             "Number": employee.mobileNumber,
                             "Text": messageContent,
                             "DLTTemplateId": defaultTemplate["templateId"]
                         }
-                        
+                        unicodeFlag != self.hasUnicode(messageContent)
                         mobileNumberContentJson.append(temp)
                         employee.sms = True
                         smsCount += 1
@@ -120,7 +123,7 @@ class Job(DailyJob):
                     "mobileNumberContentJson": json.dumps(mobileNumberContentJson),
                     "scheduledDateTime": None,
                     "count": -1,
-                    "contentType": '8' if self.hasUnicode(messageContent) else '0'
+                    "contentType": '8' if unicodeFlag else '0'
                 }
 
                 response = send_sms(sms_dict)
