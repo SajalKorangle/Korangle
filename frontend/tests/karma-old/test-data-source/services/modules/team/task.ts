@@ -398,7 +398,7 @@ export const TASK_LIST = [
     {
         "id": 52,
         "path": "update_marks",
-        "title": "Update marks",
+        "title": "Update Marks",
         "orderNumber": 4,
         "parentModule": 14,
         "parentBoard": null,
