@@ -41,8 +41,12 @@ class VerifyOTPView(View):
 
         if otp_object_list.count() > 0:
             user = User.objects.get(username=data['mobileNumber'])
-            user.set_password(data['password'])
-            user.save()
+            if user.check_password(data['password']):
+                return JsonResponse({"response": get_success_response({
+                    'status': 'failure', 'message': 'New password cannot be same as old password'})})
+            else:
+                user.set_password(data['password'])
+                user.save()
             return JsonResponse({"response": get_success_response({'status': 'success'})})
         else:
             return JsonResponse({"response": get_success_response({'status': 'failure', 'message': 'OTP verification failed'})})
