@@ -92,6 +92,7 @@
         </button>
 
         <button
+            *ngIf="checkMobile()"
             type="submit"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
             style="padding: 12px 15px; margin-left: 15px"
@@ -101,6 +102,7 @@
         </button>
 
         <button
+            *ngIf="checkMobile()"
             type="submit"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
             style="padding: 12px 15px; margin-left: 5px"
