@@ -4,6 +4,7 @@ import {ModalVideoComponent} from '@basic-components/modal-video/modal-video.com
 export class AddTutorialHtmlRenderer {
 
     vm: AddTutorialComponent;
+    orderNoRegex = /^(([0-9]{1,5})(\.[0-9]{1})?)$/;
 
     constructor() {
     }
@@ -82,7 +83,7 @@ export class AddTutorialHtmlRenderer {
             !tutorial.topic ||
             tutorial.topic.trim() == '' ||
             this.topicAlreadyPresent(tutorial) ||
-            !this.youTubeLinkValid());
+            !this.youTubeLinkValid() || !this.orderNoRegex.test(tutorial.orderNumber));
     }
 
     subjectsExist() {
