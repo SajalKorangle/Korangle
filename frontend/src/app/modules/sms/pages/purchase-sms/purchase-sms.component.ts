@@ -8,7 +8,7 @@ import { SmsOldService } from 'app/services/modules/sms/sms-old.service';
 import { CommonFunctions } from '@classes/common-functions';
 import { GeneralSMSPurchaseServiceAdapter } from '@modules/sms/class/sms-purchase.service.adapter';
 import { PaymentService } from '@services/modules/payment/payment.service';
-import { SMS_PLAN } from '@modules/sms/class/constants';
+import { getDefaultSMSPlans } from '@modules/sms/class/constants';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 import { MatDialog } from '@angular/material';
 
@@ -30,7 +30,7 @@ export class PurchaseSmsComponent implements OnInit {
     isLoading = false;
     isInitialLoading = false;
 
-    smsPlan = SMS_PLAN;
+    smsPlan = getDefaultSMSPlans();
 
 
     smsBalance = 0;
