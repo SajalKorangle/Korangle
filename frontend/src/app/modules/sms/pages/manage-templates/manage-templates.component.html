@@ -47,14 +47,11 @@
 
         <!-- If event is selected STARTS  -->
         <ng-container *ngIf="userInput.selectedEvent">
-            
             <!-- User Chosen Template STARTS  -->
             <ng-container *ngIf="userInput.selectedEventSettings.isUserChosenTemplateForEvent">
-                
                 <div class="row" style="padding-left:5px">
                     <b style="font-size:16px;margin-left:12px">{{userInput.selectedEvent.eventName}}</b>
                 </div>
-
                 <mat-expansion-panel [expanded]="false"
                                      style="margin-top: 10px; margin-bottom: 8px">
                     <mat-expansion-panel-header>
@@ -335,7 +332,7 @@
                                         {{ smsId.smsId }}
                                     </mat-option>
                                 </mat-select>
-                            </mat-form-field>                                                      
+                            </mat-form-field>
                         </div>
                     </div>
 

@@ -171,7 +171,6 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     selectEvent(eventId: any) {
-        
         this.vm.userInput.selectedEvent = this.vm.backendData.SMSEventList.find(x => x.id == eventId);
         this.vm.userInput.selectedEventSettings = this.vm.userInput.populatedSMSEventSettingsList.find(x => x.id == eventId);
     }
