@@ -51,7 +51,7 @@
 	{ "model": "team_app.task", "pk": 49, "fields": { "path": "create_examination", "title": "Create Exam", "parentModule": "14", "orderNumber": 1, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 50, "fields": { "path": "create_test", "title": "Create Test", "parentModule": "14", "orderNumber": 2, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 51, "fields": { "path": "generate_hall_ticket", "title": "Generate Hall Ticket", "parentModule": "14", "orderNumber": 3, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 52, "fields": { "path": "update_marks", "title": "Update Marks", "parentModule": "14", "orderNumber": 4, "parentBoard": null } },
+	{ "model": "team_app.task", "pk": 52, "fields": { "path": "update_marks", "title": "Update marks", "parentModule": "14", "orderNumber": 4, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 53, "fields": { "path": "print_marksheet", "title": "Print Marksheet", "parentModule": "14", "orderNumber": 5, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 54, "fields": { "path": "update_all", "title": "Update All", "parentModule": "1", "orderNumber": 3, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 55, "fields": { "path": "print_salary_sheet", "title": "Print Salary Sheet", "parentModule": "12", "orderNumber": 4, "parentBoard": null } },
