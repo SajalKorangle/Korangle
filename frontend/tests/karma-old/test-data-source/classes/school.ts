@@ -348,7 +348,7 @@ export const SCHOOL_LIST = [
                     {
                         "dbId": 52,
                         "path": "update_marks",
-                        "title": "Update Marks"
+                        "title": "Update marks"
                     },
                     {
                         "dbId": 53,

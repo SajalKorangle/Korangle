@@ -539,7 +539,7 @@ export const MODULE_LIST = [
             {
                 "id": 52,
                 "path": "update_marks",
-                "title": "Update Marks",
+                "title": "Update marks",
                 "orderNumber": 4,
                 "parentModule": 14,
                 "parentBoard": null,
