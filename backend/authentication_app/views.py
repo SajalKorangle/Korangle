@@ -20,7 +20,6 @@ from employee_app.business.employee_profile import create_employee_profile
 User = get_user_model()
 from decorators import get_success_response
 
-
 # Create your views here.
 
 

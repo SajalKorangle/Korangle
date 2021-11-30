@@ -8,7 +8,6 @@ from datetime import timedelta
 from django.utils import timezone
 
 from django.contrib.auth import get_user_model
-
 User = get_user_model()
 from authentication_app.models import OTP
 
