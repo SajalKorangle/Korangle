@@ -9,9 +9,7 @@ import math
 # Do you know why they didn't just use CASHFREE_APP_ID and CASHFREE_SECRET_KEY instead of CLIENT_ID & CLIENT_SECRET
 # for bearer token
 # @answer : They have microservice kind of an architecture where different services are completely disjoint
-from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url
-
-bank_verification_base_url = 'https://payout-gamma.cashfree.com'
+from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url, CASHFREE_VERIFICATION_SUITE_ENDPOINT
 
 KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 0.5
 
@@ -316,7 +314,7 @@ def authenticate():
         'Content-Type': 'application/json',
     }
     response = requests.post(
-        url=bank_verification_base_url + '/payout/v1/authorize',
+        url=CASHFREE_VERIFICATION_SUITE_ENDPOINT + '/payout/v1/authorize',
         headers=headers,
     )
     assert response.json()["status"] == "SUCCESS", "cashfree authentication failed: {0}".format(response.json())
@@ -338,7 +336,7 @@ def ifscVerification(ifsc):
     }
 
     response = requests.get(
-        url=bank_verification_base_url + '/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
+        url=CASHFREE_VERIFICATION_SUITE_ENDPOINT + '/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
         headers=headers
     )
 
@@ -359,7 +357,7 @@ def bankAccountVerification(accountNumber, ifsc):
     }
 
     response = requests.get(
-        url=bank_verification_base_url + '/payout/v1.2/validation/bankDetails',
+        url=CASHFREE_VERIFICATION_SUITE_ENDPOINT + '/payout/v1.2/validation/bankDetails',
         headers=headers,
         params=params,
     )
