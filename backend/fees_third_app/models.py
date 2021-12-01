@@ -259,27 +259,26 @@ class FeeReceipt(models.Model):
     cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='cancelledBy', related_name='cancelledBy')
 
     MODE_OF_PAYMENT = (
-        ( 'Cash', 'Cash' ),
-        ( 'Cheque', 'Cheque' ),
-        ( 'Online', 'Online'),
+        ('Cash', 'Cash'),
+        ('Cheque', 'Cheque'),
+        ('Online', 'Online'),
     )
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
-    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL) # what on delete, even 'PROTECT will give please refesth dialog box', on option: only delete transaction not fee receipt
+    parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
 
+
 @receiver(pre_save, sender=FeeReceipt)
-def FeeReceiptCacnlletionHandler(sender, instance, **kwargs):
+def FeeReceiptCancellationHandler(sender, instance, **kwargs):
     if(kwargs['raw']):
         return
-    if instance.id and instance.cancelled:
-        originalFeeReceipt = FeeReceipt.objects.get(id=instance.id)
-        if originalFeeReceipt.cancelled==False and originalFeeReceipt.parentTransaction != None:
-            originalFeeReceipt.parentTransaction.delete()
+    if instance.cancelled and instance.parentTransaction:
+        instance.parentTransaction.delete()
+        instance.parentTransaction = None
     pass
-
 
 
 class SubFeeReceipt(models.Model):
@@ -426,8 +425,7 @@ class FeeSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
-    accountingSettings = models.TextField(null=True) # json data
+    accountingSettings = models.TextField(null=True)  # json data
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
-        
