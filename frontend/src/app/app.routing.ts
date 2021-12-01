@@ -5,6 +5,14 @@ import { CustomPreload } from './custom-preload';
 import {AppComponent} from './app.component';
 
 const routes: Routes = [
+
+    // ----- Routes For Outside The User DashBoard Starts -------
+    {path: 'contact-us', component: AppComponent},
+    {path: 'create-school', component: AppComponent},
+    {path: 'sign-up', component: AppComponent},
+    // ----- Routes For Outside The User DashBoard Ends -------
+
+    // ----- Routes For Modules in the User DashBoard Starts -------
     {
         path: 'notification',
         loadChildren: 'app/modules/notification/notification.module#NotificationModule',
@@ -122,11 +130,9 @@ const routes: Routes = [
         path: 'online_classes',
         loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
     },
+    // ----- Routes For Modules in the User DashBoard Ends -------
 
-    // adding frontpage path routes here to avoid route not present error
-    {path: 'contact-us', component: AppComponent},
-    {path: 'create-school', component: AppComponent},
-    {path: 'sign-up', component: AppComponent},
+    // ----- Routes For Print Pages Starts -------
     {
         path: 'print',
         outlet: 'print',
@@ -148,6 +154,7 @@ const routes: Routes = [
             { path: 'parent', loadChildren: 'app/modules/parent/parent.module#ParentModule' },
         ],
     },
+    // ----- Routes For Print Pages Ends -------
 ];
 
 @NgModule({

@@ -19,6 +19,7 @@ def create_contact_details(data):
             'message': 'Contact created successfully',
         }
     else:
+        print(details_serializer.errors)
         return {
             'status': 'failure',
             'message': 'Contact Details creation Failed',

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('mobileNumber', models.CharField(max_length=12)),
                 ('firstName', models.CharField(max_length=100)),
                 ('lastName', models.CharField(max_length=100)),
-                ('emailId', models.EmailField(max_length=254, null=True)),
+                ('emailId', models.EmailField(max_length=254, null=True,  blank=True)),
                 ('schoolName', models.TextField(null=True)),
                 ('remarks', models.TextField(null=True)),
                 ('createdDateTime', models.DateTimeField(auto_now_add=True)),
