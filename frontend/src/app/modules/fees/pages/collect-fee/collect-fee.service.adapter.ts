@@ -235,7 +235,7 @@ export class CollectFeeServiceAdapter {
 
         }
         else {
-            newFeeReceiptListResponse = this.vm.genericService.createObjectList({ fees_third_app: 'FeeReceipt' }, fee_receipt_list);
+            newFeeReceiptListResponse = await this.vm.genericService.createObjectList({ fees_third_app: 'FeeReceipt' }, fee_receipt_list);
         }
 
         const newSubFeeReceiptList = [];
