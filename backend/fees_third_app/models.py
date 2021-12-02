@@ -10,6 +10,8 @@ from employee_app.models import Employee
 
 from accounts_app.models import Transaction, AccountSession
 
+from common.common import BasePermission
+
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 
@@ -266,6 +268,10 @@ class FeeReceipt(models.Model):
     modeOfPayment = models.CharField(max_length=20, choices=MODE_OF_PAYMENT, null=True)
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
+
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
@@ -356,6 +362,10 @@ class Discount(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
     parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, verbose_name='parentEmployee')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
+    
     class Meta:
         db_table = 'discount_new'
         unique_together = ('discountNumber', 'parentSchool')

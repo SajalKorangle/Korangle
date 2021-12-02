@@ -1,5 +1,6 @@
 import { DeleteStudentComponent } from './delete-student.component';
 import { CommonFunctions } from '@classes/common-functions';
+import { Query } from '@services/generic/query';
 
 export class DeleteStudentServiceAdapter {
     vm: DeleteStudentComponent;
@@ -15,52 +16,60 @@ export class DeleteStudentServiceAdapter {
         
         this.vm.isLoading = true;
         
-        const student_full_profile_request_data = {
-            schoolDbId: this.vm.user.activeSchool.dbId,
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
+        const classQuery = new Query()
+            .filter({})
+            .getObjectList({ class_app: 'Class' });
 
-        const class_section_request_data = {
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
+        const divisionQuery = new Query()
+            .filter({})
+            .getObjectList({ class_app: 'Division' });
 
-        const student_parameter_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
+        const studentParameterQuery = new Query()
+            .filter({ parentSchool: this.vm.user.activeSchool.dbId })
+            .getObjectList({ student_app: 'StudentParameter' });
 
-        const student_parameter_value_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-        };
+        const studentParameterValueQuery = new Query()
+            .filter({ parentStudent__parentSchool: this.vm.user.activeSchool.dbId })
+            .getObjectList({ student_app: 'StudentParameterValue' });
 
-        const bus_stop_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
+        const busStopQuery = new Query()
+            .filter({ parentSchool: this.vm.user.activeSchool.dbId })
+            .getObjectList({ school_app: 'BusStop' });
 
-        const tc_data = {
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            status__in: ['Generated', 'Issued'],
-            fields__korangle: ['parentStudent'],
-        };
+        const sessionQuery = new Query()
+            .filter({})
+            .getObjectList({ school_app: 'Session' });
 
-        const student_section_data = {
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        const transferCertificateNewQuery = new Query()
+            .filter({
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+                status__in: ['Generated', 'Issued'],
+            })
+            .getObjectList({ tc_app: 'TransferCertificateNew' });
+
+        const studentSectionQuery = new Query()
+            .filter({ parentSession: this.vm.user.activeSchool.currentSessionDbId })
+            .getObjectList({ student_app: 'StudentSection' });
             
-        }
-
+        const student_full_profile_request_data = {
+                schoolDbId: this.vm.user.activeSchool.dbId,
+                sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
+        };
+    
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
-            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data), // 3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data), // 4
-            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
-            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),   // 8
+            classQuery,
+            divisionQuery,
+            studentParameterQuery,
+            studentParameterValueQuery,
+            busStopQuery,
+            sessionQuery, 
+            transferCertificateNewQuery,
+            studentSectionQuery,
+            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
         ]).then(
             (value) => {
-                console.log(value);
+                // console.log(value);
                 value[0].forEach((classs) => {
                     classs.sectionList = [];
                     value[1].forEach((section) => {
@@ -68,69 +77,70 @@ export class DeleteStudentServiceAdapter {
                     });
                 });
                 this.vm.initializeClassSectionList(value[0]);
-                this.vm.backendData.tcList = value[7];
-                this.vm.initializeStudentFullProfileList(value[2]);
-                this.vm.studentParameterList = value[3].map((x) => ({
+                this.vm.studentParameterList = value[2].map((x) => ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
                     showNone: false,
                     filterFilterValues: '',
                 }));
-                this.vm.studentParameterValueList = value[4];
+                this.vm.studentParameterValueList = value[3];
                 this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter((x) => x.parameterType == 'DOCUMENT');
                 this.vm.studentParameterOtherList = this.vm.studentParameterList.filter((x) => x.parameterType !== 'DOCUMENT');
-                this.vm.busStopList = value[5];
-                this.vm.session_list = value[6];
-                this.vm.studentList = value[8];
-                
-                this.vm.isLoading = false;                
+                this.vm.busStopList = value[4];
+                this.vm.session_list = value[5];
+                this.vm.backendData.tcList = value[6];
+                this.vm.studentList = value[7];
+                this.vm.initializeStudentFullProfileList(value[8]);        
             },
             (error) => {
                 this.vm.isLoading = false;
             }
         );
     }
-
+    
     checkDeletability(studentList: any): any {
+        
+        this.vm.isLoading = true;
         
         let studentIdList = [];
         studentList.forEach((student) => {
             studentIdList.push(student.dbId);
         });
 
-        let student_data = {
-            id: studentIdList.join(','),
-            fields__korangle: 'motherName,rollNumber,scholarNumber,dateOfBirth,address,remark',
-        };
+        const studentSectionQuery = new Query()
+            .filter({ parentStudent__in: studentIdList })
+            .getObjectList({ student_app: 'StudentSection' });
 
-        let tc_data = {
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            status__in: ['Generated', 'Issued'].join(','),
-        };
+        const feeReceiptQuery = new Query()
+            .filter({ 
+                parentStudent__in: studentIdList,
+                cancelled: 'False',
+            })
+            .getObjectList({ fees_third_app: 'FeeReceipt' });
 
-        let student_section_data = {
-            parentStudent: studentIdList.join(','),
-        };
+        const discountQuery = new Query()
+            .filter({ 
+                parentStudent__in: studentIdList,
+                cancelled: 'False',
+            })
+            .getObjectList({ fees_third_app: 'Discount' });
 
-        let fee_receipt_data = {
-            parentStudent: studentIdList.join(','),
-            cancelled: 'false__boolean',
-        };
-
-        let discount_data = {
-            parentStudent: studentIdList.join(','),
-            cancelled: 'false__boolean',
-        };
-
-        this.vm.isLoading = true;
+        const transferCertificateNewQuery = new Query()
+            .filter({
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+                status__in: ['Generated', 'Issued'],
+            })
+            .getObjectList({ tc_app: 'TransferCertificateNew' });
 
         Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), // 0
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_data), // 1
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_data), // 2
-            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data), // 3
+            studentSectionQuery,
+            feeReceiptQuery,
+            discountQuery,
+            transferCertificateNewQuery,
         ]).then(
             (value) => {
+                // console.log(value);
 
                 studentList.forEach((student)=> {
 
@@ -167,7 +177,6 @@ export class DeleteStudentServiceAdapter {
                     !student.deleteDisabledReason["hasTC"]
                     ;
                     
-                    student.isDeletablechecked = true;
                     student.isDeletable = isDeletable;
 
                 });
@@ -188,58 +197,48 @@ export class DeleteStudentServiceAdapter {
         }) != undefined
     }
 
-    deleteStudent(studentList): void {
-        let studentIdList = [];
-        studentList.forEach((student) => {
-            studentIdList.push(student.dbId);
-        });
-
-        let student_data = {
-            id: studentIdList.join(','),
-        };
-
-        this.vm.isLoading = true;
-
-        this.vm.studentService.deleteObject(this.vm.studentService.student, student_data).then(
-            (value) => {
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
-    }
-
     deleteSelectedStudents(): void {
         this.vm.isLoading = true;
         
         let deletableStudentIdList = [];
-        
-        this.vm.studentFullProfileList.forEach((student) => {
-            if(student.show && student.selectProfile && student.isDeletable) {
-                deletableStudentIdList.push(student.dbId);
-            }
-        });
 
-        this.vm.studentFullProfileList.filter((x) => {
+        if(this.vm.currentClassStudentFilter == 'Class') {
+            this.vm.studentFullProfileList.forEach((student) => {
+                if(student.show && student.selectProfile && student.isDeletable) {
+                    deletableStudentIdList.push(student.dbId);
+                }
+            });
+        }
+        else if(this.vm.currentClassStudentFilter == 'Student') {
+            deletableStudentIdList.push(this.vm.selectedStudent.dbId);
+        }
+        
+        if(deletableStudentIdList.length == 0) {
+            this.vm.isLoading = false;
+            return;
+        }
+
+        this.vm.studentFullProfileList = this.vm.studentFullProfileList.filter((x) => {
             let flag = true;
             deletableStudentIdList.forEach((id) => {
                 flag = flag && (id != x.dbId);
             })
             return flag;
         });
+        
+        this.vm.htmlRenderer.handleStudentDisplay();
 
-        let student_data = {
-            id: deletableStudentIdList.join(','),
-        };
+        const deletestudentQuery = new Query()
+            .filter({ id__in: deletableStudentIdList})
+            .deleteObjectList({ student_app: 'Student' });
 
-        this.vm.studentService.deleteObjectList(this.vm.studentService.student, student_data).then(
+        deletestudentQuery.then(
             (value) => {
                 this.vm.isLoading = false;
             },
             (error) => {
                 this.vm.isLoading = false;
             }
-        );
+        )
     }
 }

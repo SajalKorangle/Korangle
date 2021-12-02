@@ -95,10 +95,12 @@ export class GenericService extends RestApiGateway {
 
 }
 
-
-
 export interface APP_MODEL_STRUCTURE_INTERFACE {
-    student_app: 'Student' | 'StudentSection';
+    student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue';
+    class_app: 'Class' | 'Division';
+    school_app: 'Session' | 'BusStop'; 
+    tc_app: 'TransferCertificateNew';
+    fees_third_app: 'FeeReceipt' | 'Discount';
 };
 
 // APP_MODEL_STRUCTURE_INTERFACE
