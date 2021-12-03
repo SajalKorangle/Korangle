@@ -173,7 +173,7 @@ def getOrderPaymetSplitDetails(orderId):
 
     
 
-def initiateRefund(orderId, splitData):
+def initiateRefund(orderId, splitData, refundAmount):
     orderStatusData = getOrderStatus(orderId)
 
     headers = {
@@ -184,7 +184,7 @@ def initiateRefund(orderId, splitData):
         'appId': CASHFREE_APP_ID,
         'secretKey': CASHFREE_SECRET_KEY,
         'referenceId': orderStatusData['referenceId'],
-        'refundAmount': float(orderStatusData['orderAmount']),
+        'refundAmount': float(refundAmount),
         'refundNote': 'refund towards payment made on korangle',
     }
 
