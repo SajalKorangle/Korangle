@@ -11,7 +11,10 @@ import math
 # @answer : They have microservice kind of an architecture where different services are completely disjoint
 from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url, CASHFREE_VERIFICATION_SUITE_ENDPOINT
 
-KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 0.5
+KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 3
+#CASHFREE_MARKETPLACE_SETTLEMENT_PERCENTAGE = 0.1
+#GST_PERCENTAGE = 18
+#CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST = CASHFREE_MARKETPLACE_SETTLEMENT_PERCENTAGE*(1 + GST_PERCENTAGE/100)
 
 
 def getResponseSignature(postData):  # used for validating that a response, indeed came from cashfree
@@ -66,6 +69,7 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
     paymentSplit = [
         {
             "vendorId": str(vendorId),
+            #"amount": round(data['orderAmount']*(100*CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST/(100-CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST)),2)
             "amount": data['orderAmount']
         }
     ]
@@ -102,6 +106,7 @@ def createAndSignCashfreeOrderForKorangle(data, orderId):
     orderData.update({
         'appId': CASHFREE_APP_ID,
         'orderId': str(orderId),
+        'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2), # adding korangle's commission
     })
 
     orderData.update({
@@ -168,7 +173,7 @@ def getOrderPaymetSplitDetails(orderId):
 
     
 
-def initiateRefund(orderId, splitData):
+def initiateRefund(orderId, splitData, refundAmount):
     orderStatusData = getOrderStatus(orderId)
 
     headers = {
@@ -179,7 +184,7 @@ def initiateRefund(orderId, splitData):
         'appId': CASHFREE_APP_ID,
         'secretKey': CASHFREE_SECRET_KEY,
         'referenceId': orderStatusData['referenceId'],
-        'refundAmount': float(orderStatusData['orderAmount']),
+        'refundAmount': float(refundAmount),
         'refundNote': 'refund towards payment made on korangle',
     }
 
