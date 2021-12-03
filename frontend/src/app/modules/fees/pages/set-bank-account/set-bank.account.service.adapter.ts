@@ -34,7 +34,7 @@ export class SetBankAccountServiceAdapter {
             this.vm.settlementCycleList, // 1
             this.vm.backendData.schoolBankAccountUpdationPermissionCountList, // 2
         ] = await Promise.all([
-            this.vm.genericService.getObject({payment_app: 'SchoolMerchantAccount'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 0
+            this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {}), // 0
             this.vm.paymentService.getObjectList(this.vm.paymentService.settlement_cycle, {})
                 .then(data => data.map(d => {
                     return { ...d, id: parseInt(d.id) };
