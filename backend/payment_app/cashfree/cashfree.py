@@ -11,7 +11,7 @@ import math
 # @answer : They have microservice kind of an architecture where different services are completely disjoint
 from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url, CASHFREE_VERIFICATION_SUITE_ENDPOINT
 
-KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 0.5
+KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 1
 
 
 def getResponseSignature(postData):  # used for validating that a response, indeed came from cashfree
