@@ -12,7 +12,9 @@ import math
 from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url, CASHFREE_VERIFICATION_SUITE_ENDPOINT
 
 KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 3
-CASHFREE_MARKETPLACE_SETTLEMENT = 0.1
+#CASHFREE_MARKETPLACE_SETTLEMENT_PERCENTAGE = 0.1
+#GST_PERCENTAGE = 18
+#CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST = CASHFREE_MARKETPLACE_SETTLEMENT_PERCENTAGE*(1 + GST_PERCENTAGE/100)
 
 
 def getResponseSignature(postData):  # used for validating that a response, indeed came from cashfree
@@ -67,7 +69,8 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
     paymentSplit = [
         {
             "vendorId": str(vendorId),
-            "amount": round(data['orderAmount']*(100*CASHFREE_MARKETPLACE_SETTLEMENT/(100-CASHFREE_MARKETPLACE_SETTLEMENT)),2)
+            #"amount": round(data['orderAmount']*(100*CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST/(100-CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST)),2)
+            "amount": data['orderAmount']
         }
     ]
 
