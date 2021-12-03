@@ -9,6 +9,7 @@ from common.common import BasePermission
 class SchoolMerchantAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolMerchantAccountList')
     vendorId = models.CharField(max_length=20, unique=True)
+    isEnabled = models.BooleanField(default=True)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']

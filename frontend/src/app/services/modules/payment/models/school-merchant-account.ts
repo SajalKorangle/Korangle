@@ -2,6 +2,7 @@ export class SchoolMerchantAccount {
     id?: number;
     parentSchool: number;
     vendorId: string;
+    isEnabled: boolean = true;
     vendorData: {
         id?: string,
         name: string,

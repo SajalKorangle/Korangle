@@ -7,4 +7,8 @@ export class PayFeesHTMLRenderer {
         this.vm = vm;
     }
 
+    isOnlinePaymentEnabled(){
+        return this.vm.schoolMerchantAccount && this.vm.schoolMerchantAccount.isEnabled;
+    }
+
 }
