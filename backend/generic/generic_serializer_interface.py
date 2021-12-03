@@ -115,7 +115,7 @@ class GenericSerializerInterface():
         ## Response Structure(fields_list) Processing Starts ##
         processed_field_list = ['__all__']
         if 'fields_list' in self.data:
-            fields_list = self.data['fields_list']
+            processed_field_list = self.data['fields_list']
             del self.data['fields_list']
 
         if '__all__' in processed_field_list:
