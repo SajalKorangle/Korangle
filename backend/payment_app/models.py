@@ -17,6 +17,17 @@ class SchoolMerchantAccount(models.Model):
         return '{0} - {1}'.format(self.parentSchool.id, self.parentSchool.name)
 
 
+class SchoolBankAccountUpdationPermissionCount(models.Model):
+    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolBankAccountUpdationPermissionList')
+    bankAccountUpdationPermissionCount = models.IntegerField(default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+
+    def __str__(self):
+        return '{0} ({1}) - {2}'.format(self.parentSchool.name, self.parentSchool.id, self.bankAccountUpdationPermissionCount)
+
+
 class Order(models.Model):
     TransactionStatus = (
         ('Pending', 'Pending'),                     # just after an order is placed and cashfree has not confirmed the payment

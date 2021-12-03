@@ -17,7 +17,7 @@ export class SetBankAccountServiceAdapter {
     //initialize data
     async initializeData() {
         let schoolMerchantAccount;
-        [
+        /*[
             schoolMerchantAccount,
             this.vm.settlementCycleList,
         ] = await Promise.all([
@@ -27,7 +27,21 @@ export class SetBankAccountServiceAdapter {
                     return { ...d, id: parseInt(d.id) };
                 })
                 ),
-        ]);
+        ]);*/
+        
+        [
+            schoolMerchantAccount, // 0
+            this.vm.settlementCycleList, // 1
+            this.vm.backendData.schoolBankAccountUpdationPermissionCountList, // 2
+        ] = await Promise.all([
+            this.vm.genericService.getObject({payment_app: 'SchoolMerchantAccount'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 0
+            this.vm.paymentService.getObjectList(this.vm.paymentService.settlement_cycle, {})
+                .then(data => data.map(d => {
+                    return { ...d, id: parseInt(d.id) };
+                })
+            ), // 1
+            this.vm.genericService.getObjectList({payment_app: 'SchoolBankAccountUpdationPermissionCount'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 2
+        ])
 
         if (schoolMerchantAccount) {
             this.vm.schoolMerchantAccount = schoolMerchantAccount;
@@ -76,6 +90,12 @@ export class SetBankAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
+
+        // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation starts
+        this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
+        await this.vm.genericService.updateObject({payment_app: 'SchoolBankAccountUpdationPermissionCount'}, this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]);
+        // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation ends
+
         const account_verification_data = {
             accountNumber: this.vm.schoolMerchantAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.schoolMerchantAccount.vendorData.bank.ifsc
