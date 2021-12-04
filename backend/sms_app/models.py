@@ -248,7 +248,7 @@ def SMSRefundHandler(sender, instance, **kwargs):
                 return
 
             # 2nd argument is split, empty split means amount will be deducted from korangle not from other vendor account(school)
-            response = initiateRefund(instance.orderId, [])
+            response = initiateRefund(instance.orderId, [], instance.amount)
             instance.refundId = response['refundId']
             instance.status = 'Refund Initiated'
 

@@ -2,16 +2,23 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from 'app/classes/data-storage';
 import { PaymentService } from '@services/modules/payment/payment.service';
 import { SetBankAccountServiceAdapter } from './set-bank.account.service.adapter';
+import { SetBankAccountHtmlRenderer } from './set-bank-account.html.renderer';
 import { SchoolMerchantAccount } from '@services/modules/payment/models/school-merchant-account';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
+import { GenericService } from '@services/generic/generic-service';
+
+
+export class BackendData {
+    schoolBankAccountUpdationPermissionCountList: any;
+}
 
 
 @Component({
     selector: 'app-online-payment-account',
     templateUrl: './set-bank-account.component.html',
     styleUrls: ['./set-bank-account.component.css'],
-    providers: [PaymentService]
+    providers: [PaymentService, GenericService]
 })
 export class SetBankAccountComponent implements OnInit {
 
@@ -24,6 +31,10 @@ export class SetBankAccountComponent implements OnInit {
     settlementCycleList: Array<SettlementOption> = [];
 
     serviceAdapter: SetBankAccountServiceAdapter;
+
+    htmlRenderer: SetBankAccountHtmlRenderer;
+
+    backendData = new BackendData();
 
     cache: {
         bankDetails?: {
@@ -45,13 +56,23 @@ export class SetBankAccountComponent implements OnInit {
     };
     isLoading: boolean = true;
 
-    constructor(public paymentService: PaymentService, public snackBar: MatSnackBar) { }
+    constructor(public paymentService: PaymentService,
+                public genericService: GenericService,
+                public snackBar: MatSnackBar) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+        
+        // Service Adapter Initialization starts
         this.serviceAdapter = new SetBankAccountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        // Service Adapter Initialization ends
+
+        // Html Renderer initialization starts
+        this.htmlRenderer = new SetBankAccountHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
+        // Html Renderer initialization ends
 
         // populate data
         this.schoolMerchantAccount.parentSchool = this.user.activeSchool.dbId;
