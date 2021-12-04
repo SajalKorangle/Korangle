@@ -288,9 +288,9 @@ class GenericSerializerInterface():
             del self.data['fields_list']
         ## Response Structure(fields_list) Processing Ends ##
 
-        query_set = self.parse_query()
+        query_set = self.parse_query(self.data)
         count = query_set.count()
-        assert onlyOne, 'More than one object to delete while onlyOne=True'
+        assert (onlyOne and count > 1), 'More than one object to delete while onlyOne=True'
 
         pk_field_name = self.Model._meta.pk.name
         pk_list = query_set.values_list(pk_field_name, flat=True)
