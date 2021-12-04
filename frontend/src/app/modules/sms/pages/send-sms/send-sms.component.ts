@@ -192,6 +192,7 @@ export class SendSmsComponent implements OnInit {
                         person[personType] = true;
                         let personWithoutReference = JSON.parse(JSON.stringify(person));
                         personWithoutReference.mobileNumber = person.secondMobileNumber;
+                        personWithoutReference.isSecondNumber = true; // mentioning the element is secondNumber entry
                         tempList.push(personWithoutReference);
                     }
                 }
@@ -203,9 +204,13 @@ export class SendSmsComponent implements OnInit {
             this.notificationPersonList = [];
         } else if (this.userInput.selectedSendUpdateType.id == this.NOTIFICATION_TYPE_ID) {
             this.smsPersonList = [];
-            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.notificationPersonList = tempList.filter((temp) => {
+                return (!temp.isSecondNumber && temp.notification) || (this.includeSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+            });
         } else if (this.userInput.selectedSendUpdateType.id == this.SMS_AND_NOTIFICATION_TYPE_ID) {
-            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.notificationPersonList = tempList.filter((temp) => {
+                return (!temp.isSecondNumber && temp.notification) || (this.includeSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+            });
             this.smsPersonList = tempList.filter((temp1) => {
                 return (
                     this.notificationPersonList.find((temp2) => {
