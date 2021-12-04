@@ -165,8 +165,8 @@
                     <mat-label
                         >Mobile Number
                         <span
-                            *ngIf="checkLength(selectedStudent.mobileNumber)"
-                            [class.fieldRight]="checkRight(selectedStudent.mobileNumber, 10)"
+                            *ngIf="checkLength(currentStudent.mobileNumber)"
+                            [class.fieldRight]="checkRight(currentStudent.mobileNumber, 10)"
                         >
                             - {{ selectedStudent.mobileNumber.toString().length }}</span
                         >
@@ -377,6 +377,7 @@
                     <input
                         matInput
                         type="text"
+                        style="text-transform:uppercase"
                         (ngModelChange)="currentStudent.bankIfscCode = $event"
                         [ngModel]="selectedStudent.bankIfscCode"
                     />
