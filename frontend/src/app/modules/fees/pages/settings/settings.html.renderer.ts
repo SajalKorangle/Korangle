@@ -7,11 +7,11 @@ export class SettingsHtmlRenderer {
 
     getParentPlatformFeePercentage() {
         const absoluteProcessingChargeOnParent = KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE - this.getSchoolPlatformFeePercentage();
-        return (100 * absoluteProcessingChargeOnParent)/(100 - absoluteProcessingChargeOnParent);   // processing charge on parent after including processing charge on added charges
+        return (100 * absoluteProcessingChargeOnParent) / (100 - absoluteProcessingChargeOnParent);  // new platform charge
     }
 
     getSchoolPlatformFeePercentage() {
-        return (this.vm.backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE)/100;
+        return (this.vm.backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE) / 100;
     }
 
 }

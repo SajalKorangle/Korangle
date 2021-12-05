@@ -9,17 +9,17 @@ export class PayFeesHTMLRenderer {
         this.vm = vm;
     }
 
-    isOnlinePaymentEnabled(){
+    isOnlinePaymentEnabled() {
         return this.vm.schoolMerchantAccount && this.vm.schoolMerchantAccount.isEnabled;
     }
 
     getParentPlatformFeePercentage() {
         const processingChargeOnParent = KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE - this.getSchoolPlatformFeePercentage();
-        return (100 * processingChargeOnParent)/(100 - processingChargeOnParent);   // processing charge on parent after including processing charge on added charges
+        return (100 * processingChargeOnParent) / (100 - processingChargeOnParent);   // new platform fee
     }
 
     getSchoolPlatformFeePercentage() {
-        return (this.vm.schoolMerchantAccount.percentageTransactionChargeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE)/100;
+        return (this.vm.schoolMerchantAccount.percentageOfPlatformFeeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE) / 100;
     }
 
 }

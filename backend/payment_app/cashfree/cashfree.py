@@ -64,8 +64,8 @@ def getSignature(orderData):  # used to authenticate that the data is a valid da
 def getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool):
     return (percentageofPlatformFeeOnSchool * KORANGLE_PAYMENT_COMMISSION_PERCENTAGE)/100
 
-def getUserPlatformPercentage(percentageofPlatformFeeOnSchool):
-    absolutePlatformFeeOnParent = KORANGLE_PAYMENT_COMMISSION_PERCENTAGE - getSchoolPlatformFeePercentage();
+def getUserPlatformFeePercentage(percentageofPlatformFeeOnSchool):
+    absolutePlatformFeeOnParent = KORANGLE_PAYMENT_COMMISSION_PERCENTAGE - getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool)
     return (100 * absolutePlatformFeeOnParent)/(100 - absolutePlatformFeeOnParent)   # new platform fee, platform fee on parent after including transacton charge on added platform fee
 
 def createAndSignCashfreeOrderForSchool(data, orderId, vendorId, percentageTransactionChargeOnSchool):
@@ -92,7 +92,7 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId, percentageTrans
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': round(data['orderAmount'] * (1 + getUserPlatformPercentage(percentageTransactionChargeOnSchool) / 100), 2),  # adding korangle's commission
+            'orderAmount': round(data['orderAmount'] * (1 + getUserPlatformFeePercentage(percentageTransactionChargeOnSchool) / 100), 2),  # adding korangle's commission
         }
     )
     if(orderData['orderAmount'] == math.floor(orderData['orderAmount'])):   # Removing decimal incase amount is int, (cashfree constraints)

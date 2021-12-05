@@ -112,13 +112,13 @@ export class SettingsServiceAdapter {
             );
         }
 
-        if(this.vm.backendData.schoolMerchantAccount){
+        if (this.vm.backendData.schoolMerchantAccount) {
             serviceList.push(
                 new Query().partiallyUpdateObject(
-                    {payment_app: 'SchoolMerchantAccount'}, 
+                    {payment_app: 'SchoolMerchantAccount'},
                     this.vm.backendData.schoolMerchantAccount
                     )
-            )
+            );
         }
 
         await Promise.all(serviceList);

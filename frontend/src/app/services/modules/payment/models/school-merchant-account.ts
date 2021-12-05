@@ -3,7 +3,7 @@ export class SchoolMerchantAccount {
     parentSchool: number;
     vendorId: string;
     isEnabled: boolean = true;
-    percentageOfPlatformFeeOnSchool:number;
+    percentageOfPlatformFeeOnSchool: number;
     vendorData: {
         id?: string,
         name: string,
