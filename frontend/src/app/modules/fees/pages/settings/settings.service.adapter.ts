@@ -116,7 +116,7 @@ export class SettingsServiceAdapter {
             serviceList.push(
                 new Query().partiallyUpdateObject(
                     {payment_app: 'SchoolMerchantAccount'}, 
-                    {id: this.vm.backendData.schoolMerchantAccount.id, isEnabled: this.vm.backendData.schoolMerchantAccount.isEnabled}
+                    this.vm.backendData.schoolMerchantAccount
                     )
             )
         }

@@ -85,7 +85,7 @@ class OrderSchoolView(CommonView, APIView):
         createdOrderResponse = GenericSerializerInterface(
             Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
 
-        responseOrderData = createAndSignCashfreeOrderForSchool(cashfreeOrderData, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId, schoolOnlinePaymentAccount.percentageTransactionChargeOnSchool)
+        responseOrderData = createAndSignCashfreeOrderForSchool(cashfreeOrderData, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId, schoolOnlinePaymentAccount.percentageOfPlatformFeeOnSchool)
         return responseOrderData
 
 

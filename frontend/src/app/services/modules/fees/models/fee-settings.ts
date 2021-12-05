@@ -6,7 +6,6 @@ export class FeeSettings {
     parentSchool: number;
     sessionLocked: boolean;
     accountingSettingsJSON: AccountingSettings;
-    percentageTransactionChargeOnSchool: number = 0;
 }
 
 export class AccountingSettings {

@@ -46,4 +46,4 @@ export class DiscountColumnFilter {
 }
 
 
-export const KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE = 3; 
+export const KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE = 3; 

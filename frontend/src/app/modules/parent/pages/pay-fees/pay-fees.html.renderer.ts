@@ -1,5 +1,5 @@
 import { PayFeesComponent } from './pay-fees.component';
-import { KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE } from '@modules/fees/classes/constants';
+import { KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE } from '@modules/fees/classes/constants';
 
 
 export class PayFeesHTMLRenderer {
@@ -13,13 +13,13 @@ export class PayFeesHTMLRenderer {
         return this.vm.schoolMerchantAccount && this.vm.schoolMerchantAccount.isEnabled;
     }
 
-    getUserTransactionProcessingChargePercentage() {
-        const processingChargeOnParent = KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE - this.getSchoolTransactionProcessingChargePercentage();
+    getParentPlatformFeePercentage() {
+        const processingChargeOnParent = KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE - this.getSchoolPlatformFeePercentage();
         return (100 * processingChargeOnParent)/(100 - processingChargeOnParent);   // processing charge on parent after including processing charge on added charges
     }
 
-    getSchoolTransactionProcessingChargePercentage() {
-        return (this.vm.schoolMerchantAccount.percentageTransactionChargeOnSchool * KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE)/100;
+    getSchoolPlatformFeePercentage() {
+        return (this.vm.schoolMerchantAccount.percentageTransactionChargeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE)/100;
     }
 
 }

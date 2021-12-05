@@ -61,25 +61,21 @@ def getSignature(orderData):  # used to authenticate that the data is a valid da
     signature = base64.b64encode(hmac.new(secret, message, digestmod=hashlib.sha256).digest())
     return signature.decode('utf-8')
 
-def getSchoolTransactionProcessingChargePercentage(percentageTransactionChargeOnSchool):
-    return (percentageTransactionChargeOnSchool * KORANGLE_PAYMENT_COMMISSION_PERCENTAGE)/100
+def getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool):
+    return (percentageofPlatformFeeOnSchool * KORANGLE_PAYMENT_COMMISSION_PERCENTAGE)/100
 
-def getUserTransactionProcessingChargePercentage(percentageTransactionChargeOnSchool):
-    processingChargeOnParent = KORANGLE_PAYMENT_COMMISSION_PERCENTAGE - getSchoolTransactionProcessingChargePercentage();
-    return (100 * processingChargeOnParent)/(100 - processingChargeOnParent)   # processing charge on parent after including processing charge on added charges
+def getUserPlatformPercentage(percentageofPlatformFeeOnSchool):
+    absolutePlatformFeeOnParent = KORANGLE_PAYMENT_COMMISSION_PERCENTAGE - getSchoolPlatformFeePercentage();
+    return (100 * absolutePlatformFeeOnParent)/(100 - absolutePlatformFeeOnParent)   # new platform fee, platform fee on parent after including transacton charge on added platform fee
 
 def createAndSignCashfreeOrderForSchool(data, orderId, vendorId, percentageTransactionChargeOnSchool):
 
-    # Is it not required to mention the vendor id and amount for Korangle here?
-    # @answer : No, the leftover amount will be settled in korangle's account
-
     
-
     paymentSplit = [
         {
             "vendorId": str(vendorId),
             #"amount": round(data['orderAmount']*(100*CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST/(100-CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST)),2)
-            "amount": round(data['orderAmount']*(1 - getSchoolTransactionProcessingChargePercentage(percentageTransactionChargeOnSchool)/100), 2)
+            "amount": round(data['orderAmount']*(1 - getSchoolPlatformFeePercentage(percentageTransactionChargeOnSchool)/100), 2)
         }
     ]
 
@@ -96,7 +92,7 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId, percentageTrans
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': round(data['orderAmount'] * (1 + getUserTransactionProcessingChargePercentage(percentageTransactionChargeOnSchool) / 100), 2),  # adding korangle's commission
+            'orderAmount': round(data['orderAmount'] * (1 + getUserPlatformPercentage(percentageTransactionChargeOnSchool) / 100), 2),  # adding korangle's commission
         }
     )
     if(orderData['orderAmount'] == math.floor(orderData['orderAmount'])):   # Removing decimal incase amount is int, (cashfree constraints)

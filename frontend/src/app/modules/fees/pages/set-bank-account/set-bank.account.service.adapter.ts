@@ -1,7 +1,5 @@
 import { SetBankAccountComponent } from './set-bank-account.component';
 import { CommonFunctions } from '@classes/common-functions';
-import { Query } from '@services/generic/query';
-
 export class SetBankAccountServiceAdapter {
 
     vm: SetBankAccountComponent;
@@ -123,15 +121,7 @@ export class SetBankAccountServiceAdapter {
         this.vm.resetIntermediateUpdateState();
     }
 
-    async updateMerchantAccountEnabled(){
-        this.vm.isLoading = true;
-        const response = await new Query().partiallyUpdateObject(
-            {payment_app: 'SchoolMerchantAccount'}, 
-            {id: this.vm.schoolMerchantAccount.id, isEnabled: !this.vm.schoolMerchantAccount.isEnabled},
-        );
-        Object.assign(this.vm.schoolMerchantAccount, response);
-        this.vm.isLoading = false;
-    }
+
 
 
 }
