@@ -10,7 +10,7 @@ export class SettingsBackendData {
     accountsList: Array<Account>;
     accountSessionList: Array<AccountSession>;
 
-    schoolMerchantAccount: {id: number, isEnabled: boolean};
+    schoolMerchantAccount: {id: number, isEnabled: boolean, percentageTransactionChargeOnSchool: number};
 
     constructor(vm: SettingsComponent) {
         this.vm = vm;

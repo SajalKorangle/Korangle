@@ -20,7 +20,7 @@
                 <h4>Payment Transaction Fee Division between parent and school</h4>
                 <div class="flex-desktop-row-mobile-col" style="align-items: center;">
                     <mat-chip style="margin: 4px;">User: {{htmlRenderer.getUserTransactionProcessingChargePercentage().toFixed(2)}}%</mat-chip>
-                    <mat-slider style="min-width: max(320px, 48vw);" [(ngModel)]="backendData.feeSettings.percentageTransactionChargeOnSchool" min="0" max="100" step="1"></mat-slider>
+                    <mat-slider style="min-width: max(320px, 48vw);" [(ngModel)]="backendData.schoolMerchantAccount.percentageTransactionChargeOnSchool" min="0" max="100" step="1"></mat-slider>
                     <mat-chip style="margin: 4px;">School: {{htmlRenderer.getSchoolTransactionProcessingChargePercentage().toFixed(2)}}%</mat-chip>
                 </div>
             </div>
