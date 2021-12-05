@@ -6,7 +6,7 @@
         <div [style.pointerEvents]="backendData.schoolMerchantAccount?'auto':'none'" [style.opacity]="backendData.schoolMerchantAccount?'1':'0.35'">
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <mat-icon style="font-size: 30px">payments</mat-icon>
-                <h3 style="margin-left: 8px;">Online Fee Payment</h3>
+                <h3 style="margin-left: 12px;">Online Fee Payment</h3>
                 
                 <mat-slide-toggle *ngIf="backendData.schoolMerchantAccount" style="margin-right: 16px; margin-left: auto;" [(ngModel)]="backendData.schoolMerchantAccount.isEnabled">
                     Online Fees Payment
@@ -36,7 +36,7 @@
 
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <mat-icon style="font-size: 30px">account_balance</mat-icon>
-                <h3>&nbsp;&nbsp;Accounting</h3>
+                <h3 style="margin-left: 12px;">Accounting</h3>
                 <mat-slide-toggle style="margin-right: 16px; margin-left: auto;" [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
                     (change)="toggleAccounting($event.checked)">Enable</mat-slide-toggle>
             </div>
@@ -136,7 +136,7 @@
 
         <div style="display: flex; flex-direction: row; align-items: center;">
             <mat-icon style="font-size: 30px">lock</mat-icon>
-            <h3>&nbsp;&nbsp;Lock Fee</h3>
+            <h3 style="margin-left: 12px;">Lock Fee</h3>
         </div>
 
         <div style="display: flex; flex-direction: row; align-items: center;">
