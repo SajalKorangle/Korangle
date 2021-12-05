@@ -547,14 +547,15 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
         for subDiscount in subDiscountList:
             studentFeeAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
 
-        if paidAmount >= studentFeeAmount:
+        assert paidAmount <= studentFeeAmount, 'Total Paid Amount is exceeding actual Student Fee Amount'
+        if paidAmount == studentFeeAmount:
             isClearedMappedByMonth[month] = True
 
         ## Validations Starts ##
 
-        if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
-            assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
-            assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
+        # if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
+            ## Relaxed # assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
+            ## Not Required, handeled earlier while check total paid amount and actual amount # assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
 
         if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
                 and getattr(studentFee, month + 'LateFee'):  # late fee
@@ -572,8 +573,9 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
 
             totalPaidLateFee += getattr(newSubFeeReceipt, month + 'LateFee') or 0
 
+            assert totalPaidLateFee <= lateFee, "total paid late fee is exceeding actual late fee"
+
             if totalPaidLateFee < lateFee:
-                isClearedMappedByMonth[month] = False
                 assert (getattr(newSubFeeReceipt, month + 'Amount') or 0) == 0, "incoming fee amount without clearing late fee"
 
     ## Cleared and Cleared Date Handling for Student Fee ##
