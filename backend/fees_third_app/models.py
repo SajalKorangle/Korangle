@@ -1,3 +1,4 @@
+from django.core import validators
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from django.db import models
@@ -26,6 +27,8 @@ from django.db import transaction as db_transaction
 from .business.constant import INSTALLMENT_LIST
 from common.common import BasePermission
 from generic.generic_serializer_interface import GenericSerializerInterface
+
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class FeeType(models.Model):
@@ -594,6 +597,7 @@ class FeeSettings(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
     accountingSettingsJSON = models.TextField(null=True)  # json data
+    percentageTransactionChargeOnSchool = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')

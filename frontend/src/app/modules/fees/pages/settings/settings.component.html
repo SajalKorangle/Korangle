@@ -1,12 +1,43 @@
 <div class="card-content">
 
     <ng-container *ngIf="!isLoading">
+
+        <!-- Online Payment Settings Starts -->
+        <div [style.pointerEvents]="backendData.schoolMerchantAccount?'auto':'none'" [style.opacity]="backendData.schoolMerchantAccount?'1':'0.35'">
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <mat-icon style="font-size: 30px">payments</mat-icon>
+                <h3 style="margin-left: 8px;">Online Fee Payment</h3>
+                
+                <mat-slide-toggle *ngIf="backendData.schoolMerchantAccount" style="margin-right: 16px; margin-left: auto;" [(ngModel)]="backendData.schoolMerchantAccount.isEnabled">
+                    Online Fees Payment
+                </mat-slide-toggle>
+
+            </div>
+
+            <span *ngIf="!backendData.schoolMerchantAccount">Merchant Bank Account not set.</span>
+
+            <div *ngIf="backendData.schoolMerchantAccount">
+                <h4>Payment Transaction Fee Division between parent and school</h4>
+                <div class="flex-desktop-row-mobile-col" style="align-items: center;">
+                    <mat-chip style="margin: 4px;">User: {{htmlRenderer.getUserTransactionProcessingChargePercentage().toFixed(2)}}%</mat-chip>
+                    <mat-slider style="min-width: max(320px, 48vw);" [(ngModel)]="backendData.feeSettings.percentageTransactionChargeOnSchool" min="0" max="100" step="1"></mat-slider>
+                    <mat-chip style="margin: 4px;">School: {{htmlRenderer.getSchoolTransactionProcessingChargePercentage().toFixed(2)}}%</mat-chip>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Online Payment Settings Ends -->
+
+        <mat-divider style="margin: 20px 0px;"></mat-divider>
+
+        <!-- Fees Accounting Settings Begins -->
         <div [style.pointerEvents]="isActiveSession?'auto':'none'" [style.opacity]="isActiveSession?'1':'0.35'">
 
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <mat-icon style="font-size: 30px">account_balance</mat-icon>
                 <h3>&nbsp;&nbsp;Accounting</h3>
-                <mat-slide-toggle style="margin-right: 20px; margin-left: auto;" [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
+                <mat-slide-toggle style="margin-right: 16px; margin-left: auto;" [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
                     (change)="toggleAccounting($event.checked)">Enable</mat-slide-toggle>
             </div>
 
@@ -98,6 +129,8 @@
             </ng-container>
 
         </div>
+
+        <!-- Fees Accounting Settings Ends -->
 
         <mat-divider style="margin: 20px 0px;"></mat-divider>
 

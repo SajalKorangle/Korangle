@@ -44,3 +44,6 @@ export class DiscountColumnFilter {
     'remark' = true;
     'employee' = true;
 }
+
+
+export const KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE = 3; 
