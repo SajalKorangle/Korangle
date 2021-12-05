@@ -1,4 +1,3 @@
-from django.core import validators
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from django.db import models
@@ -595,6 +594,7 @@ class FeeSettings(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
     accountingSettingsJSON = models.TextField(null=True)  # json data
+
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
 

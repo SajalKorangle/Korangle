@@ -11,7 +11,7 @@ export class SettingsHtmlRenderer {
     }
 
     getSchoolTransactionProcessingChargePercentage() {
-        return (this.vm.backendData.feeSettings.percentageTransactionChargeOnSchool * KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE)/100;
+        return (this.vm.backendData.schoolMerchantAccount.percentageTransactionChargeOnSchool * KORANGLE_TRANSACTION_PROCESSING_CHARGE_PERCENTAGE)/100;
     }
 
 }

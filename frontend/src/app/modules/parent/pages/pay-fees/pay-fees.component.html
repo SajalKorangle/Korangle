@@ -199,7 +199,7 @@
                     (click)="serviceAdapter.initiatePayment()">
                     Pay Now
                 </button>
-                Platform Fee: 3%
+                Platform Fee: {{htmlRenderer.getUserTransactionProcessingChargePercentage()}}%
             </ng-container>
             <!-- Fee Payment Form Ends -->
 
