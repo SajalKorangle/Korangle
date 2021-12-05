@@ -689,6 +689,8 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
     pass
 
 
+from payment_app.cashfree.cashfree import getOrderPaymetSplitDetails
+
 # For handling refund in case an order fails
 @receiver(pre_save, sender=Order)
 def FeeAmountRefundHandler(sender, instance, **kwargs):
@@ -701,15 +703,16 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
             if len(onlinePaymentTransactionList) == 0:  # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
                 return
 
-            schoolMerchantAccount = SchoolMerchantAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
+            orderSplitDetails = getOrderPaymetSplitDetails(instance.orderId)
+            refundAmount = orderSplitDetails["orderSplit"][0]["amount"]
 
             splitDetails = [
                 {
-                    "merchantVendorId": schoolMerchantAccount.vendorId,
-                    "amount": float(instance.amount),
+                    "merchantVendorId": orderSplitDetails["orderSplit"][0]["vendorId"],
+                    "amount": float(refundAmount),
                 }
             ]
 
-            response = initiateRefund(instance.orderId, splitDetails, instance.amount)
+            response = initiateRefund(instance.orderId, splitDetails, refundAmount)
             instance.refundId = response['refundId']
             instance.status = 'Refund Initiated'

@@ -44,3 +44,6 @@ export class DiscountColumnFilter {
     'remark' = true;
     'employee' = true;
 }
+
+
+export const KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE = 3;
