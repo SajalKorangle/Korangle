@@ -28,7 +28,7 @@ export class SetBankAccountServiceAdapter {
                 })
                 ),
         ]);*/
-        
+
         [
             schoolMerchantAccount, // 0
             this.vm.settlementCycleList, // 1
@@ -40,8 +40,11 @@ export class SetBankAccountServiceAdapter {
                     return { ...d, id: parseInt(d.id) };
                 })
             ), // 1
-            this.vm.genericService.getObjectList({payment_app: 'SchoolBankAccountUpdationPermissionCount'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 2
-        ])
+            this.vm.genericService.getObjectList(
+                {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
+                {filter: {parentSchool: this.vm.user.activeSchool.dbId}}
+            ), // 2
+        ]);
 
         if (schoolMerchantAccount) {
             this.vm.schoolMerchantAccount = schoolMerchantAccount;
@@ -93,7 +96,10 @@ export class SetBankAccountServiceAdapter {
 
         // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation starts
         this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
-        await this.vm.genericService.updateObject({payment_app: 'SchoolBankAccountUpdationPermissionCount'}, this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]);
+        await this.vm.genericService.updateObject(
+            {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
+            this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
+        );
         // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation ends
 
         const account_verification_data = {

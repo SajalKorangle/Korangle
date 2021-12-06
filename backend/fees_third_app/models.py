@@ -547,19 +547,21 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
         for subDiscount in subDiscountList:
             studentFeeAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
 
-        if paidAmount >= studentFeeAmount:
+        assert paidAmount <= studentFeeAmount, 'Total Paid Amount is exceeding actual Student Fee Amount'
+        if paidAmount == studentFeeAmount:
             isClearedMappedByMonth[month] = True
 
         ## Validations Starts ##
 
-        if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
-            assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
-            assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
+        # if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
+            ## Relaxed # assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
+            ## Not Required, handeled earlier while check total paid amount and actual amount # assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
 
         if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
                 and getattr(studentFee, month + 'LateFee'):  # late fee
-            delta = (getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')
-            lateFee = delta.days * getattr(studentFee, month + 'LateFee')
+            deltaDays = ((getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')).days
+            deltaDays = max(deltaDays, 0)
+            lateFee = deltaDays * getattr(studentFee, month + 'LateFee')
             if(getattr(studentFee, month + 'MaximumLateFee')):
                 lateFee = min(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
 
@@ -572,8 +574,9 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
 
             totalPaidLateFee += getattr(newSubFeeReceipt, month + 'LateFee') or 0
 
+            assert totalPaidLateFee <= lateFee, "total paid late fee is exceeding actual late fee"
+
             if totalPaidLateFee < lateFee:
-                isClearedMappedByMonth[month] = False
                 assert (getattr(newSubFeeReceipt, month + 'Amount') or 0) == 0, "incoming fee amount without clearing late fee"
 
     ## Cleared and Cleared Date Handling for Student Fee ##
@@ -687,6 +690,8 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
     pass
 
 
+from payment_app.cashfree.cashfree import getOrderPaymetSplitDetails
+
 # For handling refund in case an order fails
 @receiver(pre_save, sender=Order)
 def FeeAmountRefundHandler(sender, instance, **kwargs):
@@ -699,15 +704,16 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
             if len(onlinePaymentTransactionList) == 0:  # No attached OnlineFeePaymentTransaction row, Order is made for some other purpose
                 return
 
-            schoolMerchantAccount = SchoolMerchantAccount.objects.get(parentSchool=onlinePaymentTransactionList[0].parentSchool)
+            orderSplitDetails = getOrderPaymetSplitDetails(instance.orderId)
+            refundAmount = orderSplitDetails["orderSplit"][0]["amount"]
 
             splitDetails = [
                 {
-                    "merchantVendorId": schoolMerchantAccount.vendorId,
-                    "amount": float(instance.amount),
+                    "merchantVendorId": orderSplitDetails["orderSplit"][0]["vendorId"],
+                    "amount": float(refundAmount),
                 }
             ]
 
-            response = initiateRefund(instance.orderId, splitDetails, instance.amount)
+            response = initiateRefund(instance.orderId, splitDetails, refundAmount)
             instance.refundId = response['refundId']
             instance.status = 'Refund Initiated'
