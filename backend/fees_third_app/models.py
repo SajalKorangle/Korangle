@@ -559,8 +559,9 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
 
         if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
                 and getattr(studentFee, month + 'LateFee'):  # late fee
-            delta = (getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')
-            lateFee = delta.days * getattr(studentFee, month + 'LateFee')
+            deltaDays = ((getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')).days
+            deltaDays = max(deltaDays, 0)
+            lateFee = deltaDays * getattr(studentFee, month + 'LateFee')
             if(getattr(studentFee, month + 'MaximumLateFee')):
                 lateFee = min(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
 
