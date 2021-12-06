@@ -14,16 +14,6 @@ export class ManageTemplatesHtmlRenderer {
         this.vm = vm;
     }
 
-    initializeNewTemplate() {
-        this.vm.userInput.newTemplate = {
-            parentSMSId: null,
-            templateId: null,
-            templateName: null,
-            rawContent: null,
-            mappedContent: null,
-        };
-    }
-
     isAddDisabled() {
         return !this.vm.userInput.newTemplate.templateId || this.vm.userInput.newTemplate.templateId.trim() == '' ||
             !this.vm.userInput.newTemplate.templateName || this.vm.userInput.newTemplate.templateName.trim() == '' ||
@@ -64,7 +54,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     isUpdateDisabled(smsEvent: any) {
-        let originalData = this.vm.populatedSMSEventSettingsList.find(pop => pop.eventName == smsEvent.eventName);
+        let originalData = this.vm.populatedSelectedPageEventsData.find(pop => pop.eventName == smsEvent.eventName);
         if (JSON.stringify(smsEvent.eventSettings) == JSON.stringify(originalData.eventSettings) &&
             JSON.stringify(smsEvent.customEventTemplate) == JSON.stringify(originalData.customEventTemplate) &&
             smsEvent.selectedSMSId.id == originalData.selectedSMSId.id) {
@@ -131,12 +121,12 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getExpandedState(panelName: string, smsEvent: any) {
-        let event = this.vm.userInput.populatedSMSEventSettingsList.find(event => event.id == smsEvent.id);
+        let event = this.vm.userInput.populatedSelectedPageEventsData.find(event => event.id == smsEvent.id);
         return event.expansionPanelState[panelName];
     }
 
     setExpandedState(panelName: string, smsEvent: any, panelEvent: any) {
-        let event = this.vm.userInput.populatedSMSEventSettingsList.find(event => event.id == smsEvent.id);
+        let event = this.vm.userInput.populatedSelectedPageEventsData.find(event => event.id == smsEvent.id);
         event.expansionPanelState[panelName] = panelEvent;
         // when closing the event panel the child panels should also close
         if (panelName == this.vm.panelsList[0] && panelEvent == false) {
@@ -171,8 +161,8 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     selectEvent(eventId: any) {
-        this.vm.userInput.selectedEvent = this.vm.backendData.SMSEventList.find(x => x.id == eventId);
-        this.vm.userInput.selectedEventSettings = this.vm.userInput.populatedSMSEventSettingsList.find(x => x.id == eventId);
+        this.vm.userInput.selectedEvent = this.vm.backendData.eventList.find(x => x.id == eventId);
+        this.vm.userInput.selectedEventSettings = this.vm.userInput.populatedSelectedPageEventsData.find(x => x.id == eventId);
     }
 
     getSelectedEventTemplateList() {
@@ -183,7 +173,7 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getEventName(eventId: any) {
-        return this.vm.backendData.SMSEventList.find(x => x.id == eventId).eventName;
+        return this.vm.backendData.eventList.find(x => x.id == eventId).eventName;
     }
 
     handleBackClick() {

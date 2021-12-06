@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from school_app.model.models import School
 from information_app.models import MessageType
+from common.common import BasePermission
 
 
 # Create your models here
@@ -25,6 +26,10 @@ class SMSId(models.Model):
 
     smsIdStatus = models.CharField(max_length=15, choices=STATUS, null=False, default=PENDING)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'sms_id'
         unique_together = ('smsId', 'entityRegistrationId')
@@ -33,6 +38,10 @@ class SMSId(models.Model):
 class SMSIdSchool(models.Model):
     parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, null=False, verbose_name='parentSMSId')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'smsid_school'
@@ -202,6 +211,10 @@ class SMSTemplate(models.Model):
     rawContent = models.TextField(null=False, verbose_name='rawContent')
     mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'sms_template'
 
@@ -223,6 +236,10 @@ class SMSEventSettings(models.Model):
 
     receiverType = models.CharField(max_length=20, choices=UPDATE_TO_CHOICES, null=True,
                                     verbose_name='receiverType')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'sms_event_settings'

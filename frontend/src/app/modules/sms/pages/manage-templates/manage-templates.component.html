@@ -31,7 +31,7 @@
 
         <!-- If event is not selected STARTS  -->
         <ng-container *ngIf="!userInput.selectedEvent">
-            <mat-nav-list *ngFor="let smsEvent of userInput.populatedSMSEventSettingsList" style="width: 100%">
+            <mat-nav-list *ngFor="let smsEvent of userInput.populatedSelectedPageEventsData" style="width: 100%">
                 <a mat-list-item class="list-item" (click)="htmlRenderer.selectEvent(smsEvent.id)">
                     <div style="width: 100%">
                         <strong>{{ smsEvent.eventName }}</strong>
@@ -328,7 +328,7 @@
                             <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
                                 <mat-select placeholder="Select SMS ID" [ngModel]="userInput.selectedEventSettings.selectedSMSId"
                                             (ngModelChange)="htmlRenderer.setSMSIdSelection(userInput.selectedEventSettings, $event)">
-                                    <mat-option *ngFor="let smsId of populatedSMSIdList" [value]="smsId">
+                                    <mat-option *ngFor="let smsId of smsIdListFilteredBySchoolId" [value]="smsId">
                                         {{ smsId.smsId }}
                                     </mat-option>
                                 </mat-select>
