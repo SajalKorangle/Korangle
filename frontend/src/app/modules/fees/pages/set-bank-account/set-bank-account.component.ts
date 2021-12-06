@@ -62,7 +62,7 @@ export class SetBankAccountComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        
+
         // Service Adapter Initialization starts
         this.serviceAdapter = new SetBankAccountServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
