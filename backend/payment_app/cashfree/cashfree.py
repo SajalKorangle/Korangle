@@ -61,16 +61,21 @@ def getSignature(orderData):  # used to authenticate that the data is a valid da
     signature = base64.b64encode(hmac.new(secret, message, digestmod=hashlib.sha256).digest())
     return signature.decode('utf-8')
 
+def getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool):
+    return (percentageofPlatformFeeOnSchool * KORANGLE_PAYMENT_COMMISSION_PERCENTAGE)/100
 
-def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
+def getUserPlatformFeePercentage(percentageofPlatformFeeOnSchool):
+    absolutePlatformFeeOnParent = KORANGLE_PAYMENT_COMMISSION_PERCENTAGE - getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool)
+    return (100 * absolutePlatformFeeOnParent)/(100 - absolutePlatformFeeOnParent)   # new platform fee, platform fee on parent after including transacton charge on added platform fee
 
-    # Is it not required to mention the vendor id and amount for Korangle here?
-    # @answer : No, the leftover amount will be settled in korangle's account
+def createAndSignCashfreeOrderForSchool(data, orderId, vendorId, percentageTransactionChargeOnSchool):
+
+    
     paymentSplit = [
         {
             "vendorId": str(vendorId),
             #"amount": round(data['orderAmount']*(100*CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST/(100-CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST)),2)
-            "amount": data['orderAmount']
+            "amount": round(data['orderAmount']*(1 - getSchoolPlatformFeePercentage(percentageTransactionChargeOnSchool)/100), 2)
         }
     ]
 
@@ -87,7 +92,7 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),  # adding korangle's commission
+            'orderAmount': round(data['orderAmount'] * (1 + getUserPlatformFeePercentage(percentageTransactionChargeOnSchool) / 100), 2),  # adding korangle's commission
         }
     )
     if(orderData['orderAmount'] == math.floor(orderData['orderAmount'])):   # Removing decimal incase amount is int, (cashfree constraints)

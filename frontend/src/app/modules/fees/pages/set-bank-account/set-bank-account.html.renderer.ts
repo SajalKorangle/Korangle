@@ -21,7 +21,7 @@ export class SetBankAccountHtmlRenderer {
 
     numberOfTriesLeftStatement(): any {
         let triesLeft = this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount;
-        return  triesLeft + (triesLeft>1?' tries ': ' try ') + 'left!!!';
+        return  triesLeft + (triesLeft > 1 ? ' tries ' : ' try ') + 'left!!!';
     }
 
 }
