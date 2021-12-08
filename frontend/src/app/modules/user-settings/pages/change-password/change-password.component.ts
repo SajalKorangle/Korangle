@@ -30,6 +30,11 @@ export class ChangePasswordComponent {
             return;
         }
 
+        if (this.newPassword == this.oldPassword) {
+            alert('New Password cannot be same as old password');
+            return;
+        }
+
         if (this.newPassword.length < 8) {
             alert('There should be atleast 8 characters in your password');
             return;

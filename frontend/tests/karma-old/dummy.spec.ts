@@ -64,7 +64,7 @@ import '../../src/app//modules/marksheet/pages/view-marksheet/view-marksheet.mod
 import '../../src/app//modules/notification/notification.module';
 import '../../src/app//modules/notification/pages/view-notification/view-notification.module';
 import '../../src/app//modules/parent/pages/view-attendance/view-attendance.module';
-import '../../src/app//modules/parent/pages/view-fee/view-fee.module';
+import '../../src/app/modules/parent/pages/pay-fees/pay-fees.module';
 import '../../src/app//modules/parent/pages/view-marks/view-marks.module';
 import '../../src/app//modules/parent/pages/view-profile/view-profile.module';
 import '../../src/app//modules/parent/parent.module';

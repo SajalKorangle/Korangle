@@ -101,6 +101,11 @@ const routes: Routes = [
         loadChildren: 'app/modules/fees/pages/update-via-excel/update-via-excel.module#UpdateViaExcelModule',
         data: { moduleName: 'fees' },
     },
+    {
+        path: 'set_bank_account',
+        loadChildren: 'app/modules/fees/pages/set-bank-account/set-bank-account.module#SetBankAccountModule',
+        data: { moduleName: 'fees' },
+    },
 
     {
         path: '',

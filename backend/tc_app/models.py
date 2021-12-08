@@ -51,8 +51,8 @@ def upload_certificate_to(instance, filename):
     return 'tc_app/TransferCertificateNew/certificateFile/%s-%s' % (now().timestamp(), filename)
 
 class TransferCertificateNew(models.Model):
-    parentStudent = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
-    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.SET_NULL, null=True)
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
+    parentStudentSection = models.ForeignKey(StudentSection, on_delete=models.CASCADE, null=True)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     certificateNumber = models.IntegerField()
     certificateFile = models.FileField(upload_to=upload_certificate_to)
