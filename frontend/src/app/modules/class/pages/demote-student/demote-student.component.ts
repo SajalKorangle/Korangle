@@ -87,6 +87,7 @@ export class DemoteStudentComponent implements OnInit {
             !this.selectedStudentDeleteDisabledReason["isDeleted"] &&
             !this.selectedStudentDeleteDisabledReason["isMiddleSession"] &&
             !this.selectedStudentDeleteDisabledReason["hasFeeReceipt"] &&
+            !this.selectedStudentDeleteDisabledReason["hasDiscount"] &&
             !this.selectedStudentDeleteDisabledReason["hasTC"]
         );
     }

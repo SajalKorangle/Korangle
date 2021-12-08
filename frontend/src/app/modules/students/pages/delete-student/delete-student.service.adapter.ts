@@ -178,6 +178,22 @@ export class DeleteStudentServiceAdapter {
                     ;
                     
                     student.isDeletable = isDeletable;
+                    if(!isDeletable) {
+                        let msg="The student can't be deleted due to the following reason(s) - \n";
+                        if(student.deleteDisabledReason["hasMultipleSessions"]) {
+                            msg = msg + "Student is registered in multiple sessions.\n";
+                        }
+                        if(student.deleteDisabledReason["hasFeeReceipt"]) {
+                            msg = msg + "Fee Receipt/s have been issued for the student.\n";
+                        }
+                        if(student.deleteDisabledReason["hasDiscount"]) {
+                            msg = msg + "Discount/s have been issued for the student.\n";
+                        }
+                        if(student.deleteDisabledReason["hasTC"]) {
+                            msg = msg + "TC is already generated.\n";
+                        }
+                        student['nonDeletableMessage'] = msg;
+                    }
 
                 });
                 this.vm.isLoading = false;

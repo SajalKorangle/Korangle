@@ -101,6 +101,8 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     school_app: 'Session' | 'BusStop'; 
     tc_app: 'TransferCertificateNew';
     fees_third_app: 'FeeReceipt' | 'Discount';
+    subject_app: 'StudentSubject';
+    examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
 };
 
 // APP_MODEL_STRUCTURE_INTERFACE

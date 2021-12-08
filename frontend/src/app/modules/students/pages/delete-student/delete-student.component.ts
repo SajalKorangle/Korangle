@@ -170,6 +170,7 @@ export class DeleteStudentComponent implements OnInit {
             studentFullProfile['selectProfile'] = false;
             studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
             studentFullProfile['isDeletable'] = false;
+            studentFullProfile['nonDeletableMessage'] = '';
         });
         this.serviceAdapter.checkDeletability(this.studentFullProfileList);
         this.htmlRenderer.handleStudentDisplay();

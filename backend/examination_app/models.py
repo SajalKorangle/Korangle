@@ -9,6 +9,7 @@ from student_app.models import Student
 from class_app.models import Class, Division
 from subject_app.models import Subject, SubjectSecond, ExtraSubField
 from student_app.models import StudentSection
+from common.common import BasePermission
 
 
 
@@ -147,6 +148,9 @@ class StudentTest(models.Model):
     marksObtained = models.DecimalField(max_digits=20, decimal_places=3,null=False, verbose_name='marksObtained', default=0)
     absent = models.BooleanField(default=False, verbose_name='absent')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_test'
@@ -165,6 +169,10 @@ class StudentExtraSubField(models.Model):
     parentExtraSubField = models.ForeignKey(ExtraSubField, models.PROTECT, null=False, default=0, verbose_name='parentExtraSubField')
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     marksObtained = models.DecimalField(max_digits=6, decimal_places=2, null=False, verbose_name='marksObtained', default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_extra_sub_field'
@@ -261,6 +269,10 @@ class CCEMarks(models.Model):
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
     marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'cce_marks'

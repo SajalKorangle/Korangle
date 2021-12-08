@@ -575,7 +575,7 @@
                         <ng-container *cdkVirtualFor="let student of studentFullProfileList">
                             <tr *ngIf="student.show" id="student-isDeletable-{{student.isDeletable}}" 
                             [matTooltipDisabled]="student.isDeletable"
-                            matTooltip="This student can't be deleted. Either Fee Receipt, Discount or TC has been generated">
+                            matTooltip="{{ student.nonDeletableMessage }}">
                                 <ng-container>
                                     <td>
                                         <div *ngIf="student.isDeletable">
