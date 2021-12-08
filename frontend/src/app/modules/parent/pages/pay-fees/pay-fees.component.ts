@@ -83,7 +83,7 @@ export class PayFeesComponent implements OnInit {
     orderList: Array<Order>;
     parsedOrder: Array<ParsedOrder>;
 
-    hasOnlinePaymentAccount: boolean = false;
+    schoolMerchantAccount;
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 

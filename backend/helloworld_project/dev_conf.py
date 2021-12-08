@@ -56,13 +56,13 @@ CASHFREE_SECRET_KEY = '222ddca8eb31e8ed7a41bfaa568089a50d30e72a'
 CASHFREE_CLIENT_ID = 'CF81239C617UB7HBJS43OTETHC0'
 CASHFREE_CLIENT_SECRET = '51ea9878530a59494c8da9052feb49d30d6b7bb4'
 CASHFREE_BASE_URL = 'https://test.cashfree.com'
+CASHFREE_VERIFICATION_SUITE_ENDPOINT = 'https://payout-gamma.cashfree.com'
 
 ## Aditya's TEST Account ##
 # CASHFREE_APP_ID = '7711077de8a62744b7e8fd49e01177'
 # CASHFREE_SECRET_KEY = 'f413afe54518d72141e192c5c5ea4bb303fe9192'
 # CASHFREE_CLIENT_ID = 'CF77110C5JD3NNHBJS43OTETEN0'
 # CASHFREE_CLIENT_SECRET = 'a125f1d589609adbed0f5b2890653c0fdc77cf35'
-# CASHFREE_BASE_URL = 'https://test.cashfree.com'
 ######################################################
 
 # Query Debug Info (for dev/testing)

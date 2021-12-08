@@ -1,5 +1,19 @@
 <div class="card-content table-responsive" *ngIf="!isLoading else Loader">
 
+    <!-- Contact Technical Support starts -->
+    <div *ngIf="!this.htmlRenderer.isBankAccountUpdationEnabled()"
+        style="color: red;">
+        Contact Technical Support to get your account updation enabled.
+    </div>
+    <!-- Contact Technical Support ends -->
+
+    <!-- Number of tries Left starts -->
+    <div *ngIf="this.htmlRenderer.isBankAccountUpdationEnabled()"
+        style="color: green;">
+        {{this.htmlRenderer.numberOfTriesLeftStatement()}}
+    </div>
+    <!-- Number of tries Left ends -->
+
     <form (submit)="$event.preventDefault(); serviceAdapter.createUpdateOnlinePaymentAccount();">
         <!--Account Information Starts-->
         <h4>Account Information</h4>
@@ -61,7 +75,9 @@
         </div>
         <!--Personal Information Ends-->
 
-        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit" [disabled]="!isDataValid()">
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                type="submit"
+                [disabled]="this.htmlRenderer.isUpdateButtonDisabled()">
             {{schoolMerchantAccount.id?'Update':'Submit'}}
         </button>
         <br /><span *ngIf="errorMessage">{{errorMessage}}</span>
