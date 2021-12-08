@@ -96,11 +96,13 @@ export class GenericService extends RestApiGateway {
 }
 
 export interface APP_MODEL_STRUCTURE_INTERFACE {
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
+    accounts_app: 'Transaction' | 'TransactionAccountDetails';
+    payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue';
     class_app: 'Class' | 'Division';
     school_app: 'Session' | 'BusStop'; 
     tc_app: 'TransferCertificateNew';
-    fees_third_app: 'FeeReceipt' | 'Discount';
     subject_app: 'StudentSubject';
     examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
 };
