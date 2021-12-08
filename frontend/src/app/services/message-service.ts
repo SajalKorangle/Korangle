@@ -186,7 +186,9 @@ export class MessageService {
 
                 // Checking if it is secondNumber element, if yes checking whether the notification is true for secondNumber
                 if (personData.isSecondNumber && personData.secondNumberNotification) {
-                    mappedObject['secondNumberNotification'] = personData.secondNumberNotification;
+                    // if includeSecondMobile number is selected, a duplicate entry of the same person added with the following variables
+                    // (personData.mobileNumber = secondMobileNumber),(personData.isSecondNumber = True),(personData.secondNumberNotification = True | False)
+                    mappedObject['notification'] = personData.secondNumberNotification;
                 } else {
                     mappedObject['notification'] = personData.notification;
                 }
@@ -202,14 +204,14 @@ export class MessageService {
         } else if (sendUpdateTypeId == 3) { // if the update type is 3 (NOTIFICATION) populating only the notification_list
             sms_list = [];
             notification_list = personVariablesMappedObjList.filter((obj) => {
-                return obj.notification || obj.secondNumberNotification;
+                return obj.notification;
             });
         } else { // populating both
             notification_list = personVariablesMappedObjList.filter((obj) => {
-                return obj.notification ||  obj.secondNumberNotification;
+                return obj.notification;
             });
             sms_list = personVariablesMappedObjList.filter((obj) => {
-                return !obj.notification || !obj.secondNumberNotification;
+                return !obj.notification;
             });
         }
 

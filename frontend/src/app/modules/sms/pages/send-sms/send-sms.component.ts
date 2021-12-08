@@ -185,14 +185,14 @@ export class SendSmsComponent implements OnInit {
                 person[personType] = true; // to identify which person in list eg: x['student'] = true
                 tempList.push(person);
             }
-            if (this.userInput.selectedSendTo.id == 1) {
+            if (this.userInput.selectedSendTo.id == 1 ||  this.userInput.selectedSendTo.id == 3) {
                 if (this.includeSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
                     if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                         person, this.message, person, true)) {
                         person[personType] = true;
                         let personWithoutReference = JSON.parse(JSON.stringify(person));
                         personWithoutReference.mobileNumber = person.secondMobileNumber;
-                        personWithoutReference.isSecondNumber = true; // mentioning the element is secondNumber entry
+                        personWithoutReference['isSecondNumber'] = true; // mentioning the element is secondNumber entry
                         tempList.push(personWithoutReference);
                     }
                 }
