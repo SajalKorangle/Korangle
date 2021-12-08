@@ -89,6 +89,10 @@ export class UpdateProfileComponent implements OnInit {
             alert("Name length shouldn't be greater than 15");
             return;
         }
+        if (this.currentMobileNumber.toString().length !== 10) {
+            alert("Mobile number should be of 10 digits!");
+            return;
+        }
         if (this.currentPrintName.trim().length == 0) {
             alert("Print Name shouldn't be empty");
             return;
