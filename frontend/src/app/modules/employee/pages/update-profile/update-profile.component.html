@@ -196,7 +196,8 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="number" placeholder="Monthly Salary" (keypress)="policeNumberInput($event)"
+                    <input matInput type="number" placeholder="Monthly Salary" oninput="this.value=this.value.slice(0,this.maxLength)" (keypress)="policeNumberInput($event)"
+                        maxlength="8" 
                         (ngModelChange)="currentEmployeeProfile.monthlySalary = $event"
                         [ngModel]="selectedEmployeeProfile.monthlySalary" />
                 </mat-form-field>
