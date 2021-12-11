@@ -166,23 +166,23 @@ mat-form-field {
 }
 
 .row .col-md-5{
-    width: 45%
+    width: 45%;
 }
 
 @media only screen and (max-width: 992px) {
     .row .col-md-5 {
-        width: 60%
+        width: 60%;
     }
 }
 
 @media only screen and (max-width: 600px) {
     .row .col-md-5 {
-        width: 80%
+        width: 80%;
     }
 }
 
 @media only screen and (max-width: 425px) {
     .row .col-md-5 {
-        width: 100%
+        width: 100%;
     }
 }
