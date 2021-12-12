@@ -75,3 +75,14 @@ input {
     border-width: 0 0 0 1px;
     padding-left: 3px;
 }
+
+.flex-desktop-row-mobile-col {
+    display: flex;
+    flex-direction: row;
+}
+
+@media only screen and (max-width: 1024px) {
+    .flex-desktop-row-mobile-col {
+        flex-direction: column;
+    }
+}

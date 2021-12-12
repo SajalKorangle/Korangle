@@ -99,3 +99,10 @@ ngx-datatable-column:hover {
 /deep/ .highlight {
     background: yellow;
 }
+
+
+
+
+body {
+  margin: 2rem;
+}

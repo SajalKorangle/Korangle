@@ -72,7 +72,7 @@ export class UpdateProfileServiceAdapter {
             this.vm.currentStudent.mobileNumber.toString().length !== 0 &&
             this.vm.currentStudent.mobileNumber.toString().length !== 10
         ) {
-            alert('mobile number should be of l0 digits!');
+            alert('mobile number should be of 10 digits!');
             return;
         }
         if (

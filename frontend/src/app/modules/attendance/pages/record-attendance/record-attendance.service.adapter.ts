@@ -66,8 +66,8 @@ export class RecordAttendanceServiceAdapter {
         let class_permission_list = [];
         let division_permission_list = [];
         if (this.vm.hasAdminPermission()) {
-            class_permission_list = value[2].map(classs => classs.id);
-            division_permission_list = value[3].map(div => div.id);
+            class_permission_list = value[1].map(classs => classs.id);
+            division_permission_list = value[2].map(div => div.id);
         } else {
             value[1].forEach((element) => {
                 class_permission_list.push(element.parentClass);

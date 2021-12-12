@@ -5,12 +5,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from generic.generic_views import GenericView, GenericListView
 
-api_version = 'v6.4/'
+api_version = 'v6.7/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^' + api_version + 'generic/batch', GenericListView.as_view(), name='generic_list_view'),
-    url(r'^' + api_version + 'generic/', GenericView.as_view(), name='generic_view'),
+    url(r'^' + api_version + 'generic', GenericView.as_view(), name='generic_view'),
     url(r'^'+api_version+'school/', include('school_app.urls')),
     url(r'^'+api_version+'student/', include('student_app.urls')),
     url(r'^'+api_version+'expense/', include('expense_app.urls')),
@@ -42,6 +42,14 @@ urlpatterns = [
     url(r'^'+api_version+'errors/', include('errors_app.urls')),
     url(r'^'+api_version+'accounts/', include('accounts_app.urls')),
     url(r'^'+api_version+'event-gallery/', include('event_gallery_app.urls')),
-    url(r'^'+api_version+'online-class/', include('online_classes_app.urls'))
+    url(r'^' + api_version + 'online-class/', include('online_classes_app.urls')),
+    url(r'^' + api_version + 'payment/', include('payment_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
+## VERSION FREE URLS STARTS ##
+from payment_app.views import OrderCompletionView
+urlpatterns += [
+    url(r'^payment/order-completion/', OrderCompletionView.as_view(), name='cashfree_order_completion'),
+]
+## VERSION FREE URLS ENDS ##

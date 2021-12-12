@@ -75,7 +75,7 @@ class QueryGeneratorMixin {
         this.query_data.pagination = { start, end };
         return this;
     }
-};
+}
 
 
 
@@ -124,7 +124,7 @@ export class Query extends QueryGeneratorMixin {
         return Query.serviceObject.partiallyUpdateObjectList(app_model_name, data);
     }
 
-    deleteObjectList(app_model_name: Partial<APP_MODEL_STRUCTURE_INTERFACE>,) {
+    deleteObjectList(app_model_name: Partial<APP_MODEL_STRUCTURE_INTERFACE>, ) {
         return Query.serviceObject.deleteObjectList(app_model_name, this.getQuery());
     }
 

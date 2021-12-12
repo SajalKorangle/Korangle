@@ -17,4 +17,6 @@ export class SmsService extends ServiceObject {
     public sms_delivery_report = '/sms-delivery-report';
     // public sms_purchase = '/sms-purchase';
     // public msg_club_delivery_report = '/msg-club-delivery-report';
+    public sms_purchase = '/sms-purchase';
+    public sms_purchase_order = '/sms-purchase-order';
 }
