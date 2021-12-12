@@ -73,7 +73,6 @@ mat-form-field {
 	margin-top: 23px;
 	width: 100%;
 }
-
 .dropzone {
     width: 200px;
     height: 200px;
@@ -107,17 +106,16 @@ mat-form-field {
 }
 
 .drop {
-    /* width: 100%; */
     position: relative;
     height: 120px;
     border-radius: 5px;
 }
 
 .documentText {
-    position: absolute;
-    left: 102px;
-    top: 47px;
-    z-index: 3;
+        position: absolute;
+        left: 102px;
+        top: 47px;
+        z-index: 3;
 }
 
 .documentLabel {
