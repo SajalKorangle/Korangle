@@ -290,7 +290,7 @@ class GenericSerializerInterface():
 
         query_set = self.parse_query(self.data)
         count = query_set.count()
-        assert not (count > 1 and onlyOne), 'More than one object to delete while onlyOne=True'
+        assert (not onlyOne or count == 1), 'More than one object to delete while onlyOne=True'
 
         pk_field_name = self.Model._meta.pk.name
         pk_list = query_set.values_list(pk_field_name, flat=True)

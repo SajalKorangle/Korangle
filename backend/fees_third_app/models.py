@@ -291,10 +291,6 @@ class FeeReceipt(models.Model):
         RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
         RelationsToStudent = ['parentStudent__id']
 
-    class Permissions(BasePermission):
-        RelationsToSchool = ['parentSchool__id']
-        RelationsToStudent = ['parentStudent__id']
-
     class Meta:
         db_table = 'fee_receipt_new'
         unique_together = ('receiptNumber', 'parentSchool')
@@ -430,10 +426,6 @@ class Discount(models.Model):
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
-        RelationsToStudent = ['parentStudent__id']
-
-    class Permissions(BasePermission):
-        RelationsToSchool = ['parentSchool__id']
         RelationsToStudent = ['parentStudent__id']
     
     class Meta:

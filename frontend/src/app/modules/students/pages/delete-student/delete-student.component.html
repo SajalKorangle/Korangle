@@ -1,13 +1,16 @@
 <div class="card-content table-responsive" *ngIf="!isLoading">
 
+    <!-- Student Filter STARTS -->
     <ng-container *ngIf="currentClassStudentFilter === 'Student'">
 
         <div class="row main-row">
+
+            <!-- Parent-Student Filter  -->
             <div class="student-filter" style="margin-left: 15px">
                 <parent-student-filter
                     [user]="user"
-                    (onDataLoaded)="htmlRenderer.handleDetailsFromParentStudentFilter($event)"
-                    (onStudentListSelected)="htmlRenderer.handleStudentListSelection($event)"
+                    (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+                    (onStudentListSelected)="handleStudentListSelection($event)"
                     (onStudentListLoading)="isStudentListLoading = $event"
                     [selectedFilterType]="'Student'"
                     [studentTcGenerated]="false"
@@ -15,10 +18,7 @@
                 ></parent-student-filter>
             </div>
     
-            <!-- <div class="row" style="margin-bottom: 30px">
-                <div class="col-md-12" style="border-bottom: 1px solid lightgrey"></div>
-            </div> -->
-    
+            <!-- Class-Student Filter -->
             <ng-container>
                 <div class="class-student-filter">
                     <mat-form-field style="margin-left: 5px">
@@ -118,6 +118,7 @@
                     </div>
                 </div>
     
+                <!-- Delete Button -->
                 <span>
                     <button
                         type="submit"
@@ -132,6 +133,7 @@
                     </button>
                 </span>
     
+                <!-- Undeletability Reason -->
                 <ng-container *ngIf="!selectedStudent.isDeletable">
                     <br />
                     Can not delete the student because <br />
@@ -147,7 +149,9 @@
             </ng-container>
         </ng-container>
     </ng-container>
-        
+    <!-- Student Filter ENDS -->
+
+    <!-- Class Filter STARTS -->
     <ng-container *ngIf="currentClassStudentFilter === 'Class'">
 
         <div class="row main-row">
@@ -336,6 +340,7 @@
                     </mat-form-field>
                 </div>
         
+                <!-- Delete Button -->
                 <div class="delete-button">
                     <button
                         type="button"
@@ -352,6 +357,8 @@
                 </div>
         
             </div>
+
+            <!-- Class-Student Filter -->
             <div class="class-student-filter">
                 <mat-form-field style="float: right">
                     <mat-select [ngModel]="currentClassStudentFilter" (ngModelChange)="htmlRenderer.handleClassStudentFilter($event)">
@@ -362,7 +369,7 @@
             </div>
         </div>
 
-        <!-- Filters -->
+        <!-- Additional Filters -->
         <br />
         <ng-container>
             <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
@@ -375,7 +382,6 @@
                 <span style="margin-right: 5px">&lt;= Age &lt;=</span>
                 <input type="number" style="width: 60px" [(ngModel)]="maxAge" (ngModelChange)="htmlRenderer.handleStudentDisplay()" />
                 &nbsp; &nbsp; as on date &nbsp;&nbsp;
-                <!-- input type="date" [(ngModel)]="asOnDate" (ngModelChange)="htmlRenderer.handleStudentDisplay()" -->
                 <day-date [formattedDateOutput]="true"
                         (onDateSelected)="asOnDate = $event; htmlRenderer.handleStudentDisplay()">
                 </day-date>
@@ -519,8 +525,8 @@
             <p>
                 Total Students: <b>{{ studentFullProfileList.length }}</b
                 >, Displaying: <b>{{ displayStudentNumber }}</b
-                >, Selected: <b>{{ htmlRenderer.getSelectedStudents() }}</b
-                >, Deletable: <b>{{ htmlRenderer.getDeletableStudents() }}</b>
+                >, Deletable: <b>{{ htmlRenderer.getDeletableStudents() }}</b
+                >, Selected: <b>{{ htmlRenderer.getSelectedStudents() }}</b>
             </p>
             
             <button class="btn" style="padding: 7px 7px; margin-right: 5px" (click)="htmlRenderer.selectAllStudents(); $event.stopPropagation()">
@@ -596,7 +602,6 @@
                                     </td>
                                     <td *ngIf="columnFilter.showClassName">
                                         {{ student.className }}
-                                        <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
                                     </td>
                                     <td *ngIf="columnFilter.showSectionName">{{ student.sectionName }}</td>
                                     <td *ngIf="columnFilter.showRollNumber">{{ student.rollNumber }}</td>
@@ -618,7 +623,6 @@
                                     <td *ngIf="columnFilter.showDateOfBirth">
                                         {{ student.dateOfBirth | date: 'dd/MM/yyyy' }}
                                     </td>
-                                    <!-- td *ngIf="columnFilter.showMotherName">{{ student.motherName }}</td -->
                                     <td *ngIf="columnFilter.showMotherName">{{student.motherName}}</td>
                                     <td *ngIf="columnFilter.showGender">{{ student.gender }}</td>
                                     <td *ngIf="columnFilter.showCaste">{{ student.caste }}</td>
@@ -658,7 +662,8 @@
             </cdk-virtual-scroll-viewport>
         </ng-container>
 
-    </ng-container>   
+    </ng-container>
+    <!-- Class Filter ENDS -->
 
 </div>
 

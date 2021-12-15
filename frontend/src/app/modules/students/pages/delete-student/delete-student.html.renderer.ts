@@ -9,19 +9,6 @@ export class DeleteStudentHtmlRenderer {
         this.vm = vm;
     }
 
-    handleDetailsFromParentStudentFilter(details: any): void {
-        this.vm.classList = details.classList;
-        this.vm.sectionList = details.sectionList;
-    }
-
-    handleStudentListSelection(value): void{
-        this.vm.studentFullProfileList.forEach((student) => {
-            if(student.dbId == value[0][0].id) {
-                this.vm.selectedStudent = student;
-            }
-        });
-    }
-
     handleClassStudentFilter(value: any): void {
         this.vm.currentClassStudentFilter = value;
         if(this.vm.currentClassStudentFilter === 'Class') {

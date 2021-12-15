@@ -1,3 +1,4 @@
+/* If window size is more than 992px */
 @media only screen and (min-width: 992px) {
     .main-content {
         padding: 0px;
@@ -98,10 +99,10 @@ i.material-icons.column {
 .main-row {
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: space-around; */
     align-items: flex-end;
 }
 
+/* If window size is less than 992px */
 @media only screen and (max-width: 992px) {
     .main-row {
         display: flex;
@@ -109,6 +110,7 @@ i.material-icons.column {
         justify-content: left;
     }
 
+    /* Here order decides in which verticle order that particular class will appear */
     .student-filter {
         margin-right: auto;
         width: 75%;

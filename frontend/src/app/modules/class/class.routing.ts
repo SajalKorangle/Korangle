@@ -29,8 +29,8 @@ const routes: Routes = [
         data: { moduleName: 'class' },
     },
     {
-        path: 'demote_student',
-        loadChildren: 'app/modules/class/pages/demote-student/demote-student.module#DemoteStudentModule',
+        path: 'unpromote_student',
+        loadChildren: 'app/modules/class/pages/unpromote-student/unpromote-student.module#UnpromoteStudentModule',
         data: { moduleName: 'class' },
     },
 ];

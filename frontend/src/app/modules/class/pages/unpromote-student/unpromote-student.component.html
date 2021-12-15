@@ -1,4 +1,6 @@
 <div class="card-content">
+
+    <!-- Parent-Student Filter STARTS -->
     <parent-student-filter
         [user]="user"
         (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
@@ -8,6 +10,8 @@
         [bothFilters]="bothFilters"
         [studentTcGenerated]="false"
     ></parent-student-filter>
+    <!-- Parent-Student Filter ENDS -->
+
 
     <div class="row" style="margin-bottom: 30px">
         <div class="col-md-12" style="border-bottom: 1px solid lightgrey"></div>
@@ -27,7 +31,7 @@
                 </div>
 
                 <div class="col-md-9">
-                    <!-- Name, Father's Name, Mother's Name -->
+                    <!-- Name, Father's Name, Mother's Name  STARTS -->
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
@@ -48,8 +52,9 @@
                             </mat-form-field>
                         </div>
                     </div>
+                    <!-- Name, Father's Name, Mother's Name  ENDS -->
 
-                    <!-- Roll No., Scholar No., Date of Birth -->
+                    <!-- Roll No., Scholar No., Date of Birth STARTS -->
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%">
@@ -71,6 +76,7 @@
                             </mat-form-field>
                         </div>
                     </div>
+                    <!-- Roll No., Scholar No., Date of Birth ENDS -->
                 </div>
 
                 <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
@@ -84,7 +90,7 @@
                 </div>
             </div>
 
-            <!-- Address, Remark -->
+            <!-- Address, Remark STARTS-->
             <div class="row">
                 <div class="col-md-6">
                     <mat-form-field style="width: 100%">
@@ -99,32 +105,40 @@
                     </mat-form-field>
                 </div>
             </div>
+            <!-- Address, Remark END-->
 
+            <!-- Delete Button STARTS-->
             <span>
                 <button
                     type="submit"
                     style="margin-right: 10px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.deleteStudentFromSession()"
-                    [disabled] = "!enableDeleteFromSession()"
+                    [disabled] = "!htmlRenderer.enableDeleteFromSession()"
                 >
                     Delete from this session
                 </button>
             </span>
+            <!-- Delete Button ENDS-->
 
-            <ng-container *ngIf="!enableDeleteFromSession()">
+            <!-- Undeletability Reason STARTS -->
+            <ng-container *ngIf="!htmlRenderer.enableDeleteFromSession()">
                 <br />
                 Can not delete the student from this session because <br />
                 <ng-container *ngIf="selectedStudentDeleteDisabledReason.isDeleted">Student is already deleted<br /></ng-container>
-                <ng-container *ngIf="selectedStudentDeleteDisabledReason.isMiddleSession">You have to delete this student from his all the sessions after the current session<br /></ng-container>
-                <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasFeeReceipt"
+                <ng-container *ngIf="!selectedStudentDeleteDisabledReason.isDeleted">
+                    <ng-container *ngIf="selectedStudentDeleteDisabledReason.isMiddleSession">You have to delete this student from his all the sessions after the current session<br /></ng-container>
+                    <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasOnlyOneSession">The student is registered in only this session<br /></ng-container>
+                    <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasFeeReceipt"
                     >Fee Receipt/s have been issued for the student<br
-                /></ng-container>
-                <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasDiscount"
+                    /></ng-container>
+                    <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasDiscount"
                     >Discount/s have been issued for the student<br
-                /></ng-container>
-                <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasTC">TC is already generated<br /></ng-container>
+                    /></ng-container>
+                    <ng-container *ngIf="selectedStudentDeleteDisabledReason.hasTC">TC is already generated<br /></ng-container>
+                </ng-container>
             </ng-container>
+            <!-- Undeletability Reason ENDS -->
 
             <div class="clearfix"></div>
         </ng-container>

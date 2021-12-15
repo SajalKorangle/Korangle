@@ -12,7 +12,7 @@ export class DeleteStudentServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData(): Promise<any> {
         
         this.vm.isLoading = true;
         
@@ -49,15 +49,14 @@ export class DeleteStudentServiceAdapter {
             .getObjectList({ tc_app: 'TransferCertificateNew' });
 
         const studentSectionQuery = new Query()
-            .filter({ parentSession: this.vm.user.activeSchool.currentSessionDbId })
+            .filter({
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            })
+            .orderBy('parentClass__orderNumber', 'parentDivision__orderNumber', 'rollNumber', 'parentStudent__name')
             .getObjectList({ student_app: 'StudentSection' });
-            
-        const student_full_profile_request_data = {
-                schoolDbId: this.vm.user.activeSchool.dbId,
-                sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
     
-        Promise.all([
+        let value = await Promise.all([
             classQuery,
             divisionQuery,
             studentParameterQuery,
@@ -66,39 +65,93 @@ export class DeleteStudentServiceAdapter {
             sessionQuery, 
             transferCertificateNewQuery,
             studentSectionQuery,
-            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
-        ]).then(
-            (value) => {
-                // console.log(value);
-                value[0].forEach((classs) => {
-                    classs.sectionList = [];
-                    value[1].forEach((section) => {
-                        classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
-                    });
-                });
-                this.vm.initializeClassSectionList(value[0]);
-                this.vm.studentParameterList = value[2].map((x) => ({
-                    ...x,
-                    filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
-                    showNone: false,
-                    filterFilterValues: '',
-                }));
-                this.vm.studentParameterValueList = value[3];
-                this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter((x) => x.parameterType == 'DOCUMENT');
-                this.vm.studentParameterOtherList = this.vm.studentParameterList.filter((x) => x.parameterType !== 'DOCUMENT');
-                this.vm.busStopList = value[4];
-                this.vm.session_list = value[5];
-                this.vm.backendData.tcList = value[6];
-                this.vm.studentList = value[7];
-                this.vm.initializeStudentFullProfileList(value[8]);        
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+        ])
+
+        value[0].forEach((classs) => {
+            classs.sectionList = [];
+            value[1].forEach((section) => {
+                classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
+            });
+        });
+        this.vm.initializeClassSectionList(value[0]);
+        this.vm.studentParameterList = value[2].map((x) => ({
+            ...x,
+            filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
+            showNone: false,
+            filterFilterValues: '',
+        }));
+        this.vm.studentParameterValueList = value[3];
+        this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter((x) => x.parameterType == 'DOCUMENT');
+        this.vm.studentParameterOtherList = this.vm.studentParameterList.filter((x) => x.parameterType !== 'DOCUMENT');
+        this.vm.busStopList = value[4];
+        this.vm.session_list = value[5];
+        this.vm.backendData.tcList = value[6];
+        this.vm.studentList = value[7];
+        
+        let tempStudentProfileList = [];
+        let studentIdList = [];
+        let classList = value[0];
+        let divisionList = value[1];
+        value[7].forEach(student => {
+            studentIdList.push(student.parentStudent);
+        });
+        let studentList = await new Query().filter({id__in: studentIdList}).getObjectList({ student_app: 'Student'});
+        
+        value[7].forEach((student_section_object) => {
+            let student_object = studentList.find((student) => { return student.id == student_section_object.parentStudent;});
+            let class_object = classList.find((classs) => {return classs.id == student_section_object.parentClass;});
+            let division_object = divisionList.find((division) => {return division.id == student_section_object.parentDivision;});
+            tempStudentProfileList.push(this.get_student_full_profile(student_section_object, student_object, class_object, division_object));
+        });
+        
+        this.vm.initializeStudentFullProfileList(tempStudentProfileList);       
     }
     
-    checkDeletability(studentList: any): any {
+    get_student_full_profile(student_section_object, student_object, class_object, division_object): any {
+
+        let student_data = {};
+
+        student_data['profileImage'] = student_object.profileImage;
+        student_data['name'] = student_object.name;
+        student_data['dbId'] = student_object.id;
+        student_data['fathersName'] = student_object.fathersName;
+        student_data['mobileNumber'] = student_object.mobileNumber;
+        student_data['secondMobileNumber'] = student_object.secondMobileNumber;
+        student_data['dateOfBirth'] = student_object.dateOfBirth;
+        student_data['remark'] = student_object.remark;
+        student_data['rollNumber'] = student_section_object.rollNumber;
+        student_data['scholarNumber'] = student_object.scholarNumber;
+        student_data['motherName'] = student_object.motherName;
+        student_data['gender'] = student_object.gender;
+        student_data['caste'] = student_object.caste;
+        student_data['category'] = student_object.newCategoryField;
+        student_data['religion'] = student_object.newReligionField;
+        student_data['fatherOccupation'] = student_object.fatherOccupation;
+        student_data['address'] = student_object.address;
+        student_data['familySSMID'] = student_object.familySSMID;
+        student_data['childSSMID'] = student_object.childSSMID;
+        student_data['bankName'] = student_object.bankName;
+        student_data['bankIfscCode'] = student_object.bankIfscCode;
+        student_data['bankAccountNum'] = student_object.bankAccountNum;
+        student_data['aadharNum'] = student_object.aadharNum;
+        student_data['bloodGroup'] = student_object.bloodGroup;
+        student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome;
+        student_data['rte'] = student_object.rte;
+        student_data['parentTransferCertificate'] = student_object.parentTransferCertificate;
+        student_data['busStopDbId'] = student_object.currentBusStop;
+        student_data['admissionSessionDbId'] = student_object.admissionSession;
+        student_data['dateOfAdmission'] = student_object.dateOfAdmission;
+        student_data['parentAdmissionClass'] = student_object.parentAdmissionClass
+        student_data['sectionDbId'] = division_object.id
+        student_data['sectionName'] = division_object.name
+        student_data['className'] = class_object.name
+        student_data['classDbId'] = class_object.id
+
+        return student_data;
+    }
+
+
+    async checkDeletability(studentList: any): Promise<any> {
         
         this.vm.isLoading = true;
         
@@ -133,87 +186,76 @@ export class DeleteStudentServiceAdapter {
             })
             .getObjectList({ tc_app: 'TransferCertificateNew' });
 
-        Promise.all([
+        let value = await Promise.all([
             studentSectionQuery,
             feeReceiptQuery,
             discountQuery,
             transferCertificateNewQuery,
-        ]).then(
-            (value) => {
-                // console.log(value);
+        ])
 
-                studentList.forEach((student)=> {
+        studentList.forEach((student)=> {
 
-                    this.vm.selectedStudentSectionList = value[0].filter(x => x.parentStudent == student.dbId);
-                    this.vm.selectedStudentFeeReceiptList = value[1].filter(x => x.parentStudent == student.dbId);
-                    this.vm.selectedStudentDiscountList = value[2].filter(x => x.parentStudent == student.dbId);
-                    this.vm.tcList = value[3].filter(x => x.parentStudent == student.dbId);
-                    
-                    student.deleteDisabledReason = {};
-                    
-                    student.deleteDisabledReason["hasMultipleSessions"] = this.vm.selectedStudentSectionList.length > 1;
-                    
-                    student.deleteDisabledReason["hasFeeReceipt"] = this.vm.selectedStudentFeeReceiptList.find((feeReceipt) => {
-                        return (
-                            feeReceipt.parentStudent == student.dbId &&
-                        feeReceipt.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
-                        feeReceipt.cancelled == false
-                        );
-                    }) != undefined;
-                    
-                    student.deleteDisabledReason["hasDiscount"] = this.vm.selectedStudentDiscountList.find((discount) => {
-                        return (
-                            discount.parentStudent == student.dbId && 
-                            discount.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
-                            discount.cancelled == false
-                            );
-                    }) != undefined;
-                        
-                    student.deleteDisabledReason["hasTC"] = this.selectedStudentHasTc(student);
-                    
-                    let isDeletable = !student.deleteDisabledReason["hasMultipleSessions"] &&
-                    !student.deleteDisabledReason["hasFeeReceipt"] &&
-                    !student.deleteDisabledReason["hasDiscount"] &&
-                    !student.deleteDisabledReason["hasTC"]
-                    ;
-                    
-                    student.isDeletable = isDeletable;
-                    if(!isDeletable) {
-                        let msg="The student can't be deleted due to the following reason(s) - \n";
-                        if(student.deleteDisabledReason["hasMultipleSessions"]) {
-                            msg = msg + "Student is registered in multiple sessions.\n";
-                        }
-                        if(student.deleteDisabledReason["hasFeeReceipt"]) {
-                            msg = msg + "Fee Receipt/s have been issued for the student.\n";
-                        }
-                        if(student.deleteDisabledReason["hasDiscount"]) {
-                            msg = msg + "Discount/s have been issued for the student.\n";
-                        }
-                        if(student.deleteDisabledReason["hasTC"]) {
-                            msg = msg + "TC is already generated.\n";
-                        }
-                        student['nonDeletableMessage'] = msg;
-                    }
-
-                });
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
+            this.vm.selectedStudentSectionList = value[0].filter(x => x.parentStudent == student.dbId);
+            this.vm.selectedStudentFeeReceiptList = value[1].filter(x => x.parentStudent == student.dbId);
+            this.vm.selectedStudentDiscountList = value[2].filter(x => x.parentStudent == student.dbId);
+            this.vm.tcList = value[3].filter(x => x.parentStudent == student.dbId);
+            
+            student.deleteDisabledReason = {};
+            
+            student.deleteDisabledReason["hasMultipleSessions"] = this.vm.selectedStudentSectionList.length > 1;
+            
+            student.deleteDisabledReason["hasFeeReceipt"] = this.vm.selectedStudentFeeReceiptList.find((feeReceipt) => {
+                return (
+                    feeReceipt.parentStudent == student.dbId &&
+                feeReceipt.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
+                feeReceipt.cancelled == false
+                );
+            }) != undefined;
+            
+            student.deleteDisabledReason["hasDiscount"] = this.vm.selectedStudentDiscountList.find((discount) => {
+                return (
+                    discount.parentStudent == student.dbId &&
+                    discount.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
+                    discount.cancelled == false
+                    );
+            }) != undefined;
+                
+            student.deleteDisabledReason["hasTC"] = this.vm.tcList.find((tc) => {
+                return (
+                    tc.parentStudent == student.dbId &&
+                    tc.cancelledBy == null
+                );
+            }) != undefined;
+            
+            let isDeletable = !student.deleteDisabledReason["hasMultipleSessions"] &&
+            !student.deleteDisabledReason["hasFeeReceipt"] &&
+            !student.deleteDisabledReason["hasDiscount"] &&
+            !student.deleteDisabledReason["hasTC"]
+            ;
+            
+            student.isDeletable = isDeletable;
+            if(!isDeletable) {
+                let msg="The student can't be deleted due to the following reason(s) - \n";
+                if(student.deleteDisabledReason["hasMultipleSessions"]) {
+                    msg = msg + "Student is registered in multiple sessions.\n";
+                }
+                if(student.deleteDisabledReason["hasFeeReceipt"]) {
+                    msg = msg + "Fee Receipt/s have been issued for the student.\n";
+                }
+                if(student.deleteDisabledReason["hasDiscount"]) {
+                    msg = msg + "Discount/s have been issued for the student.\n";
+                }
+                if(student.deleteDisabledReason["hasTC"]) {
+                    msg = msg + "TC is already generated.\n";
+                }
+                student['nonDeletableMessage'] = msg;
             }
-        );
+
+        });
+        this.vm.isLoading = false;
     }
 
-    selectedStudentHasTc(student): boolean {
-        return this.vm.tcList.find((tc) => {
-            return (
-                tc.parentStudent == student.dbId &&
-                tc.cancelledBy == null
-            );
-        }) != undefined
-    }
-
-    deleteSelectedStudents(): void {
+    async deleteSelectedStudents(): Promise<any> {
         this.vm.isLoading = true;
         
         let deletableStudentIdList = [];
@@ -244,17 +286,8 @@ export class DeleteStudentServiceAdapter {
         
         this.vm.htmlRenderer.handleStudentDisplay();
 
-        const deletestudentQuery = new Query()
-            .filter({ id__in: deletableStudentIdList})
-            .deleteObjectList({ student_app: 'Student' });
+        await new Query().filter({ id__in: deletableStudentIdList }).deleteObjectList({ student_app: 'Student' });
 
-        deletestudentQuery.then(
-            (value) => {
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        )
+        this.vm.isLoading = false;
     }
 }

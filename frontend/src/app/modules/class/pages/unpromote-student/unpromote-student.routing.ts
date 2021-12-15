@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DemoteStudentComponent } from './demote-student.component';
+import { UnpromoteStudentComponent } from './unpromote-student.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: DemoteStudentComponent,
+        component: UnpromoteStudentComponent,
     },
 ];
 
@@ -15,4 +15,4 @@ const routes: Routes = [
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class DemoteStudentRoutingModule {}
+export class UnpromoteStudentRoutingModule {}

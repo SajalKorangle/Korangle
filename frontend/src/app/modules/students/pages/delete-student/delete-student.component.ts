@@ -176,6 +176,19 @@ export class DeleteStudentComponent implements OnInit {
         this.htmlRenderer.handleStudentDisplay();
     }
 
+    handleDetailsFromParentStudentFilter(details: any): void {
+        this.classList = details.classList;
+        this.sectionList = details.sectionList;
+    }
+
+    handleStudentListSelection(value): void{
+        this.studentFullProfileList.forEach((student) => {
+            if(student.dbId == value[0][0].id) {
+                this.selectedStudent = student;
+            }
+        });
+    }
+
     getSectionObject(classDbId: any, sectionDbId: number): any {
         let sectionObject = null;
         this.classSectionList.every((classs) => {

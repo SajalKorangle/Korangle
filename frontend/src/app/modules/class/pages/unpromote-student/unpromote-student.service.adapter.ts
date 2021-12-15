@@ -1,19 +1,19 @@
-import { DemoteStudentComponent } from './demote-student.component';
+import { UnpromoteStudentComponent } from './unpromote-student.component';
 import { Query } from '../../../../services/generic/query';
 
-export class DemoteStudentServiceAdapter {
-    vm: DemoteStudentComponent;
+export class UnpromoteStudentServiceAdapter {
+    vm: UnpromoteStudentComponent;
 
     constructor() {}
 
-    initializeAdapter(vm: DemoteStudentComponent): void {
+    initializeAdapter(vm: UnpromoteStudentComponent): void {
         this.vm = vm;
     }
 
     //initialize data
     initializeData(): void {}
 
-    getStudentDetails(selectedList: any): void {
+    async getStudentDetails(selectedList: any): Promise<any> {
         this.vm.isLoading = true;
         let studentList = selectedList[0];
 
@@ -31,14 +31,16 @@ export class DemoteStudentServiceAdapter {
         const feeReceiptQuery = new Query()
             .filter({ 
                 parentStudent: studentList[0].id,
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
                 cancelled: 'False',
             })
             .getObjectList({ fees_third_app: 'FeeReceipt' });
             
         const discountQuery = new Query()
             .filter({ 
-            parentStudent: studentList[0].id,
-            cancelled: 'False',
+                parentStudent: studentList[0].id,
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                cancelled: 'False',
             })
             .getObjectList({ fees_third_app: 'Discount' });
         
@@ -49,45 +51,36 @@ export class DemoteStudentServiceAdapter {
                 status__in: ['Generated', 'Issued'],
             })
             .getObjectList({ tc_app: 'TransferCertificateNew' });
-            console.log(studentList[0]);
 
-
-        Promise.all([
+        let value = await Promise.all([
             studentQuery,
             studentSectionQuery,
             feeReceiptQuery,
             discountQuery,
             transferCertificateNewQuery
-        ]).then(
-            (value) => {
-                // console.log(value);
+        ])
 
-                this.vm.selectedStudent = studentList[0];
-                Object.keys(value[0]).forEach((key) => {
-                    this.vm.selectedStudent[key] = value[0][key];
-                });
+        this.vm.selectedStudent = studentList[0];
+        Object.keys(value[0]).forEach((key) => {
+            this.vm.selectedStudent[key] = value[0][key];
+        });
 
-                this.vm.selectedStudentSectionList = value[1];
-                this.vm.selectedStudentFeeReceiptList = value[2];
-                this.vm.selectedStudentDiscountList = value[3];
-                this.vm.tcList = value[4];
+        this.vm.selectedStudentSectionList = value[1];
+        this.vm.selectedStudentFeeReceiptList = value[2];
+        this.vm.selectedStudentDiscountList = value[3];
+        this.vm.tcList = value[4];
 
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+        this.vm.isLoading = false;
     }
 
-    deleteStudentFromSession(): void {
+    async deleteStudentFromSession(): Promise<any> {
 
-        if(!this.vm.enableDeleteFromSession()) {
+        if(!this.vm.htmlRenderer.enableDeleteFromSession()) {
             this.vm.isDeleteFromSessionEnabled = false;
             return;
         }
 
-        if (!confirm('Are you sure, you want to delete this student from the current session')) {
+        if (!confirm('Are you sure, you want to delete this student from the current session?')) {
             return;
         }
 
@@ -137,23 +130,17 @@ export class DemoteStudentServiceAdapter {
 
         this.vm.isLoading = true;
 
-        Promise.all([
+        await Promise.all([
             studentSubjectQuery,
             studentTestQuery,
             studentExtraSubFieldQuery,
             cceMarksQuery,
             studentFeeQuery,
             studentSectionQuery
-        ]).then(
-            (value) => {
-                // console.log(value);
-                this.vm.selectedStudent['deleted'] = true;
+        ])
 
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+        this.vm.selectedStudent.isDeleted = true;
+
+        this.vm.isLoading = false;
     }
 }
