@@ -202,3 +202,13 @@ class StudentParameterValue(models.Model):
         db_table = 'student_parameter_value'
         unique_together = ('parentStudent', 'parentStudentParameter')
 
+class CountAllTable(models.Model):
+    formatName = models.CharField(max_length=50)
+    rows = models.JSONField()
+    cols = models.JSONField()
+
+    def __str__(self):
+        return self.formatName
+
+    class Meta:
+        db_table = 'count_all_table'
