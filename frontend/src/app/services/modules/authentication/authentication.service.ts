@@ -37,7 +37,7 @@ export class AuthenticationService extends ServiceObject {
     public verifyOTPForSignup(body: any): Promise<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-for-signup', body, {
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-signup', body, {
                 headers: headers,
             })
             .toPromise()
@@ -56,7 +56,7 @@ export class AuthenticationService extends ServiceObject {
     public verifyOTPForPassword(body: any): Promise<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-for-password', body, { headers: headers })
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-change-password', body, { headers: headers })
             .toPromise()
             .then(
                 (response) => {
@@ -73,7 +73,7 @@ export class AuthenticationService extends ServiceObject {
     public verifyOTPForCreateSchool(body: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json'});
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-for-create-school', body, {headers: headers})
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-create-school', body, {headers: headers})
             .toPromise()
             .then(
                 (response) => {

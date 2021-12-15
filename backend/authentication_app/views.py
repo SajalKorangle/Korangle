@@ -31,67 +31,83 @@ class GenerateOTPView(View):
         return JsonResponse({'response': get_success_response(generate_otp(data))})
 
 
-# Verify OTP FOR FORGOT PASSWORD
-class VerifyOTPForPasswordView(View):
+# Verify OTP And Change PASSWORD
+class VerifyOTPAndChangePasswordView(View):
 
     def post(self, request):
 
         data = json.loads(request.body.decode('utf-8'))
 
+        # ------  Verifying OTP Starts ------- #
         otp_object_list = OTP.objects.filter(mobileNumber=data['mobileNumber'],
                                              otp=data['otp'],
                                              action='FORGOT PASSWORD',
                                              generationDateTime__gte=timezone.now() - timedelta(minutes=5))
 
         if otp_object_list.count() > 0:
+        # ------  Verifying OTP Ends ------- #
+
+            # ------  Updating User password Starts ------- #
             user = User.objects.get(username=data['mobileNumber'])
             user.set_password(data['password'])
             user.save()
+            # ------  Updating User password Ends ------- #
             return JsonResponse({"response": get_success_response({'status': 'success'})})
         else:
             return JsonResponse({"response": get_success_response({'status': 'failure', 'message': 'OTP verification failed'})})
 
 
 
-# Verify OTP FOR SIGN UP
-class VerifyOTPForSignupView(View):
+# Verify OTP And SIGN UP
+class VerifyOTPAndSignupView(View):
 
     def post(self, request):
 
         data = json.loads(request.body.decode('utf-8'))
 
+        # ------  Verifying OTP Starts ------- #
         otp_object_list = OTP.objects.filter(mobileNumber=data['mobileNumber'],
                                              otp=data['otp'],
                                              action='SIGN UP',
                                              generationDateTime__gte=timezone.now() - timedelta(minutes=5))
 
         if otp_object_list.count() > 0:
+        # ------  Verifying OTP Ends ------- #
+
+            # ------  Creating User Details Starts ------- #
             user = User.objects.create_user(username=data['mobileNumber'],
                                             email=data['email'],
                                             password=data['password'],
                                             first_name=data['first_name'],
                                             last_name=data['last_name'])
             user.save()
+
+            # ------  Verifying User Details Ends ------- #
             return JsonResponse({"response": get_success_response({'status': 'success'})})
         else:
             return JsonResponse(
                 {"response": get_success_response({'status': 'failure', 'message': 'OTP verification failed'})})
 
 
-# Verify OTP For Create School
-class VerifyOTPForCreateSchool(View):
+
+# Verify OTP And Create School
+class VerifyOTPAndCreateSchool(View):
     def post(self, request):
 
         data = json.loads(request.body.decode('utf-8'))
 
-        # Verifying OTP
+        # ------  Verifying OTP Starts ------- #
+
         otp_object_list = OTP.objects.filter(mobileNumber=data['mobileNumber'],
                                              otp=data['otp'],
                                              action='CREATE SCHOOL',
                                              generationDateTime__gte=timezone.now() - timedelta(minutes=5))
 
+
         if otp_object_list.count() > 0:
-            # Checking User details
+        # ------  Verifying OTP Ends ------- #
+
+            # ------  Verifying User Details Starts ------- #
             if data['userExists'] is False:
                 user = User.objects.create_user(username=data['mobileNumber'],
                                                 email=data['email'],
@@ -104,8 +120,12 @@ class VerifyOTPForCreateSchool(View):
                 if user.check_password(data['password']) is False:
                     return JsonResponse({"response": get_success_response({'status': 'failure',
                                                                            'message': 'Invalid Password'})})
-            # Creating School
+            # ------  Verifying User Details Ends ------- #
+
+        # ------  Creating School Section Starts ------- #
             school_data = create_school_profile(data['schoolDetails'])
+
+            # ------  Creating Employee And Employee Perm for the user Section Starts ------- #
             employee_details = {
                 'name': data['first_name'] + ' ' + data['last_name'],
                 'fatherName': '-',
@@ -115,7 +135,6 @@ class VerifyOTPForCreateSchool(View):
                 'dateOfJoining': None,
                 'dateOfLeaving': None,
             }
-            # Creating Employee of the user and employee Permissions
             employee_data = create_employee_profile(employee_details)
             task_list = Task.objects.filter(parentBoard=None, parentModule__parentBoard=None)
             employee = Employee.objects.get(id=employee_data['id'])
@@ -123,6 +142,10 @@ class VerifyOTPForCreateSchool(View):
             for task in task_list:
                 EmployeePermission.objects.create(parentEmployee=employee,
                                                   parentTask=task)
+
+            # ------  Creating Employee And Employee Perm for the user Section Ends ------- #
+
+        # ------  Creating School Section Ends ------- #
 
             return JsonResponse({"response": get_success_response({'status': 'success'})})
         else:
