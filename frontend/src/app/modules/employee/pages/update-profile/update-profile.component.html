@@ -196,14 +196,16 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="number" placeholder="Monthly Salary" (keypress)="policeNumberInput($event)"
+                    <input matInput type="number" placeholder="Monthly Salary" oninput="this.value=this.value.slice(0,this.maxLength)" (keypress)="policeNumberInput($event)"
+                        maxlength="8" 
                         (ngModelChange)="currentEmployeeProfile.monthlySalary = $event"
                         [ngModel]="selectedEmployeeProfile.monthlySalary" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="number" placeholder="Paid Leaves" (keypress)="policeNumberInput($event)"
+                    <input matInput type="number" placeholder="Paid Leaves" oninput="this.value=this.value.slice(0,this.maxLength)" (keypress)="policeNumberInput($event)"
+                           maxlength="5"
                         (ngModelChange)="currentEmployeeSessionProfile.paidLeaveNumber = $event"
                         [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber" />
                 </mat-form-field>

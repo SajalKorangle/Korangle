@@ -67,6 +67,7 @@ class OrderSchoolView(CommonView, APIView):
     def post(self, request, *args, **kwargs):
         activeSchoolId = kwargs['activeSchoolID']
         schoolOnlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=activeSchoolId)
+        assert schoolOnlinePaymentAccount.isEnabled, "Online Payment is not enabled for this school"
         orderData = {
             'orderId': str(int(time() * 1000000)),
             'parentUser': request.user.id,
@@ -84,7 +85,7 @@ class OrderSchoolView(CommonView, APIView):
         createdOrderResponse = GenericSerializerInterface(
             Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
 
-        responseOrderData = createAndSignCashfreeOrderForSchool(cashfreeOrderData, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId)
+        responseOrderData = createAndSignCashfreeOrderForSchool(cashfreeOrderData, createdOrderResponse['orderId'], schoolOnlinePaymentAccount.vendorId, schoolOnlinePaymentAccount.percentageOfPlatformFeeOnSchool)
         return responseOrderData
 
 
