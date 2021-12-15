@@ -107,11 +107,11 @@ export class CreateSchoolServiceAdapter {
             schoolDetails: school_details
         };
 
-        // verifyOtpForCreateSchool function process (in Backend) :
+        // verifyOtpAndCreateSchool function process (in Backend) :
         // 1. validates otp
         // 2. validates password if user already exists (or) creates user if user doesn't exists
         // 3. Creates School, Employee and employee permissions for the user
-        const otpResponse = await this.vm.authenticationNewService.verifyOTPForCreateSchool(verify_create_school_otp);
+        const otpResponse = await this.vm.authenticationNewService.verifyOTPAndCreateSchool(verify_create_school_otp);
         if (otpResponse.status === 'success') {
             this.vm.authenticationOldService.loginUserDetails(this.vm.userDetails.mobileNumber, this.vm.userDetails.password).then(
                 (data) => {

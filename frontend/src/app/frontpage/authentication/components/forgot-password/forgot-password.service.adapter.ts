@@ -56,7 +56,7 @@ export class ForgotPasswordServiceAdapter {
 
         this.vm.stateKeeper.isLoading = true;
         this.vm.authenticationService
-            .verifyOTPForPassword({
+            .verifyOTPAndChangePassword({
                 mobileNumber: this.vm.userInput.mobileNumber,
                 otp: this.vm.userInput.otp,
                 password: this.vm.userInput.password,

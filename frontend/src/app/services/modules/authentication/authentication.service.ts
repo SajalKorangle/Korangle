@@ -34,7 +34,7 @@ export class AuthenticationService extends ServiceObject {
             .catch(this.handleError);
     }
 
-    public verifyOTPForSignup(body: any): Promise<any> {
+    public verifyOTPAndSignup(body: any): Promise<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http_class
             .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-signup', body, {
@@ -53,7 +53,7 @@ export class AuthenticationService extends ServiceObject {
             .catch(this.handleError);
     }
 
-    public verifyOTPForPassword(body: any): Promise<any> {
+    public verifyOTPAndChangePassword(body: any): Promise<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http_class
             .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-change-password', body, { headers: headers })
@@ -70,7 +70,7 @@ export class AuthenticationService extends ServiceObject {
             .catch(this.handleError);
     }
 
-    public verifyOTPForCreateSchool(body: any): Promise<any> {
+    public verifyOTPAndCreateSchool(body: any): Promise<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/json'});
         return this.http_class
             .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-create-school', body, {headers: headers})

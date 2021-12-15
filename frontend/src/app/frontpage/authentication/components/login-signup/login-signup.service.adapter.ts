@@ -92,7 +92,7 @@ export class LoginSignupServiceAdapter {
         }
         this.vm.stateKeeper.isLoading = true;
         const otpResponse = await this.vm.authenticationNewService
-            .verifyOTPForSignup({
+            .verifyOTPAndSignup({
                 first_name: this.vm.signUpVariables.firstName,
                 last_name: this.vm.signUpVariables.lastName,
                 mobileNumber: this.vm.signUpVariables.mobileNumber,
