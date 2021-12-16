@@ -33,7 +33,7 @@ import { CONSTANTS } from './constants';
 export class GenericService extends RestApiGateway {
 
     private getBaseUrl(): string {
-        return '/generic';
+        return '/generic/';
     }
 
     parseConfig(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>): [string, string] {
