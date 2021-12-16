@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
@@ -21,6 +21,10 @@ declare const $: any;
 export class AddEmployeeComponent implements OnInit {
     user;
 
+    height1 = 120;
+    height2 = 0;
+    showToolTip = false;
+
     newEmployee: any;
     newEmployeeSessionDetail: any;
 
@@ -38,7 +42,8 @@ export class AddEmployeeComponent implements OnInit {
     constructor(public employeeService: EmployeeService,
         public bankService: BankService,
         public teamService: TeamService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog, 
+        private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -46,6 +51,31 @@ export class AddEmployeeComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
+    }
+
+    ngAfterViewChecked(): void {
+        let tempH = document.getElementById('test');
+        let tempH1 = document.getElementById('fullName');
+
+        if(tempH) {
+            this.height1 = tempH.offsetHeight;
+            if(this.height2 === 0) this.height2 = tempH.offsetHeight;
+        }
+        if(tempH1) {
+            if(this.height1 == this.height2) {
+                let elementHeight1 = tempH1.offsetHeight;
+                this.height1 += elementHeight1;
+            } else {
+                this.height1 = this.height2;
+            }
+        }
+        this.cdRef.detectChanges();
+    }
+
+    getWidth() {
+        let width = document.getElementById('test').offsetWidth;
+        width -= 145;
+        return width;
     }
 
     grantAll() {
@@ -125,7 +155,12 @@ export class AddEmployeeComponent implements OnInit {
         });
     }
 
-
+    isMobile(): boolean {
+        if (window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
 
     getParameterValue = (parameter) => {
         try {
@@ -210,12 +245,36 @@ export class AddEmployeeComponent implements OnInit {
         }
     }
 
+    getShortenName(document_name) {
+        let nameList = document_name.split(".");
+        let name = "";
+        for(let i = 0; i < nameList.length - 1; i++) {
+            name += nameList[i];
+        }
+
+        if(name.length > 20) {
+            name = name.substr(0, 20);
+            name += "...";
+        }
+        name += ('.' + nameList[nameList.length - 1]);
+        return name;
+    }
+
+    getFullDocumentName(parameter) {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (item) {
+            if (item.document_name) {
+                return item.document_name;
+            }
+        }
+    }
 
     getDocumentName(parameter) {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
         if (item) {
             if (item.document_name) {
-                return item.document_name;
+                let document_name = this.getShortenName(item.document_name);
+                return document_name;
             }
         }
     }
@@ -327,7 +386,6 @@ export class AddEmployeeComponent implements OnInit {
     }
 
     updateDocuments = (parameter, value, element) => {
-        console.log("yeah");
         const options = this.employeeParameterList.filter(parameter => (parameter.parameterType == "DOCUMENT"));
         if (value.target.files.length > 1) {
             if (value.target.files.length <= options.length) {
@@ -370,6 +428,11 @@ export class AddEmployeeComponent implements OnInit {
             }
         }
         element.value = '';
+        console.log("Hello");
+        this.showToolTip = false;
+        this.height1 = 120;
+        this.height2 = 0;
+        this.cdRef.detectChanges();
     }
 
     updateDocumentValue = (parameter, file) => {

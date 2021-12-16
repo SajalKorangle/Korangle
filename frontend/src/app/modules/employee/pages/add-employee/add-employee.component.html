@@ -197,8 +197,8 @@
 
         <div class="row">
             <div *ngFor="let parameter of employeeParameterList">
-                <div *ngIf="parameter.parameterType==='DOCUMENT'" class="col-md-5"
-                    style="margin-top: 10px;margin-right:10px">
+                <div *ngIf="parameter.parameterType==='DOCUMENT'" id="test" class="col-md-5"
+                    [ngStyle]="{'margin-top': '10px', 'margin-right': '10px', 'height': height1 + 'px'}">
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)"
                         class="drop">
                         <input class="dropinput" type="file" multiple="false"
@@ -218,7 +218,14 @@
                                 <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
                             <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                                <div *ngIf="isMobile()">
+                                    <p *ngIf="!showToolTip" (click)="showToolTip = true" class="documentName">{{getDocumentName(parameter)}}</p>
+                                    <p id="fullName" *ngIf="showToolTip" (click)="showToolTip = false" 
+                                        [ngStyle]="{'width': getWidth()+'px'}" type="button" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
+                                </div>
+                                <div *ngIf="!isMobile()">
+                                    <p data-toggle="tooltip" data-placement="bottom" title="{{getFullDocumentName(parameter)}}" class="documentName">{{getDocumentName(parameter)}}</p>
+                                </div>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
                             </div>
@@ -228,7 +235,14 @@
                                 <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
                             <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
+                                <div *ngIf="isMobile()">
+                                    <p *ngIf="!showToolTip" (click)="showToolTip = true" class="documentName">{{getDocumentName(parameter)}}</p>
+                                    <p id="fullName" *ngIf="showToolTip" (click)="showToolTip = false" 
+                                        [ngStyle]="{'width': getWidth()+'px'}" type="button" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
+                                </div>
+                                <div *ngIf="!isMobile()">
+                                    <p data-toggle="tooltip" data-placement="bottom" title="{{getFullDocumentName(parameter)}}" class="documentName">{{getDocumentName(parameter)}}</p>
+                                </div>
                                 <button (click)="imageInput.click()" class="documentButton">Replace</button>
                                 <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
                             </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DataStorage } from "../../../../classes/data-storage";
 import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
@@ -15,8 +15,12 @@ declare const $: any;
     styleUrls: ['./update-profile.component.css'],
     providers: [EmployeeService]
 })
-export class UpdateProfileComponent implements OnInit {
+export class UpdateProfileComponent implements OnInit, AfterViewChecked {
     user;
+
+    height1 = 120;
+    height2 = 0;
+    showToolTip = false;
 
     employeeList: any;
     NULL_CONSTANT = null;
@@ -47,7 +51,7 @@ export class UpdateProfileComponent implements OnInit {
 
 
     constructor(public employeeService: EmployeeService,
-        public dialog: MatDialog, ) { }
+        public dialog: MatDialog, private cdRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -57,6 +61,31 @@ export class UpdateProfileComponent implements OnInit {
         this.commonFunctions = CommonFunctions.getInstance();
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};
+    }
+
+    ngAfterViewChecked(): void {
+        let tempH = document.getElementById('test');
+        let tempH1 = document.getElementById('fullName');
+
+        if(tempH) {
+            this.height1 = tempH.offsetHeight;
+            if(this.height2 === 0) this.height2 = tempH.offsetHeight;
+        }
+        if(tempH1) {
+            if(this.height1 == this.height2) {
+                let elementHeight1 = tempH1.offsetHeight;
+                this.height1 += elementHeight1;
+            } else {
+                this.height1 = this.height2;
+            }
+        }
+        this.cdRef.detectChanges();
+    }
+
+    getWidth() {
+        let width = document.getElementById('test').offsetWidth;
+        width -= 145;
+        return width;
     }
 
     getEmployeeList(employeeList: any) {
@@ -379,11 +408,41 @@ export class UpdateProfileComponent implements OnInit {
         }
     }
 
-    getDocumentName(parameter) {
+    getShortenName(document_name) {
+        let nameList = document_name.split(".");
+        let name = "";
+        for(let i = 0; i < nameList.length - 1; i++) {
+            name += nameList[i];
+        }
+
+        if(name.length > 20) {
+            name = name.substr(0, 20);
+            name += "...";
+        }
+        name += ('.' + nameList[nameList.length - 1]);
+        return name;
+    }
+
+    getFullDocumentName(parameter) {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
         if (item) {
             if (item.document_name) {
                 return item.document_name;
+            }
+            else {
+                let document_name = item.document_value.split("/");
+                document_name = document_name[document_name.length - 1];
+                return document_name.substring(document_name.indexOf("_") + 1, document_name.length);
+            }
+        }
+    }
+
+    getDocumentName(parameter) {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (item) {
+            if (item.document_name) {
+                let document_name = this.getShortenName(item.document_name);
+                return document_name;
             }
             else {
                 let document_name = item.document_value.split("/");
@@ -436,6 +495,11 @@ export class UpdateProfileComponent implements OnInit {
             }
         }
         element.value = '';
+        console.log("Hello");
+        this.showToolTip = false;
+        this.height1 = 120;
+        this.height2 = 0;
+        this.cdRef.detectChanges();
     }
 
     updateDocumentValue = (parameter, file) => {
