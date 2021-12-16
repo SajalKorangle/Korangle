@@ -16,8 +16,6 @@ from payment_app.models import Order
 from datetime import datetime
 from accounts_app.models import Transaction, AccountSession
 
-from common.common import BasePermission
-
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from django.db.models import Max
@@ -427,7 +425,7 @@ class Discount(models.Model):
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id', 'parentStudent__parentSchool__id']
         RelationsToStudent = ['parentStudent__id']
-    
+
     class Meta:
         db_table = 'discount_new'
         unique_together = ('discountNumber', 'parentSchool')

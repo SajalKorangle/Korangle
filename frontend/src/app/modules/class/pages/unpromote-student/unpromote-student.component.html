@@ -114,7 +114,7 @@
                     style="margin-right: 10px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.deleteStudentFromSession()"
-                    [disabled] = "!htmlRenderer.enableDeleteFromSession()"
+                    [disabled] = "!isStudentDeletableFromSession()"
                 >
                     Delete from this session
                 </button>
@@ -122,7 +122,7 @@
             <!-- Delete Button ENDS-->
 
             <!-- Undeletability Reason STARTS -->
-            <ng-container *ngIf="!htmlRenderer.enableDeleteFromSession()">
+            <ng-container *ngIf="!isStudentDeletableFromSession()">
                 <br />
                 Can not delete the student from this session because <br />
                 <ng-container *ngIf="selectedStudentDeleteDisabledReason.isDeleted">Student is already deleted<br /></ng-container>

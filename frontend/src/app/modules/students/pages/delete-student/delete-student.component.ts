@@ -4,7 +4,6 @@ import { DeleteStudentHtmlRenderer } from './delete-student.html.renderer';
 import { DeleteStudentBackendData } from './delete-student.backend.data';
 import { DataStorage } from '../../../../classes/data-storage';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
-import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -43,7 +42,7 @@ class ColumnFilter {
     selector: 'app-delete-student',
     templateUrl: './delete-student.component.html',
     styleUrls: ['./delete-student.component.css'],
-    providers: [StudentOldService],
+    providers: [],
 })
 export class DeleteStudentComponent implements OnInit {
     user;
@@ -51,12 +50,11 @@ export class DeleteStudentComponent implements OnInit {
     bothFilters = false;
 
     selectedStudent: any;
-    studentList = [];
+    studentSectionList = []
     selectedStudentSectionList = [];
     selectedStudentFeeReceiptList = [];
     selectedStudentDiscountList = [];
-    tcList: Array<TransferCertificateNew> = [];
-    isDeleteFromSessionEnabled = true;
+    selectedStudentTcList: Array<TransferCertificateNew> = [];
 
     // Data from Parent Student Filter
     classList = [];
@@ -117,7 +115,6 @@ export class DeleteStudentComponent implements OnInit {
 
     studentParameterList: any[] = [];
     studentParameterOtherList: any[] = [];
-    studentParameterDocumentList: any[] = [];
 
     studentParameterValueList: any[] = [];   
 
@@ -129,9 +126,7 @@ export class DeleteStudentComponent implements OnInit {
 
     profileColumns;
 
-    constructor(
-        public studentOldService: StudentOldService,
-    ) {}
+    constructor() {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -173,7 +168,7 @@ export class DeleteStudentComponent implements OnInit {
             studentFullProfile['nonDeletableMessage'] = '';
         });
         this.serviceAdapter.checkDeletability(this.studentFullProfileList);
-        this.htmlRenderer.handleStudentDisplay();
+        this.handleStudentDisplay();
     }
 
     handleDetailsFromParentStudentFilter(details: any): void {
@@ -185,6 +180,71 @@ export class DeleteStudentComponent implements OnInit {
         this.studentFullProfileList.forEach((student) => {
             if(student.dbId == value[0][0].id) {
                 this.selectedStudent = student;
+            }
+        });
+    }
+
+    handleClassStudentFilter(value: any): void {
+        this.currentClassStudentFilter = value;
+        if(this.currentClassStudentFilter === 'Class') {
+            this.selectedStudent = null;
+        }
+        this.handleStudentDisplay();
+    }
+
+    handleDeletablityFilter(value: any): void {
+        this.currentDeletablityFilter = value;
+        this.handleStudentDisplay();
+    }
+
+    unselectAllClasses(): void {
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = false;
+            });
+        });
+        this.handleStudentDisplay();
+    }
+
+    selectAllClasses(): void {
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = true;
+            });
+        });
+        this.handleStudentDisplay();
+    }
+
+    selectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = true;
+        });
+        this.studentParameterList.forEach((item) => {
+            item.show = true;
+        });
+    }
+
+    unSelectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = false;
+        });
+        this.studentParameterList.forEach((item) => {
+            item.show = false;
+        });
+    }
+
+    selectAllStudents(): void {
+       this.studentFullProfileList.forEach((student) => {
+            if (student.show && student.isDeletable) {
+                student.selectProfile = true;
+            }
+        });
+    }
+
+    unselectAllStudents(): void {
+       this.studentFullProfileList.forEach((student) => {
+            if (student.show && student.isDeletable) {
+                student.selectProfile = false;
             }
         });
     }
@@ -209,6 +269,185 @@ export class DeleteStudentComponent implements OnInit {
             console.log('Error: should have section object');
         }
         return sectionObject;
+    }
+
+    handleStudentDisplay(): void {
+        let serialNumber = 0;
+        this.displayStudentNumber = 0;
+
+        this.studentFullProfileList.forEach((student) => {
+
+            /* Class Section Check */
+            if (!student.sectionObject.selected) {
+                student.show = false;
+                return;
+            }
+
+            /* Age Check */
+            if (this.asOnDate) {
+                let age = student.dateOfBirth
+                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                    : null;
+                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                    if (!age) {
+                        student.show = false;
+                        return;
+                    } else if (age < this.minAge) {
+                        student.show = false;
+                        return;
+                    }
+                }
+                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (!age) {
+                        student.show = false;
+                        return;
+                    } else if (age > this.maxAge) {
+                        student.show = false;
+                        return;
+                    }
+                }
+            }
+
+            /* Category Check */
+            if (
+                !(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected) &&
+                !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)
+            ) {
+                if (student.category === null || student.category === '') {
+                    student.show = false;
+                    return;
+                }
+                switch (student.category) {
+                    case 'SC':
+                        if (!this.scSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'ST':
+                        if (!this.stSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'OBC':
+                        if (!this.obcSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'Gen.':
+                        if (!this.generalSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                }
+            }
+
+            /* Gender Check */
+            if (
+                !(this.maleSelected && this.femaleSelected && this.otherGenderSelected) &&
+                !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)
+            ) {
+                if (student.gender === null || student.gender === '') {
+                    student.show = false;
+                    return;
+                }
+                switch (student.gender) {
+                    case 'Male':
+                        if (!this.maleSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'Female':
+                        if (!this.femaleSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'Other':
+                        if (!this.otherGenderSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                }
+            }
+
+            /* Admission Filter Check */
+            if (!this.newAdmission && student.admissionSessionDbId === this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            } else if (!this.oldAdmission && student.admissionSessionDbId !== this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            }
+
+            /* RTE Filter Check */
+            if (
+                !(
+                    (this.yesRTE && student.rte === 'YES') ||
+                    (this.noRTE && student.rte === 'NO') ||
+                    (this.noneRTE && student.rte != 'YES' && student.rte != 'NO')
+                )
+            ) {
+                /*
+                 First we are checking for which conditions student should be visible then we are applying a 'NOT'
+                 to the whole to get student invisible condition
+                 */
+                student.show = false;
+                return;
+            }
+
+            // Transfer Certiicate Check
+            if (!((this.noTC && !student.parentTransferCertificate && !student.newTransferCertificate)
+                || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
+                student.show = false;
+                return;
+            }
+
+            // Custom filters check
+            for (let x of this.htmlRenderer.getFilteredStudentParameterList()) {
+                let flag = x.showNone;
+                x.filterValues.forEach((filter) => {
+                    flag = flag || filter.show;
+                });
+                if (flag) {
+                    let parameterValue = this.htmlRenderer.getParameterValue(student, x);
+                    if (parameterValue === this.NULL_CONSTANT && x.showNone) {
+                    } else if (
+                        !x.filterValues
+                            .filter((filter) => filter.show)
+                            .map((filter) => filter.name)
+                            .includes(parameterValue)
+                    ) {
+                        student.show = false;
+                        return;
+                    }
+                }
+            }
+
+            // Deletability Filter check
+            if(this.currentDeletablityFilter == this.deletablitySelectList[1]) {
+                if(!student.isDeletable){
+                    student.show = false;
+                    return;
+                }
+            }
+            if(this.currentDeletablityFilter == this.deletablitySelectList[2]) {
+                if(student.isDeletable){
+                    student.show = false;
+                    return;
+                }
+            }
+
+            ++this.displayStudentNumber;
+            student.show = true;
+            student.selectProfile = false;
+            student.serialNumber = ++serialNumber;
+        });
     }
 
 }

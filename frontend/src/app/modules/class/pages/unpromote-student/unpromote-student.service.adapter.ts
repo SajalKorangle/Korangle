@@ -52,39 +52,40 @@ export class UnpromoteStudentServiceAdapter {
             })
             .getObjectList({ tc_app: 'TransferCertificateNew' });
 
-        let value = await Promise.all([
-            studentQuery,
-            studentSectionQuery,
-            feeReceiptQuery,
-            discountQuery,
-            transferCertificateNewQuery
+        let tempStudentList;
+        
+        [
+            tempStudentList,
+            this.vm.selectedStudentSectionList,
+            this.vm.selectedStudentFeeReceiptList,
+            this.vm.selectedStudentDiscountList,
+            this.vm.tcList
+
+        ] = await Promise.all([
+            studentQuery,   // 0
+            studentSectionQuery,    // 1
+            feeReceiptQuery,    // 2
+            discountQuery,  // 3  
+            transferCertificateNewQuery // 4
         ])
 
         this.vm.selectedStudent = studentList[0];
-        Object.keys(value[0]).forEach((key) => {
-            this.vm.selectedStudent[key] = value[0][key];
+        Object.keys(tempStudentList).forEach((key) => {
+            this.vm.selectedStudent[key] = tempStudentList[key];
         });
-
-        this.vm.selectedStudentSectionList = value[1];
-        this.vm.selectedStudentFeeReceiptList = value[2];
-        this.vm.selectedStudentDiscountList = value[3];
-        this.vm.tcList = value[4];
 
         this.vm.isLoading = false;
     }
 
     async deleteStudentFromSession(): Promise<any> {
 
-        if(!this.vm.htmlRenderer.enableDeleteFromSession()) {
-            this.vm.isDeleteFromSessionEnabled = false;
+        if(!this.vm.isStudentDeletableFromSession()) {
             return;
         }
 
         if (!confirm('Are you sure, you want to delete this student from the current session?')) {
             return;
         }
-
-        this.vm.isDeleteFromSessionEnabled = true;
 
         const studentSubjectQuery = new Query()
             .filter({
