@@ -22,6 +22,7 @@ import { SmsOldService } from '../../../../services/modules/sms/sms-old.service'
 import { UserService } from '@services/modules/user/user.service';
 import { MessageService } from '@services/message-service';
 import { TCService } from '@services/modules/tc/tc.service';
+import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
 
@@ -29,7 +30,7 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, SmsService, NotificationService, SmsOldService, UserService, TCService],
 })
 export class GiveDiscountComponent implements OnInit {
     user;
@@ -89,6 +90,7 @@ export class GiveDiscountComponent implements OnInit {
     messageService: any;
 
     constructor(
+        public genericService: GenericService,
         public schoolService: SchoolService,
         public feeService: FeeService,
         public studentService: StudentService,
