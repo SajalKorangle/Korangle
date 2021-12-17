@@ -78,7 +78,7 @@ export class PayFeesServiceAdapter {
             (value) => {
                 console.log(value);
 
-                this.vm.hasOnlinePaymentAccount = Boolean(value[13]);
+                this.vm.schoolMerchantAccount = value[13];
 
                 this.vm.feeTypeList = value[0];
                 this.vm.busStopList = value[1];

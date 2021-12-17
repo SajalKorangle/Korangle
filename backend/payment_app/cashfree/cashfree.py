@@ -9,11 +9,12 @@ import math
 # Do you know why they didn't just use CASHFREE_APP_ID and CASHFREE_SECRET_KEY instead of CLIENT_ID & CLIENT_SECRET
 # for bearer token
 # @answer : They have microservice kind of an architecture where different services are completely disjoint
-from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url
+from helloworld_project.settings import CASHFREE_APP_ID, CASHFREE_SECRET_KEY, CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_BASE_URL as base_url, CASHFREE_VERIFICATION_SUITE_ENDPOINT
 
-bank_verification_base_url = 'https://payout-gamma.cashfree.com'
-
-KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 0.5
+KORANGLE_PAYMENT_COMMISSION_PERCENTAGE = 3
+#CASHFREE_MARKETPLACE_SETTLEMENT_PERCENTAGE = 0.1
+#GST_PERCENTAGE = 18
+#CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST = CASHFREE_MARKETPLACE_SETTLEMENT_PERCENTAGE*(1 + GST_PERCENTAGE/100)
 
 
 def getResponseSignature(postData):  # used for validating that a response, indeed came from cashfree
@@ -60,15 +61,21 @@ def getSignature(orderData):  # used to authenticate that the data is a valid da
     signature = base64.b64encode(hmac.new(secret, message, digestmod=hashlib.sha256).digest())
     return signature.decode('utf-8')
 
+def getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool):
+    return (percentageofPlatformFeeOnSchool * KORANGLE_PAYMENT_COMMISSION_PERCENTAGE)/100
 
-def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
+def getUserPlatformFeePercentage(percentageofPlatformFeeOnSchool):
+    absolutePlatformFeeOnParent = KORANGLE_PAYMENT_COMMISSION_PERCENTAGE - getSchoolPlatformFeePercentage(percentageofPlatformFeeOnSchool)
+    return (100 * absolutePlatformFeeOnParent)/(100 - absolutePlatformFeeOnParent)   # new platform fee, platform fee on parent after including transacton charge on added platform fee
 
-    # Is it not required to mention the vendor id and amount for Korangle here?
-    # @answer : No, the leftover amount will be settled in korangle's account
+def createAndSignCashfreeOrderForSchool(data, orderId, vendorId, percentageTransactionChargeOnSchool):
+
+    
     paymentSplit = [
         {
             "vendorId": str(vendorId),
-            "amount": data['orderAmount']
+            #"amount": round(data['orderAmount']*(100*CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST/(100-CASHFREE_MARKETPLACE_SETTLEMENT_WITH_GST)),2)
+            "amount": round(data['orderAmount']*(1 - getSchoolPlatformFeePercentage(percentageTransactionChargeOnSchool)/100), 2)
         }
     ]
 
@@ -85,7 +92,7 @@ def createAndSignCashfreeOrderForSchool(data, orderId, vendorId):
             'appId': CASHFREE_APP_ID,
             'orderId': str(orderId),
             'paymentSplits': paymentSplitEncoded,
-            'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2),  # adding korangle's commission
+            'orderAmount': round(data['orderAmount'] * (1 + getUserPlatformFeePercentage(percentageTransactionChargeOnSchool) / 100), 2),  # adding korangle's commission
         }
     )
     if(orderData['orderAmount'] == math.floor(orderData['orderAmount'])):   # Removing decimal incase amount is int, (cashfree constraints)
@@ -104,6 +111,7 @@ def createAndSignCashfreeOrderForKorangle(data, orderId):
     orderData.update({
         'appId': CASHFREE_APP_ID,
         'orderId': str(orderId),
+        'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2), # adding korangle's commission
     })
 
     orderData.update({
@@ -170,7 +178,7 @@ def getOrderPaymetSplitDetails(orderId):
 
     
 
-def initiateRefund(orderId, splitData):
+def initiateRefund(orderId, splitData, refundAmount):
     orderStatusData = getOrderStatus(orderId)
 
     headers = {
@@ -181,7 +189,7 @@ def initiateRefund(orderId, splitData):
         'appId': CASHFREE_APP_ID,
         'secretKey': CASHFREE_SECRET_KEY,
         'referenceId': orderStatusData['referenceId'],
-        'refundAmount': float(orderStatusData['orderAmount']),
+        'refundAmount': float(refundAmount),
         'refundNote': 'refund towards payment made on korangle',
     }
 
@@ -316,7 +324,7 @@ def authenticate():
         'Content-Type': 'application/json',
     }
     response = requests.post(
-        url=bank_verification_base_url + '/payout/v1/authorize',
+        url=CASHFREE_VERIFICATION_SUITE_ENDPOINT + '/payout/v1/authorize',
         headers=headers,
     )
     assert response.json()["status"] == "SUCCESS", "cashfree authentication failed: {0}".format(response.json())
@@ -338,7 +346,7 @@ def ifscVerification(ifsc):
     }
 
     response = requests.get(
-        url=bank_verification_base_url + '/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
+        url=CASHFREE_VERIFICATION_SUITE_ENDPOINT + '/payout/v1/ifsc/{ifsc}'.format(ifsc=ifsc),
         headers=headers
     )
 
@@ -359,7 +367,7 @@ def bankAccountVerification(accountNumber, ifsc):
     }
 
     response = requests.get(
-        url=bank_verification_base_url + '/payout/v1.2/validation/bankDetails',
+        url=CASHFREE_VERIFICATION_SUITE_ENDPOINT + '/payout/v1.2/validation/bankDetails',
         headers=headers,
         params=params,
     )
