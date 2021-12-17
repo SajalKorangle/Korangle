@@ -74,12 +74,49 @@ export class UnpromoteStudentServiceAdapter {
             this.vm.selectedStudent[key] = tempStudentList[key];
         });
 
+        // Checking if student is already deleted from this session or not
+        this.vm.selectedStudentDeleteDisabledReason["isDeleted"] = this.vm.selectedStudent.isDeleted;
+        
+        // Checking if the current session is not the latest one for the student (which means that this session is a middle session or not)
+        this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] = this.vm.selectedStudentSectionList[this.vm.selectedStudentSectionList.length - 1].parentSession !=
+                                                                    this.vm.user.activeSchool.currentSessionDbId;
+
+        // Checking if the current session is the only session in which student is registered (If that's the case then student can't be deleted)                                                            
+        this.vm.selectedStudentDeleteDisabledReason["hasOnlyOneSession"] = this.vm.selectedStudentSectionList.length == 1;
+        
+        // Checking if fee receipt is generated for the student in the current session which is not cancelled
+        this.vm.selectedStudentDeleteDisabledReason["hasFeeReceipt"] = this.vm.selectedStudentFeeReceiptList.find((feeReceipt) => {
+            return (
+                feeReceipt.parentStudent == this.vm.selectedStudent.id &&
+                feeReceipt.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
+                feeReceipt.cancelled == false
+            );
+        }) != undefined;
+
+        // Checking if discount is generated for the student in the current session which is not cancelled
+        this.vm.selectedStudentDeleteDisabledReason["hasDiscount"] = this.vm.selectedStudentDiscountList.find((discount) => {
+            return (
+                discount.parentStudent == this.vm.selectedStudent.id && 
+                discount.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
+                discount.cancelled == false
+            );
+        }) != undefined;
+
+        // Checking if any tc is generated for the student in the current session which is not cancelled
+        this.vm.selectedStudentDeleteDisabledReason["hasTC"] = this.vm.tcList.find((tc) => {
+            return (
+                tc.parentStudent == this.vm.selectedStudent.id &&
+                tc.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
+                tc.cancelledBy == null
+            );
+        }) != undefined
+
         this.vm.isLoading = false;
     }
 
     async deleteStudentFromSession(): Promise<any> {
 
-        if(!this.vm.isStudentDeletableFromSession()) {
+        if(!this.vm.htmlRenderer.isStudentDeletableFromSession()) {
             return;
         }
 
