@@ -222,12 +222,12 @@ export class CollectFeeServiceAdapter {
         let transactionToAccountId;
 
         let transactionFromAccountSession;
-        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON) {
             transactionFromAccountSession = this.vm.htmlRenderer.customAccountSessionList
-                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettings.parentAccountFrom);
+                .find(customAccountSession => customAccountSession.id == this.vm.feeSettings.accountingSettingsJSON.parentAccountFrom);
         }
 
-        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettings && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
+        if (this.vm.feeSettings && this.vm.feeSettings.accountingSettingsJSON && this.vm.studentFeePaymentAccount && transactionFromAccountSession) {
             transactionFromAccountId = this.vm.studentFeePaymentAccount;
             transactionToAccountId = transactionFromAccountSession.parentAccount;
 

@@ -1,54 +1,48 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { Component, OnInit } from '@angular/core';
+import { SmsService } from '@services/modules/sms/sms.service';
 import { DataStorage } from '../../../../classes/data-storage';
-
+import { ViewPurchasesServiceAdapter } from './view-purchases.service.adapter';
+import { PaymentService } from '@services/modules/payment/payment.service';
+import { Order } from '@services/modules/payment/models/order';
+import { SmsPurchaseOrder } from '@services/modules/sms/models/sms-purchase-order';
 @Component({
     selector: 'view-purchases',
     templateUrl: './view-purchases.component.html',
     styleUrls: ['./view-purchases.component.css'],
+    providers: [SmsService, PaymentService]
 })
 export class ViewPurchasesComponent implements OnInit {
     user;
 
-    smsPurchaseList: any;
+    backendData: {
+        smsPurchaseList: any[],
+        incompleteOnlineSmsPaymentTransactionList: Array<SmsPurchaseOrder>,
+        orderList: Array<Order>,
+    } = {
+            smsPurchaseList: null,
+            incompleteOnlineSmsPaymentTransactionList: null,
+            orderList: null,
+        };
 
-    isLoading = false;
+    parsedIncompleteTransactions: Array<ParsedTransaction> = null;
 
-    todaysDate(): string {
-        const d = new Date();
-        let month = '' + (d.getMonth() + 1);
-        let day = '' + d.getDate();
-        const year = d.getFullYear();
+    isLoading: boolean = true;
 
-        if (month.length < 2) {
-            month = '0' + month;
-        }
-        if (day.length < 2) {
-            day = '0' + day;
-        }
+    serviceAdapter: ViewPurchasesServiceAdapter;
 
-        return year + '-' + month + '-' + day;
-    }
-
-    constructor(private smsService: SmsOldService) {}
+    constructor(
+        public smsService: SmsService,
+        public paymentService: PaymentService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-
-        this.isLoading = true;
-        let data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
-        this.smsService.getSMSPurchaseList(data, this.user.jwt).then(
-            (smsPurchaseList) => {
-                this.isLoading = false;
-                this.smsPurchaseList = smsPurchaseList;
-                console.log(smsPurchaseList);
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
+        this.serviceAdapter = new ViewPurchasesServiceAdapter(this);
+        this.serviceAdapter.initializeDate();
     }
+
+}
+
+interface ParsedTransaction extends SmsPurchaseOrder {
+    parentOrderInstance: Order;
 }

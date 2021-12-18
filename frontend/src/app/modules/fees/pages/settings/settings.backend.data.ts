@@ -10,6 +10,8 @@ export class SettingsBackendData {
     accountsList: Array<Account>;
     accountSessionList: Array<AccountSession>;
 
+    schoolMerchantAccount: {id: number, isEnabled: boolean, percentageOfPlatformFeeOnSchool: number};
+
     constructor(vm: SettingsComponent) {
         this.vm = vm;
     }
@@ -19,18 +21,18 @@ export class SettingsBackendData {
         this.feeSettings.parentSchool = this.vm.user.activeSchool.dbId;
         this.feeSettings.parentSession = this.vm.activeSession.id;
         this.feeSettings.sessionLocked = false;
-        this.feeSettings.accountingSettings = null; // null value signifies accounting is disabled
+        this.feeSettings.accountingSettingsJSON = null; // null value signifies accounting is disabled
     }
 
-    initilizeAccouting(): void {
-        this.feeSettings.accountingSettings = new AccountingSettings();
+    initializeAccounting(): void {
+        this.feeSettings.accountingSettingsJSON = new AccountingSettings();
     }
 
     filterInvalidAccounts(): void {
-        if (this.feeSettings.accountingSettings) {
+        if (this.feeSettings.accountingSettingsJSON) {
             this.vm.getPaymentModeList().forEach(paymentMode => {
-                this.feeSettings.accountingSettings.toAccountsStructure[paymentMode] =
-                    this.feeSettings.accountingSettings.toAccountsStructure[paymentMode]
+                this.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode] =
+                    this.feeSettings.accountingSettingsJSON.toAccountsStructure[paymentMode]
                         .filter(accountSessionId => this.accountSessionList.find(accountSession => accountSession.id == accountSessionId));
             });
         }

@@ -1,6 +1,9 @@
 
 import { SettingsComponent } from './settings.component';
 import { Session } from '@services/modules/school/models/session';
+import { CommonFunctions } from '@modules/common/common-functions';
+import { Query } from '@services/generic/query';
+
 
 export class SettingsServiceAdapter {
 
@@ -37,19 +40,21 @@ export class SettingsServiceAdapter {
             parentAccount__accountType: 'ACCOUNT',
         };
 
-        const [feeSettingsList, accountSessionList, accountsList] = await Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request), //3
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 2
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 4
+        const [feeSettingsList, accountSessionList, accountsList, schoolMerchantAccount] = await Promise.all([
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request), //0
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 1
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 2
+            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'})
         ]);
 
         this.vm.backendData.accountSessionList = accountSessionList;
         this.vm.backendData.accountsList = accountsList;
+        this.vm.backendData.schoolMerchantAccount = schoolMerchantAccount;
 
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
         } else if (feeSettingsList.length == 1) {
-            this.vm.backendData.feeSettings = { ...feeSettingsList[0], accountingSettings: JSON.parse(feeSettingsList[0].accountingSettings) };
+            this.vm.backendData.feeSettings = feeSettingsList[0];
             this.vm.backendData.filterInvalidAccounts();
         } else {
             alert('Error: Report admin');
@@ -63,10 +68,7 @@ export class SettingsServiceAdapter {
 
     populateActiveSession(activeSession: Session): void {
         this.vm.activeSession = activeSession;
-        const today = new Date();
-        const endDate = new Date(activeSession.endDate);
-        const startDate = new Date(activeSession.startDate);
-        this.vm.isActiveSession = today >= startDate && today <= endDate;
+        this.vm.isActiveSession = activeSession.id == CommonFunctions.getActiveSession().id;
     }
 
     populateCustomAccountSession(accountsList, accountSessionList): void {
@@ -101,20 +103,24 @@ export class SettingsServiceAdapter {
             newFeeSettings.id = feeSettingsList[0].id;
             serviceList.push(
                 this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings)
-                    .then(res => this.vm.backendData.feeSettings = {
-                        ...res,
-                        accountingSettings: JSON.parse(res.accountingSettings)
-                    })
+                    .then(res => this.vm.backendData.feeSettings = res)
             );
         } else {
             serviceList.push(   //
                 this.vm.feeService.createObject(this.vm.feeService.fee_settings, newFeeSettings)
-                    .then(res => this.vm.backendData.feeSettings = {
-                        ...res,
-                        accountingSettings: JSON.parse(res.accountingSettings)
-                    })
+                    .then(res => this.vm.backendData.feeSettings = res)
             );
         }
+
+        if (this.vm.backendData.schoolMerchantAccount) {
+            serviceList.push(
+                new Query().partiallyUpdateObject(
+                    {payment_app: 'SchoolMerchantAccount'},
+                    this.vm.backendData.schoolMerchantAccount
+                    )
+            );
+        }
+
         await Promise.all(serviceList);
 
         alert('fees accounting settings updated');
