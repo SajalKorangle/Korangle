@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { CollectFeeServiceAdapter } from './collect-fee.service.adapter';
+import { CollectFeeServiceAdapter } from './collect-fee-service.adapter';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentFee } from '../../../../services/modules/fees/models/student-fee';
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
@@ -29,7 +29,6 @@ import { NotificationService } from '../../../../services/modules/notification/n
 import { UserService } from '@services/modules/user/user.service';
 import { TCService } from '@services/modules/tc/tc.service';
 import { MessageService } from '@services/message-service';
-import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
 
@@ -37,7 +36,7 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
 })
 export class CollectFeeComponent implements OnInit {
     user;
@@ -107,7 +106,6 @@ export class CollectFeeComponent implements OnInit {
     messageService: any;
 
     constructor(
-        public genericService: GenericService,
         public feeService: FeeService,
         public studentService: StudentService,
         public vehicleService: VehicleOldService,
@@ -211,10 +209,6 @@ export class CollectFeeComponent implements OnInit {
         return this.busStopList.find((item) => {
             return item.id == busStopId;
         }).stopName;
-    }
-
-    getStudentById(studentId) {
-        return this.selectedStudentList.find(student => student.id == studentId);
     }
 
     getClassNameByStudentAndSessionId(student: any, sessionId: any): any {
@@ -1293,7 +1287,7 @@ export class CollectFeeComponent implements OnInit {
     }
 
     handlePaymentAccountOnPaymentModeChange(): void {
-        if (this.feeSettings && this.feeSettings.accountingSettingsJSON) {
+        if (this.feeSettings && this.feeSettings.accountingSettings) {
             this.studentFeePaymentAccount = null;
             const filteredAccounts = this.htmlRenderer.getFilteredPaymentAccounts();
             if (filteredAccounts.length > 0) {
