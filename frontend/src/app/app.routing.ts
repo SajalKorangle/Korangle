@@ -122,6 +122,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
     },
     {
+        path: 'bill',
+        loadChildren: 'app/modules/bill/bill.module#BillModule',
+    },
+    {
         path: 'print',
         outlet: 'print',
         children: [
