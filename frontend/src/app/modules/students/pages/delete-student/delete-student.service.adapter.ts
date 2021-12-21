@@ -297,6 +297,7 @@ export class DeleteStudentServiceAdapter {
 
         await new Query().filter({ id__in: deletableStudentIdList }).deleteObjectList({ student_app: 'Student' });
 
+        this.vm.selectedStudent = null;
         this.vm.isLoading = false;
     }
 }

@@ -10,7 +10,10 @@ export class UnpromoteStudentHtmlRenderer {
     }
 
     isStudentDeletableFromSession(): boolean {
-     
+        
+        // Checking if student is already deleted from this session or not
+        this.vm.selectedStudentDeleteDisabledReason["isDeleted"] = this.vm.selectedStudent.isDeleted;
+        
         return (
             !this.vm.selectedStudentDeleteDisabledReason["isDeleted"] &&
             !this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] &&

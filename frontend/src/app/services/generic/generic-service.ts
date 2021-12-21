@@ -60,7 +60,7 @@ export class GenericService extends RestApiGateway {
                 return Promise.resolve(CONSTANTS[app_name][model_name]);
             }
         }
-        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
+        return super.getData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -80,7 +80,7 @@ export class GenericService extends RestApiGateway {
                 return Promise.resolve(null);
             }
         }
-        return super.postData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        return super.postData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -100,7 +100,7 @@ export class GenericService extends RestApiGateway {
                 return Promise.resolve(null);
             }
         }
-        return super.putData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        return super.putData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -120,7 +120,7 @@ export class GenericService extends RestApiGateway {
                 return Promise.resolve(null);
             }
         }
-        return super.patchData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        return super.patchData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     // deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: any): Promise<any> {
@@ -140,7 +140,7 @@ export class GenericService extends RestApiGateway {
                 return Promise.resolve(null);
             }
         }
-        return super.deleteData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
+        return super.deleteData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
 }

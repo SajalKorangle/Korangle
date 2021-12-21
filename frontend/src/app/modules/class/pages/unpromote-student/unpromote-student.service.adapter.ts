@@ -21,7 +21,6 @@ export class UnpromoteStudentServiceAdapter {
             .filter({
                 id: studentList[0].id
             })
-            .setFields(...['motherName', 'rollNumber', 'scholarNumber', 'dateOfBirth', 'address', 'remark'])
             .getObjectList({ student_app: 'Student' });
 
         const studentSectionQuery = new Query()
@@ -73,9 +72,6 @@ export class UnpromoteStudentServiceAdapter {
         Object.keys(tempStudentList).forEach((key) => {
             this.vm.selectedStudent[key] = tempStudentList[key];
         });
-
-        // Checking if student is already deleted from this session or not
-        this.vm.selectedStudentDeleteDisabledReason["isDeleted"] = this.vm.selectedStudent.isDeleted;
         
         // Checking if the current session is not the latest one for the student (which means that this session is a middle session or not)
         this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] = this.vm.selectedStudentSectionList[this.vm.selectedStudentSectionList.length - 1].parentSession !=

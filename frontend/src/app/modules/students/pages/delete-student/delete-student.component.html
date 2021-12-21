@@ -22,7 +22,7 @@
             <ng-container>
                 <div class="class-student-filter">
                     <mat-form-field style="margin-left: 5px">
-                        <mat-select [ngModel]="currentClassStudentFilter" (ngModelChange)="htmlRenderer.handleClassStudentFilter($event)">
+                        <mat-select [ngModel]="currentClassStudentFilter" (ngModelChange)="handleClassStudentFilter($event)">
                             <mat-option value="Class" >Class</mat-option>
                             <mat-option value="Student" >Student</mat-option>
                         </mat-select>
@@ -163,10 +163,10 @@
                     <mat-form-field style="margin-right: 15px; margin-left: 15px">
                         <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
                             <mat-option>
-                                <button class="btn" style="padding: 4px 7px" id="select-all-classes" (click)="htmlRenderer.selectAllClasses(); $event.stopPropagation()">
+                                <button class="btn" style="padding: 4px 7px" id="select-all-classes" (click)="selectAllClasses(); $event.stopPropagation()">
                                     Select All
                                 </button>
-                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.unselectAllClasses(); $event.stopPropagation()">Clear All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                             </mat-option>
             
                             <ng-container *ngFor="let class of classSectionList">
@@ -174,7 +174,7 @@
                                     <mat-option *ngIf="section.containsStudent" style="width: 100%">
                                         <mat-checkbox
                                             [(ngModel)]="section.selected"
-                                            (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                                            (ngModelChange)="handleStudentDisplay()"
                                             (click)="$event.stopPropagation()"
                                         >
                                             {{ class.name }}<span *ngIf="htmlRenderer.showSectionName(class)">, {{ section.name }}</span>
@@ -184,8 +184,8 @@
                             </ng-container>
             
                             <mat-option>
-                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllClasses(); $event.stopPropagation()">Select All</button>
-                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.unselectAllClasses(); $event.stopPropagation()">Clear All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -200,7 +200,7 @@
                                     class="btn"
                                     id="select-all-profile-columns"
                                     style="padding: 4px 7px"
-                                    (click)="htmlRenderer.selectAllColumns(); $event.stopPropagation()"
+                                    (click)="selectAllColumns(); $event.stopPropagation()"
                                 >
                                     Select All
                                 </button>
@@ -208,7 +208,7 @@
                                     class="btn"
                                     id="unselect-all-profile-columns"
                                     style="padding: 4px 7px"
-                                    (click)="htmlRenderer.unSelectAllColumns(); $event.stopPropagation()"
+                                    (click)="unSelectAllColumns(); $event.stopPropagation()"
                                 >
                                     Clear All
                                 </button>
@@ -322,8 +322,8 @@
                                 </mat-checkbox>
                             </mat-option>
                             <mat-option>
-                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.selectAllColumns(); $event.stopPropagation()">Select All</button>
-                                <button class="btn" style="padding: 4px 7px" (click)="htmlRenderer.unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -332,7 +332,7 @@
                 <!-- Deletable/Non-deletable Filter -->
                 <div class="deletability-filter">
                     <mat-form-field style="margin-right: 15px">
-                        <mat-select [ngModel]="currentDeletablityFilter" (ngModelChange)="htmlRenderer.handleDeletablityFilter($event)">
+                        <mat-select [ngModel]="currentDeletablityFilter" (ngModelChange)="handleDeletablityFilter($event)">
                             <ng-container *ngFor="let option of deletablitySelectList">
                                 <mat-option value="{{option}}">{{ option }}</mat-option>
                             </ng-container>
@@ -361,7 +361,7 @@
             <!-- Class-Student Filter -->
             <div class="class-student-filter">
                 <mat-form-field style="float: right">
-                    <mat-select [ngModel]="currentClassStudentFilter" (ngModelChange)="htmlRenderer.handleClassStudentFilter($event)">
+                    <mat-select [ngModel]="currentClassStudentFilter" (ngModelChange)="handleClassStudentFilter($event)">
                         <mat-option value="Class" >Class</mat-option>
                         <mat-option value="Student" >Student</mat-option>
                     </mat-select>
@@ -378,40 +378,40 @@
             </button>
             <ng-container *ngIf="showFilters">
                 <br /><b>Age</b><br />
-                <input type="number" style="width: 60px; margin-right: 5px" [(ngModel)]="minAge" (ngModelChange)="htmlRenderer.handleStudentDisplay()" />
+                <input type="number" style="width: 60px; margin-right: 5px" [(ngModel)]="minAge" (ngModelChange)="handleStudentDisplay()" />
                 <span style="margin-right: 5px">&lt;= Age &lt;=</span>
-                <input type="number" style="width: 60px" [(ngModel)]="maxAge" (ngModelChange)="htmlRenderer.handleStudentDisplay()" />
+                <input type="number" style="width: 60px" [(ngModel)]="maxAge" (ngModelChange)="handleStudentDisplay()" />
                 &nbsp; &nbsp; as on date &nbsp;&nbsp;
                 <day-date [formattedDateOutput]="true"
-                        (onDateSelected)="asOnDate = $event; htmlRenderer.handleStudentDisplay()">
+                        (onDateSelected)="asOnDate = $event; handleStudentDisplay()">
                 </day-date>
 
                 <br /><br /><b>Category</b><br />
                 <mat-checkbox
                     [(ngModel)]="scSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >SC,
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="stSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >ST,
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="obcSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >OBC,
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="generalSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >Gen.
                 </mat-checkbox>
@@ -420,21 +420,21 @@
                 <mat-checkbox
                     [(ngModel)]="maleSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >M
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="femaleSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >F
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="otherGenderSelected"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >Other
                 </mat-checkbox>
@@ -443,14 +443,14 @@
                 <mat-checkbox
                     [(ngModel)]="newAdmission"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >New
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="oldAdmission"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >Old
                 </mat-checkbox>
@@ -459,21 +459,21 @@
                 <mat-checkbox
                     [(ngModel)]="noneRTE"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >None
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="yesRTE"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >Yes
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="noRTE"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >No
                 </mat-checkbox>
@@ -482,14 +482,14 @@
                 <mat-checkbox
                     [(ngModel)]="noTC"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >Not-Generated
                 </mat-checkbox>
                 <mat-checkbox
                     [(ngModel)]="yesTC"
                     style="margin-right: 5px"
-                    (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                    (ngModelChange)="handleStudentDisplay()"
                     (click)="$event.stopPropagation()"
                     >Generated
                 </mat-checkbox>
@@ -504,7 +504,7 @@
                     <mat-checkbox
                         [(ngModel)]="parameter.showNone"
                         style="margin-right: 5px"
-                        (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                        (ngModelChange)="handleStudentDisplay()"
                         (click)="$event.stopPropagation()"
                         >None
                     </mat-checkbox>
@@ -512,7 +512,7 @@
                         *ngFor="let filter of htmlRenderer.getFilteredFilterValues(parameter)"
                         [(ngModel)]="filter.show"
                         style="margin-right: 5px"
-                        (ngModelChange)="htmlRenderer.handleStudentDisplay()"
+                        (ngModelChange)="handleStudentDisplay()"
                         (click)="$event.stopPropagation()"
                         >{{ filter.name }} </mat-checkbox
                     ><br />
@@ -529,10 +529,10 @@
                 >, Selected: <b>{{ htmlRenderer.getSelectedStudents() }}</b>
             </p>
             
-            <button class="btn" style="padding: 7px 7px; margin-right: 5px" (click)="htmlRenderer.selectAllStudents(); $event.stopPropagation()">
+            <button class="btn" style="padding: 7px 7px; margin-right: 5px" (click)="selectAllStudents(); $event.stopPropagation()">
                 Select All
             </button>
-            <button class="btn" style="padding: 7px 7px" (click)="htmlRenderer.unselectAllStudents(); $event.stopPropagation()">Clear All</button>
+            <button class="btn" style="padding: 7px 7px" (click)="unselectAllStudents(); $event.stopPropagation()">Clear All</button>
 
             <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
                 <table class="table table-hover">
