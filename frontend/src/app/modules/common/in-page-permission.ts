@@ -1,18 +1,26 @@
-type InputTypeInterface = "number" | "select";
+type InputTypeInterface = "number" | "select" | "groupOfCheckBox";
 type AllowedValueInterface = Array<[any, string]>;   // [any: value, string: displayName]
 export type valueType = number | string;
 
 interface Options {
     groupName?: string;
 }
+class GroupOfCheckBoxPermission {
+    checkBoxValues: AllowedValueInterface;
 
-export class InPagePermission {
+    constructor(checkBoxValues: AllowedValueInterface) {
+        this.checkBoxValues = checkBoxValues;
+    }
+}
+
+export class InPagePermission extends GroupOfCheckBoxPermission {
     displayName: string;
     inputType: InputTypeInterface;
     allowedValues?: AllowedValueInterface;   // [any: value, string: displayName]
     options: Options;
 
-    constructor(displayName: string, inputType: InputTypeInterface, allowedValues: AllowedValueInterface = null, options: Options = {}) {
+    constructor(displayName: string, inputType: InputTypeInterface, allowedValues: AllowedValueInterface = null, options: Options = {}, checkBoxValues: AllowedValueInterface = null) {
+        super(checkBoxValues);
         this.displayName = displayName;
         this.inputType = inputType;
         this.allowedValues = allowedValues;
@@ -39,6 +47,7 @@ export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All
 const feesTotalCollection = new TaskPermissionStructure('fees', 'total_collection');
 feesTotalCollection.inPagePermissionMappedByKey['numberOfDays'] = new InPagePermission('No. of Days', 'number');
 
+const employeeAssignTask = new TaskPermissionStructure('employees', 'assign_task');
 // Online Classes
 import '@modules/online-classes/pages/add-account/add-account.permissions';
 

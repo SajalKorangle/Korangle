@@ -4,6 +4,7 @@ from school_app.model.models import School, Session
 from team_app.models import Task
 import os
 from django.utils.timezone import now
+from common.common import BasePermission
 
 
 def upload_avatar_to(instance, filename):
@@ -94,6 +95,10 @@ class Employee(models.Model):
         db_table = 'employee'
         unique_together = ('parentSchool', 'mobileNumber')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
 
 class EmployeeSessionDetail(models.Model):
 
@@ -118,6 +123,10 @@ class EmployeePermission(models.Model):
     class Meta:
         db_table = 'employee_permission'
         unique_together = ('parentTask', 'parentEmployee')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployee__parentSchool__id']
+        RelationsToStudent = []
 
 class EmployeeParameter(models.Model):
 

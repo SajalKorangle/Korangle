@@ -47,6 +47,24 @@
                     </mat-select>
                 </mat-form-field>
 
+                <ng-container *ngSwitchCase="'groupOfCheckBox'" style="margin: 0 12px;">
+                    <ng-container  *ngIf="intialize(permissionKey)">
+                        <div class="col-xs-12" style="margin-left: 8px">
+                            <div class="row" style="margin-bottom: 5px">
+                                <span style="font-size: large; font-weight: 800">{{ inPagePermissionMappedByKey[permissionKey].displayName }}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 8px">
+                                <ng-container *ngFor="let option of inPagePermissionMappedByKey[permissionKey].checkBoxValues">
+                                    <div class="col-md-3">
+                                        <mat-checkbox  [(ngModel)]="employeePermissionConfigJson[permissionKey][option[0]]" (click)="$event.stopPropagation()">{{option[1]}}</mat-checkbox>
+                                    </div>
+                                </ng-container>
+                                <br />
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+
             </ng-container>
         </ng-container>
     </ng-container>

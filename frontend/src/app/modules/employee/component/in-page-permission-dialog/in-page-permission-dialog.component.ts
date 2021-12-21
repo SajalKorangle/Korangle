@@ -46,4 +46,16 @@ export class InPagePermissionDialogComponent implements OnInit {
         this.dialogRef.close({ employeePermissionConfigJson: this.employeePermissionConfigJson });
     }
 
+    intialize(permissionKey): any {
+        if(!(permissionKey in this.employeePermissionConfigJson)) {
+            this.employeePermissionConfigJson[permissionKey] = {};
+        }
+        this.inPagePermissionMappedByKey[permissionKey].checkBoxValues.forEach(value => {
+            if(!(value[0] in this.employeePermissionConfigJson[permissionKey])) {
+                this.employeePermissionConfigJson[permissionKey][value[0]] = false;
+            }
+        })
+        return true;
+    }
+
 }

@@ -7,7 +7,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { AssignTaskServiceAdapter } from './assign-task.service.adapter';
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
-import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
+import { TASK_PERMISSION_LIST, InPagePermission } from '@modules/common/in-page-permission';
 
 @Component({
     selector: 'assign-task',
@@ -94,6 +94,7 @@ export class AssignTaskComponent implements OnInit {
         });
 
         openedDialog.afterClosed().subscribe((data: any) => {
+            // console.log(data);
             if (data && data.employeePermissionConfigJson) {
                 this.updatePermissionLoading(employee, task, true);
                 if (existingPermission) {
