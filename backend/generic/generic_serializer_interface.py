@@ -115,7 +115,7 @@ class GenericSerializerInterface():
         ## Response Structure(fields_list) Processing Starts ##
         processed_field_list = ['__all__']
         if 'fields_list' in self.data:
-            fields_list = self.data['fields_list']
+            processed_field_list = self.data['fields_list']
             del self.data['fields_list']
 
         if '__all__' in processed_field_list:
@@ -211,7 +211,7 @@ class GenericSerializerInterface():
 
     def operate_object(self, data, operation_function):  # Generic function for object operations
         data_list_mapped_by_child_related_field_name = {}
-
+        
         for child_related_field_name in [field_name for field_name in data.keys() if field_name.endswith('List')]:
             data_list_mapped_by_child_related_field_name[child_related_field_name] = data[child_related_field_name]
             del data[child_related_field_name]
@@ -288,9 +288,9 @@ class GenericSerializerInterface():
             del self.data['fields_list']
         ## Response Structure(fields_list) Processing Ends ##
 
-        query_set = self.parse_query()
+        query_set = self.parse_query(self.data)
         count = query_set.count()
-        assert onlyOne, 'More than one object to delete while onlyOne=True'
+        assert (not onlyOne or count == 1), 'More than one object to delete while onlyOne=True'
 
         pk_field_name = self.Model._meta.pk.name
         pk_list = query_set.values_list(pk_field_name, flat=True)

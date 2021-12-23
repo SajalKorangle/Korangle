@@ -1,0 +1,18 @@
+.delete-btn {
+    color: #FF1717;
+    background-color: white;
+    outline: none;
+    border: none;
+    text-decoration: underline;
+    box-shadow: none;
+}
+
+.bottom-btns {
+    float: right;
+}
+
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+    font-style: normal;
+}

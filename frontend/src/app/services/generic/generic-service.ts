@@ -33,7 +33,7 @@ import { RestApiGateway } from './rest-api-gateway';
 export class GenericService extends RestApiGateway {
 
     private getBaseUrl(): string {
-        return '/generic';
+        return '/generic/';
     }
 
     parseConfig(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>): [string, string] {
@@ -50,7 +50,7 @@ export class GenericService extends RestApiGateway {
 
     getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.getData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
+        return super.getData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -60,7 +60,7 @@ export class GenericService extends RestApiGateway {
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.postData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        return super.postData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -70,7 +70,7 @@ export class GenericService extends RestApiGateway {
 
     updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.putData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        return super.putData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
@@ -80,7 +80,7 @@ export class GenericService extends RestApiGateway {
 
     partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.patchData(data, this.getBaseUrl() + '/batch', { app_name, model_name });
+        return super.patchData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     // deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: any): Promise<any> {
@@ -90,7 +90,7 @@ export class GenericService extends RestApiGateway {
 
     deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        return super.deleteData(this.getBaseUrl() + '/batch', { app_name, model_name, __query__: JSON.stringify(query) });
+        return super.deleteData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
 }
@@ -100,7 +100,7 @@ export class GenericService extends RestApiGateway {
 export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
-    student_app: 'Student' | 'StudentSection';
+    student_app: 'Student' | 'StudentSection' | 'CountAllTable';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
 }
 

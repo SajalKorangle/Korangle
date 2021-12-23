@@ -27,6 +27,11 @@ const routes: Routes = [
         data: { moduleName: 'students' },
     },
     {
+        path: 'count_all',
+        loadChildren: 'app/modules/students/pages/count-all/count-all.module#CountAllModule',
+        data: { moduleName: 'students' },
+    },
+    {
         path: 'generate_tc',
         loadChildren: 'app/modules/students/pages/generate-tc/generate-tc.module#GenerateTcModule',
         data: { moduleName: 'students' },

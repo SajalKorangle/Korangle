@@ -25,6 +25,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 import 'hammerjs';
 
 import { BasicComponentsModule } from '../basic-components/basic-components.module';
@@ -98,6 +100,8 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatSlideToggleModule,
 
         BasicComponentsModule,
+
+        DragDropModule,
     ],
     exports: [
         BasicComponentsModule,
@@ -141,6 +145,8 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatDialogModule,
         MatListModule,
         MatSlideToggleModule,
+
+        DragDropModule,
     ],
 })
 export class ComponentsModule { }
