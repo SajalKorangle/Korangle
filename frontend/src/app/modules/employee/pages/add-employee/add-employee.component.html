@@ -197,7 +197,7 @@
 
         <div class="row document-parameter">
             <div *ngFor="let parameter of employeeParameterList">
-                <div *ngIf="parameter.parameterType==='DOCUMENT'" id="test" class="col-md-5"
+                <div *ngIf="parameter.parameterType==='DOCUMENT'" id="documentElement" class="col-md-5"
                     [ngStyle]="{'margin-top': '10px', 'margin-right': '10px', 'height': getHeight(parameter) + 'px'}">
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)"
                         class="drop">
@@ -218,7 +218,7 @@
                                 <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
                             <div class="documentText">
-                                <div *ngIf="isMobile()" id="test2">
+                                <div *ngIf="isMobile()" id="fileNameElement">
                                     <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName">{{getDocumentName(parameter)}}</p>
                                     <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)" 
                                         [ngStyle]="{'width': getWidth()+'px'}" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
@@ -235,7 +235,7 @@
                                 <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
                             <div class="documentText">
-                                <div *ngIf="isMobile()" id="test2">
+                                <div *ngIf="isMobile()" id="fileNameElement">
                                     <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName">{{getDocumentName(parameter)}}</p>
                                     <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)" 
                                         [ngStyle]="{'width': getWidth()+'px'}" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>

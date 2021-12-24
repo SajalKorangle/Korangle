@@ -53,8 +53,8 @@ export class AddEmployeeComponent implements OnInit {
 
     getTextHeight(textContent: string) {
         let text = document.createElement("p");
-        let test = document.getElementById('test2');
-        test.appendChild(text);
+        let fileNameElement = document.getElementById('fileNameElement');
+        fileNameElement.appendChild(text);
 
         text.innerHTML = textContent;
         text.style.font = "roboto";
@@ -65,7 +65,7 @@ export class AddEmployeeComponent implements OnInit {
         text.style.fontWeight = "400";
         text.style.lineHeight = "18px";
         let height = Math.ceil(text.offsetHeight) + 100;
-        test.removeChild(text);
+        fileNameElement.removeChild(text);
         return height;
     }
 
@@ -98,7 +98,7 @@ export class AddEmployeeComponent implements OnInit {
     }
 
     getWidth() {
-        let width = document.getElementById('test').offsetWidth;
+        let width = document.getElementById('documentElement').offsetWidth;
         width -= 145;
         return width;
     }
