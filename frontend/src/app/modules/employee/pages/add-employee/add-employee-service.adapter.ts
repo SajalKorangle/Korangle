@@ -45,6 +45,13 @@ export class AddEmployeeServiceAdapter {
             this.vm.employeeList = value[0];
             this.vm.employeeParameterList = value[3].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
             this.vm.initializeModuleList(value[1], value[2]);
+
+            for(let i = 0; i < this.vm.employeeParameterList.length; i++) {
+                if(this.vm.employeeParameterList[i].parameterType == "DOCUMENT") {
+                    this.vm.showToolTip.push(false);
+                    this.vm.height.push(120);
+                }
+            }
             this.vm.isLoading = false;
 
         }, error => {

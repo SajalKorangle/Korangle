@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
@@ -21,9 +21,8 @@ declare const $: any;
 export class AddEmployeeComponent implements OnInit {
     user;
 
-    height1 = 120;
-    height2 = 0;
-    showToolTip = false;
+    height = [];
+    showToolTip = [];
 
     newEmployee: any;
     newEmployeeSessionDetail: any;
@@ -42,8 +41,7 @@ export class AddEmployeeComponent implements OnInit {
     constructor(public employeeService: EmployeeService,
         public bankService: BankService,
         public teamService: TeamService,
-        public dialog: MatDialog, 
-        private cdRef: ChangeDetectorRef) { }
+        public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -53,23 +51,50 @@ export class AddEmployeeComponent implements OnInit {
 
     }
 
-    ngAfterViewChecked(): void {
-        let tempH = document.getElementById('test');
-        let tempH1 = document.getElementById('fullName');
+    getTextHeight(textContent: string) {
+        let text = document.createElement("p");
+        let test = document.getElementById('test2');
+        test.appendChild(text);
 
-        if(tempH) {
-            this.height1 = tempH.offsetHeight;
-            if(this.height2 === 0) this.height2 = tempH.offsetHeight;
+        text.innerHTML = textContent;
+        text.style.font = "roboto";
+        text.style.fontSize = 12 + "px";
+        text.style.width = this.getWidth()+'px';
+        text.style.wordWrap = 'break-word';
+        text.style.color = "#959393";
+        text.style.fontWeight = "400";
+        text.style.lineHeight = "18px";
+        let height = Math.ceil(text.offsetHeight) + 100;
+        test.removeChild(text);
+        return height;
+    }
+
+    checkToolTip(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        return this.showToolTip[index];
+    }
+
+    closeToolTip(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        this.showToolTip[index] = false;
+        this.height[index] = 120;
+    }
+
+    toolTipClicked(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        if(this.showToolTip[index]) {
+            this.showToolTip[index] = false;
+            this.height[index] = 120;
+        } else {
+            this.showToolTip[index] = true;
+            let fullName = this.getFullDocumentName(parameter);
+            this.height[index] = this.getTextHeight(fullName);
         }
-        if(tempH1) {
-            if(this.height1 == this.height2) {
-                let elementHeight1 = tempH1.offsetHeight;
-                this.height1 += elementHeight1;
-            } else {
-                this.height1 = this.height2;
-            }
-        }
-        this.cdRef.detectChanges();
+    }
+
+    getHeight(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        return this.height[index];
     }
 
     getWidth() {
@@ -428,11 +453,6 @@ export class AddEmployeeComponent implements OnInit {
             }
         }
         element.value = '';
-        console.log("Hello");
-        this.showToolTip = false;
-        this.height1 = 120;
-        this.height2 = 0;
-        this.cdRef.detectChanges();
     }
 
     updateDocumentValue = (parameter, file) => {

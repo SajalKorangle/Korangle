@@ -105,6 +105,11 @@ mat-form-field {
     width: fit-content;
 }
 
+.document-parameter {
+    position: relative;
+    z-index: 0;
+}
+
 .drop {
     position: relative;
     height: 120px;
