@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { UserOldService } from '../../../../services/modules/user/user-old.service';
 import { DataStorage } from '../../../../classes/data-storage';
+import {VALIDATORS_REGX} from '@classes/regx-validators';
 
 @Component({
     selector: 'update-profile',
@@ -11,6 +12,8 @@ import { DataStorage } from '../../../../classes/data-storage';
 })
 export class UpdateProfileComponent implements OnInit {
     user;
+
+    validators = VALIDATORS_REGX;
 
     first_name: any;
     last_name: any;
@@ -29,6 +32,10 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     updateProfile(): void {
+        if (this.email && !this.validators.email.test(this.email)) {
+            alert('Kindly enter a valid email');
+            return;
+        }
         let data = {
             first_name: this.first_name,
             last_name: this.last_name,
