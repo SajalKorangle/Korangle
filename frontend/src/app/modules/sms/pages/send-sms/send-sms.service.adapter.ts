@@ -1,13 +1,14 @@
-import {SendSmsComponent} from './send-sms.component';
+import { SendSmsComponent } from './send-sms.component';
 import moment = require('moment');
 
 
 export class SendSmsServiceAdapter {
 
     vm: SendSmsComponent;
+    purchasedSMS: number = 0;
     generalSMSEventIdList = [1, 2, 3];
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: SendSmsComponent): void {
         this.vm = vm;
@@ -55,7 +56,7 @@ export class SendSmsServiceAdapter {
                 parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
                 parentStudentParamter__parameterType: 'FILTER',
             }),
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, {parentSchool: this.vm.user.activeSchool.dbId}), //8
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, { parentSchool: this.vm.user.activeSchool.dbId }), //8
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {
                 id__in: this.generalSMSEventIdList.join(',')
             }), //9
@@ -77,9 +78,10 @@ export class SendSmsServiceAdapter {
         this.vm.backendData.studentList = value[3];
         this.populateEmployeeList(value[4]);
         this.vm.backendData.smsBalance = value[5].count;
+
         this.vm.studentParameterList = value[6].map((x) => ({
             ...x,
-            filterValues: JSON.parse(x.filterValues).map((x) => ({name: x, show: false})),
+            filterValues: JSON.parse(x.filterValues).map((x) => ({ name: x, show: false })),
             showNone: false,
             filterFilterValues: '',
         }));
@@ -139,7 +141,7 @@ export class SendSmsServiceAdapter {
             employee['selected'] = true;
             employee['validMobileNumber'] = this.vm.isMobileNumberValid(employee.mobileNumber);
         });
-        this.vm.messageService.fetchGCMDevicesNew(this.vm.backendData.studentList.concat(this.vm.employeeList));
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.backendData.studentList.concat(this.vm.employeeList), true);
     }
 
     populateStudentSectionList(): void {
@@ -165,7 +167,7 @@ export class SendSmsServiceAdapter {
     async sendSMSAndNotification() {
         if (this.vm.getMobileNumberList('sms').length > 0 &&
             !confirm('Please confirm that you are '
-                + (this.vm.userInput.scheduleSMS ? 'Scheduling ' : 'Sending ') + this.vm.htmlRenderer.getEstimatedSMSCount()  + ' SMS.')) {
+                + (this.vm.userInput.scheduleSMS ? 'Scheduling ' : 'Sending ') + this.vm.htmlRenderer.getEstimatedSMSCount() + ' SMS.')) {
             return;
         }
         this.vm.stateKeeper.isLoading = true;
@@ -182,7 +184,7 @@ export class SendSmsServiceAdapter {
         if (this.vm.userInput.selectedSendTo.id == 2) {
             this.vm.dataForMapping['employeeList'] = this.vm.getMobileNumberList('both').filter(x => x.employee);
             personType = 'employee';
-        }else if (this.vm.userInput.selectedSendTo.id == 3) {
+        } else if (this.vm.userInput.selectedSendTo.id == 3) {
             this.vm.dataForMapping['commonPersonList'] = this.vm.getMobileNumberList('both');
             personType = 'commonPerson';
         }
@@ -206,7 +208,9 @@ export class SendSmsServiceAdapter {
             this.vm.stateKeeper.isLoading = false;
             return;
         }
-        alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' :  ' Sent') + ' Successfully');
+        alert(this.vm.userInput.selectedSendUpdateType.name + (this.vm.userInput.scheduleSMS ? ' Scheduled' : ' Sent') + ' Successfully');
         this.vm.stateKeeper.isLoading = false;
     }
+
+
 }

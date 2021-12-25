@@ -156,8 +156,8 @@ export class School {
                 id: this.studentList[0].id,
                 taskList: [
                     {
-                        title: 'Fees',
-                        path: 'view_fee',
+                        title: 'Pay Fees',
+                        path: 'pay_fees',
                         icon: 'receipt',
                     },
                 ],
