@@ -66,7 +66,6 @@ export class CountAllServiceAdapter {
                     filterFilterValues: '',
                 }));
                 this.vm.studentParameterValueList = value[4];
-                console.log("Paramter Full Value List: ", this.vm.studentParameterValueList);
                 this.vm.tableList = value[6];
                 this.vm.isLoading = false;
             },
@@ -110,9 +109,7 @@ export class CountAllServiceAdapter {
         tableDataObject["cols"] = cols;
 
         tableFilter_list.push(tableDataObject);
-        console.log("Table-List: ", tableFilter_list);
         const response = await this.vm.genericService.createObjectList({student_app: 'CountAllTable'}, tableFilter_list);
-        console.log(response);
         this.vm.tableOpenClicked(response[0]);
         this.updateTableList();
     }
@@ -136,10 +133,8 @@ export class CountAllServiceAdapter {
             cols[name] = colFilter;
         });
         tableDataObject["cols"] = cols;
-        console.log("Table-Object: ", tableDataObject);
 
         const response = await this.vm.genericService.updateObject({student_app: 'CountAllTable'}, tableDataObject);
-        console.log("Response: ", response);
         this.vm.tableOpenClicked(response);
         this.updateTableList();
     }

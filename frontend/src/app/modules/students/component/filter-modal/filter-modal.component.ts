@@ -95,7 +95,6 @@ export class FilterModalComponent implements OnInit {
             if(this.filter["age"]) {
                 let age = this.filter["age"];
                 this.asOnDate = age[0];
-                console.log("AsOnDate: ", this.asOnDate);
                 this.minAge = age.length > 1 ? age[1] : 0;
                 this.maxAge = age.length > 2 ? age[2] : 1000;
             }
@@ -155,6 +154,20 @@ export class FilterModalComponent implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    isMobile(): boolean {
+        if(window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
+    checkWidth(): boolean {
+        if(window.innerWidth > 575) {
+            return false;
+        } 
+        return true;
     }
 
     unselectAllClasses(): void {
@@ -244,6 +257,10 @@ export class FilterModalComponent implements OnInit {
         let age = [];
         if (this.asOnDate) {
             age.push(this.asOnDate);
+        } else {
+            let today = new Date();
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            age.push(today.toJSON().slice(0,10));
         }
         if (this.minAge != null && !isNaN(this.minAge)) {
             age.push(Math.max(this.minAge, 0));

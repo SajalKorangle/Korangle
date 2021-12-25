@@ -1,27 +1,29 @@
 <div class="card-content table-responsive">
     <b>Define custom rows and columns or choose from saved tables</b>
-    <button
-        id="print-list"
-        type="button"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
-        style="padding: 12px 15px; margin-left: 5%; margin-right: 17px"
-        matTooltip="Print the following table"
-        tooltip-position="left"
-    >
-        Print<i class="material-icons" style="margin-left: 17px">print</i>
-    </button>
+    <ng-container *ngIf="rowFilters.length > 0 || columnFilters.length > 0">
+        <button
+            id="print-list"
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
+            style="padding: 12px 15px; margin-left: 5%;"
+            matTooltip="Print the following table"
+            tooltip-position="left"
+        >
+            Print<i class="material-icons" style="margin-left: 17px">print</i>
+        </button>
 
-    <button
-        type="button"
-        id="download"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        style="padding: 12px 15px; margin-right: 17px"
-        matTooltip="Download the following table"
-        tooltip-position="left"
-        (click)="downloadList()"
-    >
-        Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
-    </button>
+        <button
+            type="button"
+            id="download"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-left: 5%;"
+            matTooltip="Download the following table"
+            tooltip-position="left"
+            (click)="downloadList()"
+        >
+            Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
+        </button>
+    </ng-container>
 
     <br /><br /><b>Table Format</b><br />
     <mat-form-field style="margin-right: 15px">
@@ -39,7 +41,7 @@
             <table class="table">
                 <thead>
                     <tr cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="dropColumn($event)">
-                        <th [ngStyle]="{'min-width': '200px'}" class="text-{{ user.activeSchool.secondaryThemeColor }}"></th>
+                        <th class="min-width" class="text-{{ user.activeSchool.secondaryThemeColor }}"></th>
                         <th [ngStyle]="{'min-width': getTextWidthColumn(filter.name)}" *ngFor="let filter of columnFilters" (click)="whereToAdd = 'col'; openChangeDialog(filter)" class="text-{{ user.activeSchool.secondaryThemeColor }}" cdkDrag><b>{{filter.name}}</b></th>
                         <th [ngStyle]="{'min-width': getTextWidthColumn('+ Column')}" (click)="whereToAdd = 'col'; openDialog()" class="text-{{ user.activeSchool.secondaryThemeColor }}"><b>+ Column</b></th>
                     </tr>
@@ -47,13 +49,13 @@
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
                     <tr class="example-box" *ngFor="let filter of rowFilters" cdkDrag>
                         <th [ngStyle]="{'min-width': getTextWidthRow()}" (click)="whereToAdd = 'row'; openChangeDialog(filter)" class="text-{{ user.activeSchool.secondaryThemeColor }}">{{filter.name}}</th>
-                        <td [ngStyle]="{'min-width': '200px'}" *ngFor="let ans of filter.answer">{{ans}}</td>
-                        <td [ngStyle]="{'min-width': '200px'}">-</td>
+                        <td class="min-width" *ngFor="let ans of filter.answer">{{ans}}</td>
+                        <td class="min-width">-</td>
                     </tr>
                     <tr class="last-child">
                         <th [ngStyle]="{'min-width': getTextWidthRow()}" (click)="whereToAdd = 'row'; openDialog()" class="text-{{ user.activeSchool.secondaryThemeColor }}">+ Row</th>
-                        <td [ngStyle]="{'min-width': '200px'}" *ngFor="let filter of columnFilters">-</td>
-                        <td [ngStyle]="{'min-width': '200px'}">-</td>
+                        <td class="min-width" *ngFor="let filter of columnFilters">-</td>
+                        <td class="min-width">-</td>
                     </tr>
                 </tbody>
             </table>
@@ -61,7 +63,7 @@
     </ng-container>
 </div>
 
-<div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+<div *ngIf="!isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
 <ng-container *ngIf="!isTableEditing">
     <button *ngIf="rowFilters.length > 0 || columnFilters.length > 0"
         type="button"

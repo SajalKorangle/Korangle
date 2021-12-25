@@ -117,6 +117,13 @@ export class CountAllComponent implements OnInit {
         });
     }
 
+    isMobile(): boolean {
+        if(window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
     updateRowFiltersAfterColumnDrag() {
         for(let i = 0; i < this.rowFilters.length; i++) {
             for(let j = 0; j < this.columnFilters.length; j++) {
@@ -250,7 +257,6 @@ export class CountAllComponent implements OnInit {
             answer.push(0);
         }
 
-        console.log("Student: ", this.studentFullProfileList[0]);   
         this.studentFullProfileList.forEach((student) => {
             let check = this.checkFilters(student, filtersData);
             if(check) {
@@ -317,10 +323,8 @@ export class CountAllComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((data) => {
-            console.log("Closed");
             if(data && data.filtersData) {
                 let filtersData = data.filtersData;
-                console.log("Filters Data: ", filtersData);
                 if(this.whereToAdd === 'row') {
                     let answer = this.getTableDataRow(filtersData);
                     filtersData["answer"] = answer;
@@ -349,10 +353,8 @@ export class CountAllComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((data) => {
-            console.log("Closed");
             if(data && data.filtersData) {
                 let filtersData = data.filtersData;
-                console.log("Filters Data: ", filtersData);
                 
                 if(filtersData["operation"] == "update") {
                     delete filtersData["operation"];
@@ -390,7 +392,6 @@ export class CountAllComponent implements OnInit {
                             }
                         }
                         this.rowFilters.splice(index, 1);
-                        console.log("Delete-Row: ", this.rowFilters);
                     } else if(this.whereToAdd === 'col') {
                         let index = 0;
                         for(let i = 0; i < this.columnFilters.length; i++) {
@@ -403,7 +404,6 @@ export class CountAllComponent implements OnInit {
                         for(let i = 0; i < this.rowFilters.length; i++) {
                             this.rowFilters[i]["answer"].splice(index, 1);
                         }
-                        console.log("Delete-Column: ", this.columnFilters);
                     }
                 }
             } else {
