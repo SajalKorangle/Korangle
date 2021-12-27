@@ -12,12 +12,9 @@ import {VALIDATORS_REGX} from '@classes/regx-validators';
     selector: 'forgot-password-component',
     providers: [NotificationService, AuthenticationService, UserService],
     templateUrl: './forgot-password.component.html',
-    styleUrls: ['../../authentication.component.css'],
+    styleUrls: ['../components/authentication/authentication.component.css'],
 })
 export class ForgotPasswordComponent implements OnInit {
-
-    // to change section from Forgot-password to Login-Signup
-    @Output() changeSection = new EventEmitter();
 
     user: User;
     serviceAdapter: ForgotPasswordServiceAdapter;

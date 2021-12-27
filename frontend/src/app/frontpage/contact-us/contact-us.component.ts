@@ -8,7 +8,7 @@ import {ContactService} from '@services/modules/contact/contact.service';
     selector: 'contact-us-component',
     templateUrl: './contact-us.component.html',
     providers: [ContactService],
-    styleUrls: ['../../contact-create.component.css']
+    styleUrls: ['../components/contact-us-create-school/contact-us-create-school.component.css']
 })
 export class ContactUsComponent implements OnInit {
 
@@ -48,7 +48,6 @@ export class ContactUsComponent implements OnInit {
             return true;
         }
     }
-
 
     clearDetails() {
         this.contactDetails = {

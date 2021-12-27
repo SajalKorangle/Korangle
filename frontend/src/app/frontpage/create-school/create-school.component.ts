@@ -15,7 +15,7 @@ import {MEDIUM_LIST} from '@classes/constants/medium';
     selector: 'create-school-component',
     templateUrl: './create-school.component.html',
     providers: [AuthenticationOldService, NotificationService, AuthenticationService, SchoolService, UserService],
-    styleUrls: ['../../contact-create.component.css', './create-school.component.css']
+    styleUrls: ['../components/contact-us-create-school/contact-us-create-school.component.css', './create-school.component.css']
 })
 export class CreateSchoolComponent implements OnInit {
 

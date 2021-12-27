@@ -1,5 +1,5 @@
 import {registerForNotification} from '@classes/common';
-import {environment} from '../../../../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {Constants} from '@classes/constants';
 import {load} from 'recaptcha-v3';
 import {CreateSchoolComponent} from './create-school.component';

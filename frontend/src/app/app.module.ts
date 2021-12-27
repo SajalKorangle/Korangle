@@ -9,30 +9,32 @@ import { BasicComponentsModule } from './basic-components/basic-components.modul
 
 import { AppComponent } from './app.component';
 
-import { ForgotPasswordComponent } from './frontpage/authentication/components/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './frontpage/forgot-password/forgot-password.component';
 
 import { PrintService } from './print/print-service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import {ComponentsModule} from '@components/components.module';
-import {ContactCreateComponent} from './frontpage/contact-create/contact-create.component';
-import {AuthenticationComponent} from './frontpage/authentication/authentication.component';
-import {LoginSignupComponent} from './frontpage/authentication/components/login-signup/login-signup.component';
-import {ContactUsComponent} from './frontpage/contact-create/components/contact-us/contact-us.component';
-import {CreateSchoolComponent} from './frontpage/contact-create/components/create-school/create-school.component';
+import {LoginSignupComponent} from './frontpage/login-signup/login-signup.component';
+import {ContactUsComponent} from './frontpage/contact-us/contact-us.component';
+import {CreateSchoolComponent} from './frontpage/create-school/create-school.component';
 import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 import {NgOtpInputModule} from 'ng-otp-input';
+import {ContactUsCreateSchoolComponent} from './frontpage/components/contact-us-create-school/contact-us-create-school.component';
+import {AuthenticationComponent} from './frontpage/components/authentication/authentication.component';
+import {PageNotFoundComponent} from './frontpage/page-not-found/page-not-found.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         ForgotPasswordComponent,
-        AuthenticationComponent,
         ForgotPasswordComponent,
         LoginSignupComponent,
         ContactUsComponent,
         CreateSchoolComponent,
-        ContactCreateComponent,
+        ContactUsCreateSchoolComponent,
+        AuthenticationComponent,
+        PageNotFoundComponent
     ],
     imports: [
         BasicComponentsModule,

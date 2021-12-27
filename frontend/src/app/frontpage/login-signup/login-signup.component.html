@@ -1,0 +1,138 @@
+<authentication-component>
+    <ng-container ngProjectAs="content">
+        <ng-container *ngIf="!stateKeeper.isLoading">
+            <mat-tab-group [selectedIndex]="selectedSectionTabIndex" [color]="'warn'" style="margin-top: 5%;">
+                <!-- LOGIN SECTION -->
+                <mat-tab label="LOGIN">
+                    <form>
+                        <br>
+                        <label style="color:black">Mobile Number <span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Mobile Number"
+                                   type="text"
+                                   [(ngModel)]="loginVariables.mobileNumber"
+                                   [pattern]="validators.phoneNumber"
+                                   name="mobileNumber"
+                                   maxlength="10">
+                            <mat-error>Please provide correct 10 digits mobile number</mat-error>
+                        </mat-form-field>
+                        <br>
+                        <label>Password <span style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Password"
+                                   type="{{ loginVariables.passwordVisibility ? 'text' : 'password' }}"
+                                   [(ngModel)]="loginVariables.password"
+                                   autocomplete="on"
+                                   name="password">
+                            <mat-icon matSuffix style="cursor: pointer" class="material-icons"
+                                      (click)="loginVariables.passwordVisibility = !loginVariables.passwordVisibility">{{
+                                getVisibilityMode(loginVariables.passwordVisibility)
+                                }}</mat-icon>
+                        </mat-form-field>
+                        <span style="float:right;color:black;text-decoration: underline;cursor:pointer"
+                              [routerLink]="['/forgot-password']">Forgot Password</span>
+                        <button type="button" class="btn" [disabled]="isLoginDisabled()"
+                                (click)="serviceAdapter.login()">
+                            Login
+                        </button>
+                    </form>
+                </mat-tab>
+
+                <!-- SIGN UP SECTION -->
+                <mat-tab label="SIGN UP"><br>
+                    <form>
+                        <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                            <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                                <label>First Name <span style="color:#f88c7c">*</span></label><br>
+                                <mat-form-field appearance="outline">
+                                    <input matInput placeholder="First Name"
+                                           type="text"
+                                           name="firstName"
+                                           [(ngModel)]="signUpVariables.firstName">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                                <label>Last Name <span
+                                        style="color:#f88c7c">*</span></label><br>
+                                <mat-form-field appearance="outline">
+                                    <input matInput placeholder="Last Name"
+                                           type="text"
+                                           name="lastName"
+                                           [(ngModel)]="signUpVariables.lastName">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <label>Mobile Number <span style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Mobile Number"
+                                   type="text"
+                                   [(ngModel)]="signUpVariables.mobileNumber"
+                                   [pattern]="validators.phoneNumber"
+                                   name="mobileNumber"
+                                   maxlength="10">
+                            <mat-error>Please provide correct 10 digits mobile number</mat-error>
+                        </mat-form-field>
+                        <br>
+                        <span>An OTP will be sent For verification </span>
+                        <button type="button" class="btn btn-primary" [disabled]="isOTPButtonDisabled()"
+                                (click)="serviceAdapter.submitCaptcha()">
+                            {{getOTPButtonText()}}
+                        </button>
+                        <mat-icon *ngIf="signUpVariables.otpSent" style="color: green">done</mat-icon>
+                        <br>
+                        <label>OTP<span style="color:#f88c7c">*</span></label><br>
+                        <ng-otp-input (onInputChange)="signUpVariables.otp = $event"
+                                      [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
+                        <br>
+                        <label style="color:black">New Password<span
+                                style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="New Password"
+                                   type="{{ signUpVariables.passwordVisibility ? 'text' : 'password' }}"
+                                   [(ngModel)]="signUpVariables.password"
+                                   name="new-password"
+                                   [pattern]="validators.password"
+                                   autocomplete="off">
+                            <mat-icon matSuffix style="cursor: pointer" class="material-icons"
+                                      (click)="signUpVariables.passwordVisibility = !signUpVariables.passwordVisibility">{{
+                                getVisibilityMode(signUpVariables.passwordVisibility)
+                                }}</mat-icon>
+                            <mat-error>Provide a password of atleast 8 characters</mat-error>
+                        </mat-form-field>
+                        <label>Confirm Password<span style="color:#f88c7c">*</span></label><br>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Confirm Password"
+                                   type="{{ signUpVariables.confirmPasswordVisibility ? 'text' : 'password' }}"
+                                   name="confirmPassword"
+                                   [(ngModel)]="signUpVariables.confirmPassword"
+                                   autocomplete="off">
+                            <mat-icon matSuffix style="cursor: pointer" class="material-icons"
+                                      (click)="signUpVariables.confirmPasswordVisibility = !signUpVariables.confirmPasswordVisibility">{{
+                                getVisibilityMode(signUpVariables.confirmPasswordVisibility)
+                                }}</mat-icon>
+                        </mat-form-field>
+                        <label>Email ID</label><br>
+                        <mat-form-field appearance="outline">
+                            <input matInput placeholder="Email ID"
+                                   [(ngModel)]="signUpVariables.emailID"
+                                   [pattern]="validators.email"
+                                   name="email"
+                                   type="email">
+                            <mat-error>Please provide valid email</mat-error>
+                        </mat-form-field>
+                        <button type="button" class="btn" [disabled]="isSignUpDisabled()"
+                                (click)="serviceAdapter.verifyOTP()">
+                            Sign
+                            Up
+                        </button>
+                    </form>
+                </mat-tab>
+            </mat-tab-group>
+        </ng-container>
+
+        <ng-container *ngIf="stateKeeper.isLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </ng-container>
+    </ng-container>
+</authentication-component>

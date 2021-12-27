@@ -12,12 +12,9 @@ import {AuthenticationService} from '@services/modules/authentication/authentica
     selector: 'login-signup',
     providers: [AuthenticationOldService, NotificationService, AuthenticationService],
     templateUrl: './login-signup.component.html',
-    styleUrls: ['../../authentication.component.css'],
+    styleUrls: ['../components/authentication/authentication.component.css'],
 })
 export class LoginSignupComponent implements OnInit {
-
-    // to change the section from login-signup to Forgot-password section
-    @Output() changeSection = new EventEmitter();
 
     user: User;
     serviceAdapter: LoginSignupServiceAdapter;
