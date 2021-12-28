@@ -17,6 +17,7 @@ declare const $: any;
 })
 export class UpdateProfileComponent implements OnInit {
     user;
+    count: Number = 1;
 
     height = [];
     showToolTip = [];
@@ -473,7 +474,9 @@ export class UpdateProfileComponent implements OnInit {
             else {
                 let document_name = item.document_value.split("/");
                 document_name = document_name[document_name.length - 1];
-                return document_name.substring(document_name.indexOf("_") + 1, document_name.length);
+                document_name = document_name.substring(document_name.indexOf("_") + 1, document_name.length);
+                document_name = this.getShortenName(document_name);
+                return document_name;
             }
         }
     }

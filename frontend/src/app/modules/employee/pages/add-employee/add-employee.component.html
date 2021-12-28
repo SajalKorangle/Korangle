@@ -206,7 +206,7 @@
                         <label class="documentLabel">{{parameter.name}}</label>
                         <div *ngIf="getParameterDocumentType(parameter)=='none'">
                             <div class="documentIcon">
-                                <img src="/assets/img/nofile.png" (click)="openFilePreviewDialog(parameter)">
+                                <img src="/assets/img/nofile.png">
                             </div>
                             <div class="documentText">
                                 <p class="documentName">Select a file or Drag it here</p>
@@ -220,7 +220,7 @@
                             <div class="documentText">
                                 <div *ngIf="isMobile()" id="fileNameElement">
                                     <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName">{{getDocumentName(parameter)}}</p>
-                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)" 
+                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)"
                                         [ngStyle]="{'width': getWidth()+'px'}" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
                                 </div>
                                 <div *ngIf="!isMobile()">
@@ -237,7 +237,7 @@
                             <div class="documentText">
                                 <div *ngIf="isMobile()" id="fileNameElement">
                                     <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName">{{getDocumentName(parameter)}}</p>
-                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)" 
+                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)"
                                         [ngStyle]="{'width': getWidth()+'px'}" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
                                 </div>
                                 <div *ngIf="!isMobile()">
