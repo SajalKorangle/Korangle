@@ -17,7 +17,6 @@ declare const $: any;
 })
 export class UpdateProfileComponent implements OnInit {
     user;
-    count: Number = 1;
 
     height = [];
     showToolTip = [];
