@@ -24,6 +24,11 @@ class GenericSerializerInterface():
     method: None
 
     def __init__(self, data, Model, activeSchoolId, activeStudentIdList=None, partial=False):
+        print()
+        print()
+        print()
+        print("Data: ", data)
+        print()
         self.data = data
         self.Model = Model
         self.activeSchoolId = activeSchoolId
@@ -61,15 +66,25 @@ class GenericSerializerInterface():
                     or_filter_aggregate = or_filter_aggregate | Q(*db_filter['filter_args'], **db_filter['filter_kwargs'])
                 filter_args.append(or_filter_aggregate)
             else:
+                print("YES6")
+                print()
                 filter_kwargs.update({attr: value})  # filters like id__in, parentSession etc.
 
+        print("filter_args: ", filter_args)
+        print()
+
+        print("filter_kwargs: ", filter_kwargs)
+        print()
         return {'filter_args': filter_args, 'filter_kwargs': filter_kwargs}
 
     def parse_query(self, data):
         query = self.Model.objects.filter(self.Model.Permissions().getPermittedQuerySet(self.activeSchoolId, self.activeStudentIdList))
+        print("Query1: ", query)
 
         for key, value in data.items():
             if key == 'filter':
+                print("YES5")
+                print()
                 parsed_filter = self.parseFilter(value)
                 query = query.filter(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs'])
             elif key == 'exclude':
@@ -97,6 +112,8 @@ class GenericSerializerInterface():
             start, end = data['pagination']['start'], data['pagination']['end']
             query = query[start:end]
 
+        print("Query: ", query)
+        print()
         return query
 
     def get_object(self):
@@ -115,19 +132,28 @@ class GenericSerializerInterface():
         ## Response Structure(fields_list) Processing Starts ##
         processed_field_list = ['__all__']
         if 'fields_list' in self.data:
-            fields_list = self.data['fields_list']
+            print("YES1")
+            print()
+            processed_field_list = self.data['fields_list']
             del self.data['fields_list']
 
         if '__all__' in processed_field_list:
+            print("YES2")
+            print()
             __all__index = processed_field_list.index('__all__')
             processed_field_list[__all__index: __all__index + 1] = [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
+            print("processed_field_list: ", processed_field_list)
 
         if 'parent_query' in self.data:
+            print("YES3")
+            print()
             parent_field_name_mapped_by_query = self.data['parent_query']
             processed_field_list += parent_field_name_mapped_by_query.keys()
             del self.data['parent_query']
-        
+
         if 'child_query' in self.data:
+            print("YES4")
+            print()
             child_field_name_mapped_by_query = self.data['child_query']
             del self.data['child_query']
 
@@ -288,9 +314,9 @@ class GenericSerializerInterface():
             del self.data['fields_list']
         ## Response Structure(fields_list) Processing Ends ##
 
-        query_set = self.parse_query()
+        query_set = self.parse_query(self.data)
         count = query_set.count()
-        assert onlyOne, 'More than one object to delete while onlyOne=True'
+        assert (not onlyOne or count == 1), 'More than one object to delete while onlyOne=True'
 
         pk_field_name = self.Model._meta.pk.name
         pk_list = query_set.values_list(pk_field_name, flat=True)

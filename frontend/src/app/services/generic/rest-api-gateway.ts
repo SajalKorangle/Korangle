@@ -190,10 +190,14 @@ export class RestApiGateway {
 
     public getData(url: any, params?: any): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+        console.log("Url: ", url);
+        console.log("Params: ", params);
         const absoluteURL = this.getAbsoluteURL(url, params);
         if (absoluteURL.length > MAX_URL_LENGTH) {
             return this.getDataWithPost(url, params);
         }
+
+        console.log("Abs Url: ", absoluteURL);
         return this.http
             .get(absoluteURL, { headers: headers })
             .toPromise()

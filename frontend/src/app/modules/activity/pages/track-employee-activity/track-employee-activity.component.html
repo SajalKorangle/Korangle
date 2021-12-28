@@ -1,0 +1,15 @@
+<div class="card-content table-responsive">
+    <!-- Filters -->
+    <ng-container>
+        <p
+            class="text-{{ user.activeSchool.secondaryThemeColor }} filter-model-btn"
+            (click)="openFilterDialog()"
+        >
+            Filters
+        </p>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
