@@ -3,10 +3,10 @@ from django.conf.urls import url
 urlpatterns = []
 
 ######## SMS Purchase ###############
-from .views import SMSPurchaseView
+from .views import SMSPurchaseOldView
 
 urlpatterns += [
-    url(r'^school/(?P<school_id>[0-9]+)/sms-purchases', SMSPurchaseView.as_view()),
+    url(r'^school/(?P<school_id>[0-9]+)/sms-purchases', SMSPurchaseOldView.as_view()),
 ]
 
 ######## SMS Old ###############
@@ -44,6 +44,22 @@ from .views import SMSIdView, SMSIdListView
 urlpatterns += [
     url(r'^sms-id/batch', SMSIdListView.as_view()),
     url(r'^sms-id', SMSIdView.as_view()),
+]
+
+#########  OnlineSmsPaymentTransaction ############
+from .views import SmsPurchaseOrderView, SmsPurchaseOrderListView
+
+urlpatterns += [
+    url(r'^sms-purchase-order/batch', SmsPurchaseOrderListView.as_view()),
+    url(r'^sms-purchase-order', SmsPurchaseOrderView.as_view()),
+]
+
+######## SMS PURCHASE ##############
+from .views import SMSPurchaseView, SMSPurchaseListView
+
+urlpatterns += [
+    url(r'^sms-purchase/batch', SMSPurchaseListView.as_view()),
+    url(r'^sms-purchase', SMSPurchaseView.as_view()),
 ]
 
 ########  SMS Templates  ###############

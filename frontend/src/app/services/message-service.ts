@@ -35,8 +35,14 @@ export class MessageService {
 
     //// FETCHING GCM DEVICES PART STARTS TO POPULATE THE KEY NOTIFICATION(TRUE OR FALSE) FOR ANY PERSON ////
 
-    fetchGCMDevicesNew: any = (personList: any) => {
-        const mobile_list = personList.filter((item) => item.mobileNumber).map((obj) => obj.mobileNumber.toString());
+    fetchGCMDevicesNew: any = (personList: any, checkSecondNumber: boolean = false) => {
+        const mobile_list = personList.filter((item) => item.mobileNumber).map((obj) => {
+            let return_str = obj.mobileNumber.toString();
+            if (checkSecondNumber && obj.secondMobileNumber) {
+                return_str = return_str + ',' + obj.secondMobileNumber.toString();
+            }
+            return return_str;
+        });
         const gcm_data = {
             user__username__in: mobile_list,
             active: 'true__boolean',
@@ -65,20 +71,15 @@ export class MessageService {
             // Storing because they're used later
             this.notif_usernames = notif_usernames;
 
-            let notification_list;
-
-            notification_list = personList.filter((obj) => {
-                return (
-                    notif_usernames.find((user) => {
-                        return user.username == obj.mobileNumber;
-                    }) != undefined
-                );
-            });
-            personList.forEach((item, i) => {
-                item.notification = false;
-            });
-            notification_list.forEach((item, i) => {
-                item.notification = true;
+            // updating two variables (notification - for actual number notification check)
+            // (secondNumberNotification - for second number notification check)
+            personList.forEach((person) => {
+                person.notification = notif_usernames.some(user => {
+                    return user.username == person.mobileNumber;
+                });
+                person.secondNumberNotification = person.secondMobileNumber && notif_usernames.some(user => {
+                    return user.username == person.secondMobileNumber;
+                });
             });
         });
     }
@@ -182,7 +183,16 @@ export class MessageService {
             if (personData.mobileNumber && personData.mobileNumber.toString().length == 10) {
                 // Getting the mapped data like - { studentName : "Rahul", class: "10" ... etc }
                 let mappedObject = this.getMappingData(variableMappedEvent.variableList, dataForMapping, personsType, personData);
-                mappedObject['notification'] = personData.notification;
+
+                // Checking if it is secondNumber element, if yes checking whether the notification is true for secondNumber
+                if (personData.isSecondNumber && personData.secondNumberNotification) {
+                    // if includeSecondMobile number is selected, a duplicate entry of the same person added with the following variables
+                    // (personData.mobileNumber = secondMobileNumber),(personData.isSecondNumber = True),(personData.secondNumberNotification = True | False)
+                    mappedObject['notification'] = personData.secondNumberNotification;
+                } else {
+                    mappedObject['notification'] = personData.notification;
+                }
+
                 mappedObject['id'] = personData.id;
                 personVariablesMappedObjList.push(mappedObject);
             }

@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'errors_app',
     'tc_app',
     'online_classes_app',
+    'payment_app',
 
     'corsheaders',
 
@@ -190,7 +191,7 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 # the next monkey patch is necessary if you use dots in the bucket name
 import ssl
 if hasattr(ssl, '_create_unverified_context'):
-   ssl._create_default_https_context = ssl._create_unverified_context
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -214,7 +215,7 @@ EMAIL_PORT = 587
 # Check running environment & load config
 if ('KORANGLE_PRODUCTION' in os.environ) and (os.environ['KORANGLE_PRODUCTION'] == 'TRUE'):
     print("KORANGLE PRODUCTION")
-    
+
     # korangle/backend/helloworld_project/prod_conf.py
     try:
         from helloworld_project.prod_conf import *
@@ -236,9 +237,11 @@ else:
     except ImportError:
         print("ERROR!\nTesting Configuration File Not Found: korangle/backend/helloworld_project/dev_conf.py")
         exit()
+    if 'KORANGLE_DB_LOG' in os.environ and os.environ['KORANGLE_DB_LOG'] == 'TRUE':
+        MIDDLEWARE.append('querycount.middleware.QueryCountMiddleware')
 
 
-#ZOOM
+# ZOOM
 ZOOM_API_KEY = 'GY5heSVqQIWo8YGY_Patrg'
 ZOOM_SECRET_KEY = 'trQY4s4DkL9GrB20JrInNY7A6ZmTJZ7G6fO0'
 ZOOM_EMAIL_ID = 'korangleplus@gmail.com'
