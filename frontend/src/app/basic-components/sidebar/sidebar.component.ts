@@ -81,7 +81,8 @@ export class SidebarComponent implements OnInit {
         });
         EmitterService.get('initialize-router').subscribe((value) => {
             this.router.navigateByUrl(
-                this.router.createUrlTree([this.user.section.route + '/' + this.user.section.subRoute], { queryParams: value.queryParams })
+                this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
+                    { queryParams: value.queryParams })
             );
         });
     }
@@ -139,5 +140,6 @@ export class SidebarComponent implements OnInit {
         this.user.isAuthenticated = false;
         this.user.jwt = '';
         this.user.emptyUserDetails();
+        this.router.navigate(['login']);
     }
 }

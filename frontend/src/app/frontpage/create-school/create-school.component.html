@@ -1,6 +1,6 @@
 <contact-us-create-school-component>
     <ng-container ngProjectAs="content">
-        <mat-tab-group [color]="'warn'" style="margin-top: 5%;" *ngIf="!stateKeeper.isLoading">
+        <mat-tab-group [color]="'warn'" *ngIf="!stateKeeper.isLoading">
             <!--- CREATE SCHOOL --->
             <mat-tab label="Create School"><br>
                 <form>
@@ -125,7 +125,8 @@
                             <label>Board<span
                                     style="color:#f88c7c">*</span></label><br>
                             <mat-form-field appearance="outline">
-                                <mat-select placeholder="Board" [(ngModel)]="schoolDetails.parentBoard" name="board">
+                                <mat-select placeholder="Board" [(ngModel)]="schoolDetails.parentBoard"
+                                            name="board">
                                     <mat-option *ngFor="let board of boardList" [value]="board.id">
                                         {{ board.name }}
                                     </mat-option>

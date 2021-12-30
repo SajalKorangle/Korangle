@@ -1,6 +1,6 @@
 <!----- Desktop Version ------>
 <div *ngIf="!isMobile()" id="desktop-version" class="background"
-     style="background-image:url(/assets/img/contact_create_desktop.png);">
+     style="background-image:url(/assets/img/contact_create_desktop.png)">
     <img src="/assets/img/korangleLogo.png" width="30" height="30"
          class="logo" alt="korangle logo">
     <span class="logo-name">Korangle</span>
@@ -27,4 +27,6 @@
     </div>
     <div class="mobile-footer"></div>
 </div>
-<ng-template #contentTpl><ng-content select="content"></ng-content></ng-template>
+<ng-template #contentTpl>
+    <ng-content select="content"></ng-content>
+</ng-template>

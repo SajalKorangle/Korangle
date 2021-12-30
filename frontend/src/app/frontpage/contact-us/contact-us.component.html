@@ -1,70 +1,72 @@
 <contact-us-create-school-component>
     <ng-container ngProjectAs="content">
-        <mat-tab-group [color]="'warn'" *ngIf="!stateKeeper.isLoading">
-            <mat-tab label="Contact Us">
-                <br>
-                <span style="margin-bottom: 5px">Enter your details and we will contact you</span><br><br>
-                <label>
-                    Mobile Number <span style="color:#f88c7c">*</span>
-                </label>
-                <mat-form-field appearance="outline">
-                    <input matInput placeholder="Mobile Number"
-                           [(ngModel)]="contactDetails.mobileNumber"
-                           [pattern]="validators.phoneNumber"
-                           type="text">
-                    <mat-error>Please provide correct 10 digits mobile number</mat-error>
-                </mat-form-field>
-                <br>
-                <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
-                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
-                        <label>First Name <span style="color:#f88c7c">*</span></label><br>
-                        <mat-form-field appearance="outline">
-                            <input matInput placeholder="First Name"
-                                   [(ngModel)]="contactDetails.firstName"
-                                   [pattern]="validators.name"
-                                   type="text">
-                            <mat-error>Please provide a valid name</mat-error>
-                        </mat-form-field>
+        <div style="height: 100vh">
+            <mat-tab-group [color]="'warn'" *ngIf="!stateKeeper.isLoading">
+                <mat-tab label="Contact Us">
+                    <br>
+                    <span style="margin-bottom: 5px">Enter your details and we will contact you</span><br><br>
+                    <label>
+                        Mobile Number <span style="color:#f88c7c">*</span>
+                    </label>
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Mobile Number"
+                               [(ngModel)]="contactDetails.mobileNumber"
+                               [pattern]="validators.phoneNumber"
+                               type="text">
+                        <mat-error>Please provide correct 10 digits mobile number</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>First Name <span style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="First Name"
+                                       [(ngModel)]="contactDetails.firstName"
+                                       [pattern]="validators.name"
+                                       type="text">
+                                <mat-error>Please provide a valid name</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label>Last Name <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Last Name"
+                                       [(ngModel)]="contactDetails.lastName"
+                                       type="text">
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
-                        <label>Last Name <span
-                                style="color:#f88c7c">*</span></label><br>
-                        <mat-form-field appearance="outline">
-                            <input matInput placeholder="Last Name"
-                                   [(ngModel)]="contactDetails.lastName"
-                                   type="text">
-                        </mat-form-field>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Email ID</label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Email ID"
+                                       [(ngModel)]="contactDetails.emailId"
+                                       [pattern]="validators.email"
+                                       type="email">
+                                <mat-error>Please provide a valid email</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label>School Name</label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="School Name"
+                                       [(ngModel)]="contactDetails.schoolName"
+                                       type="text">
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-                <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
-                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
-                        <label>Email ID</label><br>
-                        <mat-form-field appearance="outline">
-                            <input matInput placeholder="Email ID"
-                                   [(ngModel)]="contactDetails.emailId"
-                                   [pattern]="validators.email"
-                                   type="email">
-                            <mat-error>Please provide a valid email</mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
-                        <label>School Name</label><br>
-                        <mat-form-field appearance="outline">
-                            <input matInput placeholder="School Name"
-                                   [(ngModel)]="contactDetails.schoolName"
-                                   type="text">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <button type="button" class="btn" [disabled]="isSubmitDisabled()"
-                        (click)="serviceAdapter.submitDetails()">
-                    Submit
-                </button>
-            </mat-tab>
-        </mat-tab-group>
+                    <button type="button" class="btn" [disabled]="isSubmitDisabled()"
+                            (click)="serviceAdapter.submitDetails()">
+                        Submit
+                    </button>
+                </mat-tab>
+            </mat-tab-group>
 
-        <ng-container *ngIf="stateKeeper.isLoading">
-            <app-loading-spinner></app-loading-spinner>
-        </ng-container>
+            <ng-container *ngIf="stateKeeper.isLoading">
+                <app-loading-spinner></app-loading-spinner>
+            </ng-container>
+        </div>
     </ng-container>
 </contact-us-create-school-component>

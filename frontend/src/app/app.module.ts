@@ -23,6 +23,9 @@ import {NgOtpInputModule} from 'ng-otp-input';
 import {ContactUsCreateSchoolComponent} from './frontpage/components/contact-us-create-school/contact-us-create-school.component';
 import {AuthenticationComponent} from './frontpage/components/authentication/authentication.component';
 import {PageNotFoundComponent} from './frontpage/page-not-found/page-not-found.component';
+import {DashBoardComponent} from '@modules/dash-board.component';
+import {FrontpageAuthGuard} from './auth-guards/frontpage-auth-guard';
+import {DashboardAuthGuard} from './auth-guards/dashboard-auth-guard';
 
 @NgModule({
     declarations: [
@@ -34,7 +37,8 @@ import {PageNotFoundComponent} from './frontpage/page-not-found/page-not-found.c
         CreateSchoolComponent,
         ContactUsCreateSchoolComponent,
         AuthenticationComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        DashBoardComponent
     ],
     imports: [
         BasicComponentsModule,
@@ -49,7 +53,7 @@ import {PageNotFoundComponent} from './frontpage/page-not-found/page-not-found.c
     ],
     entryComponents: [PaymentResponseDialogComponent],
     exports: [],
-    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe],
+    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe, DashboardAuthGuard, FrontpageAuthGuard],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

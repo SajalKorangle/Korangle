@@ -132,6 +132,8 @@ export class CreateSchoolServiceAdapter {
                                 this.vm.notificationService.module_url +
                                 this.vm.notificationService.gcm_device,
                         });
+                        alert('School Created Successfully');
+                        this.vm.router.navigate([Constants.dashBoardRoute]);
                     }
                 },
                 (error) => {

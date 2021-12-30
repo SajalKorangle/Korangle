@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from '@classes/user';
 import {NotificationService} from '@services/modules/notification/notification.service';
 import {CommonFunctions} from '@classes/common-functions';

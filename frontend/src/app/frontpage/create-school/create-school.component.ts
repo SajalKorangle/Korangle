@@ -10,6 +10,7 @@ import {User} from '@classes/user';
 import {UserService} from '@services/modules/user/user.service';
 import {SchoolService} from '@services/modules/school/school.service';
 import {MEDIUM_LIST} from '@classes/constants/medium';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'create-school-component',
@@ -65,7 +66,8 @@ export class CreateSchoolComponent implements OnInit {
                 public notificationService: NotificationService,
                 public authenticationNewService: AuthenticationService,
                 public userService: UserService,
-                public schoolService: SchoolService) {
+                public schoolService: SchoolService,
+                public router: Router) {
     }
 
     ngOnInit() {

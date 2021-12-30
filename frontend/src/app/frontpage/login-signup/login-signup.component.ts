@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthenticationOldService} from '@services/authentication-old.service';
 import {User} from '@classes/user';
 import {NotificationService} from '@services/modules/notification/notification.service';
@@ -7,6 +7,7 @@ import {DataStorage} from '@classes/data-storage';
 import {VALIDATORS_REGX} from '@classes/regx-validators';
 import {LoginSignupServiceAdapter} from './login-signup.service.adapter';
 import {AuthenticationService} from '@services/modules/authentication/authentication.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'login-signup',
@@ -48,7 +49,8 @@ export class LoginSignupComponent implements OnInit {
         isLoading: false
     };
 
-    constructor(public authenticationOldService: AuthenticationOldService,
+    constructor(public router: Router,
+                public authenticationOldService: AuthenticationOldService,
                 public notificationService: NotificationService,
                 public authenticationNewService: AuthenticationService) {
     }

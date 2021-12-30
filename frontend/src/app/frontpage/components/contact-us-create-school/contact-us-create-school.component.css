@@ -54,8 +54,8 @@
     background-color: #F9F9F9 !important;
 }
 
-/deep/ #desktop-version #create .mat-tab-header {
-    width: 65vw;
+/deep/ #desktop-version .mat-tab-header {
+    margin-top: 5%;
 }
 
 /deep/ #desktop-version #contact .mat-tab-header {

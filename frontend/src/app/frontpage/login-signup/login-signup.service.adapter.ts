@@ -48,6 +48,7 @@ export class LoginSignupServiceAdapter {
                     this.vm.notificationService.module_url +
                     this.vm.notificationService.gcm_device,
             });
+            this.vm.router.navigate([Constants.dashBoardRoute]);
             this.vm.stateKeeper.isLoading = false;
         }
         this.vm.stateKeeper.isLoading = false;

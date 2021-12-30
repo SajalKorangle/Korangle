@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonFunctions} from '@classes/common-functions';
 
 @Component({
     selector: 'page-not-found-component',
