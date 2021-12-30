@@ -49,7 +49,7 @@
                             ">
                             <td align="left">{{ student.name }}
                                 <!-- Payment Amount Input Starts -->
-                                <mat-form-field *ngIf="hasOnlinePaymentAccount" style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
+                                <mat-form-field *ngIf="htmlRenderer.isOnlinePaymentEnabled()" style="margin-left: 16px;" [style.width]="isMobile()?'80px':'auto'">
                                     <mat-label *ngIf="isMobile()">Amount</mat-label>
                                     <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
                                     <input matInput type="number" [(ngModel)]="amountMappedByStudentId[student.id]"
@@ -189,7 +189,7 @@
                 </tbody>
             </table>
             <!-- Fee Payment Form Starts -->
-            <ng-container *ngIf="hasOnlinePaymentAccount && getOverallFeesDue() > 0">
+            <ng-container *ngIf="htmlRenderer.isOnlinePaymentEnabled() && getOverallFeesDue() > 0">
                 <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
                     <mat-label>Email</mat-label>
                     <input matInput type="email" [(ngModel)]="email" [pattern]="validatorRegex.email">
@@ -199,6 +199,8 @@
                     (click)="serviceAdapter.initiatePayment()">
                     Pay Now
                 </button>
+                Platform Fee: {{htmlRenderer.getParentPlatformFeePercentage().toFixed(2)}}%<br/>
+                Refund Penalty: 3%
             </ng-container>
             <!-- Fee Payment Form Ends -->
 
@@ -246,7 +248,7 @@
                     [sectionList]="sectionList" [sessionList]="sessionList"></app-discount-list>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngIf="hasOnlinePaymentAccount" [disabled]="parsedOrder.length==0">
+            <mat-expansion-panel *ngIf="htmlRenderer.isOnlinePaymentEnabled()" [disabled]="parsedOrder.length==0">
                 <mat-expansion-panel-header>
                     <mat-panel-title *ngIf="parsedOrder.length === 0">**No online payment yet</mat-panel-title>
                     <mat-panel-title *ngIf="feeReceiptList.length !== 0">

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, SchoolMerchantAccount, CashfreeDailyJobsReport
+from .models import Order, SchoolMerchantAccount, CashfreeDailyJobsReport, SchoolBankAccountUpdationPermissionCount
 
 
 class OrderAdminTabular(admin.ModelAdmin):
@@ -18,3 +18,4 @@ class SchoolMerchantAccountAdminTabular(admin.ModelAdmin):
 admin.site.register(Order, OrderAdminTabular)
 admin.site.register(SchoolMerchantAccount, SchoolMerchantAccountAdminTabular)
 admin.site.register(CashfreeDailyJobsReport)
+admin.site.register(SchoolBankAccountUpdationPermissionCount)

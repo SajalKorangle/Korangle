@@ -182,7 +182,11 @@ export class UpdateProfileServiceAdapter {
         service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employees, employee_form_data));
 
         if (this.vm.selectedEmployeeSessionProfile.paidLeaveNumber != this.vm.currentEmployeeSessionProfile.paidLeaveNumber) {
-            service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail, this.vm.currentEmployeeSessionProfile));
+            if (this.vm.selectedEmployeeSessionProfile.id == null) {
+                service_list.push(this.vm.employeeService.createObject(this.vm.employeeService.employee_session_detail, this.vm.currentEmployeeSessionProfile));
+            } else {
+                service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail, this.vm.currentEmployeeSessionProfile));
+            }
         } else {
             service_list.push(Promise.resolve(null));
         }
@@ -286,17 +290,6 @@ export class UpdateProfileServiceAdapter {
             this.vm.profileImage = null;
             this.vm.isLoading = false;
         });
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
