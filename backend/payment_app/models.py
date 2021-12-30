@@ -4,17 +4,31 @@ from school_app.model.models import School
 from django.utils.timezone import make_aware, make_naive
 from django.contrib.auth import get_user_model
 from common.common import BasePermission
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class SchoolMerchantAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolMerchantAccountList')
     vendorId = models.CharField(max_length=20, unique=True)
+    isEnabled = models.BooleanField(default=True)
+    percentageOfPlatformFeeOnSchool = models.PositiveIntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
 
     def __str__(self):
         return '{0} - {1}'.format(self.parentSchool.id, self.parentSchool.name)
+
+
+class SchoolBankAccountUpdationPermissionCount(models.Model):
+    parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolBankAccountUpdationPermissionList')
+    bankAccountUpdationPermissionCount = models.IntegerField(default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+
+    def __str__(self):
+        return '{0} ({1}) - {2}'.format(self.parentSchool.name, self.parentSchool.id, self.bankAccountUpdationPermissionCount)
 
 
 class Order(models.Model):

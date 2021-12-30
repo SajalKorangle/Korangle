@@ -1,4 +1,4 @@
-<div class="card-content table-responsive">
+<div class="card-content main-page table-responsive">
     <parent-student-filter [user]="user" (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
         (onStudentListSelected)="handleStudentListSelection($event)" (onStudentListLoading)="isStudentListLoading = $event" [selectedFilterType]="'Student'"
         [studentTcGenerated]="false"></parent-student-filter>
@@ -72,11 +72,13 @@
                                     </ng-container>
                                 </div>
 
-                                <div class="row" style="font-size: 16px" *ngIf="student.address">
-                                    <div class="col-md-2">Address</div>
-                                    <div class="col-md-5">
-                                        : <span style="font-weight: 600; margin-left: 5px">{{ student.address }}</span>
-                                    </div>
+                                <div class="row" style="font-size: 16px">
+                                    <ng-container *ngIf="student.address">
+                                        <div class="col-md-2">Address</div>
+                                        <div class="col-md-5">
+                                            : <span style="font-weight: 600; margin-left: 5px">{{ student.address }}</span>
+                                        </div>
+                                    </ng-container>
                                     <ng-container *ngIf="student.mobileNumber">
                                         <div class="col-md-2">Mobile No.</div>
                                         <div class="col-md-3">
@@ -101,6 +103,7 @@
 
         <!-- Student Fee Structures-->
         <ng-container *ngIf="getOverallFeesDue(false) > 0">
+            <div class="responsive-table-wrapper">
             <table class="table table-hover" style="margin-bottom: 40px">
                 <tbody>
                     <tr style="font-weight: 800 !important; font-size: 22px !important">
@@ -351,6 +354,7 @@
                     </ng-container>
                 </tbody>
             </table>
+            </div>
 
             <div class="row">
                 <!-- Payment Mode Starts -->
