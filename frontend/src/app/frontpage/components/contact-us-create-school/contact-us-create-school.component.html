@@ -1,4 +1,4 @@
-<!----- Desktop Version ------>
+<!----- Desktop Version  starts ------>
 <div *ngIf="!isMobile()" id="desktop-version" class="background"
      style="background-image:url(/assets/img/contact_create_desktop.png)">
     <img src="/assets/img/korangleLogo.png" width="30" height="30"
@@ -7,11 +7,12 @@
     <a href="#" class="back-button" style="float: right;right: 15%;top: 4%;">
         Back to HomePage
     </a>
-    <!-- This Ng Content will be replaced by the component from which we are calling this component --->
+    <!-- This Ng template Outlet will be replaced by the component from which we are calling this component --->
     <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
 </div>
+<!----- Desktop Version  ends ------>
 
-<!----- Mobile Version ------>
+<!----- Mobile Version Starts------>
 <div *ngIf="isMobile()" id="mobile-version" class="background"
      style="background-image:url(/assets/img/create_contact_mobile.png);">
     <div class="mobile-header">
@@ -27,6 +28,8 @@
     </div>
     <div class="mobile-footer"></div>
 </div>
+<!----- Mobile Version ends------>
+
 <ng-template #contentTpl>
     <ng-content select="content"></ng-content>
 </ng-template>

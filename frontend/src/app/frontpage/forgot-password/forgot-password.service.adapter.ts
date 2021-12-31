@@ -19,7 +19,7 @@ export class ForgotPasswordServiceAdapter {
     initializeData(): void {
     }
 
-    // ----  Generation of OTP ----
+    // ----  Generation of OTP Starts ----
     submitCaptcha(): void {
         this.vm.stateKeeper.isLoading = true;
         this.recaptcha.execute('submit').then((token) => {
@@ -46,8 +46,9 @@ export class ForgotPasswordServiceAdapter {
             }
         );
     }
+    // ----  Generation of OTP Ends ----
 
-    // --- Verification of the OTP provided ---
+    // --- Verification of the OTP provided Starts ---
     verifyOTP(): void {
         if (this.vm.userInput.password !== this.vm.userInput.confirmPassword) {
             alert('New Password and confirm password are not same');
@@ -76,4 +77,5 @@ export class ForgotPasswordServiceAdapter {
                 }
             );
     }
+    // --- Verification of the OTP provided Ends ---
 }

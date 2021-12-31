@@ -27,7 +27,7 @@ export class CreateSchoolServiceAdapter {
         this.vm.stateKeeper.isLoading = false;
     }
 
-    // ---- Generation of OTP -----
+    // ---- Generation of OTP Starts -----
     submitCaptcha() {
         this.vm.stateKeeper.isOTPSending = true;
         this.recaptcha.execute('submit').then((token) => {
@@ -59,6 +59,8 @@ export class CreateSchoolServiceAdapter {
         );
     }
 
+    // ---- Generation of OTP Ends -----
+
     // --- checking user already exists ---
     private checkUserExists(data) {
         if (data.existingUser) {
@@ -70,7 +72,7 @@ export class CreateSchoolServiceAdapter {
         this.vm.stateKeeper.isOTPSending = false;
     }
 
-    // ----- Creation of School and Employee of the school ---
+    // ----- Creation of School and Employee of the school Starts ---
     async createSchool() {
         this.vm.stateKeeper.isLoading = true;
         if (!this.vm.userAlreadyExists && this.vm.userDetails.password !== this.vm.userDetails.confirmPassword) {
@@ -148,4 +150,5 @@ export class CreateSchoolServiceAdapter {
             this.vm.stateKeeper.isLoading = false;
         }
     }
+    // ----- Creation of School and Employee of the school Ends ---
 }

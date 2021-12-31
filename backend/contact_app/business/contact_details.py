@@ -10,6 +10,7 @@ class ContactDetailModelSerializer(serializers.ModelSerializer):
 
 
 def create_contact_details(data):
+    # ------ Creating Contact Detail Entry Starts----- #
     details_serializer = ContactDetailModelSerializer(data=data)
     if details_serializer.is_valid():
         details_serializer.save()
@@ -24,3 +25,4 @@ def create_contact_details(data):
             'status': 'failure',
             'message': 'Contact Details creation Failed',
         }
+    # ------ Creating Contact Detail Entry Ends----- #

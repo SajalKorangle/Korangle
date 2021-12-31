@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from contact_app.models import ContactDetail
 
-
+# Contact Details in Admin panel
 @admin.register(ContactDetail)
 class ContactDetailsAdmin(admin.ModelAdmin):
     search_fields = ['createdDataTime']

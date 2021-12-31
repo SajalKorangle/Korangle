@@ -11,10 +11,8 @@ export class ContactUsCreateSchoolComponent implements OnInit {
     constructor() {
     }
 
-    pathName = ''; // takes path from the url and shows the corresponding section (contact or create)
 
     ngOnInit() {
-        this.pathName = window.location.pathname;
     }
 
     isMobile(): boolean {

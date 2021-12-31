@@ -1,6 +1,7 @@
 <contact-us-create-school-component>
     <ng-container ngProjectAs="content">
         <div style="height: 100vh">
+            <!-- Contact Us Form Starts --->
             <mat-tab-group [color]="'warn'" *ngIf="!stateKeeper.isLoading">
                 <mat-tab label="Contact Us">
                     <br>
@@ -63,6 +64,7 @@
                     </button>
                 </mat-tab>
             </mat-tab-group>
+            <!-- Contact Us Form Ends --->
 
             <ng-container *ngIf="stateKeeper.isLoading">
                 <app-loading-spinner></app-loading-spinner>

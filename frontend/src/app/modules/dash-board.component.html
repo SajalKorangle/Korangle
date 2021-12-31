@@ -1,10 +1,13 @@
+<!-- Side Bar Starts --->
 <div class="sidebar" data-image="" style="position: fixed">
     <app-sidebar [user]="user"></app-sidebar>
     <div class="sidebar-background"></div>
 </div>
+<!-- Side Bar Ends --->
 
 <mat-progress-bar *ngIf="user.isLazyLoading" mode="indeterminate"></mat-progress-bar>
 
+<!-- Dash Board main panel Starts --->
 <div class="main-panel" id="main-pannel">
     <app-navbar [user]="user" class="visible-sm visible-xs mobile-sticky-top"></app-navbar>
 
@@ -48,3 +51,4 @@
         </div>
     </div>
 </div>
+<!-- Dash Board panel Ends --->
