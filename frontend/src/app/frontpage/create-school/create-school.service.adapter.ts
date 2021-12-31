@@ -19,14 +19,6 @@ export class CreateSchoolServiceAdapter {
         });
     }
 
-    // initialize data
-    async initializeData() {
-        this.vm.stateKeeper.isLoading = true;
-        this.vm.boardList = await this.vm.schoolService.getObjectList(this.vm.schoolService.board, {});
-        this.vm.schoolDetails.parentBoard = this.vm.boardList[0].id;
-        this.vm.stateKeeper.isLoading = false;
-    }
-
     // ---- Generation of OTP Starts -----
     submitCaptcha() {
         this.vm.stateKeeper.isOTPSending = true;

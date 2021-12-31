@@ -25,7 +25,6 @@ export class CreateSchoolComponent implements OnInit {
     user: User;
     serviceAdapter: CreateSchoolServiceAdapter;
 
-    boardList = [];
     mediumList = MEDIUM_LIST;
     validators = VALIDATORS_REGX;
 
@@ -44,7 +43,7 @@ export class CreateSchoolComponent implements OnInit {
         shortName: '',
         fullName: '',
         headerSize: '',
-        parentBoard: '',
+        parentBoard: 2, // C.B.S.E Board
         medium: this.mediumList[0],
         currentSession: 3,
         address: ''
@@ -74,7 +73,6 @@ export class CreateSchoolComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new CreateSchoolServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
     }
 
     isMobile(): boolean {
