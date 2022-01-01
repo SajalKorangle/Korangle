@@ -59,7 +59,7 @@ export class AddEmployeeComponent implements OnInit {
         text.innerHTML = textContent;
         text.style.font = "roboto";
         text.style.fontSize = 12 + "px";
-        text.style.width = this.getWidth()+'px';
+        text.style.width = this.getWidth() + 'px';
         text.style.wordWrap = 'break-word';
         text.style.color = "#959393";
         text.style.fontWeight = "400";
@@ -82,7 +82,7 @@ export class AddEmployeeComponent implements OnInit {
 
     toolTipClicked(parameter) {
         let index = this.employeeParameterList.indexOf(parameter);
-        if(this.showToolTip[index]) {
+        if (this.showToolTip[index]) {
             this.showToolTip[index] = false;
             this.height[index] = 120;
         } else {
@@ -273,11 +273,11 @@ export class AddEmployeeComponent implements OnInit {
     getShortenName(document_name) {
         let nameList = document_name.split(".");
         let name = "";
-        for(let i = 0; i < nameList.length - 1; i++) {
+        for (let i = 0; i < nameList.length - 1; i++) {
             name += nameList[i];
         }
 
-        if(name.length > 20) {
+        if (name.length > 20) {
             name = name.substr(0, 20);
             name += "...";
         }

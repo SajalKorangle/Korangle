@@ -19,8 +19,8 @@ export class UpdateProfileServiceAdapter {
             console.log('different custom parameter');
             console.dir(this.vm.employeeParameterList);
 
-            for(let i = 0; i < this.vm.employeeParameterList.length; i++) {
-                if(this.vm.employeeParameterList[i].parameterType == "DOCUMENT") {
+            for (let i = 0; i < this.vm.employeeParameterList.length; i++) {
+                if (this.vm.employeeParameterList[i].parameterType == "DOCUMENT") {
                     this.vm.showToolTip.push(false);
                     this.vm.height.push(120);
                 }
