@@ -1,6 +1,8 @@
 import { CountAllComponent } from './count-all.component';
 import { CommonFunctions } from '@classes/common-functions';
 
+import { Query } from '@services/generic/query';
+
 export class CountAllServiceAdapter {
     vm: CountAllComponent;
 
@@ -10,46 +12,53 @@ export class CountAllServiceAdapter {
         this.vm = vm;
     }
 
+    /* Initialize Data */
     initializeData(): void {
+        console.log("User: ", this.vm.user);
         this.vm.isLoading = true;
-        const student_full_profile_request_data = {
-            schoolDbId: this.vm.user.activeSchool.dbId,
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
 
-        const class_section_request_data = {
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
-        const student_parameter_data = {
+        const student_full_profile_request_filter = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-        const student_parameter_value_data = {
+        const student_section_filter = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
+        const student_parameter_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        const student_parameter_value_filter = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
         };
 
-        const bus_stop_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
-
-        const tc_data = {
+        const tc_filter = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             status__in: ['Generated', 'Issued'],
-            fields__korangle: ['parentStudent'],
+        };
+
+        const tc_fields = ['parentStudent'];
+
+        const count_all_table_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
-            this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data), // 3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data), // 4
-            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 5
-            this.vm.genericService.getObjectList({student_app: 'CountAllTable'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}),  // 6
+            new Query().getObjectList({class_app: 'Class'}),    // 0
+            new Query().getObjectList({class_app: 'Division'}),    // 1
+            new Query().filter(student_parameter_filter).getObjectList({student_app: 'StudentParameter'}),    // 2
+            new Query().filter(student_parameter_value_filter).getObjectList({student_app: 'StudentParameterValue'}),    // 3
+            new Query().filter(tc_filter).setFields(...tc_fields).getObjectList({tc_app: 'TransferCertificateNew'}),    // 4
+            new Query().filter(count_all_table_filter).getObjectList({student_app: 'CountAllTable'}),    // 5
+            new Query().filter(student_full_profile_request_filter).getObjectList({student_app: 'Student'}),    // 6
+            new Query().filter(student_section_filter).getObjectList({student_app: 'StudentSection'}),    // 7
         ]).then(
             (value) => {
+
+                /* Initialize Class-Section List */
                 value[0].forEach((classs) => {
                     classs.sectionList = [];
                     value[1].forEach((section) => {
@@ -57,16 +66,96 @@ export class CountAllServiceAdapter {
                     });
                 });
                 this.vm.initializeClassSectionList(value[0]);
-                this.vm.backendData.tcList = value[5];
-                this.vm.initializeStudentFullProfileList(value[2]);
-                this.vm.studentParameterList = value[3].map((x) => ({
+
+                /* Initialize Student Parameter Value List */
+                this.vm.studentParameterList = value[2].map((x) => ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
                     showNone: false,
                     filterFilterValues: '',
                 }));
-                this.vm.studentParameterValueList = value[4];
-                this.vm.tableList = value[6];
+                this.vm.studentParameterValueList = value[3];
+
+                /* Initialize TC List */
+                value[4].forEach((element) => {
+                    delete element.id;
+                });
+                this.vm.backendData.tcList = value[4];
+
+                /* Initialize Table List */
+                this.vm.tableList = value[5];
+
+                /* Initialize Student Full Profile List */
+                let studentFullProfileList = [];
+                for (let i = 0; i < value[7].length; i++) {
+                    for (let j = 0; j < value[6].length; j++) {
+                        if (value[7][i].parentStudent === value[6][j].id) {
+
+                            let student_data = {};
+                            let student_object = value[6][j];
+                            let student_section_object = value[7][i];
+
+                            if (student_object.profileImage) {
+                                student_data['profileImage'] = student_object.profileImage;
+                            } else {
+                                student_data['profileImage'] = this.vm.NULL_CONSTANT;
+                            }
+
+                            student_data['name'] = student_object.name;
+                            student_data['dbId'] = student_object.id;
+                            student_data['fathersName'] = student_object.fathersName;
+                            student_data['mobileNumber'] = student_object.mobileNumber;
+                            student_data['secondMobileNumber'] = student_object.secondMobileNumber;
+                            student_data['dateOfBirth'] = student_object.dateOfBirth;
+                            student_data['remark'] = student_object.remark;
+                            student_data['rollNumber'] = student_section_object.rollNumber;
+                            student_data['scholarNumber'] = student_object.scholarNumber;
+                            student_data['motherName'] = student_object.motherName;
+                            student_data['gender'] = student_object.gender;
+                            student_data['caste'] = student_object.caste;
+                            student_data['category'] = student_object.newCategoryField;
+                            student_data['religion'] = student_object.newReligionField;
+                            student_data['fatherOccupation'] = student_object.fatherOccupation;
+                            student_data['address'] = student_object.address;
+                            student_data['familySSMID'] = student_object.familySSMID;
+                            student_data['childSSMID'] = student_object.childSSMID;
+                            student_data['bankName'] = student_object.bankName;
+                            student_data['bankIfscCode'] = student_object.bankIfscCode;
+                            student_data['bankAccountNum'] = student_object.bankAccountNum;
+                            student_data['aadharNum'] = student_object.aadharNum;
+                            student_data['bloodGroup'] = student_object.bloodGroup;
+                            student_data['fatherAnnualIncome'] = student_object.fatherAnnualIncome;
+                            student_data['rte'] = student_object.rte;
+                            student_data['parentTransferCertificate'] = student_object.parentTransferCertificate;
+                            student_data['dateOfAdmission'] = student_object.dateOfAdmission;
+
+                            if (student_object.currentBusStop) {
+                                student_data['busStopDbId'] = student_object.currentBusStop;
+                            } else {
+                                student_data['busStopDbId'] = this.vm.NULL_CONSTANT;
+                            }
+
+                            if (student_object.admissionSession) {
+                                student_data['admissionSessionDbId'] = student_object.admissionSession;
+                            } else {
+                                student_data['admissionSessionDbId'] = this.vm.NULL_CONSTANT;
+                            }
+
+                            if (student_object.parentAdmissionClass) {
+                                student_data['parentAdmissionClass'] = student_object.parentAdmissionClass;
+                            }
+
+                            student_data['sectionDbId'] = student_section_object.parentDivision;
+                            student_data['sectionName'] = value[1].find(section => section.id == student_section_object.parentDivision).name;
+                            student_data['className'] = value[0].find(classs => classs.id == student_section_object.parentClass).name;
+                            student_data['classDbId'] = student_section_object.parentClass;
+                            studentFullProfileList.push(student_data);
+                            break;
+                        }
+                    }
+                }
+                this.vm.initializeStudentFullProfileList(studentFullProfileList);
+
                 this.vm.isLoading = false;
             },
             (error) => {
@@ -74,10 +163,17 @@ export class CountAllServiceAdapter {
             }
         );
     }
+    /* Close - Initialize Data */
 
-    updateTableList() {
+    /* Update Table List */
+    updateTableList(): void {
+
+        const count_all_table_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
         Promise.all([
-            this.vm.genericService.getObjectList({student_app: 'CountAllTable'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}),  // 8
+            new Query().filter(count_all_table_filter).getObjectList({student_app: 'CountAllTable'}),    // 0
         ]).then(
             (value) => {
                 this.vm.tableList = value[0];
@@ -88,6 +184,7 @@ export class CountAllServiceAdapter {
         );
     }
 
+    /* Save Table */
     async saveTable() {
         let tableFilter_list = [];
         let tableDataObject = {};
@@ -109,24 +206,26 @@ export class CountAllServiceAdapter {
         tableDataObject["cols"] = cols;
 
         tableFilter_list.push(tableDataObject);
-        const response = await this.vm.genericService.createObjectList({student_app: 'CountAllTable'}, tableFilter_list);
-        this.vm.tableOpenClicked(response[0]);
+        const response = await new Query().createObject({student_app: 'CountAllTable'}, tableDataObject);
+        this.vm.tableOpenClicked(response);
         this.updateTableList();
+        alert("Table saved successfully.");
     }
 
+    /* Update Table */
     async updatetable() {
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
-        
+
         let rows = {};
         this.vm.rowFilters.forEach((rowFilter, index) => {
             let name = "row" + index;
             rows[name] = rowFilter;
         });
         tableDataObject["rows"] = rows;
-        
+
         let cols = {};
         this.vm.columnFilters.forEach((colFilter, index) => {
             let name = "col" + index;
@@ -134,8 +233,9 @@ export class CountAllServiceAdapter {
         });
         tableDataObject["cols"] = cols;
 
-        const response = await this.vm.genericService.updateObject({student_app: 'CountAllTable'}, tableDataObject);
+        const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
         this.vm.tableOpenClicked(response);
         this.updateTableList();
+        alert("Table updated successfully.");
     }
 }

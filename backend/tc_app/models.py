@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.fields import related
+from common.common import BasePermission
 
 from school_app.model.models import School, Session
 from student_app.models import Student, StudentSection
@@ -17,7 +19,7 @@ class TCLayout(models.Model):
     content = models.TextField()  # Contains the JSON content for the layout
     parentStudentSection = models.ForeignKey(Student, on_delete=models.SET_NULL,
         null=True, blank=True, default=None)  # student section on which this layout is designed
-        
+
     class Meta:
         unique_together = ('parentSchool', 'name')
 
@@ -38,11 +40,11 @@ class TCImageAssets(models.Model): # implement image data size
 
 
 class TransferCertificateSettings(models.Model):
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, unique=True)  
-    
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, unique=True)
+
     tcFee = models.IntegerField(default=0)  # For fee collection
     parentFeeType = models.ForeignKey(FeeType, on_delete=models.PROTECT, null=True)
-    
+
     nextCertificateNumber = models.IntegerField(default=0)  # Regarding certificate number
 
 
@@ -71,3 +73,6 @@ class TransferCertificateNew(models.Model):
     generatedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='generated_tc_set')
     issuedBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='issued_tc_set')
     cancelledBy = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, default=None, related_name='cancelled_tc_set')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']

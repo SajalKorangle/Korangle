@@ -1,10 +1,17 @@
+/* Modal Container */
 .filter-modal-container {
-    height: 20vh;
+    height: 23vh;
     width: 30vw;
+}
+/* End of Modal Container */
+
+/* Bottom Btns */
+.bottom-btns {
+    float: right;
 }
 
 .delete-btn {
-    color: #FF1717;
+    color: #FF1717;    /* Red */
     background-color: white;
     outline: none;
     border: none;
@@ -12,15 +19,11 @@
     box-shadow: none;
 }
 
-.bottom-btns {
-    float: right;
-}
-
 .bottom-btns .btn {
     font-weight: 500;
     font-size: 12px;
-    font-style: normal;
 }
+/* End of Bottom Btns */
 
 @media only screen and (max-width: 992px) {
     .filter-modal-container {

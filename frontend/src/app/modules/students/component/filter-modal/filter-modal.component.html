@@ -1,10 +1,11 @@
-<!-- Class Filter  -->
 <mat-dialog-content class="filter-modal-container">
+    <!-- Name Field -->
     <b>Name - </b>
     <mat-form-field class="inputField" style="margin-left: 10%;">
         <input matInput required type="text" [(ngModel)]="name" />
     </mat-form-field>
 
+    <!-- Class-Section Drop Down -->
     <br/><br/><b>Class, Section</b><br/>
     <mat-form-field style="margin-right: 15px">
         <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
@@ -32,10 +33,13 @@
             </ng-container>
         </mat-select>
     </mat-form-field>
+    <!-- End of Class-Section Drop Down -->
 
+    <!-- List of Filters -->
     <br />
     <ng-container>
         <ng-container>
+            <!-- Age -->
             <br /><b>Age</b><br />
             <input type="number" style="width: 60px; margin-right: 5px" [(ngModel)]="minAge" />
             <span style="margin-right: 5px">&lt;= Age &lt;=</span>
@@ -49,6 +53,7 @@
                     [ngModel]="asOnDate" />
             </mat-form-field>
 
+            <!-- Category -->
             <br /><br /><b>Category</b><br />
             <mat-checkbox
                 [(ngModel)]="scSelected"
@@ -81,6 +86,7 @@
                 >None
             </mat-checkbox>
 
+            <!-- Gender -->
             <br /><br /><b>Gender</b><br />
             <mat-checkbox
                 [(ngModel)]="maleSelected"
@@ -107,6 +113,7 @@
                 >None
             </mat-checkbox>
 
+            <!-- Admission -->
             <br /><br /><b>Admission</b><br />
             <mat-checkbox
                 [(ngModel)]="newAdmission"
@@ -127,6 +134,7 @@
                 >None
             </mat-checkbox>
 
+            <!-- RTE -->
             <br /><br /><b>RTE</b><br />
             <mat-checkbox
                 [(ngModel)]="yesRTE"
@@ -147,6 +155,7 @@
                 >None
             </mat-checkbox>
 
+            <!-- TC -->
             <br /><br /><b>Transfer Certificate</b><br />
             <mat-checkbox
                 [(ngModel)]="noTC"
@@ -162,6 +171,7 @@
             </mat-checkbox>
         </ng-container>
 
+        <!-- Custom Filters -->
         <br />
         <hr />
         <h5>Custom Filters</h5>
@@ -185,8 +195,9 @@
             ><br />
         </ng-container>
     </ng-container>
+    <!-- End of Filters -->
 
-    <br /><br />
+    <!-- Bottom Buttons -->
     <div class="bottom-btns">
         <button
             type="button"

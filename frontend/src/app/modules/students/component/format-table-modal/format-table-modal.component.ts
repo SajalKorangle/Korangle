@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./format-table-modal.component.css']
 })
 export class FormatTableModalComponent implements OnInit {
-    name;
+    name: string = "";
 
     constructor(
         public dialogRef: MatDialogRef<FormatTableModalComponent>,
@@ -19,15 +19,17 @@ export class FormatTableModalComponent implements OnInit {
     ngOnInit() {
     }
 
+    /* Cancle Clicked */
     cancleClick(): void {
         this.dialogRef.close();
     }
 
+    /* Save Button Clicked */
     saveClick(): void {
-        if(!this.name) {
+        if (!this.name) {
             alert("Please enter the name.");
             return;
         }
         this.dialogRef.close({name: this.name});
-    } 
+    }
 }

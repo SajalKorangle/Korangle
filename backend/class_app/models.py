@@ -1,4 +1,5 @@
 from django.db import models
+from common.common import BasePermission
 
 import os
 from django.utils.timezone import now
@@ -20,6 +21,9 @@ class Class(models.Model):
         """A string representation of the model."""
         return self.name
 
+    class Permissions(BasePermission):
+        pass
+
     class Meta:
         db_table = 'class'
 
@@ -30,6 +34,9 @@ class Division(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Permissions(BasePermission):
+        pass
 
     class Meta:
         db_table = 'division'
@@ -45,4 +52,3 @@ class ClassTeacherSignature(models.Model):
     class Meta:
         db_table = 'class_teacher_signature'
         unique_together = ('parentSchool', 'parentClass', 'parentDivision')
-
