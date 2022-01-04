@@ -8,9 +8,9 @@ from employee_app.models import Employee
 
 class ActivityRecord(models.Model):
 
-    parentTask = models.ForeignKey(Task, on_delete=models.SET_NULL, null = True)
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null = True, verbose_name='parentEmployee')
     activityDescription = models.TextField()
+    parentTask = models.ForeignKey(Task, on_delete=models.SET_NULL, null = True)
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null = True, verbose_name='parentEmployee', related_name="activityRecordList")
     createdAt = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):

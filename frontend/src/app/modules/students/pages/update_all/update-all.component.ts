@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
+import { GenericService } from '@services/generic/generic-service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
@@ -38,7 +39,7 @@ const RELIGION_LIST = ['Hinduism', 'Islam', 'Jainism', 'Christianity'];
     selector: 'update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [StudentOldService, ClassService, StudentService],
+    providers: [StudentOldService, ClassService, StudentService, GenericService],
 })
 export class UpdateAllComponent implements OnInit {
     user: any;
@@ -121,6 +122,7 @@ export class UpdateAllComponent implements OnInit {
         public studentOldService: StudentOldService,
         public studentService: StudentService,
         public classService: ClassService,
+        public genericService: GenericService,
         public cdRef: ChangeDetectorRef
     ) {}
 

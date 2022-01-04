@@ -51,6 +51,32 @@ export class UpdateProfileServiceAdapter {
         }
     }
 
+    async createRecord() {
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let parentTask;
+        moduleList.forEach((module) => {
+            if(moduleName === module.title) {
+                let tempTaskList = module.taskList;
+                tempTaskList.forEach((task) => {
+                    if(taskName === task.title) {
+                        parentTask = task.dbId;
+                    }
+                });
+            }
+        });
+        console.log("parentTask: ", parentTask);
+
+        let recordObject = {};
+        recordObject["parentTask"] = parentTask;
+        recordObject["parentEmployee"] = parentEmployee;
+        recordObject["activityDescription"] = this.vm.user.first_name + " updated student profile of " + this.vm.selectedStudent.name;
+        let record_list = [recordObject];
+        const response = await this.vm.genericService.createObjectList({activity_record_app: 'ActivityRecord'}, record_list);
+    }
+
     updateProfile(): void {
         if (this.vm.currentStudent.currentBusStop == 0) {
             this.vm.currentStudent.currentBusStop = null;
@@ -232,6 +258,7 @@ export class UpdateProfileServiceAdapter {
                 this.vm.deleteList = [];
                 this.vm.profileImage = null;
                 alert('Student: ' + this.vm.selectedStudent.name + ' updated successfully');
+                this.createRecord();
                 this.vm.isLoading = false;
             },
             (error) => {

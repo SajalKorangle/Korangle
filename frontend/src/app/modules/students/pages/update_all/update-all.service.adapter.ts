@@ -52,6 +52,31 @@ export class UpdateAllServiceAdapter {
         );
     }
 
+    async createRecord(key, name) {
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let parentTask;
+        moduleList.forEach((module) => {
+            if(moduleName === module.title) {
+                let tempTaskList = module.taskList;
+                tempTaskList.forEach((task) => {
+                    if(taskName === task.title) {
+                        parentTask = task.dbId;
+                    }
+                });
+            }
+        });
+
+        let recordObject = {};
+        recordObject["parentTask"] = parentTask;
+        recordObject["parentEmployee"] = parentEmployee;
+        recordObject["activityDescription"] = this.vm.user.first_name + " updated " + key + " of " + name + ".";
+        let record_list = [recordObject];
+        const response = await this.vm.genericService.createObjectList({activity_record_app: 'ActivityRecord'}, record_list);
+    }
+
     updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
         console.log(key, student, newValue, inputType);
         if (student[key] != newValue) {
@@ -160,6 +185,7 @@ export class UpdateAllServiceAdapter {
                             (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = false;
                         } else if (inputType === 'list') {
                         }
+                        this.createRecord(key, student.name);
                     } else {
                         alert('Not able to update ' + key + ' for value: ' + newValue);
                     }

@@ -1,0 +1,210 @@
+/* Modal Container */
+.modal-container {
+    height: 70vh;
+    width: 60vw;
+}
+
+/* Modal Header */
+.modal-header {
+    border-right: 2px solid #000000;   /* Black */
+    padding-right: 10rem;
+    padding-bottom: 0rem;
+    border-bottom: 0px;
+}
+
+/* Page Names  &&  Employee Names Section */
+.names {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 5rem;
+}
+
+.page-name-section {
+    flex-basis: 40%;
+}
+
+.mat-option-page-name {
+    width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.employee-name-section {
+    flex-basis: 40%;
+}
+
+.mat-option-employee-name {
+     width: 100%;
+     padding-top: 1rem;
+     padding-bottom: 1rem;
+}
+
+.example-viewport {
+    height: 30vh;
+    width: 100%;
+}
+/* End of Page Names  &&  Employee Names Section */
+
+/* Time Span Section */
+.time-span-sub-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-span-sub-section .title {
+    flex-basis: 10%;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 14px;
+    opacity: 0.6;
+}
+
+.time-span-sub-section .radio-btns {
+    flex-basis: 88%;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.radio-btn-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.radio-button {
+    flex-basis: 30%;
+}
+/* Time Span Section */
+
+/* FIlters Description */
+.filters-list {
+    font-size: 12px;
+    line-height: 14px;
+}
+
+/* Bottom Buttons */
+.bottom-btns {
+    float: right;
+}
+
+.clear-btn {
+    font-style: normal;
+    color: #FF1717;   /* Red */
+    background-color: white;
+    box-shadow: none;
+    text-decoration: underline;
+    text-transform: capitalize;
+    padding: 7px 25px;
+}
+
+/* Media Query - Mobile Phones */
+@media only screen and (max-width: 992px) {
+    .modal-container {
+        height: 85vh;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .modal-header {
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        padding-right: 3rem;
+    }
+
+    .names {
+        padding: 0;
+        margin: 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        font-size: 12px;
+    }
+
+    .example-viewport {
+        height: 40vh;
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .page-name-section {
+        flex-basis: 100%;
+        font-size: 14px;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 2rem;
+    }
+
+    .mat-option-page-name {
+        width: 100%;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .employee-name-section {
+        flex-basis: 100%;
+        font-size: 14px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .time-span-sub-section {
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        margin-top: 2rem;
+    }
+
+    .time-span-sub-section .title {
+        flex-basis: 100%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .time-span-sub-section .radio-btns {
+        flex-basis: 100%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .radio-btn-group {
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .radio-button {
+        flex-basis: 100%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .radio-button:first-child {
+        margin: 0;
+        padding: 0;
+    }
+
+    .radio-button:last-child {
+        margin-bottom: 0;
+    }
+
+    .filters-list {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+}
+/* End of Media Query */

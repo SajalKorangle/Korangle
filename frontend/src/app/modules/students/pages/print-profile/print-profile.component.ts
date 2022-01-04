@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PrintProfileServiceAdapter } from './print-profile.service.adapter';
+import { GenericService } from '@services/generic/generic-service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -16,7 +17,7 @@ declare const $: any;
     selector: 'app-print-profile',
     templateUrl: './print-profile.component.html',
     styleUrls: ['./print-profile.component.css'],
-    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService],
+    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, GenericService],
 })
 export class PrintProfileComponent implements OnInit {
     sessionList = [];
@@ -45,7 +46,8 @@ export class PrintProfileComponent implements OnInit {
         public subjectService: SubjectService,
         public feeService: FeeService,
         public examinationService: ExaminationService,
-        public printService: PrintService
+        public printService: PrintService,
+        public genericService: GenericService,
     ) {}
 
     ngOnInit(): void {
@@ -98,6 +100,7 @@ export class PrintProfileComponent implements OnInit {
     }
 
     printProfile() {
+        this.serviceAdapter.createRecord();
         const value = {
             studentProfile: this.selectedStudent,
             studentSection: this.selectedStudentSection,

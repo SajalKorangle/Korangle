@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
 
+import { GenericService } from '@services/generic/generic-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import { DataStorage } from '../../../../classes/data-storage';
@@ -17,7 +18,7 @@ declare const $: any;
     selector: 'update-profile',
     templateUrl: './update-profile.component.html',
     styleUrls: ['./update-profile.component.css'],
-    providers: [SchoolService, StudentService],
+    providers: [SchoolService, StudentService, GenericService],
 })
 export class UpdateProfileComponent implements OnInit {
     user;
@@ -52,7 +53,7 @@ export class UpdateProfileComponent implements OnInit {
 
     commonFunctions: CommonFunctions;
 
-    constructor(public studentService: StudentService, public schoolService: SchoolService, public dialog: MatDialog) { }
+    constructor(public studentService: StudentService, public schoolService: SchoolService, public dialog: MatDialog, public genericService: GenericService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();

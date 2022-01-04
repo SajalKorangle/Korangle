@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
+import { ChangeClassServiceAdapter } from './change-class.service.adapter';
+import { GenericService } from '@services/generic/generic-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { DataStorage } from '../../../../classes/data-storage';
 
@@ -7,7 +9,7 @@ import { DataStorage } from '../../../../classes/data-storage';
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [StudentService],
+    providers: [StudentService, GenericService],
 })
 export class ChangeClassComponent implements OnInit {
     user;
@@ -24,13 +26,17 @@ export class ChangeClassComponent implements OnInit {
     isLoading = false;
     isStudentListLoading = false;
 
-    constructor(private studentService: StudentService) {}
+    serviceAdapter: ChangeClassServiceAdapter;
+
+    constructor(private studentService: StudentService, public genericService: GenericService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
+        this.serviceAdapter = new ChangeClassServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
     }
 
     handleDetailsFromParentStudentFilter(details: any): void {
@@ -71,6 +77,7 @@ export class ChangeClassComponent implements OnInit {
         this.studentService.partiallyUpdateObject(this.studentService.student_section, data).then(
             (response) => {
                 alert('Class Updated Successfully');
+                this.serviceAdapter.createRecord();
                 if (this.selectedStudentSection.id == response.id) {
                     this.selectedStudentSection.parentDivision = response.parentDivision;
                     this.selectedStudentSection.parentClass = response.parentClass;

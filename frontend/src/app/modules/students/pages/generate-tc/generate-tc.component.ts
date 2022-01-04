@@ -4,6 +4,8 @@ import { Student } from '../../../../classes/student';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
+import { GenerateTCServiceAdapter } from './generate-tc.service.adapter';
+import { GenericService } from '@services/generic/generic-service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import { PrintService } from '../../../../print/print-service';
@@ -15,7 +17,7 @@ import { SchoolService } from '../../../../services/modules/school/school.servic
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [StudentOldService, SchoolOldService, SchoolService],
+    providers: [StudentOldService, SchoolOldService, SchoolService, GenericService],
 })
 export class GenerateTcComponent implements OnInit {
     user;
@@ -57,10 +59,14 @@ export class GenerateTcComponent implements OnInit {
     flag = false;
     count = 0;
 
-    constructor(private studentService: StudentOldService, private schoolService: SchoolService, private printService: PrintService) {}
+    serviceAdapter: GenerateTCServiceAdapter;
+
+    constructor(private studentService: StudentOldService, private schoolService: SchoolService, private printService: PrintService, public genericService: GenericService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.serviceAdapter = new GenerateTCServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
 
         Promise.all([this.schoolService.getObjectList(this.schoolService.board, {})]).then(
             (value) => {
@@ -197,6 +203,7 @@ export class GenerateTcComponent implements OnInit {
                         this.isLoading = false;
                         if (response.status === 'success') {
                             alert('Transfer Certificate generated successfully');
+                            this.serviceAdapter.createRecord("generated");
                             this.currentTransferCertificate.id = data.parentTransferCertificate;
                             this.selectedTransferCertificate.copy(this.currentTransferCertificate);
                             this.printTCSecondFormat();
@@ -226,6 +233,7 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert(response.message);
+                this.serviceAdapter.createRecord("updated");
                 this.selectedTransferCertificate.copy(this.currentTransferCertificate);
             },
             (error) => {
@@ -253,6 +261,7 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert('TC has been cancelled successfully');
+                this.serviceAdapter.createRecord("cancelled");
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;
                 this.studentFromFilter.parentTransferCertificate = null;

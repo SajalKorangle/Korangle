@@ -7,12 +7,13 @@ import { SubjectService } from '../../../../services/modules/subject/subject.ser
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { TCService } from './../../../../services/modules/tc/tc.service';
 import { TransferCertificateNew } from './../../../../services/modules/tc/models/transfer-certificate';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'app-delete-student',
     templateUrl: './delete-student.component.html',
     styleUrls: ['./delete-student.component.css'],
-    providers: [FeeService, StudentService, SubjectService, ExaminationService, TCService],
+    providers: [FeeService, StudentService, SubjectService, ExaminationService, TCService, GenericService],
 })
 export class DeleteStudentComponent implements OnInit {
     user;
@@ -40,6 +41,7 @@ export class DeleteStudentComponent implements OnInit {
         public subjectService: SubjectService,
         public examinationOldService: ExaminationService,
         public feeService: FeeService,
+        public genericService: GenericService,
         public tcService: TCService
     ) {}
 

@@ -71,6 +71,31 @@ export class DeleteStudentServiceAdapter {
         );
     }
 
+    async createRecord() {
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let parentTask;
+        moduleList.forEach((module) => {
+            if(moduleName === module.title) {
+                let tempTaskList = module.taskList;
+                tempTaskList.forEach((task) => {
+                    if(taskName === task.title) {
+                        parentTask = task.dbId;
+                    }
+                });
+            }
+        });
+
+        let recordObject = {};
+        recordObject["parentTask"] = parentTask;
+        recordObject["parentEmployee"] = parentEmployee;
+        recordObject["activityDescription"] = this.vm.user.first_name + " deleted a student " + this.vm.selectedStudent.name;
+        let record_list = [recordObject];
+        const response = await this.vm.genericService.createObjectList({activity_record_app: 'ActivityRecord'}, record_list);
+    }
+
     deleteStudent(): void {
         if (!confirm('Are you sure, you want to delete this student')) {
             return;
@@ -85,7 +110,7 @@ export class DeleteStudentServiceAdapter {
         this.vm.studentService.deleteObject(this.vm.studentService.student, student_data).then(
             (value) => {
                 this.vm.selectedStudent['deleted'] = true;
-
+                this.createRecord();
                 this.vm.isLoading = false;
             },
             (error) => {
