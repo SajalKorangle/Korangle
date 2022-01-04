@@ -433,6 +433,7 @@ export class AddEmployeeComponent implements OnInit {
 
         openedDialog.afterClosed().subscribe((data: any) => {
             if (data && data.employeePermissionConfigJson) {
+                data.employeePermissionConfigJsonCopy = Object.assign({}, data.employeePermissionConfigJson);
                 task.configJSON = data.employeePermissionConfigJson;
                 task.selected = true;
             }

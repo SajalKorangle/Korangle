@@ -11,7 +11,7 @@
                 </ng-container>
                 <ng-container *ngIf="selectedAssignTaskOption == assignTaskOptions[1]">
                     <mat-form-field>
-                        <mat-select placeholder="Select module" [ngModel]="selectedModule" (ngModelChange)="selectedModule = $event">
+                        <mat-select placeholder="Select Module" [ngModel]="selectedModule" (ngModelChange)="selectedModule = $event">
                             <mat-option *ngFor="let module of moduleList" [value]="module">
                                 {{ module.title }}
                             </mat-option>
@@ -19,7 +19,7 @@
                     </mat-form-field>
                     <mat-form-field *ngIf="selectedModule && selectedAssignTaskOption == assignTaskOptions[1]" style="margin-left: 20px">
                         <mat-select
-                            placeholder="Select task"
+                            placeholder="Select Task"
                             [ngModel]="selectedTask"
                             (ngModelChange)="selectedTask = $event; serviceAdapter.getPermissionList()"
                         >

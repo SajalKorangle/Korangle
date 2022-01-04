@@ -10,10 +10,11 @@ import { CommonFunctions } from '@classes/common-functions';
 })
 export class InPagePermissionDialogComponent implements OnInit {
 
-    inPagePermissionMappedByKey: { [key: string]: InPagePermission; };
+    inPagePermissionMappedByKey: { [key: string]: any; };
 
     groupList: Array<string>;
     employeePermissionConfigJson: { [key: string]: any; } = {};
+    employeePermissionConfigJsonCopy: { [key: string]: any; } = {};
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
@@ -31,8 +32,10 @@ export class InPagePermissionDialogComponent implements OnInit {
         this.groupList.sort((a, b) => a.localeCompare(b));
         if (Object.values(this.inPagePermissionMappedByKey).find(inPagePermission => inPagePermission.options.groupName == undefined))
             this.groupList.push(undefined);
-        if (data.existingPermission && data.existingPermission.configJSON)
+        if (data.existingPermission && data.existingPermission.configJSON) {
             this.employeePermissionConfigJson = data.existingPermission.configJSON;
+            this.employeePermissionConfigJsonCopy = data.existingPermission.configJSON;
+        }
     }
 
     ngOnInit() { }
@@ -43,19 +46,53 @@ export class InPagePermissionDialogComponent implements OnInit {
     }
 
     apply(): void {
+        this.employeePermissionConfigJson = Object.assign({}, this.employeePermissionConfigJsonCopy);
         this.dialogRef.close({ employeePermissionConfigJson: this.employeePermissionConfigJson });
     }
 
     intialize(permissionKey): any {
         if(!(permissionKey in this.employeePermissionConfigJson)) {
             this.employeePermissionConfigJson[permissionKey] = {};
+            this.employeePermissionConfigJsonCopy[permissionKey] = {};
         }
         this.inPagePermissionMappedByKey[permissionKey].checkBoxValues.forEach(value => {
             if(!(value[0] in this.employeePermissionConfigJson[permissionKey])) {
                 this.employeePermissionConfigJson[permissionKey][value[0]] = false;
+                this.employeePermissionConfigJsonCopy[permissionKey][value[0]] = false;
             }
         })
         return true;
     }
 
+    isSelectRemoveAllButtonAvailable(permissionKey, groupName): Boolean {
+        let permissionKeyList = this.getGroupPermissionKeys(groupName);
+        if(permissionKeyList[0] == permissionKey && this.inPagePermissionMappedByKey[permissionKey].inputType === 'groupOfCheckBox') {
+            return true;
+        }
+        return false;
+    }
+
+    selectAllCheckBox(groupName): void {
+        let permissionKeyList = this.getGroupPermissionKeys(groupName);
+        permissionKeyList.forEach(permissionKey => {
+            if(this.inPagePermissionMappedByKey[permissionKey].inputType === 'groupOfCheckBox') {
+                this.inPagePermissionMappedByKey[permissionKey].checkBoxValues.forEach(checkBoxValue => {
+                    this.employeePermissionConfigJson[permissionKey][checkBoxValue[0]] = true;
+                    this.employeePermissionConfigJsonCopy[permissionKey][checkBoxValue[0]] = true;
+                })
+            }
+        })
+    }
+
+    unSelectAllCheckBox(groupName): void {
+        let permissionKeyList = this.getGroupPermissionKeys(groupName);
+        permissionKeyList.forEach(permissionKey => {
+            if(this.inPagePermissionMappedByKey[permissionKey].inputType === 'groupOfCheckBox') {
+                this.inPagePermissionMappedByKey[permissionKey].checkBoxValues.forEach(checkBoxValue => {
+                    this.employeePermissionConfigJson[permissionKey][checkBoxValue[0]] = false;
+                    this.employeePermissionConfigJsonCopy[permissionKey][checkBoxValue[0]] = false;
+                })
+            }
+        })
+    }
 }

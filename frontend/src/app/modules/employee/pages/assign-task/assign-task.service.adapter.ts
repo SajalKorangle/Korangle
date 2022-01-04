@@ -1,6 +1,6 @@
 import { Query } from '@services/generic/query';
 import { AssignTaskComponent } from './assign-task.component';
-import { TASK_PERMISSION_LIST, InPagePermission } from '@modules/common/in-page-permission';
+import { TASK_PERMISSION_LIST, GroupOfCheckBoxPermission } from '@modules/common/in-page-permission';
 
 export class AssignTaskServiceAdapter {
     vm: AssignTaskComponent;
@@ -18,24 +18,19 @@ export class AssignTaskServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let loggedInEmployee = await new Query()
-            .filter({
-                parentSchool: this.vm.user.activeSchool.dbId,
-                mobileNumber: this.vm.user.username
-            })
-            .getObject({ employee_app: 'Employee' });
-            
+        // Extracting Delegation Permission Dict for Logged in Employee STARTS
         let loggedInEmployeePermission = await new Query()
             .filter({
-                parentEmployee: loggedInEmployee.id, 
+                parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
+                parentEmployee__mobileNumber: this.vm.user.username,
+                parentTask: 42
             })
-            .getObjectList({ employee_app: 'EmployeePermission' });
+            .getObject({ employee_app: 'EmployeePermission' });
 
-        loggedInEmployeePermission = loggedInEmployeePermission.find(permission => {return permission.parentTask === 42});
-        
         let loggedInEmployeePermissionPermissionDict = JSON.parse(loggedInEmployeePermission.configJSON);
-        // console.log(loggedInEmployeePermissionPermissionDict);
+        // Extracting Delegation Permission Dict for Logged in Employee ENDS
 
+        // Extracting Module List
         const moduleQuery = new Query()
         .filter({
             __or__:[
@@ -45,6 +40,7 @@ export class AssignTaskServiceAdapter {
         })
         .getObjectList({ team_app: 'Module' });
         
+        // Extracting Task List for each Module
         const taskQuery = new Query()
         .filter({
                 __or__1:[
@@ -68,10 +64,10 @@ export class AssignTaskServiceAdapter {
             taskQuery
         ]);
 
-        // console.log(moduleList, taskList);
-
+        // Connecting Task List to corresponding Module
         this.initializeModuleList(moduleList, taskList);
 
+        // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
         if(Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
             
             let tempModuleList = [];      
@@ -100,21 +96,24 @@ export class AssignTaskServiceAdapter {
 
     intializeAssignTaskPermission(): any{
 
+        // Finding Assign Task Permission from TASK_PERMISSION_LIST
         let assign_task_permission = TASK_PERMISSION_LIST.find(task_permission => {return task_permission.modulePath === 'employees' && task_permission.taskPath === 'assign_task'});
 
+        // Making groups based on Modules
         this.vm.moduleList.forEach(module => {
+            // Tasks corresponding to the module will act as checkBoxValues
             let checkBoxValues = []
             module.taskList.forEach(task => {
                 checkBoxValues.push([task.id, task.title]);
             })
 
+            // Updating inPagePermissionMappedByKey dict with key as module id and value as InPagePermission
             assign_task_permission.inPagePermissionMappedByKey[module.id]
-                = new InPagePermission(
+                = new GroupOfCheckBoxPermission(
                     module.title,
                     'groupOfCheckBox',
-                    null,
-                    {},
                     checkBoxValues,
+                    {}
                 );
         });  
     }

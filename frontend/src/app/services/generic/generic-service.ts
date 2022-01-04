@@ -102,7 +102,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     student_app: 'Student' | 'StudentSection';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
-    employee_app: 'Employee' | 'EmployeePermission';
+    employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
     team_app: 'Module' | 'Task';
 }
 

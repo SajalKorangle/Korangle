@@ -146,6 +146,10 @@ class EmployeeParameter(models.Model):
     class Meta:
         db_table = 'employee_parameter'
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
 
 class EmployeeParameterValue(models.Model):
 
