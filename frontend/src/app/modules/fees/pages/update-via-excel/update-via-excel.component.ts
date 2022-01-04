@@ -8,7 +8,6 @@ import { StudentService } from './../../../../services/modules/student/student.s
 import { ClassService } from './../../../../services/modules/class/class.service';
 import { FeeService } from './../../../../services/modules/fees/fee.service';
 import { INSTALLMENT_LIST } from '../../classes/constants';
-import { isMobile } from '../../../../classes/common';
 
 
 @Component({
@@ -182,8 +181,10 @@ export class UpdateViaExcelComponent implements OnInit {
 
     //Checking if it is in mobile
     checkMobile(): any {
-        if(isMobile()) return false;
-        else return true;
+        if(window.innerWidth > 991) {
+            return false;
+        }
+        return true;
     }
 
     downloadSheetTemplate(): void {
