@@ -102,7 +102,7 @@ export class ManageTemplatesServiceAdapter {
         let temp = this.vm.backendData.eventList.find(x => x.id == eventId);
         temp['eventSettings'] = this.vm.backendData.selectedPageEventSettingsList.find(setting => setting.SMSEventId == temp.id);
         
-        // If custom template is linked with the event
+        // If a template is linked with the SMS ID other than 'Default'
         temp['customEventTemplate'] = this.vm.backendData.selectedPageTemplateList.find(template => template.id == temp['eventSettings'].parentSMSTemplate);
         if (temp['customEventTemplate']) {
             temp['selectedSMSId'] = this.vm.smsIdListFilteredBySchoolId.find(smsId => smsId.id == temp['customEventTemplate'].parentSMSId);
