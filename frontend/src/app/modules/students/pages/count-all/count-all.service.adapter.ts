@@ -14,7 +14,6 @@ export class CountAllServiceAdapter {
 
     /* Initialize Data */
     initializeData(): void {
-        console.log("User: ", this.vm.user);
         this.vm.isLoading = true;
 
         const student_full_profile_request_filter = {
@@ -162,8 +161,7 @@ export class CountAllServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    }
-    /* Close - Initialize Data */
+    }  // Ends: initializeData()
 
     /* Update Table List */
     updateTableList(): void {
@@ -182,15 +180,15 @@ export class CountAllServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    }
+    }  // Ends: updateTableList()
 
     /* Save Table */
     async saveTable() {
-        let tableFilter_list = [];
         let tableDataObject = {};
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
+        /* Get Rows */
         let rows = {};
         this.vm.rowFilters.forEach((rowFilter, index) => {
             let name = "row" + index;
@@ -198,6 +196,7 @@ export class CountAllServiceAdapter {
         });
         tableDataObject["rows"] = rows;
 
+        /* Get Columns */
         let cols = {};
         this.vm.columnFilters.forEach((colFilter, index) => {
             let name = "col" + index;
@@ -205,12 +204,12 @@ export class CountAllServiceAdapter {
         });
         tableDataObject["cols"] = cols;
 
-        tableFilter_list.push(tableDataObject);
+        /* Create An Object */
         const response = await new Query().createObject({student_app: 'CountAllTable'}, tableDataObject);
-        this.vm.tableOpenClicked(response);
+        this.vm.htmlRenderer.tableOpenClicked(response);
         this.updateTableList();
         alert("Table saved successfully.");
-    }
+    }  // Ends: saveTable()
 
     /* Update Table */
     async updatetable() {
@@ -219,6 +218,7 @@ export class CountAllServiceAdapter {
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
+        /* Get Rows */
         let rows = {};
         this.vm.rowFilters.forEach((rowFilter, index) => {
             let name = "row" + index;
@@ -226,6 +226,7 @@ export class CountAllServiceAdapter {
         });
         tableDataObject["rows"] = rows;
 
+        /* Get Columns */
         let cols = {};
         this.vm.columnFilters.forEach((colFilter, index) => {
             let name = "col" + index;
@@ -233,9 +234,10 @@ export class CountAllServiceAdapter {
         });
         tableDataObject["cols"] = cols;
 
+        /* Update An Object */
         const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
-        this.vm.tableOpenClicked(response);
+        this.vm.htmlRenderer.tableOpenClicked(response);
         this.updateTableList();
         alert("Table updated successfully.");
-    }
+    }  // Ends: updatetable()
 }

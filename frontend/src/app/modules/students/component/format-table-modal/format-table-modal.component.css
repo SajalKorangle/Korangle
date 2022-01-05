@@ -1,9 +1,9 @@
-/* Modal Container */
+/* Starts: Modal Container */
 .filter-modal-container {
     height: 23vh;
     width: 30vw;
 }
-/* End of Modal Container */
+/* Ends: Modal Container */
 
 /* Bottom Btns */
 .bottom-btns {
@@ -23,9 +23,11 @@
     font-weight: 500;
     font-size: 12px;
 }
-/* End of Bottom Btns */
+/* Ends: Bottom Btns */
 
+/* Starts: Media Query */
 @media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
     .filter-modal-container {
         height: 25vh;
         width: 100%;
@@ -33,8 +35,12 @@
         margin: 0;
         padding: 0;
     }
+    /* Ends: Modal Container */
 
+    /* Starts: Name Section */
     .inputField {
         width: 40%;
     }
+    /* Ends: Name Section */
 }
+/* Ends: Media Query */

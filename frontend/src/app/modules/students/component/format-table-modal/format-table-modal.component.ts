@@ -22,7 +22,7 @@ export class FormatTableModalComponent implements OnInit {
     /* Cancle Clicked */
     cancleClick(): void {
         this.dialogRef.close();
-    }
+    }  // Ends: cancleClick()
 
     /* Save Button Clicked */
     saveClick(): void {
@@ -31,5 +31,5 @@ export class FormatTableModalComponent implements OnInit {
             return;
         }
         this.dialogRef.close({name: this.name});
-    }
+    }  // Ends: saveClick()
 }

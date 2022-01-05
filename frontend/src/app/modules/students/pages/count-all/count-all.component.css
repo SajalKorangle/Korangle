@@ -1,4 +1,4 @@
-/* Table Section */
+/* Starts: Table Section */
 .example-viewport {
     height: 70vh;
     width: 100%;
@@ -54,11 +54,15 @@
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+/* Ends: Table Section */
 
+/* Starts: Media Query */
 @media only screen and (max-width: 992px) {
+    /* Starts: Table Section */
     .minWidth {
         min-width: 200px;
         max-width: 350px;
     }
+    /* Ends: Table Section */
 }
-/* End of Table Section */
+/* Ends: Media Query */

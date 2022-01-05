@@ -7,6 +7,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllBackendData } from './count-all.backend.data';
+import { CountAllHtmlRenderer } from './count-all.html.renderer';
 import { FilterModalComponent } from '@modules/students/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/students/component/format-table-modal/format-table-modal.component';
 
@@ -42,6 +43,7 @@ export class CountAllComponent implements OnInit {
 
     serviceAdapter: CountAllServiceAdapter;
     backendData: CountAllBackendData;
+    htmlRenderer: CountAllHtmlRenderer;
 
     constructor(
         public genericService: GenericService,
@@ -59,6 +61,9 @@ export class CountAllComponent implements OnInit {
         this.serviceAdapter = new CountAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new CountAllHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
     /* Initialize Class-Section List */
@@ -70,7 +75,7 @@ export class CountAllComponent implements OnInit {
                 section.containsStudent = false;
             });
         });
-    }
+    }  // Ends: initializeClassSectionList()
 
     /* Get Section Objects */
     getSectionObject(classDbId: any, sectionDbId: number): any {
@@ -93,7 +98,7 @@ export class CountAllComponent implements OnInit {
             console.log('Error: should have section object');
         }
         return sectionObject;
-    }
+    }  // Ends: getSectionObject()
 
     /* Initialize Student Full Profile List */
     initializeStudentFullProfileList(studentFullProfileList: any): void {
@@ -105,22 +110,17 @@ export class CountAllComponent implements OnInit {
             studentFullProfile['selectDocument'] = false;
             studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
-    }
-
-    isMobile(): boolean {
-        if (window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
+    }  // Ends: initializeStudentFullProfileList()
 
     /* Update Row Data After Column Drag */
     updateRowFiltersAfterColumnDrag(): void {
         for (let i = 0; i < this.rowFilters.length; i++) {
+            // initializing the result.
             for (let j = 0; j < this.columnFilters.length; j++) {
                 this.rowFilters[i]["answer"][j] = 0;
             }
 
+            // Logic:  first check student with row, and then with column.
             this.studentFullProfileList.forEach((student) => {
                 let check = this.checkFilters(student, this.rowFilters[i]);
                 if (check) {
@@ -133,7 +133,7 @@ export class CountAllComponent implements OnInit {
                 }
             });
         }
-    }
+    }  // Ends: updateRowFiltersAfterColumnDrag()
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
@@ -245,17 +245,19 @@ export class CountAllComponent implements OnInit {
             }
         }
         return check;
-    }
-    /* Close Check Filters */
+    }  // Ends: checkFilters()
 
     /* Get Table Date From Newly Added Row */
     getTableDataRow(filtersData): any {
+
+        // initializing the result.
         let totalCount = 0;
         let answer = [];
         for (let i = 0; i < this.columnFilters.length; i++) {
             answer.push(0);
         }
 
+        // Logic:  first check student with row, and then with column.
         this.studentFullProfileList.forEach((student) => {
             let check = this.checkFilters(student, filtersData);
             if (check) {
@@ -268,21 +270,24 @@ export class CountAllComponent implements OnInit {
                     }
                 }
             }
-        });
+        });  // Ends: Logic
 
         let returnData = {};
         returnData["answer"] = answer;
         returnData["totalCount"] = totalCount;
         return returnData;
-    }
+    }  // Ends: getTableDataRow()
 
     /* Get Table Date From Newly Added Column */
     getTableDataColumn(filtersData): any {
+
+        // initializing the result.
         let totalCount = 0;
         for (let i = 0; i < this.rowFilters.length; i++) {
             this.rowFilters[i].answer.push(0);
         }
 
+        // Logic:  first check student with column, and then with row.
         this.studentFullProfileList.forEach((student) => {
             let check = this.checkFilters(student, filtersData);
             if (check) {
@@ -295,17 +300,20 @@ export class CountAllComponent implements OnInit {
                     }
                 }
             }
-        });
+        });   // Ends: Logic
         return totalCount;
-    }
+    }  // Ends: getTableDataColumn()
 
     /* Get Updated Table Date */
     getUpdatedTableDataColumn(filtersData, index): any {
+
+        // initializing the result.
         let totalCount = 0;
         for (let i = 0; i < this.rowFilters.length; i++) {
             this.rowFilters[i].answer[index] = 0;
         }
 
+        // Logic:  first check student with column, and then with row.
         this.studentFullProfileList.forEach((student) => {
             let check = this.checkFilters(student, filtersData);
             if (check) {
@@ -318,9 +326,9 @@ export class CountAllComponent implements OnInit {
                     }
                 }
             }
-        });
+        });   // Ends: Logic
         return totalCount;
-    }
+    }  // Ends: getUpdatedTableDataColumn()
 
     getFilteredStudentParameterList(): any {
         return this.studentParameterList.filter((x) => x.parameterType === 'FILTER');
@@ -335,15 +343,16 @@ export class CountAllComponent implements OnInit {
             }
         });
 
+        // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
                 let filtersData = data.filtersData;
-                if (this.whereToAdd === 'row') {
+                if (this.whereToAdd === 'row') {  /* Row Filter */
                     let returnData = this.getTableDataRow(filtersData);
                     filtersData["answer"] = returnData.answer;
                     filtersData["totalCount"] = returnData.totalCount;
                     this.rowFilters.push(filtersData);
-                } else if (this.whereToAdd === 'col') {
+                } else if (this.whereToAdd === 'col') {  /* Column Filter */
                     filtersData["totalCount"] = this.getTableDataColumn(filtersData);
                     this.columnFilters.push(filtersData);
                 }
@@ -355,7 +364,7 @@ export class CountAllComponent implements OnInit {
                 });
             }
         });
-    }
+    }  // Ends: openDialog()
 
     /* Open Filter Modal - For Existing Filters (Row  or  Column) */
     openChangeDialog(filter): void {
@@ -367,6 +376,7 @@ export class CountAllComponent implements OnInit {
             }
         });
 
+        // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
                 let filtersData = data.filtersData;
@@ -429,8 +439,8 @@ export class CountAllComponent implements OnInit {
                     });
                 });
             }
-        });
-    }
+        });   // Dialog Closed.
+    }  // Ends: openChangeDialog()
 
     /* Open Table Format Name Dialog */
     openSaveFormatDialog(): void {
@@ -440,33 +450,14 @@ export class CountAllComponent implements OnInit {
             }
         });
 
+        // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.name) {
                 this.tableFormatTitle = data.name;
                 this.serviceAdapter.saveTable();
             }
         });
-    }
-
-    /* Open Existing Table */
-    tableOpenClicked(table): void {
-        this.isTableEditing = true;
-        this.tableActiveId = table["id"];
-        this.tableFormatTitle = table.formatName;
-        let tableRows = [];
-        let tableCols = [];
-
-        Object.entries(table["rows"]).forEach(([key, value]) => {
-            tableRows.push(value);
-        });
-
-        Object.entries(table["cols"]).forEach(([key, value]) => {
-            tableCols.push(value);
-        });
-
-        this.columnFilters = tableCols;
-        this.rowFilters = tableRows;
-    }
+    }  // Ends: openSaveFormatDialog()
 
     updateChangesClicked(): void {
         this.serviceAdapter.updatetable();
@@ -480,14 +471,16 @@ export class CountAllComponent implements OnInit {
             }
         });
 
+        // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.name) {
                 this.tableFormatTitle = data.name;
                 this.serviceAdapter.saveTable();
             }
         });
-    }
+    }  // Ends: saveAsClicked()
 
+    /* Get header Values */
     getHeaderValues(): any {
         let headerValues = [];
         headerValues.push('');
@@ -495,8 +488,9 @@ export class CountAllComponent implements OnInit {
             headerValues.push(columnFilter.name);
         });
         return headerValues;
-    }
+    }  // Ends: getHeaderValues()
 
+    /* Get Filter Information */
     getFilterInfo(filter: any): any {
         let filterInfo = [];
         filterInfo.push(filter.name);
@@ -504,8 +498,9 @@ export class CountAllComponent implements OnInit {
             filterInfo.push(ans);
         });
         return filterInfo;
-    }
+    }  // Ends: getFilterInfo()
 
+    /* Download the Table */
     downloadList(): void {
         let template: any;
         template = [this.getHeaderValues()];
@@ -515,7 +510,7 @@ export class CountAllComponent implements OnInit {
         let fileName: string = this.tableFormatTitle;
         fileName += ".csv";
         this.excelService.downloadFile(template, fileName);
-    }
+    }  // Ends: downloadList()
 
     /* Get Width of Column */
     getTextWidthColumn(textContent: string): any {
@@ -524,8 +519,6 @@ export class CountAllComponent implements OnInit {
 
         text.style.font = "roboto";
         text.style.fontSize = 16 + "px";
-        // text.style.height = 'auto';
-        // text.style.width = 'auto';
         text.style.position = 'absolute';
         text.style.whiteSpace = 'no-wrap';
         text.innerHTML = textContent;
@@ -534,7 +527,7 @@ export class CountAllComponent implements OnInit {
         let formattedWidth = width + "px";
         document.body.removeChild(text);
         return formattedWidth;
-    }
+    }  // Ends: getTextWidthColumn()
 
     /* Get Width of 1st Column */
     getTextWidthRow(): any {
@@ -546,5 +539,5 @@ export class CountAllComponent implements OnInit {
         });
 
         return this.getTextWidthColumn(textContent);
-    }
+    }  // Ends: getTextWidthRow()
 }

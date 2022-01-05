@@ -63,6 +63,7 @@ export class FilterModalComponent implements OnInit {
             this.studentParameterList = this.filter["studentParameterList"];
             this.name = this.filter["name"];
 
+            /* Initialize class-section */
             if (this.filter["selectedClass"]) {
                 let selectedClass = this.filter["selectedClass"];
                 this.classSectionList.forEach((classs) => {
@@ -73,8 +74,9 @@ export class FilterModalComponent implements OnInit {
                         }
                     });
                 });
-            }
+            }   //  Ends: Initialize class-section
 
+            /* Initialize category */
             if (this.filter["category"]) {
                 let category = this.filter["category"];
                 if (category.includes("SC")) {
@@ -92,15 +94,17 @@ export class FilterModalComponent implements OnInit {
                 if (category.includes("NONE")) {
                     this.noneCategory = true;
                 }
-            }
+            }   //  Ends: Initialize category
 
+            /* Initialize age */
             if (this.filter["age"]) {
                 let age = this.filter["age"];
                 this.asOnDate = age[0];
                 this.minAge = age.length > 1 ? age[1] : 0;
                 this.maxAge = age.length > 2 ? age[2] : 1000;
-            }
+            }   //  Ends: Initialize age
 
+            /* Initialize gender */
             if (this.filter["gender"]) {
                 let gender = this.filter["gender"];
                 if (gender.includes("Male")) {
@@ -115,8 +119,9 @@ export class FilterModalComponent implements OnInit {
                 if (gender.includes("NONE")) {
                     this.noneGender = true;
                 }
-            }
+            }   //  Ends: Initialize gender
 
+            /* Initialize admission */
             if (this.filter["admission"]) {
                 let admission = this.filter["admission"];
                 if (admission.includes("New")) {
@@ -128,8 +133,9 @@ export class FilterModalComponent implements OnInit {
                 if (admission.includes("NONE")) {
                     this.noneAdmission = true;
                 }
-            }
+            }   //  Ends: Initialize admission
 
+            /* Initialize RTE */
             if (this.filter["RTE"]) {
                 let rte = this.filter["RTE"];
                 if (rte.includes("YES")) {
@@ -141,8 +147,9 @@ export class FilterModalComponent implements OnInit {
                 if (rte.includes("NONE")) {
                     this.noneRTE = true;
                 }
-            }
+            }   //  Ends: Initialize RTE
 
+            /* Initialize TC */
             if (this.filter["TC"]) {
                 let tc = this.filter["TC"];
                 if (tc.includes("YES")) {
@@ -151,8 +158,8 @@ export class FilterModalComponent implements OnInit {
                 if (tc.includes("NO")) {
                     this.noTC = true;
                 }
-            }
-        }
+            }   //  Ends: Initialize TC
+        }  // Ends: Initialize Default Value of Filters
     }
 
     ngOnInit() {
@@ -181,7 +188,7 @@ export class FilterModalComponent implements OnInit {
                 section.selected = false;
             });
         });
-    }
+    }  // Ends: unselectAllClasses()
 
     /* Select All Classes */
     selectAllClasses(): void {
@@ -190,8 +197,9 @@ export class FilterModalComponent implements OnInit {
                 section.selected = true;
             });
         });
-    }
+    }  // Ends: selectAllClasses()
 
+    /* Show Section Name */
     showSectionName(classs: any): boolean {
         let sectionLength = 0;
         classs.sectionList.every((section) => {
@@ -205,10 +213,11 @@ export class FilterModalComponent implements OnInit {
             }
         });
         return sectionLength > 1;
-    }
+    }  // Ends: showSectionName()
 
     getFilteredStudentParameterList = () => this.studentParameterList.filter((x) => x.parameterType === 'FILTER');
 
+    /* Get parameter value */
     getFilteredFilterValues(parameter: any): any {
         if (parameter.filterFilterValues === '') {
             return parameter.filterValues;
@@ -216,7 +225,7 @@ export class FilterModalComponent implements OnInit {
         return parameter.filterValues.filter((x) => {
             return x.name.includes(parameter.filterFilterValues);
         });
-    }
+    }  // Ends: getFilteredFilterValues()
 
     /* Delete Button Clicked */
     deleteClick(): void {
@@ -232,7 +241,7 @@ export class FilterModalComponent implements OnInit {
                 this.dialogRef.close();
             }
         }
-    }
+    }  // Ends: deleteClick()
 
     /* Apply Button Clicked */
     applyClick(): void {
@@ -256,6 +265,7 @@ export class FilterModalComponent implements OnInit {
         if (selectedClass.length > 0) {
             filtersData["selectedClass"] = selectedClass;
         }
+        /* Ends: Class-Section */
 
         /* Name */
         filtersData["name"] = this.name;
@@ -280,6 +290,7 @@ export class FilterModalComponent implements OnInit {
             age.push(1000);
         }
         filtersData["age"] = age;
+        /* Ends: Age */
 
         /* Category */
         let category = [];
@@ -301,6 +312,7 @@ export class FilterModalComponent implements OnInit {
         if (category.length > 0) {
             filtersData["category"] = category;
         }
+        /* Ends: Category */
 
         /* Gender */
         let gender = [];
@@ -319,6 +331,7 @@ export class FilterModalComponent implements OnInit {
         if (gender.length > 0) {
             filtersData["gender"] = gender;
         }
+        /* Ends: Gender */
 
         /* Admission */
         let admission = [];
@@ -334,6 +347,7 @@ export class FilterModalComponent implements OnInit {
         if (admission.length > 0) {
             filtersData["admission"] = admission;
         }
+        /* Ends: Admission */
 
         /* RTE */
         let rte = [];
@@ -349,6 +363,7 @@ export class FilterModalComponent implements OnInit {
         if (rte.length > 0) {
             filtersData["RTE"] = rte;
         }
+        /* Ends: RTE */
 
         /* TC */
         let tc = [];
@@ -361,14 +376,17 @@ export class FilterModalComponent implements OnInit {
         if (tc.length > 0) {
             filtersData["TC"] = tc;
         }
+        /* Ends: TC */
 
         filtersData["studentParameterList"] = this.studentParameterList;
 
+        /* Operation Type */
         if (this.isEditing) {
             filtersData["operation"] = "update";
             this.dialogRef.close({ filtersData: filtersData });
         } else {
             this.dialogRef.close({ filtersData: filtersData });
         }
-    }
+        /* Ends:  Operation Type */
+    }  // Ends: applyClick()
 }

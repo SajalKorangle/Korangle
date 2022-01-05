@@ -1,6 +1,6 @@
 <div class="card-content table-responsive">
     <b>Define custom rows and columns or choose from saved tables</b>
-    <!--  Print  &&  Download  Buttons  Section -->
+    <!-- Starts: Print && Download Buttons Section -->
     <ng-container *ngIf="rowFilters.length > 0 || columnFilters.length > 0">
         <button
             id="print-list"
@@ -25,25 +25,26 @@
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
     </ng-container>
-    <!--  End  of  Print  &&  Download  Buttons  Section -->
+    <!--  Ends: Print && Download Buttons Section -->
 
     <br /><br /><b>Table Format</b><br />
-    <!-- Tables List -->
+    <!--Starts: Generated Tables List -->
     <mat-form-field style="margin-right: 15px">
         <mat-select placeholder="{{tableFormatTitle ? tableFormatTitle : 'Not Selected'}}" id="select-class" style="width: 100%">
             <ng-container *ngFor="let table of tableList">
-                <mat-option (click)="tableOpenClicked(table)" style="width: 100%">
+                <mat-option (click)="htmlRenderer.tableOpenClicked(table)" style="width: 100%">
                     {{ table.formatName }}
                 </mat-option>
             </ng-container>
         </mat-select>
     </mat-form-field>
-    <!-- End of Tables List -->
+    <!-- Ends: Generated Tables List -->
 
-    <!-- Table -->
+    <!-- Starts: Table -->
     <ng-container *ngIf="!isLoading">
         <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
             <table class="table">
+                <!-- Starts: Table Header -->
                 <thead>
                     <tr cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="dropColumn($event)">
                         <th class="minWidth"></th>
@@ -55,6 +56,9 @@
                         </th>
                     </tr>
                 </thead>
+                <!-- Ends: Table Header -->
+
+                <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
                     <tr class="example-box" *ngFor="let filter of rowFilters" cdkDrag>
                         <th (click)="whereToAdd = 'row'; openChangeDialog(filter)" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
@@ -73,13 +77,16 @@
                         <td class="minWidth">-</td>
                     </tr>
                 </tbody>
+                <!-- Ends: Table Body -->
             </table>
         </cdk-virtual-scroll-viewport>
     </ng-container>
     <!-- End of Table -->
 </div>
 
-<div *ngIf="!isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+<div *ngIf="!htmlRenderer.isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+
+<!-- Starts: Save Button -->
 <ng-container *ngIf="!isTableEditing">
     <button *ngIf="rowFilters.length > 0 || columnFilters.length > 0"
         type="button"
@@ -90,8 +97,9 @@
         Save Table Format
     </button>
 </ng-container>
+<!-- Ends: Save Button -->
 
-<!-- Update Changes  &&  Save As Buttons Section -->
+<!-- Starts: Update Changes  &&  Save As Buttons Section -->
 <ng-container *ngIf="isTableEditing">
     <button type="button"
         (click)="updateChangesClicked()"
@@ -109,8 +117,10 @@
         Save As
     </button>
 </ng-container>
-<!-- End of Update Changes  &&  Save As Buttons Section -->
+<!-- Ends: Update Changes  &&  Save As Buttons Section -->
 
+<!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+<!-- Ends: Spinner -->
