@@ -96,6 +96,6 @@
 	{ "model": "team_app.task", "pk": 114, "fields": { "path": "transfer_balance", "title": "Transfer Balance", "parentModule": "23", "orderNumber": 8, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 115, "fields": { "path": "settings", "title": "Settings", "parentModule": "23", "orderNumber": 9, "parentBoard": null } },
 	{ "model": "team_app.task", "pk": 116, "fields": { "path": "manage_sms_id", "title": "Manage SMS ID", "parentModule": "9", "orderNumber": 4, "parentBoard": null } },
-	{ "model": "team_app.task", "pk": 117, "fields": { "path": "manage_templates", "title": "Manage Templates", "parentModule": "9", "orderNumber": 5, "parentBoard": null } }
-
+	{ "model": "team_app.task", "pk": 117, "fields": { "path": "manage_templates", "title": "Manage Templates", "parentModule": "9", "orderNumber": 5, "parentBoard": null } },
+    { "model": "team_app.task", "pk": 118, "fields": { "path": "purchase_sms", "title": "Purchase SMS", "parentModule": "9", "orderNumber": 4, "parentBoard": null } }
 ]

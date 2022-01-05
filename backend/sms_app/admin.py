@@ -2,10 +2,11 @@ from django.contrib import admin
 
 # Register your models here.
 
-from sms_app.models import SMSPurchase, SMS, SMSDeliveryReport, SMSId
+from sms_app.models import SMSPurchase, SMS, SMSDeliveryReport, SMSId, SmsPurchaseOrder
 
 admin.site.register(SMSPurchase)
 admin.site.register(SMSDeliveryReport)
+admin.site.register(SmsPurchaseOrder)
 
 
 @admin.register(SMS)

@@ -70,7 +70,11 @@
                     <div class="row">
                         <mat-form-field style="width: 100%">
                             <mat-label>Order No(Only upto 1 Decimal)</mat-label>
-                            <input matInput type="number" value="0" min="1" step=".1" [(ngModel)]="userInput.newTutorial.orderNumber" />
+                            <input matInput type="number" value="0" min="1" step=".1" 
+                                   max="9999"
+                                   [(ngModel)]="userInput.newTutorial.orderNumber"
+                                   [pattern]="htmlRenderer.orderNoRegex"/>
+                            <mat-error>Provide a no. less than 99999 ( Upto 1 decimal )</mat-error>
                         </mat-form-field>
                     </div>
 

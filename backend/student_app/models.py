@@ -1,4 +1,5 @@
 from django.db import models
+from common.common import BasePermission
 
 from school_app.model.models import BusStop, Session, School
 
@@ -140,6 +141,10 @@ class Student(models.Model):
         return self.studentsection_set \
             .get(parentSession=session_object).rollNumber
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = ['id']
+
     class Meta:
         db_table = 'student'
 
@@ -154,6 +159,10 @@ class StudentSection(models.Model):
 
     rollNumber = models.TextField(null=True, blank=True)
     attendance = models.IntegerField(null=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_section'

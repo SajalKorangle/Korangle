@@ -14,7 +14,11 @@ import {SendSmsHtmlRenderer} from '@modules/sms/pages/send-sms/send-sms.html.ren
 import {VARIABLE_MAPPED_EVENT_LIST} from '@modules/classes/constants';
 import {InformationService} from '@services/modules/information/information.service';
 
+import { MatDialog } from '@angular/material';
 
+import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
+
+import { CommonFunctions } from '@classes/common-functions';
 @Component({
     selector: 'send-sms',
     templateUrl: './send-sms.component.html',
@@ -23,6 +27,8 @@ import {InformationService} from '@services/modules/information/information.serv
 })
 export class SendSmsComponent implements OnInit {
     user;
+
+    commonFunction = CommonFunctions.getInstance();
 
     serviceAdapter: SendSmsServiceAdapter;
     htmlRenderer: SendSmsHtmlRenderer;
@@ -35,7 +41,7 @@ export class SendSmsComponent implements OnInit {
 
     displayStudentNumber = 0;
 
-    sendToList = [{id: 1, name: 'Students'}, {id: 2, name: 'Employees'}, {id: 3, name: 'Common'}];
+    sendToList = [{ id: 1, name: 'Students' }, { id: 2, name: 'Employees' }, { id: 3, name: 'Common' }];
 
     dataForMapping = {} as any;
 
@@ -106,12 +112,13 @@ export class SendSmsComponent implements OnInit {
         },
         rte: {
             yes: false,
-            no: false,
-        },
+            no: false
+        }
     };
+    purchase: any;
 
-    constructor(
-        public studentService: StudentService,
+
+    constructor(public studentService: StudentService,
         public employeeService: EmployeeService,
         public classService: ClassService,
         public smsOldService: SmsOldService,
@@ -119,8 +126,8 @@ export class SendSmsComponent implements OnInit {
         public notificationService: NotificationService,
         public informationService: InformationService,
         public userService: UserService,
-        private cdRef: ChangeDetectorRef
-    ) {}
+        public cdRef: ChangeDetectorRef,
+        public dialog: MatDialog) { }
 
     onPage(event) {
         clearTimeout(this.timeout);
@@ -158,9 +165,9 @@ export class SendSmsComponent implements OnInit {
         this.serviceAdapter = new SendSmsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
         this.htmlRenderer = new SendSmsHtmlRenderer();
         this.htmlRenderer.initializeAdapter(this);
+
     }
 
     getMobileNumberList(returnType: string): any {
@@ -178,13 +185,14 @@ export class SendSmsComponent implements OnInit {
                 person[personType] = true; // to identify which person in list eg: x['student'] = true
                 tempList.push(person);
             }
-            if (this.userInput.selectedSendTo.id == 1) {
+            if (this.userInput.selectedSendTo.id == 1 ||  this.userInput.selectedSendTo.id == 3) {
                 if (this.includeSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
                     if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                         person, this.message, person, true)) {
                         person[personType] = true;
                         let personWithoutReference = JSON.parse(JSON.stringify(person));
                         personWithoutReference.mobileNumber = person.secondMobileNumber;
+                        personWithoutReference['isSecondNumber'] = true; // mentioning the element is secondNumber entry
                         tempList.push(personWithoutReference);
                     }
                 }
@@ -196,9 +204,13 @@ export class SendSmsComponent implements OnInit {
             this.notificationPersonList = [];
         } else if (this.userInput.selectedSendUpdateType.id == this.NOTIFICATION_TYPE_ID) {
             this.smsPersonList = [];
-            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.notificationPersonList = tempList.filter((temp) => {
+                return (!temp.isSecondNumber && temp.notification) || (this.includeSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+            });
         } else if (this.userInput.selectedSendUpdateType.id == this.SMS_AND_NOTIFICATION_TYPE_ID) {
-            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.notificationPersonList = tempList.filter((temp) => {
+                return (!temp.isSecondNumber && temp.notification) || (this.includeSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+            });
             this.smsPersonList = tempList.filter((temp1) => {
                 return (
                     this.notificationPersonList.find((temp2) => {
@@ -368,6 +380,35 @@ export class SendSmsComponent implements OnInit {
         return this.classSectionList.find((classSection) => {
             return classSection['class'].id == classId && classSection['section'].id == sectionId;
         }).selected;
+    }
+
+    getClassSectionName(classId: number, sectionId: number): string {
+        let classSection = this.classSectionList.find((classSection) => {
+            return classSection.class.id == classId && classSection.section.id == sectionId;
+        });
+        let multipleSections =
+            this.classSectionList.filter((classSection) => {
+                return classSection.class.id == classId;
+            }).length > 1;
+        return classSection.class.name + (multipleSections ? ', ' + classSection.section.name : '');
+    }
+
+    hasPurchaseSMSPermission(): boolean {
+        let moduleIdx = this.user.activeSchool.moduleList.findIndex(module => module.path === 'sms');
+        let taskIdx = -1;
+        taskIdx = this.user.activeSchool.moduleList[moduleIdx].taskList.findIndex(task => task.path === 'purchase_sms');
+        if (taskIdx === -1)
+            return false;
+
+        return true;
+    }
+
+    openPurchaseSMSDialog(): void {
+        this.dialog.open(PurchaseSmsDialogComponent, {
+            data: {
+                vm: this,
+            }
+        });
     }
 
 }
