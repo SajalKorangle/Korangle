@@ -18,6 +18,9 @@ declare const $: any;
 export class UpdateProfileComponent implements OnInit {
     user;
 
+    height = [];
+    showToolTip = [];
+
     employeeList: any;
     NULL_CONSTANT = null;
     selectedEmployeeProfile: any;
@@ -47,7 +50,7 @@ export class UpdateProfileComponent implements OnInit {
 
 
     constructor(public employeeService: EmployeeService,
-        public dialog: MatDialog, ) { }
+        public dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -57,6 +60,58 @@ export class UpdateProfileComponent implements OnInit {
         this.commonFunctions = CommonFunctions.getInstance();
         this.currentEmployeeProfile = {};
         this.currentEmployeeSessionProfile = {};
+    }
+
+    getTextHeight(textContent: string) {
+        let text = document.createElement("p");
+        let fileNameElement = document.getElementById('fileNameElement');
+        fileNameElement.appendChild(text);
+
+        text.innerHTML = textContent;
+        text.style.font = "roboto";
+        text.style.fontSize = 12 + "px";
+        text.style.width = this.getWidth() + 'px';
+        text.style.wordWrap = 'break-word';
+        text.style.color = "#959393";
+        text.style.fontWeight = "400";
+        text.style.lineHeight = "18px";
+        let height = Math.ceil(text.offsetHeight) + 100;
+        fileNameElement.removeChild(text);
+        return height;
+    }
+
+    checkToolTip(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        return this.showToolTip[index];
+    }
+
+    closeToolTip(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        this.showToolTip[index] = false;
+        this.height[index] = 120;
+    }
+
+    toolTipClicked(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        if (this.showToolTip[index]) {
+            this.showToolTip[index] = false;
+            this.height[index] = 120;
+        } else {
+            this.showToolTip[index] = true;
+            let fullName = this.getFullDocumentName(parameter);
+            this.height[index] = this.getTextHeight(fullName);
+        }
+    }
+
+    getHeight(parameter) {
+        let index = this.employeeParameterList.indexOf(parameter);
+        return this.height[index];
+    }
+
+    getWidth() {
+        let width = document.getElementById('documentElement').offsetWidth;
+        width -= 145;
+        return width;
     }
 
     getEmployeeList(employeeList: any) {
@@ -379,7 +434,22 @@ export class UpdateProfileComponent implements OnInit {
         }
     }
 
-    getDocumentName(parameter) {
+    getShortenName(document_name) {
+        let nameList = document_name.split(".");
+        let name = "";
+        for (let i = 0; i < nameList.length - 1; i++) {
+            name += nameList[i];
+        }
+
+        if (name.length > 20) {
+            name = name.substr(0, 20);
+            name += "...";
+        }
+        name += ('.' + nameList[nameList.length - 1]);
+        return name;
+    }
+
+    getFullDocumentName(parameter) {
         let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
         if (item) {
             if (item.document_name) {
@@ -389,6 +459,23 @@ export class UpdateProfileComponent implements OnInit {
                 let document_name = item.document_value.split("/");
                 document_name = document_name[document_name.length - 1];
                 return document_name.substring(document_name.indexOf("_") + 1, document_name.length);
+            }
+        }
+    }
+
+    getDocumentName(parameter) {
+        let item = this.currentEmployeeParameterValueList.find(x => x.parentEmployeeParameter === parameter.id);
+        if (item) {
+            if (item.document_name) {
+                let document_name = this.getShortenName(item.document_name);
+                return document_name;
+            }
+            else {
+                let document_name = item.document_value.split("/");
+                document_name = document_name[document_name.length - 1];
+                document_name = document_name.substring(document_name.indexOf("_") + 1, document_name.length);
+                document_name = this.getShortenName(document_name);
+                return document_name;
             }
         }
     }
