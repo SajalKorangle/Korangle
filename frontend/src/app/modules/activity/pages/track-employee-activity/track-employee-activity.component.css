@@ -1,4 +1,4 @@
-/* Filters */
+/* Starts: Filters */
 .filter-model-btn {
     font-size: 12px;
     text-decoration: underline;
@@ -9,17 +9,17 @@
     width: 35px;
     cursor: pointer;
 }
-/* End of Filters */
+/* Ends: Filters */
 
-/* Filter-description */
+/* Starts: Filter-description */
 .filters-list {
     font-size: 12px;
     line-height: 14px;
     margin-left: 4rem;
 }
-/* End of Filter-description */
+/* Ends: Filter-description */
 
-/* Search Bar */
+/* Starts: Search Bar */
 .search-bar {
     margin-left: 4rem;
     display: flex;
@@ -44,9 +44,9 @@
     border-bottom-right-radius: 2px;
     background-color: white;
 }
-/* End of Search Bar */
+/* Ends: Search Bar */
 
-/* Pagination */
+/* Starts: Pagination */
 .page-section {
     display: flex;
     justify-content: space-between;
@@ -85,9 +85,9 @@
     text-decoration: none !important;
     color: orange;
 }
-/* End of Pagination */
+/* Ends: Pagination */
 
-/* Record List */
+/* Starts: Record List */
 .record-list {
     min-height: 70vh;
     margin: 1rem 2rem;
@@ -159,18 +159,23 @@
     padding-bottom: 9px;
     word-wrap: break-word;
 }
-/* End of Record List */
+/* Ends: Record List */
 
-/* Media Query - Mobile Phone */
+/* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
+    /* Starts: Filters */
     .filter-model-btn {
         margin-left: 2rem;
     }
+    /* Ends: Filters */
 
+    /* Starts: Filter-description */
     .filters-list {
         margin-left: 2rem;
     }
+    /* Ends: Filter-description */
 
+    /* Starts: Search Bar */
     .search-bar {
         margin-left: 2rem;
         height: 20px;
@@ -179,7 +184,9 @@
     .material-icons {
         font-size: 15px;
     }
+    /* Ends: Search Bar */
 
+    /* Starts: Pagination */
     .page-section {
         font-size: 12px;
         padding: 3px 2rem;
@@ -188,7 +195,9 @@
     .page-numbers div {
         margin-right: 0.7rem;
     }
+    /* Ends: Pagination */
 
+    /* Starts: Record List */
     .record {
         display: block;
         height: 110px;
@@ -233,5 +242,6 @@
         padding-left: 1rem;
         padding-right: 1rem;
     }
+    /* Ends: Record List */
 }
-/* End of Media Query */
+/* Ends: Media Query */

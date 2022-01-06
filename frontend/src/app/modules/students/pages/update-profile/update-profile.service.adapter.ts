@@ -1,5 +1,6 @@
 import { UpdateProfileComponent } from './update-profile.component';
 import { toInteger } from 'lodash';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent;
@@ -49,32 +50,6 @@ export class UpdateProfileServiceAdapter {
         } catch (e) {
             return null;
         }
-    }
-
-    async createRecord() {
-        let parentEmployee = this.vm.user.activeSchool.employeeId;
-        let moduleName = this.vm.user.section.title;
-        let taskName = this.vm.user.section.subTitle;
-        let moduleList = this.vm.user.activeSchool.moduleList;
-        let parentTask;
-        moduleList.forEach((module) => {
-            if(moduleName === module.title) {
-                let tempTaskList = module.taskList;
-                tempTaskList.forEach((task) => {
-                    if(taskName === task.title) {
-                        parentTask = task.dbId;
-                    }
-                });
-            }
-        });
-        console.log("parentTask: ", parentTask);
-
-        let recordObject = {};
-        recordObject["parentTask"] = parentTask;
-        recordObject["parentEmployee"] = parentEmployee;
-        recordObject["activityDescription"] = this.vm.user.first_name + " updated student profile of " + this.vm.selectedStudent.name;
-        let record_list = [recordObject];
-        const response = await this.vm.genericService.createObjectList({activity_record_app: 'ActivityRecord'}, record_list);
     }
 
     updateProfile(): void {
@@ -258,7 +233,15 @@ export class UpdateProfileServiceAdapter {
                 this.vm.deleteList = [];
                 this.vm.profileImage = null;
                 alert('Student: ' + this.vm.selectedStudent.name + ' updated successfully');
-                this.createRecord();
+
+                let parentEmployee = this.vm.user.activeSchool.employeeId;
+                let moduleName = this.vm.user.section.title;
+                let taskName = this.vm.user.section.subTitle;
+                let moduleList = this.vm.user.activeSchool.moduleList;
+                let actionString = " updated student profile of ";
+                let name1 = this.vm.user.first_name;
+                let name2 = this.vm.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
                 this.vm.isLoading = false;
             },
             (error) => {

@@ -3,6 +3,7 @@ import { ATTENDANCE_STATUS_LIST } from '../../../attendance/classes/constants';
 import { StudentTest } from '../../../../services/modules/examination/models/student-test';
 import { StudentSubject } from '../../../../services/modules/subject/models/student-subject';
 import { StudentFee } from '../../../../services/modules/fees/models/student-fee';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class AddStudentServiceAdapter {
     vm: AddStudentComponent;
@@ -112,31 +113,6 @@ export class AddStudentServiceAdapter {
         }
     }
 
-    async createRecord() {
-        let parentEmployee = this.vm.user.activeSchool.employeeId;
-        let moduleName = this.vm.user.section.title;
-        let taskName = this.vm.user.section.subTitle;
-        let moduleList = this.vm.user.activeSchool.moduleList;
-        let parentTask;
-        moduleList.forEach((module) => {
-            if(moduleName === module.title) {
-                let tempTaskList = module.taskList;
-                tempTaskList.forEach((task) => {
-                    if(taskName === task.title) {
-                        parentTask = task.dbId;
-                    }
-                });
-            }
-        });
-
-        let recordObject = {};
-        recordObject["parentTask"] = parentTask;
-        recordObject["parentEmployee"] = parentEmployee;
-        recordObject["activityDescription"] = this.vm.user.first_name + " admitted " + this.vm.newStudent.name;
-        let record_list = [recordObject];
-        const response = await this.vm.genericService.createObjectList({activity_record_app: 'ActivityRecord'}, record_list);
-    }
-
     createNewStudent(): void {
         if (this.vm.newStudent.name == null || this.vm.newStudent.name == '') {
             alert('Name should be populated');
@@ -196,7 +172,15 @@ export class AddStudentServiceAdapter {
                 }
             }
         });
-        this.createRecord();
+
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let actionString = " admitted ";
+        let name1 = this.vm.user.first_name;
+        let name2 = this.vm.newStudent.name;
+
         this.vm.studentService.createObject(this.vm.studentService.student, student_form_data).then(
             (value) => {
                 this.vm.newStudentSection.parentStudent = value.id;
@@ -340,6 +324,7 @@ export class AddStudentServiceAdapter {
 
                         this.vm.initializeVariable();
 
+                        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
                         this.vm.isLoading = false;
                     },
                     (error) => {

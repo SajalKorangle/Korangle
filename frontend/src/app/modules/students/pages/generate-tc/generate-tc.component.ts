@@ -4,8 +4,6 @@ import { Student } from '../../../../classes/student';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
-import { GenerateTCServiceAdapter } from './generate-tc.service.adapter';
-import { GenericService } from '@services/generic/generic-service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import { PrintService } from '../../../../print/print-service';
@@ -13,11 +11,13 @@ import { PRINT_TC } from '../../../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 
+import { CommonFunctions } from '@modules/common/common-functions';
+
 @Component({
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [StudentOldService, SchoolOldService, SchoolService, GenericService],
+    providers: [StudentOldService, SchoolOldService, SchoolService],
 })
 export class GenerateTcComponent implements OnInit {
     user;
@@ -59,14 +59,10 @@ export class GenerateTcComponent implements OnInit {
     flag = false;
     count = 0;
 
-    serviceAdapter: GenerateTCServiceAdapter;
-
-    constructor(private studentService: StudentOldService, private schoolService: SchoolService, private printService: PrintService, public genericService: GenericService) {}
+    constructor(private studentService: StudentOldService, private schoolService: SchoolService, private printService: PrintService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        this.serviceAdapter = new GenerateTCServiceAdapter();
-        this.serviceAdapter.initializeAdapter(this);
 
         Promise.all([this.schoolService.getObjectList(this.schoolService.board, {})]).then(
             (value) => {
@@ -203,7 +199,16 @@ export class GenerateTcComponent implements OnInit {
                         this.isLoading = false;
                         if (response.status === 'success') {
                             alert('Transfer Certificate generated successfully');
-                            this.serviceAdapter.createRecord("generated");
+
+                            let parentEmployee = this.user.activeSchool.employeeId;
+                            let moduleName = this.user.section.title;
+                            let taskName = this.user.section.subTitle;
+                            let moduleList = this.user.activeSchool.moduleList;
+                            let actionString = " generated transfer certificate of ";
+                            let name1 = this.user.first_name;
+                            let name2 = this.selectedStudent.name;
+                            CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+
                             this.currentTransferCertificate.id = data.parentTransferCertificate;
                             this.selectedTransferCertificate.copy(this.currentTransferCertificate);
                             this.printTCSecondFormat();
@@ -233,7 +238,16 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert(response.message);
-                this.serviceAdapter.createRecord("updated");
+
+                let parentEmployee = this.user.activeSchool.employeeId;
+                let moduleName = this.user.section.title;
+                let taskName = this.user.section.subTitle;
+                let moduleList = this.user.activeSchool.moduleList;
+                let actionString = " updated transfer certificate of ";
+                let name1 = this.user.first_name;
+                let name2 = this.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+
                 this.selectedTransferCertificate.copy(this.currentTransferCertificate);
             },
             (error) => {
@@ -261,7 +275,16 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert('TC has been cancelled successfully');
-                this.serviceAdapter.createRecord("cancelled");
+
+                let parentEmployee = this.user.activeSchool.employeeId;
+                let moduleName = this.user.section.title;
+                let taskName = this.user.section.subTitle;
+                let moduleList = this.user.activeSchool.moduleList;
+                let actionString = " cancelled transfer certificate of ";
+                let name1 = this.user.first_name;
+                let name2 = this.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;
                 this.studentFromFilter.parentTransferCertificate = null;

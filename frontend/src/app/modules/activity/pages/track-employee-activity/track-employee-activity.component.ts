@@ -6,6 +6,7 @@ import { GenericService } from '@services/generic/generic-service';
 import { TrackEmployeeActivityServiceAdapter } from './track-employee-activity.service.adapter';
 
 import { FilterModalComponent } from '@modules/activity/components/filter-modal/filter-modal.component';
+import { TrackEmployeeActivityHtmlRenderer } from './track-employee-activity.html.renderer';
 
 import { MatDialog } from '@angular/material';
 
@@ -21,8 +22,6 @@ export class TrackEmployeeActivityComponent implements OnInit {
     isLoading: boolean = false;
 
     activityRecordList = [];
-    // filteredActivityRecordList = [];
-    // displayedRecordList = [];
     employeeList = [];
     taskList = [];
 
@@ -41,6 +40,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
     backgroundColorList = [];
 
     serviceAdapter: TrackEmployeeActivityServiceAdapter;
+    htmlRenderer: TrackEmployeeActivityHtmlRenderer;
 
     constructor(
         public genericService: GenericService,
@@ -55,6 +55,9 @@ export class TrackEmployeeActivityComponent implements OnInit {
         this.serviceAdapter.initializeData();
 
         this.timeSpanData["dateFormat"] = "- None";
+
+        this.htmlRenderer = new TrackEmployeeActivityHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
     /* Initialize Employee List */
@@ -68,7 +71,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
             tempEmployee["selected"] = false;
             this.employeeList.push(tempEmployee);
         });
-    }
+    }  // Ends: initializeEmployeeList()
 
     /* Initialize Task List */
     initializeTaskList(): void {
@@ -90,7 +93,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
                 this.taskList.push(tempTask);
             });
         });
-    }
+    }  // Ends: initializeTaskList()
 
     /* Initialize Total Records */
     initializeTotalRecords(employeeList: any) {
@@ -101,10 +104,10 @@ export class TrackEmployeeActivityComponent implements OnInit {
 
         this.totalPages = Math.ceil(this.totalRecords/this.numberOfRecordsPerPage);
         this.endNumber = Math.min(this.numberOfRecordsPerPage, this.totalRecords);
-        if(this.endNumber) {
+        if (this.endNumber) {
             this.startNumber = 1;
         }
-    }
+    }  // Ends: initializeTotalRecords()
 
     isMobile(): boolean {
         if (window.innerWidth > 991) {
@@ -120,103 +123,48 @@ export class TrackEmployeeActivityComponent implements OnInit {
         const b = parseInt(hex.slice(5, 7), 16);
         const alpha = "0.5";
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }
+    }  // Ends: hexToRGBA()
 
     /* Generate Random Color */
     getBackgroundColor(): string {
         let randomColor = "#4CAF50";
-        while(true) {
+        while (true) {
             randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
-            if(!this.backgroundColorList.includes(randomColor)) {
+            if (!this.backgroundColorList.includes(randomColor)) {
                 break;
             }
         }
         this.backgroundColorList.push(randomColor);
         return this.hexToRGBA(randomColor);
-    }
+    }  // Ends: getBackgroundColor()
 
     /* Records Based on Current Page */
     getActivityRecordList() {
         this.endNumber = Math.min(10 * this.currentPage, this.totalRecords);
         this.startNumber = Math.min(10 * (this.currentPage - 1) + 1, this.endNumber);    /* If totalRecords == 0, ==> startNumber = 0 & endNumber = 0 */
         this.serviceAdapter.getRecordsFromFilters();
-    }
+    }  // Ends: getActivityRecordList()
 
     setCurrentPage(currentPage) {
         this.currentPage = currentPage;
         this.getActivityRecordList();
-    }
+    }  // Ends: setCurrentPage()
 
     /* Go to Previous Page */
     previousPage() {
-        if(this.currentPage > 1) {
+        if (this.currentPage > 1) {
             this.currentPage -= 1;
             this.getActivityRecordList();
         }
-    }
+    }  // Ends: previousPage()
 
     /* Go to Next Page */
     nextPage() {
-        if(this.currentPage < this.totalPages) {
+        if (this.currentPage < this.totalPages) {
             this.currentPage += 1;
             this.getActivityRecordList();
         }
-    }
-
-    /* Selected Pages in Filter Modal */
-    getPagesList() {
-        let list = "";
-        this.taskList.forEach((task) => {
-            if(task.selected) {
-                if(list == "") {
-                    list = task.moduleTitle + " - " + task.taskTitle;
-                } else {
-                    list = list + ", " + task.moduleTitle + " - " + task.taskTitle;
-                }
-            }
-        });
-
-        if(list == "") {
-            list = "- None";
-        } else {
-            list = "( " + list + " )";
-        }
-        return list;
-    }
-
-    /* Selected Employees in Filter Modal */
-    getEmployeesList() {
-        let list = "";
-        this.employeeList.forEach((employee) => {
-            if(employee.selected) {
-                if(list == "") {
-                    list = employee.name;
-                } else {
-                    list = list + ", " + employee.name;
-                }
-            }
-        });
-
-        if(list == "") {
-            list = "- None";
-        } else {
-            list = "( " + list + " )";
-        }
-        return list;
-    }
-
-    /* Format: "-None"  or  "StarteDate to EndDate" */
-    getTimeSpanData() {
-        return this.timeSpanData["dateFormat"];
-    }
-
-    /* Newest or Oldest */
-    getSortType() {
-        if(this.sortType) {
-            return ", " + this.sortType;
-        }
-        return "";
-    }
+    }  // Ends: nextPage()
 
     /* Time(hh:mm)  &&  Date(dd month_name year) */
     getDateTimeOfRecord(record) {
@@ -231,205 +179,60 @@ export class TrackEmployeeActivityComponent implements OnInit {
 
         timeDate = hour + ":" + minutes + ", " + date;
 
-        if(parseInt(date) === 1) {
+        if (parseInt(date) === 1) {
             timeDate += "st ";
-        } else if(parseInt(date) === 2) {
+        } else if (parseInt(date) === 2) {
             timeDate += "nd ";
-        } else if(parseInt(date) === 3) {
+        } else if (parseInt(date) === 3) {
             timeDate += "rd ";
         } else {
             timeDate += "th ";
         }
 
-        if(month == 1) {
+        if (month == 1) {
             timeDate += "January ";
-        } else if(month == 2) {
+        } else if (month == 2) {
             timeDate += "February ";
-        } else if(month == 3) {
+        } else if (month == 3) {
             timeDate += "March ";
-        } else if(month == 4) {
+        } else if (month == 4) {
             timeDate += "April ";
-        } else if(month == 5) {
+        } else if (month == 5) {
             timeDate += "May ";
-        } else if(month == 6) {
+        } else if (month == 6) {
             timeDate += "June ";
-        } else if(month == 7) {
+        } else if (month == 7) {
             timeDate += "July ";
-        } else if(month == 8) {
+        } else if (month == 8) {
             timeDate += "August ";
-        } else if(month == 9) {
+        } else if (month == 9) {
             timeDate += "September ";
-        } else if(month == 10) {
+        } else if (month == 10) {
             timeDate += "October ";
-        } else if(month == 11) {
+        } else if (month == 11) {
             timeDate += "November ";
-        } else if(month == 12) {
+        } else if (month == 12) {
             timeDate += "December ";
         }
 
         timeDate += year;
         return timeDate;
-    }
-    /* End of getDateTime */
+    }  // Ends: getDateTimeOfRecord()
 
-    /* Get Backgroung Color of Icon */
-    getIconBGColor(taskId) {
-        let color = "#4CAF50";
-        this.taskList.forEach((task) => {
-            if(task.taskDbId === taskId) {
-                color = task.bgColor;
-            }
-        });
-        return color;
-    }
-
-    /* Get Icon of Module */
-    getIcon(taskId) {
-        let icon = "";
-        this.taskList.forEach((task) => {
-            if(task.taskDbId === taskId) {
-                icon = task.moduleIcon;
-            }
-        });
-        return icon;
-    }
-
-    /* Get Employee of Record */
-    getEmployeeName(employeeId) {
-        let employeeName = "";
-        this.employeeList.forEach((employee) => {
-            if(employee.dbId === employeeId) {
-                employeeName = employee.name;
-            }
-        });
-        return employeeName;
-    }
-
-    /* Get Task of Record */
-    getModuleTaskName(taskId) {
-        let moduleTaskName = "";
-        this.taskList.forEach((task) => {
-            if(task.taskDbId === taskId) {
-                moduleTaskName = task.moduleTitle + " - " + task.taskTitle;
-            }
-        });
-        return moduleTaskName;
-    }
-
-    // getTaskListFromFilters() {
-    //     let taskIdList = [];
-    //     this.taskList.forEach((task) => {
-    //         if(task.selected) {
-    //             taskIdList.push(task.taskDbId);
-    //         }
-    //     });
-    //
-    //     let employeeIdList = [];
-    //     this.employeeList.forEach((employee) => {
-    //         if(employee.selected) {
-    //             employeeIdList.push(employee.dbId);
-    //         }
-    //     });
-    //
-    //     this.filteredActivityRecordList = [];
-    //     this.activityRecordList.forEach((record) => {
-    //         let check = true;
-    //         if(taskIdList.length && !taskIdList.includes(record.parentTask)) {
-    //             check = false;
-    //         }
-    //         if(employeeIdList.length && !employeeIdList.includes(record.parentEmployee)) {
-    //             check = false;
-    //         }
-    //         if(this.timeSpanData["dateFormat"] != "- None") {
-    //             let createdAt = record.createdAt;
-    //             let startDate = this.timeSpanData["dateFormat"].split(" ")[0];
-    //             let endDate = this.timeSpanData["dateFormat"].split(" ")[2];
-    //
-    //             let [sDate, sMonth, sYear] = startDate.split("-");
-    //             let [eDate, eMonth, eYear] = endDate.split("-");
-    //
-    //             sDate = parseInt(sDate);
-    //             sMonth = parseInt(sMonth);
-    //             sYear = parseInt(sYear);
-    //
-    //             eDate = parseInt(eDate);
-    //             eMonth = parseInt(eMonth);
-    //             eYear = parseInt(eYear);
-    //
-    //             let year = parseInt(createdAt[0] + createdAt[1] + createdAt[2] + createdAt[3]);
-    //             let month = parseInt(createdAt[5] + createdAt[6]);
-    //             let date = parseInt(createdAt[8] + createdAt[9]);
-    //
-    //             startDate = new Date(sYear, sMonth - 1, sDate);
-    //             endDate = new Date(eYear, eMonth - 1, eDate);
-    //             createdAt = new Date(year, month - 1, date);
-    //
-    //             if(startDate.getTime() > createdAt.getTime() || createdAt.getTime() > endDate.getTime()) {
-    //                 check = false;
-    //             }
-    //         }
-    //
-    //         if(check) {
-    //             this.filteredActivityRecordList.push(record);
-    //         }
-    //     });
-    //
-    //     this.currentPage = 1;
-    //     if(this.sortType) {
-    //         if(this.sortType[0] == 'N') {
-    //             this.filteredActivityRecordList.sort(function(a, b) {
-    //
-    //                 let yearA = parseInt(a.createdAt[0] + a.createdAt[1] + a.createdAt[2] + a.createdAt[3]);
-    //                 let monthA = parseInt(a.createdAt[5] + a.createdAt[6]);
-    //                 let dateA = parseInt(a.createdAt[8] + a.createdAt[9]);
-    //
-    //                 let yearB = parseInt(b.createdAt[0] + b.createdAt[1] + b.createdAt[2] + b.createdAt[3]);
-    //                 let monthB = parseInt(b.createdAt[5] + b.createdAt[6]);
-    //                 let dateB = parseInt(b.createdAt[8] + b.createdAt[9]);
-    //
-    //                 if(yearA == yearB) {
-    //                     if(monthA == monthB) {
-    //                         return dateB - dateA;
-    //                     }
-    //                     return monthB - monthA;
-    //                 }
-    //                 return yearB - yearA;
-    //             });
-    //         } else {
-    //             this.filteredActivityRecordList.sort(function(a, b) {
-    //                 let yearA = parseInt(a[0] + a[1] + a[2] + a[3]);
-    //                 let monthA = parseInt(a[5] + a[6]);
-    //                 let dateA = parseInt(a[14] + a[15]);
-    //
-    //                 let yearB = parseInt(b[0] + b[1] + b[2] + b[3]);
-    //                 let monthB = parseInt(b[5] + b[6]);
-    //                 let dateB = parseInt(b[14] + b[15]);
-    //
-    //                 if(yearA == yearB) {
-    //                     if(monthA == monthB) {
-    //                         return dateA - dateB;
-    //                     }
-    //                     return monthA - monthB;
-    //                 }
-    //                 return yearA - yearB;
-    //             });
-    //         }
-    //     }
-    //     this.getActivityRecordList();
-    // }
-
+    /* Debouncing */
     debounce(func, timeout = 300){
         let timer;
         return (...args) => {
         clearTimeout(timer);
             timer = setTimeout(() => { func.apply(this, args); }, timeout);
          };
-    }
+    }  // Ends: debounce()
 
+    /* Apply Filters */
     applyFilters() {
         this.currentPage = 1;
         this.getActivityRecordList();
-    }
+    }  // Ends: applyFilters()
 
     seachChanged = this.debounce(() => this.applyFilters());
 
@@ -444,8 +247,9 @@ export class TrackEmployeeActivityComponent implements OnInit {
             }
         });
 
+        /* On Closing Modal */
         dialogRef.afterClosed().subscribe((data) => {
-            if(data) {
+            if (data) {
                 this.taskList = data.filtersData.taskList;
                 this.employeeList = data.filtersData.employeeList;
                 this.timeSpanData = data.filtersData.timeSpanData;
@@ -453,5 +257,5 @@ export class TrackEmployeeActivityComponent implements OnInit {
                 this.applyFilters();
             }
         });
-    }
+    }  // Ends: openFilterDialog()
 }

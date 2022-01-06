@@ -1,18 +1,20 @@
-/* Modal Container */
+/* Starts: Modal Container */
 .modal-container {
     height: 70vh;
     width: 60vw;
 }
+/* Ends: Modal Container */
 
-/* Modal Header */
+/* Starts: Modal Header */
 .modal-header {
     border-right: 2px solid #000000;   /* Black */
     padding-right: 10rem;
     padding-bottom: 0rem;
     border-bottom: 0px;
 }
+/* Ends: Modal Header */
 
-/* Page Names  &&  Employee Names Section */
+/* Starts: Page Names  &&  Employee Names Section */
 .names {
     display: flex;
     justify-content: space-between;
@@ -44,9 +46,9 @@
     height: 30vh;
     width: 100%;
 }
-/* End of Page Names  &&  Employee Names Section */
+/* Ends: Page Names  &&  Employee Names Section */
 
-/* Time Span Section */
+/* Starts: Time Span Section */
 .time-span-sub-section {
     display: flex;
     justify-content: space-between;
@@ -77,15 +79,16 @@
 .radio-button {
     flex-basis: 30%;
 }
-/* Time Span Section */
+/* Ends: Time Span Section */
 
-/* FIlters Description */
+/* Starts: FIlters Description */
 .filters-list {
     font-size: 12px;
     line-height: 14px;
 }
+/* Ends: FIlters Description */
 
-/* Bottom Buttons */
+/* Starts: Bottom Buttons */
 .bottom-btns {
     float: right;
 }
@@ -99,23 +102,29 @@
     text-transform: capitalize;
     padding: 7px 25px;
 }
+/* Ends: Bottom Buttons */
 
 /* Media Query - Mobile Phones */
 @media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
     .modal-container {
         height: 85vh;
         width: 100%;
         margin: 0;
         padding: 0;
     }
+    /* Ends: Modal Header */
 
+    /* Starts: Page Names  &&  Employee Names Section */
     .modal-header {
         font-size: 14px;
         margin: 0;
         padding: 0;
         padding-right: 3rem;
     }
+    /* Ends: Modal Header */
 
+    /* Starts: Page Names  &&  Employee Names Section */
     .names {
         padding: 0;
         margin: 0;
@@ -150,7 +159,9 @@
         padding: 0;
         margin: 0;
     }
+    /* Ends: Page Names  &&  Employee Names Section */
 
+    /* Starts: Time Span Section */
     .time-span-sub-section {
         justify-content: flex-start;
         flex-direction: column;
@@ -200,11 +211,14 @@
     .radio-button:last-child {
         margin-bottom: 0;
     }
+    /* Ends: Time Span Section */
 
+    /* Starts: FIlters Description */
     .filters-list {
         margin: 0;
         padding: 0;
         font-size: 14px;
     }
+    /* Ends: FIlters Description */
 }
 /* End of Media Query */

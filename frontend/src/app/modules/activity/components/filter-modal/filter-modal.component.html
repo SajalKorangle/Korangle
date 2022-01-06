@@ -1,12 +1,15 @@
+<!-- Starts: Modal Container -->
 <mat-dialog-content class="modal-container">
+    <!-- Starts: Modal Header -->
     <b class="modal-header">Apply Filters</b>
+    <!-- Ends: Modal Header -->
 
     <br />
     <br />
-    <!-- Page Names  &&  Employee Names Section -->
+    <!-- Starts: Page Names  &&  Employee Names Section -->
     <div class="names">
 
-        <!-- Page Names -->
+        <!-- Starts: Page Names -->
         <div class="page-name-section">
             <b>Page Names</b><br /><br />
             <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
@@ -31,8 +34,9 @@
                 </ng-container>
             </cdk-virtual-scroll-viewport>
         </div>
+        <!-- Ends: Page Names -->
 
-        <!-- Employee Names -->
+        <!-- Starts: Employee Names -->
         <div class="employee-name-section">
             <b>Employee Names</b><br /><br />
             <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
@@ -57,17 +61,18 @@
                 </ng-container>
             </cdk-virtual-scroll-viewport>
         </div>
+        <!-- Ends: Employee Names -->
 
     </div>
-    <!-- End of Page Names  &&  Employee Names Section -->
+    <!-- Ends: Page Names  &&  Employee Names Section -->
 
     <br />
     <br />
-    <!-- Time Span Section -->
+    <!-- Starts: Time Span Section -->
     <div class="time-span-section">
         <b>Time Span</b><br />
 
-        <!-- Start Date -- Time Span Sub-Section -->
+        <!-- Starts: Start Date -- Time Span Sub-Section -->
         <div class="time-span-sub-section">
             <div class="title">
                 Start Date -
@@ -97,9 +102,9 @@
                 </mat-radio-group>
             </div>
         </div>
-        <!-- End of Start Date -- Time Span Sub-Section -->
+        <!-- Ends: Start Date -- Time Span Sub-Section -->
 
-        <!-- End Date -- Time Span Sub-Section -->
+        <!-- Starts: End Date -- Time Span Sub-Section -->
         <div class="time-span-sub-section">
             <div class="title">
                 End Date -
@@ -129,9 +134,9 @@
                 </mat-radio-group>
             </div>
         </div>
-        <!-- End of End Date -- Time Span Sub-Section -->
+        <!-- Ends: End Date -- Time Span Sub-Section -->
 
-        <!-- Sort Type -- Time Span Sub-Section -->
+        <!-- Starts: Sort Type -- Time Span Sub-Section -->
         <div class="time-span-sub-section">
             <div class="title" style="margin-bottom: 1rem;">
                 Sort
@@ -147,28 +152,28 @@
                     <mat-radio-button class="radio-button" value="Oldest First">
                         Oldest First
                     </mat-radio-button>
-                    <mat-radio-button *ngIf="!isMobile()" class="radio-button" value="Oldest First" style="opacity: 0">
-                        Oldest First
+                    <mat-radio-button *ngIf="!htmlRenderer.isMobile()" class="radio-button" value="temp" style="opacity: 0">
+                        temp
                     </mat-radio-button>
                 </mat-radio-group>
             </div>
         </div>
-        <!-- End Sort Type -- Time Span Sub-Section -->
+        <!-- Ends: Sort Type -- Time Span Sub-Section -->
     </div>
-    <!-- End of Time Span Section -->
+    <!-- Ends: Time Span Section -->
 
     <br />
     <br />
-    <!-- Filter-description -->
+    <!-- Starts: Filter-description -->
     <div class="filters-list">
-        <b>Pages </b> <span>{{getPagesList()}}, </span>
-        <b>Employees </b> <span>{{getEmployeesList()}}, </span>
-        <b>Time Span </b> <span>{{getTimeSpanData().dateFormat}}</span><span>{{getSortType()}}</span>
+        <b>Pages </b> <span>{{htmlRenderer.getPagesList()}}, </span>
+        <b>Employees </b> <span>{{htmlRenderer.getEmployeesList()}}, </span>
+        <b>Time Span </b> <span>{{htmlRenderer.getTimeSpanData().dateFormat}}</span><span>{{htmlRenderer.getSortType()}}</span>
     </div>
-    <!-- End of Filter-description -->
+    <!-- Ends: Filter-description -->
 
     <br />
-    <!-- Clear All Btn  &&  Apply Btn -->
+    <!-- Starts: Clear All Btn  &&  Apply Btn -->
     <div class="bottom-btns">
         <button
             type="button"
@@ -190,4 +195,6 @@
             Apply
         </button>
     </div>
+    <!-- Ends: Clear All Btn  &&  Apply Btn -->
 </mat-dialog-content>
+<!-- Ends: Modal Container -->

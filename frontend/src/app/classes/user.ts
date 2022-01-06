@@ -105,7 +105,6 @@ export class User {
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
         this.activeSchool = this.schoolList[0];
-        console.log("Active School: ", this.activeSchool);
         this.initializeTask();
     }
 

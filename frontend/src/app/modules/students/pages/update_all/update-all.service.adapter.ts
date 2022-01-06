@@ -1,5 +1,6 @@
 import { UpdateAllComponent } from './update-all.component';
 import { CommonFunctions } from '@classes/common-functions';
+import { CommonFunctions as CommonFunctionsRecordActivity } from '@modules/common/common-functions';
 
 export class UpdateAllServiceAdapter {
     vm: UpdateAllComponent;
@@ -50,31 +51,6 @@ export class UpdateAllServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    }
-
-    async createRecord(key, name) {
-        let parentEmployee = this.vm.user.activeSchool.employeeId;
-        let moduleName = this.vm.user.section.title;
-        let taskName = this.vm.user.section.subTitle;
-        let moduleList = this.vm.user.activeSchool.moduleList;
-        let parentTask;
-        moduleList.forEach((module) => {
-            if(moduleName === module.title) {
-                let tempTaskList = module.taskList;
-                tempTaskList.forEach((task) => {
-                    if(taskName === task.title) {
-                        parentTask = task.dbId;
-                    }
-                });
-            }
-        });
-
-        let recordObject = {};
-        recordObject["parentTask"] = parentTask;
-        recordObject["parentEmployee"] = parentEmployee;
-        recordObject["activityDescription"] = this.vm.user.first_name + " updated " + key + " of " + name + ".";
-        let record_list = [recordObject];
-        const response = await this.vm.genericService.createObjectList({activity_record_app: 'ActivityRecord'}, record_list);
     }
 
     updateStudentField(key: any, student: any, newValue: any, inputType: any): void {
@@ -185,7 +161,15 @@ export class UpdateAllServiceAdapter {
                             (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = false;
                         } else if (inputType === 'list') {
                         }
-                        this.createRecord(key, student.name);
+
+                        let parentEmployee = this.vm.user.activeSchool.employeeId;
+                        let moduleName = this.vm.user.section.title;
+                        let taskName = this.vm.user.section.subTitle;
+                        let moduleList = this.vm.user.activeSchool.moduleList;
+                        let actionString = " updated " + key + " of ";
+                        let name1 = this.vm.user.first_name;
+                        let name2 = student.name;
+                        CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
                     } else {
                         alert('Not able to update ' + key + ' for value: ' + newValue);
                     }

@@ -24,9 +24,9 @@ export class TrackEmployeeActivityServiceAdapter {
 
         let employeeList = [];
         [
-            employeeList,   // 1
+            employeeList,   // 0
         ] = await Promise.all([
-            employeeQuery,   // 1
+            employeeQuery,   // 0
         ]);
 
         this.vm.initializeEmployeeList(employeeList);
@@ -44,7 +44,7 @@ export class TrackEmployeeActivityServiceAdapter {
                 recordQuery,   // 0
         ]);
         this.vm.isLoading = false;
-    }
+    }  // Ends: initializeData()
 
     /* Get Records Based on Applied Filters. */
     async getRecordsFromFilters() {
@@ -59,27 +59,27 @@ export class TrackEmployeeActivityServiceAdapter {
 
         let taskIdList = [];
         this.vm.taskList.forEach((task) => {
-            if(task.selected) {
+            if (task.selected) {
                 taskIdList.push(task.taskDbId);
             }
         });
-        if(taskIdList.length) {
+        if (taskIdList.length) {
             filter["parentTask__in"] = taskIdList;
             filter2["activityRecordList__parentTask__in"] = taskIdList;
         }
 
         let employeeIdList = [];
         this.vm.employeeList.forEach((employee) => {
-            if(employee.selected) {
+            if (employee.selected) {
                 employeeIdList.push(employee.dbId);
             }
         });
-        if(employeeIdList.length) {
+        if (employeeIdList.length) {
             filter["parentEmployee__in"] = employeeIdList;
             filter2["activityRecordList__parentEmployee__in"] = employeeIdList;
         }
 
-        if(this.vm.timeSpanData["dateFormat"] != "- None") {
+        if (this.vm.timeSpanData["dateFormat"] != "- None") {
             let [startDate, to, endDate] = this.vm.timeSpanData["dateFormat"].split(" ");
 
             let [sDate, sMonth, sYear] = startDate.split("-");
@@ -93,13 +93,13 @@ export class TrackEmployeeActivityServiceAdapter {
             filter2["activityRecordList__createdAt__range"] = [startDate, endDate];
         }
 
-        if(this.vm.seachString) {
+        if (this.vm.seachString) {
             filter["activityDescription__icontains"] = this.vm.seachString;
             filter2["activityRecordList__activityDescription__icontains"] = this.vm.seachString;
         }
 
         let orderBy = "createdAt";
-        if(this.vm.sortType == "Newest First") {
+        if (this.vm.sortType == "Newest First") {
             orderBy = "-createdAt";
         }
 
@@ -134,5 +134,5 @@ export class TrackEmployeeActivityServiceAdapter {
         ]);
 
         this.vm.isLoading = false;
-    }
+    }  // Ends: getRecordsFromFilters()
 }

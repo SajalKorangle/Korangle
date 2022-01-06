@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { PrintProfileServiceAdapter } from './print-profile.service.adapter';
-import { GenericService } from '@services/generic/generic-service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
@@ -10,6 +9,7 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { DataStorage } from '../../../../classes/data-storage';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_PROFILE } from '../../../../print/print-routes.constants';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 declare const $: any;
 
@@ -17,7 +17,7 @@ declare const $: any;
     selector: 'app-print-profile',
     templateUrl: './print-profile.component.html',
     styleUrls: ['./print-profile.component.css'],
-    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, GenericService],
+    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService],
 })
 export class PrintProfileComponent implements OnInit {
     sessionList = [];
@@ -46,8 +46,7 @@ export class PrintProfileComponent implements OnInit {
         public subjectService: SubjectService,
         public feeService: FeeService,
         public examinationService: ExaminationService,
-        public printService: PrintService,
-        public genericService: GenericService,
+        public printService: PrintService
     ) {}
 
     ngOnInit(): void {
@@ -100,7 +99,14 @@ export class PrintProfileComponent implements OnInit {
     }
 
     printProfile() {
-        this.serviceAdapter.createRecord();
+        let parentEmployee = this.user.activeSchool.employeeId;
+        let moduleName = this.user.section.title;
+        let taskName = this.user.section.subTitle;
+        let moduleList = this.user.activeSchool.moduleList;
+        let actionString = " printed profile of ";
+        let name1 = this.user.first_name;
+        let name2 = this.selectedStudent.name;
+        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
         const value = {
             studentProfile: this.selectedStudent,
             studentSection: this.selectedStudentSection,

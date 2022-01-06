@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
-import { GenericService } from '@services/generic/generic-service';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
 import { StudentService } from "../../../../services/modules/student/student.service";
@@ -36,8 +35,7 @@ declare const $: any;
         ExaminationService,
         VehicleOldService,
         FeeService,
-        BankService,
-        GenericService,
+        BankService
     ],
 })
 export class AddStudentComponent implements OnInit {
@@ -79,7 +77,6 @@ export class AddStudentComponent implements OnInit {
         public examinationService: ExaminationService,
         public feeService: FeeService,
         public bankService: BankService,
-        public genericService: GenericService,
         public dialog: MatDialog
     ) { }
 

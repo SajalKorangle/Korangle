@@ -1,5 +1,5 @@
 <div>
-    <!-- Filters -->
+    <!-- Starts: Filters -->
     <ng-container>
         <p
             class="text-{{ user.activeSchool.secondaryThemeColor }} filter-model-btn"
@@ -8,31 +8,32 @@
             Filters
         </p>
     </ng-container>
-    <!-- End of Filters -->
+    <!-- Ends: Filters -->
 
-    <!-- Filter-description -->
+    <!-- Starts: Filter-description -->
     <div class="filters-list">
-        <b>- Pages </b> <span>{{getPagesList()}}, </span>
-        <b>Employees </b> <span>{{getEmployeesList()}}, </span>
-        <b>Time Span </b> <span>{{getTimeSpanData() + getSortType()}}</span>
+        <b>- Pages </b> <span>{{ htmlRenderer.getPagesList() }}, </span>
+        <b>Employees </b> <span>{{ htmlRenderer.getEmployeesList() }}, </span>
+        <b>Time Span </b> <span>{{ htmlRenderer.getTimeSpanData() + htmlRenderer.getSortType() }}</span>
     </div>
-    <!-- End of Filter-description -->
+    <!-- Ends: Filter-description -->
 
-    <!-- Search Bar -->
+    <!-- Starts: Search Bar -->
     <div class="search-bar">
         <input class="search-field" type="search" placeholder="Type Keywords" [ngModel]="seachString" (ngModelChange)="seachString = $event; seachChanged()">
         <button class="seach-btn"><i class="material-icons">search</i></button>
     </div>
-    <!-- End of Search Bar -->
+    <!-- Ends: Search Bar -->
 
-    <!-- Pagination -->
+    <!-- Starts: Pagination -->
     <div class="page-section">
         <div class="page-count-section">
-            {{ startNumber }}-{{endNumber}} of {{ totalRecords }} results
+            {{ startNumber }}-{{ endNumber }} of {{ totalRecords }} results
         </div>
         <div class="page-number-section">
             <i class="material-icons" (click)="previousPage()">chevron_left</i>
             <div class="page-numbers">
+                <!-- Starts: Format - < 1 2 3 4 5 6 > -->
                 <ng-container *ngIf="totalPages <= 6">
                     <div [className]="currentPage === 1 ? 'active' : ''" (click)="setCurrentPage(1)">1</div>
                     <div *ngIf="totalPages >= 2" [className]="currentPage === 2 ? 'active' : ''" (click)="setCurrentPage(2)">2</div>
@@ -41,7 +42,9 @@
                     <div *ngIf="totalPages >= 5" [className]="currentPage === 5 ? 'active' : ''" (click)="setCurrentPage(5)">5</div>
                     <div *ngIf="totalPages >= 6" [className]="currentPage === 6 ? 'active' : ''" (click)="setCurrentPage(6)">6</div>
                 </ng-container>
+                <!-- Ends: Format - < 1 2 3 4 5 6 > -->
 
+                <!-- Starts: Format - < 1 ... (x - 1) x (x + 1) ... lastPage > -->
                 <ng-container *ngIf="totalPages > 6">
                     <div [className]="currentPage === 1 ? 'active' : ''" (click)="setCurrentPage(1)">1</div>
                     <ng-container *ngIf="currentPage <= 3">
@@ -65,30 +68,31 @@
                     </ng-container>
                     <div [className]="currentPage === totalPages ? 'active' : ''" (click)="setCurrentPage(totalPages)">{{ totalPages }}</div>
                 </ng-container>
+                <!-- Ends: Format - < 1 ... (x - 1) x (x + 1) ... lastPage > -->
             </div>
             <i class="material-icons" (click)="nextPage()">chevron_right</i>
         </div>
     </div>
-    <!-- End of Pagination -->
+    <!-- Ends: Pagination -->
 
-    <!-- Record List -->
+    <!-- Starts: Record List -->
     <div class="record-list">
         <ng-container *ngIf="!isMobile()">
             <div class="record" *ngFor="let record of activityRecordList">
-                <div class="icon" [ngStyle]="{'background-color': getIconBGColor(record.parentTask)}">
-                    <i class="material-icons">{{ getIcon(record.parentTask) }}</i>
+                <div class="icon" [ngStyle]="{'background-color': htmlRenderer.getIconBGColor(record.parentTask)}">
+                    <i class="material-icons">{{ htmlRenderer.getIcon(record.parentTask) }}</i>
                 </div>
                 <div class="title">
                     <div>
-                        <div class="name">{{ getEmployeeName(record.parentEmployee) }}</div>
-                        <div class="module-task">{{ getModuleTaskName(record.parentTask) }}</div>
+                        <div class="name">{{ htmlRenderer.getEmployeeName(record.parentEmployee) }}</div>
+                        <div class="module-task">{{ htmlRenderer.getModuleTaskName(record.parentTask) }}</div>
                     </div>
                 </div>
                 <div class="description">
                     <div>{{ record.activityDescription }}</div>
                 </div>
                 <div class="time">
-                    <div>{{getDateTimeOfRecord(record)}}</div>
+                    <div>{{ htmlRenderer.getDateTimeOfRecord(record) }}</div>
                 </div>
             </div>
         </ng-container>
@@ -96,17 +100,17 @@
         <ng-container *ngIf="isMobile()">
             <div class="record" *ngFor="let record of activityRecordList">
                 <div class="header">
-                    <div class="icon" [ngStyle]="{'background-color': getIconBGColor(record.parentTask)}">
-                        <i class="material-icons">{{ getIcon(record.parentTask) }}</i>
+                    <div class="icon" [ngStyle]="{'background-color': htmlRenderer.getIconBGColor(record.parentTask)}">
+                        <i class="material-icons">{{ htmlRenderer.getIcon(record.parentTask) }}</i>
                     </div>
                     <div class="title">
                         <div>
-                            <div class="name">{{ getEmployeeName(record.parentEmployee) }}</div>
-                            <div class="module-task">{{ getModuleTaskName(record.parentTask) }}</div>
+                            <div class="name">{{ htmlRenderer.getEmployeeName(record.parentEmployee) }}</div>
+                            <div class="module-task">{{ htmlRenderer.getModuleTaskName(record.parentTask) }}</div>
                         </div>
                     </div>
                     <div class="time">
-                        <div>{{getDateTimeOfRecord(record)}}</div>
+                        <div>{{ htmlRenderer.getDateTimeOfRecord(record) }}</div>
                     </div>
                 </div>
                 <div class="description">
@@ -115,9 +119,11 @@
             </div>
         </ng-container>
     </div>
-    <!-- End of Record List -->
+    <!-- Ends: Record List -->
 </div>
 
+<!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
+<!-- Ends: Spinner -->

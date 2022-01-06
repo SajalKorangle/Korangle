@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { DataStorage } from '../../../../classes/data-storage';
-
+import { FilterModalHtmlRenderer } from './filter-modal.html.renderer';
 
 @Component({
     selector: 'app-filter-modal',
@@ -26,6 +26,8 @@ export class FilterModalComponent implements OnInit {
 
     sortType;
 
+    htmlRenderer: FilterModalHtmlRenderer;
+
     constructor(
         public dialogRef: MatDialogRef<FilterModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
@@ -33,8 +35,9 @@ export class FilterModalComponent implements OnInit {
         this.employeeList = data.employeeList;
         this.taskList = data.taskList;
 
-        if(data.sortType) {
-            if(data.sortType[0] == 'N') {
+        /* Initializing Sort Type */
+        if (data.sortType) {
+            if (data.sortType[0] == 'N') {
                 this.sortType = "Newest First";
             } else {
                 this.sortType = "Oldest First";
@@ -42,241 +45,106 @@ export class FilterModalComponent implements OnInit {
         }
 
         /* Initializing Data of Time Span Section */
-        if(data.timeSpanData["dateFormat"] != "- None") {
+        if (data.timeSpanData["dateFormat"] != "- None") {
 
-            if(data.timeSpanData.startDateType == "sDate") {
+            if (data.timeSpanData.startDateType == "sDate") {   // Start Date Type: startDate
                 this.startDate = "sDate";
                 let startDate = data.timeSpanData["dateFormat"].split(" ")[0];
                 let [sDate, sMonth, sYear] = startDate.split("-");
                 this.sDate = sYear + "-" + sMonth + "-" + sDate;
 
-            } else if(data.timeSpanData.startDateType == "dayOne") {
+            } else if (data.timeSpanData.startDateType == "dayOne") {   // Start Date Type: 1st day of month
                 this.startDate = "dayOne";
 
-            } else if(data.timeSpanData.startDateType.includes("startDays")) {
+            } else if (data.timeSpanData.startDateType.includes("startDays")) {   // Start Date Type: days ago
                 this.startDate = "startDays";
                 this.startDays = 0;
-                for(let i = 9; i < data.timeSpanData.startDateType.length; i++) {
+                for (let i = 9; i < data.timeSpanData.startDateType.length; i++) {
                     this.startDays *= 10;
                     this.startDays += parseInt(data.timeSpanData.startDateType[i]);
                 }
             }
 
-            if(data.timeSpanData.endDateType == "eDate") {
+            if (data.timeSpanData.endDateType == "eDate") {   // End Date Type: endDate
                 this.endDate = "eDate";
                 let endDate = data.timeSpanData["dateFormat"].split(" ")[2];
                 let [eDate, eMonth, eYear] = endDate.split("-");
                 this.eDate = eYear + "-" + eMonth + "-" + eDate;
 
-            } else if(data.timeSpanData.endDateType == "today") {
+            } else if (data.timeSpanData.endDateType == "today") {   // End Date Type: today
                 this.endDate = "today";
 
-            } else if(data.timeSpanData.endDateType.includes("endDays")) {
-                this.endDate = "startDays";
+            } else if (data.timeSpanData.endDateType.includes("endDays")) {   // End Date Type: days ago
+                this.endDate = "endDays";
                 this.endDays = 0;
-                for(let i = 7; i < data.timeSpanData.endDateType.length; i++) {
+                for (let i = 7; i < data.timeSpanData.endDateType.length; i++) {
                     this.endDays *= 10;
                     this.endDays += parseInt(data.timeSpanData.endDateType[i]);
                 }
             }
 
         }
+
+        this.htmlRenderer = new FilterModalHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
     }
 
-    /* Selected Pages in Modal */
-    getPagesList() {
-        let list = "";
-        this.taskList.forEach((task) => {
-            if(task.selected) {
-                if(list == "") {
-                    list = task.moduleTitle + " - " + task.taskTitle;
-                } else {
-                    list = list + ", " + task.moduleTitle + " - " + task.taskTitle;
-                }
-            }
-        });
-
-        if(list == "") {
-            list = "- None";
-        } else {
-            list = "( " + list + " )";
-        }
-        return list;
-    }
-
-    /* Selected Employees in Modal */
-    getEmployeesList() {
-        let list = "";
-        this.employeeList.forEach((employee) => {
-            if(employee.selected) {
-                if(list == "") {
-                    list = employee.name;
-                } else {
-                    list = list + ", " + employee.name;
-                }
-            }
-        });
-
-        if(list == "") {
-            list = "- None";
-        } else {
-            list = "( " + list + " )";
-        }
-        return list;
-    }
-
-    isMobile(): boolean {
-        if (window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
-
-    /* Format: "-None"  or  "StarteDate to EndDate" */
-    getTimeSpanData() {
-        let startDate, endDate;
-        let timeSpanData = {};
-        if(this.startDate && this.endDate) {
-            if(this.startDate == "sDate") {
-                if(!this.sDate) {
-                    timeSpanData["dateFormat"] = "- None";
-                    return timeSpanData;
-                }
-
-                let [year, month, date] = this.sDate.split("-");
-                let newDate = "";
-                newDate = date + "-" + month + "-" + year;
-                startDate = newDate;
-                timeSpanData["startDateType"] = "sDate";
-
-            } else if(this.startDate == "dayOne") {
-                let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
-                [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
-
-                let newDate = "";
-                if(parseInt(date) < 10) {
-                    newDate = "0" + date + "-" + month + "-" + year;
-                } else {
-                    newDate = date + "-" + month + "-" + year;
-                }
-                startDate = newDate;
-                timeSpanData["startDateType"] = "dayOne";
-
-            } else if(this.startDate == "startDays") {
-
-                let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
-                var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
-                result.setDate(result.getDate() - this.startDays);
-                [month, date, year] = result.toLocaleDateString("en-US").split("/");
-
-                let newDate = "";
-                if(parseInt(date) < 10) {
-                    newDate = "0" + date + "-" + month + "-" + year;
-                } else {
-                    newDate = date + "-" + month + "-" + year;
-                }
-                startDate = newDate;
-                timeSpanData["startDateType"] = "startDays" + this.startDays;
-            }
-
-            if(this.endDate == "eDate") {
-                if(!this.eDate) {
-                    timeSpanData["dateFormat"] = "- None";
-                    return timeSpanData;
-                }
-
-                let [year, month, date] = this.eDate.split("-");
-                let newDate = "";
-                newDate = date + "-" + month + "-" + year;
-                endDate = newDate;
-                timeSpanData["endDateType"] = "eDate";
-
-            } else if(this.endDate == "today") {
-                let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
-
-                let newDate = "";
-                if(parseInt(date) < 10) {
-                    newDate = "0" + date + "-" + month + "-" + year;
-                } else {
-                    newDate = date + "-" + month + "-" + year;
-                }
-                endDate = newDate;
-                timeSpanData["endDateType"] = "today";
-
-            } else if(this.endDate == "endDays") {
-
-                let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
-                var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
-                result.setDate(result.getDate() - this.endDays);
-                [month, date, year] = result.toLocaleDateString("en-US").split("/");
-
-                let newDate = "";
-                if(parseInt(date) < 10) {
-                    newDate = "0" + date + "-" + month + "-" + year;
-                } else {
-                    newDate = date + "-" + month + "-" + year;
-                }
-                endDate = newDate;
-                timeSpanData["endDateType"] = "endDays" + this.endDays;
-            }
-
-            let dateFormat = startDate + " to " + endDate;
-            timeSpanData["dateFormat"] = dateFormat;
-            return timeSpanData;
-        }
-        timeSpanData["dateFormat"] = "- None";
-        return timeSpanData;
-    }
-    /* End of Get Time Span Data */
-
     /* Newest or Oldest */
     getSortType() {
-        if(this.sortType) {
+        if (this.sortType) {
             return ", " + this.sortType;
         }
         return "";
-    }
+    }  // Ends: getSortType()
 
     /* Select All Pages */
     selectAllPages() {
         this.taskList.forEach((task) => {
             task.selected = true;
         });
-    }
+    }  // Ends: selectAllPages()
 
     /* Unselect All Pages */
     unselectAllPages() {
         this.taskList.forEach((task) => {
             task.selected = false;
         });
-    }
+    }  // Ends: unselectAllPages()
 
     /* Select All Employees */
     selectAllEmployees() {
         this.employeeList.forEach((employee) => {
             employee.selected = true;
         });
-    }
+    }  // Ends: selectAllEmployees()
 
     /* Unselect All Employees */
     unselectAllEmployees() {
         this.employeeList.forEach((employee) => {
             employee.selected = false;
         });
-    }
+    }  // Ends: unselectAllEmployees()
+
+    /* Unmark Dates */
+    unmarkDates() {
+        this.startDate = null;
+        this.endDate = null;
+        this.sortType = null;
+    }  // Ends: unmarkDates()
 
     /* Clear All Clicked */
     clearAllClick(): void {
         let conformation = confirm("Do you really want to clear this?");
-        if(conformation) {
+        if (conformation) {
             this.unselectAllEmployees();
             this.unselectAllPages();
+            this.unmarkDates();
         }
-    }
+    }  // Ends: clearAllClick()
 
     /* Apply Clicked */
     applyClick() {
@@ -287,59 +155,59 @@ export class FilterModalComponent implements OnInit {
     /* Start Date  &&  End Date Validation */
 
         /* If startDate is selected, user need to provide the endDate. */
-        if(this.startDate && !this.endDate) {
+        if (this.startDate && !this.endDate) {
             alert("Please enter the End Date.");
             return;
         }
 
         /* If endDate is selected, user need to provide the startDate. */
-        if(!this.startDate && this.endDate) {
+        if (!this.startDate && this.endDate) {
             alert("Please enter the Start Date.");
             return;
         }
 
         /* If Start Date is selected, user need to provide the Start Date. */
-        if(this.startDate && this.startDate == "sDate" && !this.sDate) {
+        if (this.startDate && this.startDate == "sDate" && !this.sDate) {
             alert("Please enter the start date.");
             return;
         }
 
         /* If Start Days Ago are selected, user need to provide Start Days. */
-        if(this.startDate && this.startDate == "startDays" && this.startDays === 0) {
+        if (this.startDate && this.startDate == "startDays" && this.startDays === 0) {
             alert("Please enter the value of days ago in the start date section.");
             return;
         }
 
         /* If End Date is selected, user need to provide the End Date. */
-        if(this.endDate && this.endDate == "eDate" && !this.eDate) {
+        if (this.endDate && this.endDate == "eDate" && !this.eDate) {
             alert("Please enter the end date.");
             return;
         }
 
         /* If End Days Ago are selected, user need to provide End Days. */
-        if(this.endDate && this.endDate == "endDays" && this.endDays === 0) {
+        if (this.endDate && this.endDate == "endDays" && this.endDays === 0) {
             alert("Please enter the value of days ago in the end date section.");
             return;
         }
 
-        let timeSpanData = this.getTimeSpanData();
+        let timeSpanData = this.htmlRenderer.getTimeSpanData();
         filtersData["timeSpanData"] = timeSpanData;
 
         /* "Start Date - End Date" Validation [Start Date must come before the End Date] */
-        if(timeSpanData["dateFormat"] && timeSpanData["dateFormat"] != "- None") {
+        if (timeSpanData["dateFormat"] && timeSpanData["dateFormat"] != "- None") {
             let startDate = timeSpanData["dateFormat"].split(" ")[0];
             let endDate = timeSpanData["dateFormat"].split(" ")[2];
 
             let [sDate, sMonth, sYear] = startDate.split("-");
             let [eDate, eMonth, eYear] = endDate.split("-");
 
-            if(parseInt(sYear) > parseInt(eYear)) {
+            if (parseInt(sYear) > parseInt(eYear)) {
                 alert("Start Date must come before End Date.");
                 return;
-            } else if(parseInt(sYear) === parseInt(eYear) && parseInt(sMonth) > parseInt(eMonth)) {
+            } else if (parseInt(sYear) === parseInt(eYear) && parseInt(sMonth) > parseInt(eMonth)) {
                 alert("Start Date must come before End Date.");
                 return;
-            } else if(parseInt(sYear) === parseInt(eYear) && parseInt(sMonth) === parseInt(eMonth) && parseInt(sDate) > parseInt(eDate)) {
+            } else if (parseInt(sYear) === parseInt(eYear) && parseInt(sMonth) === parseInt(eMonth) && parseInt(sDate) > parseInt(eDate)) {
                 alert("Start Date must come before End Date.");
                 return;
             }
@@ -348,11 +216,11 @@ export class FilterModalComponent implements OnInit {
 
     /* End of Start Date  &&  End Date Validation */
 
-        if(this.sortType) {
+        if (this.sortType) {
             filtersData["sortType"] = this.sortType;
         } else {
             filtersData["sortType"] = "";
         }
         this.dialogRef.close({ filtersData: filtersData });
-    }
+    }  // Ends: applyClick()
 }

@@ -1,15 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ChangeClassServiceAdapter } from './change-class.service.adapter';
-import { GenericService } from '@services/generic/generic-service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { DataStorage } from '../../../../classes/data-storage';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 @Component({
     selector: 'change-class',
     templateUrl: './change-class.component.html',
     styleUrls: ['./change-class.component.css'],
-    providers: [StudentService, GenericService],
+    providers: [StudentService],
 })
 export class ChangeClassComponent implements OnInit {
     user;
@@ -26,17 +25,13 @@ export class ChangeClassComponent implements OnInit {
     isLoading = false;
     isStudentListLoading = false;
 
-    serviceAdapter: ChangeClassServiceAdapter;
-
-    constructor(private studentService: StudentService, public genericService: GenericService) {}
+    constructor(private studentService: StudentService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         const data = {
             sessionDbId: this.user.activeSchool.currentSessionDbId,
         };
-        this.serviceAdapter = new ChangeClassServiceAdapter();
-        this.serviceAdapter.initializeAdapter(this);
     }
 
     handleDetailsFromParentStudentFilter(details: any): void {
@@ -77,7 +72,16 @@ export class ChangeClassComponent implements OnInit {
         this.studentService.partiallyUpdateObject(this.studentService.student_section, data).then(
             (response) => {
                 alert('Class Updated Successfully');
-                this.serviceAdapter.createRecord();
+
+                let parentEmployee = this.user.activeSchool.employeeId;
+                let moduleName = this.user.section.title;
+                let taskName = this.user.section.subTitle;
+                let moduleList = this.user.activeSchool.moduleList;
+                let actionString = " changed class of ";
+                let name1 = this.user.first_name;
+                let name2 = this.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+
                 if (this.selectedStudentSection.id == response.id) {
                     this.selectedStudentSection.parentDivision = response.parentDivision;
                     this.selectedStudentSection.parentClass = response.parentClass;
