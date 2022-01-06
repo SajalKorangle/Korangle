@@ -3,8 +3,8 @@
         <mat-form-field>
             <mat-select placeholder="Select columns">
                 <mat-option>
-                    <button class="btn" style="padding: 4px 7px">select all</button>
-                    <button class="btn" style="padding: 4px 7px">clear all</button>
+                    <button class="btn" (click)="selectAllColumns(); $event.stopPropagation()" style="padding: 4px 7px">select all</button>
+                    <button class="btn" (click)="unSelectAllColumns(); $event.stopPropagation()" style="padding: 4px 7px">clear all</button>
                 </mat-option>
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()">Name</mat-checkbox>
@@ -48,6 +48,14 @@
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation()">Address</mat-checkbox>
                 </mat-option>
+                <mat-option>
+                    <button class="btn" (click)="selectAllColumns(); $event.stopPropagation()" style="padding: 4px 7px">
+                        select all
+                    </button>
+                    <button class="btn" (click)="unSelectAllColumns(); $event.stopPropagation()" style="padding: 4px 7px">
+                        clear all
+                    </button>
+                </mat-option>
             </mat-select>
         </mat-form-field>
         <button
@@ -69,8 +77,8 @@
     </div>
     <br />
     <div>
-        <button class="btn" style="padding: 4px 7px" (click)="selectAllStudents(); $event.stopPropagation()">Select all</button>
-        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllStudents(); $event.stopPropagation()">Clear all</button>
+        <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">Select all</button>
+        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllEmployees(); $event.stopPropagation()">Clear all</button>
     </div>
     <ngx-datatable
         class="material ngxDataTable"
