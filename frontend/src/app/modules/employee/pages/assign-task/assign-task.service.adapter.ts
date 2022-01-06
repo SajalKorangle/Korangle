@@ -161,8 +161,8 @@ export class AssignTaskServiceAdapter {
             configJSON,
         };
 
-        const respone = await this.vm.employeeService.createObject(this.vm.employeeService.employee_permissions, newEmployeePermission);
-        this.vm.currentPermissionList.push(respone);
+        const response = await this.vm.employeeService.createObject(this.vm.employeeService.employee_permissions, newEmployeePermission);
+        this.vm.currentPermissionList.push(response);
         this.vm.updatePermissionLoading(employee, task, false);
     }
 
@@ -184,6 +184,8 @@ export class AssignTaskServiceAdapter {
     }
 
     async assignAllTasks(employee) {
+        if(employee.permissionLoading) 
+            return;
         const toCreatePermissions = [];
 
         this.vm.moduleList.forEach((module) => {
