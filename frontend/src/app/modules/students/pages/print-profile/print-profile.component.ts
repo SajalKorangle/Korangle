@@ -103,10 +103,8 @@ export class PrintProfileComponent implements OnInit {
         let moduleName = this.user.section.title;
         let taskName = this.user.section.subTitle;
         let moduleList = this.user.activeSchool.moduleList;
-        let actionString = " printed profile of ";
-        let name1 = this.user.first_name;
-        let name2 = this.selectedStudent.name;
-        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+        let actionString = this.user.first_name + " printed profile of " + this.selectedStudent.name;
+        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
         const value = {
             studentProfile: this.selectedStudent,
             studentSection: this.selectedStudentSection,

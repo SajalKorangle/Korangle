@@ -1,5 +1,5 @@
 /* Starts: Filters */
-.filter-model-btn {
+.filter-modal-btn {
     font-size: 12px;
     text-decoration: underline;
     line-height: 14px;
@@ -164,7 +164,7 @@
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
     /* Starts: Filters */
-    .filter-model-btn {
+    .filter-modal-btn {
         margin-left: 2rem;
     }
     /* Ends: Filters */

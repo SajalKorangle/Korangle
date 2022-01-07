@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ComponentsModule } from '../../components/components.module';
 
 import { ActivityComponent } from './activity.component';
@@ -12,7 +11,7 @@ import { ActivityRoutingModule } from './activity.routing';
         ActivityComponent,
     ],
 
-    imports: [ComponentsModule, ActivityRoutingModule, NgxDatatableModule],
+    imports: [ComponentsModule, ActivityRoutingModule],
     bootstrap: [ActivityComponent],
 })
 export class ActivityModule { }

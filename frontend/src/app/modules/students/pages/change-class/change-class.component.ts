@@ -77,10 +77,8 @@ export class ChangeClassComponent implements OnInit {
                 let moduleName = this.user.section.title;
                 let taskName = this.user.section.subTitle;
                 let moduleList = this.user.activeSchool.moduleList;
-                let actionString = " changed class of ";
-                let name1 = this.user.first_name;
-                let name2 = this.selectedStudent.name;
-                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+                let actionString = this.user.first_name + " changed class of " + this.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
 
                 if (this.selectedStudentSection.id == response.id) {
                     this.selectedStudentSection.parentDivision = response.parentDivision;

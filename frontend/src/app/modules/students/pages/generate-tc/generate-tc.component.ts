@@ -11,7 +11,6 @@ import { PRINT_TC } from '../../../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 
-import { CommonFunctions } from '@modules/common/common-functions';
 
 @Component({
     selector: 'generate-tc',
@@ -200,15 +199,6 @@ export class GenerateTcComponent implements OnInit {
                         if (response.status === 'success') {
                             alert('Transfer Certificate generated successfully');
 
-                            let parentEmployee = this.user.activeSchool.employeeId;
-                            let moduleName = this.user.section.title;
-                            let taskName = this.user.section.subTitle;
-                            let moduleList = this.user.activeSchool.moduleList;
-                            let actionString = " generated transfer certificate of ";
-                            let name1 = this.user.first_name;
-                            let name2 = this.selectedStudent.name;
-                            CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
-
                             this.currentTransferCertificate.id = data.parentTransferCertificate;
                             this.selectedTransferCertificate.copy(this.currentTransferCertificate);
                             this.printTCSecondFormat();
@@ -239,15 +229,6 @@ export class GenerateTcComponent implements OnInit {
                 this.isLoading = false;
                 alert(response.message);
 
-                let parentEmployee = this.user.activeSchool.employeeId;
-                let moduleName = this.user.section.title;
-                let taskName = this.user.section.subTitle;
-                let moduleList = this.user.activeSchool.moduleList;
-                let actionString = " updated transfer certificate of ";
-                let name1 = this.user.first_name;
-                let name2 = this.selectedStudent.name;
-                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
-
                 this.selectedTransferCertificate.copy(this.currentTransferCertificate);
             },
             (error) => {
@@ -275,15 +256,6 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert('TC has been cancelled successfully');
-
-                let parentEmployee = this.user.activeSchool.employeeId;
-                let moduleName = this.user.section.title;
-                let taskName = this.user.section.subTitle;
-                let moduleList = this.user.activeSchool.moduleList;
-                let actionString = " cancelled transfer certificate of ";
-                let name1 = this.user.first_name;
-                let name2 = this.selectedStudent.name;
-                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
 
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;

@@ -67,6 +67,7 @@ class GenericSerializerInterface():
 
     def parse_query(self, data):
         query = self.Model.objects.filter(self.Model.Permissions().getPermittedQuerySet(self.activeSchoolId, self.activeStudentIdList))
+
         for key, value in data.items():
             if key == 'filter':
                 parsed_filter = self.parseFilter(value)

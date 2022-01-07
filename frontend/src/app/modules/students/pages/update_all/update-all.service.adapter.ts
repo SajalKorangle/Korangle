@@ -166,10 +166,8 @@ export class UpdateAllServiceAdapter {
                         let moduleName = this.vm.user.section.title;
                         let taskName = this.vm.user.section.subTitle;
                         let moduleList = this.vm.user.activeSchool.moduleList;
-                        let actionString = " updated " + key + " of ";
-                        let name1 = this.vm.user.first_name;
-                        let name2 = student.name;
-                        CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+                        let actionString = this.vm.user.first_name + " updated " + key + " of " + student.name;
+                        CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                     } else {
                         alert('Not able to update ' + key + ' for value: ' + newValue);
                     }

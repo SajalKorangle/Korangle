@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.fields import related
 from common.common import BasePermission
 
 from school_app.model.models import School, Session

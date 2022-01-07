@@ -177,9 +177,7 @@ export class AddStudentServiceAdapter {
         let moduleName = this.vm.user.section.title;
         let taskName = this.vm.user.section.subTitle;
         let moduleList = this.vm.user.activeSchool.moduleList;
-        let actionString = " admitted ";
-        let name1 = this.vm.user.first_name;
-        let name2 = this.vm.newStudent.name;
+        let actionString = this.vm.user.first_name + " admitted " + this.vm.newStudent.name;
 
         this.vm.studentService.createObject(this.vm.studentService.student, student_form_data).then(
             (value) => {
@@ -324,7 +322,7 @@ export class AddStudentServiceAdapter {
 
                         this.vm.initializeVariable();
 
-                        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString, name1, name2);
+                        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                         this.vm.isLoading = false;
                     },
                     (error) => {

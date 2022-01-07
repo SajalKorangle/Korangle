@@ -15,6 +15,7 @@ export class TrackEmployeeActivityServiceAdapter {
 
         this.vm.isLoading = true;
 
+        // Employee Query: Employee List  &&  Total Available Records.
         const employeeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .annotate('record_count', 'activityRecordList', 'Count')
@@ -33,6 +34,7 @@ export class TrackEmployeeActivityServiceAdapter {
         this.vm.initializeTotalRecords(employeeList);
         this.vm.initializeTaskList();
 
+        // Record Query: Get Records [startNUmber, endNumber]
         const recordQuery = new Query()
             .filter({ parentEmployee__parentSchool: this.vm.user.activeSchool.dbId })
             .paginate(Math.max(0, this.vm.startNumber - 1), this.vm.endNumber)
@@ -57,6 +59,7 @@ export class TrackEmployeeActivityServiceAdapter {
         }
         let filter2 = {};
 
+        /* Task Ids Check */
         let taskIdList = [];
         this.vm.taskList.forEach((task) => {
             if (task.selected) {
@@ -68,6 +71,7 @@ export class TrackEmployeeActivityServiceAdapter {
             filter2["activityRecordList__parentTask__in"] = taskIdList;
         }
 
+        /* Employee Ids Check */
         let employeeIdList = [];
         this.vm.employeeList.forEach((employee) => {
             if (employee.selected) {
@@ -79,6 +83,7 @@ export class TrackEmployeeActivityServiceAdapter {
             filter2["activityRecordList__parentEmployee__in"] = employeeIdList;
         }
 
+        /* Date Range: startDate to endDate */
         if (this.vm.timeSpanData["dateFormat"] != "- None") {
             let [startDate, to, endDate] = this.vm.timeSpanData["dateFormat"].split(" ");
 
@@ -93,16 +98,19 @@ export class TrackEmployeeActivityServiceAdapter {
             filter2["activityRecordList__createdAt__range"] = [startDate, endDate];
         }
 
+        /* Search String */
         if (this.vm.seachString) {
             filter["activityDescription__icontains"] = this.vm.seachString;
             filter2["activityRecordList__activityDescription__icontains"] = this.vm.seachString;
         }
 
+        /* Sort Type */
         let orderBy = "createdAt";
         if (this.vm.sortType == "Newest First") {
             orderBy = "-createdAt";
         }
 
+        // Employee Query: Total Available Records Based on Applied Filters.
         const employeeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .annotate('record_count', 'activityRecordList', 'Count', filter2)
@@ -121,6 +129,7 @@ export class TrackEmployeeActivityServiceAdapter {
         this.vm.endNumber = Math.min(10 * this.vm.currentPage, this.vm.totalRecords);
         this.vm.startNumber = Math.min(10 * (this.vm.currentPage - 1) + 1, this.vm.endNumber);
 
+        // Record Query: Get Records [startNUmber, endNumber]
         const recordQuery = new Query()
             .filter(filter)
             .orderBy(orderBy)

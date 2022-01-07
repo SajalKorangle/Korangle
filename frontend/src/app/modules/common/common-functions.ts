@@ -17,7 +17,7 @@ export class CommonFunctions {
         return { modulePath: routePathList[0], taskPath: routePathList[1] };
     }
 
-    static async createRecord(employeeId, moduleName, taskName, moduleList, actionString, name1, name2) {
+    static async createRecord(employeeId, moduleName, taskName, moduleList, actionString) {
         let parentEmployee = employeeId;
         let parentTask;
         moduleList.forEach((module) => {
@@ -34,7 +34,7 @@ export class CommonFunctions {
         let recordObject = {};
         recordObject["parentTask"] = parentTask;
         recordObject["parentEmployee"] = parentEmployee;
-        recordObject["activityDescription"] = name1 + actionString + name2;
+        recordObject["activityDescription"] = actionString;
         const response = await new Query().createObject({activity_record_app: 'ActivityRecord'}, recordObject);
     }
 }

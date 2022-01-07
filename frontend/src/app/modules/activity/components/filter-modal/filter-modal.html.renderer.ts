@@ -60,7 +60,7 @@ export class FilterModalHtmlRenderer {
         return true;
     }
 
-    /* Format: "-None"  or  "StarteDate to EndDate" */
+    /* Format: "-None"  or  "StartDate to EndDate" */
     getTimeSpanData() {
         let startDate, endDate;
         let timeSpanData = {};
