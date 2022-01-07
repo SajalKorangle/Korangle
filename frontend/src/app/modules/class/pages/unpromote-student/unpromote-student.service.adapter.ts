@@ -21,11 +21,12 @@ export class UnpromoteStudentServiceAdapter {
             .filter({
                 id: studentList[0].id
             })
-            .getObjectList({ student_app: 'Student' });
+            .setFields(...['motherName', 'scholarNumber', 'dateOfBirth', 'address', 'remark'])
+            .getObject({ student_app: 'Student' });
 
         const studentSectionQuery = new Query()
-                .filter({ parentStudent: studentList[0].id })
-                .getObjectList({ student_app: 'StudentSection' });        
+            .filter({ parentStudent: studentList[0].id })
+            .getObjectList({ student_app: 'StudentSection' }); 
                 
         const feeReceiptQuery = new Query()
             .filter({ 
@@ -72,6 +73,7 @@ export class UnpromoteStudentServiceAdapter {
         Object.keys(tempStudentList).forEach((key) => {
             this.vm.selectedStudent[key] = tempStudentList[key];
         });
+        this.vm.selectedStudent['rollNumber'] = this.vm.selectedStudentSectionList[0].rollNumber;
         
         // Checking if the current session is not the latest one for the student (which means that this session is a middle session or not)
         this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] = this.vm.selectedStudentSectionList[this.vm.selectedStudentSectionList.length - 1].parentSession !=
@@ -148,12 +150,19 @@ export class UnpromoteStudentServiceAdapter {
             })
             .deleteObjectList({ examination_app: 'CCEMarks' });
 
-        const studentFeeQuery = new Query()
-            .filter({ 
+        const studentFeeReceiptQuery = new Query()
+            .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
             .deleteObjectList({ fees_third_app: 'FeeReceipt' });
+ 
+        const studentFeeQuery = new Query()
+            .filter({
+                parentStudent: this.vm.selectedStudent.id,
+                parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            })
+            .deleteObjectList({ fees_third_app: 'StudentFee' });
 
         const studentSectionQuery = new Query()
             .filter({
@@ -169,6 +178,7 @@ export class UnpromoteStudentServiceAdapter {
             studentTestQuery,
             studentExtraSubFieldQuery,
             cceMarksQuery,
+            studentFeeReceiptQuery,
             studentFeeQuery,
             studentSectionQuery
         ])
