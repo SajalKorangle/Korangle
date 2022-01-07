@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { RestApiGateway } from './rest-api-gateway';
+import { CONSTANTS } from './constants';
 
 // const JSON_OBJECT_RESPONSE_PARSER = (responseData) => {
 //     if (responseData) { // json parse if key ends with JSON
@@ -45,41 +46,81 @@ export class GenericService extends RestApiGateway {
 
     getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(CONSTANTS[app_name][model_name]);
+            }
+        }
         return super.getData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.postData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.postData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.putData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.putData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.patchData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
@@ -90,6 +131,11 @@ export class GenericService extends RestApiGateway {
 
     deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.deleteData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
