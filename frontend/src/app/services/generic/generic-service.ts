@@ -126,6 +126,11 @@ export class GenericService extends RestApiGateway {
 
     // deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: any): Promise<any> {
     //     const [app_name, model_name] = this.parseConfig(config);
+    //     if(app_name in CONSTANTS){
+    //         if(model_name in CONSTANTS[app_name]) {
+    //             return Promise.resolve(null);
+    //         }
+    //     }
     //     return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
     // }
 
@@ -149,7 +154,6 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
     tc_app: 'TransferCertificateNew';
-    class_app: 'Class' | "Division";
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE
