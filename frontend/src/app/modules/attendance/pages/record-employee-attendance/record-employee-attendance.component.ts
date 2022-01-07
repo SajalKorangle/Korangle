@@ -176,7 +176,6 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     //Checking if it is in mobile
     checkMobile(): any {
-        console.log("Called");
         if(isMobile()) return false;
         else return true;
     }
