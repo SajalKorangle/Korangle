@@ -174,6 +174,8 @@ export class FilterModalComponent implements OnInit {
     }
 
     /* Check Width - maxidth (575) */
+    /* It is being used to style the page based on width.
+     For a very small device, some "<br />" needs to removed. */
     checkWidth(): boolean {
         if (window.innerWidth > 575) {
             return false;

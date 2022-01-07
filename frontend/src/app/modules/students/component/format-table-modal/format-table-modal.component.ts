@@ -19,8 +19,8 @@ export class FormatTableModalComponent implements OnInit {
     ngOnInit() {
     }
 
-    /* Cancle Clicked */
-    cancleClick(): void {
+    /* Cancel Clicked */
+    cancelClick(): void {
         this.dialogRef.close();
     }  // Ends: cancleClick()
 
