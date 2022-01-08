@@ -6,14 +6,12 @@ from student_app.models import Student
 
 # Create your models here.
 class MessageType(models.Model):
+
     # Type Name
     name = models.CharField(max_length = 20)
 
     # Default Text
     defaultText = models.TextField()
-
-    # Address To
-    parentEmployees = models.ManyToManyField(Employee)
 
     # Higher Authorities
     higherAuthoritiesDetail = models.JSONField()
@@ -62,3 +60,16 @@ class Message(models.Model):
 
     class Meta:
         db_table = 'message'
+
+
+class EmployeeMessageTypeJuction(models.Model):
+
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+
+    parentMessageType = models.ForeignKey(MessageType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return (self.parentEmployee.name + " & " + self.parentMessageType.name)
+
+    class Meta:
+        db_table = 'employee_messageType_junction'
