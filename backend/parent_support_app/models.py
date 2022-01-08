@@ -13,9 +13,6 @@ class MessageType(models.Model):
     # Default Text
     defaultText = models.TextField()
 
-    # Higher Authorities
-    higherAuthoritiesDetail = models.JSONField()
-
     # Applicable Status
     statuses = ArrayField(models.CharField(max_length=20))
 
@@ -64,9 +61,17 @@ class Message(models.Model):
 
 class EmployeeMessageTypeJuction(models.Model):
 
+    # Employee name
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
+    # Message type
     parentMessageType = models.ForeignKey(MessageType, on_delete=models.CASCADE)
+
+    # Notify employee based on message's status
+    notifyStatus = models.CharField(max_length = 20, null = True)
+
+    # After how many day he/she should get notified
+    notifyDays = models.IntegerField(null = True)
 
     def __str__(self):
         return (self.parentEmployee.name + " & " + self.parentMessageType.name)
