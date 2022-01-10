@@ -29,6 +29,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/sms/sms.module#SmsModule',
     },
     {
+        path: 'parent_support',
+        loadChildren: 'app/modules/parent-support/parent-support.module#ParentSupportModule',
+    },
+    {
         path: 'attendance',
         loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule',
     },

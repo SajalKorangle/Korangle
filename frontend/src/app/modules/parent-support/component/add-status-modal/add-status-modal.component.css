@@ -1,0 +1,52 @@
+/* Starts: Modal Container */
+.add-status-modal-container {
+    height: 35vh;
+    width: 30vw;
+}
+/* Ends: Modal Container */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;
+}
+
+.title {
+    font-weight: 500;
+}
+
+.close-btn {
+    color: red;
+    cursor: pointer;
+}
+
+.inputField {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #C4C4C4;
+}
+
+.delete-btn {
+    color: red;
+    cursor: pointer;
+}
+
+/* Starts: Bottom Btns */
+.bottom-btns {
+    float: right;
+}
+
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.cancel-btn {
+    background-color: white;
+    color: black;
+}
+/* Ends: Bottom Btns */

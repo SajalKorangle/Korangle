@@ -1,0 +1,36 @@
+<mat-dialog-content class="add-status-modal-container">
+    <div class="header">
+        <div class="title">Parent Support >> Add Complaint Status</div>
+        <div><i class="material-icons close-btn">highlight_off</i></div>
+    </div>
+    <br />
+    <br />
+
+    <!-- Starts: Name Field -->
+    <div class="inputField">
+        <mat-form-field>
+            <input matInput placeholder="Status Name" required type="text" [(ngModel)]="name" />
+        </mat-form-field>
+        <div><i class="material-icons delete-btn">delete_forever</i></div>
+    </div>
+    <!-- Ends: Name Field -->
+
+    <!-- Starts: Bottom Buttons -->
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 7px 17px;"
+        >
+            Save
+        </button>
+        <button
+            type="button"
+            class="btn cancel-btn"
+            style="padding: 7px 17px;"
+        >
+            Cancel
+        </button>
+    </div>
+    <!-- Ends: Bottom Buttons -->
+</mat-dialog-content>

@@ -122,6 +122,38 @@
             <ng-container *ngIf="user.activeSchool">
                 <!-- Parent -->
                 <ng-container *ngIf="user.activeSchool.role === 'Parent'">
+
+                    <!-- Parent Support -->
+                    <ng-container *ngFor="let module of user.activeSchool.tempModuleList">
+                        <li
+                            [class.active]="module.name === user.section.title"
+                            [attr.data-color]="user.activeSchool.primaryThemeColor"
+                            style="border-bottom: 0.1px solid lightgrey"
+                        >
+                            <a [attr.id]="module.path" (click)="module.showTaskList = !module.showTaskList">
+                                <i class="material-icons">{{ module.icon }}</i>
+                                <p>
+                                    {{ module.name }}
+                                    <i *ngIf="!module.showTaskList" class="material-icons" style="float: right">keyboard_arrow_down</i>
+                                    <i *ngIf="module.showTaskList" class="material-icons" style="float: right">keyboard_arrow_up</i>
+                                </p>
+                            </a>
+                            <ng-container *ngIf="module.showTaskList">
+                                <div
+                                    *ngFor="let task of module.taskList"
+                                    [attr.data-color]="user.activeSchool.secondaryThemeColor"
+                                    [class.active]="module.name === user.section.title && task.title === user.section.subTitle"
+                                    class="subsectionDiv"
+                                    (click)="changePage(task, module)"
+                                    [attr.id]="module.path + '-' + task.path"
+                                >
+                                    <i class="material-icons">remove</i>
+                                    <p>{{ task.title }}</p>
+                                </div>
+                            </ng-container>
+                        </li>
+                    </ng-container>
+
                     <!-- Multiple Students -->
                     <ng-container *ngIf="user.activeSchool.studentList.length > 1">
                         <ng-container *ngFor="let student of user.activeSchool.studentList">

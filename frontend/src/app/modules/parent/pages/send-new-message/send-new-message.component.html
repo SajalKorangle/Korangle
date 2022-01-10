@@ -1,0 +1,50 @@
+<div class="card-content">
+
+    <div class="common-section">
+        <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Select Complaint type : </span>
+        <mat-form-field>
+            <mat-select placeholder="Enter Type" style="width: 100%">
+                <mat-option>Hello</mat-option>
+                <mat-option>Hello</mat-option>
+                <mat-option>Hello</mat-option>
+                <mat-option>Hello</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="common-section">
+        <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Select student name : </span>
+        <mat-form-field>
+            <mat-select placeholder="Enter Name" style="width: 100%">
+                <mat-option>Hello</mat-option>
+                <mat-option>Hello</mat-option>
+                <mat-option>Hello</mat-option>
+                <mat-option>Hello</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="common-section">
+        <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Enter title : </span>
+        <input class="title-input" type="text" placeholder="Enter Title">
+    </div>
+
+    <br />
+    <div class="comment-section">
+        <div class="default-text">
+            Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
+        </div>
+        <div class="bottom-section">
+            <input class="bottom-search-field" type="search" placeholder="Type Query here" [ngModel]="comment" (ngModelChange)="comment = $event">
+            <button
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                style="padding: 12px 15px"
+                matTooltip="Send Comment"
+                tooltip-position="left"
+            >
+                Send
+            </button>
+        </div>
+    </div>
+</div>
