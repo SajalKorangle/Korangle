@@ -67,7 +67,7 @@ export class TrackEmployeeActivityHtmlRenderer {
 
     /* Newest or Oldest */
     getSortType() {
-        if(this.vm.sortType) {
+        if (this.vm.sortType) {
             return ", " + this.vm.sortType;
         }
         return "";

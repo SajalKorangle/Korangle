@@ -21,7 +21,7 @@ export class CommonFunctions {
         let parentEmployee = employeeId;
         let parentTask;
         moduleList.forEach((module) => {
-            if(moduleName === module.title) {
+            if (moduleName === module.title) {
                 let tempTaskList = module.taskList;
                 tempTaskList.forEach((task) => {
                     if (taskName === task.title) {

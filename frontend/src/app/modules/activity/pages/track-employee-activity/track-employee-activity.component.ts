@@ -102,7 +102,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
             this.totalRecords += employee.record_count;
         });
 
-        this.totalPages = Math.ceil(this.totalRecords/this.numberOfRecordsPerPage);
+        this.totalPages = Math.ceil(this.totalRecords / this.numberOfRecordsPerPage);
         this.endNumber = Math.min(this.numberOfRecordsPerPage, this.totalRecords);
         if (this.endNumber) {
             this.startNumber = 1;
@@ -129,7 +129,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
     getBackgroundColor(): string {
         let randomColor = "#4CAF50";
         while (true) {
-            randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+            randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
             if (!this.backgroundColorList.includes(randomColor)) {
                 break;
             }
@@ -220,7 +220,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
     }  // Ends: getDateTimeOfRecord()
 
     /* Debouncing */
-    debounce(func, timeout = 300){
+    debounce(func, timeout = 300) {
         let timer;
         return (...args) => {
         clearTimeout(timer);

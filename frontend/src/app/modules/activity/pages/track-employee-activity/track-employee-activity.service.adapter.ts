@@ -56,7 +56,7 @@ export class TrackEmployeeActivityServiceAdapter {
 
         let filter = {
             parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
-        }
+        };
         let filter2 = {};
 
         /* Task Ids Check */

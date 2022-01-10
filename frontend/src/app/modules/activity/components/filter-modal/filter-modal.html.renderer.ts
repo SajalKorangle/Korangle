@@ -77,12 +77,12 @@ export class FilterModalHtmlRenderer {
                 startDate = newDate;
                 timeSpanData["startDateType"] = "sDate";
 
-            } else if(this.vm.startDate == "dayOne") {   // Start Date Type: 1st day of month
+            } else if (this.vm.startDate == "dayOne") {   // Start Date Type: 1st day of month
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
                 [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
 
                 let newDate = "";
-                if(parseInt(date) < 10) {
+                if (parseInt(date) < 10) {
                     newDate = "0" + date + "-" + month + "-" + year;
                 } else {
                     newDate = date + "-" + month + "-" + year;
@@ -90,7 +90,7 @@ export class FilterModalHtmlRenderer {
                 startDate = newDate;
                 timeSpanData["startDateType"] = "dayOne";
 
-            } else if(this.vm.startDate == "startDays") {   // Start Date Type: days ago
+            } else if (this.vm.startDate == "startDays") {   // Start Date Type: days ago
 
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
                 var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
@@ -98,7 +98,7 @@ export class FilterModalHtmlRenderer {
                 [month, date, year] = result.toLocaleDateString("en-US").split("/");
 
                 let newDate = "";
-                if(parseInt(date) < 10) {
+                if (parseInt(date) < 10) {
                     newDate = "0" + date + "-" + month + "-" + year;
                 } else {
                     newDate = date + "-" + month + "-" + year;
@@ -107,8 +107,8 @@ export class FilterModalHtmlRenderer {
                 timeSpanData["startDateType"] = "startDays" + this.vm.startDays;
             }
 
-            if(this.vm.endDate == "eDate") {   // End Date Type: endDate
-                if(!this.vm.eDate) {
+            if (this.vm.endDate == "eDate") {   // End Date Type: endDate
+                if (!this.vm.eDate) {
                     timeSpanData["dateFormat"] = "- None";
                     return timeSpanData;
                 }
@@ -119,11 +119,11 @@ export class FilterModalHtmlRenderer {
                 endDate = newDate;
                 timeSpanData["endDateType"] = "eDate";
 
-            } else if(this.vm.endDate == "today") {   // End Date Type: today
+            } else if (this.vm.endDate == "today") {   // End Date Type: today
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
 
                 let newDate = "";
-                if(parseInt(date) < 10) {
+                if (parseInt(date) < 10) {
                     newDate = "0" + date + "-" + month + "-" + year;
                 } else {
                     newDate = date + "-" + month + "-" + year;
@@ -131,7 +131,7 @@ export class FilterModalHtmlRenderer {
                 endDate = newDate;
                 timeSpanData["endDateType"] = "today";
 
-            } else if(this.vm.endDate == "endDays") {   // End Date Type: days ago
+            } else if (this.vm.endDate == "endDays") {   // End Date Type: days ago
 
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
                 var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
@@ -139,7 +139,7 @@ export class FilterModalHtmlRenderer {
                 [month, date, year] = result.toLocaleDateString("en-US").split("/");
 
                 let newDate = "";
-                if(parseInt(date) < 10) {
+                if (parseInt(date) < 10) {
                     newDate = "0" + date + "-" + month + "-" + year;
                 } else {
                     newDate = date + "-" + month + "-" + year;
@@ -158,7 +158,7 @@ export class FilterModalHtmlRenderer {
 
     /* Newest or Oldest */
     getSortType() {
-        if(this.vm.sortType) {
+        if (this.vm.sortType) {
             return ", " + this.vm.sortType;
         }
         return "";
