@@ -64,6 +64,7 @@ export class FilterModalHtmlRenderer {
     getTimeSpanData() {
         let startDate, endDate;
         let timeSpanData = {};
+        timeSpanData["dateFormat"] = "- None";
         if (this.vm.startDate && this.vm.endDate) {
             if (this.vm.startDate == "sDate") {   // Start Date Type: startDate
                 if (!this.vm.sDate) {
@@ -152,7 +153,6 @@ export class FilterModalHtmlRenderer {
             timeSpanData["dateFormat"] = dateFormat;
             return timeSpanData;
         }
-        timeSpanData["dateFormat"] = "- None";
         return timeSpanData;
     }  // Ends: getTimeSpanData()
 

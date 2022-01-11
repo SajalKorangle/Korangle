@@ -166,9 +166,9 @@
     <br />
     <!-- Starts: Filter-description -->
     <div class="filters-list">
-        <b>Pages </b> <span>{{htmlRenderer.getPagesList()}}, </span>
-        <b>Employees </b> <span>{{htmlRenderer.getEmployeesList()}}, </span>
-        <b>Time Span </b> <span>{{htmlRenderer.getTimeSpanData().dateFormat}}</span><span>{{htmlRenderer.getSortType()}}</span>
+        <b>Pages </b> <span>{{ htmlRenderer.getPagesList() }}, </span>
+        <b>Employees </b> <span>{{ htmlRenderer.getEmployeesList() }}, </span>
+        <b>Time Span </b> <span>{{ htmlRenderer.getTimeSpanData()["dateFormat"] ? htmlRenderer.getTimeSpanData()["dateFormat"] : "- None" }}</span><span>{{ htmlRenderer.getSortType() }}</span>
     </div>
     <!-- Ends: Filter-description -->
 
