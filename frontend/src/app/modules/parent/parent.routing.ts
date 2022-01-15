@@ -49,18 +49,8 @@ const routes: Routes = [
         data: { moduleName: 'parent' },
     },
     {
-        path: 'manage_my_complaints',
-        loadChildren: 'app/modules/parent/pages/manage-my-complaints/manage-my-complaints.module#ManageMyComplaintsModule',
-        data: { moduleName: 'parent' },
-    },
-    {
-        path: 'send_new_message',
-        loadChildren: 'app/modules/parent/pages/send-new-message/send-new-message.module#SendNewMessageModule',
-        data: { moduleName: 'parent' },
-    },
-    {
-        path: 'open_message',
-        loadChildren: 'app/modules/parent/pages/open-message/open-message.module#OpenMessageModule',
+        path: 'manage_complaints',
+        loadChildren: 'app/modules/parent/pages/manage-complaints/manage-complaints.module#ManageComplaintsModule',
         data: { moduleName: 'parent' },
     },
     {

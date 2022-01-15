@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataStorage } from "@classes/data-storage";
 
 @Component({
     selector: 'app-add-complaint',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddComplaintComponent implements OnInit {
 
+    user:any;
+
     constructor() { }
 
     ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+        console.log("User: ", this.user);
     }
 
 }

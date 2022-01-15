@@ -1,6 +1,6 @@
 /* Starts: Modal Container */
 .add-status-modal-container {
-    height: 35vh;
+    height: 31vh;
     width: 30vw;
 }
 /* Ends: Modal Container */
@@ -48,5 +48,6 @@
 .cancel-btn {
     background-color: white;
     color: black;
+    /* outline: orange; */
 }
 /* Ends: Bottom Btns */

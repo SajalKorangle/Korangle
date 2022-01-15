@@ -1,0 +1,250 @@
+<mat-dialog-content class="filter-modal-container">
+    <!-- Starts: Name Field -->
+    <b>Name - </b>
+    <mat-form-field class="inputField" style="margin-left: 10%;">
+        <input matInput required type="text" [(ngModel)]="name" />
+    </mat-form-field>
+    <!-- Ends: Name Field -->
+
+    <br />
+    <br />
+    <!-- Starts: Time Span Section -->
+    <div class="time-span-section">
+        <b>Time Span</b><br /><br />
+
+        <!-- Starts: Start Date -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                Start Date -
+            </div>
+            <div class="date-options">
+                <mat-form-field style="margin-right: 15px">
+                    <mat-select placeholder="{{ startDateTye }}" style="width: 100%">
+                        <mat-option (click)="startDateTye = 'Select Start Date'" style="width: 100%">
+                            Select Start Date
+                        </mat-option>
+                        <mat-option (click)="startDateTye = 'Select Date'" style="width: 100%">
+                            Select Date
+                        </mat-option>
+                        <mat-option (click)="startDateTye = '1st of Ongoing Month'" style="width: 100%">
+                            1st of Ongoing Month
+                        </mat-option>
+                        <mat-option (click)="startDateTye = 'From Days Ago'" style="width: 100%">
+                            From Days Ago
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="startDateTye == 'Select Date'">
+                    <input
+                        matInput
+                        type="date"
+                        (ngModelChange)="sDate = $event"
+                        [ngModel]="sDate"
+                    />
+                </mat-form-field>
+                <span *ngIf="startDateTye == 'From Days Ago'">
+                    Fetch from
+                    <input type="number" style="width: 60px; margin-left: 1%; margin-right: 1%;" [(ngModel)]="sDays"/>
+                    days ago
+                </span>
+            </div>
+        </div>
+        <!-- Ends: Start Date -- Time Span Sub-Section -->
+
+        <!-- Starts: End Date -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                End Date -
+            </div>
+            <div class="date-options">
+                <mat-form-field style="margin-right: 15px">
+                    <mat-select placeholder="{{ endDateTye }}" style="width: 100%">
+                        <mat-option (click)="endDateTye = 'Select End Date'" style="width: 100%">
+                            Select Start Date
+                        </mat-option>
+                        <mat-option (click)="endDateTye = 'Select Date'" style="width: 100%">
+                            Select Date
+                        </mat-option>
+                        <mat-option (click)="endDateTye = 'Current Date'" style="width: 100%">
+                            Current Date
+                        </mat-option>
+                        <mat-option (click)="endDateTye = 'From Days Ago'" style="width: 100%">
+                            From Days Ago
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="endDateTye == 'Select Date'">
+                    <input
+                        matInput
+                        type="date"
+                        (ngModelChange)="eDate = $event"
+                        [ngModel]="eDate"
+                    />
+                </mat-form-field>
+                <span *ngIf="endDateTye == 'From Days Ago'">
+                    Fetch till
+                    <input type="number" style="width: 60px; margin-left: 1%; margin-right: 1%;" [(ngModel)]="eDays"/>
+                    days ago
+                </span>
+            </div>
+        </div>
+        <!-- Ends: End Date -- Time Span Sub-Section -->
+    </div>
+    <!-- Ends: Time Span Section -->
+
+    <br />
+    <br />
+    <!-- Starts: Complaint type  &&  Status Section -->
+    <div class="names">
+
+        <!-- Starts: Complaint type -->
+        <div class="complaint-type-section">
+            <b>Complaint type</b><br /><br />
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <mat-option style="background-color: #F5F5F5">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllComplaintType(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllComplaintType(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <!-- <ng-container *ngfor="let complaintType of complaintTypeList">
+                    <mat-option class="mat-option-complaint-type">
+                        <mat-checkbox
+                            [(ngModel)]="complaintType.selected"
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ complaintType.name }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container> -->
+
+                <mat-option class="mat-option-complaint-type">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option class="mat-option-complaint-type">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option class="mat-option-complaint-type">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option class="mat-option-complaint-type">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+            </cdk-virtual-scroll-viewport>
+        </div>
+        <!-- Ends: Complaint type -->
+
+        <!-- Starts: Status -->
+        <div class="status-section">
+            <b>Status</b><br /><br />
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <mat-option style="background-color: #F5F5F5">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllEmployees(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <!-- <ng-container *ngfor="let status of statusList">
+                    <mat-option class="mat-option-complaint-type">
+                        <mat-checkbox
+                            [(ngModel)]="status.selected"
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ status.name }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container> -->
+
+                <mat-option class="mat-option-status">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option class="mat-option-status">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option class="mat-option-status">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option class="mat-option-status">
+                    <mat-checkbox
+                        [(ngModel)]="checkBox"
+                        (click)="$event.stopPropagation()"
+                    >
+                        Fee Related
+                    </mat-checkbox>
+                </mat-option>
+            </cdk-virtual-scroll-viewport>
+        </div>
+        <!-- Ends: Status -->
+
+    </div>
+    <!-- Ends: Complaint type  &&  Status Section -->
+
+    <!-- Starts: Bottom Buttons -->
+    <br />
+    <br />
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn delete-btn"
+            style="padding: 7px 17px;"
+            matTooltip="Delete Filters"
+            tooltip-position="left"
+            (click) = "deleteClick()"
+        >
+            Delete
+        </button>
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} apply-btn"
+            matTooltip="Apply Filters"
+            tooltip-position="left"
+            (click) = "applyClick()"
+        >
+            Apply
+        </button>
+    </div>
+    <!-- Ends: Bottom Buttons -->
+</mat-dialog-content>

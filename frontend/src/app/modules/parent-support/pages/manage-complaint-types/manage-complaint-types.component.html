@@ -1,4 +1,4 @@
-<div class="card-content">
+<div *ngIf="pageName == 'showTables'" class="card-content">
     <div class="table-container">
         <div class="title">Complaint Types</div>
         <table class="table">
@@ -7,52 +7,20 @@
                     <th style="text-align: center">Sr. no.</th>
                     <th style="text-align: center">Type Name</th>
                     <th style="text-align: center">No. of employees</th>
-                    <th style="text-align: center">Pass to higher authority</th>
                     <th style="text-align: center"></th>
                     <th style="text-align: center"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td style="text-align: center">1.</td>
-                    <td style="text-align: center">Fee Amount</td>
-                    <td style="text-align: center">10</td>
-                    <td style="text-align: center">None</td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center">1.</td>
-                    <td style="text-align: center">Fee Amount</td>
-                    <td style="text-align: center">10</td>
-                    <td style="text-align: center">None</td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center">1.</td>
-                    <td style="text-align: center">Fee Amount</td>
-                    <td style="text-align: center">10</td>
-                    <td style="text-align: center">None</td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center">1.</td>
-                    <td style="text-align: center">Fee Amount</td>
-                    <td style="text-align: center">10</td>
-                    <td style="text-align: center">None</td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td style="text-align: center">1.</td>
-                    <td style="text-align: center">Fee Amount</td>
-                    <td style="text-align: center">10</td>
-                    <td style="text-align: center">None</td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
+                <ng-container *ngFor="let complaintType of complaintTypeList; let i = index">
+                    <tr>
+                        <td style="text-align: center">{{ i + 1 }}.</td>
+                        <td style="text-align: center">{{ complaintType.name }}</td>
+                        <td style="text-align: center">10</td>
+                        <td><i class="material-icons edit-icon" style="text-align: center; cursor: pointer" (click)="editComplaintType(complaintType, i)">edit</i></td>
+                        <td><i class="material-icons delete-icon" style="text-align: center; cursor: pointer" (click)="deleteComplaintType(i)">delete_forever</i></td>
+                    </tr>
+                </ng-container>
             </tbody>
         </table>
     </div>
@@ -65,13 +33,13 @@
         style="padding: 12px 15px"
         matTooltip="Add New Type"
         tooltip-position="left"
+        (click)="pageName='addCompalintType'"
     >
         <i class="material-icons">add</i> Add Type
     </button>
     <br />
     <br />
     <br />
-
 
     <div class="table-container">
         <div class="title">Complaint Statuses</div>
@@ -82,164 +50,17 @@
                     <th>Name</th>
                     <th></th>
                     <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1.</td>
-                    <td>Resolved</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Resolved</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Resolved</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Resolved</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Resolved</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
-                <tr>
-                    <td>1.</td>
-                    <td>Resolved</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><i class="material-icons edit-icon" style="text-align: center">edit</i></td>
-                    <td><i class="material-icons delete-icon" style="text-align: center">delete_forever</i></td>
-                </tr>
+                <ng-container *ngFor="let status of statusList; let i = index">
+                    <tr>
+                        <td> {{ i + 1 }}.</td>
+                        <td> {{ status.statusName }} </td>
+                        <td><i class="material-icons edit-icon" style="text-align: center; cursor: pointer" (click)="openChangeStatusDialog(status, i)">edit</i></td>
+                        <td><i class="material-icons delete-icon" style="text-align: center; cursor: pointer" (click)="deleteStatus(i)">delete_forever</i></td>
+                    </tr>
+                </ng-container>
             </tbody>
         </table>
     </div>
@@ -256,4 +77,171 @@
     >
         <i class="material-icons">add</i> Add Status
     </button>
+</div>
+
+<div *ngIf="pageName == 'addCompalintType'" class="card-content">
+    <div class="add-title">Add/Edit Complaint Type</div>
+    <br />
+
+    <div class="flex-box">
+        <div class="field-title">Type Name : </div>
+        <mat-form-field>
+            <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" />
+        </mat-form-field>
+    </div>
+    <br />
+
+    <div class="flex-box">
+        <div class="field-title">Default Text : </div>
+        <mat-form-field appearance="fill">
+          <textarea matInput [(ngModel)]="defaultText" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" ></textarea>
+        </mat-form-field>
+    </div>
+    <br />
+
+    <div>
+        <div class="field-title">Address to :</div>
+        <br />
+        <div class="search-bar">
+            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="seachString = $event">
+            <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
+        </div>
+
+        <br />
+        <mat-checkbox
+            [(ngModel)]="helloCheckBox"
+            (click)="$event.stopPropagation()"
+        >
+            Hello
+        </mat-checkbox>
+
+        <br />
+        <mat-checkbox
+            [(ngModel)]="helloCheckBox"
+            (click)="$event.stopPropagation()"
+        >
+            Hello
+        </mat-checkbox>
+
+        <br />
+        <mat-checkbox
+            [(ngModel)]="helloCheckBox"
+            (click)="$event.stopPropagation()"
+        >
+            Hello
+        </mat-checkbox>
+
+        <br />
+        <mat-checkbox
+            [(ngModel)]="helloCheckBox"
+            (click)="$event.stopPropagation()"
+        >
+            Hello
+        </mat-checkbox>
+    </div>
+    <br />
+
+    <div>
+        <div class="field-title">Applicable Statuses : </div>
+        <br />
+        <div class="checkbox-group">
+            <div style="flex-basis: 25%;">
+                <mat-checkbox
+                    [(ngModel)]="helloCheckBox"
+                    (click)="$event.stopPropagation()"
+                >
+                    Hello
+                </mat-checkbox>
+
+                <br />
+                <mat-checkbox
+                    [(ngModel)]="helloCheckBox"
+                    (click)="$event.stopPropagation()"
+                >
+                    Hello
+                </mat-checkbox>
+
+                <br />
+                <mat-checkbox
+                    [(ngModel)]="helloCheckBox"
+                    (click)="$event.stopPropagation()"
+                >
+                    Hello
+                </mat-checkbox>
+            </div>
+
+            <div style="flex-basis: 25%;">
+                <mat-checkbox
+                    [(ngModel)]="helloCheckBox"
+                    (click)="$event.stopPropagation()"
+                >
+                    Hello
+                </mat-checkbox>
+
+                <br />
+                <mat-checkbox
+                    [(ngModel)]="helloCheckBox"
+                    (click)="$event.stopPropagation()"
+                >
+                    Hello
+                </mat-checkbox>
+            </div>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" />
+            </mat-form-field>
+            <button
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
+                matTooltip="Add New Complaint Status"
+                tooltip-position="left"
+            >
+                Add Complaint Status
+            </button>
+        </div>
+    </div>
+    <br />
+
+    <div class="flex-box">
+        <div class="field-title" style="margin-right: 5%;">Default Status :</div>
+        <mat-form-field>
+            <mat-select placeholder="{{ defaultStatus }}"  style="width: 100%">
+                <mat-option (click)="defaultStatus = 'hello'">Hello</mat-option>
+                <mat-option (click)="defaultStatus = 'hello'">Hello</mat-option>
+                <mat-option (click)="defaultStatus = 'hello'">Hello</mat-option>
+                <mat-option (click)="defaultStatus = 'hello'">Hello</mat-option>
+
+                <!-- <mat-option (click)="defaultStatus = status.name" *ngFor="let status of statusList">
+                    {{ status.name }}
+                </mat-option> -->
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div style="border-bottom: 1px solid #C4C4C4"></div>
+
+    <!-- Starts: Bottom Buttons -->
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 7px 17px;"
+            (click)="saveClicked()"
+        >
+            Save
+        </button>
+        <button
+            type="button"
+            class="btn cancel-btn"
+            style="padding: 7px 17px;"
+            (click)="cancelClicked()"
+        >
+            Cancel
+        </button>
+    </div>
+    <!-- Ends: Bottom Buttons -->
 </div>

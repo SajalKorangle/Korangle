@@ -1,0 +1,49 @@
+<mat-dialog-content class="add-status-modal-container">
+    <div class="header">
+        <div class="title">Parent Support >> Assign Employee</div>
+        <div><i class="material-icons close-btn">highlight_off</i></div>
+    </div>
+    <br />
+
+    <div>
+        <div class="field-title">Address to :</div>
+        <br />
+
+        <div class="search-bar">
+            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="seachString" (ngModelChange)="seachString = $event">
+            <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
+        </div>
+
+        <br />
+        <div class="checkbox-grp">
+            <mat-checkbox
+                [(ngModel)]="helloCheckBox"
+                (click)="$event.stopPropagation()"
+                style="flex-basis: 30%;"
+            >
+                Hello
+            </mat-checkbox>
+            <div class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline;">Renotify</div>
+        </div>
+    </div>
+    <br />
+</mat-dialog-content>
+
+<!-- Starts: Bottom Buttons -->
+<div class="bottom-btns">
+    <button
+        type="button"
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        style="padding: 7px 17px;"
+    >
+        Save
+    </button>
+    <button
+        type="button"
+        class="btn cancel-btn"
+        style="padding: 7px 17px;"
+    >
+        Cancel
+    </button>
+</div>
+<!-- Ends: Bottom Buttons -->

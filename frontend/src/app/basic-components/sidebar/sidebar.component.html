@@ -124,7 +124,7 @@
                 <ng-container *ngIf="user.activeSchool.role === 'Parent'">
 
                     <!-- Parent Support -->
-                    <ng-container *ngFor="let module of user.activeSchool.tempModuleList">
+                    <!-- <ng-container *ngFor="let module of user.activeSchool.tempModuleList">
                         <li
                             [class.active]="module.name === user.section.title"
                             [attr.data-color]="user.activeSchool.primaryThemeColor"
@@ -152,7 +152,7 @@
                                 </div>
                             </ng-container>
                         </li>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Multiple Students -->
                     <ng-container *ngIf="user.activeSchool.studentList.length > 1">

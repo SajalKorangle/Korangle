@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 @Component({
-    selector: 'app-manage-my-complaints',
-    templateUrl: './manage-my-complaints.component.html',
-    styleUrls: ['./manage-my-complaints.component.css']
+    selector: 'app-assign-employee',
+    templateUrl: './assign-employee.component.html',
+    styleUrls: ['./assign-employee.component.css']
 })
-export class ManageMyComplaintsComponent implements OnInit {
+export class AssignEmployeeComponent implements OnInit {
     user: any;
 
-    seachString: string = "";
+    helloCheckBox: boolean;
 
     constructor() { }
 

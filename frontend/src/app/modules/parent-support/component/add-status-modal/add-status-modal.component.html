@@ -1,7 +1,7 @@
 <mat-dialog-content class="add-status-modal-container">
     <div class="header">
-        <div class="title">Parent Support >> Add Complaint Status</div>
-        <div><i class="material-icons close-btn">highlight_off</i></div>
+        <div class="title">Parent Support >> {{ operation }} Complaint Status</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
     </div>
     <br />
     <br />
@@ -9,7 +9,7 @@
     <!-- Starts: Name Field -->
     <div class="inputField">
         <mat-form-field>
-            <input matInput placeholder="Status Name" required type="text" [(ngModel)]="name" />
+            <input matInput placeholder="Status Name" required type="text" [(ngModel)]="statusName" />
         </mat-form-field>
         <div><i class="material-icons delete-btn">delete_forever</i></div>
     </div>
@@ -21,6 +21,7 @@
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
             style="padding: 7px 17px;"
+            (click)="saveClicked()"
         >
             Save
         </button>
@@ -28,6 +29,7 @@
             type="button"
             class="btn cancel-btn"
             style="padding: 7px 17px;"
+            (click)="closeClicked()"
         >
             Cancel
         </button>

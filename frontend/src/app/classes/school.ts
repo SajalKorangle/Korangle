@@ -39,7 +39,7 @@ export class School {
     moduleList = [];
     studentList = [];
     parentModuleList = [];
-    tempModuleList = [];
+    // tempModuleList = [];
 
     fromServerObject(schoolData: any) {
         this.dbId = schoolData.dbId;
@@ -176,29 +176,42 @@ export class School {
                 ],
             });
 
-            this.tempModuleList.push({
-                icon: "event",
-                showTaskList: false,
-                path: 'parent_support',
+            this.parentModuleList.push({
                 name: 'Parent Support',
+                studentList: this.studentList,
+                id: this.studentList[0].id,
                 taskList: [
                     {
-                        title: 'Manage my complaints',
-                        path: 'manage_my_complaints',
-                        videoUrl: "https://youtu.be/JTCcMNncdag",
-                    },
-                    {
-                        title: 'Send new message',
-                        path: 'send_new_message',
-                        videoUrl: "https://youtu.be/JTCcMNncdag",
-                    },
-                    {
-                        title: 'Open message',
-                        path: 'open_message',
-                        videoUrl: "https://youtu.be/JTCcMNncdag",
+                        title: 'Manage complaints',
+                        path: 'manage_complaints',
+                        icon: 'event',
                     },
                 ],
             });
+
+            // this.tempModuleList.push({
+            //     icon: "event",
+            //     showTaskList: false,
+            //     path: 'parent_support',
+            //     name: 'Parent Support',
+            //     taskList: [
+            //         {
+            //             title: 'Manage my complaints',
+            //             path: 'manage_my_complaints',
+            //             videoUrl: "https://youtu.be/JTCcMNncdag",
+            //         },
+            //         {
+            //             title: 'Send new message',
+            //             path: 'send_new_message',
+            //             videoUrl: "https://youtu.be/JTCcMNncdag",
+            //         },
+            //         {
+            //             title: 'Open message',
+            //             path: 'open_message',
+            //             videoUrl: "https://youtu.be/JTCcMNncdag",
+            //         },
+            //     ],
+            // });
         }
     }
 }

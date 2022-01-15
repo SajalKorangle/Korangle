@@ -1,45 +1,29 @@
-.card-content {
-    padding: 3rem;
-    min-height: 90vh;
+/* Starts: Modal Container */
+.add-status-modal-container {
+    height: 50vh;
+    width: 40vw;
 }
+/* Ends: Modal Container */
 
-/* Starts: Table */
-thead tr th {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid black;
-}
-
-tbody tr:last-child td {
-    border-bottom: 1px solid #dee2e6;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;
 }
 
 .title {
-    font-size: 14px;
-    line-height: 16px;
-    opacity: 0.9;
+    font-weight: 500;
 }
 
-.delete-icon {
+.close-btn {
     color: red;
-}
-/* Ends: Table */
-
-.add-title {
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 400;
-    opacity: 0.7;
-}
-
-.flex-box {
-    display: flex;
-    align-items: center;
+    cursor: pointer;
 }
 
 .field-title {
     font-size: 14px;
-    /* line-height: 14px; */
     font-weight: 500;
     margin-right: 1rem;
 }
@@ -72,19 +56,9 @@ tbody tr:last-child td {
 }
 /* Ends: Search Bar */
 
-.mat-radio-button ~ .mat-radio-button {
-  margin-left: 16px;
-}
-
-.checkbox-group {
+.checkbox-grp {
     display: flex;
-    /* align-items: center; */
-}
-
-.add-status-btn {
-    padding: 12px 15px;
-    margin-left: 10%;
-    text-transform: capitalize !important;
+    align-items: center;
 }
 
 /* Starts: Bottom Btns */
