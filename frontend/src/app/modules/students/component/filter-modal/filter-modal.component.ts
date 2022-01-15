@@ -279,7 +279,7 @@ export class FilterModalComponent implements OnInit {
         } else {
             let today = new Date();
             today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-            age.push(today.toJSON().slice(0,10));
+            age.push(today.toJSON().slice(0, 10));
         }
         if (this.minAge != null && !isNaN(this.minAge)) {
             age.push(Math.max(this.minAge, 0));

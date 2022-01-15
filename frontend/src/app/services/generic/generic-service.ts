@@ -154,6 +154,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
     tc_app: 'TransferCertificateNew';
+    class_app: 'Class' | 'Division';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

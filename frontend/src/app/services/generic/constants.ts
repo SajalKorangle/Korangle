@@ -35,4 +35,4 @@ export const CONSTANTS = {
         'Class': CLASS_CONSTANT,
         'Division': DIVISION_CONSTANT,
     }
-}
+};

@@ -484,7 +484,7 @@ export class CountAllComponent implements OnInit {
     getHeaderValues(): any {
         let headerValues = [];
         headerValues.push('');
-        this.columnFilters.forEach((columnFilter)=> {
+        this.columnFilters.forEach((columnFilter) => {
             headerValues.push(columnFilter.name);
         });
         return headerValues;
