@@ -12,4 +12,5 @@ export const SESSION_CONSTANT = [
     { id: 3, startDate: '2019-04-01', endDate: '2020-03-31', name: 'Session 2019-20', orderNumber: 3 },
     { id: 4, startDate: '2020-04-01', endDate: '2021-03-31', name: 'Session 2020-21', orderNumber: 4 },
     { id: 5, startDate: '2021-04-01', endDate: '2022-03-31', name: 'Session 2021-22', orderNumber: 5 },
+    { id: 6, startDate: '2022-04-01', endDate: '2023-03-31', name: 'Session 2022-23', orderNumber: 6 },
 ];
