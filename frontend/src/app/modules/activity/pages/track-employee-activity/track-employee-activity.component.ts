@@ -130,7 +130,7 @@ export class TrackEmployeeActivityComponent implements OnInit {
         let randomColor = "#4CAF50";
         while (true) {
             randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-            if (!this.backgroundColorList.includes(randomColor)) {
+            if (!this.backgroundColorList.includes(randomColor) && randomColor != "#FFFFFF" && randomColor != "#ffffff") {
                 break;
             }
         }

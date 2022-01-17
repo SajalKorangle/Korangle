@@ -83,14 +83,12 @@
                     [(ngModel)]="startDate"
                 >
                     <mat-radio-button class="radio-button" value="sDate">
-                        <mat-form-field>
-                            <input
-                                matInput
-                                type="date"
-                                (ngModelChange)="sDate = $event"
-                                [ngModel]="sDate"
-                            />
-                        </mat-form-field>
+                        <input
+                            class="customInput"
+                            type="date"
+                            (ngModelChange)="sDate = $event"
+                            [ngModel]="sDate"
+                        />
                     </mat-radio-button>
                     <mat-radio-button class="radio-button" value="dayOne">
                         1st of ongoing month
@@ -115,14 +113,12 @@
                     [(ngModel)]="endDate"
                 >
                     <mat-radio-button class="radio-button" value="eDate">
-                        <mat-form-field>
-                            <input
-                                matInput
-                                type="date"
-                                (ngModelChange)="eDate = $event"
-                                [ngModel]="eDate"
-                            />
-                        </mat-form-field>
+                        <input
+                            class="customInput"
+                            type="date"
+                            (ngModelChange)="eDate = $event"
+                            [ngModel]="eDate"
+                        />
                     </mat-radio-button>
                     <mat-radio-button class="radio-button" value="today">
                         Today
@@ -138,7 +134,7 @@
 
         <!-- Starts: Sort Type -- Time Span Sub-Section -->
         <div class="time-span-sub-section">
-            <div class="title" style="margin-bottom: 1rem;">
+            <div class="title">
                 Sort
             </div>
             <div class="radio-btns">
@@ -162,7 +158,6 @@
     </div>
     <!-- Ends: Time Span Section -->
 
-    <br />
     <br />
     <!-- Starts: Filter-description -->
     <div class="filters-list">

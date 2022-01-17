@@ -53,6 +53,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 1rem;
 }
 
 .time-span-sub-section .title {
@@ -78,6 +79,12 @@
 
 .radio-button {
     flex-basis: 30%;
+}
+
+.customInput {
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    width: 100%;
 }
 /* Ends: Time Span Section */
 
@@ -177,6 +184,7 @@
         font-size: 14px;
         margin: 0;
         padding: 0;
+        margin-bottom: 2rem;
     }
 
     .time-span-sub-section .radio-btns {
@@ -201,11 +209,6 @@
         margin: 0;
         padding: 0;
         margin-bottom: 1rem;
-    }
-
-    .radio-button:first-child {
-        margin: 0;
-        padding: 0;
     }
 
     .radio-button:last-child {
