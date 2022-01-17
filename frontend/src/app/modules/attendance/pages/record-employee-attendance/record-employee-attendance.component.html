@@ -91,25 +91,25 @@
             Update
         </button>
 
-        <button
-            *ngIf="checkMobile()"
-            type="submit"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 12px 15px; margin-left: 15px"
-            (click)="printEmployeeAttendanceList()"
-        >
-            <i class="material-icons">print</i>
-        </button>
+        <ng-container *ngIf="!checkMobile()">
+            <button
+                type="submit"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 12px 15px; margin-left: 15px"
+                (click)="printEmployeeAttendanceList()"
+            >
+                <i class="material-icons">print</i>
+            </button>
 
-        <button
-            *ngIf="checkMobile()"
-            type="submit"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 12px 15px; margin-left: 5px"
-            (click)="downloadList()"
-        >
-            <i class="material-icons">save_alt</i>
-        </button>
+            <button
+                type="submit"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 12px 15px; margin-left: 5px"
+                (click)="downloadList()"
+            >
+                <i class="material-icons">save_alt</i>
+            </button>
+        </ng-container>
 
         <br />A: Absent, P: Present, H: Holiday, h: Half Day, N: Not Recorded <br />
     </ng-container>

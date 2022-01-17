@@ -182,8 +182,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     //Checking if it is in mobile
     checkMobile(): any {
-        if(isMobile()) return false;
-        else return true;
+        return isMobile();
     }
 
     // For Printing
