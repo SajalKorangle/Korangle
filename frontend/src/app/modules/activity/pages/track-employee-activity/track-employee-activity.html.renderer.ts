@@ -119,22 +119,43 @@ export class TrackEmployeeActivityHtmlRenderer {
 
     /* Time(hh:mm)  &&  Date(dd month_name year) */
     getDateTimeOfRecord(record) {
-        let createdAt = record.createdAt;
+        let createdAt = new Date(record.createdAt);
+
+        let hour = createdAt.getHours();
+        let hourString = "";
+        if(hour < 10) {
+            hourString = "0" + hour;
+        } else {
+            hourString = "" + hour;
+        }
+
+        let minutes = createdAt.getMinutes();
+        let minutesString = "";
+        if(minutes < 10) {
+            minutesString = "0" + minutes;
+        } else {
+            minutesString = "" + minutes;
+        }
+
+        let date = createdAt.getDate();
+        let dateString = "";
+        if(date < 10) {
+            dateString = "0" + date;
+        } else {
+            dateString = "" + date;
+        }
+
+        let year = createdAt.getFullYear();
+        let month = createdAt.getMonth() + 1;
+
         let timeDate = "";
-        let hour = createdAt[11] + createdAt[12];
-        let minutes = createdAt[14] + createdAt[15];
+        timeDate = hourString + ":" + minutesString + ", " + dateString;
 
-        let year = createdAt[0] + createdAt[1] + createdAt[2] + createdAt[3];
-        let month = parseInt(createdAt[5] + createdAt[6]);
-        let date = createdAt[8] + createdAt[9];
-
-        timeDate = hour + ":" + minutes + ", " + date;
-
-        if (parseInt(date) === 1) {
+        if (date === 1) {
             timeDate += "st ";
-        } else if (parseInt(date) === 2) {
+        } else if (date === 2) {
             timeDate += "nd ";
-        } else if (parseInt(date) === 3) {
+        } else if (date === 3) {
             timeDate += "rd ";
         } else {
             timeDate += "th ";
