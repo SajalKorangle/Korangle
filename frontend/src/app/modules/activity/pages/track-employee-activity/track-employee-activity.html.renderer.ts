@@ -123,7 +123,7 @@ export class TrackEmployeeActivityHtmlRenderer {
 
         let hour = createdAt.getHours();
         let hourString = "";
-        if(hour < 10) {
+        if (hour < 10) {
             hourString = "0" + hour;
         } else {
             hourString = "" + hour;
@@ -131,7 +131,7 @@ export class TrackEmployeeActivityHtmlRenderer {
 
         let minutes = createdAt.getMinutes();
         let minutesString = "";
-        if(minutes < 10) {
+        if (minutes < 10) {
             minutesString = "0" + minutes;
         } else {
             minutesString = "" + minutes;
@@ -139,7 +139,7 @@ export class TrackEmployeeActivityHtmlRenderer {
 
         let date = createdAt.getDate();
         let dateString = "";
-        if(date < 10) {
+        if (date < 10) {
             dateString = "0" + date;
         } else {
             dateString = "" + date;
