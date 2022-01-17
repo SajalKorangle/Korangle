@@ -109,13 +109,6 @@ export class TrackEmployeeActivityComponent implements OnInit {
         }
     }  // Ends: initializeTotalRecords()
 
-    isMobile(): boolean {
-        if (window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
-
     /* Covert HEX color code to RGB color code */
     hexToRGBA(hex: string) {
         const r = parseInt(hex.slice(1, 3), 16);
@@ -165,59 +158,6 @@ export class TrackEmployeeActivityComponent implements OnInit {
             this.getActivityRecordList();
         }
     }  // Ends: nextPage()
-
-    /* Time(hh:mm)  &&  Date(dd month_name year) */
-    getDateTimeOfRecord(record) {
-        let createdAt = record.createdAt;
-        let timeDate = "";
-        let hour = createdAt[11] + createdAt[12];
-        let minutes = createdAt[14] + createdAt[15];
-
-        let year = createdAt[0] + createdAt[1] + createdAt[2] + createdAt[3];
-        let month = parseInt(createdAt[5] + createdAt[6]);
-        let date = createdAt[8] + createdAt[9];
-
-        timeDate = hour + ":" + minutes + ", " + date;
-
-        if (parseInt(date) === 1) {
-            timeDate += "st ";
-        } else if (parseInt(date) === 2) {
-            timeDate += "nd ";
-        } else if (parseInt(date) === 3) {
-            timeDate += "rd ";
-        } else {
-            timeDate += "th ";
-        }
-
-        if (month == 1) {
-            timeDate += "January ";
-        } else if (month == 2) {
-            timeDate += "February ";
-        } else if (month == 3) {
-            timeDate += "March ";
-        } else if (month == 4) {
-            timeDate += "April ";
-        } else if (month == 5) {
-            timeDate += "May ";
-        } else if (month == 6) {
-            timeDate += "June ";
-        } else if (month == 7) {
-            timeDate += "July ";
-        } else if (month == 8) {
-            timeDate += "August ";
-        } else if (month == 9) {
-            timeDate += "September ";
-        } else if (month == 10) {
-            timeDate += "October ";
-        } else if (month == 11) {
-            timeDate += "November ";
-        } else if (month == 12) {
-            timeDate += "December ";
-        }
-
-        timeDate += year;
-        return timeDate;
-    }  // Ends: getDateTimeOfRecord()
 
     /* Debouncing */
     debounce(func, timeout = 300) {

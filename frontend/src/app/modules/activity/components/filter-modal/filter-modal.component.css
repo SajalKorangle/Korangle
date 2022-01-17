@@ -86,6 +86,10 @@
     border-bottom: 2px solid lightgrey;
     width: 100%;
 }
+
+.temp-btn {
+    opacity: 0;
+}
 /* Ends: Time Span Section */
 
 /* Starts: FIlters Description */

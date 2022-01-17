@@ -77,7 +77,7 @@
 
     <!-- Starts: Record List -->
     <div class="record-list">
-        <ng-container *ngIf="!isMobile()">
+        <ng-container *ngIf="!htmlRenderer.isMobile()">
             <div class="record" *ngFor="let record of activityRecordList">
                 <div class="icon" [ngStyle]="{'background-color': htmlRenderer.getIconBGColor(record.parentTask)}">
                     <i class="material-icons">{{ htmlRenderer.getIcon(record.parentTask) }}</i>
@@ -97,7 +97,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="isMobile()">
+        <ng-container *ngIf="htmlRenderer.isMobile()">
             <div class="record" *ngFor="let record of activityRecordList">
                 <div class="header">
                     <div class="icon" [ngStyle]="{'background-color': htmlRenderer.getIconBGColor(record.parentTask)}">

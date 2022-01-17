@@ -18,11 +18,11 @@ export class FilterModalComponent implements OnInit {
 
     startDate;    /* Type of Start Date */
     sDate;    /* Start Date */
-    startDays = 0;    /* Start Days Ago */
+    startDays;    /* Start Days Ago */
 
     endDate;    /* Type of End Date */
     eDate;    /* End Date */
-    endDays = 0;    /* End Days Ago */
+    endDays;    /* End Days Ago */
 
     sortType;
 
@@ -173,7 +173,7 @@ export class FilterModalComponent implements OnInit {
         }
 
         /* If Start Days Ago are selected, user need to provide Start Days. */
-        if (this.startDate && this.startDate == "startDays" && this.startDays === 0) {
+        if (this.startDate && this.startDate == "startDays" && (this.startDays == null || this.startDays == undefined)) {
             alert("Please enter the value of days ago in the start date section.");
             return;
         }
@@ -185,7 +185,7 @@ export class FilterModalComponent implements OnInit {
         }
 
         /* If End Days Ago are selected, user need to provide End Days. */
-        if (this.endDate && this.endDate == "endDays" && this.endDays === 0) {
+        if (this.endDate && this.endDate == "endDays" && (this.endDays == null || this.endDays == undefined)) {
             alert("Please enter the value of days ago in the end date section.");
             return;
         }
