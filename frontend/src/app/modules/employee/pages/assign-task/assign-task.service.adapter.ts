@@ -98,7 +98,7 @@ export class AssignTaskServiceAdapter {
 
         // Finding Assign Task Permission from TASK_PERMISSION_LIST
         let assign_task_permission = TASK_PERMISSION_LIST.find(task_permission => {
-            return task_permission.modulePath === 'employees' && task_permission.taskPath === 'assign_task'; 
+            return task_permission.modulePath === 'employees' && task_permission.taskPath === 'assign_task';
         });
 
         // Making groups based on Modules

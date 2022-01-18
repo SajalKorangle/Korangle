@@ -14,9 +14,9 @@ export class InPagePermissionDialogComponent implements OnInit {
 
     groupList: Array<string>;
     employeePermissionConfigJson: { [key: string]: any; } = {};
-    // Using employeePermissionConfigJsonCopy variable to store data locally, 
+    // Using employeePermissionConfigJsonCopy variable to store data locally,
     // employeePermissionConfigJson will be stored in database only after clicking on apply button
-    employeePermissionConfigJsonCopy: { [key: string]: any; } = {};     
+    employeePermissionConfigJsonCopy: { [key: string]: any; } = {};
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
