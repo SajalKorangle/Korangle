@@ -2,6 +2,7 @@ from django.db import models
 
 
 from school_app.model.models import Board
+from common.common import BasePermission
 
 # Create your models here.
 
@@ -20,6 +21,10 @@ class Module(models.Model):
     class Meta:
         db_table = 'module'
 
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
+
 
 class Task(models.Model):
 
@@ -36,3 +41,7 @@ class Task(models.Model):
     class Meta:
         db_table = 'task'
         unique_together = ('parentModule', 'path')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []

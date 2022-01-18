@@ -103,6 +103,8 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     student_app: 'Student' | 'StudentSection';
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
+    employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
+    team_app: 'Module' | 'Task';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE
