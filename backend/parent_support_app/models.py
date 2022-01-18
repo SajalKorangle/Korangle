@@ -14,11 +14,14 @@ class Status(models.Model):
     # Status Name
     name = models.CharField(max_length = 20)
 
+    # Parent School
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+
     def __str__(self):
         return self.name
 
     class Permissions(BasePermission):
-        pass
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'complaint_status'
@@ -35,11 +38,14 @@ class ComplaintType(models.Model):
     # Default Complaint Status
     parentStatusDefault = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True)
 
+    # Parent School
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+
     def __str__(self):
         return self.name
 
     class Permissions(BasePermission):
-        pass
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'complaint_type'
@@ -48,12 +54,12 @@ class ComplaintType(models.Model):
 class Complaint(models.Model):
 
     # Creator
-    # It will be null for parent, who is not an emplyee of school. User model will used for parent.
-    # This would require if the complaint is raised by the employee of the school.
+    # It will be null for the parent, who is not an employee of the school. The user model will be used for parents.
+    # This would be required if the complaint is raised by the employee of the school.
     parentEmployee = models.ForeignKey(Employee, on_delete = models.CASCADE, null = True)
 
-    # In case of parent, his employee id would null.
-    # So we have to use User model to extract information related to user.
+    # In the case of the parent, his employee id would be null.
+    # So we have to use the User model to extract information related to the user.
     parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Date Sent
@@ -71,11 +77,14 @@ class Complaint(models.Model):
     # Complaint Status
     parentStatus = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True, default = 0)
 
+    # Parent School
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+
     def __str__(self):
         return self.title
 
     class Permissions(BasePermission):
-        RelationsToSchool = ['parentEmployee__parentSchool__id']
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'complaint'
@@ -145,10 +154,18 @@ class EmployeeComplaintType(models.Model):
 
 
 class CountAllTable(models.Model):
+
+    # Table Name
     formatName = models.CharField(max_length=50)
+
+    # Parent School
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
-    rows = models.JSONField()    # It will store all the rows of the table in JSON format.
-    cols = models.JSONField()    # It will store all the columns of the table in JSON format.
+
+    # It will store all the rows of the table in JSON format.
+    rows = models.JSONField()
+
+    # It will store all the columns of the table in JSON format.
+    cols = models.JSONField()
 
     def __str__(self):
         return self.formatName
