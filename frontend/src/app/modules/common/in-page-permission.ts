@@ -11,14 +11,14 @@ export class InPagePermission {
     inputType: InputTypeInterface;
     allowedValues?: AllowedValueInterface;   // [any: value, string: displayName]
     options: Options;
-    
+
     constructor(displayName: string, inputType: InputTypeInterface, allowedValues: AllowedValueInterface = null, options: Options = {}) {
         this.displayName = displayName;
         this.inputType = inputType;
         this.allowedValues = allowedValues;
         this.options = options;
     }
-    
+
 }
 export class GroupOfCheckBoxPermission extends InPagePermission {
     checkBoxValues: AllowedValueInterface;

@@ -33,29 +33,29 @@ export class AssignTaskServiceAdapter {
         // Extracting Module List
         const moduleQuery = new Query()
         .filter({
-            __or__:[
-                { parentBoard: this.vm.user.activeSchool.parentBoard}, 
+            __or__: [
+                { parentBoard: this.vm.user.activeSchool.parentBoard},
                 { parentBoard: null}
             ],
         })
         .getObjectList({ team_app: 'Module' });
-        
+
         // Extracting Task List for each Module
         const taskQuery = new Query()
         .filter({
-                __or__1:[
-                    { parentBoard: this.vm.user.activeSchool.parentBoard}, 
+                __or__1: [
+                    { parentBoard: this.vm.user.activeSchool.parentBoard},
                     { parentBoard: null}
                 ],
-                __or__2:[
-                    { parentModule__parentBoard: this.vm.user.activeSchool.parentBoard}, 
+                __or__2: [
+                    { parentModule__parentBoard: this.vm.user.activeSchool.parentBoard},
                     { parentModule__parentBoard: null}
                 ],
             })
             .getObjectList({ team_app: 'Task' });
-        
+
         let moduleList, taskList;
-        
+
         [
             moduleList,
             taskList
@@ -68,44 +68,46 @@ export class AssignTaskServiceAdapter {
         this.initializeModuleList(moduleList, taskList);
 
         // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
-        if(Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
-            
-            let tempModuleList = [];      
+        if (Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
+
+            let tempModuleList = [];
             this.vm.moduleList.forEach(module => {
                 let tempTaskList = [];
                 let tempModule = module;
-                
+
                 module.taskList.forEach(task => {
-                    if(loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
+                    if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
                         tempTaskList.push(task);
                     }
                 });
-                
-                if(tempTaskList.length) {
+
+                if (tempTaskList.length) {
                     tempModule.taskList = tempTaskList;
                     tempModuleList.push(tempModule);
                 }
-            })
-            
+            });
+
             this.vm.moduleList = tempModuleList;
         }
-        
+
         this.intializeAssignTaskPermission();
         this.vm.isLoading = false;
     }
 
-    intializeAssignTaskPermission(): any{
+    intializeAssignTaskPermission(): any {
 
         // Finding Assign Task Permission from TASK_PERMISSION_LIST
-        let assign_task_permission = TASK_PERMISSION_LIST.find(task_permission => {return task_permission.modulePath === 'employees' && task_permission.taskPath === 'assign_task'});
+        let assign_task_permission = TASK_PERMISSION_LIST.find(task_permission => {
+            return task_permission.modulePath === 'employees' && task_permission.taskPath === 'assign_task'; 
+        });
 
         // Making groups based on Modules
         this.vm.moduleList.forEach(module => {
             // Tasks corresponding to the module will act as checkBoxValues
-            let checkBoxValues = []
+            let checkBoxValues = [];
             module.taskList.forEach(task => {
                 checkBoxValues.push([task.id, task.title]);
-            })
+            });
 
             // Updating inPagePermissionMappedByKey dict with key as module id and value as InPagePermission
             assign_task_permission.inPagePermissionMappedByKey[module.id]
@@ -115,7 +117,7 @@ export class AssignTaskServiceAdapter {
                     checkBoxValues,
                     {}
                 );
-        });  
+        });
     }
 
     getPermissionList(): void {
@@ -184,7 +186,7 @@ export class AssignTaskServiceAdapter {
     }
 
     async assignAllTasks(employee) {
-        if(employee.permissionLoading) 
+        if (employee.permissionLoading)
             return;
         const toCreatePermissions = [];
 
