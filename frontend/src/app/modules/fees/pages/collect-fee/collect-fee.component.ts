@@ -37,7 +37,8 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService,
+        SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
 })
 export class CollectFeeComponent implements OnInit {
     user;
@@ -161,7 +162,7 @@ export class CollectFeeComponent implements OnInit {
 
     ngAfterContentChecked(): void {
         this.cdRef.detectChanges();
-    }  
+    }
 
     isMobileMenu() {
         if ($(window).width() > 991) {

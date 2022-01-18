@@ -62,12 +62,12 @@ export class GiveDiscountServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
-                { id__in: this.vm.GIVE_DISCOUNT_EVENT_DBID}), //3        
+                { id__in: this.vm.GIVE_DISCOUNT_EVENT_DBID}), //3
         ]);
 
         this.vm.smsBalance = value[3].count;
         this.vm.backendData.discountSMSEventList = value[3];
-        
+
         this.vm.dataForMapping['classList'] = value[0];
         this.vm.dataForMapping['divisionList'] = value[1];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
@@ -208,17 +208,17 @@ export class GiveDiscountServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    // Notify parents about Discount Details  
+    // Notify parents about Discount Details
     async notifyParents() {
         let tempStudentList = this.vm.getStudentList();
         let studentList = [];
-         
+
         // Calculating and storing neccessary variables for SMS/Notification template
-        if(tempStudentList.length > 0) {
+        if (tempStudentList.length > 0) {
 
             tempStudentList.forEach((student) => {
 
-                if(this.checkMobileNumber(student.mobileNumber) == false) {
+                if (this.checkMobileNumber(student.mobileNumber) == false) {
                     return;
                 }
 
@@ -229,8 +229,8 @@ export class GiveDiscountServiceAdapter {
                     let discountAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
 
                     let tempStudent =  CommonFunctions.getInstance().copyObject(student);
-                    
-                    if(discountAmount > 0) {
+
+                    if (discountAmount > 0) {
                         tempStudent['discountAmount'] = discountAmount;
                         tempStudent['session'] = session;
                         studentList.push(tempStudent);
@@ -241,10 +241,10 @@ export class GiveDiscountServiceAdapter {
         }
 
         this.vm.messageService.fetchGCMDevicesNew(studentList);
-        
+
         this.vm.dataForMapping['studentList'] =  studentList;
         this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
-        
+
         await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
             this.vm.dataForMapping,
             ['student'],
@@ -252,7 +252,7 @@ export class GiveDiscountServiceAdapter {
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
         );
-        
+
     }
 
     checkMobileNumber(mobileNumber: number): boolean {

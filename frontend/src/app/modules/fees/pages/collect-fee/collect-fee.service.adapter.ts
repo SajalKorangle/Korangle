@@ -87,12 +87,12 @@ export class CollectFeeServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
-                { id__in: this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID}), //3        
+                { id__in: this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID}), //3
         ]);
 
         this.vm.smsBalance = val[2].count;
         this.vm.backendData.feeReceiptSMSEventList = val[3];
-        
+
         this.vm.dataForMapping['classList'] = val[0];
         this.vm.dataForMapping['divisionList'] = val[1];
         this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
@@ -291,17 +291,17 @@ export class CollectFeeServiceAdapter {
 
     }
 
-    // Notify parents about Fee Receipt  
+    // Notify parents about Fee Receipt
     async notifyParents(fee_receipt_list) {
         let tempStudentList = this.vm.getStudentList();
         let studentList = [];
-        
+
         // Calculating and storing neccessary variables for SMS/Notification template
-        if(tempStudentList.length > 0) {
+        if (tempStudentList.length > 0) {
 
             tempStudentList.forEach((student) => {
 
-                if(this.checkMobileNumber(student.mobileNumber) == false) {
+                if (this.checkMobileNumber(student.mobileNumber) == false) {
                     return;
                 }
 
@@ -311,11 +311,11 @@ export class CollectFeeServiceAdapter {
 
                     let feeAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
                     let dueFeeAmount = this.vm.getSessionFeesDue(student, session, false) + this.vm.getSessionLateFeesDue(student, session, false);
-                    
-                    let feeReceipt = fee_receipt_list.find(x => (x.parentStudent == student.id && x.parentSession == session.id))
+
+                    let feeReceipt = fee_receipt_list.find(x => (x.parentStudent == student.id && x.parentSession == session.id));
 
                     let tempStudent =  CommonFunctions.getInstance().copyObject(student);
-                    if(feeAmount > 0) {
+                    if (feeAmount > 0) {
                         tempStudent['feeAmount'] = feeAmount;
                         tempStudent['dueFeeAmount'] = dueFeeAmount;
                         tempStudent['session'] = session;
@@ -328,7 +328,7 @@ export class CollectFeeServiceAdapter {
         }
 
         this.vm.messageService.fetchGCMDevicesNew(studentList);
-        
+
         this.vm.dataForMapping['studentList'] =  studentList;
         this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
 
@@ -339,7 +339,7 @@ export class CollectFeeServiceAdapter {
             this.vm.user.activeSchool.dbId,
             this.vm.smsBalance
         );
-        
+
     }
 
     checkMobileNumber(mobileNumber: number): boolean {

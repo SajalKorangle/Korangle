@@ -19,7 +19,7 @@ export class ManageTemplatesServiceAdapter {
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .getObjectList({ sms_app: 'SMSIdSchool' });
         this.vm.backendData.SMSIdList = await new Query()
-            .filter({ 
+            .filter({
                 id__in: this.vm.backendData.SMSIdSchoolList.map((a) => a.parentSMSId),
                 smsIdStatus: 'ACTIVATED',
             })
@@ -44,7 +44,7 @@ export class ManageTemplatesServiceAdapter {
 
         // Initializing event settings for those events which use default templates and for which event settings are not initilized yet
         this.vm.userInput.selectedPage.orderedSMSEventIdList.forEach(smsEventId => {
-            if(!this.vm.htmlRenderer.isUserChosenTemplateForEvent(smsEventId)) {
+            if (!this.vm.htmlRenderer.isUserChosenTemplateForEvent(smsEventId)) {
                 let setting = this.vm.backendData.selectedPageEventSettingsList.find(set => set.SMSEventId == smsEventId);
                 if (!setting) {
                     let tempSettings = {
@@ -73,13 +73,13 @@ export class ManageTemplatesServiceAdapter {
 
         // Populating neccessary information of each events of the seleceted page in populatedSelectedPageEventsData
         // [event info, event settings, default template info, custom template info, marking user chosen or default]
-        let defaultTemplateIdList = [] // Storing default template ids for events in selected page to populate default templates later on
+        let defaultTemplateIdList = []; // Storing default template ids for events in selected page to populate default templates later on
         this.vm.userInput.selectedPage.orderedSMSEventIdList.forEach(async smsEventId => {
-            if(this.vm.htmlRenderer.isUserChosenTemplateForEvent(smsEventId)) {
+            if (this.vm.htmlRenderer.isUserChosenTemplateForEvent(smsEventId)) {
                 // If user chosen template then initializing new template and updating populatedSelectedPageEventsData
                 this.vm.initializeNewTemplate();
                 let temp = this.vm.backendData.eventList.find(x => x.id == smsEventId);
-                temp.isUserChosenTemplateForEvent = true;           
+                temp.isUserChosenTemplateForEvent = true;
                 this.vm.userInput.populatedSelectedPageEventsData.push(temp);
             }
             else {
@@ -98,10 +98,10 @@ export class ManageTemplatesServiceAdapter {
     }
 
     populateEventSettings(eventId) {
-        // Populating only if user has not chosen template for the event        
+        // Populating only if user has not chosen template for the event
         let temp = this.vm.backendData.eventList.find(x => x.id == eventId);
         temp['eventSettings'] = this.vm.backendData.selectedPageEventSettingsList.find(setting => setting.SMSEventId == temp.id);
-        
+
         // If a template is linked with the SMS ID other than 'Default'
         temp['customEventTemplate'] = this.vm.backendData.selectedPageTemplateList.find(template => template.id == temp['eventSettings'].parentSMSTemplate);
         if (temp['customEventTemplate']) {
@@ -111,7 +111,7 @@ export class ManageTemplatesServiceAdapter {
             temp['selectedSMSId'] = this.vm.smsIdListFilteredBySchoolId.find(smsId => smsId.id == 0);
             temp['customEventTemplate'] = {templateId: '', templateName: '', rawContent: '', mappedContent: '', parentSMSId: 0};
         }
-        
+
         // for saving expansion panel closed or open state  after loading
         temp['expansionPanelState'] = {
             eventPanel: false,
