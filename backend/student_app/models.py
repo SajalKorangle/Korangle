@@ -57,7 +57,7 @@ class Student(models.Model):
     dateOfBirth = models.DateField(null=True)
     remark = models.TextField(null=True, blank=True)
 
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name="studentList")
 
     # new student profile data
     motherName = models.TextField(null=True, blank=True)
@@ -91,7 +91,7 @@ class Student(models.Model):
     bloodGroup = models.TextField(null=True, blank=True)
     fatherAnnualIncome = models.TextField(null=True, blank=True)
 
-    currentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=True, verbose_name='current_bus_stop')
+    currentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=True, verbose_name='current_bus_stop',  related_name="studentList")
 
     RTE_YES = 'YES'
     RTE_NO = 'NO'
@@ -102,12 +102,12 @@ class Student(models.Model):
 
     rte = models.CharField(max_length=10, choices=RTE, null=True)
 
-    admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession')
-    parentAdmissionClass = models.ForeignKey(Class, blank=True, null=True, on_delete=models.SET_NULL)
+    admissionSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=True, verbose_name='admissionSession', related_name="studentList")
+    parentAdmissionClass = models.ForeignKey(Class, blank=True, null=True, on_delete=models.SET_NULL, related_name="studentList")
     dateOfAdmission = models.DateField(null=True, verbose_name='dateOfAdmission')
 
     parentTransferCertificate = \
-        models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate')
+        models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate', related_name="studentList")
     
 
     def __str__(self):
@@ -151,11 +151,11 @@ class Student(models.Model):
 
 class StudentSection(models.Model):
 
-    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent')
+    parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, default=0, verbose_name='parentStudent', related_name="studentSectionList")
 
-    parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass')
-    parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision')
-    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
+    parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentClass', related_name="studentSectionList")
+    parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentDivision', related_name="studentSectionList")
+    parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession', related_name="studentSectionList")
 
     rollNumber = models.TextField(null=True, blank=True)
     attendance = models.IntegerField(null=True)

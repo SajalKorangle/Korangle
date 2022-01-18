@@ -52,12 +52,17 @@ export class AssignTaskComponent implements OnInit {
         });
     }
 
-    updatePermission(employee: any, task: any): void {
+    async updatePermission(employee: any, task: any, module: any): Promise<any> {
+        if (this.isPermissionLoading(employee, task))
+            return;
         this.updatePermissionLoading(employee, task, true);
         if (this.hasPermission(employee, task)) {
             this.serviceAdapter.deletePermission(employee, task);
         } else {
-            this.serviceAdapter.addPermission(employee, task);
+            await this.serviceAdapter.addPermission(employee, task);
+            if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path)) {
+                this.openInPagePermissionDialog(module, task, employee);
+            }
         }
     }
 
@@ -95,6 +100,7 @@ export class AssignTaskComponent implements OnInit {
 
         openedDialog.afterClosed().subscribe((data: any) => {
             if (data && data.employeePermissionConfigJson) {
+                data.employeePermissionConfigJsonCopy = Object.assign({}, data.employeePermissionConfigJson);
                 this.updatePermissionLoading(employee, task, true);
                 if (existingPermission) {
                     this.serviceAdapter.updatePermission(
@@ -108,7 +114,9 @@ export class AssignTaskComponent implements OnInit {
         });
     }
 
-    hasInPageTaskPermission(module, task): boolean {
+    hasInPageTaskPermission(module, task, employee): boolean {
+        if (this.isDisabled(module, task, employee))
+            return false;
         if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path))
             return true;
         return false;
