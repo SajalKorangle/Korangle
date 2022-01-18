@@ -78,6 +78,11 @@ mat-form-field {
     width: fit-content;
 }
 
+.document-parameter {
+    position: relative;
+    z-index: 0;
+}
+
 .drop {
     position: relative;
     height: 120px;
@@ -97,6 +102,7 @@ mat-form-field {
     top: 19px;
     font-size: 14px;
     color: black;
+    white-space: nowrap;
 }
 
 .documentName {
@@ -124,6 +130,14 @@ mat-form-field {
     z-index: 3;
 }
 
+.tooltip-btn {
+    word-wrap: break-word;
+    font-size: 12px;
+    color: #959393;
+    font-weight: 400;
+    line-height: 18px;
+}
+
 .none {
     background: rgba(182, 224, 184, 0.1);
     border: 1px dashed #7db580;
@@ -136,6 +150,31 @@ mat-form-field {
     bottom: 30px;
 }
 
-.row .col-md-5 {
-    width: 38.66666667%;
+.row .col-md-5{
+    width: 45%;
+}
+
+@media only screen and (max-width: 992px) {
+    .row .col-md-5 {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .documentIcon {
+        width: 50px;
+    }
+
+    .documentLabel {
+        left: 72px;
+        font-size: 12px;
+    }
+
+    .documentText {
+        left: 72px;
+    }
+
+    .documentButton {
+        font-size: 12px;
+    }
 }
