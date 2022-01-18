@@ -10,11 +10,11 @@ import { CommonFunctions } from '@classes/common-functions';
 })
 export class InPagePermissionDialogComponent implements OnInit {
 
-    inPagePermissionMappedByKey: { [key: string]: any; };
+    inPagePermissionMappedByKey: { [key: string]: any; };   // Storing inPagePermission key value pair
 
     groupList: Array<string>;
     employeePermissionConfigJson: { [key: string]: any; } = {};
-    employeePermissionConfigJsonCopy: { [key: string]: any; } = {};
+    employeePermissionConfigJsonCopy: { [key: string]: any; } = {};     // Using this variable to store data locally, will be stored in database only after clicking on apply button
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
@@ -50,6 +50,7 @@ export class InPagePermissionDialogComponent implements OnInit {
         this.dialogRef.close({ employeePermissionConfigJson: this.employeePermissionConfigJson });
     }
 
+    // Functions for inputType = 'groupOfCheckBox' only: STARTS
     intialize(permissionKey): any {
         if(!(permissionKey in this.employeePermissionConfigJson)) {
             this.employeePermissionConfigJson[permissionKey] = {};
@@ -95,4 +96,5 @@ export class InPagePermissionDialogComponent implements OnInit {
             }
         })
     }
+    // Functions for inputType = 'groupOfCheckBox' only: ENDS
 }
