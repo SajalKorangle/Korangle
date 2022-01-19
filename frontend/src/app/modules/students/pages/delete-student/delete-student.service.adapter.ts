@@ -82,16 +82,15 @@ export class DeleteStudentServiceAdapter {
         };
 
         this.vm.isLoading = true;
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let actionString = this.vm.user.first_name + " deleted a student " + this.vm.selectedStudent.name;
 
         this.vm.studentService.deleteObject(this.vm.studentService.student, student_data).then(
             (value) => {
                 this.vm.selectedStudent['deleted'] = true;
-
-                let parentEmployee = this.vm.user.activeSchool.employeeId;
-                let moduleName = this.vm.user.section.title;
-                let taskName = this.vm.user.section.subTitle;
-                let moduleList = this.vm.user.activeSchool.moduleList;
-                let actionString = this.vm.user.first_name + " deleted a student " + this.vm.selectedStudent.name;
                 CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                 this.vm.isLoading = false;
             },
@@ -133,6 +132,11 @@ export class DeleteStudentServiceAdapter {
         };
 
         this.vm.isLoading = true;
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let actionString = this.vm.user.first_name + " deleted a student " + this.vm.selectedStudent.name + " from the session.";
 
         Promise.all([
             this.vm.subjectService.deleteObjectList(this.vm.subjectService.student_subject, student_subject_data),
@@ -147,7 +151,7 @@ export class DeleteStudentServiceAdapter {
         ]).then(
             (value) => {
                 this.vm.selectedStudent['deleted'] = true;
-
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                 this.vm.isLoading = false;
             },
             (error) => {

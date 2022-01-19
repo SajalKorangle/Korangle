@@ -10,21 +10,21 @@ import { FilterModalHtmlRenderer } from './filter-modal.html.renderer';
     styleUrls: ['./filter-modal.component.css']
 })
 export class FilterModalComponent implements OnInit {
-    user;
+    user: any;
 
-    employeeList = [];
-    taskList = [];
-    timeSpan = {};
+    employeeList: any = [];
+    taskList: any = [];
+    timeSpan: any = {};
 
-    startDate;    /* Type of Start Date */
-    sDate;    /* Start Date */
-    startDays;    /* Start Days Ago */
+    startDate: string = "";    /* Type of Start Date */
+    sDate: string = "";    /* Start Date */
+    startDays: number = 0;    /* Start Days Ago */
 
-    endDate;    /* Type of End Date */
-    eDate;    /* End Date */
-    endDays;    /* End Days Ago */
+    endDate: string = "";    /* Type of End Date */
+    eDate: string = "";    /* End Date */
+    endDays: number = 0;    /* End Days Ago */
 
-    sortType;
+    sortType: string = "";
 
     htmlRenderer: FilterModalHtmlRenderer;
 
@@ -92,6 +92,14 @@ export class FilterModalComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
     }
+
+    /* Make input-date non-typeable */
+    handleOnKeyDown(event: any) {
+        let keyPressed = event.keyCode;
+        if (keyPressed != 8 && keyPressed != 46) { //check if it is not delete
+            return false; // don't allow to input any value
+        }
+    }  // Ends: handleOnKeyDown()
 
     /* Newest or Oldest */
     getSortType() {

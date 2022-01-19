@@ -86,8 +86,8 @@
                         <input
                             class="customInput"
                             type="date"
-                            (ngModelChange)="sDate = $event"
-                            [ngModel]="sDate"
+                            (keydown)="handleOnKeyDown($event)"
+                            [(ngModel)]="sDate"
                         />
                     </mat-radio-button>
                     <mat-radio-button class="radio-button" value="dayOne">
@@ -116,8 +116,8 @@
                         <input
                             class="customInput"
                             type="date"
-                            (ngModelChange)="eDate = $event"
-                            [ngModel]="eDate"
+                            (keydown)="handleOnKeyDown($event)"
+                            [(ngModel)]="eDate"
                         />
                     </mat-radio-button>
                     <mat-radio-button class="radio-button" value="today">
