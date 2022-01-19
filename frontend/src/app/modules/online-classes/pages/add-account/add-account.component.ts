@@ -67,7 +67,7 @@ export class AddAccountComponent implements OnInit {
 
     newAccountInfoSanatyCheckURL(meetingUrl): boolean {
         var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-            '((meet\\.google\\.)+[a-z]{2,})' + // domain name
+            '(((meet\\.google\\.)|(teams\\.live\\.))+[a-z]{2,})' + // domain name
             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*') ; // port and path
         if (!meetingUrl) {  // check for all the fields
             alert("All fields are required");

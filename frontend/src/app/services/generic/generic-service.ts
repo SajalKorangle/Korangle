@@ -101,9 +101,15 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     student_app: 'Student' | 'StudentSection';
+    sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
+<<<<<<< HEAD
     parent_support_app: 'ComplaintType' | 'Status' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'CountAllTable';
     employee_app: 'Employee';
+=======
+    employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
+    team_app: 'Module' | 'Task';
+>>>>>>> e5cdf9ab9bd20af55b946e43dee7f18f8e7e7c46
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE
