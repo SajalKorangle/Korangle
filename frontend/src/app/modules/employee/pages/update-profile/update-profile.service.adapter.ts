@@ -18,6 +18,13 @@ export class UpdateProfileServiceAdapter {
             this.vm.employeeParameterList = value[0].map(x => ({ ...x, filterValues: JSON.parse(x.filterValues) }));
             console.log('different custom parameter');
             console.dir(this.vm.employeeParameterList);
+
+            for (let i = 0; i < this.vm.employeeParameterList.length; i++) {
+                if (this.vm.employeeParameterList[i].parameterType == "DOCUMENT") {
+                    this.vm.showToolTip.push(false);
+                    this.vm.height.push(120);
+                }
+            }
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;

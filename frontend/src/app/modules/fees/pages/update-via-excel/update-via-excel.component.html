@@ -62,61 +62,66 @@
         </mat-card>
     </ng-container>
 
-    <hr />
+    <ng-container *ngIf="!checkMobile()">
+        <hr />
+        <h3 class="text-{{ user.activeSchool.secondaryThemeColor }}">Download Template</h3>
+        <h3 style="display: block">{{ selectionCount }} / {{ studentsCount }}</h3>
 
-    <h3 class="text-{{ user.activeSchool.secondaryThemeColor }}">Download Template</h3>
-    <h3 style="display: block">{{ selectionCount }} / {{ studentsCount }}</h3>
+        <!-- Class Filter -->
+        <mat-form-field style="margin-right: 25px">
+            <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
+                <mat-option>
+                    <button
+                        class="btn"
+                        style="padding: 4px 7px"
+                        id="select-all-classes"
+                        (click)="updateAllClassesSelection(true); $event.stopPropagation()"
+                    >
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(false); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
 
-    <!-- Class Filter -->
-    <mat-form-field style="margin-right: 25px">
-        <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
-            <mat-option>
-                <button
-                    class="btn"
-                    style="padding: 4px 7px"
-                    id="select-all-classes"
-                    (click)="updateAllClassesSelection(true); $event.stopPropagation()"
-                >
-                    Select All
-                </button>
-                <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(false); $event.stopPropagation()">
-                    Clear All
-                </button>
-            </mat-option>
-
-            <ng-container *ngFor="let class of classList">
-                <ng-container *ngFor="let section of divisionList">
-                    <mat-option *ngIf="studentListMappedByClassIdDivisionId[class.id][section.id]" style="width: 100%">
-                        <mat-checkbox
-                            [(ngModel)]="classDivisionSelectionMappedByClassIdDivisionId[class.id][section.id]"
-                            (ngModelChange)="
-                                selectionCount = $event
-                                    ? selectionCount + studentListMappedByClassIdDivisionId[class.id][section.id].length
-                                    : selectionCount - studentListMappedByClassIdDivisionId[class.id][section.id].length
-                            "
-                            (click)="$event.stopPropagation()"
-                        >
-                            {{ class.name }}
-                            <span *ngIf="showSection(class)">, {{ section.name }}</span>
-                        </mat-checkbox>
-                    </mat-option>
+                <ng-container *ngFor="let class of classList">
+                    <ng-container *ngFor="let section of divisionList">
+                        <mat-option *ngIf="studentListMappedByClassIdDivisionId[class.id][section.id]" style="width: 100%">
+                            <mat-checkbox
+                                [(ngModel)]="classDivisionSelectionMappedByClassIdDivisionId[class.id][section.id]"
+                                (ngModelChange)="
+                                    selectionCount = $event
+                                        ? selectionCount + studentListMappedByClassIdDivisionId[class.id][section.id].length
+                                        : selectionCount - studentListMappedByClassIdDivisionId[class.id][section.id].length
+                                "
+                                (click)="$event.stopPropagation()"
+                            >
+                                {{ class.name }}
+                                <span *ngIf="showSection(class)">, {{ section.name }}</span>
+                            </mat-checkbox>
+                        </mat-option>
+                    </ng-container>
                 </ng-container>
-            </ng-container>
 
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(true); $event.stopPropagation()">
-                    Select All
-                </button>
-                <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(false); $event.stopPropagation()">
-                    Clear All
-                </button>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+                <mat-option>
+                    <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(true); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="updateAllClassesSelection(false); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-    <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="downloadSheetTemplate()">
-        Download Template
-    </button>
+        <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="downloadSheetTemplate()">
+            Download Template
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="checkMobile()">
+        <h4>Download template from desktop.</h4>
+    </ng-container>
 </div>
 
 <ng-template #spinner>

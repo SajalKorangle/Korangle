@@ -155,6 +155,9 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     tc_app: 'TransferCertificateNew';
     subject_app: 'StudentSubject';
     examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
+    sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
+    employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
+    team_app: 'Module' | 'Task';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

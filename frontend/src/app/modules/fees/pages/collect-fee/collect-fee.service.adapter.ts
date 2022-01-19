@@ -16,6 +16,8 @@ export class CollectFeeServiceAdapter {
     //initialize data
     async initializeData() {
 
+        // ------------------- Initial Data Fetching Starts ---------------------
+
         this.vm.isLoading = true;
 
         let schoolId = this.vm.user.activeSchool.dbId;
@@ -75,6 +77,36 @@ export class CollectFeeServiceAdapter {
         this.vm.handlePaymentAccountOnPaymentModeChange();
 
         this.vm.isLoading = false;
+
+        const sms_count_request_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        const val = await Promise.all([
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
+                { id__in: this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID}), //3
+        ]);
+
+        this.vm.smsBalance = val[2].count;
+        this.vm.backendData.feeReceiptSMSEventList = val[3];
+
+        this.vm.dataForMapping['classList'] = val[0];
+        this.vm.dataForMapping['divisionList'] = val[1];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
+        let fetch_event_settings_list = {
+            SMSEventId__in: this.vm.backendData.feeReceiptSMSEventList.map(a => a.id).join(),
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        if (this.vm.backendData.feeReceiptSMSEventList.length > 0) {
+            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, fetch_event_settings_list);
+        }
+
+        // ------------------- Initial Data Fetching Ends ---------------------
 
     }
 
@@ -249,6 +281,7 @@ export class CollectFeeServiceAdapter {
         this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(newSubFeeReceiptList);
 
         alert('Fees submitted successfully');
+        this.notifyParents(newFeeReceiptList);
 
         this.vm.printFullFeeReceiptList(newFeeReceiptList, newSubFeeReceiptList);
 
@@ -256,6 +289,61 @@ export class CollectFeeServiceAdapter {
 
         this.vm.isLoading = false;
 
+    }
+
+    // Notify parents about Fee Receipt
+    async notifyParents(fee_receipt_list) {
+        let tempStudentList = this.vm.getStudentList();
+        let studentList = [];
+
+        // Calculating and storing neccessary variables for SMS/Notification template
+        if (tempStudentList.length > 0) {
+
+            tempStudentList.forEach((student) => {
+
+                if (this.checkMobileNumber(student.mobileNumber) == false) {
+                    return;
+                }
+
+                let sessionList = this.vm.getFilteredSessionListByStudent(student);
+
+                sessionList.forEach((session) => {
+
+                    let feeAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
+                    let dueFeeAmount = this.vm.getSessionFeesDue(student, session, false) + this.vm.getSessionLateFeesDue(student, session, false);
+
+                    let feeReceipt = fee_receipt_list.find(x => (x.parentStudent == student.id && x.parentSession == session.id));
+
+                    let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+                    if (feeAmount > 0) {
+                        tempStudent['feeAmount'] = feeAmount;
+                        tempStudent['dueFeeAmount'] = dueFeeAmount;
+                        tempStudent['session'] = session;
+                        tempStudent['feeReceipt'] = feeReceipt;
+                        studentList.push(tempStudent);
+                    }
+
+                });
+            });
+        }
+
+        this.vm.messageService.fetchGCMDevicesNew(studentList);
+
+        this.vm.dataForMapping['studentList'] =  studentList;
+        this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
+
+        await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+            this.vm.dataForMapping,
+            ['student'],
+            this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
+
+    }
+
+    checkMobileNumber(mobileNumber: number): boolean {
+        return mobileNumber && mobileNumber.toString().length == 10;
     }
 
     addToFeeReceiptList(fee_receipt_list: any): void {
