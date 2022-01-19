@@ -37,7 +37,7 @@
             </mat-form-field>
 
             <mat-form-field>
-                <mat-label>Google Meet url</mat-label>
+                <mat-label>Google Meet/Teams url</mat-label>
                 <input matInput type="text" [(ngModel)]="userInput.newAccountInfo.meetingUrl"
                     [disabled]="htmlRenderer.isGmeetAccountDisabled(userInput.newAccountInfo.meetingNumber,userInput.newAccountInfo.passcode)">
             </mat-form-field>
@@ -122,7 +122,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <mat-label>Google Meeting URL</mat-label>
+                            <mat-label>Google Meeting/Teams URL</mat-label>
                             <input matInput type="text" [(ngModel)]="userInput.selectedAccountInfo.meetingUrl"
                                 [disabled]="htmlRenderer.isGmeetAccountDisabled(userInput.selectedAccountInfo.meetingNumber,userInput.selectedAccountInfo.passcode)">
                         </mat-form-field><br />

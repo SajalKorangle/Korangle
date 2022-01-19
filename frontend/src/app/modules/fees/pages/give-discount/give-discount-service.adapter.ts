@@ -13,7 +13,10 @@ export class GiveDiscountServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
+
+        // ------------------- Initial Data Fetching Starts ---------------------
+
         this.vm.isLoading = true;
 
         let schoolId = this.vm.user.activeSchool.dbId;
@@ -49,7 +52,38 @@ export class GiveDiscountServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    }
+
+        const sms_count_request_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        const value = await Promise.all([
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
+                { id__in: this.vm.GIVE_DISCOUNT_EVENT_DBID}), //3
+        ]);
+
+        this.vm.smsBalance = value[3].count;
+        this.vm.backendData.discountSMSEventList = value[3];
+
+        this.vm.dataForMapping['classList'] = value[0];
+        this.vm.dataForMapping['divisionList'] = value[1];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
+        let fetch_event_settings_list = {
+            SMSEventId__in: this.vm.backendData.discountSMSEventList.map(a => a.id).join(),
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        if (this.vm.backendData.discountSMSEventList.length > 0) {
+            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, fetch_event_settings_list);
+        }
+
+        // ------------------- Initial Data Fetching Ends ---------------------
+
+}
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
@@ -168,9 +202,61 @@ export class GiveDiscountServiceAdapter {
         this.vm.subDiscountList = this.vm.subDiscountList.concat(subDiscountList);
 
         alert('Discount given successfully');
+        this.notifyParents();
+
         this.vm.handleStudentFeeProfile();
         this.vm.isLoading = false;
+    }
 
+    // Notify parents about Discount Details
+    async notifyParents() {
+        let tempStudentList = this.vm.getStudentList();
+        let studentList = [];
+
+        // Calculating and storing neccessary variables for SMS/Notification template
+        if (tempStudentList.length > 0) {
+
+            tempStudentList.forEach((student) => {
+
+                if (this.checkMobileNumber(student.mobileNumber) == false) {
+                    return;
+                }
+
+                let sessionList = this.vm.getFilteredSessionListByStudent(student);
+
+                sessionList.forEach((session) => {
+
+                    let discountAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
+
+                    let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+
+                    if (discountAmount > 0) {
+                        tempStudent['discountAmount'] = discountAmount;
+                        tempStudent['session'] = session;
+                        studentList.push(tempStudent);
+                    }
+
+                });
+            });
+        }
+
+        this.vm.messageService.fetchGCMDevicesNew(studentList);
+
+        this.vm.dataForMapping['studentList'] =  studentList;
+        this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
+
+        await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+            this.vm.dataForMapping,
+            ['student'],
+            this.vm.GIVE_DISCOUNT_EVENT_DBID,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
+
+    }
+
+    checkMobileNumber(mobileNumber: number): boolean {
+        return mobileNumber && mobileNumber.toString().length == 10;
     }
 
     addToDiscountList(discount_list: any): void {

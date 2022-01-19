@@ -77,6 +77,14 @@ export class AddStudentServiceAdapter {
 
                 this.vm.initializeVariable();
 
+                if (this.vm.studentParameterList) {
+                    for (let i = 0; i < this.vm.studentParameterList.length; i++) {
+                        if (this.vm.studentParameterList[i].parameterType == "DOCUMENT") {
+                            this.vm.showToolTip.push(false);
+                            this.vm.height.push(120);
+                        }
+                    }
+                }
                 this.vm.isLoading = false;
             },
             (error) => {
