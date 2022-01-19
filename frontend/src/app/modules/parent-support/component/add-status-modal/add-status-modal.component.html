@@ -11,7 +11,7 @@
         <mat-form-field>
             <input matInput placeholder="Status Name" required type="text" [(ngModel)]="statusName" />
         </mat-form-field>
-        <div><i class="material-icons delete-btn">delete_forever</i></div>
+        <div *ngIf="operation == 'Edit'"><i class="material-icons delete-btn" (click)="deleteClick()">delete_forever</i></div>
     </div>
     <!-- Ends: Name Field -->
 

@@ -1,52 +1,75 @@
-<div class="card-content">
-
+<div *ngIf="!isLoading" class="card-content">
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Student Name : </span>
-        <div class="search-bar" style="flex-basis: 60%;">
-            <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="seachString" (ngModelChange)="seachString = $event">
-            <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
+        <div class="search-bar" style="flex-basis: 50%;">
+            <input class="search-field" type="search" placeholder="Enter Student Name" [(ngModel)]="seachStudentString">
+            <button class="seach-btn" (click)="searchStudent()"><i class="material-icons search-icon">search</i></button>
+        </div>
+    </div>
+
+    <div *ngIf="searchedStudentList.length > 0" class="common-section">
+        <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"></span>
+        <div style="flex-basis: 50%;">
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <ng-container *ngFor="let student of searchedStudentList">
+                    <mat-option (click)="initializeStudentData(student)">
+                        {{ student.name }}
+                    </mat-option>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
         </div>
     </div>
     <br />
 
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Father’s Name : </span>
-        <input class="title-input" type="text" placeholder="Enter Father's Name">
+        <div style="flex-basis: 60%;">
+            {{ fatherName }}
+        </div>
     </div>
+    <br />
 
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Select Complaint type : </span>
         <mat-form-field>
-            <mat-select placeholder="Enter Name" style="width: 100%">
-                <mat-option>Hello</mat-option>
-                <mat-option>Hello</mat-option>
-                <mat-option>Hello</mat-option>
-                <mat-option>Hello</mat-option>
+            <mat-select placeholder="{{ complaintTypeName }}" style="width: 100%">
+                <ng-container *ngFor="let complaintTypeT of complaintTypeList">
+                    <mat-option (click)="complaintTypeName = complaintTypeT.name; complaintType = complaintTypeT;">{{ complaintTypeT.name }}</mat-option>
+                </ng-container>
             </mat-select>
         </mat-form-field>
     </div>
+    <br />
 
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Enter title : </span>
-        <input class="title-input" type="text" placeholder="Enter Title">
+        <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
     </div>
-
     <br />
+
     <div class="comment-section">
         <div class="default-text">
             Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
         </div>
         <div class="bottom-section">
-            <input class="bottom-search-field" type="search" placeholder="Type Query here" [ngModel]="comment" (ngModelChange)="comment = $event">
+            <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="comment">
             <button
                 type="button"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
                 style="padding: 12px 15px"
                 matTooltip="Send Comment"
                 tooltip-position="left"
+                (click)="sendComplaintClicked()"
             >
                 Send
             </button>
         </div>
     </div>
+    <br />
 </div>
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->

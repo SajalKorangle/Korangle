@@ -20,6 +20,7 @@ export class ManageComplaintsComponent implements OnInit {
     complaintParentContactNumber: string = "";
     complaintTitle: string = "";
     complaintStatus: string = "";
+    complaintComment: string = "";
     complaintCommentList: any = [];
     complaintList: any = [];
 
@@ -28,6 +29,38 @@ export class ManageComplaintsComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
         console.log("User: ", this.user);
+    }
+
+    sendComplaint() {
+        this.complaintParentName = this.user.first_name + " " + this.user.last_name;
+        // this.complaintDateSent = new Date();
+        this.complaintParentContactNumber = this.user.username;
+        this.complaintStatus = "Unresolved";
+
+        let complaint = {};
+        complaint["complaintParentName"] = this.complaintParentName;
+        complaint["complaintDateSent"] = this.complaintDateSent;
+        complaint["complaintParentContactNumber"] = this.complaintParentContactNumber;
+        complaint["complaintStatus"] = this.complaintStatus;
+        complaint["complaintType"] = this.complaintType;
+        complaint["complaintStudentName"] = this.complaintStudentName;
+        complaint["complaintParentName"] = this.complaintParentName;
+        complaint["complaintTitle"] = this.complaintTitle;
+        complaint["complaintCommentList"] = [this.complaintComment];
+
+        this.complaintList.push(complaint);
+    }
+
+    openComplaint(complaint) {
+        this.complaintParentName = complaint["complaintParentName"];
+        this.complaintDateSent = complaint["complaintDateSent"];
+        this.complaintParentContactNumber = complaint["complaintParentContactNumber"];
+        this.complaintStatus = complaint["complaintStatus"];
+        this.complaintType = complaint["complaintType"];
+        this.complaintStudentName = complaint["complaintStudentName"];
+        this.complaintParentName = complaint["complaintParentName"];
+        this.complaintTitle = complaint["complaintTitle"];
+        this.complaintComment = complaint["complaintCommentList"][0];
     }
 
 }

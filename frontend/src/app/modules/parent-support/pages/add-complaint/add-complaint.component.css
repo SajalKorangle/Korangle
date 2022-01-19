@@ -12,6 +12,12 @@
     flex-basis: 15%;
 }
 
+.example-viewport {
+    height: 20vh;
+    width: 100%;
+    font-size: 14px;
+}
+
 /* Starts: Search Bar */
 .search-bar {
     display: flex;
@@ -20,7 +26,7 @@
 }
 
 .search-field {
-    flex-basis: 63%;
+    flex-basis: 90%;
     border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
@@ -28,7 +34,7 @@
 }
 
 .seach-btn {
-    flex-basis: 7%;
+    flex-basis: 10%;
     border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;

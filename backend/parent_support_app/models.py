@@ -12,10 +12,10 @@ from school_app.model.models import School
 class Status(models.Model):
 
     # Status Name
-    name = models.CharField(max_length = 20)
+    name = models.CharField(max_length = 100)
 
     # Parent School
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -30,7 +30,7 @@ class Status(models.Model):
 class ComplaintType(models.Model):
 
     # Complaint Type Name
-    name = models.CharField(max_length = 20)
+    name = models.CharField(max_length = 100)
 
     # Default Complaint Text
     defaultText = models.TextField()
@@ -39,7 +39,7 @@ class ComplaintType(models.Model):
     parentStatusDefault = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True)
 
     # Parent School
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -60,7 +60,7 @@ class Complaint(models.Model):
 
     # In the case of the parent, his employee id would be null.
     # So we have to use the User model to extract information related to the user.
-    parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+    # parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Date Sent
     dateSent = models.DateTimeField(auto_now_add = True)
@@ -72,13 +72,13 @@ class Complaint(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE)
 
     # Complaint Title
-    title = models.CharField(max_length = 50)
+    title = models.CharField(max_length = 100)
 
     # Complaint Status
-    parentStatus = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True, default = 0)
+    parentStatus = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True)
 
     # Parent School
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -96,6 +96,10 @@ class Comment(models.Model):
     parentEmployee = models.ForeignKey(Employee, on_delete = models.SET_NULL, null = True)
 
     # If sender is parent.
+    # We will fetch father's name from his child.
+    parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE, null = True)
+
+    # Parent User
     parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Sender's message
@@ -153,13 +157,13 @@ class EmployeeComplaintType(models.Model):
         db_table = 'employee_complaintType'
 
 
-class CountAllTable(models.Model):
+class CountAllParentSupport(models.Model):
 
     # Table Name
-    formatName = models.CharField(max_length=50)
+    formatName = models.CharField(max_length = 100)
 
     # Parent School
-    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
+    parentSchool = models.ForeignKey(School, on_delete = models.CASCADE)
 
     # It will store all the rows of the table in JSON format.
     rows = models.JSONField()
@@ -174,7 +178,7 @@ class CountAllTable(models.Model):
         RelationsToSchool = ['parentSchool__id']
 
     class Meta:
-        db_table = 'count_all_table_parentSupport'
+        db_table = 'count_all_parentSupport'
 
 
 @receiver(post_save, sender = Complaint)

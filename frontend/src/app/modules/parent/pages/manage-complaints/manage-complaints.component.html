@@ -33,12 +33,12 @@
                 <tbody>
                     <ng-container *ngFor="let complaint of complaintList; let i = index">
                         <tr>
-                            <td>{{ complaint.studentName }}</td>
+                            <td>{{ complaint.complaintStudentName }}</td>
                             <td>{{ complaint.dateSent }}</td>
                             <td>{{ complaint.complaintType }}</td>
-                            <td>{{ complaint.status }}</td>
-                            <td>{{ complaint.commentList.length }}</td>
-                            <td (click)="pageName = 'open-complaint'" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; cursor: pointer;">Open</td>
+                            <td>{{ complaint.complaintStatus }}</td>
+                            <td>{{ complaint.complaintCommentList.length }}</td>
+                            <td (click)="pageName = 'open-complaint'; openComplaint(complaint)" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; cursor: pointer;">Open</td>
                             <td><i class="material-icons delete-icon">delete_forever</i></td>
                         </tr>
                     </ng-container>
@@ -73,14 +73,14 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Name:</div>
-            <div>John Doe</div>
+            <div>{{ complaintParentName }}</div>
         </div>
 
         <div class="status-section">
             <div class="status">
                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
                 <mat-form-field>
-                    <mat-select placeholder="Resolved" style="width: 100%">
+                    <mat-select placeholder="{{ complaintStatus }}" style="width: 100%">
                         <mat-option>Hello</mat-option>
                         <mat-option>Hello</mat-option>
                         <mat-option>Hello</mat-option>
@@ -95,7 +95,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
-            <div>Today</div>
+            <div>{{ dateSent }}</div>
         </div>
         <div></div>
     </div>
@@ -103,8 +103,8 @@
 
     <div class="common-section">
         <div class="information">
-            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Message Type :</div>
-            <div>Fee Amount</div>
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Compalint Type :</div>
+            <div>{{ complaintType }}</div>
         </div>
         <div></div>
     </div>
@@ -113,7 +113,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
-            <div>Jane Dea</div>
+            <div>{{ complaintStudentName }}</div>
         </div>
         <div></div>
     </div>
@@ -122,7 +122,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
-            <div>99999 99999</div>
+            <div>{{ complaintParentContactNumber }}</div>
         </div>
         <div></div>
     </div>
@@ -130,7 +130,7 @@
     <div class="common-section" style="align-items: flex-end">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
-            <div>Fee Related Query for Neha Doshi in month January</div>
+            <div>{{ complaintTitle }}</div>
         </div>
         <button
             type="button"
@@ -211,7 +211,10 @@
 
     <div class="send-new-common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Enter title : </span>
-        <input class="title-input" type="text" placeholder="Enter Title">
+        <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
+        <!-- <mat-form-field class="title-input" style="margin-left: 10%;">
+            <input matInput type="text"/>
+        </mat-form-field> -->
     </div>
 
     <br />
@@ -220,14 +223,15 @@
             Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
         </div>
         <div class="bottom-section">
-            <input class="bottom-search-field" type="search" placeholder="Type Query here" [ngModel]="comment" (ngModelChange)="comment = $event">
+            <!-- <input class="bottom-search-field" type="search" placeholder="Type Query here" [ngModel]="complaintComment" (ngModelChange)="complaintComment = $event"> -->
+            <input class="bottom-search-field" type="text" placeholder="Type Query here" [(ngModel)]="complaintComment">
             <button
                 type="button"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
                 style="padding: 12px 15px"
                 matTooltip="Send Comment"
                 tooltip-position="left"
-                (click)="pageName = 'list-of-complaints'"
+                (click)="pageName = 'list-of-complaints'; sendComplaint()"
             >
                 Send
             </button>

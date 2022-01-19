@@ -37,4 +37,8 @@ export class AddStatusModalComponent implements OnInit {
     saveClicked() {
         this.dialogRef.close({statusName: this.statusName});
     }
+
+    deleteClick() {
+        this.dialogRef.close({operation: "delete"});
+    }
 }
