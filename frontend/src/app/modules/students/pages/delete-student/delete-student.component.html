@@ -238,11 +238,6 @@
                                 <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation()">Mobile No. </mat-checkbox>
                             </mat-option>
                             <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showSecondMobileNumber" (click)="$event.stopPropagation()"
-                                    >Alt. Mobile No.
-                                </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
                                 <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation()">Scholar No. </mat-checkbox>
                             </mat-option>
                             <mat-option>
@@ -255,50 +250,10 @@
                                 <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation()">Gender </mat-checkbox>
                             </mat-option>
                             <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showCaste" (click)="$event.stopPropagation()">Caste </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
                                 <mat-checkbox [(ngModel)]="columnFilter.showCategory" (click)="$event.stopPropagation()">Category </mat-checkbox>
                             </mat-option>
                             <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showReligion" (click)="$event.stopPropagation()">Religion </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showFatherOccupation" (click)="$event.stopPropagation()">
-                                    Father's Occupation
-                                </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
                                 <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation()">Address </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showChildSSMID" (click)="$event.stopPropagation()">Child SSMID </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showFamilySSMID" (click)="$event.stopPropagation()">Family SSMID </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showBankName" (click)="$event.stopPropagation()">Bank Name </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showBankIfscCode" (click)="$event.stopPropagation()">Bank Ifsc Code </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showBankAccountNum" (click)="$event.stopPropagation()">Bank Acc. No. </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showAadharNum" (click)="$event.stopPropagation()">Aadhar No. </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showBloodGroup" (click)="$event.stopPropagation()">Blood Group </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showFatherAnnualIncome" (click)="$event.stopPropagation()">
-                                    Father's Annual Income
-                                </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation()"> RTE </mat-checkbox>
                             </mat-option>
                             <mat-option>
                                 <mat-checkbox [(ngModel)]="columnFilter.showAdmissionSession" (click)="$event.stopPropagation()">
@@ -306,19 +261,8 @@
                                 </mat-checkbox>
                             </mat-option>
                             <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showBusStopName" (click)="$event.stopPropagation()"> Bus Stop Name </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
                                 <mat-checkbox [(ngModel)]="columnFilter.showDateOfAdmission" (click)="$event.stopPropagation()">
                                     Date Of Admission
-                                </mat-checkbox>
-                            </mat-option>
-                            <mat-option>
-                                <mat-checkbox [(ngModel)]="columnFilter.showRemark" (click)="$event.stopPropagation()"> Remark </mat-checkbox>
-                            </mat-option>
-                            <mat-option *ngFor="let parameter of studentParameterOtherList">
-                                <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation()">
-                                    {{ parameter.name }}
                                 </mat-checkbox>
                             </mat-option>
                             <mat-option>

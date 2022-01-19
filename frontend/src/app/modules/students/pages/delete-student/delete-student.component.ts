@@ -14,29 +14,14 @@ class ColumnFilter {
     showRollNumber = false;
     showFathersName = true;
     showMobileNumber = false;
-    showSecondMobileNumber = false;
     showScholarNumber = false;
     showDateOfBirth = false;
     showMotherName = false;
     showGender = false;
-    showCaste = false;
     showCategory = false;
-    showReligion = false;
-    showFatherOccupation = false;
     showAddress = false;
-    showChildSSMID = false;
-    showFamilySSMID = false;
-    showBankName = false;
-    showBankIfscCode = false;
-    showBankAccountNum = false;
-    showAadharNum = false;
-    showBloodGroup = false;
-    showFatherAnnualIncome = false;
-    showRTE = false;
     showAdmissionSession = false;
-    showBusStopName = false;
     showDateOfAdmission = false;
-    showRemark = false;
 }
 @Component({
     selector: 'app-delete-student',
