@@ -45,8 +45,8 @@ export class GenericService extends RestApiGateway {
 
     getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -55,8 +55,8 @@ export class GenericService extends RestApiGateway {
 
     getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(CONSTANTS[app_name][model_name]);
             }
         }
@@ -65,8 +65,8 @@ export class GenericService extends RestApiGateway {
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -75,8 +75,8 @@ export class GenericService extends RestApiGateway {
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -85,8 +85,8 @@ export class GenericService extends RestApiGateway {
 
     updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -95,8 +95,8 @@ export class GenericService extends RestApiGateway {
 
     updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -105,8 +105,8 @@ export class GenericService extends RestApiGateway {
 
     partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -115,8 +115,8 @@ export class GenericService extends RestApiGateway {
 
     partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -135,8 +135,8 @@ export class GenericService extends RestApiGateway {
 
     deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if(app_name in CONSTANTS){
-            if(model_name in CONSTANTS[app_name]) {
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
                 return Promise.resolve(null);
             }
         }
@@ -151,7 +151,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue';
     class_app: 'Class' | 'Division';
-    school_app: 'Session' | 'BusStop'; 
+    school_app: 'Session' | 'BusStop';
     tc_app: 'TransferCertificateNew';
     subject_app: 'StudentSubject';
     examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';

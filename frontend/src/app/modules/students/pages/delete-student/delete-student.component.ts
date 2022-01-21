@@ -35,7 +35,7 @@ export class DeleteStudentComponent implements OnInit {
     bothFilters = false;
 
     selectedStudent: any;
-    studentSectionList = []
+    studentSectionList = [];
     selectedStudentSectionList = [];
     selectedStudentFeeReceiptList = [];
     selectedStudentDiscountList = [];
@@ -46,9 +46,9 @@ export class DeleteStudentComponent implements OnInit {
     sectionList = [];
 
     isLoading = false;
-    
+
     isStudentListLoading = false;
-    
+
     serviceAdapter: DeleteStudentServiceAdapter;
     htmlRenderer: DeleteStudentHtmlRenderer;
     backendData: DeleteStudentBackendData;
@@ -101,7 +101,7 @@ export class DeleteStudentComponent implements OnInit {
     studentParameterList: any[] = [];
     studentParameterOtherList: any[] = [];
 
-    studentParameterValueList: any[] = [];   
+    studentParameterValueList: any[] = [];
 
     classStudentSelectList = ['Class', 'Student'];
     currentClassStudentFilter;
@@ -161,9 +161,9 @@ export class DeleteStudentComponent implements OnInit {
         this.sectionList = details.sectionList;
     }
 
-    handleStudentListSelection(value): void{
+    handleStudentListSelection(value): void {
         this.studentFullProfileList.forEach((student) => {
-            if(student.dbId == value[0][0].id) {
+            if (student.dbId == value[0][0].id) {
                 this.selectedStudent = student;
             }
         });
@@ -171,7 +171,7 @@ export class DeleteStudentComponent implements OnInit {
 
     handleClassStudentFilter(value: any): void {
         this.currentClassStudentFilter = value;
-        if(this.currentClassStudentFilter === 'Class') {
+        if (this.currentClassStudentFilter === 'Class') {
             this.selectedStudent = null;
         }
         this.handleStudentDisplay();
@@ -415,14 +415,14 @@ export class DeleteStudentComponent implements OnInit {
             }
 
             // Deletability Filter check
-            if(this.currentDeletablityFilter == this.deletablitySelectList[1]) {
-                if(!student.isDeletable){
+            if (this.currentDeletablityFilter == this.deletablitySelectList[1]) {
+                if (!student.isDeletable) {
                     student.show = false;
                     return;
                 }
             }
-            if(this.currentDeletablityFilter == this.deletablitySelectList[2]) {
-                if(student.isDeletable){
+            if (this.currentDeletablityFilter == this.deletablitySelectList[2]) {
+                if (student.isDeletable) {
                     student.show = false;
                     return;
                 }

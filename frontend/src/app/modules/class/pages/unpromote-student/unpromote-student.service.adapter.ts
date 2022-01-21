@@ -26,24 +26,24 @@ export class UnpromoteStudentServiceAdapter {
 
         const studentSectionQuery = new Query()
             .filter({ parentStudent: studentList[0].id })
-            .getObjectList({ student_app: 'StudentSection' }); 
-                
+            .getObjectList({ student_app: 'StudentSection' });
+
         const feeReceiptQuery = new Query()
-            .filter({ 
+            .filter({
                 parentStudent: studentList[0].id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
                 cancelled: 'False',
             })
             .getObjectList({ fees_third_app: 'FeeReceipt' });
-            
+
         const discountQuery = new Query()
-            .filter({ 
+            .filter({
                 parentStudent: studentList[0].id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
                 cancelled: 'False',
             })
             .getObjectList({ fees_third_app: 'Discount' });
-        
+
         const transferCertificateNewQuery = new Query()
             .filter({
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -53,7 +53,7 @@ export class UnpromoteStudentServiceAdapter {
             .getObjectList({ tc_app: 'TransferCertificateNew' });
 
         let tempStudentList;
-        
+
         [
             tempStudentList,
             this.vm.selectedStudentSectionList,
@@ -65,23 +65,23 @@ export class UnpromoteStudentServiceAdapter {
             studentQuery,   // 0
             studentSectionQuery,    // 1
             feeReceiptQuery,    // 2
-            discountQuery,  // 3  
+            discountQuery,  // 3
             transferCertificateNewQuery // 4
-        ])
+        ]);
 
         this.vm.selectedStudent = studentList[0];
         Object.keys(tempStudentList).forEach((key) => {
             this.vm.selectedStudent[key] = tempStudentList[key];
         });
         this.vm.selectedStudent['rollNumber'] = this.vm.selectedStudentSectionList[0].rollNumber;
-        
-        // Checking if the current session is not the latest one for the student (which means that this session is a middle session or not)
-        this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] = this.vm.selectedStudentSectionList[this.vm.selectedStudentSectionList.length - 1].parentSession !=
-                                                                    this.vm.user.activeSchool.currentSessionDbId;
 
-        // Checking if the current session is the only session in which student is registered (If that's the case then student can't be deleted)                                                            
+        // Checking if the current session is not the latest one for the student (which means that this session is a middle session or not)
+        this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] =
+            this.vm.selectedStudentSectionList[this.vm.selectedStudentSectionList.length - 1].parentSession != this.vm.user.activeSchool.currentSessionDbId;
+
+        // Checking if the current session is the only session in which student is registered (If that's the case then student can't be deleted)
         this.vm.selectedStudentDeleteDisabledReason["hasOnlyOneSession"] = this.vm.selectedStudentSectionList.length == 1;
-        
+
         // Checking if fee receipt is generated for the student in the current session which is not cancelled
         this.vm.selectedStudentDeleteDisabledReason["hasFeeReceipt"] = this.vm.selectedStudentFeeReceiptList.find((feeReceipt) => {
             return (
@@ -94,7 +94,7 @@ export class UnpromoteStudentServiceAdapter {
         // Checking if discount is generated for the student in the current session which is not cancelled
         this.vm.selectedStudentDeleteDisabledReason["hasDiscount"] = this.vm.selectedStudentDiscountList.find((discount) => {
             return (
-                discount.parentStudent == this.vm.selectedStudent.id && 
+                discount.parentStudent == this.vm.selectedStudent.id &&
                 discount.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
                 discount.cancelled == false
             );
@@ -107,14 +107,14 @@ export class UnpromoteStudentServiceAdapter {
                 tc.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
                 tc.cancelledBy == null
             );
-        }) != undefined
+        }) != undefined;
 
         this.vm.isLoading = false;
     }
 
     async deleteStudentFromSession(): Promise<any> {
 
-        if(!this.vm.htmlRenderer.isStudentDeletableFromSession()) {
+        if (!this.vm.htmlRenderer.isStudentDeletableFromSession()) {
             return;
         }
 
@@ -130,7 +130,7 @@ export class UnpromoteStudentServiceAdapter {
             .deleteObjectList({ subject_app: 'StudentSubject' });
 
         const studentTestQuery = new Query()
-            .filter({ 
+            .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
@@ -142,7 +142,7 @@ export class UnpromoteStudentServiceAdapter {
                 parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
             .deleteObjectList({ examination_app: 'StudentExtraSubField' });
-        
+
         const cceMarksQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
@@ -156,7 +156,7 @@ export class UnpromoteStudentServiceAdapter {
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
             .deleteObjectList({ fees_third_app: 'FeeReceipt' });
- 
+
         const studentFeeQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
@@ -181,7 +181,7 @@ export class UnpromoteStudentServiceAdapter {
             studentFeeReceiptQuery,
             studentFeeQuery,
             studentSectionQuery
-        ])
+        ]);
 
         this.vm.selectedStudent.isDeleted = true;
 
