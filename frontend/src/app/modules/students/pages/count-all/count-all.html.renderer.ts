@@ -1,4 +1,5 @@
 import { CountAllComponent } from './count-all.component';
+import { isMobile } from '../../../../classes/common';
 
 export class CountAllHtmlRenderer {
 
@@ -31,10 +32,16 @@ export class CountAllHtmlRenderer {
         this.vm.rowFilters = tableRows;
     }  // Ends: tableOpenClicked()
 
+    /* For mobile-browser */
     isMobile(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
         return true;
+    }
+
+    /* For mobile-application */
+    checkMobile(): boolean {
+        return isMobile();
     }
 }

@@ -1,12 +1,11 @@
 <div class="card-content table-responsive">
     <b>Define custom rows and columns or choose from saved tables</b>
     <!-- Starts: Print && Download Buttons Section -->
-    <br *ngIf="htmlRenderer.isMobile()"/>
-    <ng-container *ngIf="rowFilters.length > 0 || columnFilters.length > 0">
+    <ng-container *ngIf="!htmlRenderer.checkMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
         <button
             id="print-list"
             type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
             [ngStyle]="{ 'padding': '12px 15px', 'margin-left': htmlRenderer.isMobile() ? '0%' : '5%'}"
             matTooltip="Print the following table"
             tooltip-position="left"
