@@ -409,9 +409,9 @@
         </div>
         <br />
 
-        <div class="row">
+        <div class="row document-parameter">
             <div *ngFor="let parameter of studentParameterList">
-                <div *ngIf="parameter.parameterType === 'DOCUMENT'" class="col-md-5" style="margin-top: 10px; margin-right: 10px">
+                <div *ngIf="parameter.parameterType === 'DOCUMENT'" id="documentElement" class="col-md-5" [ngStyle]="{'margin-top': '10px', 'margin-right': '10px', 'height': getHeight(parameter) + 'px'}">
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
                         <input
                             class="dropinput"
@@ -423,7 +423,7 @@
                         <label class="documentLabel">{{ parameter.name }}</label>
                         <div *ngIf="getParameterDocumentType(parameter) == 'none'">
                             <div class="documentIcon">
-                                <img src="/assets/img/nofile.png" (click)="openFilePreviewDialog(parameter)" />
+                                <img src="/assets/img/nofile.png" />
                             </div>
                             <div class="documentText">
                                 <p class="documentName">Select a file or Drag it here</p>
@@ -435,9 +435,15 @@
                                 <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)" />
                             </div>
                             <div class="documentText">
-                                <p class="documentName">{{ getDocumentName(parameter) }}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                                <div *ngIf="isMobile()" id="fileNameElement">
+                                    <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName">{{getDocumentName(parameter)}}</p>
+                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)" [ngStyle]="{'width': getWidth()+'px'}" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
+                                </div>
+                                <div *ngIf="!isMobile()">
+                                    <p data-toggle="tooltip" data-placement="bottom" title="{{getFullDocumentName(parameter)}}" class="documentName">{{getDocumentName(parameter)}}</p>
+                                </div>
+                                <button (click)="imageInput.click(); closeToolTip(parameter)" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter); closeToolTip(parameter)" class="documentButton">Delete</button>
                             </div>
                         </div>
                         <div *ngIf="getParameterDocumentType(parameter) == 'pdf'">
@@ -445,9 +451,15 @@
                                 <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)" />
                             </div>
                             <div class="documentText">
-                                <p class="documentName">{{ getDocumentName(parameter) }}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
+                                <div *ngIf="isMobile()" id="fileNameElement">
+                                    <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName">{{getDocumentName(parameter)}}</p>
+                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)" [ngStyle]="{'width': getWidth()+'px'}" class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
+                                </div>
+                                <div *ngIf="!isMobile()">
+                                    <p data-toggle="tooltip" data-placement="bottom" title="{{getFullDocumentName(parameter)}}" class="documentName">{{getDocumentName(parameter)}}</p>
+                                </div>
+                                <button (click)="imageInput.click(); closeToolTip(parameter)" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter); closeToolTip(parameter)" class="documentButton">Delete</button>
                             </div>
                         </div>
                     </div>

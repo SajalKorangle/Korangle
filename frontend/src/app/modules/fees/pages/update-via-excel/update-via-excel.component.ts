@@ -8,6 +8,8 @@ import { StudentService } from './../../../../services/modules/student/student.s
 import { ClassService } from './../../../../services/modules/class/class.service';
 import { FeeService } from './../../../../services/modules/fees/fee.service';
 import { INSTALLMENT_LIST } from '../../classes/constants';
+import { isMobile } from '../../../../classes/common';
+
 
 @Component({
     selector: 'app-update-via-excel',
@@ -176,6 +178,11 @@ export class UpdateViaExcelComponent implements OnInit {
 
     uploadToServer(): void {
         this.serviceAdapter.uploadStudentFeeData();
+    }
+
+    //Checking if it is in mobile
+    checkMobile(): any {
+        return isMobile();
     }
 
     downloadSheetTemplate(): void {
