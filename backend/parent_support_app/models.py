@@ -53,14 +53,15 @@ class ComplaintType(models.Model):
 
 class Complaint(models.Model):
 
-    # Creator
-    # It will be null for the parent, who is not an employee of the school. The user model will be used for parents.
+    # Creator (Employee)
+    # It will be null for the parent, who is not an employee of the school.
     # This would be required if the complaint is raised by the employee of the school.
     parentEmployee = models.ForeignKey(Employee, on_delete = models.CASCADE, null = True)
 
     # In the case of the parent, his employee id would be null.
     # So we have to use the User model to extract information related to the user.
-    # parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+    # It would require, while generating the notifications.
+    parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Date Sent
     dateSent = models.DateTimeField(auto_now_add = True)
@@ -92,14 +93,16 @@ class Complaint(models.Model):
 
 class Comment(models.Model):
 
-    # Sender
+    # If sender is employee.
     parentEmployee = models.ForeignKey(Employee, on_delete = models.SET_NULL, null = True)
 
     # If sender is parent.
-    # We will fetch father's name from his child.
+    # We will fetch father's name && contact number from his child.
+    # It would be null, if the comment is made by school employee.
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE, null = True)
 
     # Parent User
+    # It would require, while generating the notifications.
     parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Sender's message
@@ -185,10 +188,42 @@ class CountAllParentSupport(models.Model):
 def notify_employee(sender, instance, created, **kwargs):
 
     if created:
+        # Notify all the assigned employee of parentComplaintType.
         for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaintType):
             notification = Notification()
-            notification.content = "A new complaint of type " + instance.parentComplaintType.name + " is assigned to you. Kindly respond to it."
+            notification.content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
             notification.SMSEventId = 0
             notification.parentUser = instance.parentUser
-            notification.parentSchool = employee_complaintType.parentEmployee.parentSchool
+            notification.parentSchool = instance.parentSchool
+            notification.save()
+
+        # Notify the sender of Complaint.
+        notification = Notification()
+        notification.content = "Your complaint titled as " + instance.title + " has been sent to school employees."
+        notification.SMSEventId = 0
+        notification.parentUser = instance.parentUser
+        notification.parentSchool = instance.parentSchool
+        notification.save()
+
+
+@receiver(post_save, sender = Comment)
+def notify_employee_onComment(sender, instance, created, **kwargs):
+
+    if created:
+        # Notify all the assigned employee of parentComplaintType.
+        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaint.parentComplaintType):
+            notification = Notification()
+            notification.content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
+            notification.SMSEventId = 0
+            notification.parentUser = instance.parentUser
+            notification.parentSchool = instance.parentStudent.parentSchool
+            notification.save()
+
+        # Notify the sender of parentComplaint, If school employee has answered his/her complaint.
+        if instance.parentUser.id != instance.parentComplaint.parentUser.id:
+            notification = Notification()
+            notification.content = instance.parentEmployee.name + " has answered your complaint " + instance.parentComplaint.title + "."
+            notification.SMSEventId = 0
+            notification.parentUser = instance.parentComplaint.parentUser
+            notification.parentSchool = instance.parentStudent.parentSchool
             notification.save()
