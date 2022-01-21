@@ -166,6 +166,8 @@ export class CountAllServiceAdapter {
     /* Update Table List */
     updateTableList(): void {
 
+        this.vm.isLoading = true;
+
         const count_all_table_filter = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
@@ -175,6 +177,7 @@ export class CountAllServiceAdapter {
         ]).then(
             (value) => {
                 this.vm.tableList = value[0];
+                this.vm.isLoading = false;
             },
             (error) => {
                 this.vm.isLoading = false;
@@ -184,6 +187,7 @@ export class CountAllServiceAdapter {
 
     /* Save Table */
     async saveTable() {
+        this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
@@ -206,13 +210,16 @@ export class CountAllServiceAdapter {
 
         /* Create An Object */
         const response = await new Query().createObject({student_app: 'CountAllTable'}, tableDataObject);
-        this.vm.htmlRenderer.tableOpenClicked(response);
+        this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableList.length);
         this.updateTableList();
+
+        this.vm.isLoading = false;
         alert("Table saved successfully.");
     }  // Ends: saveTable()
 
     /* Update Table */
     async updatetable() {
+        this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
@@ -236,8 +243,24 @@ export class CountAllServiceAdapter {
 
         /* Update An Object */
         const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
-        this.vm.htmlRenderer.tableOpenClicked(response);
+        this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
         this.updateTableList();
+
+        this.vm.isLoading = false;
         alert("Table updated successfully.");
     }  // Ends: updatetable()
+
+    async deleteTable() {
+        this.vm.isLoading = true;
+
+        let tableData = {
+            id: this.vm.tableActiveId,
+        }
+        const response = new Query().filter(tableData).deleteObjectList({student_app: 'CountAllTable'});
+        console.log("response: ", response);
+
+        this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
+        this.vm.initializeTableDetails();
+        this.vm.isLoading = false;
+    }
 }

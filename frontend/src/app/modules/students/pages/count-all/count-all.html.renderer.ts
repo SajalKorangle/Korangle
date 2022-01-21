@@ -13,9 +13,10 @@ export class CountAllHtmlRenderer {
     }
 
     /* Open Existing Table */
-    tableOpenClicked(table): void {
+    tableOpenClicked(table, idx): void {
         this.vm.isTableEditing = true;
         this.vm.tableActiveId = table["id"];
+        this.vm.tableActiveIdx = idx;
         this.vm.tableFormatTitle = table.formatName;
         let tableRows = [];
         let tableCols = [];

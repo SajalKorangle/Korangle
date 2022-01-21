@@ -1,3 +1,13 @@
+.table-List {
+    display: flex;
+    align-items: center;
+}
+
+.delete-icon {
+    color: red;
+    cursor: pointer;
+}
+
 /* Starts: Table Section */
 .example-viewport {
     height: 70vh;

@@ -29,6 +29,7 @@ export class CountAllComponent implements OnInit {
 
     isTableEditing: boolean = false;
     tableActiveId: number = 0;
+    tableActiveIdx: number = 0;
 
     tableFormatTitle: string = "";     // Table Name
     whereToAdd: string = "";    // Row  or  Column
@@ -540,4 +541,17 @@ export class CountAllComponent implements OnInit {
 
         return this.getTextWidthColumn(textContent);
     }  // Ends: getTextWidthRow()
+
+    initializeTableDetails() {
+        this.isTableEditing = false;
+        this.tableActiveId = 0;
+        this.tableActiveIdx = 0;
+        this.tableFormatTitle = "";
+        this.columnFilters = [];
+        this.rowFilters = [];
+    }
+
+    deleteTable() {
+        this.serviceAdapter.deleteTable();
+    }
 }

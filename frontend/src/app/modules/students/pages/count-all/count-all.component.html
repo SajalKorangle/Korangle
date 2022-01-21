@@ -1,4 +1,4 @@
-<div class="card-content table-responsive">
+<div *ngIf="!isLoading" class="card-content table-responsive">
     <b>Define custom rows and columns or choose from saved tables</b>
     <!-- Starts: Print && Download Buttons Section -->
     <ng-container *ngIf="!htmlRenderer.checkMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
@@ -29,15 +29,18 @@
 
     <br /><br /><b>Table Format</b><br />
     <!--Starts: Generated Tables List -->
-    <mat-form-field style="margin-right: 15px">
-        <mat-select placeholder="{{tableFormatTitle ? tableFormatTitle : 'Not Selected'}}" id="select-class" style="width: 100%">
-            <ng-container *ngFor="let table of tableList">
-                <mat-option (click)="htmlRenderer.tableOpenClicked(table)" style="width: 100%">
-                    {{ table.formatName }}
-                </mat-option>
-            </ng-container>
-        </mat-select>
-    </mat-form-field>
+    <div class="table-List">
+        <mat-form-field style="margin-right: 30px">
+            <mat-select placeholder="{{tableFormatTitle ? tableFormatTitle : 'Not Selected'}}" id="select-class" style="width: 100%">
+                <ng-container *ngFor="let table of tableList; let idx = index">
+                    <mat-option (click)="htmlRenderer.tableOpenClicked(table, idx)" style="width: 100%">
+                        {{ table.formatName }}
+                    </mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+        <i *ngIf="tableFormatTitle" (click)="deleteTable()" class="material-icons delete-icon"> delete_forever </i>
+    </div>
     <!-- Ends: Generated Tables List -->
 
     <!-- Starts: Table -->
@@ -51,7 +54,7 @@
                         <th *ngFor="let filter of columnFilters" (click)="whereToAdd = 'col'; openChangeDialog(filter)" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDrag>
                             {{filter.name}} (<span>{{filter.totalCount}}</span>)
                         </th>
-                        <th (click)="whereToAdd = 'col'; openDialog()" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
+                        <th (click)="whereToAdd = 'col'; openDialog()" style="cursor: pointer" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             + Column
                         </th>
                     </tr>
@@ -70,7 +73,7 @@
                         <td class="minWidth">-</td>
                     </tr>
                     <tr class="last-child">
-                        <th (click)="whereToAdd = 'row'; openDialog()" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
+                        <th (click)="whereToAdd = 'row'; openDialog()" style="cursor: pointer" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             + Row
                         </th>
                         <td class="minWidth" *ngFor="let filter of columnFilters">-</td>
@@ -84,40 +87,42 @@
     <!-- End of Table -->
 </div>
 
-<div *ngIf="!htmlRenderer.isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+<ng-container *ngIf="!isLoading">
+    <div *ngIf="!htmlRenderer.isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
 
-<!-- Starts: Save Button -->
-<ng-container *ngIf="!isTableEditing">
-    <button *ngIf="rowFilters.length > 0 || columnFilters.length > 0"
-        type="button"
-        (click)="openSaveFormatDialog()"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
-    >
-        Save Table Format
-    </button>
+    <!-- Starts: Save Button -->
+    <ng-container *ngIf="!isTableEditing">
+        <button *ngIf="rowFilters.length > 0 || columnFilters.length > 0"
+            type="button"
+            (click)="openSaveFormatDialog()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+        >
+            Save Table Format
+        </button>
+    </ng-container>
+    <!-- Ends: Save Button -->
+
+    <!-- Starts: Update Changes  &&  Save As Buttons Section -->
+    <ng-container *ngIf="isTableEditing">
+        <button type="button"
+            (click)="updateChangesClicked()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+        >
+            Update Changes
+        </button>
+
+        <button type="button"
+            (click)="saveAsClicked()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+        >
+            Save As
+        </button>
+    </ng-container>
+    <!-- Ends: Update Changes  &&  Save As Buttons Section -->
 </ng-container>
-<!-- Ends: Save Button -->
-
-<!-- Starts: Update Changes  &&  Save As Buttons Section -->
-<ng-container *ngIf="isTableEditing">
-    <button type="button"
-        (click)="updateChangesClicked()"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
-    >
-        Update Changes
-    </button>
-
-    <button type="button"
-        (click)="saveAsClicked()"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
-    >
-        Save As
-    </button>
-</ng-container>
-<!-- Ends: Update Changes  &&  Save As Buttons Section -->
 
 <!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">
