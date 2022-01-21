@@ -77,7 +77,7 @@
                             style="margin-right: 5px"
                             (click)="$event.stopPropagation()"
                             (ngModelChange)="applyFilters()">
-                        {{ filter.name }} 
+                        {{ filter.name }}
                     </mat-checkbox>
                     <br/>
                 </ng-container>
@@ -126,7 +126,7 @@
                                                     <b>{{ htmlRenderer.getFilteredParentTotalFees() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-            
+
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%; background: #ededed">
@@ -136,7 +136,7 @@
                                                     <b>{{ htmlRenderer.getFilteredParentTotalFeesPaid() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-            
+
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
@@ -151,7 +151,7 @@
                                 </div>
                             </div>
                         </div>
-            
+
                         <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-7">Total Fees Due (Till Month)</div>
@@ -162,7 +162,7 @@
                                     <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -172,7 +172,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -182,7 +182,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -192,7 +192,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -320,7 +320,7 @@
                             </table>
                         </div>
                         <!-- print , download buttons -->
-                        <div class=" print-download-buttons">
+                        <div *ngIf="!htmlRenderer.isMobile()" class=" print-download-buttons">
 
                             <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
@@ -381,7 +381,7 @@
                                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-            
+
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%; background: #ededed">
@@ -391,7 +391,7 @@
                                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-            
+
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
@@ -406,7 +406,7 @@
                                 </div>
                             </div>
                         </div>
-            
+
                         <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-7">Total Fees Due (Till Month)</div>
@@ -417,7 +417,7 @@
                                     <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -427,7 +427,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -437,7 +437,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -447,7 +447,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -773,7 +773,7 @@
                         </div>
                         <mat-paginator [pageSizeOptions]="[5,10,20,50,100]" showFirstLastButtons></mat-paginator>
                         <!-- print , download buttons -->
-                        <div class=" print-download-buttons">
+                        <div *ngIf="!htmlRenderer.isMobile()" class=" print-download-buttons">
 
                             <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
@@ -850,7 +850,7 @@
                     <br/>
                     <ng-container
                             *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
-           
+
             <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
                     You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
