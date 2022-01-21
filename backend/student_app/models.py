@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import related
 from common.common import BasePermission
 
 from school_app.model.models import BusStop, Session, School
@@ -185,6 +186,10 @@ class StudentParameter(models.Model):
 
     filterValues = models.TextField(null=True, blank=True)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'student_parameter'
 
@@ -197,6 +202,10 @@ class StudentParameterValue(models.Model):
     value = models.TextField(null=True,blank=True)
     document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudentParameter__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_parameter_value'
