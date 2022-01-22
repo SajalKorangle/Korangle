@@ -39,6 +39,9 @@ export class TrackEmployeeActivityComponent implements OnInit {
 
     backgroundColorList = [];
 
+    moduleColorList: any = ["#FBE0B7", "#C7E4CB", "#D7E0DF", "#FBCBCB"];
+    colorIndex: number = 0;
+
     serviceAdapter: TrackEmployeeActivityServiceAdapter;
     htmlRenderer: TrackEmployeeActivityHtmlRenderer;
 
@@ -80,7 +83,8 @@ export class TrackEmployeeActivityComponent implements OnInit {
 
         moduleList.forEach((module) => {
             let tempTaskList = module.taskList;
-            let bgColor = this.getBackgroundColor();
+            let bgColor = this.moduleColorList[this.colorIndex];
+            this.colorIndex = ((this.colorIndex + 1) % this.moduleColorList.length);
             tempTaskList.forEach((task) => {
                 let tempTask = {};
                 tempTask["taskTitle"] = task["title"];
@@ -108,28 +112,6 @@ export class TrackEmployeeActivityComponent implements OnInit {
             this.startNumber = 1;
         }
     }  // Ends: initializeTotalRecords()
-
-    /* Covert HEX color code to RGB color code */
-    hexToRGBA(hex: string) {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
-        const alpha = "0.5";
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }  // Ends: hexToRGBA()
-
-    /* Generate Random Color */
-    getBackgroundColor(): string {
-        let randomColor = "#4CAF50";
-        while (true) {
-            randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-            if (!this.backgroundColorList.includes(randomColor) && randomColor != "#FFFFFF" && randomColor != "#ffffff") {
-                break;
-            }
-        }
-        this.backgroundColorList.push(randomColor);
-        return this.hexToRGBA(randomColor);
-    }  // Ends: getBackgroundColor()
 
     /* Records Based on Current Page */
     getActivityRecordList() {
