@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { RestApiGateway } from './rest-api-gateway';
+import { CONSTANTS } from './constants';
 
 // const JSON_OBJECT_RESPONSE_PARSER = (responseData) => {
 //     if (responseData) { // json parse if key ends with JSON
@@ -45,65 +45,124 @@ export class GenericService extends RestApiGateway {
 
     getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(CONSTANTS[app_name][model_name]);
+            }
+        }
         return super.getData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.postData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.postData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.putData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.putData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.patchData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     // deleteObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: any): Promise<any> {
     //     const [app_name, model_name] = this.parseConfig(config);
+    //     if(app_name in CONSTANTS){
+    //         if(model_name in CONSTANTS[app_name]) {
+    //             return Promise.resolve(null);
+    //         }
+    //     }
     //     return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
     // }
 
     deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
+        if (app_name in CONSTANTS) {
+            if (model_name in CONSTANTS[app_name]) {
+                return Promise.resolve(null);
+            }
+        }
         return super.deleteData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
 }
 
-
-
 export interface APP_MODEL_STRUCTURE_INTERFACE {
-    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
-    student_app: 'Student' | 'StudentSection';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
+<<<<<<< HEAD
     activity_record_app: 'ActivityRecord';
     employee_app: 'Employee';
+=======
+    student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue';
+    class_app: 'Class' | 'Division';
+    school_app: 'Session' | 'BusStop';
+    tc_app: 'TransferCertificateNew';
+    subject_app: 'StudentSubject';
+    examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
+    sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
+    employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
+    team_app: 'Module' | 'Task';
+>>>>>>> master
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE
