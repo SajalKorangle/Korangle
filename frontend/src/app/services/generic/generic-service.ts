@@ -149,10 +149,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
-<<<<<<< HEAD
     activity_record_app: 'ActivityRecord';
-    employee_app: 'Employee';
-=======
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue';
     class_app: 'Class' | 'Division';
     school_app: 'Session' | 'BusStop';
@@ -162,7 +159,6 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
     team_app: 'Module' | 'Task';
->>>>>>> master
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

@@ -1,6 +1,7 @@
 import { DeleteStudentComponent } from './delete-student.component';
 import { CommonFunctions } from '@classes/common-functions';
 import { Query } from '@services/generic/query';
+import { CommonFunctions as CommonFunctionsRecordActivity } from '@modules/common/common-functions';
 
 export class DeleteStudentServiceAdapter {
     vm: DeleteStudentComponent;
@@ -156,11 +157,6 @@ export class DeleteStudentServiceAdapter {
     async checkDeletability(studentList: any): Promise<any> {
 
         this.vm.isLoading = true;
-        let parentEmployee = this.vm.user.activeSchool.employeeId;
-        let moduleName = this.vm.user.section.title;
-        let taskName = this.vm.user.section.subTitle;
-        let moduleList = this.vm.user.activeSchool.moduleList;
-        let actionString = this.vm.user.first_name + " deleted a student " + this.vm.selectedStudent.name;
 
         let studentIdList = [];
         studentList.forEach((student) => {
@@ -306,7 +302,7 @@ export class DeleteStudentServiceAdapter {
         this.vm.handleStudentDisplay();
 
         await new Query().filter({ id__in: deletableStudentIdList }).deleteObjectList({ student_app: 'Student' });
-
+        CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
         this.vm.selectedStudent = null;
         this.vm.isLoading = false;
     }
