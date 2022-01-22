@@ -19,6 +19,8 @@ export class CommonFunctions {
 
     static async createRecord(employeeId, moduleName, taskName, moduleList, actionString) {
         let parentEmployee = employeeId;
+        let employee = await new Query().filter({id: parentEmployee}).getObject({ employee_app: 'Employee'});
+
         let parentTask;
         moduleList.forEach((module) => {
             if (moduleName === module.title) {
@@ -34,7 +36,7 @@ export class CommonFunctions {
         let recordObject = {};
         recordObject["parentTask"] = parentTask;
         recordObject["parentEmployee"] = parentEmployee;
-        recordObject["activityDescription"] = actionString;
+        recordObject["activityDescription"] = employee.name + actionString;
         const response = await new Query().createObject({activity_record_app: 'ActivityRecord'}, recordObject);
     }
 }

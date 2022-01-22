@@ -185,7 +185,7 @@ export class AddStudentServiceAdapter {
         let moduleName = this.vm.user.section.title;
         let taskName = this.vm.user.section.subTitle;
         let moduleList = this.vm.user.activeSchool.moduleList;
-        let actionString = this.vm.user.first_name + " admitted " + this.vm.newStudent.name;
+        let actionString = " admitted " + this.vm.newStudent.name;
 
         this.vm.studentService.createObject(this.vm.studentService.student, student_form_data).then(
             (value) => {

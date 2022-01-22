@@ -9,7 +9,6 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { DataStorage } from '../../../../classes/data-storage';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_PROFILE } from '../../../../print/print-routes.constants';
-import { CommonFunctions } from '@modules/common/common-functions';
 
 declare const $: any;
 
@@ -99,12 +98,6 @@ export class PrintProfileComponent implements OnInit {
     }
 
     printProfile() {
-        let parentEmployee = this.user.activeSchool.employeeId;
-        let moduleName = this.user.section.title;
-        let taskName = this.user.section.subTitle;
-        let moduleList = this.user.activeSchool.moduleList;
-        let actionString = this.user.first_name + " printed profile of " + this.selectedStudent.name;
-        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
         const value = {
             studentProfile: this.selectedStudent,
             studentSection: this.selectedStudentSection,

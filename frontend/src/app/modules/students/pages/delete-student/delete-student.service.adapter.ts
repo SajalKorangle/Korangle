@@ -271,19 +271,22 @@ export class DeleteStudentServiceAdapter {
         let moduleName = this.vm.user.section.title;
         let taskName = this.vm.user.section.subTitle;
         let moduleList = this.vm.user.activeSchool.moduleList;
-        let actionString = this.vm.user.first_name + " deleted a student " + this.vm.selectedStudent.name + " from the session.";
+        let actionString = "";
 
         let deletableStudentIdList = [];
+        let deletableStudentNameList = [];
 
         if (this.vm.currentClassStudentFilter == 'Class') {
             this.vm.studentFullProfileList.forEach((student) => {
                 if (student.show && student.selectProfile && student.isDeletable) {
                     deletableStudentIdList.push(student.dbId);
+                    deletableStudentNameList.push(student.name);
                 }
             });
         }
         else if (this.vm.currentClassStudentFilter == 'Student') {
             deletableStudentIdList.push(this.vm.selectedStudent.dbId);
+            deletableStudentNameList.push(this.vm.selectedStudent.name);
         }
 
         if (deletableStudentIdList.length == 0) {
@@ -302,7 +305,12 @@ export class DeleteStudentServiceAdapter {
         this.vm.handleStudentDisplay();
 
         await new Query().filter({ id__in: deletableStudentIdList }).deleteObjectList({ student_app: 'Student' });
-        CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
+
+        deletableStudentNameList.forEach((studentName) => {
+            actionString = " deleted a student " + studentName + " from the session.";
+            CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
+        });
+
         this.vm.selectedStudent = null;
         this.vm.isLoading = false;
     }

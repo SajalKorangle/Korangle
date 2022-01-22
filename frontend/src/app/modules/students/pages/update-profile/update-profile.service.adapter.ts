@@ -238,7 +238,7 @@ export class UpdateProfileServiceAdapter {
                 let moduleName = this.vm.user.section.title;
                 let taskName = this.vm.user.section.subTitle;
                 let moduleList = this.vm.user.activeSchool.moduleList;
-                let actionString = this.vm.user.first_name + " updated student profile of " + this.vm.selectedStudent.name;
+                let actionString = " updated student profile of " + this.vm.selectedStudent.name;
                 CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                 this.vm.isLoading = false;
             },
