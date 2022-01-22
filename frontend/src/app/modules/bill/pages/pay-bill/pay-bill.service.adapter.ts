@@ -13,18 +13,39 @@ export class PayBillServiceAdapter {
 
         this.vm.isInitialLoading = true;
 
-        // Getting list of unpaid bills from backend starts
+        // Getting list of unpaid bills and corresponding orders from backend starts
         let unpaidBillListQuery = new Query()
             .filter({
                 'parentSchool': this.vm.user.activeSchool.dbId,
-                'paid': false,
+                'paidDate': null,
             })
+            .addChildQuery(
+                'billOrderList',
+                new Query().addParentQuery(
+                    'parentOrder',
+                    new Query()
+                )
+            )
             .getObjectList({bill_app: 'Bill'});
 
         [this.vm.unpaidBillList] = await Promise.all([unpaidBillListQuery]);
-        // Getting list of unpaid bills from backend ends
+        // Getting list of unpaid bills and corresponding orders from backend ends
 
         this.vm.isInitialLoading = false;
+
+    }
+
+    // paying the bill
+    async payBill(bill: any) {
+        
+        // Generating Order
+
+        // Calling Cashfree
+
+    }
+
+    // refresh the status of order.
+    async refreshBillStatus(bill: any) {
 
     }
 

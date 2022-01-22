@@ -35,6 +35,8 @@
                     <td>Rs. {{bill.amount}}/-</td>
                     <td>{{bill.dueDate | date: 'd MMM y'}}</td>
                     <td>{{bill.remark}}</td> <!-- TODO: Implement Long to Short text pipe -->
+                    <td>Document Path</td>
+                    <td>Pay Bill Button</td>
                     
                     <!-- td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
                     <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
