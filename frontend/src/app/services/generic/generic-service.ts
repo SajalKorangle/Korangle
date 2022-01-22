@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { RestApiGateway } from './rest-api-gateway';
 import { CONSTANTS } from './constants';
 
@@ -146,15 +145,19 @@ export class GenericService extends RestApiGateway {
 
 }
 
-
-
 export interface APP_MODEL_STRUCTURE_INTERFACE {
-    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder';
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
-    student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
-    tc_app: 'TransferCertificateNew';
+    student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     class_app: 'Class' | 'Division';
+    school_app: 'Session' | 'BusStop';
+    tc_app: 'TransferCertificateNew';
+    subject_app: 'StudentSubject';
+    examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
+    sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
+    employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
+    team_app: 'Module' | 'Task';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

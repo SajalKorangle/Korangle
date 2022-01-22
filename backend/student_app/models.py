@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import related
 from common.common import BasePermission
 
 from school_app.model.models import BusStop, Session, School
@@ -91,7 +92,7 @@ class Student(models.Model):
     bloodGroup = models.TextField(null=True, blank=True)
     fatherAnnualIncome = models.TextField(null=True, blank=True)
 
-    currentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=True, verbose_name='current_bus_stop', related_name="studentList")
+    currentBusStop = models.ForeignKey(BusStop, on_delete=models.PROTECT, null=True, verbose_name='current_bus_stop',  related_name="studentList")
 
     RTE_YES = 'YES'
     RTE_NO = 'NO'
@@ -187,6 +188,7 @@ class StudentParameter(models.Model):
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'student_parameter'
@@ -202,7 +204,8 @@ class StudentParameterValue(models.Model):
     document_size = models.TextField(null=True,blank=True)
 
     class Permissions(BasePermission):
-        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToSchool = ['parentStudentParameter__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_parameter_value'

@@ -6,6 +6,8 @@ from student_app.models import Student, StudentSection
 from fees_third_app.models import FeeType
 from employee_app.models import Employee
 from django.utils.timezone import now
+from common.common import BasePermission
+
 
 def upload_thumbnail_to(instance, filename):
     return '%s/tc_layouts/imageAssets/%s_%s' % (instance.parentSchool.id, now().timestamp(), filename)
@@ -75,3 +77,4 @@ class TransferCertificateNew(models.Model):
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']

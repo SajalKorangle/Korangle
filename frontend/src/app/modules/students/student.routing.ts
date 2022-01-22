@@ -37,16 +37,6 @@ const routes: Routes = [
         data: { moduleName: 'students' },
     },
     {
-        path: 'promote_student',
-        loadChildren: 'app/modules/students/pages/promote-student/promote-student.module#PromoteStudentModule',
-        data: { moduleName: 'students' },
-    },
-    {
-        path: 'change_class',
-        loadChildren: 'app/modules/students/pages/change-class/change-class.module#ChangeClassModule',
-        data: { moduleName: 'students' },
-    },
-    {
         path: 'add_student',
         loadChildren: 'app/modules/students/pages/add-student/add-student.module#AddStudentModule',
         data: { moduleName: 'students' },
