@@ -257,7 +257,6 @@ export class CountAllServiceAdapter {
             id: this.vm.tableActiveId,
         };
         const response = new Query().filter(tableData).deleteObjectList({student_app: 'CountAllTable'});
-        console.log("response: ", response);
 
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();
