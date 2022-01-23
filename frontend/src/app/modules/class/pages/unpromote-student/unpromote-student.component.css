@@ -1,0 +1,23 @@
+@media only screen and (min-width: 992px) {
+    .main-content {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .table-content {
+        margin-top: 40px;
+        margin-left: 40px;
+    }
+}
+
+.main-content {
+    height: 95%;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+mat-form-field {
+    margin-top: 23px;
+}

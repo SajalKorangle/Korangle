@@ -12,6 +12,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.files.storage import default_storage as storage
 
+from common.common import BasePermission
+
+
 
 def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
@@ -43,6 +46,10 @@ class Session(models.Model):
 
     def __str__(self):
         return str(self.startDate) + ' --- ' + str(self.endDate)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'session'
@@ -157,6 +164,10 @@ class BusStop(models.Model):
 
     def __str__(self):
         return self.parentSchool.name + ' --- ' + self.stopName + ' --- ' + str(self.kmDistance)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'bus_stop'

@@ -115,30 +115,30 @@ class Student(models.Model):
         return self.parentSchool.name+" --- "+self.name
 
     def get_section_id(self, session_object):
-        return self.studentsection_set\
+        return self.studentSectionList\
             .get(parentSession=session_object).parentDivision.id
 
     def get_section_name(self, session_object):
-        return self.studentsection_set\
+        return self.studentSectionList\
             .get(parentSession=session_object).parentDivision.name
 
     def get_class_object(self, session_object):
-        return self.studentsection_set.get(parentSession=session_object)\
+        return self.studentSectionList.get(parentSession=session_object)\
             .parentClass
 
     def get_class_id(self, session_object):
-        return self.studentsection_set\
+        return self.studentSectionList\
             .get(parentSession=session_object).parentClass.id
 
     def get_class_name(self, session_object):
         try:
-            return self.studentsection_set \
+            return self.studentSectionList \
                 .get(parentSession=session_object).parentClass.name
         except ObjectDoesNotExist:
             return None
 
     def get_rollNumber(self, session_object):
-        return self.studentsection_set \
+        return self.studentSectionList \
             .get(parentSession=session_object).rollNumber
 
     class Permissions(BasePermission):
@@ -185,6 +185,10 @@ class StudentParameter(models.Model):
 
     filterValues = models.TextField(null=True, blank=True)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'student_parameter'
 
@@ -197,6 +201,10 @@ class StudentParameterValue(models.Model):
     value = models.TextField(null=True,blank=True)
     document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudentParameter__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_parameter_value'
