@@ -91,6 +91,28 @@ class Complaint(models.Model):
         db_table = 'complaint'
 
 
+@receiver(post_save, sender = Complaint)
+def notify_on_complaint(sender, instance, created, **kwargs):
+
+    if created:
+        # Notify all the assigned employee of parentComplaintType.
+        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaintType):
+            notification = Notification()
+            notification.content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
+            notification.SMSEventId = 0
+            notification.parentUser = instance.parentUser
+            notification.parentSchool = instance.parentSchool
+            notification.save()
+
+        # Notify the sender of Complaint.
+        notification = Notification()
+        notification.content = "Your complaint titled as " + instance.title + " has been sent to school employees."
+        notification.SMSEventId = 0
+        notification.parentUser = instance.parentUser
+        notification.parentSchool = instance.parentSchool
+        notification.save()
+
+
 class Comment(models.Model):
 
     # If sender is employee.
@@ -122,6 +144,29 @@ class Comment(models.Model):
 
     class Meta:
         db_table = 'complaint_comment'
+
+
+@receiver(post_save, sender = Comment)
+def notify_on_comment(sender, instance, created, **kwargs):
+
+    if created:
+        # Notify all the assigned employee of parentComplaintType.
+        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaint.parentComplaintType):
+            notification = Notification()
+            notification.content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
+            notification.SMSEventId = 0
+            notification.parentUser = instance.parentUser
+            notification.parentSchool = instance.parentStudent.parentSchool
+            notification.save()
+
+        # Notify the sender of parentComplaint, If school employee has answered his/her complaint.
+        if instance.parentUser.id != instance.parentComplaint.parentUser.id:
+            notification = Notification()
+            notification.content = instance.parentEmployee.name + " has answered your complaint " + instance.parentComplaint.title + "."
+            notification.SMSEventId = 0
+            notification.parentUser = instance.parentComplaint.parentUser
+            notification.parentSchool = instance.parentStudent.parentSchool
+            notification.save()
 
 
 class StatusComplaintType(models.Model):
@@ -182,48 +227,3 @@ class CountAllParentSupport(models.Model):
 
     class Meta:
         db_table = 'count_all_parentSupport'
-
-
-@receiver(post_save, sender = Complaint)
-def notify_employee(sender, instance, created, **kwargs):
-
-    if created:
-        # Notify all the assigned employee of parentComplaintType.
-        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaintType):
-            notification = Notification()
-            notification.content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
-            notification.SMSEventId = 0
-            notification.parentUser = instance.parentUser
-            notification.parentSchool = instance.parentSchool
-            notification.save()
-
-        # Notify the sender of Complaint.
-        notification = Notification()
-        notification.content = "Your complaint titled as " + instance.title + " has been sent to school employees."
-        notification.SMSEventId = 0
-        notification.parentUser = instance.parentUser
-        notification.parentSchool = instance.parentSchool
-        notification.save()
-
-
-@receiver(post_save, sender = Comment)
-def notify_employee_onComment(sender, instance, created, **kwargs):
-
-    if created:
-        # Notify all the assigned employee of parentComplaintType.
-        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaint.parentComplaintType):
-            notification = Notification()
-            notification.content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
-            notification.SMSEventId = 0
-            notification.parentUser = instance.parentUser
-            notification.parentSchool = instance.parentStudent.parentSchool
-            notification.save()
-
-        # Notify the sender of parentComplaint, If school employee has answered his/her complaint.
-        if instance.parentUser.id != instance.parentComplaint.parentUser.id:
-            notification = Notification()
-            notification.content = instance.parentEmployee.name + " has answered your complaint " + instance.parentComplaint.title + "."
-            notification.SMSEventId = 0
-            notification.parentUser = instance.parentComplaint.parentUser
-            notification.parentSchool = instance.parentStudent.parentSchool
-            notification.save()
