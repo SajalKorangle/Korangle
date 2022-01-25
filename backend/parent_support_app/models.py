@@ -9,6 +9,16 @@ from notification_app.models import Notification
 from user_app.models import User
 from school_app.model.models import School
 
+
+def createNotification(content, parentUser, parentSchool):
+    notification = Notification()
+    notification.content = content
+    notification.SMSEventId = 0
+    notification.parentUser = parentUser
+    notification.parentSchool = parentSchool
+    notification.save()
+
+
 class Status(models.Model):
 
     # Status Name
@@ -61,7 +71,7 @@ class Complaint(models.Model):
     # In the case of the parent, his employee id would be null.
     # So we have to use the User model to extract information related to the user.
     # It would require, while generating the notifications.
-    parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+    # parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Date Sent
     dateSent = models.DateTimeField(auto_now_add = True)
@@ -95,22 +105,48 @@ class Complaint(models.Model):
 def notify_on_complaint(sender, instance, created, **kwargs):
 
     if created:
+
         # Notify all the assigned employee of parentComplaintType.
         for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaintType):
-            notification = Notification()
-            notification.content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
-            notification.SMSEventId = 0
-            notification.parentUser = instance.parentUser
-            notification.parentSchool = instance.parentSchool
-            notification.save()
+            mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
+                parentSchool = instance.parentSchool
+                createNotification(content, user, parentSchool)
 
-        # Notify the sender of Complaint.
-        notification = Notification()
-        notification.content = "Your complaint titled as " + instance.title + " has been sent to school employees."
-        notification.SMSEventId = 0
-        notification.parentUser = instance.parentUser
-        notification.parentSchool = instance.parentSchool
-        notification.save()
+
+        if instance.parentEmployee:
+
+            # Notify parent employee on creation of complaint.
+            mobileNumber = str(instance.parentEmployee.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = "Your complaint titled as " + instance.title + " has been sent."
+                parentSchool = instance.parentStudent.parentSchool
+                createNotification(content, user, parentSchool)
+
+            # Notify parent as employee has answered their complaint.
+            mobileNumber = str(instance.parentStudent.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = instance.parentEmployee.name + " has raised a complaint against your child" + instance.parentStudent.name + "."
+                parentSchool = instance.parentStudent.parentSchool
+                createNotification(content, user, parentSchool)
+
+        else:
+
+            # Notify parent on creation of comment.
+            mobileNumber = str(instance.parentStudent.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = "Your complaint titled as " + instance.title + " has been sent."
+                parentSchool = instance.parentStudent.parentSchool
+                createNotification(content, user, parentSchool)
 
 
 class Comment(models.Model):
@@ -125,7 +161,7 @@ class Comment(models.Model):
 
     # Parent User
     # It would require, while generating the notifications.
-    parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
+    # parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Sender's message
     message = models.TextField()
@@ -149,24 +185,42 @@ class Comment(models.Model):
 @receiver(post_save, sender = Comment)
 def notify_on_comment(sender, instance, created, **kwargs):
 
-    if created:
+    commentList = Comment.objects.filter(parentComplaint = instance.parentComplaint)
+    if created and len(commentList) > 1:
+        print("Comment Created")
+
         # Notify all the assigned employee of parentComplaintType.
         for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaint.parentComplaintType):
-            notification = Notification()
-            notification.content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
-            notification.SMSEventId = 0
-            notification.parentUser = instance.parentUser
-            notification.parentSchool = instance.parentStudent.parentSchool
-            notification.save()
+            mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
+                parentSchool = instance.parentStudent.parentSchool
+                createNotification(content, user, parentSchool)
 
-        # Notify the sender of parentComplaint, If school employee has answered his/her complaint.
-        if instance.parentUser.id != instance.parentComplaint.parentUser.id:
-            notification = Notification()
-            notification.content = instance.parentEmployee.name + " has answered your complaint " + instance.parentComplaint.title + "."
-            notification.SMSEventId = 0
-            notification.parentUser = instance.parentComplaint.parentUser
-            notification.parentSchool = instance.parentStudent.parentSchool
-            notification.save()
+
+        if instance.parentEmployee:
+
+            # Notify parent as employee has answered their complaint.
+            mobileNumber = str(instance.parentStudent.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = instance.parentEmployee.name + " has commented on complaint " + instance.parentComplaint.title + "."
+                parentSchool = instance.parentStudent.parentSchool
+                createNotification(content, user, parentSchool)
+
+        if ((not instance.parentEmployee) and instance.parentComplaint.parentEmployee):
+
+            # Notify parentEmployee on creation of comment.
+            mobileNumber = str(instance.parentComplaint.parentEmployee.mobileNumber)
+            user = User.objects.filter(username = mobileNumber)
+            if len(user) > 0:
+                user = user[0]
+                content = instance.parentStudent.fathersName + "  father of " + instance.parentStudent.name + ", has commented on complaint " + instance.parentComplaint.title + "."
+                parentSchool = instance.parentStudent.parentSchool
+                createNotification(content, user, parentSchool)
 
 
 class StatusComplaintType(models.Model):
