@@ -20,6 +20,7 @@ import {valueType} from '@modules/common/in-page-permission';
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
 import {EmployeeService} from '@services/modules/employee/employee.service';
 import {TCService} from '@services/modules/tc/tc.service';
+import { isMobile } from '../../../../classes/common';
 
 @Component({
     selector: 'record-attendance',
@@ -177,6 +178,11 @@ export class RecordAttendanceComponent implements OnInit {
             });
         });
         return studentAttendanceStatusListData;
+    }
+
+    //Checking if it is in mobile
+    checkMobile(): any {
+        return isMobile();
     }
 
     // For Printing

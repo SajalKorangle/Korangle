@@ -104,6 +104,22 @@
     "mappedContent": "The Event {#eventTitle#} has been removed from the event list KORANGLE"
   },
   {
+    "id":14,
+    "parentSMSId": 1,
+    "templateName": "discount_notification",
+    "templateId": "1007784599332550985",
+    "rawContent": "Discount of Rs. {#var#} has been given to {#var#} by {#var#} for the Academic {#var#}.\n\nKorangle",
+    "mappedContent": "Discount of Rs. {#discountAmount#} has been given to {#studentName#} by {#schoolName#} for the Academic {#session#}.\n\nKorangle"
+  },
+  {
+    "id":15,
+    "parentSMSId": 1,
+    "templateName": "fee_receipt_notification",
+    "templateId": "1007896151647629076",
+    "rawContent": "Rs. {#var#} deposited in the fee account of {#var#}, scholar no {#var#} vide receipt no {#var#}, dated {#var#}.\n\n{#var#}\nKorangle",
+    "mappedContent": "Rs. {#feeAmount#} deposited in the fee account of {#studentName#}, scholar no {#studentScholarId#} vide receipt no {#feeReceiptNumber#}, dated {#date#}.\n\n{#schoolName#}\nKorangle"
+  },
+  {
     "id":16,
     "parentSMSId": 1,
     "templateName": "subscription_expiry_notification",

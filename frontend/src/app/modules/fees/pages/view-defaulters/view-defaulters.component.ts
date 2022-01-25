@@ -425,6 +425,8 @@ export class ViewDefaultersComponent implements OnInit {
                 );
             });
 
+            student['rollNumber'] = studentSection.rollNumber;
+
             student['class'] = this.classList.find((classs) => {
                 return studentSection.parentClass == classs.id;
             });
@@ -642,7 +644,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printStudentFeesReport(): void {
-        let tempArray = ['S No.', 'Name', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Name', 'Scholar Number', 'Roll Number', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -654,6 +656,8 @@ export class ViewDefaultersComponent implements OnInit {
             let row = [];
             row.push(++count);
             row.push(student.name);
+            row.push(student.scholarNumber);
+            row.push(student.rollNumber);
             row.push(student.fathersName);
             row.push(student.class.name + ', ' + student.section.name);
             row.push(this.checkMobileNumber(student.mobileNumber) ? student.mobileNumber : '');
@@ -673,7 +677,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printParentFeesReport(): void {
-        let tempArray = ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Parent', 'Student', 'Scholar Number', 'Roll Number', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -688,10 +692,14 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(parent.name);
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
+                row.push(parent.studentList[0].scholarNumber);
+                row.push(parent.studentList[0].rollNumber);
                 row.push(parent.studentList[0].class.name + ', ' + parent.studentList[0].section.name);
                 row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
                 row.push(this.checkMobileNumber(parent.studentList[0].secondMobileNumber) ? parent.studentList[0].secondMobileNumber : '');
             } else {
+                row.push('');
+                row.push('');
                 row.push('');
                 row.push('');
                 row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
@@ -712,6 +720,8 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push('');
                     newRow.push('');
                     newRow.push(student.name);
+                    newRow.push(student.scholarNumber);
+                    newRow.push(student.rollNumber);
                     newRow.push(student.class.name + ', ' + student.section.name);
                     newRow.push('');
                     newRow.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
@@ -732,7 +742,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadStudentFeesReport(): void {
-        let tempArray = ['S No.', 'Name', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Name', 'Scholar Number', 'Roll Number', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -745,6 +755,8 @@ export class ViewDefaultersComponent implements OnInit {
             let row = [];
             row.push(++count);
             row.push(student.name);
+            row.push(student.scholarNumber);
+            row.push(student.rollNumber);
             row.push(student.fathersName);
             row.push(student.class.name + ', ' + student.section.name);
             row.push(student.mobileNumber);
@@ -765,7 +777,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadParentFeesReport(): void {
-        let tempArray = ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Parent', 'Student', 'Scholar Number', 'Roll Number', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -782,11 +794,15 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(parent.name);
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
+                row.push(parent.studentList[0].scholarNumber);
+                row.push(parent.studentList[0].rollNumber);
                 row.push(parent.studentList[0].class.name + ', ' + parent.studentList[0].section.name);
                 row.push(parent.studentList[0].mobileNumber);
                 row.push(parent.studentList[0].secondMobileNumber);
                 row.push(parent.studentList[0].address);
             } else {
+                row.push('');
+                row.push('');
                 row.push('');
                 row.push('');
                 row.push(parent.studentList[0].mobileNumber);
@@ -808,6 +824,8 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push('');
                     newRow.push('');
                     newRow.push(student.name);
+                    newRow.push(student.scholarNumber);
+                    newRow.push(student.rollNumber);
                     newRow.push(student.class.name + ', ' + student.section.name);
                     newRow.push('');
                     newRow.push(student.secondMobileNumber);
