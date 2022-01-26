@@ -24,7 +24,7 @@ export class AddEmployeeServiceAdapter {
         .filter({
             parentSchool: this.vm.user.activeSchool.dbId,
         })
-        .setFields(...['id', 'name', 'mobileNumber', 'employeeNumber', 'dataOfLeaving'])
+        .setFields(...['id', 'name', 'mobileNumber', 'employeeNumber', 'dateOfLeaving'])
         .getObjectList({ employee_app: 'Employee' });
 
         // Extracting Module List

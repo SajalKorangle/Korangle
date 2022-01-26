@@ -1,0 +1,247 @@
+/* Starts: Filters */
+.filter-modal-btn {
+    font-size: 12px;
+    text-decoration: underline;
+    line-height: 14px;
+    font-weight: 400;
+    margin-left: 4rem;
+    margin-top: 2rem;
+    width: 35px;
+    cursor: pointer;
+}
+/* Ends: Filters */
+
+/* Starts: Filter-description */
+.filters-list {
+    font-size: 12px;
+    line-height: 14px;
+    margin-left: 4rem;
+}
+/* Ends: Filter-description */
+
+/* Starts: Search Bar */
+.search-bar {
+    margin-left: 4rem;
+    display: flex;
+    height: 25px;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 12px;
+}
+
+.search-field {
+    flex-basis: 50%;
+    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    padding: 5px;
+}
+
+.seach-btn {
+    flex-basis: 7%;
+    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background-color: white;
+}
+/* Ends: Search Bar */
+
+/* Starts: Pagination */
+.page-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(83, 172, 87, 0.1);   /* Green */
+    width: 100%;
+    padding: 2px 3rem;
+}
+
+.page-number-section {
+    display: flex;
+    align-items: center;
+}
+
+.page-number-section .material-icons {
+    cursor: pointer;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.page-numbers div {
+    cursor: pointer;
+    margin-right: 1rem;
+    text-decoration: underline;
+}
+
+.page-numbers div:last-child {
+    margin-right: 0rem;
+}
+
+.active {
+    text-decoration: none !important;
+    color: orange;
+}
+/* Ends: Pagination */
+
+/* Starts: Record List */
+.record-list {
+    min-height: 70vh;
+    margin: 1rem 2rem;
+}
+
+.record {
+    border: 1px solid #E5E5E5;    /* Light Gray */
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    height: 80px;
+}
+
+.icon {
+    flex-basis: 6%;
+    opacity: 0.7;
+    border-radius: 5px;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    flex-basis: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.title .name {
+    font-weight: 500;
+    font-size: 14px;
+    color: #000000;   /* Black */
+    word-wrap: break-word;
+}
+
+.title .module-task {
+    font-size: 10px;
+    color: #000000;   /* Black */
+    opacity: 0.6;
+    word-wrap: break-word;
+}
+
+.description {
+    flex-basis: 52%;
+    font-size: 12px;
+    line-height: 14px;
+    color: #000000;   /* Black */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    word-wrap: break-word;
+}
+
+.time {
+    flex-basis: 10%;
+    font-size: 10px;
+    line-height: 10px;
+    color: #000000;   /* Black */
+    height: 100%;
+    opacity: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 9px;
+    word-wrap: break-word;
+}
+/* Ends: Record List */
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    /* Starts: Filters */
+    .filter-modal-btn {
+        margin-left: 2rem;
+    }
+    /* Ends: Filters */
+
+    /* Starts: Filter-description */
+    .filters-list {
+        margin-left: 2rem;
+    }
+    /* Ends: Filter-description */
+
+    /* Starts: Search Bar */
+    .search-bar {
+        margin-left: 2rem;
+        height: 20px;
+    }
+
+    .material-icons {
+        font-size: 15px;
+    }
+    /* Ends: Search Bar */
+
+    /* Starts: Pagination */
+    .page-section {
+        font-size: 12px;
+        padding: 3px 2rem;
+    }
+
+    .page-numbers div {
+        margin-right: 0.7rem;
+    }
+    /* Ends: Pagination */
+
+    /* Starts: Record List */
+    .record {
+        display: block;
+        height: 110px;
+        padding: 0;
+    }
+
+    .header {
+        height: 70px;
+        flex-basis: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .icon {
+        flex-basis: 20%;
+    }
+
+    .title {
+        flex-basis: 37%;
+    }
+
+    .title .name {
+        font-size: 12px;
+    }
+
+    .title .module-task {
+        font-size: 10px;
+    }
+
+    .time {
+        flex-basis: 33%;
+        font-size: 8px;
+        line-height: 8px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .description {
+        flex-basis: 100%;
+        height: 40px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    /* Ends: Record List */
+}
+/* Ends: Media Query */
