@@ -19,7 +19,7 @@
     .student-filter {
         width: 75%;
     }
-    
+
     .class-student-filter {
         margin-left: auto;
         margin-right: 15px;
@@ -140,4 +140,4 @@ i.material-icons.column {
         margin-left: 15px;
         order: 1;
     }
-} 
+}

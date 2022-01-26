@@ -29,6 +29,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/sms/sms.module#SmsModule',
     },
     {
+        path: 'activity',
+        loadChildren: 'app/modules/activity/activity.module#ActivityModule',
+    },
+    {
         path: 'attendance',
         loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule',
     },

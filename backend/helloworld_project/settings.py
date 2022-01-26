@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'tc_app',
     'online_classes_app',
     'payment_app',
+    'activity_record_app',
 
     'corsheaders',
 

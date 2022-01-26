@@ -126,7 +126,7 @@ class GenericSerializerInterface():
             parent_field_name_mapped_by_query = self.data['parent_query']
             processed_field_list += parent_field_name_mapped_by_query.keys()
             del self.data['parent_query']
-        
+
         if 'child_query' in self.data:
             child_field_name_mapped_by_query = self.data['child_query']
             del self.data['child_query']
