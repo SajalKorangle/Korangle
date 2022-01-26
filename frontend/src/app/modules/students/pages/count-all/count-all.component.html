@@ -1,5 +1,6 @@
 <div *ngIf="!isLoading" class="card-content table-responsive">
     <b>Define custom rows and columns or choose from saved tables</b>
+    <!-- <br *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile()"/> -->
     <!-- Starts: Print && Download Buttons Section -->
     <ng-container *ngIf="!htmlRenderer.checkMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
         <button
@@ -52,11 +53,16 @@
                 <thead>
                     <tr cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="dropColumn($event)">
                         <th class="minWidth"></th>
-                        <th *ngFor="let filter of columnFilters" (click)="whereToAdd = 'col'; openChangeDialog(filter)" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDrag>
-                            {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                        <th *ngFor="let filter of columnFilters" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
+                            <span (click)="whereToAdd = 'col'; openChangeDialog(filter)" style="cursor: pointer">
+                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                            </span>
+                            <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
                         </th>
-                        <th (click)="whereToAdd = 'col'; openDialog()" style="cursor: pointer" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
-                            + Column
+                        <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
+                            <span (click)="whereToAdd = 'col'; openDialog()" style="cursor: pointer">
+                                + Column
+                            </span>
                         </th>
                     </tr>
                 </thead>
@@ -64,9 +70,12 @@
 
                 <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
-                    <tr class="example-box" *ngFor="let filter of rowFilters" cdkDrag>
-                        <th (click)="whereToAdd = 'row'; openChangeDialog(filter)" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
-                            {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                    <tr class="example-box" *ngFor="let filter of rowFilters" cdkDragLockAxis="y" cdkDrag>
+                        <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
+                            <i class="material-icons menu-icon" style="float: left" cdkDragHandle>menu</i>
+                            <span (click)="whereToAdd = 'row'; openChangeDialog(filter)" style="cursor: pointer">
+                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                            </span>
                         </th>
                         <td class="minWidth" *ngFor="let ans of filter.answer">
                             {{ans}}
@@ -74,8 +83,10 @@
                         <td class="minWidth">-</td>
                     </tr>
                     <tr class="last-child">
-                        <th (click)="whereToAdd = 'row'; openDialog()" style="cursor: pointer" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
-                            + Row
+                        <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
+                            <span (click)="whereToAdd = 'row'; openDialog()" style="cursor: pointer">
+                                + Row
+                            </span>
                         </th>
                         <td class="minWidth" *ngFor="let filter of columnFilters">-</td>
                         <td class="minWidth">-</td>

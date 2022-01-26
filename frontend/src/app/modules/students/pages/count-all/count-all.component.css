@@ -42,6 +42,18 @@
     border-bottom: 1px solid #dee2e6;
 }
 
+.menu-icon {
+    font-size: 12px !important;
+    color: black !important;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.menu-icon:hover {
+    background-color: #C4C4C4;
+}
+
 .minWidth {
     min-width: 300px;
     max-width: 400px;
