@@ -13,5 +13,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(migrate_promote_student_change_class),
-        migrations.RunPython(add_unpromote_student),
+        migrations.RunPython(add_unpromote_student)
     ]
