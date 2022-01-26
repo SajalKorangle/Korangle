@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { GenericService } from '@services/generic/generic-service';
 import { PrintService } from '../../../../print/print-service';
+import { PRINT_COUNT_ALL_TABLE } from '../../../../print/print-routes.constants';
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
 
@@ -512,6 +513,23 @@ export class CountAllComponent implements OnInit {
         fileName += ".csv";
         this.excelService.downloadFile(template, fileName);
     }  // Ends: downloadList()
+
+    printStudentList(): void {
+        // alert('Functionality needs to be implemented once again');
+        let template: any = [];
+        this.rowFilters.forEach((rowFilter) => {
+            template.push(this.getFilterInfo(rowFilter));
+        });
+
+        let headerInfo: any = this.getHeaderValues();
+
+        const value = {
+            rowData: template,
+            columnData: headerInfo,
+            tableName: this.tableFormatTitle,
+        };
+        this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE, { user: this.user, value });
+    }
 
     /* Get Width of Column */
     getTextWidthColumn(textContent: string): any {

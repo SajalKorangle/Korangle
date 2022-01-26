@@ -9,6 +9,7 @@
             [ngStyle]="{ 'padding': '12px 15px', 'margin-left': htmlRenderer.isMobile() ? '0%' : '5%'}"
             matTooltip="Print the following table"
             tooltip-position="left"
+            (click)="printStudentList()"
         >
             Print<i class="material-icons" style="margin-left: 17px">print</i>
         </button>
