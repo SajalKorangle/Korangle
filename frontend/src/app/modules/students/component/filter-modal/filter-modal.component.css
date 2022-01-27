@@ -1,0 +1,46 @@
+/* Starts: Modal Container */
+.filter-modal-container {
+    height: 70vh;
+    width: 50vw;
+}
+/* Ends: Modal Container */
+
+/* Starts: Bottom Btns */
+.bottom-btns {
+    float: right;
+}
+
+.delete-btn {
+    color: #FF1717;    /* Red */
+    background-color: white;
+    outline: none;
+    border: none;
+    text-decoration: underline;
+    box-shadow: none;
+}
+
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+/* Ends: Bottom Btns */
+
+/* Starts: Media Query */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .filter-modal-container {
+        height: 90vh;
+        width: 100%;
+        margin: 0;
+        font-size: 12px;
+        padding: 0;
+    }
+    /* Ends: Modal Container */
+
+    /* Starts: Name Section */
+    .inputField {
+        width: 50%;
+    }
+    /* Ends: Name Section */
+}
+/* Ends: Media Query */

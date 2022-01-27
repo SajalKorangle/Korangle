@@ -4,6 +4,7 @@ export const PRINT_MULTIPLE_I_CARDS = 'print-multiple-i-cards';
 export const PRINT_TC = 'print-tc';
 export const PRINT_STUDENT_LIST = 'print-student-list';
 export const PRINT_STUDENT_PROFILE = 'print-student-profile';
+export const PRINT_COUNT_ALL_TABLE = 'print-count-all-table';
 
 //employee
 export const PRINT_EMPLOYEE_I_CARD = 'print-employee-i-card';
