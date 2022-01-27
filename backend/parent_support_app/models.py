@@ -68,11 +68,6 @@ class Complaint(models.Model):
     # This would be required if the complaint is raised by the employee of the school.
     parentEmployee = models.ForeignKey(Employee, on_delete = models.CASCADE, null = True)
 
-    # In the case of the parent, his employee id would be null.
-    # So we have to use the User model to extract information related to the user.
-    # It would require, while generating the notifications.
-    # parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
-
     # Date Sent
     dateSent = models.DateTimeField(auto_now_add = True)
 
@@ -106,11 +101,15 @@ def notify_on_complaint(sender, instance, created, **kwargs):
 
     if created:
 
+        senderEmployeeMobileNumber = ""
+        if instance.parentEmployee:
+            senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
+
         # Notify all the assigned employee of parentComplaintType.
         for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaintType):
             mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
-            if len(user) > 0:
+            if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
                 user = user[0]
                 content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
                 parentSchool = instance.parentSchool
@@ -119,32 +118,22 @@ def notify_on_complaint(sender, instance, created, **kwargs):
 
         if instance.parentEmployee:
 
-            # Notify parent employee on creation of complaint.
-            mobileNumber = str(instance.parentEmployee.mobileNumber)
-            user = User.objects.filter(username = mobileNumber)
-            if len(user) > 0:
-                user = user[0]
-                content = "Your complaint titled as " + instance.title + " has been sent."
-                parentSchool = instance.parentStudent.parentSchool
-                createNotification(content, user, parentSchool)
-
-            # Notify parent as employee has answered their complaint.
+            # Notify parents if their complaint is raised by a school employee.
+            # 1. Using mobileNumber.
             mobileNumber = str(instance.parentStudent.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
             if len(user) > 0:
                 user = user[0]
-                content = instance.parentEmployee.name + " has raised a complaint against your child" + instance.parentStudent.name + "."
+                content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
                 parentSchool = instance.parentStudent.parentSchool
                 createNotification(content, user, parentSchool)
 
-        else:
-
-            # Notify parent on creation of comment.
-            mobileNumber = str(instance.parentStudent.mobileNumber)
-            user = User.objects.filter(username = mobileNumber)
+            # 2. Using secondMobileNumber.
+            secondMobileNumber = str(instance.parentStudent.secondMobileNumber)
+            user = User.objects.filter(username = secondMobileNumber)
             if len(user) > 0:
                 user = user[0]
-                content = "Your complaint titled as " + instance.title + " has been sent."
+                content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
                 parentSchool = instance.parentStudent.parentSchool
                 createNotification(content, user, parentSchool)
 
@@ -154,14 +143,8 @@ class Comment(models.Model):
     # If sender is employee.
     parentEmployee = models.ForeignKey(Employee, on_delete = models.SET_NULL, null = True)
 
-    # If sender is parent.
     # We will fetch father's name && contact number from his child.
-    # It would be null, if the comment is made by school employee.
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE, null = True)
-
-    # Parent User
-    # It would require, while generating the notifications.
-    # parentUser = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
 
     # Sender's message
     message = models.TextField()
@@ -187,13 +170,16 @@ def notify_on_comment(sender, instance, created, **kwargs):
 
     commentList = Comment.objects.filter(parentComplaint = instance.parentComplaint)
     if created and len(commentList) > 1:
-        print("Comment Created")
+
+        senderEmployeeMobileNumber = ""
+        if instance.parentEmployee:
+            senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
 
         # Notify all the assigned employee of parentComplaintType.
         for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaint.parentComplaintType):
             mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
-            if len(user) > 0:
+            if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
                 user = user[0]
                 content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
                 parentSchool = instance.parentStudent.parentSchool
@@ -202,23 +188,22 @@ def notify_on_comment(sender, instance, created, **kwargs):
 
         if instance.parentEmployee:
 
-            # Notify parent as employee has answered their complaint.
+            # Notify parents if a school employee has answered their complaint.
+            # 1. Using mobileNumber.
             mobileNumber = str(instance.parentStudent.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
             if len(user) > 0:
                 user = user[0]
-                content = instance.parentEmployee.name + " has commented on complaint " + instance.parentComplaint.title + "."
+                content = instance.parentEmployee.name + " has answered your complaint titled as " + instance.parentComplaint.title + "."
                 parentSchool = instance.parentStudent.parentSchool
                 createNotification(content, user, parentSchool)
 
-        if ((not instance.parentEmployee) and instance.parentComplaint.parentEmployee):
-
-            # Notify parentEmployee on creation of comment.
-            mobileNumber = str(instance.parentComplaint.parentEmployee.mobileNumber)
-            user = User.objects.filter(username = mobileNumber)
+            # 2. Using secondMobileNumber.
+            secondMobileNumber = str(instance.parentStudent.secondMobileNumber)
+            user = User.objects.filter(username = secondMobileNumber)
             if len(user) > 0:
                 user = user[0]
-                content = instance.parentStudent.fathersName + "  father of " + instance.parentStudent.name + ", has commented on complaint " + instance.parentComplaint.title + "."
+                content = instance.parentEmployee.name + " has answered your complaint titled as " + instance.parentComplaint.title + "."
                 parentSchool = instance.parentStudent.parentSchool
                 createNotification(content, user, parentSchool)
 
