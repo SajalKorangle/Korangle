@@ -99,5 +99,3 @@ urlpatterns += [
     url(r'^student-parameter', StudentParameterView.as_view()),
 ]
 
-
-

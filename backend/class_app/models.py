@@ -55,4 +55,3 @@ class ClassTeacherSignature(models.Model):
     class Meta:
         db_table = 'class_teacher_signature'
         unique_together = ('parentSchool', 'parentClass', 'parentDivision')
-

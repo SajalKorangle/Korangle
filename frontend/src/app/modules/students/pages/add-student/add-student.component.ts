@@ -35,7 +35,7 @@ declare const $: any;
         ExaminationService,
         VehicleOldService,
         FeeService,
-        BankService,
+        BankService
     ],
 })
 export class AddStudentComponent implements OnInit {

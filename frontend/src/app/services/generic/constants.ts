@@ -36,4 +36,3 @@ export const CONSTANTS = {
         'Division': DIVISION_CONSTANT,
     }
 };
-

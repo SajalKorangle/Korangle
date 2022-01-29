@@ -1,0 +1,129 @@
+<div>
+    <!-- Starts: Filters -->
+    <ng-container>
+        <p
+            class="text-{{ user.activeSchool.secondaryThemeColor }} filter-modal-btn"
+            (click)="openFilterDialog()"
+        >
+            Filters
+        </p>
+    </ng-container>
+    <!-- Ends: Filters -->
+
+    <!-- Starts: Filter-description -->
+    <div class="filters-list">
+        <b>- Pages </b> <span>{{ htmlRenderer.getPagesList() }}, </span>
+        <b>Employees </b> <span>{{ htmlRenderer.getEmployeesList() }}, </span>
+        <b>Time Span </b> <span>{{ htmlRenderer.getTimeSpanData() + htmlRenderer.getSortType() }}</span>
+    </div>
+    <!-- Ends: Filter-description -->
+
+    <!-- Starts: Search Bar -->
+    <div class="search-bar">
+        <input class="search-field" type="search" placeholder="Type Keywords" [ngModel]="seachString" (ngModelChange)="seachString = $event; seachChanged()">
+        <button class="seach-btn"><i class="material-icons">search</i></button>
+    </div>
+    <!-- Ends: Search Bar -->
+
+    <!-- Starts: Pagination -->
+    <div class="page-section">
+        <div class="page-count-section">
+            {{ startNumber }}-{{ endNumber }} of {{ totalRecords }} results
+        </div>
+        <div class="page-number-section">
+            <i class="material-icons" (click)="previousPage()">chevron_left</i>
+            <div class="page-numbers">
+                <!-- Starts: Format - < 1 2 3 4 5 6 > -->
+                <ng-container *ngIf="totalPages <= 6">
+                    <div [className]="currentPage === 1 ? 'active' : ''" (click)="setCurrentPage(1)">1</div>
+                    <div *ngIf="totalPages >= 2" [className]="currentPage === 2 ? 'active' : ''" (click)="setCurrentPage(2)">2</div>
+                    <div *ngIf="totalPages >= 3" [className]="currentPage === 3 ? 'active' : ''" (click)="setCurrentPage(3)">3</div>
+                    <div *ngIf="totalPages >= 4" [className]="currentPage === 4 ? 'active' : ''" (click)="setCurrentPage(4)">4</div>
+                    <div *ngIf="totalPages >= 5" [className]="currentPage === 5 ? 'active' : ''" (click)="setCurrentPage(5)">5</div>
+                    <div *ngIf="totalPages >= 6" [className]="currentPage === 6 ? 'active' : ''" (click)="setCurrentPage(6)">6</div>
+                </ng-container>
+                <!-- Ends: Format - < 1 2 3 4 5 6 > -->
+
+                <!-- Starts: Format - < 1 ... (x - 1) x (x + 1) ... lastPage > -->
+                <ng-container *ngIf="totalPages > 6">
+                    <div [className]="currentPage === 1 ? 'active' : ''" (click)="setCurrentPage(1)">1</div>
+                    <ng-container *ngIf="currentPage <= 3">
+                        <div [className]="currentPage === 2 ? 'active' : ''" (click)="setCurrentPage(2)">2</div>
+                        <div [className]="currentPage === 3 ? 'active' : ''" (click)="setCurrentPage(3)">3</div>
+                        <div [className]="currentPage === 4 ? 'active' : ''" (click)="setCurrentPage(4)">4</div>
+                        <div style="text-decoration: none">...</div>
+                    </ng-container>
+                    <ng-container *ngIf="currentPage > 3 && currentPage <= totalPages - 3">
+                        <div style="text-decoration: none">...</div>
+                        <div [className]="currentPage === currentPage - 1 ? 'active' : ''" (click)="setCurrentPage(currentPage - 1)">{{ currentPage - 1 }}</div>
+                        <div [className]="currentPage === currentPage ? 'active' : ''" (click)="setCurrentPage(currentPage)">{{ currentPage }}</div>
+                        <div [className]="currentPage === currentPage + 1 ? 'active' : ''" (click)="setCurrentPage(currentPage + 1)">{{ currentPage + 1 }}</div>
+                        <div style="text-decoration: none">... </div>
+                    </ng-container>
+                    <ng-container *ngIf="currentPage > totalPages - 3 && currentPage <= totalPages">
+                        <div style="text-decoration: none">... </div>
+                        <div [className]="currentPage === totalPages - 3 ? 'active' : ''" (click)="setCurrentPage(totalPages - 3)">{{ totalPages - 3 }}</div>
+                        <div [className]="currentPage === totalPages - 2 ? 'active' : ''" (click)="setCurrentPage(totalPages - 2)">{{ totalPages - 2 }}</div>
+                        <div [className]="currentPage === totalPages - 1 ? 'active' : ''" (click)="setCurrentPage(totalPages - 1)">{{ totalPages - 1 }}</div>
+                    </ng-container>
+                    <div [className]="currentPage === totalPages ? 'active' : ''" (click)="setCurrentPage(totalPages)">{{ totalPages }}</div>
+                </ng-container>
+                <!-- Ends: Format - < 1 ... (x - 1) x (x + 1) ... lastPage > -->
+            </div>
+            <i class="material-icons" (click)="nextPage()">chevron_right</i>
+        </div>
+    </div>
+    <!-- Ends: Pagination -->
+
+    <!-- Starts: Record List -->
+    <div class="record-list">
+        <ng-container *ngIf="!htmlRenderer.isMobile()">
+            <div class="record" *ngFor="let record of activityRecordList">
+                <div class="icon" [ngStyle]="{'background-color': htmlRenderer.getIconBGColor(record.parentTask)}">
+                    <i class="material-icons">{{ htmlRenderer.getIcon(record.parentTask) }}</i>
+                </div>
+                <div class="title">
+                    <div>
+                        <div class="name">{{ htmlRenderer.getEmployeeName(record.parentEmployee) }}</div>
+                        <div class="module-task">{{ htmlRenderer.getModuleTaskName(record.parentTask) }}</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <div>{{ record.activityDescription }}</div>
+                </div>
+                <div class="time">
+                    <div>{{ htmlRenderer.getDateTimeOfRecord(record) }}</div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="htmlRenderer.isMobile()">
+            <div class="record" *ngFor="let record of activityRecordList">
+                <div class="header">
+                    <div class="icon" [ngStyle]="{'background-color': htmlRenderer.getIconBGColor(record.parentTask)}">
+                        <i class="material-icons">{{ htmlRenderer.getIcon(record.parentTask) }}</i>
+                    </div>
+                    <div class="title">
+                        <div>
+                            <div class="name">{{ htmlRenderer.getEmployeeName(record.parentEmployee) }}</div>
+                            <div class="module-task">{{ htmlRenderer.getModuleTaskName(record.parentTask) }}</div>
+                        </div>
+                    </div>
+                    <div class="time">
+                        <div>{{ htmlRenderer.getDateTimeOfRecord(record) }}</div>
+                    </div>
+                </div>
+                <div class="description">
+                    <div>{{ record.activityDescription }}</div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <!-- Ends: Record List -->
+</div>
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->
