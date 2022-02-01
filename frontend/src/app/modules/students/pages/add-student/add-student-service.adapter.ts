@@ -3,6 +3,7 @@ import { ATTENDANCE_STATUS_LIST } from '../../../attendance/classes/constants';
 import { StudentTest } from '../../../../services/modules/examination/models/student-test';
 import { StudentSubject } from '../../../../services/modules/subject/models/student-subject';
 import { StudentFee } from '../../../../services/modules/fees/models/student-fee';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class AddStudentServiceAdapter {
     vm: AddStudentComponent;
@@ -179,6 +180,13 @@ export class AddStudentServiceAdapter {
                 }
             }
         });
+
+        let parentEmployee = this.vm.user.activeSchool.employeeId;
+        let moduleName = this.vm.user.section.title;
+        let taskName = this.vm.user.section.subTitle;
+        let moduleList = this.vm.user.activeSchool.moduleList;
+        let actionString = " admitted " + this.vm.newStudent.name;
+
         this.vm.studentService.createObject(this.vm.studentService.student, student_form_data).then(
             (value) => {
                 this.vm.newStudentSection.parentStudent = value.id;
@@ -322,6 +330,7 @@ export class AddStudentServiceAdapter {
 
                         this.vm.initializeVariable();
 
+                        CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                         this.vm.isLoading = false;
                     },
                     (error) => {

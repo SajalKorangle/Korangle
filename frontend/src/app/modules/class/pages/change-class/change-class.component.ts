@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { DataStorage } from '../../../../classes/data-storage';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 @Component({
     selector: 'change-class',
@@ -71,6 +72,14 @@ export class ChangeClassComponent implements OnInit {
         this.studentService.partiallyUpdateObject(this.studentService.student_section, data).then(
             (response) => {
                 alert('Class Updated Successfully');
+
+                let parentEmployee = this.user.activeSchool.employeeId;
+                let moduleName = this.user.section.title;
+                let taskName = this.user.section.subTitle;
+                let moduleList = this.user.activeSchool.moduleList;
+                let actionString = " changed class of " + this.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
+
                 if (this.selectedStudentSection.id == response.id) {
                     this.selectedStudentSection.parentDivision = response.parentDivision;
                     this.selectedStudentSection.parentClass = response.parentClass;

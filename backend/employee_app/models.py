@@ -90,7 +90,10 @@ class Employee(models.Model):
     dateOfLeaving = models.DateField(null=True)
 
     # School Id
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name="employeeList")
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']

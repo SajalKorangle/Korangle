@@ -108,37 +108,37 @@ class Student(models.Model):
 
     parentTransferCertificate = \
         models.ForeignKey(TransferCertificate, on_delete=models.SET_NULL, null=True, verbose_name='parentTransferCertificate', related_name="studentList")
-    
+
 
     def __str__(self):
         """A string representation of the model."""
         return self.parentSchool.name+" --- "+self.name
 
     def get_section_id(self, session_object):
-        return self.studentsection_set\
+        return self.studentSectionList\
             .get(parentSession=session_object).parentDivision.id
 
     def get_section_name(self, session_object):
-        return self.studentsection_set\
+        return self.studentSectionList\
             .get(parentSession=session_object).parentDivision.name
 
     def get_class_object(self, session_object):
-        return self.studentsection_set.get(parentSession=session_object)\
+        return self.studentSectionList.get(parentSession=session_object)\
             .parentClass
 
     def get_class_id(self, session_object):
-        return self.studentsection_set\
+        return self.studentSectionList\
             .get(parentSession=session_object).parentClass.id
 
     def get_class_name(self, session_object):
         try:
-            return self.studentsection_set \
+            return self.studentSectionList \
                 .get(parentSession=session_object).parentClass.name
         except ObjectDoesNotExist:
             return None
 
     def get_rollNumber(self, session_object):
-        return self.studentsection_set \
+        return self.studentSectionList \
             .get(parentSession=session_object).rollNumber
 
     class Permissions(BasePermission):
@@ -185,6 +185,10 @@ class StudentParameter(models.Model):
 
     filterValues = models.TextField(null=True, blank=True)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'student_parameter'
 
@@ -198,7 +202,26 @@ class StudentParameterValue(models.Model):
     document_value = models.FileField(upload_to=upload_document_to, max_length=500, blank=True, null=True)
     document_size = models.TextField(null=True,blank=True)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudentParameter__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
+
     class Meta:
         db_table = 'student_parameter_value'
         unique_together = ('parentStudent', 'parentStudentParameter')
 
+
+class CountAllTable(models.Model):
+    formatName = models.CharField(max_length=50)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, related_name="countAllTableList")
+    rows = models.JSONField()    # It will store all the rows of the table in JSON format.
+    cols = models.JSONField()    # It will store all the columns of the table in JSON format.
+
+    def __str__(self):
+        return self.formatName
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+
+    class Meta:
+        db_table = 'count_all_table'

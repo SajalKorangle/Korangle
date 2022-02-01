@@ -33,6 +33,10 @@ const routes: Routes = [
         loadChildren: 'app/modules/parent-support/parent-support.module#ParentSupportModule',
     },
     {
+        path: 'activity',
+        loadChildren: 'app/modules/activity/activity.module#ActivityModule',
+    },
+    {
         path: 'attendance',
         loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule',
     },
