@@ -10,7 +10,7 @@
     <br />
     <!-- Starts: Time Span Section -->
     <div class="time-span-section">
-        <b>Time Span</b><br /><br />
+        <b>Time Span</b><br /><br *ngIf="!isMobile()"/>
 
         <!-- Starts: Start Date -- Time Span Sub-Section -->
         <div class="time-span-sub-section">
@@ -39,8 +39,8 @@
                     <input
                         matInput
                         type="date"
-                        (ngModelChange)="sDate = $event"
-                        [ngModel]="sDate"
+                        (keydown)="handleOnKeyDown($event)"
+                        [(ngModel)]="sDate"
                     />
                 </mat-form-field>
                 <span *ngIf="startDateTye == 'From Days Ago'">
@@ -79,8 +79,8 @@
                     <input
                         matInput
                         type="date"
-                        (ngModelChange)="eDate = $event"
-                        [ngModel]="eDate"
+                        (keydown)="handleOnKeyDown($event)"
+                        [(ngModel)]="eDate"
                     />
                 </mat-form-field>
                 <span *ngIf="endDateTye == 'From Days Ago'">
@@ -95,7 +95,7 @@
     <!-- Ends: Time Span Section -->
 
     <br />
-    <br />
+    <br *ngIf="!isMobile()"/>
     <!-- Starts: Complaint type  &&  Status Section -->
     <div class="names">
 
@@ -112,49 +112,17 @@
                     </button>
                 </mat-option>
 
-                <!-- <ng-container *ngfor="let complaintType of complaintTypeList">
+                <ng-container *ngFor="let complaintType of complaintTypeList">
                     <mat-option class="mat-option-complaint-type">
                         <mat-checkbox
+                            class="checkbox-label"
                             [(ngModel)]="complaintType.selected"
                             (click)="$event.stopPropagation()"
                         >
                             {{ complaintType.name }}
                         </mat-checkbox>
                     </mat-option>
-                </ng-container> -->
-
-                <mat-option class="mat-option-complaint-type">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option class="mat-option-complaint-type">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option class="mat-option-complaint-type">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option class="mat-option-complaint-type">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
+                </ng-container>
             </cdk-virtual-scroll-viewport>
         </div>
         <!-- Ends: Complaint type -->
@@ -164,15 +132,15 @@
             <b>Status</b><br /><br />
             <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
                 <mat-option style="background-color: #F5F5F5">
-                    <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllStatus(); $event.stopPropagation()">
                         Select All
                     </button>
-                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllEmployees(); $event.stopPropagation()">
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllStatus(); $event.stopPropagation()">
                         Clear All
                     </button>
                 </mat-option>
 
-                <!-- <ng-container *ngfor="let status of statusList">
+                <ng-container *ngFor="let status of statusList">
                     <mat-option class="mat-option-complaint-type">
                         <mat-checkbox
                             [(ngModel)]="status.selected"
@@ -181,40 +149,7 @@
                             {{ status.name }}
                         </mat-checkbox>
                     </mat-option>
-                </ng-container> -->
-
-                <mat-option class="mat-option-status">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option class="mat-option-status">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option class="mat-option-status">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
-                <mat-option class="mat-option-status">
-                    <mat-checkbox
-                        [(ngModel)]="checkBox"
-                        (click)="$event.stopPropagation()"
-                    >
-                        Fee Related
-                    </mat-checkbox>
-                </mat-option>
+                </ng-container>
             </cdk-virtual-scroll-viewport>
         </div>
         <!-- Ends: Status -->
@@ -224,7 +159,7 @@
 
     <!-- Starts: Bottom Buttons -->
     <br />
-    <br />
+    <br *ngIf="!isMobile()"/>
     <div class="bottom-btns">
         <button
             type="button"

@@ -9,11 +9,12 @@
 }
 
 .header {
-    flex-basis: 15%;
+    flex-basis: 25%;
 }
 
 .example-viewport {
     height: 20vh;
+    /* flex-basis: 50%; */
     width: 100%;
     font-size: 14px;
 }
@@ -97,3 +98,47 @@
 .notify-btn {
     text-transform: capitalize !important;
 }
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding: 2rem;
+    }
+
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .seach-btn {
+        flex-basis: 10%;
+    }
+
+    .common-section {
+        display: block;
+    }
+
+    .information {
+        flex-basis: 100%;
+    }
+
+    .information .header {
+        margin-right: 0rem;
+        flex-basis: 40%;
+    }
+
+    .bottom-section {
+        display: block;
+    }
+
+    .bottom-text-field {
+        width: 100%;
+        height: 180px;
+        background: #FEFEFE;
+        border: 0.5px solid #C4C4C4;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+}
+/* Ends: Media Query - Mobile Phone */

@@ -1,3 +1,13 @@
+.table-List {
+    display: flex;
+    align-items: center;
+}
+
+.delete-icon {
+    color: red;
+    cursor: pointer;
+}
+
 /* Starts: Table Section */
 .example-viewport {
     height: 70vh;
@@ -30,6 +40,18 @@
 
 .table tbody .last-child {
     border-bottom: 1px solid #dee2e6;
+}
+
+.menu-icon {
+    font-size: 12px !important;
+    color: black !important;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.menu-icon:hover {
+    background-color: #C4C4C4;
 }
 
 .minWidth {

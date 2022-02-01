@@ -1,4 +1,5 @@
 import { CountAllComponent } from './count-all.component';
+import { isMobile } from '../../../../classes/common';
 
 export class CountAllHtmlRenderer {
 
@@ -12,9 +13,10 @@ export class CountAllHtmlRenderer {
     }
 
     /* Open Existing Table */
-    tableOpenClicked(table): void {
+    tableOpenClicked(table, idx): void {
         this.vm.isTableEditing = true;
         this.vm.tableActiveId = table["id"];
+        this.vm.tableActiveIdx = idx;
         this.vm.tableFormatTitle = table.formatName;
         let tableRows = [];
         let tableCols = [];
@@ -31,10 +33,16 @@ export class CountAllHtmlRenderer {
         this.vm.rowFilters = tableRows;
     }  // Ends: tableOpenClicked()
 
+     /* For mobile-browser */
     isMobile(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
         return true;
+    }
+
+    /* For mobile-application */
+    checkMobile(): boolean {
+        return isMobile();
     }
 }

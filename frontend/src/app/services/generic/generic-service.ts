@@ -103,8 +103,9 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     student_app: 'Student' | 'StudentSection';
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
-    parent_support_app: 'ComplaintType' | 'Status' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'CountAllTable';
-    employee_app: 'Employee';
+    parent_support_app: 'SchoolComplaintType' | 'SchoolComplaintStatus' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'CountAllParentSupport';
+    employee_app: 'Employee' | 'EmployeeParameter' | 'EmployeePermission';
+    team_app: 'Module' | 'Task';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

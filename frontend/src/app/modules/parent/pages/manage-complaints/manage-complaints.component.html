@@ -1,60 +1,51 @@
-<div *ngIf="pageName == 'list-of-complaints'" class="card-content">
+<div *ngIf="!isLoading && pageName == 'list-of-complaints'" class="card-content">
     <!-- Starts: Search Bar -->
     <div class="search-bar">
-        <input class="search-field" type="search" placeholder="Search by student name, message type, title" [ngModel]="seachString" (ngModelChange)="seachString = $event">
+        <input class="search-field" type="search" placeholder="Search by student name, message type, title" [(ngModel)]="seachString">
         <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
     </div>
     <br />
     <br />
     <!-- Ends: Search Bar -->
 
-    <div class="table-container">
-        <div class="example-viewport">Complaints</div>
-        <!-- <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport"> -->
+    <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+        <div class="table-container">
+            <div style="border-bottom: 2px solid #909090;">Complaints</div>
             <table class="table table-hover table-responsive">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
-                        <!-- <th style="min-width: 150px">Child Name</th>
+                        <th style="min-width: 150px">Child Name</th>
                         <th style="min-width: 150px">Date Sent</th>
-                        <th style="min-width: 150px">Message Type</th>
+                        <th style="min-width: 150px">Complaint Type</th>
                         <th style="min-width: 150px">Status</th>
-                        <th style="min-width: 150px">Comments</th>
+                        <th style="min-width: 150px; text-align: center;">Comments</th>
                         <th style="min-width: 100px"></th>
-                        <th style="min-width: 100px"></th> -->
-                        <th>Child Name</th>
-                        <th>Date Sent</th>
-                        <th>Complaint Type</th>
-                        <th>Status</th>
-                        <th>Comments</th>
-                        <th></th>
-                        <th></th>
+                        <th style="min-width: 100px"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <ng-container *ngFor="let complaint of complaintList; let i = index">
                         <tr>
-                            <td>{{ complaint.complaintStudentName }}</td>
-                            <td>{{ complaint.dateSent }}</td>
-                            <td>{{ complaint.complaintType }}</td>
-                            <td>{{ complaint.complaintStatus }}</td>
-                            <td>{{ complaint.complaintCommentList.length }}</td>
-                            <td (click)="pageName = 'open-complaint'; openComplaint(complaint)" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; cursor: pointer;">Open</td>
-                            <td><i class="material-icons delete-icon">delete_forever</i></td>
+                            <td>{{ complaint.parentStudent.name }}</td>
+                            <td>{{ getDateInfo(complaint.dateSent) }}</td>
+                            <td>{{ complaint.parentSchoolComplaintType.name }}</td>
+                            <td>{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Selected" }}</td>
+                            <td style="text-align: center">{{ complaint.commentList.length }}</td>
+                            <td
+                                style="text-align: center"
+                                (click)="pageName = 'open-complaint'; openComplaint(complaint);"
+                                class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                style="text-decoration: underline; cursor: pointer;"
+                            >
+                                Open
+                            </td>
+                            <td style="text-align: center"><i class="material-icons delete-icon">delete_forever</i></td>
                         </tr>
                     </ng-container>
-                    <!-- <tr>
-                        <td style="min-width: 150px">John Doe</td>
-                        <td style="min-width: 150px">Today</td>
-                        <td style="min-width: 150px">Fee Amount</td>
-                        <td style="min-width: 150px">Resolved</td>
-                        <td style="min-width: 150px">10</td>
-                        <td style="min-width: 100px">Open</td>
-                        <td style="min-width: 100px"><i class="material-icons delete-icon">delete_forever</i></td>
-                    </tr> -->
                 </tbody>
             </table>
-        <!-- </cdk-virtual-scroll-viewport> -->
-    </div>
+        </div>
+    </cdk-virtual-scroll-viewport>
 
     <br />
     <button
@@ -69,71 +60,75 @@
     </button>
 </div>
 
-<div *ngIf="pageName == 'open-complaint'" class="card-content">
+<div *ngIf="!isLoading && pageName == 'open-complaint'" class="card-content">
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Name:</div>
-            <div>{{ complaintParentName }}</div>
+            <div>{{ openedComplaint.parentStudent.fathersName }}</div>
         </div>
 
-        <div class="status-section">
+        <div *ngIf="!isMobile()" class="status-section">
             <div class="status">
                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
                 <mat-form-field>
-                    <mat-select placeholder="{{ complaintStatus }}" style="width: 100%">
-                        <mat-option>Hello</mat-option>
-                        <mat-option>Hello</mat-option>
-                        <mat-option>Hello</mat-option>
-                        <mat-option>Hello</mat-option>
+                    <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
+                        <ng-container *ngFor="let status of openedComplaint.applicableStatusList">
+                            <mat-option (click)="defaultStatusTitle=status.name; defaultStatus=status">
+                                {{ status.name }}
+                            </mat-option>
+                        </ng-container>
                     </mat-select>
                 </mat-form-field>
             </div>
             <i class="material-icons delete-icon">delete_forever</i>
         </div>
     </div>
+    <br *ngIf="isMobile()"/>
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
-            <div>{{ dateSent }}</div>
+            <div>{{ getDateInfo(openedComplaint.dateSent) }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Compalint Type :</div>
-            <div>{{ complaintType }}</div>
+            <div>{{ openedComplaint.parentSchoolComplaintType.name }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
-            <div>{{ complaintStudentName }}</div>
+            <div>{{ openedComplaint.parentStudent.name }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
-            <div>{{ complaintParentContactNumber }}</div>
+            <div>{{ openedComplaint.parentStudent.mobileNumber }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
+    <br />
 
     <div class="common-section" style="align-items: flex-end">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
-            <div>{{ complaintTitle }}</div>
+            <div>{{ openedComplaint.title }}</div>
         </div>
         <button
             type="button"
+            *ngIf="!isMobile()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }} refresh-btn"
             style="padding: 6px 15px"
             matTooltip="Refresh"
@@ -144,36 +139,80 @@
     </div>
     <br />
 
+    <ng-container *ngIf="isMobile()">
+        <div class="common-section">
+            <div class="information">
+                <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Status: </div>
+                <div class="status-option-section">
+                    <mat-form-field style="flex-basis: 80%">
+                        <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
+                            <ng-container *ngFor="let status of openedComplaint.applicableStatusList; let idxStatus = index">
+                                <mat-option (click)="defaultStatusTitle = status.name; defaultStatus = status;">{{ status.name }}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                    <i style="flex-basis: 20%" class="material-icons delete-icon">delete_forever</i>
+                </div>
+            </div>
+        </div>
+        <br />
+    </ng-container>
+
     <div class="comment-section">
         <div class="default-text comment">
-            Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
+            {{ openedComplaint.parentSchoolComplaintType.defaultText }}
         </div>
-        <div class="comment">
-            <div class="name">John Doe</div>
-            <div class="information">
-                <div class="comment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                <div class="time">09:31, 09-03-21</div>
+        <ng-container *ngFor="let commentObject of commentList">
+            <div class="comment">
+                <div class="name" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">
+                    {{ getAuthorComment(commentObject) }}
+                </div>
+                <div class="information">
+                    <div class="comment-description" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                    <div class="time" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.5'} ">{{ getDateTimeInfo(commentObject.createdAt) }}</div>
+                </div>
             </div>
-        </div>
-        <div class="comment">
-            <div class="name class-dark">John Doe</div>
-            <div class="information">
-                <div class="comment-description class-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                <div class="time">09:31, 09-03-21</div>
+        </ng-container>
+
+        <ng-container *ngIf="!isMobile()">
+            <div class="bottom-section">
+                <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    style="padding: 12px 15px"
+                    matTooltip="Send Comment"
+                    tooltip-position="left"
+                    (click)="updateComplaintClicked()"
+                >
+                    Send
+                </button>
             </div>
-        </div>
-        <div class="bottom-section">
-            <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [ngModel]="comment" (ngModelChange)="comment = $event">
-            <button
-                type="button"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
-                style="padding: 12px 15px"
-                matTooltip="Send Comment"
-                tooltip-position="left"
-            >
-                Send
-            </button>
-        </div>
+        </ng-container>
+
+        <ng-container *ngIf="isMobile()">
+            <div class="bottom-section">
+                <textarea
+                    placeholder="Type Response/ Updates here"
+                    class="bottom-text-field"
+                    [(ngModel)]="comment"
+                ></textarea>
+                <br />
+
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        style="padding: 10px 25px"
+                        matTooltip="Send Comment"
+                        tooltip-position="left"
+                        (click)="sendComplaintClicked()"
+                    >
+                        Send
+                    </button>
+                </div>
+            </div>
+        </ng-container>
     </div>
 
     <button
@@ -187,54 +226,87 @@
     </button>
 </div>
 
-<div *ngIf="pageName == 'send-complaint'" class="card-content">
+<div *ngIf="!isLoading && pageName == 'send-complaint'" class="card-content">
     <div class="send-new-common-section">
-        <span class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Complaint type : </span>
+        <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Complaint Type : </div>
         <mat-form-field>
-            <mat-select placeholder="{{ complaintType }}" style="width: 100%">
-                <mat-option (click)="complaintType = 'Fee Amount'">Fee Amount</mat-option>
-                <mat-option (click)="complaintType = 'Vehicle'">Vehicle</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-
-    <div class="send-new-common-section">
-        <span class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select student name : </span>
-        <mat-form-field>
-            <mat-select placeholder="{{ complaintStudentName }}" style="width: 100%">
-                <ng-container *ngFor="let student of user.activeSchool.studentList">
-                    <mat-option (click)="complaintStudentName = student.name">{{ student.name }}</mat-option>
+            <mat-select placeholder="{{ complaintTypeName }}" style="width: 100%">
+                <ng-container *ngFor="let complaintTypeObject of complaintTypeList">
+                    <mat-option (click)="complaintTypeName = complaintTypeObject.name; complaintType = complaintTypeObject; complaintTypeDefaultText = complaintTypeObject.defaultText;">
+                        {{ complaintTypeObject.name }}
+                    </mat-option>
                 </ng-container>
             </mat-select>
         </mat-form-field>
     </div>
 
     <div class="send-new-common-section">
-        <span class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Enter title : </span>
+        <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Student Name : </div>
+        <mat-form-field>
+            <mat-select placeholder="{{ complaintStudentName }}" style="width: 100%">
+                <ng-container *ngFor="let student of studentList">
+                    <mat-option (click)="complaintStudentName = student.name; complaintStudent = student;">{{ student.name }}</mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <br *ngIf="!isMobile()"/>
+
+    <div class="send-new-common-section">
+        <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Enter title : </div>
         <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
-        <!-- <mat-form-field class="title-input" style="margin-left: 10%;">
-            <input matInput type="text"/>
-        </mat-form-field> -->
     </div>
 
     <br />
     <div class="comment-section">
         <div class="send-new-default-text">
-            Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
+            {{ complaintTypeDefaultText }}
         </div>
-        <div class="bottom-section">
-            <!-- <input class="bottom-search-field" type="search" placeholder="Type Query here" [ngModel]="complaintComment" (ngModelChange)="complaintComment = $event"> -->
-            <input class="bottom-search-field" type="text" placeholder="Type Query here" [(ngModel)]="complaintComment">
-            <button
-                type="button"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
-                style="padding: 12px 15px"
-                matTooltip="Send Comment"
-                tooltip-position="left"
-                (click)="pageName = 'list-of-complaints'; sendComplaint()"
-            >
-                Send
-            </button>
-        </div>
+
+        <ng-container *ngIf="!isMobile()">
+            <div class="bottom-section">
+                <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="commentMessage">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    style="padding: 12px 15px"
+                    matTooltip="Send Comment"
+                    tooltip-position="left"
+                    (click)="sendComplaint()"
+                >
+                    Send
+                </button>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="isMobile()">
+            <div class="bottom-section">
+                <textarea
+                    placeholder="Type Query here"
+                    class="bottom-text-field"
+                    [(ngModel)]="comment"
+                ></textarea>
+                <br />
+
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        style="padding: 10px 25px"
+                        matTooltip="Send Comment"
+                        tooltip-position="left"
+                        (click)="sendComplaint()"
+                    >
+                        Send
+                    </button>
+                </div>
+            </div>
+        </ng-container>
     </div>
 </div>
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->

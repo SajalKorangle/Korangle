@@ -2,7 +2,7 @@
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Student Name : </span>
         <div class="search-bar" style="flex-basis: 50%;">
-            <input class="search-field" type="search" placeholder="Enter Student Name" [(ngModel)]="seachStudentString">
+            <input class="search-field" type="search" placeholder="Enter Student Name" [ngModel]="seachStudentString" (ngModelChange)="seachStudentString = $event; seachStudentChanged()">
             <button class="seach-btn" (click)="searchStudent()"><i class="material-icons search-icon">search</i></button>
         </div>
     </div>
@@ -23,11 +23,11 @@
 
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Father’s Name : </span>
-        <div style="flex-basis: 60%;">
+        <div>
             {{ fatherName }}
         </div>
     </div>
-    <br />
+    <br *ngIf="isMobile()"/>
 
     <div class="common-section">
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Select Complaint type : </span>
@@ -39,31 +39,58 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <br />
+    <!-- <br /> -->
 
     <div class="common-section">
-        <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Enter title : </span>
+        <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Enter title : </span><br />
         <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
     </div>
     <br />
 
     <div class="comment-section">
         <div class="default-text">
-            Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
+            {{ complaintType["defaultText"] ? complaintType["defaultText"] : '' }}
         </div>
-        <div class="bottom-section">
-            <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="comment">
-            <button
-                type="button"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
-                style="padding: 12px 15px"
-                matTooltip="Send Comment"
-                tooltip-position="left"
-                (click)="sendComplaintClicked()"
-            >
-                Send
-            </button>
-        </div>
+
+        <ng-container *ngIf="!isMobile()">
+            <div class="bottom-section">
+                <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="comment">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    style="padding: 12px 15px"
+                    matTooltip="Send Comment"
+                    tooltip-position="left"
+                    (click)="sendComplaintClicked()"
+                >
+                    Send
+                </button>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="isMobile()">
+            <div class="bottom-section">
+                <textarea
+                    placeholder="Type Query here"
+                    class="bottom-text-field"
+                    [(ngModel)]="comment"
+                ></textarea>
+                <br />
+
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        style="padding: 10px 25px"
+                        matTooltip="Send Comment"
+                        tooltip-position="left"
+                        (click)="sendComplaintClicked()"
+                    >
+                        Send
+                    </button>
+                </div>
+            </div>
+        </ng-container>
     </div>
     <br />
 </div>

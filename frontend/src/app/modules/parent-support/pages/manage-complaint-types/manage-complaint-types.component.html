@@ -4,22 +4,22 @@
             <div class="title">Complaint Types</div>
             <table class="table">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th style="text-align: center">Sr. no.</th>
+                    <tr style="width: 100%">
+                        <th>Sr. no.</th>
                         <th style="text-align: center">Type Name</th>
                         <th style="text-align: center">No. of employees</th>
-                        <th style="text-align: center"></th>
-                        <th style="text-align: center"></th>
+                        <th style=""></th>
+                        <th style=""></th>
                     </tr>
                 </thead>
                 <tbody>
                     <ng-container *ngFor="let complaintType of complaintTypeList; let i = index">
-                        <tr>
-                            <td style="text-align: center">{{ i + 1 }}.</td>
+                        <tr style="width: 100%">
+                            <td>{{ i + 1 }}.</td>
                             <td style="text-align: center">{{ complaintType.name }}</td>
                             <td style="text-align: center">{{ complaintType.addressEmployeeList.length }}</td>
-                            <td><i class="material-icons edit-icon" style="text-align: center; cursor: pointer" (click)="editComplaintType(complaintType, i)">edit</i></td>
-                            <td><i class="material-icons delete-icon" style="text-align: center; cursor: pointer" (click)="deleteComplaintType(complaintType, i)">delete_forever</i></td>
+                            <td><i class="material-icons edit-icon" style="cursor: pointer" (click)="editComplaintType(complaintType, i)">edit</i></td>
+                            <td><i class="material-icons delete-icon" style="cursor: pointer" (click)="deleteComplaintType(complaintType, i)">delete_forever</i></td>
                         </tr>
                     </ng-container>
                 </tbody>
@@ -108,8 +108,8 @@
         <div class="field-title">Address to :</div>
         <br />
         <div class="search-bar">
-            <input class="search-field" type="search" placeholder="Search employee name" [(ngModel)]="addressToSearchString">
-            <button class="seach-btn" (click)="searchEmployee()"><i class="material-icons search-icon">search</i></button>
+            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; seachChanged()">
+            <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
         </div>
 
         <div *ngIf="searchedEmployeeList.length > 0" class="flex-box">
@@ -172,6 +172,7 @@
             <mat-form-field>
                 <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" />
             </mat-form-field>
+            <br *ngIf="isMobile()"/>
             <button
                 type="button"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
@@ -199,7 +200,7 @@
     </div>
     <br />
     <br />
-    <br />
+    <br *ngIf="!isMobile()"/>
     <div style="border-bottom: 1px solid #C4C4C4"></div>
 
     <!-- Starts: Bottom Buttons -->
@@ -215,7 +216,7 @@
         <button
             type="button"
             class="btn cancel-btn"
-            style="padding: 7px 17px;"
+            [ngStyle]="setCancelBtnStyle()"
             (click)="cancelClicked()"
         >
             Cancel

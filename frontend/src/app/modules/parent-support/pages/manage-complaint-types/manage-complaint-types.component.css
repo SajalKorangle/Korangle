@@ -4,6 +4,7 @@
 }
 
 /* Starts: Table */
+
 thead tr th {
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -116,6 +117,28 @@ tbody tr:last-child td {
 .cancel-btn {
     background-color: white;
     color: black;
-    /* outline: orange; */
+    margin-left: 12px;
+    padding: 7px 17px;
 }
 /* Ends: Bottom Btns */
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .seach-btn {
+        flex-basis: 10%;
+    }
+
+    .add-status-btn {
+        margin-left: 0%;
+    }
+}
+/* Ends: Media Query - Mobile Phone */

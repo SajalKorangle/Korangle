@@ -6,7 +6,10 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { CommonFunctions } from "../../../../classes/common-functions";
 
 import { ExcelService } from '../../../../excel/excel-service';
+import { PrintService } from '../../../../print/print-service';
+// import { PRINT_COUNT_ALL_TABLE } from '../../../../print/print-routes.constants';
 
+import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
 import { FilterModalComponent } from '@modules/parent-support/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/parent-support/component/format-table-modal/format-table-modal.component';
@@ -24,21 +27,18 @@ export class CountAllComponent implements OnInit {
 
     isTableEditing: boolean = false;
     tableActiveId: number = 0;
-
+    tableActiveIdx: number = 0;
     tableFormatTitle: string = "";     // Table Name
     whereToAdd: string = "";    // Row  or  Column
     rowFilters: any = [];    // Row List
     columnFilters: any = [];    // Column List
-
     tableList: any = [];
+
     complaintTypeList: any = [];
     statusList: any = [];
+    complaintList: any = [];
 
-    classSectionList: any = [];
-    studentFullProfileList: any = [];
-    studentParameterList: any[] = [];
-    studentParameterValueList: any[] = [];
-
+    serviceAdapter: CountAllServiceAdapter;
     htmlRenderer: CountAllHtmlRenderer;
 
     constructor(
@@ -50,55 +50,39 @@ export class CountAllComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         console.log("User: ", this.user);
 
+        this.serviceAdapter = new CountAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
         this.htmlRenderer = new CountAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
     }
 
-    /* Initialize Class-Section List */
-    initializeClassSectionList(classSectionList: any): void {
-        this.classSectionList = classSectionList;
-        this.classSectionList.forEach((classs) => {
-            classs.sectionList.forEach((section) => {
-                section.selected = false;
-                section.containsStudent = false;
-            });
+    initializecomplaintTypeList(complaintTypeList) {
+        complaintTypeList.forEach((complaintType) => {
+            complaintType["selected"] = false;
+            this.complaintTypeList.push(complaintType);
         });
-    }  // Ends: initializeClassSectionList()
 
-    /* Get Section Objects */
-    getSectionObject(classDbId: any, sectionDbId: number): any {
-        let sectionObject = null;
-        this.classSectionList.every((classs) => {
-            classs.sectionList.every((section) => {
-                if (sectionDbId === section.id && classDbId === classs.id) {
-                    sectionObject = section;
-                    section.containsStudent = true;
-                    return false;
-                }
-                return true;
-            });
-            if (sectionObject) {
-                return false;
-            }
-            return true;
-        });
-        if (!sectionObject) {
-            console.log('Error: should have section object');
-        }
-        return sectionObject;
-    }  // Ends: getSectionObject()
+        console.log("Complaint Type List: ", this.complaintTypeList);
+    }
 
-    /* Initialize Student Full Profile List */
-    initializeStudentFullProfileList(studentFullProfileList: any): void {
-        this.studentFullProfileList = studentFullProfileList;
-        this.studentFullProfileList.forEach((studentFullProfile) => {
-            studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
-            studentFullProfile['show'] = false;
-            studentFullProfile['selectProfile'] = false;
-            studentFullProfile['selectDocument'] = false;
-            // studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
+    initializeStatusList(statusList) {
+        statusList.forEach((status) => {
+            status["selected"] = false;
+            this.statusList.push(status);
         });
-    }  // Ends: initializeStudentFullProfileList()
+        console.log("Status List: ", this.statusList);
+    }
+
+    initializeTableDetails() {
+        this.isTableEditing = false;
+        this.tableActiveId = 0;
+        this.tableActiveIdx = 0;
+        this.tableFormatTitle = "";
+        this.columnFilters = [];
+        this.rowFilters = [];
+    }
 
     /* Update Row Data After Column Drag */
     updateRowFiltersAfterColumnDrag(): void {
@@ -108,12 +92,12 @@ export class CountAllComponent implements OnInit {
                 this.rowFilters[i]["answer"][j] = 0;
             }
 
-            // Logic:  first check student with row, and then with column.
-            this.studentFullProfileList.forEach((student) => {
-                let check = this.checkFilters(student, this.rowFilters[i]);
+            // Logic:  first check complaint with row, and then with column.
+            this.complaintList.forEach((complaint) => {
+                let check = this.checkFilters(complaint, this.rowFilters[i]);
                 if (check) {
                     for (let j = 0; j < this.columnFilters.length; j++) {
-                        check = this.checkFilters(student, this.columnFilters[j]);
+                        check = this.checkFilters(complaint, this.columnFilters[j]);
                         if (check) {
                             this.rowFilters[i]["answer"][j] += 1;
                         }
@@ -121,7 +105,7 @@ export class CountAllComponent implements OnInit {
                 }
             });
         }
-    }  // Ends: updateRowFiltersAfterColumnDrag()
+    }
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
@@ -134,106 +118,42 @@ export class CountAllComponent implements OnInit {
         this.updateRowFiltersAfterColumnDrag();
     }
 
-    /* Get Value of Custom Parameter */
-    getParameterValue(student, parameter): any {
-        try {
-            return this.studentParameterValueList.find(
-                (x) => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
-            ).value;
-        } catch {
-            return this.NULL_CONSTANT;
-        }
-    }
-
     /* Check Applied set of Filters on a Student */
-    checkFilters(student, filtersData): any {
+    checkFilters(complaint, filtersData): any {
         let check = true;
         for (const filter in filtersData) {
 
-            if (filter == "selectedClass") {  /* Class Check */
-                let studentClass =  student.className + ", " + student.sectionName;
-                if (!filtersData[filter].includes(studentClass)) {
+            if (filter == "complaintTypeList") {  /* Class Check */
+
+                let idx = filtersData["complaintTypeList"].indexOf(complaint.parentComplaintType);
+                if(idx == -1) {
                     check = false;
                     break;
                 }
-            } else if (filter == "age") {  /* Age Check */
-                let age = student.dateOfBirth
-                ? Math.floor((new Date(filtersData[filter][0]).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                : null;
 
-                if (age) {
-                    if (age > filtersData[filter][2] || age < filtersData[filter][1]) {
-                        check = false;
-                        break;
-                    }
-                }
-            } else if (filter == "category") {  /* Category Check */
-                let category = student.category ? student.category : "NONE";
+            } else if (filter == "statusList") {  /* Age Check */
 
-                if (!filtersData[filter].includes(category)) {
+                let idx = filtersData["statusList"].indexOf(complaint.parentStatus);
+                if(idx == -1) {
                     check = false;
                     break;
                 }
-            } else if (filter == "gender") {  /* Gender Check */
-                let gender = student.gender ? student.gender : "NONE";
 
-                if (!filtersData[filter].includes(gender)) {
+            } else if (filter == "startDate") {  /* Category Check */
+
+                let complaintDate = new Date(complaint.dateSent).getTime();
+                let filterStartDate = new Date(filtersData["startDate"]).getTime();
+                let filterEndDate = new Date(filtersData["endDate"]).getTime();
+
+                if(complaintDate < filterStartDate || complaintDate > filterEndDate) {
                     check = false;
                     break;
                 }
-            } else if (filter == "admission") {  /* Admission Check */
-                let admissionType;
 
-                if (!student.admissionSessionDbId) {
-                    admissionType = "NONE";
-                } else if (student.admissionSessionDbId === this.user.activeSchool.currentSessionDbId) {
-                    admissionType = "New";
-                } else {
-                    admissionType = "Old";
-                }
-
-                if (!filtersData[filter].includes(admissionType)) {
-                    check = false;
-                    break;
-                }
-            } else if (filter == "RTE") {  /* RTE Check */
-                let rte = student.rte ? student.rte : "NONE";
-                if (!filtersData[filter].includes(rte)) {
-                    check = false;
-                    break;
-                }
-            } else if (filter == "TC") {  /* TC Check */
-                if (!((filtersData[filter].includes("NO") && !student.parentTransferCertificate && !student.newTransferCertificate)
-                    || (filtersData[filter].includes("YES") && (student.parentTransferCertificate || student.newTransferCertificate)))) {
-                    check = false;
-                    break;
-                }
-            } else if (filter == "studentParameterList") {  /* Custom Paramter Check */
-                let studentParameterList = filtersData[filter];
-                for (let parameter of studentParameterList) {
-                    let flag = parameter.showNone;
-                    parameter.filterValues.forEach((filter) => {
-                        flag = flag || filter.show;
-                    });
-
-                    if (flag) {
-                        let parameterValue = this.getParameterValue(student, parameter);
-                        if (parameterValue === this.NULL_CONSTANT && parameter.showNone) {
-                        } else if (
-                            !parameter.filterValues
-                                .filter((filter) => filter.show)
-                                .map((filter) => filter.name)
-                                .includes(parameterValue)
-                        ) {
-                            check = false;
-                            break;
-                        }
-                    }
-                }
             }
         }
         return check;
-    }  // Ends: checkFilters()
+    }
 
     /* Get Table Date From Newly Added Row */
     getTableDataRow(filtersData): any {
@@ -245,26 +165,26 @@ export class CountAllComponent implements OnInit {
             answer.push(0);
         }
 
-        // Logic:  first check student with row, and then with column.
-        // this.studentFullProfileList.forEach((student) => {
-        //     let check = this.checkFilters(student, filtersData);
-        //     if (check) {
-        //         totalCount += 1;
-        //         for (let i = 0; i < this.columnFilters.length; i++) {
-        //             let columnFilterData = this.columnFilters[i];
-        //             check = this.checkFilters(student, columnFilterData);
-        //             if (check) {
-        //                 answer[i] += 1;
-        //             }
-        //         }
-        //     }
-        // });  // Ends: Logic
+        // Logic:  first check complaint with row, and then with column.
+        this.complaintList.forEach((complaint) => {
+            let check = this.checkFilters(complaint, filtersData);
+            if (check) {
+                totalCount += 1;
+                for (let i = 0; i < this.columnFilters.length; i++) {
+                    let columnFilterData = this.columnFilters[i];
+                    check = this.checkFilters(complaint, columnFilterData);
+                    if (check) {
+                        answer[i] += 1;
+                    }
+                }
+            }
+        });  // Ends: Logic
 
         let returnData = {};
         returnData["answer"] = answer;
         returnData["totalCount"] = totalCount;
         return returnData;
-    }  // Ends: getTableDataRow()
+    }
 
     /* Get Table Date From Newly Added Column */
     getTableDataColumn(filtersData): any {
@@ -275,22 +195,22 @@ export class CountAllComponent implements OnInit {
             this.rowFilters[i].answer.push(0);
         }
 
-        // Logic:  first check student with column, and then with row.
-        // this.studentFullProfileList.forEach((student) => {
-        //     let check = this.checkFilters(student, filtersData);
-        //     if (check) {
-        //         totalCount += 1;
-        //         for (let i = 0; i < this.rowFilters.length; i++) {
-        //             let rowFilterData = this.rowFilters[i];
-        //             check = this.checkFilters(student, rowFilterData);
-        //             if (check) {
-        //                 this.rowFilters[i].answer[this.rowFilters[i].answer.length - 1] += 1;
-        //             }
-        //         }
-        //     }
-        // });   // Ends: Logic
+        // Logic:  first check complaint with column, and then with row.
+        this.complaintList.forEach((complaint) => {
+            let check = this.checkFilters(complaint, filtersData);
+            if (check) {
+                totalCount += 1;
+                for (let i = 0; i < this.rowFilters.length; i++) {
+                    let rowFilterData = this.rowFilters[i];
+                    check = this.checkFilters(complaint, rowFilterData);
+                    if (check) {
+                        this.rowFilters[i].answer[this.rowFilters[i].answer.length - 1] += 1;
+                    }
+                }
+            }
+        });   // Ends: Logic
         return totalCount;
-    }  // Ends: getTableDataColumn()
+    }
 
     /* Get Updated Table Date */
     getUpdatedTableDataColumn(filtersData, index): any {
@@ -301,14 +221,14 @@ export class CountAllComponent implements OnInit {
             this.rowFilters[i].answer[index] = 0;
         }
 
-        // Logic:  first check student with column, and then with row.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
+        // Logic:  first check complaint with column, and then with row.
+        this.complaintList.forEach((complaint) => {
+            let check = this.checkFilters(complaint, filtersData);
             if (check) {
                 totalCount += 1;
                 for (let i = 0; i < this.rowFilters.length; i++) {
                     let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(student, rowFilterData);
+                    check = this.checkFilters(complaint, rowFilterData);
                     if (check) {
                         this.rowFilters[i].answer[index] += 1;
                     }
@@ -316,10 +236,6 @@ export class CountAllComponent implements OnInit {
             }
         });   // Ends: Logic
         return totalCount;
-    }  // Ends: getUpdatedTableDataColumn()
-
-    getFilteredStudentParameterList(): any {
-        return this.studentParameterList.filter((x) => x.parameterType === 'FILTER');
     }
 
     /* Open Filter Modal */
@@ -349,7 +265,7 @@ export class CountAllComponent implements OnInit {
                 }
             }
         });
-    }  // Ends: openDialog()
+    }
 
     /* Open Filter Modal - For Existing Filters (Row  or  Column) */
     openChangeDialog(filter): void {
@@ -365,9 +281,62 @@ export class CountAllComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
                 console.log("Data: ", data.filtersData);
+                let filtersData = data.filtersData;
+
+                if (filtersData["operation"] == "update") {    /* Update Filter */
+                    delete filtersData["operation"];
+                    if (this.whereToAdd == 'row') {    /* Update Row */
+                        let index = 0;
+                        for (let i = 0; i < this.rowFilters.length; i++) {
+                            if (this.rowFilters[i]["name"] == filter["name"]) {
+                                index = i;
+                                break;
+                            }
+                        }
+
+                        let returnData = this.getTableDataRow(filtersData);
+                        filtersData["answer"] = returnData.answer;
+                        filtersData["totalCount"] = returnData.totalCount;
+                        this.rowFilters[index] = filtersData;
+                    } else if (this.whereToAdd === 'col') {    /* Update Column */
+                        let index = 0;
+                        for (let i = 0; i < this.columnFilters.length; i++) {
+                            if (this.columnFilters[i]["name"] == filter["name"]) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        filtersData["totalCount"] = this.getUpdatedTableDataColumn(filtersData, index);
+                        this.columnFilters[index] = filtersData;
+                    }
+                } else if (filtersData["operation"] == "delete") {    /* Delete Filter */
+                    delete filtersData["operation"];
+                    if (this.whereToAdd == 'row') {    /* Delete Row */
+                        let index = 0;
+                        for (let i = 0; i < this.rowFilters.length; i++) {
+                            if (this.rowFilters[i]["name"] == filter["name"]) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        this.rowFilters.splice(index, 1);
+                    } else if (this.whereToAdd === 'col') {    /* Delete Column */
+                        let index = 0;
+                        for (let i = 0; i < this.columnFilters.length; i++) {
+                            if (this.columnFilters[i]["name"] == filter["name"]) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        this.columnFilters.splice(index, 1);
+                        for (let i = 0; i < this.rowFilters.length; i++) {
+                            this.rowFilters[i]["answer"].splice(index, 1);
+                        }
+                    }
+                }
             }
         });   // Dialog Closed.
-    }  // Ends: openChangeDialog()
+    }
 
     /* Open Table Format Name Dialog */
     openSaveFormatDialog(): void {
@@ -382,13 +351,13 @@ export class CountAllComponent implements OnInit {
             if (data && data.name) {
                 this.tableFormatTitle = data.name;
                 console.log("Data: ", data);
-                // this.serviceAdapter.saveTable();
+                this.serviceAdapter.saveTable();
             }
         });
-    }  // Ends: openSaveFormatDialog()
+    }
 
     updateChangesClicked(): void {
-        // this.serviceAdapter.updatetable();
+        this.serviceAdapter.updatetable();
     }
 
     /* Open Table Format Name Dialog - Save As Clicked */
@@ -403,10 +372,14 @@ export class CountAllComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.name) {
                 this.tableFormatTitle = data.name;
-                // this.serviceAdapter.saveTable();
+                this.serviceAdapter.saveTable();
             }
         });
-    }  // Ends: saveAsClicked()
+    }
+
+    deleteTable() {
+        this.serviceAdapter.deleteTable();
+    }
 
     /* Get header Values */
     getHeaderValues(): any {
@@ -416,7 +389,7 @@ export class CountAllComponent implements OnInit {
             headerValues.push(columnFilter.name);
         });
         return headerValues;
-    }  // Ends: getHeaderValues()
+    }
 
     /* Get Filter Information */
     getFilterInfo(filter: any): any {
@@ -426,7 +399,7 @@ export class CountAllComponent implements OnInit {
             filterInfo.push(ans);
         });
         return filterInfo;
-    }  // Ends: getFilterInfo()
+    }
 
     /* Download the Table */
     downloadList(): void {
@@ -435,10 +408,26 @@ export class CountAllComponent implements OnInit {
         this.rowFilters.forEach((rowFilter) => {
             template.push(this.getFilterInfo(rowFilter));
         });
-        let fileName: string = this.tableFormatTitle;
-        fileName += ".csv";
+        let fileName: string = this.tableFormatTitle + ".csv";
         this.excelService.downloadFile(template, fileName);
-    }  // Ends: downloadList()
+    }
+
+    printStudentList(): void {
+        // alert('Functionality needs to be implemented once again');
+        let template: any = [];
+        this.rowFilters.forEach((rowFilter) => {
+            template.push(this.getFilterInfo(rowFilter));
+        });
+
+        let headerInfo: any = this.getHeaderValues();
+
+        const value = {
+            rowData: template,
+            columnData: headerInfo,
+            tableName: this.tableFormatTitle,
+        };
+        // this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE, { user: this.user, value });
+    }
 
     /* Get Width of Column */
     getTextWidthColumn(textContent: string): any {
@@ -455,7 +444,7 @@ export class CountAllComponent implements OnInit {
         let formattedWidth = width + "px";
         document.body.removeChild(text);
         return formattedWidth;
-    }  // Ends: getTextWidthColumn()
+    }
 
     /* Get Width of 1st Column */
     getTextWidthRow(): any {

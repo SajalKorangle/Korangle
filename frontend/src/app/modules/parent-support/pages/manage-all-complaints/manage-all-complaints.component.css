@@ -31,6 +31,11 @@
 }
 /* Ends: Search Bar */
 
+.example-viewport {
+    height: 80vh;
+    width: 100%;
+}
+
 .filter-column {
     display: flex;
     justify-content: space-between;
@@ -54,8 +59,8 @@
 }
 
 .information .header {
-    margin-right: 5rem;
-    flex-basis: 15%;
+    /* margin-right: 5rem; */
+    flex-basis: 25%;
 }
 
 .status-section {
@@ -97,7 +102,6 @@
     font-weight: 500;
     font-size: 14px;
     line-height: 16px;
-    opacity: 0.7;
     margin-bottom: 1.5rem;
 }
 
@@ -109,7 +113,6 @@
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.04em;
-    opacity: 0.7;
     flex-basis: 88%;
     word-wrap: break-word;
 }
@@ -117,7 +120,6 @@
 .time {
     flex-basis: 10%;
     font-size: 9px;
-    opacity: 0.5;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -156,3 +158,36 @@
 .notify-btn {
     text-transform: capitalize !important;
 }
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .seach-btn {
+        flex-basis: 10%;
+    }
+
+    .information {
+        flex-basis: 100%;
+    }
+
+    .information .header {
+        margin-right: 0rem;
+        flex-basis: 40%;
+    }
+
+    .status-option-section {
+        flex-basis: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+/* Ends: Media Query - Mobile Phone */

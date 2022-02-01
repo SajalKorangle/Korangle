@@ -41,7 +41,7 @@ export class ManageComplaintTypesComponent implements OnInit {
     typeName: string = "";
     defaultText: string = "";
     addressToSearchString: string = "";
-    defaultStatus: string = "Select Default Status";
+    defaultStatus: string = "Not Selected";
     defaultStatusId: number = 0;
     complaintTypeList: any = [];
 
@@ -72,7 +72,7 @@ export class ManageComplaintTypesComponent implements OnInit {
         this.defaultText = "";
         this.addressToSearchString = "";
         this.addStatusName = "";
-        this.defaultStatus = "Select Default Status";
+        this.defaultStatus = "Not Selected";
         this.applicableStatusList = [];
         this.applicableStatusTempList = [];
         this.selectedEmployeeList = [];
@@ -81,21 +81,51 @@ export class ManageComplaintTypesComponent implements OnInit {
         this.unselectAllStatus();
     }
 
+    isMobile() {
+        if(window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
+    setCancelBtnStyle() {
+        let color = "white";
+        if(this.user.activeSchool.secondaryThemeColor == "primary") {
+            color = "#1976D2";
+        } else if(this.user.activeSchool.secondaryThemeColor == "warning") {
+            color = "#FFC107";
+        } else if(this.user.activeSchool.secondaryThemeColor == "secondary") {
+            color = "#424242";
+        } else if(this.user.activeSchool.secondaryThemeColor == "accent") {
+            color = "#82B1FF";
+        } else if(this.user.activeSchool.secondaryThemeColor == "error") {
+            color = "#FF5252";
+        } else if(this.user.activeSchool.secondaryThemeColor == "info") {
+            color = "#2196F3";
+        } else if(this.user.activeSchool.secondaryThemeColor == "success") {
+            color = "#4CAF50";
+        }
+
+        let style = {
+            'border': '1.5px solid ' + color,
+        };
+
+        return style;
+    }
+
     initializecomplaintTypeList(complaintTypeList) {
-        complaintTypeList.forEach((element) => {
-            let complaintType = {};
-            complaintType["defaultText"] = element["defaultText"];
-            complaintType["id"] = element["id"];
-            complaintType["name"] = element["name"];
-            complaintType["parentSchool"] = element["parentSchool"];
-            complaintType["parentStatusDefault"] = element["parentStatusDefault"];
+        complaintTypeList.forEach((complaintType) => {
             complaintType["addressEmployeeList"] = [];
+
+            let id = complaintType["parentSchoolComplaintStatusDefault"];
+            complaintType["parentSchoolComplaintStatusDefault"] = this.getStatusFromId(id);
             this.complaintTypeList.push(complaintType);
         });
 
         for(let i = 0; i < this.complaintTypeList.length; i++) {
             this.serviceAdapter.getEmployeeCompalintType(this.complaintTypeList[i].id, i);
         }
+        console.log("Complaint Type List: ", this.complaintTypeList);
     }
 
     initializeStatusList(statusList) {
@@ -142,7 +172,7 @@ export class ManageComplaintTypesComponent implements OnInit {
     initializeStatusComplaintType(statusComplaintTypeList) {
         this.applicableStatusList = [];
         statusComplaintTypeList.forEach((statusComplaintType) => {
-            let status = this.getStatusFromId(statusComplaintType.parentStatus);
+            let status = this.getStatusFromId(statusComplaintType.parentSchoolComplaintStatus);
             status["selected"] = true;
             this.applicableStatusList.push(status);
         });
@@ -150,20 +180,13 @@ export class ManageComplaintTypesComponent implements OnInit {
     }
 
     initializeEmployeeComplaintType(employeeComplaintTypeList, idx) {
-        // this.selectedEmployeeList = [];
-        // employeeComplaintTypeList.forEach((employeeComplaintType) => {
-        //     let employee = this.getEmployeeFromId(employeeComplaintType.parentEmployee);
-        //     employee["selected"] = true;
-        //     this.selectedEmployeeList.push(employee);
-        // });
-        // this.applicableEmployeeList = CommonFunctions.getInstance().deepCopy(this.selectedEmployeeList);
-
         this.complaintTypeList[idx]["addressEmployeeList"] = [];
         employeeComplaintTypeList.forEach((employeeComplaintType) => {
             let employee = this.getEmployeeFromId(employeeComplaintType.parentEmployee);
             employee["selected"] = true;
             this.complaintTypeList[idx]["addressEmployeeList"].push(employee);
         });
+        console.log("complaintType Employee: ", this.complaintTypeList[idx]["addressEmployeeList"]);
     }
 
     searchEmployee() {
@@ -179,6 +202,17 @@ export class ManageComplaintTypesComponent implements OnInit {
         });
         console.log("Searched Employee List: ", this.searchedEmployeeList);
     }
+
+    /* Debouncing */
+    debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+        clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+         };
+    }  // Ends: debounce()
+
+    seachChanged = this.debounce(() => this.searchEmployee());
 
     /* Open Add Status Modal */
     openAddStatusDialog(): void {
@@ -229,7 +263,8 @@ export class ManageComplaintTypesComponent implements OnInit {
         if(this.addStatusName) {
             this.serviceAdapter.addStatus();
         }
-        this.initializeComplaintTypeDetails();
+        this.addStatusName = "";
+        // this.initializeComplaintTypeDetails();
     }
 
     getStatusFromId(id) {
@@ -260,7 +295,8 @@ export class ManageComplaintTypesComponent implements OnInit {
     applicableStatusClicked(status) {
         let isSelected = !status.selected;
         if(isSelected) {
-            this.applicableStatusList.push(status);
+            let tempStatus = CommonFunctions.getInstance().deepCopy(status);
+            this.applicableStatusList.push(tempStatus);
         } else {
             if(this.defaultStatus == status.name) {
                 this.defaultStatus = "Select Default Status";
@@ -273,8 +309,6 @@ export class ManageComplaintTypesComponent implements OnInit {
     }
 
     saveClicked() {
-        let complaintType = {};
-
         if(!this.typeName) {
             alert("Please enter complaint type name.");
             return;
@@ -294,11 +328,14 @@ export class ManageComplaintTypesComponent implements OnInit {
             let complaintTypeObject = {};
             complaintTypeObject["name"] = this.typeName;
             complaintTypeObject["defaultText"] = this.defaultText;
-            complaintTypeObject["parentStatusDefault"] = this.defaultStatusId;
+            complaintTypeObject["parentSchoolComplaintStatusDefault"] = this.defaultStatusId;
             complaintTypeObject["parentSchool"] = this.user.activeSchool.dbId;
             complaintTypeObject["id"] = this.editingComplaintTypeId;
             this.serviceAdapter.updateCompalintType(complaintTypeObject);
-            this.complaintTypeList[this.editingCompalaintTypeIndex] = complaintTypeObject;
+
+            this.complaintTypeList[this.editingCompalaintTypeIndex]["name"] = complaintTypeObject["name"];
+            this.complaintTypeList[this.editingCompalaintTypeIndex]["defaultText"] = complaintTypeObject["defaultText"];
+            this.complaintTypeList[this.editingCompalaintTypeIndex]["parentSchoolComplaintStatusDefault"] = this.getStatusFromId(this.defaultStatusId);
             this.editingCompalaintType = false;
         } else {
             this.serviceAdapter.addCompalintType();
@@ -313,8 +350,8 @@ export class ManageComplaintTypesComponent implements OnInit {
     editComplaintType(complaintType, idx) {
         this.typeName = complaintType.name;
         this.defaultText = complaintType.defaultText;
-        this.defaultStatus = this.getStatusFromId(complaintType.parentStatusDefault)["name"];
-        this.defaultStatusId = complaintType.parentStatusDefault;
+        this.defaultStatus = complaintType.parentSchoolComplaintStatusDefault.name;
+        this.defaultStatusId = complaintType.parentSchoolComplaintStatusDefault.id;
         this.editingCompalaintType = true;
         this.editingCompalaintTypeIndex = idx;
         this.editingComplaintTypeId = complaintType.id;
@@ -330,8 +367,7 @@ export class ManageComplaintTypesComponent implements OnInit {
     }
 
     deleteStatus(status, idx) {
-        console.log("Delete Status Called.");
-        this.serviceAdapter.deleteStatus(idx);
+        this.serviceAdapter.deleteStatus(status);
         this.statusList.splice(idx, 1);
     }
 }

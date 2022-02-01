@@ -30,12 +30,29 @@ export class FilterModalComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<FilterModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
-    ) { }
+    ) {
+        this.complaintTypeList = data.complaintTypeList;
+        this.statusList = data.statusList;
+    }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
     }
+
+    isMobile() {
+        if(window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
+    /* Make input-date non-typeable */
+    handleOnKeyDown(event: any) {
+        let keyPressed = event.keyCode;
+        if (keyPressed != 8 && keyPressed != 46) { //check if it is not delete
+            return false; // don't allow to input any value
+        }
+    }  // Ends: handleOnKeyDown()
 
     /* Unselect All ComplaintTypes */
     unselectAllComplaintType(): void {
@@ -69,8 +86,8 @@ export class FilterModalComponent implements OnInit {
     deleteClick(): void {
         let conformation = confirm("Do you really want to delete this?");
         if (conformation) {
-            this.unselectAllComplaintType();
-            this.unselectAllStatus();
+            // this.unselectAllComplaintType();
+            // this.unselectAllStatus();
             if (this.isEditing) {
                 let filtersData = {};
                 filtersData["operation"] = "delete";
@@ -92,8 +109,26 @@ export class FilterModalComponent implements OnInit {
         let filtersData = {};
 
         filtersData["name"] = this.name;
-        filtersData["complaintTypeList"] = this.complaintTypeList;
-        filtersData["statusList"] = this.statusList;
+
+        let complaintTypeList = [];
+        this.complaintTypeList.forEach((complaintType) => {
+            if(complaintType.selected) {
+                complaintTypeList.push(complaintType.id);
+            }
+        });
+        if(complaintTypeList.length) {
+            filtersData["complaintTypeList"] = complaintTypeList;
+        }
+
+        let statusList = [];
+        this.statusList.forEach((status) => {
+            if(status.selected) {
+                statusList.push(status.id);
+            }
+        });
+        if(statusList.length) {
+            filtersData["statusList"] = statusList;
+        }
 
         if(this.startDateTye != "Select Start Date" || this.endDateTye != "Select End Date") {
             if(this.startDateTye == "Select Start Date") {
@@ -165,7 +200,7 @@ export class FilterModalComponent implements OnInit {
                 if (parseInt(month) < 10) {
                     month = "0" + month;
                 }
-                
+
                 this.sDate = year + "-" + month + "-" + date;
             }
 

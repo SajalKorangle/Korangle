@@ -18,11 +18,11 @@ export class ManageComplaintTypesServiceAdapter {
         // Employee Query: Employee List  &&  Total Available Records.
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'ComplaintType' });
+            .getObjectList({ parent_support_app: 'SchoolComplaintType' });
 
         const statusQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'Status' });
+            .getObjectList({ parent_support_app: 'SchoolComplaintStatus' });
 
         // Employee Query: Employee List
         const employeeQuery = new Query()
@@ -43,31 +43,36 @@ export class ManageComplaintTypesServiceAdapter {
             employeeQuery,   // 2
         ]);
 
-        console.log("Complaint Type List: ", this.vm.complaintTypeList);
-        this.vm.initializecomplaintTypeList(complaintTypeList);
         this.vm.initializeStatusList(statusList);
+        this.vm.initializecomplaintTypeList(complaintTypeList);
         this.vm.initializeEmployeeList(employeeList);
         this.vm.isLoading = false;
-    }  // Ends: initializeData()
+    }
 
     async addStatus() {
         let statusObject = {};
         statusObject["name"] = this.vm.addStatusName;
         statusObject["parentSchool"] = this.vm.user.activeSchool.dbId;
-        const response = await new Query().createObject({parent_support_app: 'Status'}, statusObject);
+        const response = await new Query().createObject({parent_support_app: 'SchoolComplaintStatus'}, statusObject);
         response["selected"] = false;
         this.vm.statusList.push(response);
         console.log("Status Added: ", response);
     }
 
     async updateStatus(statusObject) {
-        await new Query().updateObject({parent_support_app: 'Status'}, statusObject);
+        await new Query().updateObject({parent_support_app: 'SchoolComplaintStatus'}, statusObject);
     }
 
-    async deleteStatus(statusIndex) {
-        let deleteStatusFilter = {};
-        deleteStatusFilter["id"] = statusIndex;
-        // await new Query().deleteObjectList({parent_support_app: 'Status'}, deleteStatusFilter);
+    async deleteStatus(status) {
+
+        this.vm.isLoading = true;
+
+        let statusData = {
+            id: status.id,
+        };
+
+        await new Query().filter(statusData).deleteObjectList({parent_support_app: 'SchoolComplaintStatus'});
+        this.vm.isLoading = false;
     }
 
     async addStatusComplaintType(statusComplaintTypeList) {
@@ -75,25 +80,62 @@ export class ManageComplaintTypesServiceAdapter {
         console.log("Status-Complaint Type: ", response);
     }
 
+    async deleteStatusComplaintType(statusComplaintTypeList) {
+
+        let deleteStatusId = [];
+        let deleteComplaintTypeId = [];
+
+        statusComplaintTypeList.forEach((element) => {
+            deleteStatusId.push(element["parentSchoolComplaintStatus"]);
+            deleteComplaintTypeId.push(element["parentSchoolComplaintType"]);
+        });
+
+        const deleteData = {
+            parentSchoolComplaintStatus__in: deleteStatusId,
+            parentSchoolComplaintType__in: deleteComplaintTypeId,
+        };
+
+        await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'StatusComplaintType'});
+    }
+
     async addEmployeeComplaintType(employeeComplaintTypeList) {
         const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaintType'}, employeeComplaintTypeList);
         console.log("Employee-Complaint Type: ", response);
+    }
+
+    async deleteEmployeeComplaintType(employeeComplaintTypeList) {
+
+        let deleteEmployeeId = [];
+        let deleteComplaintTypeId = [];
+
+        employeeComplaintTypeList.forEach((element) => {
+            deleteEmployeeId.push(element["parentEmployee"]);
+            deleteComplaintTypeId.push(element["parentSchoolComplaintType"]);
+        });
+
+        const deleteData = {
+            parentEmployee__in: deleteEmployeeId,
+            parentSchoolComplaintType__in: deleteComplaintTypeId,
+        };
+
+        await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'EmployeeComplaintType'});
     }
 
     async addCompalintType() {
         let complaintTypeObject = {};
         complaintTypeObject["name"] = this.vm.typeName;
         complaintTypeObject["defaultText"] = this.vm.defaultText;
-        complaintTypeObject["parentStatusDefault"] = this.vm.defaultStatusId;
+        complaintTypeObject["parentSchoolComplaintStatusDefault"] = this.vm.defaultStatusId;
         complaintTypeObject["parentSchool"] = this.vm.user.activeSchool.dbId;
-        const response = await new Query().createObject({parent_support_app: 'ComplaintType'}, complaintTypeObject);
+        const response = await new Query().createObject({parent_support_app: 'SchoolComplaintType'}, complaintTypeObject);
+        response["parentSchoolComplaintStatusDefault"] = this.vm.getStatusFromId(this.vm.defaultStatusId);
         this.vm.complaintTypeList.push(response);
 
         let statusComplaintTypeList = [];
         this.vm.applicableStatusList.forEach((status) => {
             let statusComplaintTypeObject = {};
-            statusComplaintTypeObject["parentStatus"] = status.id;
-            statusComplaintTypeObject["parentComplaintType"] = response.id;
+            statusComplaintTypeObject["parentSchoolComplaintStatus"] = status.id;
+            statusComplaintTypeObject["parentSchoolComplaintType"] = response.id;
             statusComplaintTypeList.push(statusComplaintTypeObject);
         });
         if(statusComplaintTypeList.length) {
@@ -105,7 +147,7 @@ export class ManageComplaintTypesServiceAdapter {
             if(employee.selected) {
                 let employeeComplaintType = {};
                 employeeComplaintType["parentEmployee"] = employee.id;
-                employeeComplaintType["parentComplaintType"] = response.id;
+                employeeComplaintType["parentSchoolComplaintType"] = response.id;
                 employeeComplaintTypeList.push(employeeComplaintType);
             }
         });
@@ -113,12 +155,14 @@ export class ManageComplaintTypesServiceAdapter {
             this.addEmployeeComplaintType(employeeComplaintTypeList);
         }
 
+        this.vm.complaintTypeList[this.vm.complaintTypeList.length - 1]["addressEmployeeList"] = [];
+        this.getEmployeeCompalintType(response.id, this.vm.complaintTypeList.length - 1);
         this.vm.initializeComplaintTypeDetails();
         this.vm.pageName = "showTables";
     }
 
     async updateCompalintType(complaintTypeObject) {
-        await new Query().updateObject({parent_support_app: 'ComplaintType'}, complaintTypeObject);
+        await new Query().updateObject({parent_support_app: 'SchoolComplaintType'}, complaintTypeObject);
 
         console.log("List: ", this.vm.applicableStatusList);
         console.log("Temp List: ", this.vm.applicableStatusTempList);
@@ -137,14 +181,14 @@ export class ManageComplaintTypesServiceAdapter {
             if(this.vm.applicableStatusList[i].id != this.vm.applicableStatusTempList[j].id) {
                 if(this.vm.applicableStatusList[i].id > this.vm.applicableStatusTempList[j].id) {
                     let statusComplaintTypeObject = {};
-                    statusComplaintTypeObject["parentStatus"] = this.vm.applicableStatusTempList[j].id;
-                    statusComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+                    statusComplaintTypeObject["parentSchoolComplaintStatus"] = this.vm.applicableStatusTempList[j].id;
+                    statusComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
                     deleteStatusComplaintList.push(statusComplaintTypeObject);
                     j++;
                 } else {
                     let statusComplaintTypeObject = {};
-                    statusComplaintTypeObject["parentStatus"] = this.vm.applicableStatusList[i].id;
-                    statusComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+                    statusComplaintTypeObject["parentSchoolComplaintStatus"] = this.vm.applicableStatusList[i].id;
+                    statusComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
                     createStatusComplaintList.push(statusComplaintTypeObject);
                     i++;
                 }
@@ -156,16 +200,16 @@ export class ManageComplaintTypesServiceAdapter {
 
         while(i < n) {
             let statusComplaintTypeObject = {};
-            statusComplaintTypeObject["parentStatus"] = this.vm.applicableStatusList[i].id;
-            statusComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+            statusComplaintTypeObject["parentSchoolComplaintStatus"] = this.vm.applicableStatusList[i].id;
+            statusComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
             createStatusComplaintList.push(statusComplaintTypeObject);
             i++;
         }
 
         while(j < m) {
             let statusComplaintTypeObject = {};
-            statusComplaintTypeObject["parentStatus"] = this.vm.applicableStatusTempList[j].id;
-            statusComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+            statusComplaintTypeObject["parentSchoolComplaintStatus"] = this.vm.applicableStatusTempList[j].id;
+            statusComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
             deleteStatusComplaintList.push(statusComplaintTypeObject);
             j++;
         }
@@ -177,10 +221,9 @@ export class ManageComplaintTypesServiceAdapter {
             this.addStatusComplaintType(createStatusComplaintList);
         }
 
-        // if(deleteStatusComplaintList.length) {
-        //     this.deleteStatusComplaintType(deleteStatusComplaintList);
-        // }
-
+        if(deleteStatusComplaintList.length) {
+            this.deleteStatusComplaintType(deleteStatusComplaintList);
+        }
 
         let selectedEmployeeList = [];
         this.vm.selectedEmployeeList.forEach((employee) => {
@@ -207,13 +250,13 @@ export class ManageComplaintTypesServiceAdapter {
                 if(selectedEmployeeList[i].id > this.vm.applicableEmployeeList[j].id) {
                     let employeeComplaintTypeObject = {};
                     employeeComplaintTypeObject["parentEmployee"] = this.vm.applicableEmployeeList[j].id;
-                    employeeComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+                    employeeComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
                     deleteEmployeeComplaintList.push(employeeComplaintTypeObject);
                     j++;
                 } else {
                     let employeeComplaintTypeObject = {};
                     employeeComplaintTypeObject["parentEmployee"] = selectedEmployeeList[i].id;
-                    employeeComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+                    employeeComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
                     createEmployeeComplaintList.push(employeeComplaintTypeObject);
                     i++;
                 }
@@ -226,7 +269,7 @@ export class ManageComplaintTypesServiceAdapter {
         while(i < n) {
             let employeeComplaintTypeObject = {};
             employeeComplaintTypeObject["parentEmployee"] = selectedEmployeeList[i].id;
-            employeeComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+            employeeComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
             createEmployeeComplaintList.push(employeeComplaintTypeObject);
             i++;
         }
@@ -234,7 +277,7 @@ export class ManageComplaintTypesServiceAdapter {
         while(j < m) {
             let employeeComplaintTypeObject = {};
             employeeComplaintTypeObject["parentEmployee"] = this.vm.applicableEmployeeList[j].id;
-            employeeComplaintTypeObject["parentComplaintType"] = complaintTypeObject.id;
+            employeeComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
             deleteEmployeeComplaintList.push(employeeComplaintTypeObject);
             j++;
         }
@@ -246,17 +289,24 @@ export class ManageComplaintTypesServiceAdapter {
             this.addEmployeeComplaintType(createEmployeeComplaintList);
         }
 
-        // if(deleteEmployeeComplaintList.length) {
-        //     this.deleteStatusComplaintType(deleteEmployeeComplaintList);
-        // }
+        if(deleteEmployeeComplaintList.length) {
+            this.deleteEmployeeComplaintType(deleteEmployeeComplaintList);
+        }
 
+        this.getEmployeeCompalintType(this.vm.complaintTypeList[this.vm.editingCompalaintTypeIndex].id, this.vm.editingCompalaintTypeIndex);
         this.vm.initializeComplaintTypeDetails();
         this.vm.pageName = "showTables";
     }
 
     async deleteCompalintType(complaintTypeObject) {
-        let deleteComplaintTypeList = [complaintTypeObject];
-        // await new Query().deleteObjectList({parent_support_app: 'ComplaintType'}, deleteComplaintTypeList);
+        this.vm.isLoading = true;
+
+        const deleteCompalintType = {
+            id: complaintTypeObject.id,
+        };
+
+        await new Query().filter(deleteCompalintType).deleteObjectList({ parent_support_app: 'SchoolComplaintType' });
+        this.vm.isLoading = false;
     }
 
     async getStatusCompalintType() {
@@ -265,7 +315,7 @@ export class ManageComplaintTypesServiceAdapter {
         this.vm.pageName = "";
 
         const statusComplaintTypeQuery = new Query()
-            .filter({ parentComplaintType: this.vm.editingComplaintTypeId })
+            .filter({ parentSchoolComplaintType: this.vm.editingComplaintTypeId })
             .getObjectList({ parent_support_app: 'StatusComplaintType' });
 
         let statusComplaintTypeList = [];
@@ -284,11 +334,12 @@ export class ManageComplaintTypesServiceAdapter {
 
     async getEmployeeCompalintType(complaintTypeId, idx) {
 
+        console.log("Get Employee Complaint Type Called.");
         this.vm.isLoading = true;
         // this.vm.pageName = "";
 
         const employeeComplaintTypeQuery = new Query()
-            .filter({ parentComplaintType: complaintTypeId })
+            .filter({ parentSchoolComplaintType: complaintTypeId })
             .getObjectList({ parent_support_app: 'EmployeeComplaintType' });
 
         let employeeComplaintTypeList = [];

@@ -27,14 +27,10 @@
     line-height: 14px;
 }
 
-.radio-btn-group {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.radio-button {
-    flex-basis: 30%;
+.customInput {
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    width: 100%;
 }
 /* Ends: Time Span Section */
 
@@ -103,7 +99,8 @@
     /* Starts: Modal Container */
     .filter-modal-container {
         height: 90vh;
-        width: 100%;
+        width: 65vw;
+        /* width: 100%; */
         margin: 0;
         font-size: 12px;
         padding: 0;
@@ -121,7 +118,7 @@
         justify-content: flex-start;
         flex-direction: column;
         align-items: flex-start;
-        font-size: 14px;
+        font-size: 12px;
         margin: 0;
         padding: 0;
         margin-top: 2rem;
@@ -129,42 +126,16 @@
 
     .time-span-sub-section .title {
         flex-basis: 100%;
-        font-size: 14px;
+        font-size: 12px;
         margin: 0;
         padding: 0;
     }
 
     .time-span-sub-section .date-options {
         /* flex-basis: 100%; */
-        font-size: 14px;
+        font-size: 12px;
         margin: 0;
         padding: 0;
-    }
-
-    .radio-btn-group {
-        justify-content: flex-start;
-        flex-direction: column;
-        align-items: flex-start;
-        font-size: 14px;
-        margin: 0;
-        padding: 0;
-    }
-
-    .radio-button {
-        flex-basis: 100%;
-        font-size: 14px;
-        margin: 0;
-        padding: 0;
-        margin-bottom: 1rem;
-    }
-
-    .radio-button:first-child {
-        margin: 0;
-        padding: 0;
-    }
-
-    .radio-button:last-child {
-        margin-bottom: 0;
     }
     /* Ends: Time Span Section */
 
@@ -180,12 +151,12 @@
     .example-viewport {
         height: 40vh;
         width: 100%;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .complaint-type-section {
         flex-basis: 100%;
-        font-size: 14px;
+        font-size: 12px;
         padding: 0;
         margin: 0;
         margin-bottom: 2rem;
@@ -193,13 +164,13 @@
 
     .mat-option-complaint-type {
         width: 100%;
-        padding-top: 3rem;
-        padding-bottom: 3rem;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
     }
 
     .status-section {
         flex-basis: 100%;
-        font-size: 14px;
+        font-size: 12px;
         padding: 0;
         margin: 0;
     }

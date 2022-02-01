@@ -1,162 +1,189 @@
-<div *ngIf="pageName == 'showTables'" class="card-content">
+<div *ngIf="!isLoading && pageName == 'showTables'" class="card-content">
     <div class="search-bar">
         <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="seachString" (ngModelChange)="seachString = $event">
         <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
     </div>
     <br />
 
-    <table class="table">
-        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-            <tr>
-                <th>Student Name</th>
-                <th>Father’s Name</th>
-                <th>Date Sent</th>
-                <th>
-                    <div class="filter-column">
-                        <div>Type</div>
-                        <i class="material-icons filter-alt-btn">filter_alt</i>
-                    </div>
-                </th>
-                <th>
-                    <div class="filter-column">
-                        <div>Status</div>
-                        <i class="material-icons filter-alt-btn">filter_alt</i>
-                    </div>
-                </th>
-                <th>Father’s Contact</th>
-                <th style="text-align: center">Comments</th>
-                <th style="text-align: center">Handlers</th>
-                <th style="text-align: center"></th>
-                <th style="text-align: center"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let complaint of complaintList; let i = index">
+    <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+        <table class="table">
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
-                    <td>John Doe</td>
-                    <td>John Doe</td>
-                    <td>03-04-21</td>
-                    <td>Fee Amount</td>
-                    <td>Resolved</td>
-                    <td>99999 99999</td>
-                    <td style="text-align: center">10</td>
-                    <td
-                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                        style="text-align: center; cursor: pointer; text-decoration: underline;"
-                        (click)="openAssignEmployeeDialog()"
-                    >
-                        Assign
-                    </td>
-                    <td
-                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                        style="text-align: center; text-decoration: underline;"
-                        (click)="openComplaint(complaint, i)"
-                    >
-                        Open
-                    </td>
-                    <td><i class="material-icons delete-icon" style="color: red">delete_forever</i></td>
+                    <th style="min-width: 140px;">Student Name</th>
+                    <th style="min-width: 140px;">Father’s Name</th>
+                    <th style="min-width: 110px;">Date Sent</th>
+                    <th style="min-width: 110px;">
+                        <div class="filter-column">
+                            <div>Type</div>
+                            <i class="material-icons filter-alt-btn">filter_alt</i>
+                        </div>
+                    </th>
+                    <th style="min-width: 110px;">
+                        <div class="filter-column">
+                            <div>Status</div>
+                            <i class="material-icons filter-alt-btn">filter_alt</i>
+                        </div>
+                    </th>
+                    <th style="min-width: 125px;">Father’s Contact</th>
+                    <th style="min-width: 100px; text-align: center">Comments</th>
+                    <th style="min-width: 150px; text-align: center">Handlers</th>
+                    <th></th>
+                    <th></th>
+                    <!-- <th style="background-color: red; text-align: center;"></th> -->
                 </tr>
-            </ng-container>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let complaint of complaintList; let i = index">
+                    <tr>
+                        <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
+                        <td style="min-width: 140px;">{{ complaint.parentStudent.fathersName }}</td>
+                        <td style="min-width: 110px;">{{ getDateInfo(complaint.dateSent) }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType.name }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Selected" }}</td>
+                        <td style="min-width: 125px;">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
+                        <td style="min-width: 100px; text-align: center">{{ complaint.commentList.length }}</td>
+                        <td
+                            class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                            style="min-width: 150px; text-align: center; cursor: pointer; text-decoration: underline;"
+                            (click)="openAssignEmployeeDialog()"
+                        >
+                            Assign
+                        </td>
+                        <td
+                            class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                            style="min-width: 50px; text-align: center; cursor: pointer; text-decoration: underline;"
+                            (click)="openComplaint(complaint, i)"
+                        >
+                            Open
+                        </td>
+                        <td><i class="material-icons delete-icon" (click)="openedComplaintIdx = i; deleteComplaint(complaint);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </cdk-virtual-scroll-viewport>
 </div>
 
-<div *ngIf="pageName == 'showComplaint'" class="card-content">
+<div *ngIf="!isLoading && pageName == 'showComplaint'" class="card-content">
     <div class="common-section">
         <div class="information">
-            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Name:</div>
-            <div>John Doe</div>
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Father's Name:</div>
+            <div>{{ openedComplaint.parentStudent.fathersName }}</div>
         </div>
 
-        <div class="status-section">
+        <div *ngIf="!isMobile()" class="status-section">
             <div class="status">
                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
                 <mat-form-field>
-                    <mat-select placeholder="Resolved" style="width: 100%">
-                        <mat-option>Hello</mat-option>
-                        <mat-option>Hello</mat-option>
-                        <mat-option>Hello</mat-option>
-                        <mat-option>Hello</mat-option>
+                    <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
+                        <ng-container *ngFor="let status of openedComplaint.applicableStatusList; let idxStatus = index">
+                            <mat-option (click)="defaultStatusTitle = status.name; defaultStatus = status;">{{ status.name }}</mat-option>
+                        </ng-container>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <i class="material-icons delete-icon">delete_forever</i>
+            <i class="material-icons delete-icon" style="cursor: pointer" (click)="deleteComplaint(openedComplaint);">delete_forever</i>
         </div>
     </div>
+    <br *ngIf="isMobile()"/>
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
-            <div>Today</div>
+            <div>{{ getDateInfo(openedComplaint.dateSent) }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Message Type :</div>
-            <div>Fee Amount</div>
+            <div>{{ openedComplaint.parentSchoolComplaintType.name }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
-            <div>Jane Dea</div>
+            <div>{{ openedComplaint.parentStudent.name }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
-            <div>99999 99999</div>
+            <div>{{ openedComplaint.parentStudent.mobileNumber }}</div>
         </div>
-        <div></div>
+        <!-- <div></div> -->
     </div>
     <br />
 
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
-            <div>Fee Related Query for Neha Doshi in month January</div>
+            <div>{{ openedComplaint.title }}</div>
         </div>
+        <!-- <div></div> -->
     </div>
     <br />
 
+    <ng-container *ngIf="isMobile()">
+        <div class="common-section">
+            <div class="information">
+                <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Status: </div>
+                <div class="status-option-section">
+                    <mat-form-field style="flex-basis: 80%">
+                        <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
+                            <ng-container *ngFor="let status of openedComplaint.applicableStatusList; let idxStatus = index">
+                                <mat-option (click)="defaultStatusTitle = status.name; defaultStatus = status;">{{ status.name }}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                    <i style="flex-basis: 20%" class="material-icons delete-icon">delete_forever</i>
+                </div>
+            </div>
+        </div>
+        <br />
+    </ng-container>
+
     <div class="comment-section">
         <div class="default-text comment">
-            Type your fee related query here. Kindly provide information such as month or duration of the problem, fee amount, etc in the message.
+            {{ openedComplaint.parentSchoolComplaintType.defaultText }}
         </div>
-        <div class="comment">
-            <div class="name">John Doe</div>
-            <div class="information">
-                <div class="comment-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                <div class="time">09:31, 09-03-21</div>
+        <ng-container *ngFor="let commentObject of commentList">
+            <div class="comment">
+                <div class="name" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">
+                    {{ getAuthorComment(commentObject) }}
+                </div>
+                <div class="information">
+                    <div class="comment-description" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                    <div class="time" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.5'} ">{{ getDateTimeInfo(commentObject.createdAt) }}</div>
+                </div>
             </div>
-        </div>
-        <div class="comment">
-            <div class="name class-dark">John Doe</div>
-            <div class="information">
-                <div class="comment-description class-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-                <div class="time">09:31, 09-03-21</div>
-            </div>
-        </div>
+        </ng-container>
         <div class="bottom-section">
-            <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [ngModel]="comment" (ngModelChange)="comment = $event">
+            <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
             <button
                 type="button"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
                 style="padding: 12px 15px"
                 matTooltip="Send Comment"
                 tooltip-position="left"
+                (click)="sendCommentClicked()"
             >
                 Send
             </button>
         </div>
     </div>
 </div>
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->

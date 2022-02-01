@@ -19,7 +19,7 @@ def createNotification(content, parentUser, parentSchool):
     notification.save()
 
 
-class Status(models.Model):
+class SchoolComplaintStatus(models.Model):
 
     # Status Name
     name = models.CharField(max_length = 100)
@@ -34,10 +34,10 @@ class Status(models.Model):
         RelationsToSchool = ['parentSchool__id']
 
     class Meta:
-        db_table = 'complaint_status'
+        db_table = 'school_complaint_status'
 
 
-class ComplaintType(models.Model):
+class SchoolComplaintType(models.Model):
 
     # Complaint Type Name
     name = models.CharField(max_length = 100)
@@ -46,7 +46,7 @@ class ComplaintType(models.Model):
     defaultText = models.TextField()
 
     # Default Complaint Status
-    parentStatusDefault = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True)
+    parentSchoolComplaintStatusDefault = models.ForeignKey(SchoolComplaintStatus, on_delete = models.SET_NULL, null = True)
 
     # Parent School
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -58,7 +58,7 @@ class ComplaintType(models.Model):
         RelationsToSchool = ['parentSchool__id']
 
     class Meta:
-        db_table = 'complaint_type'
+        db_table = 'school_complaint_type'
 
 
 class Complaint(models.Model):
@@ -72,7 +72,7 @@ class Complaint(models.Model):
     dateSent = models.DateTimeField(auto_now_add = True)
 
     # Complaint Type
-    parentComplaintType = models.ForeignKey(ComplaintType, on_delete = models.CASCADE)
+    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.CASCADE)
 
     # Child
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE)
@@ -81,7 +81,7 @@ class Complaint(models.Model):
     title = models.CharField(max_length = 100)
 
     # Complaint Status
-    parentStatus = models.ForeignKey(Status, on_delete = models.SET_NULL, null = True)
+    parentSchoolComplaintStatus = models.ForeignKey(SchoolComplaintStatus, on_delete = models.SET_NULL, null = True)
 
     # Parent School
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -105,13 +105,13 @@ def notify_on_complaint(sender, instance, created, **kwargs):
         if instance.parentEmployee:
             senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
 
-        # Notify all the assigned employee of parentComplaintType.
-        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaintType):
+        # Notify all the assigned employee of parentSchoolComplaintType.
+        for employee_complaintType in EmployeeComplaintType.objects.filter(parentSchoolComplaintType = instance.parentSchoolComplaintType):
             mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
             if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
                 user = user[0]
-                content = "A new complaint of type " + instance.parentComplaintType.name + " has been assigned to you. Kindly respond to it."
+                content = "A new complaint of type " + instance.parentSchoolComplaintType.name + " has been assigned to you. Kindly respond to it."
                 parentSchool = instance.parentSchool
                 createNotification(content, user, parentSchool)
 
@@ -156,7 +156,7 @@ class Comment(models.Model):
     parentComplaint = models.ForeignKey(Complaint, on_delete = models.CASCADE)
 
     def __str__(self):
-        return (self.parentEmployee.name + " & " + self.parentComplaint.title)
+        return self.message
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentEmployee__parentSchool__id']
@@ -175,8 +175,8 @@ def notify_on_comment(sender, instance, created, **kwargs):
         if instance.parentEmployee:
             senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
 
-        # Notify all the assigned employee of parentComplaintType.
-        for employee_complaintType in EmployeeComplaintType.objects.filter(parentComplaintType = instance.parentComplaint.parentComplaintType):
+        # Notify all the assigned employee of parentSchoolComplaintType.
+        for employee_complaintType in EmployeeComplaintType.objects.filter(parentSchoolComplaintType = instance.parentComplaint.parentSchoolComplaintType):
             mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
             if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
@@ -211,13 +211,13 @@ def notify_on_comment(sender, instance, created, **kwargs):
 class StatusComplaintType(models.Model):
 
     # Parent Status
-    parentStatus = models.ForeignKey(Status, on_delete = models.CASCADE)
+    parentSchoolComplaintStatus = models.ForeignKey(SchoolComplaintStatus, on_delete = models.CASCADE)
 
     # Parent Complaint type
-    parentComplaintType = models.ForeignKey(ComplaintType, on_delete = models.CASCADE)
+    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.CASCADE)
 
     def __str__(self):
-        return (self.parentStatus.name + " & " + self.parentComplaintType.name)
+        return (self.parentSchoolComplaintStatus.name + " & " + self.parentSchoolComplaintType.name)
 
     class Permissions(BasePermission):
         pass
@@ -232,10 +232,10 @@ class EmployeeComplaintType(models.Model):
     parentEmployee = models.ForeignKey(Employee, on_delete = models.CASCADE)
 
     # Parent Complaint type
-    parentComplaintType = models.ForeignKey(ComplaintType, on_delete = models.CASCADE)
+    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.CASCADE)
 
     def __str__(self):
-        return (self.parentEmployee.name + " & " + self.parentComplaintType.name)
+        return (self.parentEmployee.name + " & " + self.parentSchoolComplaintType.name)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentEmployee__parentSchool__id']

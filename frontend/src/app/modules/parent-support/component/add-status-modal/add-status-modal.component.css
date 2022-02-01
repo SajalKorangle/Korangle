@@ -48,6 +48,17 @@
 .cancel-btn {
     background-color: white;
     color: black;
-    /* outline: orange; */
 }
 /* Ends: Bottom Btns */
+
+/* Media Query - Mobile Phones */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .add-status-modal-container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Modal Header */
+}
+/* End of Media Query */
