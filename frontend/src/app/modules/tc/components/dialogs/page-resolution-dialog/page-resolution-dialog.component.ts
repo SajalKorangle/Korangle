@@ -43,7 +43,7 @@ export class PageResolutionDialogComponent implements OnInit {
     selectCustomPageResolution() {
         if (this.activePageResolution.resolutionName != 'Custom') {
             this.customPageResolution = new PageResolution(
-                'Cusotm',
+                'Custom',
                 this.activePageResolution.mm.height,
                 this.activePageResolution.mm.width,
                 this.activePageResolution.orientation
