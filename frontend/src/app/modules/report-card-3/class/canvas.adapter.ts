@@ -53,6 +53,7 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
     isLoading: boolean = false;
 
     constructor() {
+        console.log(this);
         this.virtualCanvas = document.createElement('canvas');
         this.virtualContext = this.virtualCanvas.getContext('2d');
 
@@ -227,7 +228,9 @@ export class CanvasAdapterBase implements CanvasAdapterInterface {
             // loading resolution
             let resolution;
             if (Data.actualresolution.resolutionName == 'Custom') {
+                console.log('raw resoluton  =', Data.actualresolution);
                 resolution = new PageResolution('Custom', Data.actualresolution.mmHeight, Data.actualresolution.mmWidth, Data.actualresolution.orientation);
+                console.log('resolution = ', resolution);
             } else {
                 resolution = PAGE_RESOLUTIONS.find(pr => pr.resolutionName == Data.actualresolution.resolutionName);
                 resolution.orientation = Data.actualresolution.orientation;
