@@ -1,4 +1,5 @@
 from django.db import models
+from common.common import BasePermission
 
 from school_app.model.models import School, Session
 from team_app.models import Task
@@ -89,7 +90,10 @@ class Employee(models.Model):
     dateOfLeaving = models.DateField(null=True)
 
     # School Id
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name="employeeList")
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'employee'
@@ -163,4 +167,3 @@ class EmployeeParameterValue(models.Model):
     class Meta:
         db_table = 'employee_parameter_value'
         unique_together = ('parentEmployee', 'parentEmployeeParameter')
-

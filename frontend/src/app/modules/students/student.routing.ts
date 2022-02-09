@@ -11,9 +11,11 @@ import {
     PRINT_STUDENT_LIST,
     PRINT_MULTIPLE_I_CARDS,
     PRINT_STUDENT_PROFILE,
+    PRINT_COUNT_ALL_TABLE,
 } from '../../print/print-routes.constants';
 import { PrintTransferCertificateSecondFormatComponent } from './print/print-transfer-certificate-second-format/print-transfer-certificate-second-format.component';
 import { PrintStudentProfileComponent } from './print/print-student-profile/print-student-profile.component';
+import { PrintCountAllTableComponent } from './print/print-count-all-table/print-count-all-table.component';
 
 const routes: Routes = [
     {
@@ -24,6 +26,11 @@ const routes: Routes = [
     {
         path: 'view_all',
         loadChildren: 'app/modules/students/pages/view-all/view-all.module#ViewAllModule',
+        data: { moduleName: 'students' },
+    },
+    {
+        path: 'count_all',
+        loadChildren: 'app/modules/students/pages/count-all/count-all.module#CountAllModule',
         data: { moduleName: 'students' },
     },
     {
@@ -94,6 +101,10 @@ const routes: Routes = [
     {
         path: PRINT_STUDENT_PROFILE,
         component: PrintStudentProfileComponent,
+    },
+    {
+        path: PRINT_COUNT_ALL_TABLE,
+        component: PrintCountAllTableComponent,
     },
 ];
 

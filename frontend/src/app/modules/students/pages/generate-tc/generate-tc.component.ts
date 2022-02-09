@@ -11,6 +11,7 @@ import { PRINT_TC } from '../../../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
 
+
 @Component({
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
@@ -197,6 +198,7 @@ export class GenerateTcComponent implements OnInit {
                         this.isLoading = false;
                         if (response.status === 'success') {
                             alert('Transfer Certificate generated successfully');
+
                             this.currentTransferCertificate.id = data.parentTransferCertificate;
                             this.selectedTransferCertificate.copy(this.currentTransferCertificate);
                             this.printTCSecondFormat();
@@ -226,6 +228,7 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert(response.message);
+
                 this.selectedTransferCertificate.copy(this.currentTransferCertificate);
             },
             (error) => {
@@ -253,6 +256,7 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert('TC has been cancelled successfully');
+
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;
                 this.studentFromFilter.parentTransferCertificate = null;

@@ -149,7 +149,8 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
-    student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue';
+    activity_record_app: 'ActivityRecord';
+    student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     class_app: 'Class' | 'Division';
     school_app: 'Session' | 'BusStop';
     tc_app: 'TransferCertificateNew';

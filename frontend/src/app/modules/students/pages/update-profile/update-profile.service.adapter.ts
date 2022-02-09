@@ -1,5 +1,6 @@
 import { UpdateProfileComponent } from './update-profile.component';
 import { toInteger } from 'lodash';
+import { CommonFunctions } from '@modules/common/common-functions';
 
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent;
@@ -232,6 +233,13 @@ export class UpdateProfileServiceAdapter {
                 this.vm.deleteList = [];
                 this.vm.profileImage = null;
                 alert('Student: ' + this.vm.selectedStudent.name + ' updated successfully');
+
+                let parentEmployee = this.vm.user.activeSchool.employeeId;
+                let moduleName = this.vm.user.section.title;
+                let taskName = this.vm.user.section.subTitle;
+                let moduleList = this.vm.user.activeSchool.moduleList;
+                let actionString = " updated student profile of " + this.vm.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                 this.vm.isLoading = false;
             },
             (error) => {

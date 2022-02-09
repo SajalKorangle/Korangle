@@ -49,6 +49,10 @@ const routes: Routes = [
                 // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
             },
             {
+                path: 'activity',
+                loadChildren: 'app/modules/activity/activity.module#ActivityModule',
+            },
+            {
                 path: 'sms',
                 loadChildren: 'app/modules/sms/sms.module#SmsModule',
             },
