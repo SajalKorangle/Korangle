@@ -44,10 +44,7 @@ export class SidebarComponent implements OnInit {
 
     constructor(private router: Router, private notificationService: NotificationService, private schoolService: SchoolService) {
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
-            if (curr._routerState.url.includes('print:print') || future._routerState.url.includes('print:print')) {
-                return curr.routeConfig === future.routeConfig;
-            }
-            return false;
+            return (curr.routeConfig === future.routeConfig) || future.data.reuse;
         };
     }
 
@@ -80,10 +77,12 @@ export class SidebarComponent implements OnInit {
             this.session_list = value;
         });
         EmitterService.get('initialize-router').subscribe((value) => {
-            this.router.navigateByUrl(
-                this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
-                    { queryParams: value.queryParams })
-            );
+            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+                this.router.navigateByUrl(
+                    this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
+                        {queryParams: value.queryParams})
+                );
+            });
         });
     }
 

@@ -27,6 +27,7 @@ const routes: Routes = [
         path: 'dashboard',
         component: DashBoardComponent,
         canActivate: [DashboardAuthGuard],
+        data: { reuse: true },
         children: [
             {
                 path: 'notification',
