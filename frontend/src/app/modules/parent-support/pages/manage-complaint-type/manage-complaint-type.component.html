@@ -1,8 +1,17 @@
+<!-- Starts: Show Tables -->
 <div *ngIf="pageName == 'showTables'" class="card-content">
+
+    <!-- Starts: Complaint Type Table -->
     <ng-container>
         <div class="table-container">
+            <!-- Starts: Table Title -->
             <div class="title">Complaint Types</div>
+            <!-- Ends: Table Title -->
+
+            <!-- Starts: Table -->
             <table class="table">
+
+                <!-- Starts: Table Head -->
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr style="width: 100%">
                         <th>Sr. no.</th>
@@ -12,6 +21,9 @@
                         <th style=""></th>
                     </tr>
                 </thead>
+                <!-- Ends: Table Head -->
+
+                <!-- Starts: Table Body -->
                 <tbody>
                     <ng-container *ngFor="let complaintType of complaintTypeList; let i = index">
                         <tr style="width: 100%">
@@ -23,11 +35,14 @@
                         </tr>
                     </ng-container>
                 </tbody>
+                <!-- Ends: Table Body -->
             </table>
+            <!-- Ends: Table -->
         </div>
         <br />
         <br />
 
+        <!-- Starts: Add New Complaint Type Button -->
         <button
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -41,12 +56,20 @@
         <br />
         <br />
         <br />
+        <!-- Ends: Add New Complaint Type Button -->
     </ng-container>
+    <!-- Ends: Complaint Type Table -->
 
+    <!-- Starts: Complaint Status Table -->
     <ng-container>
         <div class="table-container">
+            <!-- Starts: Table Title -->
             <div class="title">Complaint Statuses</div>
+            <!-- Ends: Table Title -->
+
+            <!-- Starts: Table -->
             <table class="table">
+                <!-- Starts: Table Head -->
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th>Sr. no.</th>
@@ -55,6 +78,9 @@
                         <th></th>
                     </tr>
                 </thead>
+                <!-- Ends: Table Head -->
+
+                <!-- Starts: Table Body -->
                 <tbody>
                     <ng-container *ngFor="let status of statusList; let i = index">
                         <tr>
@@ -65,11 +91,14 @@
                         </tr>
                     </ng-container>
                 </tbody>
+                <!-- Ends: Table Body -->
             </table>
+            <!-- Ends: Table -->
         </div>
         <br />
         <br />
 
+        <!-- Starts: Add New Status Button -->
         <button
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -80,9 +109,13 @@
         >
             <i class="material-icons">add</i> Add Status
         </button>
+        <!-- Ends: Add New Status Button -->
     </ng-container>
+    <!-- Ends: Complaint Status Table -->
 </div>
+<!-- Ends: Show Tables -->
 
+<!-- Starts: Add Complaint Type -->
 <div *ngIf="pageName == 'addCompalintType'" class="card-content">
     <div class="add-title">Add/Edit Complaint Type</div>
     <br />
@@ -139,7 +172,7 @@
     <div>
         <div class="field-title">Applicable Statuses : </div>
         <div class="checkbox-group">
-            <div style="flex-basis: 25%;">
+            <div class="checkbox-subgroup">
                 <ng-container *ngFor="let status of statusList; let idx = index">
                     <ng-container *ngIf="idx < (statusList.length / 2)">
                         <br />
@@ -153,7 +186,7 @@
                 </ng-container>
             </div>
 
-            <div style="flex-basis: 25%;">
+            <div class="checkbox-subgroup">
                 <ng-container *ngFor="let status of statusList; let idx = index">
                     <ng-container *ngIf="idx >= (statusList.length / 2)">
                         <br />
@@ -216,7 +249,7 @@
         <button
             type="button"
             class="btn cancel-btn"
-            [ngStyle]="setCancelBtnStyle()"
+            [ngStyle]="htmlRenderer.setCancelBtnStyle()"
             (click)="cancelClicked()"
         >
             Cancel
@@ -224,6 +257,7 @@
     </div>
     <!-- Ends: Bottom Buttons -->
 </div>
+<!-- Ends: Add Complaint Type -->
 
 <!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">

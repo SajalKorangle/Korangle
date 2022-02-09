@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 import { AddComplaintServiceAdapter } from './add-complaint.service.adapter';
+import { AddComplaintHtmlRenderer } from './add-complaint.html.renderer';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class AddComplaintComponent implements OnInit {
     complaintTypeList: any = [];
 
     serviceAdapter: AddComplaintServiceAdapter;
+    htmlRenderer: AddComplaintHtmlRenderer;
 
     constructor() { }
 
@@ -39,15 +41,12 @@ export class AddComplaintComponent implements OnInit {
         this.serviceAdapter = new AddComplaintServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new AddComplaintHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
-    isMobile() {
-        if(window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
-
+    /* Initialize Student Full Profile List */
     initializeStudentFullProfileList(studentList, studentSectionList) {
         this.studentList = [];
         for (let i = 0; i < studentSectionList.length; i++) {
@@ -69,14 +68,16 @@ export class AddComplaintComponent implements OnInit {
         }
 
         console.log("Student List: ", this.studentList);
-    }
+    }  // Ends: initializeStudentFullProfileList()
 
+    /* Initialize Selected Student Data */
     initializeStudentData(student) {
         this.selectedStudent = student;
         this.fatherName = this.selectedStudent.fathersName;
         this.seachStudentString = this.selectedStudent.name;
-    }
+    }  // Ends: initializeStudentData()
 
+    /* Initialize Complaint Data */
     initializeComplaintData() {
         this.seachStudentString = "";
         this.searchedStudentList = [];
@@ -86,7 +87,7 @@ export class AddComplaintComponent implements OnInit {
         this.complaintTitle = "";
         this.complaintTypeName = "Select Complaint Type";
         this.complaintType = {};
-    }
+    }  // Ends: initializeComplaintData()
 
     /* Debouncing */
     debounce(func, timeout = 300) {
@@ -95,11 +96,12 @@ export class AddComplaintComponent implements OnInit {
         clearTimeout(timer);
             timer = setTimeout(() => { func.apply(this, args); }, timeout);
          };
-    }
+    }  // Ends: debounce()
 
+    /* Get Searched Student List */
     searchStudentList() {
         this.searchedStudentList = [];
-        if(!this.seachStudentString) {
+        if (!this.seachStudentString) {
             return ;
         }
 
@@ -109,38 +111,29 @@ export class AddComplaintComponent implements OnInit {
             }
         });
         console.log("Searched Student List: ", this.searchedStudentList);
-    }
+    }  // Ends: searchStudentList()
 
     seachStudentChanged = this.debounce(() => this.searchStudentList());
 
+    /* Send Complaint */
     sendComplaintClicked() {
-        console.log("Student: ", this.seachStudentString);
-        console.log("Father: ", this.fatherName);
-        console.log("complaint Type: ", this.complaintTypeName);
-        console.log("Title: ", this.complaintTitle);
-        console.log("Comment: ", this.comment);
 
-        if(!this.fatherName) {
+        if (!this.fatherName) {
             alert("Please select the student.");
             return;
         }
 
-        if(!this.complaintTypeName) {
-            alert("Please select the complaint type.");
-            return;
-        }
-
-        if(!this.complaintTitle) {
+        if (!this.complaintTitle) {
             alert("Please enter the complaint title.");
             return;
         }
 
-        if(!this.comment) {
+        if (!this.comment) {
             alert("Please enter your query.");
             return;
         }
 
         this.searchedStudentList = [];
         this.serviceAdapter.addComplaint();
-    }
+    }  // Ends: sendComplaintClicked()
 }

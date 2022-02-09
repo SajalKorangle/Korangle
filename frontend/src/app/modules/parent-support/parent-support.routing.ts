@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { ParentSupportComponent } from './parent-support.component';
+import { PrintCountAllTableParentSupportComponent } from './print/print-count-all-table-parent-support/print-count-all-table-parent-support.component';
+import { PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT } from '../../print/print-routes.constants';
 
 const routes: Routes = [
     {
-        path: 'manage_complaint_types',
-        loadChildren: 'app/modules/parent-support/pages/manage-complaint-types/manage-complaint-types.module#ManageComplaintTypesModule',
+        path: 'manage_complaint_type',
+        loadChildren: 'app/modules/parent-support/pages/manage-complaint-type/manage-complaint-type.module#ManageComplaintTypeModule',
         data: { moduleName: 'parent-support' },
     },
     {
@@ -27,6 +29,10 @@ const routes: Routes = [
     {
         path: '',
         component: ParentSupportComponent,
+    },
+    {
+        path: PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT,
+        component: PrintCountAllTableParentSupportComponent,
     },
 ];
 

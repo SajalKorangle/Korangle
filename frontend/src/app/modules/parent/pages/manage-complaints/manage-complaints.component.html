@@ -1,17 +1,25 @@
+<!-- Starts: List Of Complaints -->
 <div *ngIf="!isLoading && pageName == 'list-of-complaints'" class="card-content">
     <!-- Starts: Search Bar -->
     <div class="search-bar">
-        <input class="search-field" type="search" placeholder="Search by student name, message type, title" [(ngModel)]="seachString">
+        <input class="search-field" type="search" placeholder="Search by student name, complaint type, title" [ngModel]="seachString" (ngModelChange)="seachString = $event; seachChanged()">
         <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
     </div>
     <br />
     <br />
     <!-- Ends: Search Bar -->
 
+    <!-- Starts: Complaint List Table -->
     <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
         <div class="table-container">
+            <!-- Starts: Table Title -->
             <div style="border-bottom: 2px solid #909090;">Complaints</div>
+            <!-- Ends: Table Title -->
+
+            <!-- Starts: Table -->
             <table class="table table-hover table-responsive">
+
+                <!-- Starts: Table Header -->
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th style="min-width: 150px">Child Name</th>
@@ -23,12 +31,15 @@
                         <th style="min-width: 100px"></th>
                     </tr>
                 </thead>
+                <!-- Ends: Table Header -->
+
+                <!-- Starts: Table Body -->
                 <tbody>
-                    <ng-container *ngFor="let complaint of complaintList; let i = index">
+                    <ng-container *ngFor="let complaint of searchedComplaintList; let idx = index">
                         <tr>
                             <td>{{ complaint.parentStudent.name }}</td>
-                            <td>{{ getDateInfo(complaint.dateSent) }}</td>
-                            <td>{{ complaint.parentSchoolComplaintType.name }}</td>
+                            <td>{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                            <td>{{ complaint.parentSchoolComplaintType.name ? complaint.parentSchoolComplaintType.name : "Not Selected" }}</td>
                             <td>{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Selected" }}</td>
                             <td style="text-align: center">{{ complaint.commentList.length }}</td>
                             <td
@@ -39,35 +50,47 @@
                             >
                                 Open
                             </td>
-                            <td style="text-align: center"><i class="material-icons delete-icon">delete_forever</i></td>
+                            <td style="text-align: center; cursor: pointer;"><i class="material-icons delete-icon" (click)="deleteComplaint(complaint)">delete_forever</i></td>
                         </tr>
                     </ng-container>
                 </tbody>
+                <!-- Ends: Table Body -->
             </table>
+            <!-- Ends: Table -->
         </div>
     </cdk-virtual-scroll-viewport>
+    <!-- Ends: Complaint List Table -->
 
+    <!-- Starts: Send New Compalint -->
     <br />
     <button
         type="button"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }} send-new-btn"
         style="padding: 12px 15px; margin-left: 1rem"
-        matTooltip="Send New Message"
+        matTooltip="Send New Complaint"
         tooltip-position="left"
         (click)="pageName = 'send-complaint';"
     >
         <i class="material-icons">add</i> Send New
     </button>
+    <!-- Ends: Send New Compalint -->
 </div>
+<!-- Ends: List Of Complaints -->
 
+<!-- Starts: Open Complaint -->
 <div *ngIf="!isLoading && pageName == 'open-complaint'" class="card-content">
+
+    <!-- Starts: Parent Name  &&  Status(desktop) -->
     <div class="common-section">
+        <!-- Starts: Parent Name -->
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Name:</div>
             <div>{{ openedComplaint.parentStudent.fathersName }}</div>
         </div>
+        <!-- Ends: Parent Name -->
 
-        <div *ngIf="!isMobile()" class="status-section">
+        <!-- Starts: Status -->
+        <div *ngIf="!htmlRenderer.isMobile()" class="status-section">
             <div class="status">
                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
                 <mat-form-field>
@@ -80,101 +103,125 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <i class="material-icons delete-icon">delete_forever</i>
+            <i class="material-icons delete-icon" (click)="deleteComplaint(openedComplaint)">delete_forever</i>
         </div>
+        <!-- Ends: Status -->
     </div>
-    <br *ngIf="isMobile()"/>
+    <br *ngIf="htmlRenderer.isMobile()"/>
+    <!-- Ends: Parent Name  &&  Status(desktop) -->
 
+    <!-- Starts: Date Sent -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
-            <div>{{ getDateInfo(openedComplaint.dateSent) }}</div>
+            <div>{{ htmlRenderer.getDateInfo(openedComplaint.dateSent) }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Date Sent -->
 
+    <!-- Starts: Complaint Type -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Compalint Type :</div>
-            <div>{{ openedComplaint.parentSchoolComplaintType.name }}</div>
+            <div>{{ openedComplaint.parentSchoolComplaintType.name ? openedComplaint.parentSchoolComplaintType.name : "Not Selected" }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Complaint Type -->
 
+    <!-- Starts: Student Name -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
             <div>{{ openedComplaint.parentStudent.name }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Student Name -->
 
+    <!-- Starts: Contact Number -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
             <div>{{ openedComplaint.parentStudent.mobileNumber }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Contact Number -->
 
+    <!-- Starts: Complaint Title -->
     <div class="common-section" style="align-items: flex-end">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
-            <div>{{ openedComplaint.title }}</div>
+            <div style="word-wrap: break-word;">{{ openedComplaint.title }}</div>
         </div>
+
+        <!-- Starts: Refresh Button -->
         <button
             type="button"
-            *ngIf="!isMobile()"
+            *ngIf="!htmlRenderer.isMobile()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }} refresh-btn"
             style="padding: 6px 15px"
             matTooltip="Refresh"
             tooltip-position="left"
+            (click)="refreshClicked()"
         >
             Refresh
         </button>
+        <!-- Ends: Refresh Button -->
     </div>
     <br />
+    <!-- Ends: Complaint Title -->
 
-    <ng-container *ngIf="isMobile()">
+    <!-- Starts: Status(Mobile) -->
+    <ng-container *ngIf="htmlRenderer.isMobile()">
         <div class="common-section">
             <div class="information">
                 <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Status: </div>
                 <div class="status-option-section">
-                    <mat-form-field style="flex-basis: 80%">
+                    <mat-form-field style="flex-basis: 70%">
                         <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
                             <ng-container *ngFor="let status of openedComplaint.applicableStatusList; let idxStatus = index">
                                 <mat-option (click)="defaultStatusTitle = status.name; defaultStatus = status;">{{ status.name }}</mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
-                    <i style="flex-basis: 20%" class="material-icons delete-icon">delete_forever</i>
+                    <i style="flex-basis: 20%" class="material-icons delete-icon" (click)="deleteComplaint(openedComplaint)">delete_forever</i>
                 </div>
             </div>
         </div>
         <br />
     </ng-container>
+    <!-- Ends: Status(Mobile) -->
 
+    <!-- Starts: Comment Section -->
     <div class="comment-section">
+
+        <!-- Starts: Default Text -->
         <div class="default-text comment">
             {{ openedComplaint.parentSchoolComplaintType.defaultText }}
         </div>
-        <ng-container *ngFor="let commentObject of commentList">
-            <div class="comment">
-                <div class="name" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">
-                    {{ getAuthorComment(commentObject) }}
-                </div>
-                <div class="information">
-                    <div class="comment-description" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
-                    <div class="time" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.5'} ">{{ getDateTimeInfo(commentObject.createdAt) }}</div>
-                </div>
-            </div>
-        </ng-container>
+        <!-- Ends: Default Text -->
 
-        <ng-container *ngIf="!isMobile()">
+        <!-- Starts: (Desktop) - List of Comments  &&  Send Query Section -->
+        <ng-container *ngIf="!htmlRenderer.isMobile()">
+
+            <!-- Starts: List of Comments -->
+            <ng-container *ngFor="let commentObject of commentList">
+                <div class="comment">
+                    <div class="name" [ngStyle]=" {'opacity': commentObject.parentEmployee['name'] ? '1' : '0.7'} ">
+                        {{ htmlRenderer.getAuthorComment(commentObject) }}
+                    </div>
+                    <div class="information">
+                        <div class="comment-description" [ngStyle]=" {'opacity': commentObject.parentEmployee['name'] ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                        <div class="time" [ngStyle]=" {'opacity': commentObject.parentEmployee['name'] ? '1' : '0.5'} ">{{ htmlRenderer.getDateTimeInfo(commentObject.createdAt) }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Ends: List of Comments -->
+
+            <!-- Starts: Send Query Section -->
             <div class="bottom-section">
                 <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
                 <button
@@ -188,14 +235,35 @@
                     Send
                 </button>
             </div>
+            <!-- Ends: Send Query Section -->
         </ng-container>
+        <!-- Ends: (Desktop) - List of Comments  &&  Send Query Section -->
 
-        <ng-container *ngIf="isMobile()">
+        <!-- Starts: (Mobile) - List of Comments  &&  Send Query Section -->
+        <ng-container *ngIf="htmlRenderer.isMobile()">
+
+            <!-- Starts: List of Comments -->
+            <ng-container *ngFor="let commentObject of commentList">
+                <div class="comment">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="name" [ngStyle]=" {'opacity': commentObject.parentEmployee['name'] ? '1' : '0.7'} ">
+                            {{ htmlRenderer.getAuthorComment(commentObject) }}
+                        </div>
+                        <div class="time" [ngStyle]=" {'opacity': commentObject.parentEmployee['name'] ? '1' : '0.5'} ">{{ htmlRenderer.getDateTimeInfo(commentObject.createdAt) }}</div>
+                    </div>
+                    <div class="information">
+                        <div class="comment-description" [ngStyle]=" {'opacity': commentObject.parentEmployee['name'] ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Ends: List of Comments -->
+
+            <!-- Starts: Send Query Section -->
             <div class="bottom-section">
                 <textarea
                     placeholder="Type Response/ Updates here"
                     class="bottom-text-field"
-                    [(ngModel)]="comment"
+                    [(ngModel)]="commentMessage"
                 ></textarea>
                 <br />
 
@@ -206,15 +274,19 @@
                         style="padding: 10px 25px"
                         matTooltip="Send Comment"
                         tooltip-position="left"
-                        (click)="sendComplaintClicked()"
+                        (click)="updateComplaintClicked()"
                     >
                         Send
                     </button>
                 </div>
             </div>
+            <!-- Ends: Send Query Section -->
         </ng-container>
+        <!-- Ends: (Mobile) - List of Comments  &&  Send Query Section -->
     </div>
+    <!-- Ends: Comment Section -->
 
+    <!-- Status: Renotify Button -->
     <button
         type="button"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }} notify-btn"
@@ -224,9 +296,14 @@
     >
         Renotify
     </button>
+    <!-- Ends: Renotify Button -->
 </div>
+<!-- Ends: Open Complaint -->
 
+<!-- Starts: Send Complaint -->
 <div *ngIf="!isLoading && pageName == 'send-complaint'" class="card-content">
+
+    <!-- Starts: Select Complaint Type -->
     <div class="send-new-common-section">
         <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Complaint Type : </div>
         <mat-form-field>
@@ -239,7 +316,9 @@
             </mat-select>
         </mat-form-field>
     </div>
+    <!-- Ends: Select Complaint Type -->
 
+    <!-- Starts: Select Student -->
     <div class="send-new-common-section">
         <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Student Name : </div>
         <mat-form-field>
@@ -250,20 +329,28 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <br *ngIf="!isMobile()"/>
+    <br *ngIf="!htmlRenderer.isMobile()"/>
+    <!-- Ends: Select Student -->
 
+    <!-- Starts: Title -->
     <div class="send-new-common-section">
         <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Enter title : </div>
         <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
     </div>
+    <!-- Ends: Title -->
 
+    <!-- Starts: Comment Section -->
     <br />
     <div class="comment-section">
+
+        <!-- Starts: Default Text -->
         <div class="send-new-default-text">
             {{ complaintTypeDefaultText }}
         </div>
+        <!-- Ends: Default Text -->
 
-        <ng-container *ngIf="!isMobile()">
+        <!-- Starts: (Desktop) - Send Query Section -->
+        <ng-container *ngIf="!htmlRenderer.isMobile()">
             <div class="bottom-section">
                 <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="commentMessage">
                 <button
@@ -278,13 +365,15 @@
                 </button>
             </div>
         </ng-container>
+        <!-- Ends: (Desktop) - Send Query Section -->
 
-        <ng-container *ngIf="isMobile()">
+        <!-- Starts: (Mobile) - Send Query Section -->
+        <ng-container *ngIf="htmlRenderer.isMobile()">
             <div class="bottom-section">
                 <textarea
                     placeholder="Type Query here"
                     class="bottom-text-field"
-                    [(ngModel)]="comment"
+                    [(ngModel)]="commentMessage"
                 ></textarea>
                 <br />
 
@@ -302,8 +391,11 @@
                 </div>
             </div>
         </ng-container>
+        <!-- Ends: (Mobile) - Send Query Section -->
     </div>
+    <!-- Ends: Comment Section -->
 </div>
+<!-- Ends: Send Complaint -->
 
 <!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">

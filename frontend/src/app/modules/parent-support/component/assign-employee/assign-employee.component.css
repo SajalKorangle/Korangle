@@ -5,12 +5,13 @@
 }
 /* Ends: Modal Container */
 
+/* Starts: header */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 5px;
-    border-bottom: 1px solid #C4C4C4;
+    border-bottom: 1px solid #C4C4C4;   /* Light Gray */
 }
 
 .title {
@@ -21,14 +22,16 @@
     color: red;
     cursor: pointer;
 }
+/* Ends: header */
 
+/* Starts: Assign Employee Section */
 .field-title {
     font-size: 14px;
     font-weight: 500;
     margin-right: 1rem;
 }
 
-/* Starts: Search Bar */
+    /* Starts: Search Bar */
 .search-bar {
     display: flex;
     height: 25px;
@@ -54,12 +57,14 @@
 .search-icon {
     color: rgba(0, 0, 0, 0.5);
 }
-/* Ends: Search Bar */
+    /* Ends: Search Bar */
 
 .checkbox-grp {
     display: flex;
     align-items: center;
 }
+/* Ends: Assign Employee Section */
+
 
 /* Starts: Bottom Btns */
 .bottom-btns {
@@ -74,6 +79,5 @@
 .cancel-btn {
     background-color: white;
     color: black;
-    /* outline: orange; */
 }
 /* Ends: Bottom Btns */

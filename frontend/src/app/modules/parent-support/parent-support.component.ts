@@ -10,6 +10,5 @@ export class ParentSupportComponent implements OnInit {
     constructor() {}
 
     ngOnInit(): void {
-        this.user = DataStorage.getInstance().getUser();
     }
 }

@@ -9,6 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class FilterModalComponent implements OnInit {
     user: any;
+    filter: any;
 
     name: string;
 
@@ -16,11 +17,11 @@ export class FilterModalComponent implements OnInit {
 
     checkBox: boolean;
 
-    startDateTye: string = "Select Start Date";
+    startDateType: string = "Select Start Date";
     sDate: string = "";
     sDays: number = 0;
 
-    endDateTye: string = "Select End Date";
+    endDateType: string = "Select End Date";
     eDate: string = "";
     eDays: number = 0;
 
@@ -33,18 +34,74 @@ export class FilterModalComponent implements OnInit {
     ) {
         this.complaintTypeList = data.complaintTypeList;
         this.statusList = data.statusList;
+
+        /* Initialize Default Value of Filters */
+        if (data.filter) {
+            this.isEditing = true;
+            this.filter = data.filter;
+            this.name = this.filter["name"];
+
+            /* Initialize complaint type list */
+            if (this.filter["complaintTypeList"]) {
+
+                this.complaintTypeList.forEach((complaintType) => {
+
+                    let idx = this.filter["complaintTypeList"].indexOf(complaintType.id);
+                    if (idx != -1) {
+                        complaintType["selected"] = true;
+                    }
+                });
+            }  // Ends: Initialize complaint type list
+
+            /* Initialize status list */
+            if (this.filter["statusList"]) {
+
+                this.statusList.forEach((status) => {
+
+                    let idx = this.filter["statusList"].indexOf(status.id);
+                    if (idx != -1) {
+                        status["selected"] = true;
+                    }
+                });
+            }  // Ends: Initialize status list
+
+            /* Initialize age */
+            if (this.filter["startDateType"]) {
+
+                this.startDateType = this.filter["startDateType"];
+                switch (this.startDateType) {
+                    case "From Days Ago":
+                        this.sDays = this.filter["sDays"];
+                        break;
+
+                    default:
+                        this.sDate = this.filter["startDate"];
+                }
+
+                this.endDateType = this.filter["endDateType"];
+                switch (this.endDateType) {
+                    case "From Days Ago":
+                        this.eDays = this.filter["eDays"];
+                        break;
+
+                    default:
+                        this.eDate = this.filter["endDate"];
+                }
+            }  // Ends: Initialize age
+        }
     }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
     }
 
+    /* Check for mobile browser */
     isMobile() {
-        if(window.innerWidth > 991) {
+        if (window.innerWidth > 991) {
             return false;
         }
         return true;
-    }
+    }  // Ends: isMobile()
 
     /* Make input-date non-typeable */
     handleOnKeyDown(event: any) {
@@ -86,8 +143,6 @@ export class FilterModalComponent implements OnInit {
     deleteClick(): void {
         let conformation = confirm("Do you really want to delete this?");
         if (conformation) {
-            // this.unselectAllComplaintType();
-            // this.unselectAllStatus();
             if (this.isEditing) {
                 let filtersData = {};
                 filtersData["operation"] = "delete";
@@ -107,61 +162,64 @@ export class FilterModalComponent implements OnInit {
         }
 
         let filtersData = {};
-
         filtersData["name"] = this.name;
 
+        /* Selected Complaint Types */
         let complaintTypeList = [];
         this.complaintTypeList.forEach((complaintType) => {
-            if(complaintType.selected) {
+            if (complaintType.selected) {
                 complaintTypeList.push(complaintType.id);
             }
         });
-        if(complaintTypeList.length) {
+        if (complaintTypeList.length) {
             filtersData["complaintTypeList"] = complaintTypeList;
-        }
+        }  // Ends: Selected Complaint Types
 
+        /* Selected Statuses */
         let statusList = [];
         this.statusList.forEach((status) => {
-            if(status.selected) {
+            if (status.selected) {
                 statusList.push(status.id);
             }
         });
-        if(statusList.length) {
+        if (statusList.length) {
             filtersData["statusList"] = statusList;
-        }
+        }  // Ends: Selected Statuses
 
-        if(this.startDateTye != "Select Start Date" || this.endDateTye != "Select End Date") {
-            if(this.startDateTye == "Select Start Date") {
+        /* Validation: Start Date  &&  End Date */
+        if (this.startDateType != "Select Start Date" || this.endDateType != "Select End Date") {
+
+            if (this.startDateType == "Select Start Date") {
                 alert("Please select an option for the start date.");
                 return;
             }
 
-            if(this.endDateTye == "Select End Date") {
+            if (this.endDateType == "Select End Date") {
                 alert("Please select an option for the end date.");
                 return;
             }
 
-            if(this.startDateTye == "Select Date" && this.sDate == "") {
+            if (this.startDateType == "Select Date" && this.sDate == "") {
                 alert("Please enter the start date.");
                 return;
             }
 
-            if(this.endDateTye == "Select End Date" && this.eDate == "") {
+            if (this.endDateType == "Select End Date" && this.eDate == "") {
                 alert("Please enter the end date.");
                 return;
             }
 
-            if(this.startDateTye == "From Days Ago" && this.sDays == 0) {
+            if (this.startDateType == "From Days Ago" && this.sDays == 0) {
                 alert("Please enter the value of start days.");
                 return;
             }
 
-            if(this.endDateTye == "From Days Ago" && this.eDays == 0) {
+            if (this.endDateType == "From Days Ago" && this.eDays == 0) {
                 alert("Please enter the value of end days");
                 return;
             }
 
-            if(this.startDateTye == "1st of Ongoing Month") {
+            if (this.startDateType == "1st of Ongoing Month") {  // Start Date Type: 1st day of month
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
                 [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
 
@@ -175,20 +233,7 @@ export class FilterModalComponent implements OnInit {
                 this.sDate = year + "-" + month + "-" + date;
             }
 
-            if(this.endDateTye == "Current Date") {
-                let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
-
-                if (parseInt(date) < 10) {
-                    date = "0" + date;
-                }
-                if (parseInt(month) < 10) {
-                    month = "0" + month;
-                }
-
-                this.eDate = year + "-" + month + "-" + date;
-            }
-
-            if(this.startDateTye == "From Days Ago") {
+            if (this.startDateType == "From Days Ago") {  // Start Date Type: From Days Ago
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
                 var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
                 result.setDate(result.getDate() - this.sDays);
@@ -202,9 +247,23 @@ export class FilterModalComponent implements OnInit {
                 }
 
                 this.sDate = year + "-" + month + "-" + date;
+                filtersData["sDays"] = this.sDays;
             }
 
-            if(this.endDateTye == "From Days Ago") {
+            if (this.endDateType == "Current Date") {  // End Date Type: Today
+                let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+
+                if (parseInt(date) < 10) {
+                    date = "0" + date;
+                }
+                if (parseInt(month) < 10) {
+                    month = "0" + month;
+                }
+
+                this.eDate = year + "-" + month + "-" + date;
+            }
+
+            if (this.endDateType == "From Days Ago") {  // End Date Type: From Days Ago
                 let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
                 var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
                 result.setDate(result.getDate() - this.eDays);
@@ -218,11 +277,14 @@ export class FilterModalComponent implements OnInit {
                 }
 
                 this.eDate = year + "-" + month + "-" + date;
+                filtersData["eDays"] = this.eDays;
             }
 
             filtersData["startDate"] = this.sDate;
+            filtersData["startDateType"] = this.startDateType;
             filtersData["endDate"] = this.eDate;
-        }
+            filtersData["endDateType"] = this.endDateType;
+        }  // Ends: Validation: Start Date  &&  End Date
 
         /* Operation Type */
         if (this.isEditing) {
@@ -230,7 +292,7 @@ export class FilterModalComponent implements OnInit {
             this.dialogRef.close({ filtersData: filtersData });
         } else {
             this.dialogRef.close({ filtersData: filtersData });
-        }
-        /* Ends:  Operation Type */
+        }  //Ends: Operation Type
+
     }  // Ends: applyClick()
 }

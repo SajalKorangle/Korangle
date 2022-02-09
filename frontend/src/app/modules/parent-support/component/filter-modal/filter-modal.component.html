@@ -4,10 +4,11 @@
     <mat-form-field class="inputField" style="margin-left: 10%;">
         <input matInput required type="text" [(ngModel)]="name" />
     </mat-form-field>
+    <br />
+    <br />
     <!-- Ends: Name Field -->
 
-    <br />
-    <br />
+
     <!-- Starts: Time Span Section -->
     <div class="time-span-section">
         <b>Time Span</b><br /><br *ngIf="!isMobile()"/>
@@ -19,23 +20,26 @@
             </div>
             <div class="date-options">
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="{{ startDateTye }}" style="width: 100%">
-                        <mat-option (click)="startDateTye = 'Select Start Date'" style="width: 100%">
-                            Select Start Date
+                    <!-- Starts: Possible Options for Start-Date -->
+                    <mat-select placeholder="{{ startDateType }}" style="width: 100%">
+                        <mat-option (click)="startDateType = 'Select Start Date'" style="width: 100%">
+                            Cancle Date Selection
                         </mat-option>
-                        <mat-option (click)="startDateTye = 'Select Date'" style="width: 100%">
+                        <mat-option (click)="startDateType = 'Select Date'" style="width: 100%">
                             Select Date
                         </mat-option>
-                        <mat-option (click)="startDateTye = '1st of Ongoing Month'" style="width: 100%">
+                        <mat-option (click)="startDateType = '1st of Ongoing Month'" style="width: 100%">
                             1st of Ongoing Month
                         </mat-option>
-                        <mat-option (click)="startDateTye = 'From Days Ago'" style="width: 100%">
+                        <mat-option (click)="startDateType = 'From Days Ago'" style="width: 100%">
                             From Days Ago
                         </mat-option>
                     </mat-select>
+                    <!-- Ends: Possible Options for Start-Date -->
                 </mat-form-field>
 
-                <mat-form-field *ngIf="startDateTye == 'Select Date'">
+                <!-- Starts: If DateType = Select Date -->
+                <mat-form-field *ngIf="startDateType == 'Select Date'">
                     <input
                         matInput
                         type="date"
@@ -43,11 +47,15 @@
                         [(ngModel)]="sDate"
                     />
                 </mat-form-field>
-                <span *ngIf="startDateTye == 'From Days Ago'">
+                <!-- Ends: If DateType = Select Date -->
+
+                <!-- Starts: If DateType = Days Ago -->
+                <span *ngIf="startDateType == 'From Days Ago'">
                     Fetch from
                     <input type="number" style="width: 60px; margin-left: 1%; margin-right: 1%;" [(ngModel)]="sDays"/>
                     days ago
                 </span>
+                <!-- Ends: If DateType = Days Ago -->
             </div>
         </div>
         <!-- Ends: Start Date -- Time Span Sub-Section -->
@@ -59,23 +67,26 @@
             </div>
             <div class="date-options">
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="{{ endDateTye }}" style="width: 100%">
-                        <mat-option (click)="endDateTye = 'Select End Date'" style="width: 100%">
-                            Select Start Date
+                    <!-- Starts: Possible Options for End-Date -->
+                    <mat-select placeholder="{{ endDateType }}" style="width: 100%">
+                        <mat-option (click)="endDateType = 'Select End Date'" style="width: 100%">
+                            Cancle Date Selection
                         </mat-option>
-                        <mat-option (click)="endDateTye = 'Select Date'" style="width: 100%">
+                        <mat-option (click)="endDateType = 'Select Date'" style="width: 100%">
                             Select Date
                         </mat-option>
-                        <mat-option (click)="endDateTye = 'Current Date'" style="width: 100%">
+                        <mat-option (click)="endDateType = 'Current Date'" style="width: 100%">
                             Current Date
                         </mat-option>
-                        <mat-option (click)="endDateTye = 'From Days Ago'" style="width: 100%">
+                        <mat-option (click)="endDateType = 'From Days Ago'" style="width: 100%">
                             From Days Ago
                         </mat-option>
                     </mat-select>
+                    <!-- Ends: Possible Options for End-Date -->
                 </mat-form-field>
 
-                <mat-form-field *ngIf="endDateTye == 'Select Date'">
+                <!-- Starts: If DateType = Select Date -->
+                <mat-form-field *ngIf="endDateType == 'Select Date'">
                     <input
                         matInput
                         type="date"
@@ -83,22 +94,25 @@
                         [(ngModel)]="eDate"
                     />
                 </mat-form-field>
-                <span *ngIf="endDateTye == 'From Days Ago'">
+                <!-- Ends: If DateType = Select Date -->
+
+                <!-- Starts: If DateType = Days Ago -->
+                <span *ngIf="endDateType == 'From Days Ago'">
                     Fetch till
                     <input type="number" style="width: 60px; margin-left: 1%; margin-right: 1%;" [(ngModel)]="eDays"/>
                     days ago
                 </span>
+                <!-- Ends: If DateType = Days Ago -->
             </div>
         </div>
         <!-- Ends: End Date -- Time Span Sub-Section -->
     </div>
-    <!-- Ends: Time Span Section -->
-
     <br />
     <br *ngIf="!isMobile()"/>
+    <!-- Ends: Time Span Section -->
+
     <!-- Starts: Complaint type  &&  Status Section -->
     <div class="names">
-
         <!-- Starts: Complaint type -->
         <div class="complaint-type-section">
             <b>Complaint type</b><br /><br />
@@ -155,11 +169,11 @@
         <!-- Ends: Status -->
 
     </div>
+    <br />
+    <br *ngIf="!isMobile()"/>
     <!-- Ends: Complaint type  &&  Status Section -->
 
     <!-- Starts: Bottom Buttons -->
-    <br />
-    <br *ngIf="!isMobile()"/>
     <div class="bottom-btns">
         <button
             type="button"

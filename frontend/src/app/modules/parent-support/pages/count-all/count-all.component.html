@@ -9,7 +9,7 @@
             style="padding: 12px 15px; margin-left: 5%;"
             matTooltip="Print the following table"
             tooltip-position="left"
-            (click)="printStudentList()"
+            (click)="printTable()"
         >
             Print<i class="material-icons" style="margin-left: 17px">print</i>
         </button>
@@ -33,6 +33,9 @@
     <div class="table-List">
         <mat-form-field style="margin-right: 30px">
             <mat-select placeholder="{{tableFormatTitle ? tableFormatTitle : 'Not Selected'}}" style="width: 100%">
+                <mat-option (click)="addNewTableClicked()" style="width: 100%">
+                    Create New Table
+                </mat-option>
                 <ng-container *ngFor="let table of tableList; let idx = index">
                     <mat-option (click)="htmlRenderer.tableOpenClicked(table, idx)" style="width: 100%">
                         {{ table.formatName }}

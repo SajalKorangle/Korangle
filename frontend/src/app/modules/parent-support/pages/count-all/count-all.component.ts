@@ -7,7 +7,7 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 
 import { ExcelService } from '../../../../excel/excel-service';
 import { PrintService } from '../../../../print/print-service';
-// import { PRINT_COUNT_ALL_TABLE } from '../../../../print/print-routes.constants';
+import { PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT } from '../../../../print/print-routes.constants';
 
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
@@ -26,6 +26,7 @@ export class CountAllComponent implements OnInit {
     NULL_CONSTANT = null;
 
     isTableEditing: boolean = false;
+    isTableUpdated: boolean = false;
     tableActiveId: number = 0;
     tableActiveIdx: number = 0;
     tableFormatTitle: string = "";     // Table Name
@@ -43,6 +44,7 @@ export class CountAllComponent implements OnInit {
 
     constructor(
         public excelService: ExcelService,
+        public printService: PrintService,
         public dialog: MatDialog,
     ) { }
 
@@ -58,31 +60,37 @@ export class CountAllComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
+    /* Initialize Complaint Type List */
     initializecomplaintTypeList(complaintTypeList) {
+        this.complaintTypeList = [];
         complaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = false;
             this.complaintTypeList.push(complaintType);
         });
 
         console.log("Complaint Type List: ", this.complaintTypeList);
-    }
+    }  // Ends: initializecomplaintTypeList()
 
+    /* Initialize Status List */
     initializeStatusList(statusList) {
+        this.statusList = [];
         statusList.forEach((status) => {
             status["selected"] = false;
             this.statusList.push(status);
         });
         console.log("Status List: ", this.statusList);
-    }
+    }  // Ends: initializeStatusList()
 
+    /* Initialize Table Details */
     initializeTableDetails() {
+        this.isTableUpdated = false;
         this.isTableEditing = false;
         this.tableActiveId = 0;
         this.tableActiveIdx = 0;
         this.tableFormatTitle = "";
         this.columnFilters = [];
         this.rowFilters = [];
-    }
+    }  // Ends: initializeTableDetails()
 
     /* Update Row Data After Column Drag */
     updateRowFiltersAfterColumnDrag(): void {
@@ -105,47 +113,49 @@ export class CountAllComponent implements OnInit {
                 }
             });
         }
-    }
+    }  // Ends: updateRowFiltersAfterColumnDrag()
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
+        this.isTableUpdated = true;
         moveItemInArray(this.rowFilters, event.previousIndex, event.currentIndex);
-    }
+    }  // Ends: dropRow()
 
     /* Will be Called After Dragging of a Column */
     dropColumn(event: CdkDragDrop<string[]>): void {
+        this.isTableUpdated = true;
         moveItemInArray(this.columnFilters, event.previousIndex, event.currentIndex);
         this.updateRowFiltersAfterColumnDrag();
-    }
+    }  // Ends: dropColumn()
 
     /* Check Applied set of Filters on a Student */
     checkFilters(complaint, filtersData): any {
         let check = true;
         for (const filter in filtersData) {
 
-            if (filter == "complaintTypeList") {  /* Class Check */
+            if (filter == "complaintTypeList") {  /* Check Complaint Type */
 
-                let idx = filtersData["complaintTypeList"].indexOf(complaint.parentComplaintType);
-                if(idx == -1) {
+                let idx = filtersData["complaintTypeList"].indexOf(complaint.parentSchoolComplaintType);
+                if (idx == -1) {
                     check = false;
                     break;
                 }
 
-            } else if (filter == "statusList") {  /* Age Check */
+            } else if (filter == "statusList") {  /* Check Status */
 
-                let idx = filtersData["statusList"].indexOf(complaint.parentStatus);
-                if(idx == -1) {
+                let idx = filtersData["statusList"].indexOf(complaint.parentSchoolComplaintStatus);
+                if (idx == -1) {
                     check = false;
                     break;
                 }
 
-            } else if (filter == "startDate") {  /* Category Check */
+            } else if (filter == "startDate") {  /* Date Range Check */
 
                 let complaintDate = new Date(complaint.dateSent).getTime();
                 let filterStartDate = new Date(filtersData["startDate"]).getTime();
                 let filterEndDate = new Date(filtersData["endDate"]).getTime();
 
-                if(complaintDate < filterStartDate || complaintDate > filterEndDate) {
+                if (complaintDate < filterStartDate || complaintDate > filterEndDate) {
                     check = false;
                     break;
                 }
@@ -153,7 +163,7 @@ export class CountAllComponent implements OnInit {
             }
         }
         return check;
-    }
+    }  // Ends: checkFilters()
 
     /* Get Table Date From Newly Added Row */
     getTableDataRow(filtersData): any {
@@ -184,7 +194,7 @@ export class CountAllComponent implements OnInit {
         returnData["answer"] = answer;
         returnData["totalCount"] = totalCount;
         return returnData;
-    }
+    }  // Ends: getTableDataRow()
 
     /* Get Table Date From Newly Added Column */
     getTableDataColumn(filtersData): any {
@@ -210,7 +220,7 @@ export class CountAllComponent implements OnInit {
             }
         });   // Ends: Logic
         return totalCount;
-    }
+    }  // Ends: getTableDataColumn()
 
     /* Get Updated Table Date */
     getUpdatedTableDataColumn(filtersData, index): any {
@@ -236,7 +246,7 @@ export class CountAllComponent implements OnInit {
             }
         });   // Ends: Logic
         return totalCount;
-    }
+    }  // Ends: getUpdatedTableDataColumn()
 
     /* Open Filter Modal */
     openDialog(): void {
@@ -250,22 +260,23 @@ export class CountAllComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
+                this.isTableUpdated = true;
                 console.log("Data: ", data.filtersData);
                 let filter = data.filtersData;
 
-                if(this.whereToAdd == 'row') {
+                if (this.whereToAdd == 'row') {    /* Add Row Filter */
                     let returnData = this.getTableDataRow(filter);
                     filter["answer"] = returnData["answer"];
                     filter["totalCount"] = returnData["totalCount"];
                     this.rowFilters.push(filter);
-                } else {
+                } else {    /* Add Column Filter */
                     let totalCount = this.getTableDataColumn(filter);
                     filter["totalCount"] = totalCount;
                     this.columnFilters.push(filter);
                 }
             }
         });
-    }
+    }  // Ends: openDialog()
 
     /* Open Filter Modal - For Existing Filters (Row  or  Column) */
     openChangeDialog(filter): void {
@@ -280,6 +291,7 @@ export class CountAllComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
+                this.isTableUpdated = true;
                 console.log("Data: ", data.filtersData);
                 let filtersData = data.filtersData;
 
@@ -336,7 +348,7 @@ export class CountAllComponent implements OnInit {
                 }
             }
         });   // Dialog Closed.
-    }
+    }  // Ends: openChangeDialog()
 
     /* Open Table Format Name Dialog */
     openSaveFormatDialog(): void {
@@ -354,11 +366,13 @@ export class CountAllComponent implements OnInit {
                 this.serviceAdapter.saveTable();
             }
         });
-    }
+    }  // Ends: openSaveFormatDialog()
 
+    /* Update Table */
     updateChangesClicked(): void {
+        this.isTableUpdated = false;
         this.serviceAdapter.updatetable();
-    }
+    }  // Ends: updateChangesClicked()
 
     /* Open Table Format Name Dialog - Save As Clicked */
     saveAsClicked(): void {
@@ -375,11 +389,27 @@ export class CountAllComponent implements OnInit {
                 this.serviceAdapter.saveTable();
             }
         });
-    }
+    }  // Ends: saveAsClicked()
 
+    /* Delete Table */
     deleteTable() {
         this.serviceAdapter.deleteTable();
-    }
+    }  // Ends: deleteTable()
+
+    /* Create New Table */
+    addNewTableClicked() {
+        if(this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                let operation = "createNew";
+                this.serviceAdapter.updatetable(operation);
+            } else {
+                this.initializeTableDetails();
+            }
+        } else {
+            this.initializeTableDetails();
+        }
+    }  // Ends: addNewTableClicked()
 
     /* Get header Values */
     getHeaderValues(): any {
@@ -389,7 +419,7 @@ export class CountAllComponent implements OnInit {
             headerValues.push(columnFilter.name);
         });
         return headerValues;
-    }
+    }  // Ends: getHeaderValues()
 
     /* Get Filter Information */
     getFilterInfo(filter: any): any {
@@ -399,7 +429,7 @@ export class CountAllComponent implements OnInit {
             filterInfo.push(ans);
         });
         return filterInfo;
-    }
+    }  // Ends: getFilterInfo()
 
     /* Download the Table */
     downloadList(): void {
@@ -410,9 +440,10 @@ export class CountAllComponent implements OnInit {
         });
         let fileName: string = this.tableFormatTitle + ".csv";
         this.excelService.downloadFile(template, fileName);
-    }
+    }  // Ends: downloadList()
 
-    printStudentList(): void {
+    /* Print Table */
+    printTable(): void {
         // alert('Functionality needs to be implemented once again');
         let template: any = [];
         this.rowFilters.forEach((rowFilter) => {
@@ -426,36 +457,6 @@ export class CountAllComponent implements OnInit {
             columnData: headerInfo,
             tableName: this.tableFormatTitle,
         };
-        // this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE, { user: this.user, value });
-    }
-
-    /* Get Width of Column */
-    getTextWidthColumn(textContent: string): any {
-        let text = document.createElement("span");
-        document.body.appendChild(text);
-
-        text.style.font = "roboto";
-        text.style.fontSize = 16 + "px";
-        text.style.position = 'absolute';
-        text.style.whiteSpace = 'no-wrap';
-        text.innerHTML = textContent;
-
-        let width = Math.ceil(text.offsetWidth);
-        let formattedWidth = width + "px";
-        document.body.removeChild(text);
-        return formattedWidth;
-    }
-
-    /* Get Width of 1st Column */
-    getTextWidthRow(): any {
-        let textContent = "+ Row";
-        this.rowFilters.forEach((row) => {
-            if (row.name.length > textContent.length) {
-                textContent = row.name;
-            }
-        });
-
-        return this.getTextWidthColumn(textContent);
-    }  // Ends: getTextWidthRow()
-
+        this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT, { user: this.user, value });
+    }  // Ends: printTable()
 }

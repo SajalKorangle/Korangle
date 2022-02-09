@@ -72,7 +72,7 @@ class Complaint(models.Model):
     dateSent = models.DateTimeField(auto_now_add = True)
 
     # Complaint Type
-    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.CASCADE)
+    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.CASCADE, null = True)
 
     # Child
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE)
@@ -144,7 +144,7 @@ class Comment(models.Model):
     parentEmployee = models.ForeignKey(Employee, on_delete = models.SET_NULL, null = True)
 
     # We will fetch father's name && contact number from his child.
-    parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE, null = True)
+    parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE)
 
     # Sender's message
     message = models.TextField()
@@ -159,7 +159,7 @@ class Comment(models.Model):
         return self.message
 
     class Permissions(BasePermission):
-        RelationsToSchool = ['parentEmployee__parentSchool__id']
+        RelationsToSchool = ['parentStudent__parentSchool__id']
 
     class Meta:
         db_table = 'complaint_comment'
@@ -220,7 +220,7 @@ class StatusComplaintType(models.Model):
         return (self.parentSchoolComplaintStatus.name + " & " + self.parentSchoolComplaintType.name)
 
     class Permissions(BasePermission):
-        pass
+        RelationsToSchool = ['parentSchoolComplaintType__parentSchool__id']
 
     class Meta:
         db_table = 'status_complaintType'
@@ -238,7 +238,7 @@ class EmployeeComplaintType(models.Model):
         return (self.parentEmployee.name + " & " + self.parentSchoolComplaintType.name)
 
     class Permissions(BasePermission):
-        RelationsToSchool = ['parentEmployee__parentSchool__id']
+        RelationsToSchool = ['parentSchoolComplaintType__parentSchool__id']
 
     class Meta:
         db_table = 'employee_complaintType'

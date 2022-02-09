@@ -4,7 +4,6 @@
 }
 
 /* Starts: Table */
-
 thead tr th {
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -26,6 +25,7 @@ tbody tr:last-child td {
 }
 /* Ends: Table */
 
+/* Starts: Add New Complaint */
 .add-title {
     font-size: 12px;
     line-height: 14px;
@@ -40,7 +40,6 @@ tbody tr:last-child td {
 
 .field-title {
     font-size: 14px;
-    /* line-height: 14px; */
     font-weight: 500;
     margin-right: 1rem;
 }
@@ -61,7 +60,7 @@ tbody tr:last-child td {
     border-radius: 2px;
 }
 
-/* Starts: Search Bar */
+    /* Starts: Search Bar */
 .search-bar {
     display: flex;
     height: 25px;
@@ -87,15 +86,14 @@ tbody tr:last-child td {
 .search-icon {
     color: rgba(0, 0, 0, 0.5);
 }
-/* Ends: Search Bar */
-
-.mat-radio-button ~ .mat-radio-button {
-  margin-left: 16px;
-}
+    /* Ends: Search Bar */
 
 .checkbox-group {
     display: flex;
-    /* align-items: center; */
+}
+
+.checkbox-subgroup {
+    flex-basis: 30%;
 }
 
 .add-status-btn {
@@ -104,7 +102,7 @@ tbody tr:last-child td {
     text-transform: capitalize !important;
 }
 
-/* Starts: Bottom Btns */
+    /* Starts: Bottom Btns */
 .bottom-btns {
     float: right;
 }
@@ -118,9 +116,11 @@ tbody tr:last-child td {
     background-color: white;
     color: black;
     margin-left: 12px;
-    padding: 7px 17px;
+    padding: 5.5px 15.5px;
 }
-/* Ends: Bottom Btns */
+    /* Ends: Bottom Btns */
+
+/* Ends: Add New Complaint */
 
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
@@ -129,6 +129,7 @@ tbody tr:last-child td {
         padding-right: 1rem;
     }
 
+    /* Starts: Search Bar */
     .search-field {
         flex-basis: 90%;
     }
@@ -136,9 +137,16 @@ tbody tr:last-child td {
     .seach-btn {
         flex-basis: 10%;
     }
+    /* Ends: Search Bar */
+
+    /* Starts: Add New Complaint Type */
+    .checkbox-subgroup {
+        flex-basis: 50%;
+    }
 
     .add-status-btn {
         margin-left: 0%;
     }
+    /* Ends: Add New Complaint Type */
 }
 /* Ends: Media Query - Mobile Phone */

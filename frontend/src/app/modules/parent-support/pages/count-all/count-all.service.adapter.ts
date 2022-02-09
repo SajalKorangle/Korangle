@@ -8,9 +8,10 @@ export class CountAllServiceAdapter {
 
     constructor() { }
 
+    /* Initialize Adapter */
     initializeAdapter(vm: CountAllComponent): void {
         this.vm = vm;
-    }
+    }  // Ends: initializeAdapter()
 
     /* Initialize Data */
     async initializeData() {
@@ -53,7 +54,7 @@ export class CountAllServiceAdapter {
         this.vm.complaintList = complaintList;
         console.log("Complaint List: ", this.vm.complaintList);
         this.vm.isLoading = false;
-    }
+    }  // Ends: initializeData()
 
     /* Save Table */
     async saveTable() {
@@ -82,14 +83,14 @@ export class CountAllServiceAdapter {
         const response = await new Query().createObject({parent_support_app: 'CountAllParentSupport'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableList.length);
         this.vm.tableList.push(response);
-        // this.updateTableList();
 
+        this.vm.isTableUpdated = false;
         this.vm.isLoading = false;
         alert("Table saved successfully.");
-    }
+    }  // Ends: saveTable()
 
     /* Update Table */
-    async updatetable() {
+    async updatetable(operation = "") {
         this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
@@ -116,12 +117,16 @@ export class CountAllServiceAdapter {
         const response = await new Query().updateObject({parent_support_app: 'CountAllParentSupport'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
         this.vm.tableList[this.vm.tableActiveIdx] = response;
-        // this.updateTableList();
+
+        if(operation == "createNew") {
+            this.vm.initializeTableDetails();
+        }
 
         this.vm.isLoading = false;
         alert("Table updated successfully.");
-    }
+    }  // Ends: updatetable()
 
+    /* Delete Table */
     async deleteTable() {
         this.vm.isLoading = true;
 
@@ -133,5 +138,5 @@ export class CountAllServiceAdapter {
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();
         this.vm.isLoading = false;
-    }
+    }  // Ends: deleteTable()
 }

@@ -8,9 +8,10 @@ export class CountAllHtmlRenderer {
     constructor() {
     }
 
+    /* Initialize Renderer */
     initializeRenderer(vm: CountAllComponent): void {
         this.vm = vm;
-    }
+    }  // Ends: initializeRenderer()
 
     /* Open Existing Table */
     tableOpenClicked(table, idx): void {
@@ -39,10 +40,10 @@ export class CountAllHtmlRenderer {
             return false;
         }
         return true;
-    }
+    }  // Ends: isMobile()
 
     /* For mobile-application */
     checkMobile(): boolean {
         return isMobile();
-    }
+    }  // Ends: checkMobile()
 }

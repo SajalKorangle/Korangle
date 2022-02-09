@@ -5,6 +5,7 @@
 }
 /* Ends: Modal Container */
 
+/* Starts: Header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -21,7 +22,9 @@
     color: red;
     cursor: pointer;
 }
+/* Ends: Header */
 
+/* Starts: Input Section */
 .inputField {
     display: flex;
     justify-content: space-between;
@@ -34,6 +37,7 @@
     color: red;
     cursor: pointer;
 }
+/* Ends: Input Section */
 
 /* Starts: Bottom Btns */
 .bottom-btns {

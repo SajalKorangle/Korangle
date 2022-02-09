@@ -1,48 +1,124 @@
+<!-- Starts: List Of Complaints -->
 <div *ngIf="!isLoading && pageName == 'showTables'" class="card-content">
+    <!-- Starts: Search Bar -->
     <div class="search-bar">
-        <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="seachString" (ngModelChange)="seachString = $event">
+        <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="seachString" (ngModelChange)="seachString = $event; seachChanged()">
         <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
     </div>
     <br />
+    <!-- Ends: Search Bar -->
 
+    <!-- Starts: Complaint List Table -->
     <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+        <!-- Starts: Table -->
         <table class="table">
+
+            <!-- Starts: Table Header -->
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
                     <th style="min-width: 140px;">Student Name</th>
                     <th style="min-width: 140px;">Father’s Name</th>
-                    <th style="min-width: 110px;">Date Sent</th>
+                    <th style="min-width: 110px;">
+                        <div class="filter-column">
+                            <div>Date Sent</div>
+                            <!-- Starts: Date Sent Sort Type Filter -->
+                            <div style="cursor: pointer;">
+                                <span *ngIf="sortNewest" style="color: black; font-size: 12px;" (click)="sortNewestClicked()" class="material-icons">north</span>
+                                <span *ngIf="sortOldest" style="color: black; font-size: 12px;" (click)="sortOldestClicked()" class="material-icons">south</span>
+                            </div>
+                            <!-- Ends: Date Sent Sort Type Filter -->
+                        </div>
+                    </th>
                     <th style="min-width: 110px;">
                         <div class="filter-column">
                             <div>Type</div>
-                            <i class="material-icons filter-alt-btn">filter_alt</i>
+                            <!-- Starts: Complaint Type Filter -->
+                            <div style="position: relative;">
+                                <i class="material-icons filter-alt-btn" (click)="showFilterOptionComplaintType = !showFilterOptionComplaintType; showFilterOptionStatus = false;">filter_alt</i>
+                                <div *ngIf="showFilterOptionComplaintType" class="filter-option">
+                                    <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
+                                        <mat-option style="background-color: #F5F5F5">
+                                            <button class="btn" style="padding: 4px 7px" (click)="selectAllComplaintType(); $event.stopPropagation()">
+                                                Select All
+                                            </button>
+                                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllComplaintType(); $event.stopPropagation()">
+                                                Clear All
+                                            </button>
+                                        </mat-option>
+
+                                        <ng-container *ngFor="let complaintType of filterComplaintTypeList">
+                                            <mat-option class="mat-option-complaint-type">
+                                                <mat-checkbox
+                                                    class="checkbox-label"
+                                                    [ngModel]="complaintType.selected"
+                                                    (ngModelChange)="complaintTypeOptionClicked(complaintType);"
+                                                >
+                                                    {{ complaintType.name }}
+                                                </mat-checkbox>
+                                            </mat-option>
+                                        </ng-container>
+                                    </cdk-virtual-scroll-viewport>
+                                </div>
+                            </div>
+                            <!-- Ends: Complaint Type Filter -->
                         </div>
                     </th>
                     <th style="min-width: 110px;">
                         <div class="filter-column">
                             <div>Status</div>
-                            <i class="material-icons filter-alt-btn">filter_alt</i>
+                            <!-- Starts: Status Filter -->
+                            <div style="position: relative;">
+                                <i class="material-icons filter-alt-btn" (click)="showFilterOptionStatus = !showFilterOptionStatus; showFilterOptionComplaintType = false;">filter_alt</i>
+                                <div *ngIf="showFilterOptionStatus" class="filter-option">
+                                    <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
+                                        <mat-option style="background-color: #F5F5F5">
+                                            <button class="btn" style="padding: 4px 7px" (click)="selectAllStatus(); $event.stopPropagation()">
+                                                Select All
+                                            </button>
+                                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllStatus(); $event.stopPropagation()">
+                                                Clear All
+                                            </button>
+                                        </mat-option>
+
+                                        <ng-container *ngFor="let status of filterStatusList">
+                                            <mat-option class="mat-option-complaint-type">
+                                                <mat-checkbox
+                                                    class="checkbox-label"
+                                                    [ngModel]="status.selected"
+                                                    (ngModelChange)="statusOptionClicked(status);"
+                                                >
+                                                    {{ status.name }}
+                                                </mat-checkbox>
+                                            </mat-option>
+                                        </ng-container>
+                                    </cdk-virtual-scroll-viewport>
+                                </div>
+                            </div>
+                            <!-- Ends: Status Filter -->
                         </div>
                     </th>
                     <th style="min-width: 125px;">Father’s Contact</th>
                     <th style="min-width: 100px; text-align: center">Comments</th>
-                    <th style="min-width: 150px; text-align: center">Handlers</th>
+                    <th *ngIf="userPermission" style="min-width: 150px; text-align: center">Handlers</th>
                     <th></th>
                     <th></th>
-                    <!-- <th style="background-color: red; text-align: center;"></th> -->
                 </tr>
             </thead>
+            <!-- Ends: Table Header -->
+
+            <!-- Starts: Table Body -->
             <tbody>
-                <ng-container *ngFor="let complaint of complaintList; let i = index">
+                <ng-container *ngFor="let complaint of searchedComplaintList; let i = index">
                     <tr>
                         <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
                         <td style="min-width: 140px;">{{ complaint.parentStudent.fathersName }}</td>
-                        <td style="min-width: 110px;">{{ getDateInfo(complaint.dateSent) }}</td>
-                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType.name }}</td>
-                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Selected" }}</td>
+                        <td style="min-width: 110px;">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType.name ? complaint.parentSchoolComplaintType.name : "Not Applicable" }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Applicable" }}</td>
                         <td style="min-width: 125px;">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
                         <td style="min-width: 100px; text-align: center">{{ complaint.commentList.length }}</td>
                         <td
+                            *ngIf="userPermission"
                             class="text-{{ user.activeSchool.secondaryThemeColor }}"
                             style="min-width: 150px; text-align: center; cursor: pointer; text-decoration: underline;"
                             (click)="openAssignEmployeeDialog()"
@@ -59,19 +135,45 @@
                         <td><i class="material-icons delete-icon" (click)="openedComplaintIdx = i; deleteComplaint(complaint);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
                     </tr>
                 </ng-container>
-            </tbody>
-        </table>
-    </cdk-virtual-scroll-viewport>
-</div>
 
+                <!-- Starts: Dummy Row -->
+                <tr>
+                    <td class="dummyRow" style="min-width: 140px;"></td>
+                    <td class="dummyRow" style="min-width: 140px;"></td>
+                    <td class="dummyRow" style="min-width: 110px;"></td>
+                    <td class="dummyRow" style="min-width: 110px;"></td>
+                    <td class="dummyRow" style="min-width: 110px;"></td>
+                    <td class="dummyRow" style="min-width: 125px;"></td>
+                    <td class="dummyRow" style="min-width: 100px; text-align: center"></td>
+                    <td class="dummyRow" style="min-width: 150px; text-align: center; cursor: default; text-decoration: underline;"></td>
+                    <td class="dummyRow" style="min-width: 150px; text-align: center; cursor: default; text-decoration: underline;"></td>
+                    <td class="dummyRow"></td>
+                </tr>
+                <!-- Ends: Dummy Row -->
+            </tbody>
+            <!-- Ends: Table Body -->
+        </table>
+        <!-- Ends: Table -->
+    </cdk-virtual-scroll-viewport>
+    <!-- Ends: Complaint List Table -->
+</div>
+<!-- Ends: List Of Complaints -->
+
+
+<!-- Starts: Open Complaint -->
 <div *ngIf="!isLoading && pageName == 'showComplaint'" class="card-content">
+
+    <!-- Starts: Parent Name  &&  Status(desktop) -->
     <div class="common-section">
+        <!-- Starts: Parent Name -->
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Father's Name:</div>
             <div>{{ openedComplaint.parentStudent.fathersName }}</div>
         </div>
+        <!-- Ends: Parent Name -->
 
-        <div *ngIf="!isMobile()" class="status-section">
+        <!-- Starts: Status -->
+        <div *ngIf="!htmlRenderer.isMobile()" class="status-section">
             <div class="status">
                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
                 <mat-form-field>
@@ -84,55 +186,63 @@
             </div>
             <i class="material-icons delete-icon" style="cursor: pointer" (click)="deleteComplaint(openedComplaint);">delete_forever</i>
         </div>
+        <!-- Ends: Status -->
     </div>
-    <br *ngIf="isMobile()"/>
+    <br *ngIf="htmlRenderer.isMobile()"/>
+    <!-- Ends: Parent Name  &&  Status(desktop) -->
 
+    <!-- Starts: Date Sent -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
-            <div>{{ getDateInfo(openedComplaint.dateSent) }}</div>
+            <div>{{ htmlRenderer.getDateInfo(openedComplaint.dateSent) }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Date Sent -->
 
+    <!-- Starts: Complaint Type -->
     <div class="common-section">
         <div class="information">
-            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Message Type :</div>
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Complaint Type :</div>
             <div>{{ openedComplaint.parentSchoolComplaintType.name }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Complaint Type -->
 
+    <!-- Starts: Student Name -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
             <div>{{ openedComplaint.parentStudent.name }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Student Name -->
 
+    <!-- Starts: Contact Number -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
             <div>{{ openedComplaint.parentStudent.mobileNumber }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Contact Number -->
 
+    <!-- Starts: Complaint Title -->
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
             <div>{{ openedComplaint.title }}</div>
         </div>
-        <!-- <div></div> -->
     </div>
     <br />
+    <!-- Ends: Complaint Title -->
 
-    <ng-container *ngIf="isMobile()">
+    <!-- Starts: Status(Mobile) -->
+    <ng-container *ngIf="htmlRenderer.isMobile()">
         <div class="common-section">
             <div class="information">
                 <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Status: </div>
@@ -150,37 +260,122 @@
         </div>
         <br />
     </ng-container>
+    <!-- Ends: Status(Mobile) -->
 
+    <!-- Starts: Comment Section -->
     <div class="comment-section">
+
+        <!-- Starts: Default Text -->
         <div class="default-text comment">
             {{ openedComplaint.parentSchoolComplaintType.defaultText }}
         </div>
-        <ng-container *ngFor="let commentObject of commentList">
-            <div class="comment">
-                <div class="name" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">
-                    {{ getAuthorComment(commentObject) }}
+        <!-- Ends: Default Text -->
+
+        <!-- Starts: (Desktop) - List of Comments  &&  Send Query Section -->
+        <ng-container *ngIf="!htmlRenderer.isMobile()">
+
+            <!-- Starts: List of Comments -->
+            <ng-container *ngFor="let commentObject of commentList">
+                <div class="comment">
+                    <div class="name" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">
+                        {{ htmlRenderer.getAuthorComment(commentObject) }}
+                    </div>
+                    <div class="information">
+                        <div class="comment-description" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                        <div class="time" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.5'} ">{{ htmlRenderer.getDateTimeInfo(commentObject.createdAt) }}</div>
+                    </div>
                 </div>
-                <div class="information">
-                    <div class="comment-description" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
-                    <div class="time" [ngStyle]=" {'opacity': openedComplaint.parentEmployee == user.activeSchool.employeeId ? '1' : '0.5'} ">{{ getDateTimeInfo(commentObject.createdAt) }}</div>
+            </ng-container>
+            <!-- Ends: List of Comments -->
+
+            <!-- Starts: Send Query Section -->
+            <div class="bottom-section">
+                <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    style="padding: 12px 15px"
+                    matTooltip="Send Comment"
+                    tooltip-position="left"
+                    (click)="sendCommentClicked()"
+                >
+                    Send
+                </button>
+            </div>
+            <!-- Ends: Send Query Section -->
+        </ng-container>
+        <!-- Ends: (Desktop) - List of Comments  &&  Send Query Section -->
+
+        <!-- Starts: (Mobile) - List of Comments  &&  Send Query Section -->
+        <ng-container *ngIf="htmlRenderer.isMobile()">
+
+            <!-- Starts: List of Comments -->
+            <ng-container *ngFor="let commentObject of commentList">
+                <div class="comment">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="name" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">
+                            {{ htmlRenderer.getAuthorComment(commentObject) }}
+                        </div>
+                        <div class="time" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.5'} ">{{ htmlRenderer.getDateTimeInfo(commentObject.createdAt) }}</div>
+                    </div>
+                    <div class="information">
+                        <div class="comment-description" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Ends: List of Comments -->
+
+            <!-- Starts: Send Query Section -->
+            <div class="bottom-section">
+                <textarea
+                    placeholder="Type Response/ Updates here"
+                    class="bottom-text-field"
+                    [(ngModel)]="comment"
+                ></textarea>
+                <br />
+
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        style="padding: 10px 25px"
+                        matTooltip="Send Comment"
+                        tooltip-position="left"
+                        (click)="sendCommentClicked()"
+                    >
+                        Send
+                    </button>
                 </div>
             </div>
+            <!-- Ends: Send Query Section -->
         </ng-container>
-        <div class="bottom-section">
-            <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
-            <button
-                type="button"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
-                style="padding: 12px 15px"
-                matTooltip="Send Comment"
-                tooltip-position="left"
-                (click)="sendCommentClicked()"
-            >
-                Send
-            </button>
-        </div>
+        <!-- Ends: (Mobile) - List of Comments  &&  Send Query Section -->
     </div>
+    <!-- Ends: Comment Section -->
 </div>
+<!-- Ends: Open Complaint -->
+
+<!-- Starts: Progress Bar -->
+<div style="padding: 0rem 3rem 2rem 3rem;">
+    <ng-container *ngIf="isProgress">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div id="progress" class="progress" [ngStyle]="{ 'background-color': htmlRenderer.getSecondaryColor(), 'width': progress + '%', 'height': '6px'}"></div>
+            </div>
+            <div class="progress-done" [ngStyle]="{ 'background-color': htmlRenderer.getPrimaryColor(), 'color': user.activeSchool.primaryThemeColor}">
+                <span class="material-icons done-icon">done</span>
+            </div>
+        </div>
+    </ng-container>
+    <!-- Starts: Load More -->
+    <ng-container *ngIf="isLoadMore">
+        <div class="load-more text-{{ user.activeSchool.secondaryThemeColor }}" >
+            LOAD MORE (50)
+        </div>
+    </ng-container>
+    <!-- Ends: Load More -->
+</div>
+<!-- Ends: Progress Bar -->
 
 <!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">

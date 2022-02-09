@@ -3,7 +3,9 @@
     min-height: 90vh;
 }
 
-/* Starts: Search Bar */
+/* Starts: List of Complaints */
+
+    /* Starts: Search Bar */
 .search-bar {
     display: flex;
     height: 25px;
@@ -29,8 +31,9 @@
 .search-icon {
     color: rgba(0, 0, 0, 0.5);
 }
-/* Ends: Search Bar */
+    /* Ends: Search Bar */
 
+    /* Starts: Table */
 .example-viewport {
     height: 80vh;
     width: 100%;
@@ -42,11 +45,47 @@
     align-items: center;
 }
 
+.table {
+    height: 100%;
+    width: 100%;
+    z-index: -10;
+}
+
+tr th {
+    border-bottom: 1px solid black;
+}
+
+.dummyRow {
+    border: none !important;
+    height: 40vh;
+}
+
 .filter-alt-btn {
     margin-right: 20%;
     cursor: pointer;
 }
 
+.filter-option {
+    position: absolute;
+    top: 35px;
+    left: -30px;
+    width: 30vh;
+    height: 30vh;
+    z-index: 100000;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.mat-option-complaint-type {
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+    /* Ends: Table */
+
+/* Ends: List of Complaints */
+
+/* Starts: Open Complaint */
 .common-section {
     display: flex;
     justify-content: space-between;
@@ -56,10 +95,11 @@
 .information {
     flex-basis: 65%;
     display: flex;
+    align-items: center;
 }
 
 .information .header {
-    /* margin-right: 5rem; */
+    margin-right: 5rem;
     flex-basis: 25%;
 }
 
@@ -67,9 +107,9 @@
     flex-basis: 35%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 0;
     padding: 0;
-    align-items: center;
 }
 
 .delete-icon {
@@ -77,10 +117,7 @@
     color: red;
 }
 
-.refresh-btn {
-    text-transform: capitalize !important;
-}
-
+    /* Starts: Comment Section */
 .comment-section {
     background-color: #F4F7FF;
     border-radius: 5px;
@@ -118,8 +155,9 @@
 }
 
 .time {
-    flex-basis: 10%;
-    font-size: 9px;
+    flex-basis: 15%;
+    font-size: 10px;
+    opacity: 0.5;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -154,17 +192,60 @@
     border-radius: 5px !important;
     text-transform: capitalize !important;
 }
+    /* Ends: Comment Section */
 
-.notify-btn {
-    text-transform: capitalize !important;
+/* Ends: Open Complaint */
+
+/* Starts: Progress Bar */
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+
+.progress-bar {
+    flex-basis: 95%;
+    background-color: #D9D9D9;
+    height: 6px;
+    border-radius: 3px;
+}
+
+.progress-done {
+    flex-basis: 20px;
+    border-radius: 50%;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.done-icon {
+    font-size: 12px;
+    text-align: center;
+}
+
+.load-more {
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+/* Ends: Progress Bar */
 
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
     .card-content {
-        padding-left: 2rem;
-        padding-right: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
+
+    /* Starts: Search Bar */
+   .search-bar {
+       height: 27px;
+   }
 
     .search-field {
         flex-basis: 90%;
@@ -173,21 +254,60 @@
     .seach-btn {
         flex-basis: 10%;
     }
+    /* Ends: Search Bar */
 
+    /* Starts: Open Complaint */
     .information {
         flex-basis: 100%;
     }
 
     .information .header {
         margin-right: 0rem;
-        flex-basis: 40%;
+        flex-basis: 50%;
     }
 
     .status-option-section {
-        flex-basis: 60%;
+        flex-basis: 50%;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
+
+    .time {
+        flex-basis: 35%;
+        font-size: 12px;
+        opacity: 0.5;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        word-wrap: break-word;
+    }
+
+    .dummyRow {
+        height: 50vh;
+    }
+
+    .filter-option {
+        width: 40vh;
+        height: 40vh;
+    }
+    /* Ends: Open Complaint */
+
+    /* Starts: Comment Section */
+    .bottom-section {
+        display: block;
+    }
+
+    .bottom-text-field {
+        width: 100%;
+        height: 180px;
+        background: #FEFEFE;
+        border: 0.5px solid #C4C4C4;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+    /* Ends: Comment Section */
 }
 /* Ends: Media Query - Mobile Phone */

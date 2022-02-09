@@ -4,17 +4,18 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 import { DataStorage } from "@classes/data-storage";
 
 import { AddStatusModalComponent } from '@modules/parent-support/component/add-status-modal/add-status-modal.component';
-import { ManageComplaintTypesServiceAdapter } from './manage-complaint-types.service.adapter';
+import { ManageComplaintTypeServiceAdapter } from './manage-complaint-type.service.adapter';
+import { ManageComplaintTypeHtmlRenderer } from './manage-complaint-type.html.renderer';
 
 import { MatDialog } from '@angular/material';
 
 
 @Component({
-    selector: 'app-manage-complaint-types',
-    templateUrl: './manage-complaint-types.component.html',
-    styleUrls: ['./manage-complaint-types.component.css']
+    selector: 'app-manage-complaint-type',
+    templateUrl: './manage-complaint-type.component.html',
+    styleUrls: ['./manage-complaint-type.component.css']
 })
-export class ManageComplaintTypesComponent implements OnInit {
+export class ManageComplaintTypeComponent implements OnInit {
     user: any;
     isLoading: boolean;
 
@@ -45,7 +46,8 @@ export class ManageComplaintTypesComponent implements OnInit {
     defaultStatusId: number = 0;
     complaintTypeList: any = [];
 
-    serviceAdapter: ManageComplaintTypesServiceAdapter;
+    serviceAdapter: ManageComplaintTypeServiceAdapter;
+    htmlRenderer: ManageComplaintTypeHtmlRenderer;
 
     constructor(
         public dialog: MatDialog,
@@ -55,17 +57,22 @@ export class ManageComplaintTypesComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         console.log("User: ", this.user);
 
-        this.serviceAdapter = new ManageComplaintTypesServiceAdapter();
+        this.serviceAdapter = new ManageComplaintTypeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new ManageComplaintTypeHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
+    /* Unselect All Status */
     unselectAllStatus() {
         this.statusList.forEach((status) => {
             status.selected = false;
         });
-    }
+    }  // Ends: unselectAllStatus()
 
+    /* Initialize Complaint Type Details */
     initializeComplaintTypeDetails() {
         this.editingCompalaintType = false;
         this.typeName = "";
@@ -79,40 +86,9 @@ export class ManageComplaintTypesComponent implements OnInit {
         this.searchedEmployeeList = [];
         this.applicableEmployeeList = [];
         this.unselectAllStatus();
-    }
+    }  // Ends: initializeComplaintTypeDetails()
 
-    isMobile() {
-        if(window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
-
-    setCancelBtnStyle() {
-        let color = "white";
-        if(this.user.activeSchool.secondaryThemeColor == "primary") {
-            color = "#1976D2";
-        } else if(this.user.activeSchool.secondaryThemeColor == "warning") {
-            color = "#FFC107";
-        } else if(this.user.activeSchool.secondaryThemeColor == "secondary") {
-            color = "#424242";
-        } else if(this.user.activeSchool.secondaryThemeColor == "accent") {
-            color = "#82B1FF";
-        } else if(this.user.activeSchool.secondaryThemeColor == "error") {
-            color = "#FF5252";
-        } else if(this.user.activeSchool.secondaryThemeColor == "info") {
-            color = "#2196F3";
-        } else if(this.user.activeSchool.secondaryThemeColor == "success") {
-            color = "#4CAF50";
-        }
-
-        let style = {
-            'border': '1.5px solid ' + color,
-        };
-
-        return style;
-    }
-
+    /* Initialize Complaint Type List */
     initializecomplaintTypeList(complaintTypeList) {
         complaintTypeList.forEach((complaintType) => {
             complaintType["addressEmployeeList"] = [];
@@ -122,19 +98,20 @@ export class ManageComplaintTypesComponent implements OnInit {
             this.complaintTypeList.push(complaintType);
         });
 
-        for(let i = 0; i < this.complaintTypeList.length; i++) {
+        for (let i = 0; i < this.complaintTypeList.length; i++) {
             this.serviceAdapter.getEmployeeCompalintType(this.complaintTypeList[i].id, i);
         }
         console.log("Complaint Type List: ", this.complaintTypeList);
-    }
+    }  // Ends: initializecomplaintTypeList()
 
+    /* Initialize Status List */
     initializeStatusList(statusList) {
         statusList.forEach((status) => {
             status["selected"] = false;
             this.statusList.push(status);
         });
         console.log("Status List: ", this.statusList);
-    }
+    }  // Ends: initializeStatusList()
 
     /* Initialize Employee List */
     initializeEmployeeList(employeeList: any): void {
@@ -147,28 +124,31 @@ export class ManageComplaintTypesComponent implements OnInit {
             tempEmployee["selected"] = false;
             this.employeeList.push(tempEmployee);
         });
-    }
+    }  // Ends: initializeEmployeeList()
 
+    /* Check Existence of Employee */
     checkEmployeeExist(employeeId) {
-        for(let i = 0; i < this.selectedEmployeeList.length; i++) {
-            if(this.selectedEmployeeList[i].id == employeeId) {
+        for (let i = 0; i < this.selectedEmployeeList.length; i++) {
+            if (this.selectedEmployeeList[i].id == employeeId) {
                 return true;
             }
         }
 
         return false;
-    }
+    }  // Ends: checkEmployeeExist()
 
+    /* Initialize Employee Data */
     initializeEmployeeData(employee) {
         let check = this.checkEmployeeExist(employee.id);
 
-        if(!check) {
+        if (!check) {
             let employeeCopy = CommonFunctions.getInstance().deepCopy(employee);
             employeeCopy["selected"] = true;
             this.selectedEmployeeList.push(employeeCopy);
         }
-    }
+    }  // Ends: initializeEmployeeData()
 
+    /* Initialize Applicable Status List */
     initializeStatusComplaintType(statusComplaintTypeList) {
         this.applicableStatusList = [];
         statusComplaintTypeList.forEach((statusComplaintType) => {
@@ -177,8 +157,9 @@ export class ManageComplaintTypesComponent implements OnInit {
             this.applicableStatusList.push(status);
         });
         this.applicableStatusTempList = CommonFunctions.getInstance().deepCopy(this.applicableStatusList);
-    }
+    }  // Ends: initializeStatusComplaintType()
 
+    /* Initialize Address-TO-Employee List */
     initializeEmployeeComplaintType(employeeComplaintTypeList, idx) {
         this.complaintTypeList[idx]["addressEmployeeList"] = [];
         employeeComplaintTypeList.forEach((employeeComplaintType) => {
@@ -187,11 +168,12 @@ export class ManageComplaintTypesComponent implements OnInit {
             this.complaintTypeList[idx]["addressEmployeeList"].push(employee);
         });
         console.log("complaintType Employee: ", this.complaintTypeList[idx]["addressEmployeeList"]);
-    }
+    }  // Ends: initializeEmployeeComplaintType()
 
+    /* Get Searched Employee List */
     searchEmployee() {
         this.searchedEmployeeList = [];
-        if(!this.addressToSearchString) {
+        if (!this.addressToSearchString) {
             return ;
         }
 
@@ -201,7 +183,7 @@ export class ManageComplaintTypesComponent implements OnInit {
             }
         });
         console.log("Searched Employee List: ", this.searchedEmployeeList);
-    }
+    }  // Ends: searchEmployee()
 
     /* Debouncing */
     debounce(func, timeout = 300) {
@@ -225,14 +207,14 @@ export class ManageComplaintTypesComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             console.log("Data: ", data);
-            if(data && data["statusName"]) {
+            if (data && data["statusName"]) {
                 this.addStatusName = data["statusName"];
                 this.addStatusClick();
             }
         });
-    }
+    }  // Ends: openAddStatusDialog()
 
-    /* Open Edit Filter Modal */
+    /* Open Change Status Modal */
     openChangeStatusDialog(status, idx): void {
         const dialogRef = this.dialog.open(AddStatusModalComponent, {
             data: {
@@ -244,11 +226,11 @@ export class ManageComplaintTypesComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             console.log("Data: ", data);
-            if(data && data["operation"]) {
-                if(data["operation"] == "delete") {
+            if (data && data["operation"]) {
+                if (data["operation"] == "delete") {
                     this.deleteStatus(status, idx);
                 }
-            } else if(data && data["statusName"]) {
+            } else if (data && data["statusName"]) {
                 let statusObject = {};
                 statusObject["name"] = data["statusName"];
                 statusObject["parentSchool"] = this.user.activeSchool.dbId;
@@ -257,74 +239,95 @@ export class ManageComplaintTypesComponent implements OnInit {
                 this.statusList[idx]["name"] = data["statusName"];
             }
         });
-    }
+    }  // Ends: openChangeStatusDialog()
 
+    /* Add New Status */
     addStatusClick() {
-        if(this.addStatusName) {
+        if (this.addStatusName) {
             this.serviceAdapter.addStatus();
         }
         this.addStatusName = "";
-        // this.initializeComplaintTypeDetails();
-    }
+    }  // Ends: addStatusClick()
 
+    /* Get Status */
     getStatusFromId(id) {
-        for(let i = 0; i < this.statusList.length; i++) {
-            if(this.statusList[i].id == id) {
+        for (let i = 0; i < this.statusList.length; i++) {
+            if (this.statusList[i].id == id) {
                 return this.statusList[i];
             }
         }
-    }
+    }  // Ends: getStatusFromId()
 
+    /* Get Employee */
     getEmployeeFromId(id) {
-        for(let i = 0; i < this.employeeList.length; i++) {
-            if(this.employeeList[i].id == id) {
+        for (let i = 0; i < this.employeeList.length; i++) {
+            if (this.employeeList[i].id == id) {
                 return this.employeeList[i];
             }
         }
-    }
+    }  // Ends: getEmployeeFromId()
 
+    /* Get Applicable Status */
     getApplicableStatusId(id) {
-        for(let i = 0; i < this.applicableStatusList.length; i++) {
-            if(this.applicableStatusList[i].id == id) {
+        for (let i = 0; i < this.applicableStatusList.length; i++) {
+            if (this.applicableStatusList[i].id == id) {
                 return i;
             }
         }
         return -1;
-    }
+    }  // Ends: getApplicableStatusId()
 
+    /* Add Status to Applicable-Status-List */
     applicableStatusClicked(status) {
         let isSelected = !status.selected;
-        if(isSelected) {
+        if (isSelected) {
             let tempStatus = CommonFunctions.getInstance().deepCopy(status);
             this.applicableStatusList.push(tempStatus);
         } else {
-            if(this.defaultStatus == status.name) {
-                this.defaultStatus = "Select Default Status";
+            if (this.defaultStatus == status.name) {
+                this.defaultStatus = "Not Selected";
             }
             let idx = this.getApplicableStatusId(status.id);
-            if(idx != -1) {
+            if (idx != -1) {
                 this.applicableStatusList.splice(idx, 1);
             }
         }
-    }
+    }  // Ends: applicableStatusClicked()
 
+    /* Save Complaint Type */
     saveClicked() {
-        if(!this.typeName) {
+
+        /* Check Type Name */
+        if (!this.typeName) {
             alert("Please enter complaint type name.");
             return;
         }
 
-        if(!this.defaultText) {
-            alert("Please enter default text.");
+        /* Check Assigned Employees */
+        let employeeComplaintTypeCount = 0;
+        this.selectedEmployeeList.forEach((employee) => {
+            if (employee.selected) {
+                employeeComplaintTypeCount++;
+            }
+        });
+        if (!employeeComplaintTypeCount) {
+            alert("Please assign employees.");
             return;
         }
 
-        if(!this.defaultStatus) {
+        /* Check Applicable Statuses */
+        if (!this.applicableStatusList.length) {
+            alert("Please assign status.");
+            return;
+        }
+
+        /* Check Default Status */
+        if (this.defaultStatus == "Not Selected") {
             alert("Please enter default status.");
             return;
         }
 
-        if(this.editingCompalaintType) {
+        if (this.editingCompalaintType) {
             let complaintTypeObject = {};
             complaintTypeObject["name"] = this.typeName;
             complaintTypeObject["defaultText"] = this.defaultText;
@@ -340,13 +343,18 @@ export class ManageComplaintTypesComponent implements OnInit {
         } else {
             this.serviceAdapter.addCompalintType();
         }
-    }
+    }  // Ends: saveClicked()
 
+    /* Cancel Clicked */
     cancelClicked() {
+        if (this.applicableEmployeeList.length) {
+            this.complaintTypeList[this.editingCompalaintTypeIndex]["addressEmployeeList"] = this.applicableEmployeeList;
+        }
         this.initializeComplaintTypeDetails();
         this.pageName = "showTables";
-    }
+    }  // Ends: cancelClicked()
 
+    /* Edit Complaint Type */
     editComplaintType(complaintType, idx) {
         this.typeName = complaintType.name;
         this.defaultText = complaintType.defaultText;
@@ -357,17 +365,18 @@ export class ManageComplaintTypesComponent implements OnInit {
         this.editingComplaintTypeId = complaintType.id;
         this.selectedEmployeeList = complaintType.addressEmployeeList;
         this.applicableEmployeeList = CommonFunctions.getInstance().deepCopy(this.selectedEmployeeList);
-        // this.serviceAdapter.getEmployeeCompalintType();
         this.serviceAdapter.getStatusCompalintType();
-    }
+    }  // Ends: editComplaintType()
 
+    /* Delete Complaint Type */
     deleteComplaintType(complaintType, idx) {
         this.serviceAdapter.deleteCompalintType(complaintType);
         this.complaintTypeList.splice(idx, 1);
-    }
+    }  // Ends: deleteComplaintType()
 
+    /* Delete Status */
     deleteStatus(status, idx) {
         this.serviceAdapter.deleteStatus(status);
         this.statusList.splice(idx, 1);
-    }
+    }  // Ends: deleteStatus()
 }

@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 
-import { ManageComplaintTypesRoutingModule } from './manage-complaint-types.routing';
+import { ManageComplaintTypeRoutingModule } from './manage-complaint-type.routing';
 import { ComponentsModule } from "../../../../components/components.module";
-import { ManageComplaintTypesComponent } from "./manage-complaint-types.component";
+import { ManageComplaintTypeComponent } from "./manage-complaint-type.component";
 import { LocalComponentsModule } from '@modules/parent-support/component/local-components.module';
 import { AddStatusModalComponent } from '@modules/parent-support/component/add-status-modal/add-status-modal.component';
 
 @NgModule({
-    declarations: [ManageComplaintTypesComponent],
+    declarations: [ManageComplaintTypeComponent],
 
-    imports: [ManageComplaintTypesRoutingModule, ComponentsModule, LocalComponentsModule],
+    imports: [ManageComplaintTypeRoutingModule, ComponentsModule, LocalComponentsModule],
     exports: [],
     providers: [],
-    bootstrap: [ManageComplaintTypesComponent],
+    bootstrap: [ManageComplaintTypeComponent],
     entryComponents: [AddStatusModalComponent],
 })
-export class ManageComplaintTypesModule { }
+export class ManageComplaintTypeModule { }

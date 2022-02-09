@@ -6,9 +6,10 @@ export class AddComplaintServiceAdapter {
 
     constructor() { }
 
+    /* Initialize Adapter */
     initializeAdapter(vm: AddComplaintComponent): void {
         this.vm = vm;
-    }
+    }  // Ends: initializeAdapter()
 
     /* Initialize Data */
     async initializeData() {
@@ -24,7 +25,6 @@ export class AddComplaintServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        // Employee Query: Employee List  &&  Total Available Records.
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .getObjectList({ parent_support_app: 'SchoolComplaintType' });
@@ -36,6 +36,7 @@ export class AddComplaintServiceAdapter {
         const studentSectionQuery = new Query()
             .filter(student_section_filter)
             .getObjectList({student_app: 'StudentSection'});
+
 
         let studentList = [];
         let studentSectionList = [];
@@ -53,16 +54,28 @@ export class AddComplaintServiceAdapter {
         this.vm.isLoading = false;
     }  // Ends: initializeData()
 
+    /* Add Complaint */
     async addComplaint() {
-
         this.vm.isLoading = true;
 
         let complaintObject = {};
         complaintObject["parentEmployee"] = this.vm.user.activeSchool.employeeId;
-        complaintObject["parentSchoolComplaintType"] = this.vm.complaintType.id;
+
+        if(this.vm.complaintType["id"]) {
+            complaintObject["parentSchoolComplaintType"] = this.vm.complaintType.id;
+        } else {
+            complaintObject["parentSchoolComplaintType"] = this.vm.NULL_CONSTANT;
+        }
+
         complaintObject["parentStudent"] = this.vm.selectedStudent.dbId;
         complaintObject["title"] = this.vm.complaintTitle;
-        complaintObject["parentSchoolComplaintStatus"] = this.vm.complaintType.parentSchoolComplaintStatusDefault;
+
+        if(this.vm.complaintType["parentSchoolComplaintStatusDefault"]) {
+            complaintObject["parentSchoolComplaintStatus"] = this.vm.complaintType.parentSchoolComplaintStatusDefault;
+        } else {
+            complaintObject["parentSchoolComplaintStatus"] = this.vm.NULL_CONSTANT;
+        }
+
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         const complaint = await new Query().createObject({parent_support_app: 'Complaint'}, complaintObject);
@@ -78,7 +91,8 @@ export class AddComplaintServiceAdapter {
             console.log("Comment: ", comment);
         }
 
+        this.vm.comment = "";
         this.vm.initializeComplaintData();
         this.vm.isLoading = false;
-    }
+    }  // Ends: addComplaint()
 }

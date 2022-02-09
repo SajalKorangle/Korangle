@@ -3,15 +3,24 @@ import { Injectable } from '@angular/core';
 import { Constants } from '../../classes/constants';
 import { environment } from '../../../environments/environment';
 
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpEvent, HttpEventType, HttpRequest } from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
 import { DataStorage } from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from '../modules/errors/error-reporting.service';
+import { MatDialog } from '@angular/material';
+
+import { ManageAllComplaintsComponent } from '@modules/parent-support/pages/manage-all-complaints/manage-all-complaints.component';
+// import { ManageAllComplaintsServiceAdapter } from '@modules/parent-support/pages/manage-all-complaints/manage-all-complaints.service.adapter';
 
 const MAX_URL_LENGTH = 2048;
 
 @Injectable()
 export class RestApiGateway {
     reportError = reportError;
+
+    // manageAllComplaintsServiceAdapter: ManageAllComplaintsServiceAdapter;
+    manageAllComplaintsComponent: ManageAllComplaintsComponent;
+    dialog: MatDialog;
 
     constructor(private http: HttpClient) { }
 
@@ -188,27 +197,203 @@ export class RestApiGateway {
             .catch(this.handleError);
     }
 
+    // public getData(url: any, params?: any): Promise<any> {
+    //     const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+    //     const absoluteURL = this.getAbsoluteURL(url, params);
+    //     if (absoluteURL.length > MAX_URL_LENGTH) {
+    //         return this.getDataWithPost(url, params);
+    //     }
+    //     return this.http
+    //         .get(absoluteURL, { headers: headers })
+    //         .toPromise()
+    //         .then(
+    //             (response) => {
+    //                 return this.returnResponse(response, url, 'from getData');
+    //             },
+    //             (error) => {
+    //                 this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData', false, location.href);
+    //                 alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+    //                 return null;
+    //             }
+    //         )
+    //         .catch(this.handleError);
+    // }
+
     public getData(url: any, params?: any): Promise<any> {
         const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
         const absoluteURL = this.getAbsoluteURL(url, params);
         if (absoluteURL.length > MAX_URL_LENGTH) {
             return this.getDataWithPost(url, params);
         }
-        return this.http
-            .get(absoluteURL, { headers: headers })
-            .toPromise()
-            .then(
-                (response) => {
-                    return this.returnResponse(response, url, 'from getData');
-                },
-                (error) => {
-                    this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData', false, location.href);
-                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                    return null;
-                }
-            )
+
+        const req = new HttpRequest('GET', absoluteURL, {
+            reportProgress: true,
+            headers: headers
+        });
+
+        return this.http.request(req)
+                .pipe(
+                    map(event => this.getEventMessage(event, params)),
+                    catchError(this.handleError)
+                )
+                .toPromise()
+                .then(
+                    (response) => {
+                        return this.returnResponse(response, url, 'from getData');
+                    },
+                    (error) => {
+                        this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData', false, location.href);
+                        alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                        return null;
+                    }
+                )
             .catch(this.handleError);
     }
+
+    private getEventMessage(event: HttpEvent<any>, params) {
+        let returnData = {};
+
+        if (event.type === HttpEventType.DownloadProgress) {
+            const percentDone = Math.round(100 * event.loaded / (event.total));
+            returnData["percentDone"] = percentDone;
+            if(params["model_name"] == "Complaint") {
+                // this.manageAllComplaintsServiceAdapter = new ManageAllComplaintsServiceAdapter();
+                // console.log("manageAllComplaintsServiceAdapter: ", this.manageAllComplaintsServiceAdapter);
+                this.manageAllComplaintsComponent = new ManageAllComplaintsComponent(this.dialog);
+                this.manageAllComplaintsComponent.setProgress(percentDone);
+            }
+        }
+
+        if (event.type === HttpEventType.Response) {
+            returnData["success"] = event.body["success"];
+        }
+        return returnData;
+    }
+
+    // public getData(url: any, params?: any) {
+    //     const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+    //     const absoluteURL = this.getAbsoluteURL(url, params);
+    //     if (absoluteURL.length > MAX_URL_LENGTH) {
+    //         return this.getDataWithPost(url, params);
+    //     }
+    //
+    //     const req = new HttpRequest('GET', absoluteURL, {
+    //          reportProgress: true,
+    //          headers: headers
+    //     });
+    //
+    //     let output: any;
+    //     this.http.request(req).pipe(
+    //         map(event => this.getEventMessage(event)),
+    //         catchError(this.handleError)
+    //     ).subscribe((element) => {
+    //         output = element;
+    //     });
+    //
+    //     console.log("Output: ", output);
+    //     return output;
+    //
+    //     // if(data["data"]) {
+    //     //     return data;
+    //     // }
+    //         // let data = [];
+    //         // this.http.request(req).subscribe((event: HttpEvent<any>) => {
+    //         //     switch (event.type) {
+    //         //         case HttpEventType.Sent:
+    //         //             console.log('Request sent!');
+    //         //             break;
+    //         //         case HttpEventType.ResponseHeader:
+    //         //             console.log('Response header received!');
+    //         //             break;
+    //         //         case HttpEventType.DownloadProgress:
+    //         //             const percentDone = Math.round(100 * event.loaded / (event.total));
+    //         //             console.log("Progress: ", percentDone);
+    //         //             break;
+    //         //         case HttpEventType.Response:
+    //         //             data = event.body["success"];
+    //         //       }
+    //         //       console.log("Data: ", data);
+    //         // });
+    //         //
+    //         // if(data.length) {
+    //         //     return data;
+    //         // }
+    //
+    //     // return this.http
+    //     //     .get(absoluteURL, { responseType: "blob", reportProgress: true, observe: "events", headers: headers })
+    //     //     .pipe(
+    //     //         map(event => this.getEventMessage(event)),
+    //     //         tap(data => this.showProgress(data)),
+    //     //         last(),
+    //     //         catchError(this.handleError)
+    //     //     );
+    //
+    //
+    //         // .subscribe(event => {
+    //         //     console.log("Event: ", event);
+    //         //     if (event.type === HttpEventType.DownloadProgress) {
+    //         //         console.log("download progress");
+    //         //     }
+    //         //     if (event.type === HttpEventType.Response) {
+    //         //         console.log("donwload completed");
+    //         //     }
+    //         // });
+    // }
+
+    // public getData(url: any, params?: any): Promise<any> {
+    //     const headers = new HttpHeaders({ Authorization: 'JWT ' + this.getToken() });
+    //     const absoluteURL = this.getAbsoluteURL(url, params);
+    //     if (absoluteURL.length > MAX_URL_LENGTH) {
+    //         return this.getDataWithPost(url, params);
+    //     }
+    //
+    //     return this.http
+    //             .get(absoluteURL, { reportProgress: true, headers: headers })
+    //             .toPromise()
+    //             .then(
+    //                 (response) => {
+    //                     return this.returnResponse(response, url, 'from getData');
+    //                 },
+    //                 (error) => {
+    //                     this.reportError(ERROR_SOURCES[0], location.href, JSON.stringify(error), 'from getData', false, location.href);
+    //                     alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+    //                     return null;
+    //                 }
+    //             )
+    //             .catch(this.handleError);
+    //
+    //     // const req = new HttpRequest('GET', absoluteURL, {
+    //     //      reportProgress: true,
+    //     //      headers: headers
+    //     // });
+    //
+    //     // return this.http.request(req).subscribe((event: HttpEvent<any>) => {
+    //     //     let data = [];
+    //     //     switch (event.type) {
+    //     //         case HttpEventType.Sent:
+    //     //             console.log('Request sent!');
+    //     //             break;
+    //     //         case HttpEventType.ResponseHeader:
+    //     //             console.log('Response header received!');
+    //     //             break;
+    //     //         case HttpEventType.DownloadProgress:
+    //     //             const percentDone = Math.round(100 * event.loaded / (event.total));
+    //     //             console.log("Progress: ", percentDone);
+    //     //             break;
+    //     //         case HttpEventType.Response:
+    //     //             data = event.body["success"];
+    //     //       }
+    //     //       console.log("Data: ", data);
+    //     //       return data;
+    //     // });
+    //
+    //     // return this.http.request(req).pipe(
+    //     //     map(event => this.getEventMessage(event)),
+    //     //     tap(data => data),
+    //     //     last(),
+    //     //     catchError(this.handleError)
+    //     // );
+    // }
 
     public handleError(error: any): Promise<any> {
         console.error('An error occurred', error); // for demo purposes only

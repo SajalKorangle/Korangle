@@ -3,6 +3,7 @@
     min-height: 90vh;
 }
 
+/* Starts: Commom Input Section */
 .common-section {
     display: flex;
     align-items: center;
@@ -14,12 +15,11 @@
 
 .example-viewport {
     height: 20vh;
-    /* flex-basis: 50%; */
     width: 100%;
     font-size: 14px;
 }
 
-/* Starts: Search Bar */
+    /* Starts: Search Bar */
 .search-bar {
     display: flex;
     height: 25px;
@@ -45,8 +45,9 @@
 .search-icon {
     color: rgba(0, 0, 0, 0.5);
 }
-/* Ends: Search Bar */
+    /* Ends: Search Bar */
 
+    /* Starts: Complaint Title */
 .title-input {
     border: none;
     outline: none;
@@ -55,7 +56,12 @@
     font-weight: 400;
     opacity: 0.8;
 }
+    /* Ends: Complaint Title */
 
+/* Ends: Commom Input Section */
+
+
+/* Starts: Comment Section */
 .comment-section {
     background-color: #F4F7FF;
     border-radius: 5px;
@@ -98,6 +104,8 @@
 .notify-btn {
     text-transform: capitalize !important;
 }
+/* Ends: Comment Section */
+
 
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
@@ -105,14 +113,7 @@
         padding: 2rem;
     }
 
-    .search-field {
-        flex-basis: 90%;
-    }
-
-    .seach-btn {
-        flex-basis: 10%;
-    }
-
+    /* Starts: Common Input Section */
     .common-section {
         display: block;
     }
@@ -126,6 +127,16 @@
         flex-basis: 40%;
     }
 
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .seach-btn {
+        flex-basis: 10%;
+    }
+    /* Ends: Common Input Section */
+
+    /* Starts: Comment Section */
     .bottom-section {
         display: block;
     }
@@ -140,5 +151,6 @@
         font-size: 12px;
         line-height: 14px;
     }
+    /* Ends: Comment Section */
 }
 /* Ends: Media Query - Mobile Phone */

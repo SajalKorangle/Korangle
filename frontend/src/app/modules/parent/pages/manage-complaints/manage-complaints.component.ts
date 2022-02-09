@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 import { ManageComplaintsServiceAdapter } from './manage-complaints.service.adapter';
+import { ManageComplaintsHtmlRenderer } from './manage-complaints.html.renderer';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class ManageComplaintsComponent implements OnInit {
     complaintType: any = {};
     complaintComment: string = "";
     complaintList: any = [];
+    searchedComplaintList: any = [];
     complaintTypeList: any = [];
 
     statusList: any = [];
@@ -43,6 +45,7 @@ export class ManageComplaintsComponent implements OnInit {
     commentList: any = [];
 
     serviceAdapter: ManageComplaintsServiceAdapter;
+    htmlRenderer: ManageComplaintsHtmlRenderer;
 
     constructor() { }
 
@@ -53,19 +56,20 @@ export class ManageComplaintsComponent implements OnInit {
         this.serviceAdapter = new ManageComplaintsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new ManageComplaintsHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
-    isMobile() {
-        if(window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
-
+    /* Initialize Complaint List */
     initializeComplaintList(complaintList) {
-        this.complaintList = [];
+
+        let length = this.complaintList.length;
+
         complaintList.forEach((complaintObject) => {
+
             let complaint = {};
+
             complaint["parentSchoolComplaintType"] = this.getParentComplaint(complaintObject["parentSchoolComplaintType"]);
             complaint["id"] = complaintObject["id"];
             complaint["dateSent"] = complaintObject["dateSent"];
@@ -74,50 +78,34 @@ export class ManageComplaintsComponent implements OnInit {
             complaint["commentList"] = [];
             complaint["parentStudent"] = this.getParentStudent(complaintObject["parentStudent"]);
             complaint["title"] = complaintObject["title"];
-
-            if(complaintObject["parentSchoolComplaintStatus"]) {
-                complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
-            } else {
-                complaint["parentSchoolComplaintStatus"] = {};
-            }
+            complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
 
             this.complaintList.push(complaint);
         });
 
-        for(let i = 0; i < this.complaintList.length; i++) {
+        /* Get Comments */
+        for (let i = length; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i]["id"], i);
         }
 
-        for(let i = 0; i < this.complaintList.length; i++) {
-            this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
+        /* Get Applicable Status List */
+        for (let i = complaintList; i < this.complaintList.length; i++) {
+
+            if (this.complaintList[i]["parentSchoolComplaintType"]["id"]) {
+                this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
+            }
         }
         console.log("Complaint List: ", this.complaintList);
-    }
+        this.searchedComplaintList = this.complaintList;
+    }  // Ends: initializeComplaintList()
 
-    initializeComplaint(complaintObject) {
-        let complaint = {};
-        complaint["parentSchoolComplaintType"] = this.getParentComplaint(complaintObject["parentSchoolComplaintType"]);
-        complaint["id"] = complaintObject["id"];
-        complaint["dateSent"] = complaintObject["dateSent"];
-        complaint["parentEmployee"] = this.getEmployee(complaintObject["parentEmployee"]);
-        complaint["applicableStatusList"] = [];
-        complaint["commentList"] = [];
-        complaint["parentStudent"] = this.getParentStudent(complaintObject["parentStudent"]);
-        complaint["title"] = complaintObject["title"];
-
-        if(complaintObject["parentSchoolComplaintStatus"]) {
-            complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
-        } else {
-            complaint["parentSchoolComplaintStatus"] = {};
-        }
-
-        this.complaintList.push(complaint);
-        this.serviceAdapter.getCommentComplaint(complaintObject["id"], this.complaintList.length - 1);
-        this.serviceAdapter.getStatusCompalintType(complaintObject["parentSchoolComplaintType"], this.complaintList.length - 1);
-        console.log("Complaint List: ", this.complaintList);
-    }
-
+    /* Initialize Student Full Profile List */
     initializeStudentFullProfileList(studentList, studentSectionList) {
+
+        if (!studentSectionList) {
+            return;
+        }
+
         this.studentList = [];
         for (let i = 0; i < studentSectionList.length; i++) {
             for (let j = 0; j < studentList.length; j++) {
@@ -138,43 +126,83 @@ export class ManageComplaintsComponent implements OnInit {
         }
 
         console.log("Student List: ", this.studentList);
-    }
+    }  // Ends: initializeStudentFullProfileList()
 
+    /* Initialize Status List */
     initializeStatusList(statusList) {
+
+        if (!statusList) {
+            return;
+        }
+
         statusList.forEach((status) => {
             this.statusList.push(status);
         });
         console.log("Status List: ", this.statusList);
-    }
+    }  // Ends: initializeStatusList()
 
     /* Initialize Employee List */
     initializeEmployeeList(employeeList: any): void {
-        this.employeeList = [];
 
+        if (!employeeList) {
+            return;
+        }
+
+        this.employeeList = [];
         employeeList.forEach((employee) => {
             let tempEmployee = {};
             tempEmployee["name"] = employee["name"];
             tempEmployee["id"] = employee["id"];
             this.employeeList.push(tempEmployee);
         });
-    }
+    }  // Ends: initializeEmployeeList()
 
+    /* Get Parent Student */
     getParentStudent(parentStudent) {
-        for(let i = 0; i < this.studentList.length; i++) {
-            if(this.studentList[i].dbId == parentStudent) {
+
+        let nullStudent = {
+            dbId: null,
+            fathersName: '',
+            name: '',
+            mobileNumber: null,
+        };
+
+        if (!parentStudent) {
+            return nullStudent;
+        }
+
+        for (let i = 0; i < this.studentList.length; i++) {
+            if (this.studentList[i].dbId == parentStudent) {
                 return this.studentList[i];
             }
         }
-    }
+        return nullStudent;
+    }  // Ends: getParentStudent()
 
+    /* Get Parent Complaint */
     getParentComplaint(parentSchoolComplaintType) {
-        for(let i = 0; i < this.complaintTypeList.length; i++) {
-            if(this.complaintTypeList[i].id == parentSchoolComplaintType) {
+
+        let nullComplaintType = {
+            id: null,
+            defaultText: '',
+            name: '',
+            parentSchoolComplaintStatusDefault: null,
+            parentSchool: null,
+        };
+
+        if (!parentSchoolComplaintType) {
+            return nullComplaintType;
+        }
+
+        for (let i = 0; i < this.complaintTypeList.length; i++) {
+            if (this.complaintTypeList[i].id == parentSchoolComplaintType) {
                 return this.complaintTypeList[i];
             }
         }
-    }
+        return nullComplaintType;
+    }  // Ends: getParentComplaint()
 
+    /* Get Status */
     getStatus(id) {
         let nullStatus = {
             id: null,
@@ -182,153 +210,142 @@ export class ManageComplaintsComponent implements OnInit {
             parentSchool: null,
         };
 
-        if(!id) {
+        if (!id) {
             return nullStatus;
         }
 
-        for(let i = 0; i < this.statusList.length; i++) {
-            if(this.statusList[i].id == id) {
+        for (let i = 0; i < this.statusList.length; i++) {
+            if (this.statusList[i].id == id) {
                 return this.statusList[i];
             }
         }
         return nullStatus;
-    }
+    }  // Ends: getStatus()
 
+    /* Get Employee */
     getEmployee(id) {
         let nullEmployee = {
             id: null,
             name: null,
         };
 
-        if(!id) {
+        if (!id) {
             return nullEmployee;
         }
 
-        for(let i = 0; i < this.employeeList.length; i++) {
-            if(this.employeeList[i].id == id) {
+        for (let i = 0; i < this.employeeList.length; i++) {
+            if (this.employeeList[i].id == id) {
                 return this.employeeList[i];
             }
         }
         return nullEmployee;
-    }
+    }  // Ends: getEmployee()
 
-    getDateTimeInfo(createdAt) {
-        let newDate = new Date(createdAt);
+    /* Debouncing */
+    debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+        clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+         };
+    }  // Ends: debounce()
 
-        let hour = newDate.getHours();
-        let hourString = "";
-        if(hour < 10) {
-            hourString = "0" + hour;
-        } else {
-            hourString = "" + hour;
-        }
+    /* Get Searched Complaint List */
+    getSearchedComplaintList() {
+        this.searchedComplaintList = [];
+        let seachString = this.seachString.trim();
 
-        let minutes = newDate.getMinutes();
-        let minutesString = "";
-        if(minutes < 10) {
-            minutesString = "0" + minutes;
-        } else {
-            minutesString = "" + minutes;
-        }
+        this.complaintList.forEach((complaint) => {
+            if (complaint.parentStudent.name.toLowerCase().includes(seachString.toLowerCase())) { /* Check for student name */
+                this.searchedComplaintList.push(complaint);
+            } else if (complaint.title.toLowerCase().includes(seachString.toLowerCase())) { /* Check for complaint title */
+                this.searchedComplaintList.push(complaint);
+            } else if (
+                complaint.parentSchoolComplaintType["name"] &&
+                complaint.parentSchoolComplaintType.name.toLowerCase().includes(seachString.toLowerCase())
+            ) { /* Check for complaint type */
+                this.searchedComplaintList.push(complaint);
+            }
+        });
+    }  // Ends: getSearchedComplaintList()
 
-        let date = newDate.getDate();
-        let dateString = "";
-        if(date < 10) {
-            dateString = "0" + date;
-        } else {
-            dateString = "" + date;
-        }
+    seachChanged = this.debounce(() => this.getSearchedComplaintList());
 
-        let year = newDate.getFullYear();
-        let month = newDate.getMonth() + 1;
-        let monthString = "";
-        if(month < 10) {
-            monthString = "0" + month;
-        } else {
-            monthString = "" + month;
-        }
-
-        let dateTimeInfo = "";
-        dateTimeInfo = hourString + ":" + minutesString + ", " + dateString + "-" + monthString + "-" + year;
-        return dateTimeInfo;
-    }
-
-    getDateInfo(createdAt) {
-        let newDate = new Date(createdAt);
-
-        let date = newDate.getDate();
-        let dateString = "";
-        if(date < 10) {
-            dateString = "0" + date;
-        } else {
-            dateString = "" + date;
-        }
-
-        let year = newDate.getFullYear();
-        let month = newDate.getMonth() + 1;
-        let monthString = "";
-        if(month < 10) {
-            monthString = "0" + month;
-        } else {
-            monthString = "" + month;
-        }
-
-        let dateInfo = "";
-        dateInfo = dateString + "-" + monthString + "-" + year;
-        return dateInfo;
-    }
-
+    /* Send Complaint */
     sendComplaint() {
 
-        if(!this.complaintType["id"]) {
-            alert("Please select the complaint type.");
-            return;
-        }
-
-        if(!this.complaintStudent["dbId"]) {
+        if (!this.complaintStudent["dbId"]) {
             alert("Please select the student.");
             return;
         }
 
-        if(!this.complaintTitle) {
+        if (!this.complaintTitle) {
             alert("Please enter the complaint title.");
             return;
         }
 
-        if(!this.commentMessage) {
+        if (!this.commentMessage) {
             alert("Please enter your query.");
             return;
         }
 
         this.serviceAdapter.sendComplaint();
-    }
+    }  // Ends: sendComplaint()
 
+    /* Update Complaint */
     updateComplaintClicked() {
-        if(!this.openedComplaint.parentSchoolComplaintStatus["id"] || (this.openedComplaint.parentSchoolComplaintStatus["id"] && this.openedComplaint.parentSchoolComplaintStatus.id != this.defaultStatus.id)) {
+
+        if (
+            !this.openedComplaint.parentSchoolComplaintStatus["id"] ||
+            (this.openedComplaint.parentSchoolComplaintStatus["id"] && this.openedComplaint.parentSchoolComplaintStatus.id != this.defaultStatus.id)
+        ) {
             this.serviceAdapter.updateStatus();
         }
 
-        if(!this.commentMessage) {
+        if (!this.commentMessage) {
             alert("Please enter your query.");
             return;
         }
 
-        this.serviceAdapter.addComplaintComment(this.openedComplaint);
-    }
+        this.serviceAdapter.addComplaintComment();
+    }  // Ends: updateComplaintClicked()
 
+    /* Open Complaint */
     openComplaint(complaint) {
         this.openedComplaint = complaint;
         this.commentList = complaint["commentList"];
-        if(complaint.parentSchoolComplaintStatus) {
-            this.defaultStatus = complaint.parentSchoolComplaintStatus;
-            this.defaultStatusTitle = complaint.parentSchoolComplaintStatus.name;
-        }
-    }
+        this.defaultStatus = complaint.parentSchoolComplaintStatus;
+        this.defaultStatusTitle = complaint.parentSchoolComplaintStatus.name;
 
-    getAuthorComment(comment) {
-        if(comment.parentEmployee["id"]) {
-            return comment.parentEmployee.name;
+        if (!this.defaultStatusTitle) {
+            this.defaultStatusTitle = "Not Applicable";
         }
-        return (this.user.first_name + " " + this.user.last_name);
-    }
+    }  // Ends: openComplaint()
+
+    /* Get Complaint Index */
+    getComplaintIdx(complaint) {
+        for (let i = 0; i < this.complaintList.length; i++) {
+            if (this.complaintList[i].id == complaint.id) {
+                return i;
+            }
+        }
+        return -1;
+    }  // Ends: getComplaintIdx()
+
+    /* Delete Complaint */
+    deleteComplaint(complaint) {
+
+        let idx = this.getComplaintIdx(complaint);
+        if (idx != -1) {
+            this.complaintList.splice(idx, 1);
+            this.serviceAdapter.deleteComplaint(complaint.id);
+        }
+        this.getSearchedComplaintList();
+        this.pageName = "list-of-complaints";
+    }  // Ends: deleteComplaint()
+
+    /* Refresh Complaint */
+    refreshClicked() {
+        this.serviceAdapter.refreshComplaint();
+    }  // Ends: refreshClicked()
 }

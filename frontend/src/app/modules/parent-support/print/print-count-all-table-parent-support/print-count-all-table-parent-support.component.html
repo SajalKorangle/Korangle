@@ -1,0 +1,36 @@
+<!-- Starts: Table Heading -->
+<br />
+<b>Tabel Name: </b><span>{{ tableName }}</span>
+<br />
+<br />
+<!-- Ends: Table Heading -->
+
+
+<!-- Starts: Table -->
+<table *ngIf="rowData && columnData" class="table table-hover">
+
+    <!-- Starts: Table Head -->
+    <thead style="font-weight: 400">
+        <tr>
+            <th style="text-align: center;"></th>
+            <ng-container *ngFor="let columnName of columnData">
+                <th style="text-align: center;">{{ columnName }}</th>
+            </ng-container>
+        </tr>
+    </thead>
+    <!-- Ends: Table Head -->
+    
+    <!-- Starts: Table Body -->
+    <tbody>
+        <ng-container *ngFor="let row of rowData; let idx = index">
+            <tr>
+                <td style="text-align: center;">{{ idx + 1 }}.</td>
+                <ng-container *ngFor="let columnValue of row">
+                    <td style="text-align: center;">{{ columnValue }}</td>
+                </ng-container>
+            </tr>
+        </ng-container>
+    </tbody>
+    <!-- Ends: Table Body -->
+</table>
+<!-- Ends: Table -->
