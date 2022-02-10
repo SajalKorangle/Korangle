@@ -263,9 +263,10 @@ class EmployeeComplaint(models.Model):
 
 
 @receiver(post_save, sender = EmployeeComplaint)
-def notify_on_complaint(sender, instance, created, **kwargs):
+def notify_on_employee_complaint(sender, instance, created, **kwargs):
 
     if created:
+        # Notify assigned employee of parentComplaint.
         mobileNumber = str(instance.parentEmployee.mobileNumber)
         user = User.objects.filter(username = mobileNumber)
         if len(user) > 0:
