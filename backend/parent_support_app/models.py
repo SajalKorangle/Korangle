@@ -244,6 +244,37 @@ class EmployeeComplaintType(models.Model):
         db_table = 'employee_complaintType'
 
 
+class EmployeeComplaint(models.Model):
+
+    # Parent Employee
+    parentEmployee = models.ForeignKey(Employee, on_delete = models.CASCADE)
+
+    # Parent Complaint
+    parentComplaint = models.ForeignKey(Complaint, on_delete = models.CASCADE)
+
+    def __str__(self):
+        return (self.parentEmployee.name + " & " + self.parentComplaint.title)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployee__parentSchool__id']
+
+    class Meta:
+        db_table = 'employee_complaint'
+
+
+@receiver(post_save, sender = EmployeeComplaint)
+def notify_on_complaint(sender, instance, created, **kwargs):
+
+    if created:
+        mobileNumber = str(instance.parentEmployee.mobileNumber)
+        user = User.objects.filter(username = mobileNumber)
+        if len(user) > 0:
+            user = user[0]
+            content = "A new complaint titled as " + instance.parentComplaint.title + " has been assigned to you. Kindly respond to it."
+            parentSchool = instance.parentSchool
+            createNotification(content, user, parentSchool)
+
+
 class CountAllParentSupport(models.Model):
 
     # Table Name
