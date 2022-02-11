@@ -43,6 +43,7 @@ export class SidebarComponent implements OnInit {
     session_list = [];
 
     constructor(private router: Router, private notificationService: NotificationService, private schoolService: SchoolService) {
+        // We are using this routeReuseStrategy because the DashBoard Component should not re-render when changing pages.
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
             return (curr.routeConfig === future.routeConfig) || future.data.reuse;
         };
@@ -77,6 +78,9 @@ export class SidebarComponent implements OnInit {
             this.session_list = value;
         });
         EmitterService.get('initialize-router').subscribe((value) => {
+            // Navigating To '/' before any other route - because :
+            // We have used routeReuseStrategy so if the url is same the page won't reload,
+            // To overcome that case we are navigating to '/' first and then the corresponding route.
             this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
                 this.router.navigateByUrl(
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
