@@ -89,7 +89,6 @@ export class ManageAllComplaintsComponent implements OnInit {
     /* Starts Progress Bar */
     startProgressBar() {
         this.progress = 1;
-        console.log("Progress bar has been started.");
         this.progressInterval = setInterval(() => this.setProgressInterval(), 300);  /* 30 seconds full time */
     }  // Ends: startProgressBar()
 

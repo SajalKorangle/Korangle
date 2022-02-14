@@ -385,7 +385,6 @@ export class ManageAllComplaintsServiceAdapter {
         }
 
         this.vm.isProgress = true;
-        console.log("Filter Data: ", filterData);
 
         const complaintQuery = new Query()
             .filter(filterData)
