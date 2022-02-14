@@ -28,7 +28,6 @@ export class AddStatusModalComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
     }
 
     /* Close Modal */
@@ -38,6 +37,11 @@ export class AddStatusModalComponent implements OnInit {
 
     /* Save Modal */
     saveClicked() {
+        if (!this.statusName) {
+            alert("Please enter status name.");
+            return;
+        }
+
         this.dialogRef.close({statusName: this.statusName});
     }  // Ends: saveClicked()
 

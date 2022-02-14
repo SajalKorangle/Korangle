@@ -1,6 +1,6 @@
 .card-content {
     padding: 3rem;
-    min-height: 90vh;
+    min-height: 82vh;
 }
 
 /* Starts: List of Complaints */
@@ -33,9 +33,40 @@
 }
     /* Ends: Search Bar */
 
+    /* Starts: Progress Bar */
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.progress-bar {
+    flex-basis: 96%;
+    background-color: #D9D9D9;
+    height: 6px;
+    border-radius: 3px;
+}
+
+.progress-done {
+    flex-basis: 20px;
+    border-radius: 50%;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.done-icon {
+    font-size: 12px;
+    text-align: center;
+}
+    /* Ends: Progress Bar */
+
     /* Starts: Table */
 .example-viewport {
-    height: 80vh;
+    height: 75vh;
     width: 100%;
 }
 
@@ -82,8 +113,8 @@ tr th {
     padding-bottom: 1rem;
 }
     /* Ends: Table */
-
 /* Ends: List of Complaints */
+
 
 /* Starts: Open Complaint */
 .common-section {
@@ -193,38 +224,10 @@ tr th {
     text-transform: capitalize !important;
 }
     /* Ends: Comment Section */
-
 /* Ends: Open Complaint */
 
-/* Starts: Progress Bar */
-.progress-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 
-.progress-bar {
-    flex-basis: 95%;
-    background-color: #D9D9D9;
-    height: 6px;
-    border-radius: 3px;
-}
-
-.progress-done {
-    flex-basis: 20px;
-    border-radius: 50%;
-    height: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.done-icon {
-    font-size: 12px;
-    text-align: center;
-}
-
+/* Starts: Load More */
 .load-more {
     margin-top: 1rem;
     font-weight: 600;
@@ -233,13 +236,17 @@ tr th {
     text-decoration: underline;
     cursor: pointer;
 }
-/* Ends: Progress Bar */
+/* Ends: Load More */
 
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
     .card-content {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .progress-bar {
+        flex-basis: 91%;
     }
 
     /* Starts: Search Bar */

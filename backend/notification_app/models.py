@@ -1,4 +1,5 @@
 from django.db import models
+from common.common import BasePermission
 
 # Create your models here.
 from django.db.models import DateField
@@ -34,6 +35,9 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'notification'

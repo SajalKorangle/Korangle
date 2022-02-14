@@ -97,45 +97,31 @@ class Complaint(models.Model):
 
 
 @receiver(post_save, sender = Complaint)
-def notify_on_complaint(sender, instance, created, **kwargs):
+def notify_parents_on_complaint(sender, instance, created, **kwargs):
 
-    if created:
+    if created and instance.parentEmployee:
 
         senderEmployeeMobileNumber = ""
-        if instance.parentEmployee:
-            senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
+        senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
 
-        # Notify all the assigned employee of parentSchoolComplaintType.
-        for employee_complaintType in EmployeeComplaintType.objects.filter(parentSchoolComplaintType = instance.parentSchoolComplaintType):
-            mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
-            user = User.objects.filter(username = mobileNumber)
-            if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
-                user = user[0]
-                content = "A new complaint of type " + instance.parentSchoolComplaintType.name + " has been assigned to you. Kindly respond to it."
-                parentSchool = instance.parentSchool
-                createNotification(content, user, parentSchool)
+        # Notify parents if their complaint is raised by a school employee.
+        # 1. Using mobileNumber.
+        mobileNumber = str(instance.parentStudent.mobileNumber)
+        user = User.objects.filter(username = mobileNumber)
+        if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
+            user = user[0]
+            content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
+            parentSchool = instance.parentStudent.parentSchool
+            createNotification(content, user, parentSchool)
 
-
-        if instance.parentEmployee:
-
-            # Notify parents if their complaint is raised by a school employee.
-            # 1. Using mobileNumber.
-            mobileNumber = str(instance.parentStudent.mobileNumber)
-            user = User.objects.filter(username = mobileNumber)
-            if len(user) > 0:
-                user = user[0]
-                content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
-                parentSchool = instance.parentStudent.parentSchool
-                createNotification(content, user, parentSchool)
-
-            # 2. Using secondMobileNumber.
-            secondMobileNumber = str(instance.parentStudent.secondMobileNumber)
-            user = User.objects.filter(username = secondMobileNumber)
-            if len(user) > 0:
-                user = user[0]
-                content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
-                parentSchool = instance.parentStudent.parentSchool
-                createNotification(content, user, parentSchool)
+        # 2. Using secondMobileNumber.
+        secondMobileNumber = str(instance.parentStudent.secondMobileNumber)
+        user = User.objects.filter(username = secondMobileNumber)
+        if (len(user) > 0) and (senderEmployeeMobileNumber != secondMobileNumber):
+            user = user[0]
+            content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
+            parentSchool = instance.parentStudent.parentSchool
+            createNotification(content, user, parentSchool)
 
 
 class Comment(models.Model):
@@ -175,9 +161,9 @@ def notify_on_comment(sender, instance, created, **kwargs):
         if instance.parentEmployee:
             senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
 
-        # Notify all the assigned employee of parentSchoolComplaintType.
-        for employee_complaintType in EmployeeComplaintType.objects.filter(parentSchoolComplaintType = instance.parentComplaint.parentSchoolComplaintType):
-            mobileNumber = str(employee_complaintType.parentEmployee.mobileNumber)
+
+        for employee_complaint in EmployeeComplaint.objects.filter(parentComplaint = instance.parentComplaint):
+            mobileNumber = str(employee_complaint.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
             if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
                 user = user[0]
@@ -263,16 +249,21 @@ class EmployeeComplaint(models.Model):
 
 
 @receiver(post_save, sender = EmployeeComplaint)
-def notify_on_employee_complaint(sender, instance, created, **kwargs):
+def notify_employee_on_complaint(sender, instance, created, **kwargs):
 
     if created:
+
+        senderEmployeeMobileNumber = ""
+        if instance.parentComplaint.parentEmployee:
+            senderEmployeeMobileNumber = str(instance.parentComplaint.parentEmployee.mobileNumber)
+
         # Notify assigned employee of parentComplaint.
         mobileNumber = str(instance.parentEmployee.mobileNumber)
         user = User.objects.filter(username = mobileNumber)
-        if len(user) > 0:
+        if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
             user = user[0]
             content = "A new complaint titled as " + instance.parentComplaint.title + " has been assigned to you. Kindly respond to it."
-            parentSchool = instance.parentSchool
+            parentSchool = instance.parentComplaint.parentSchool
             createNotification(content, user, parentSchool)
 
 

@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { AssignEmployeeComponent } from '@modules/parent-support/component/assign-employee/assign-employee.component';
 import { ManageAllComplaintsServiceAdapter } from './manage-all-complaints.service.adapter';
 import { ManageAllComplaintsHtmlRenderer } from './manage-all-complaints.html.renderer';
+import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 import { CommonFunctions } from "../../../../classes/common-functions";
 
@@ -22,9 +23,10 @@ export class ManageAllComplaintsComponent implements OnInit {
 
     progress: number = 0;
     isProgress: boolean = true;
+    progressInterval: any;
     isLoadMore: boolean = true;
 
-    userPermission: boolean = false;
+    userPermission: boolean = false;  /* Admin or Employee */
     pageName: string = "showTables";
     showFilterOptionComplaintType: boolean = false;
     showFilterOptionStatus: boolean = false;
@@ -43,7 +45,6 @@ export class ManageAllComplaintsComponent implements OnInit {
     employeeList: any = [];
     studentList: any = [];
     complaintList: any = [];
-    schoolComplaintTypeIdList: any = [];
     searchedComplaintList: any = [];
     complaintTypeList: any = [];
     filterComplaintTypeList: any = [];
@@ -66,7 +67,6 @@ export class ManageAllComplaintsComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
 
         this.htmlRenderer = new ManageAllComplaintsHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
@@ -76,23 +76,41 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
-    /* Set Progress */
-    setProgress(progress) {
-        this.progress = progress;
-
-        var el = document.getElementById("progress");
-        console.log("Element: ", el);
-        if (el) {
-            el.style.width = this.progress + '%';
+    /* Progress Bar Set-Interval Function */
+    setProgressInterval() {
+        if (this.progress >= 100) {
+            clearInterval(this.progressInterval);
+            this.loadComplaints();
+        } else {
+            this.progress++;
         }
-    }  // Ends: setProgress()
+    }  // Ends: setProgressInterval()
+
+    /* Starts Progress Bar */
+    startProgressBar() {
+        this.progress = 1;
+        console.log("Progress bar has been started.");
+        this.progressInterval = setInterval(() => this.setProgressInterval(), 300);  /* 30 seconds full time */
+    }  // Ends: startProgressBar()
+
+    startNewProgressBar() {
+        clearInterval(this.progressInterval);
+        this.startProgressBar();
+    }
+
+    /* Done Icon Clicked (Fetch Complaints) */
+    doneIconClicked() {
+        this.progress = 0;
+        clearInterval(this.progressInterval);
+        this.loadComplaints();
+    }  // Ends: doneIconClicked()
 
     /* Sort Complaints (Newest First) */
     sortNewestClicked() {
         this.sortType = "-dateSent";
         this.sortOldest = true;
         this.sortNewest = false;
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: sortNewestClicked()
 
     /* Sort Complaints (Oldest First) */
@@ -100,7 +118,7 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.sortType = "dateSent";
         this.sortOldest = false;
         this.sortNewest = true;
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: sortOldestClicked()
 
     /* Select All Complaint Type */
@@ -108,8 +126,7 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.filterComplaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = true;
         });
-
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: selectAllComplaintType()
 
     /* Unselect All Complaint Type */
@@ -117,8 +134,7 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.filterComplaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = false;
         });
-
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: unselectAllComplaintType()
 
     /* Select All Status */
@@ -126,8 +142,7 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.filterStatusList.forEach((status) => {
             status["selected"] = true;
         });
-
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: selectAllStatus()
 
     /* Unselect All Status */
@@ -135,22 +150,19 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.filterStatusList.forEach((status) => {
             status["selected"] = false;
         });
-
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: unselectAllStatus()
 
     /* Status Filter Option Clicked */
     statusOptionClicked(status) {
         status.selected = !status.selected;
-        console.log("Status Selected: ", status.selected);
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: statusOptionClicked()
 
     /* Complaint Type Filter Option Clicked */
     complaintTypeOptionClicked(complaintType) {
         complaintType.selected = !complaintType.selected;
-        console.log("Complaint Type Selected: ", complaintType.selected);
-        this.loadComplaints();
+        this.startNewProgressBar();
     }  // Ends: complaintTypeOptionClicked()
 
     /* Load Complaints */
@@ -171,8 +183,12 @@ export class ManageAllComplaintsComponent implements OnInit {
     /* Check User Permission (Admin / Not Admin) */
     checkUserPermission(employeePermissionObject) {
         this.userPermission = employeePermissionObject.configJSON.includes("admin");
-        console.log("User Permission: ", this.userPermission);
-        this.serviceAdapter.initializeComplaintData();
+
+        if (this.userPermission) {
+            this.serviceAdapter.initializeComplaintDataAdmin();
+        } else {
+            this.serviceAdapter.initializeComplaintDataEmployee();
+        }
     }  // Ends: checkUserPermission()
 
     /* Initialize Complaint Type list */
@@ -182,7 +198,18 @@ export class ManageAllComplaintsComponent implements OnInit {
             return;
         }
 
+        let nullComplaintType = {
+            id: null,
+            defaultText: '',
+            name: '',
+            parentSchoolComplaintStatusDefault: null,
+            parentSchool: null,
+            selected: false,
+        };
+
         this.complaintTypeList = [];
+        this.complaintTypeList.push(nullComplaintType);
+
         complaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = false;
             this.complaintTypeList.push(complaintType);
@@ -190,6 +217,18 @@ export class ManageAllComplaintsComponent implements OnInit {
 
         this.filterComplaintTypeList = CommonFunctions.getInstance().deepCopy(this.complaintTypeList);
     }  // Ends: initializeComplaintTypeList()
+
+    /* Initialize Address-TO-Employee List (If Complaint-Type is Null) */
+    initializeEmployeeComplaintList(employeeComplaintList, idx) {
+        employeeComplaintList.forEach((employeeComplaint) => {
+            let employee = this.getEmployee(employeeComplaint.parentEmployee);
+            employee["selected"] = true;
+
+            if (employee["name"]) {
+                this.complaintList[idx]["employeeComplaintList"].push(employee);
+            }
+        });
+    }  // Ends: initializeEmployeeComplaintList()
 
     /* Initialize Complaint list */
     initializeComplaintList(complaintList) {
@@ -199,25 +238,19 @@ export class ManageAllComplaintsComponent implements OnInit {
         }
 
         let length = this.complaintList.length;
-        console.log("Length: ", length);
 
         complaintList.forEach((complaintObject) => {
             let complaint = {};
-            complaint["parentSchoolComplaintType"] = this.getParentComplaint(complaintObject["parentSchoolComplaintType"]);
+            complaint["parentSchoolComplaintType"] = this.getParentComplaintType(complaintObject["parentSchoolComplaintType"]);
             complaint["id"] = complaintObject["id"];
             complaint["dateSent"] = complaintObject["dateSent"];
             complaint["parentEmployee"] = this.getEmployee(complaintObject["parentEmployee"]);
             complaint["applicableStatusList"] = [];
+            complaint["employeeComplaintList"] = [];
             complaint["commentList"] = [];
             complaint["parentStudent"] = this.getParentStudent(complaintObject["parentStudent"]);
             complaint["title"] = complaintObject["title"];
-
-            if (complaintObject["parentSchoolComplaintStatus"]) {
-                complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
-            } else {
-                complaint["parentSchoolComplaintStatus"] = {};
-            }
-
+            complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
             this.complaintList.push(complaint);
         });
 
@@ -226,15 +259,21 @@ export class ManageAllComplaintsComponent implements OnInit {
         }
 
         for (let i = length; i < this.complaintList.length; i++) {
-            this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
+            if (this.complaintList[i]["parentSchoolComplaintType"]["id"]) {
+                this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
+            }
         }
-        console.log("Complaint List: ", this.complaintList);
-        this.isProgress = false;
+
+        for (let i = length; i < this.complaintList.length; i++) {
+            this.serviceAdapter.getEmployeeCompalint(this.complaintList[i].id, i);
+        }
+        // this.isProgress = false;
 
         if (complaintList.length < 50) {
             this.isLoadMore = false;
         }
         this.searchedComplaintList = this.complaintList;
+        this.startProgressBar();
     }  // Ends: initializeComplaintList()
 
     /* Initialize Student Full Profile list */
@@ -264,7 +303,6 @@ export class ManageAllComplaintsComponent implements OnInit {
             }
         }
 
-        console.log("Student List: ", this.studentList);
     }  // Ends: initializeStudentFullProfileList()
 
     /* Initialize Status list */
@@ -274,11 +312,21 @@ export class ManageAllComplaintsComponent implements OnInit {
             return;
         }
 
+        let nullStatus = {
+            id: null,
+            name: '',
+            parentSchool: null,
+            selected: false,
+        };
+
+        if (this.statusList.length == 0) {
+            this.statusList.push(nullStatus);
+        }
+
         statusList.forEach((status) => {
             status["selected"] = false;
             this.statusList.push(status);
         });
-        console.log("Status List: ", this.statusList);
         this.filterStatusList = CommonFunctions.getInstance().deepCopy(this.statusList);
     }  // Ends: initializeStatusList()
 
@@ -295,6 +343,7 @@ export class ManageAllComplaintsComponent implements OnInit {
             let tempEmployee = {};
             tempEmployee["name"] = employee["name"];
             tempEmployee["id"] = employee["id"];
+            tempEmployee["mobileNumber"] = employee["mobileNumber"];
             this.employeeList.push(tempEmployee);
         });
     }  // Ends: initializeEmployeeList()
@@ -322,7 +371,7 @@ export class ManageAllComplaintsComponent implements OnInit {
     }  // Ends: getParentStudent()
 
     /* Get Parent Complaint */
-    getParentComplaint(parentSchoolComplaintType) {
+    getParentComplaintType(parentSchoolComplaintType) {
 
         let nullComplaintType = {
             id: null,
@@ -342,7 +391,7 @@ export class ManageAllComplaintsComponent implements OnInit {
             }
         }
         return nullComplaintType;
-    }  // Ends: getParentComplaint()
+    }  // Ends: getParentComplaintType()
 
     /* Get Status */
     getStatus(id) {
@@ -371,6 +420,7 @@ export class ManageAllComplaintsComponent implements OnInit {
         let nullEmployee = {
             id: null,
             name: null,
+            mobileNumber: "",
         };
 
         if (!id) {
@@ -402,16 +452,23 @@ export class ManageAllComplaintsComponent implements OnInit {
     seachChanged = this.debounce(() => this.getSearchedComplaintList());
 
     /* Open Filter Modal */
-    openAssignEmployeeDialog(): void {
+    openAssignEmployeeDialog(complaint, idx): void {
         const dialogRef = this.dialog.open(AssignEmployeeComponent, {
             data: {
-                msg: "Hello",
+                employeeList: CommonFunctions.getInstance().deepCopy(this.employeeList),
+                openedComplaint: CommonFunctions.getInstance().deepCopy(complaint),
+                employeeComplaintList: CommonFunctions.getInstance().deepCopy(complaint.employeeComplaintList),
             }
         });
 
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
-            console.log("closed");
+            if (data && data["newlyAssignedEmployeeList"]) {
+                let newlyAssignedEmployeeList = data["newlyAssignedEmployeeList"];
+                if (newlyAssignedEmployeeList.length) {
+                    this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
+                }
+            }
         });
     }  // Ends: openAssignEmployeeDialog()
 
@@ -423,30 +480,39 @@ export class ManageAllComplaintsComponent implements OnInit {
         this.openedComplaint = complaint;
         this.openedComplaintIdx = idx;
         this.pageName = "showComplaint";
-        console.log("Opened Complaint: ", this.openedComplaint);
+
+        if (!this.defaultStatusTitle) {
+            this.defaultStatusTitle = "Not Applicable";
+        }
     }  // Ends: openComplaint()
+
+    updateStatus(status) {
+        this.defaultStatusTitle = status.name;
+        this.defaultStatus = status;
+        this.serviceAdapter.updateStatus();
+    }
 
     /* Update Complaint */
     sendCommentClicked() {
-        console.log("Opened Complaint: ", this.openedComplaint);
-        console.log("Default Status: ", this.defaultStatus);
-
-        if (
-            this.defaultStatus &&
-            (   !this.openedComplaint["parentSchoolComplaintStatus"] ||
-                (this.openedComplaint["parentSchoolComplaintStatus"] && this.openedComplaint["parentSchoolComplaintStatus"].id != this.defaultStatus.id)
-            )
-        ) {
-            this.serviceAdapter.updateStatus();
+        if (!this.commentMessage) {
+            alert("Please enter your query.");
         }
-
-        if (this.commentMessage) {
-            this.serviceAdapter.addComment();
-        }
+        this.serviceAdapter.addComment();
     }  // Ends: sendCommentClicked()
 
     /* Delete Complaint */
     deleteComplaint(complaint) {
-        this.serviceAdapter.deleteComplaint(complaint);
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: complaint.title,
+            }
+        });
+
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.serviceAdapter.deleteComplaint(complaint);
+            }
+        });
     }  // Ends: deleteComplaint()
 }

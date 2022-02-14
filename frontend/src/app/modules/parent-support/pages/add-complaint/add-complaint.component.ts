@@ -36,7 +36,6 @@ export class AddComplaintComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
 
         this.serviceAdapter = new AddComplaintServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -67,7 +66,6 @@ export class AddComplaintComponent implements OnInit {
             }
         }
 
-        console.log("Student List: ", this.studentList);
     }  // Ends: initializeStudentFullProfileList()
 
     /* Initialize Selected Student Data */
@@ -110,7 +108,6 @@ export class AddComplaintComponent implements OnInit {
                 this.searchedStudentList.push(student);
             }
         });
-        console.log("Searched Student List: ", this.searchedStudentList);
     }  // Ends: searchStudentList()
 
     seachStudentChanged = this.debounce(() => this.searchStudentList());

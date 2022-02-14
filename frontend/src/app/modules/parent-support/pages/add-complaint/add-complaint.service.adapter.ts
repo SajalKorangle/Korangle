@@ -54,45 +54,73 @@ export class AddComplaintServiceAdapter {
         this.vm.isLoading = false;
     }  // Ends: initializeData()
 
+    async assignEmployeeComplaint(employeeComplaintList) {
+        const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaint'}, employeeComplaintList);
+    }
+
     /* Add Complaint */
     async addComplaint() {
         this.vm.isLoading = true;
 
+        /* Starts: Get Assigned Employees */
+        let employeeComplaintTypeList = [];
+        if (this.vm.complaintType["id"]) {
+
+            const employeeComplaintTypeQuery = new Query()
+                .filter({ parentSchoolComplaintType: this.vm.complaintType["id"] })
+                .getObjectList({ parent_support_app: 'EmployeeComplaintType' });
+
+
+            [
+                employeeComplaintTypeList,   // 0
+            ] = await Promise.all([
+                employeeComplaintTypeQuery,   // 0
+            ]);
+        }
+        /* Ends: Get Assigned Employees */
+
         let complaintObject = {};
         complaintObject["parentEmployee"] = this.vm.user.activeSchool.employeeId;
 
-        if(this.vm.complaintType["id"]) {
+        if (this.vm.complaintType["id"]) {
             complaintObject["parentSchoolComplaintType"] = this.vm.complaintType.id;
+            complaintObject["parentSchoolComplaintStatus"] = this.vm.complaintType.parentSchoolComplaintStatusDefault;
         } else {
             complaintObject["parentSchoolComplaintType"] = this.vm.NULL_CONSTANT;
+            complaintObject["parentSchoolComplaintStatus"] = this.vm.NULL_CONSTANT;
         }
 
         complaintObject["parentStudent"] = this.vm.selectedStudent.dbId;
         complaintObject["title"] = this.vm.complaintTitle;
-
-        if(this.vm.complaintType["parentSchoolComplaintStatusDefault"]) {
-            complaintObject["parentSchoolComplaintStatus"] = this.vm.complaintType.parentSchoolComplaintStatusDefault;
-        } else {
-            complaintObject["parentSchoolComplaintStatus"] = this.vm.NULL_CONSTANT;
-        }
-
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         const complaint = await new Query().createObject({parent_support_app: 'Complaint'}, complaintObject);
-        console.log("Complaint: ", complaint);
 
-        if(this.vm.comment) {
+        let employeeComplaintList = [];
+        employeeComplaintTypeList.forEach((employeeComplaintType) => {
+            let employeeComplaint = {};
+
+            employeeComplaint["parentEmployee"] = employeeComplaintType["parentEmployee"];
+            employeeComplaint["parentComplaint"] = complaint.id;
+            employeeComplaintList.push(employeeComplaint);
+        });
+        if (employeeComplaintList.length) {
+            this.assignEmployeeComplaint(employeeComplaintList);
+        }
+
+        if (this.vm.comment) {
             let commentObject = {};
             commentObject["parentEmployee"] = this.vm.NULL_CONSTANT;
             commentObject["parentStudent"] = this.vm.selectedStudent.dbId;
             commentObject["message"] = this.vm.comment;
             commentObject["parentComplaint"] = complaint.id;
+
             const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
-            console.log("Comment: ", comment);
         }
 
         this.vm.comment = "";
         this.vm.initializeComplaintData();
+        alert("Complaint added successfully.");
         this.vm.isLoading = false;
     }  // Ends: addComplaint()
 }

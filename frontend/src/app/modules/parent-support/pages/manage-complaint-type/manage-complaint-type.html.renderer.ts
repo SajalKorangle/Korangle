@@ -4,8 +4,7 @@ export class ManageComplaintTypeHtmlRenderer {
 
     vm: ManageComplaintTypeComponent;
 
-    constructor() {
-    }
+    constructor() { }
 
     /* Initialize Renderer */
     initializeRenderer(vm: ManageComplaintTypeComponent): void {

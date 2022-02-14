@@ -1,5 +1,5 @@
 <!-- Starts: Show Tables -->
-<div *ngIf="pageName == 'showTables'" class="card-content">
+<div *ngIf="pageName == 'showTables' && !isLoading" class="card-content">
 
     <!-- Starts: Complaint Type Table -->
     <ng-container>
@@ -116,10 +116,11 @@
 <!-- Ends: Show Tables -->
 
 <!-- Starts: Add Complaint Type -->
-<div *ngIf="pageName == 'addCompalintType'" class="card-content">
+<div *ngIf="pageName == 'addCompalintType' && !isLoading" class="card-content" style="min-height: 83vh">
     <div class="add-title">Add/Edit Complaint Type</div>
     <br />
 
+    <!-- Starts: Complaint Type Name -->
     <div class="flex-box">
         <div class="field-title">Type Name : </div>
         <mat-form-field>
@@ -127,7 +128,9 @@
         </mat-form-field>
     </div>
     <br />
+    <!-- Ends: Complaint Type Name -->
 
+    <!-- Starts: Default Text -->
     <div class="flex-box">
         <div class="field-title">Default Text : </div>
         <textarea
@@ -136,15 +139,21 @@
         ></textarea>
     </div>
     <br />
+    <!-- Ends: Default Text -->
 
+    <!-- Starts: Assign Employees -->
     <div>
         <div class="field-title">Address to :</div>
         <br />
+
+        <!-- Starts: Search Bar -->
         <div class="search-bar">
             <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; seachChanged()">
             <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
         </div>
+        <!-- Ends: Search Bar -->
 
+        <!-- Starts: Searched Employee List -->
         <div *ngIf="searchedEmployeeList.length > 0" class="flex-box">
             <div style="flex-basis: 70%;">
                 <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
@@ -156,7 +165,9 @@
                 </cdk-virtual-scroll-viewport>
             </div>
         </div>
+        <!-- Ends: Searched Employee List -->
 
+        <!-- Starts: Selected Employee List -->
         <ng-container *ngFor="let employee of selectedEmployeeList; let idx = index">
             <br />
             <mat-checkbox
@@ -166,12 +177,16 @@
                 {{ employee.name }}
             </mat-checkbox>
         </ng-container>
+        <!-- Ends: Selected Employee List -->
     </div>
     <br />
+    <!-- Ends: Assign Employees -->
 
+    <!-- Starts: Applicable Status List -->
     <div>
         <div class="field-title">Applicable Statuses : </div>
         <div class="checkbox-group">
+            <!-- Starts: Applicable Status List Sub-Group 1 -->
             <div class="checkbox-subgroup">
                 <ng-container *ngFor="let status of statusList; let idx = index">
                     <ng-container *ngIf="idx < (statusList.length / 2)">
@@ -185,7 +200,9 @@
                     </ng-container>
                 </ng-container>
             </div>
+            <!-- Ends: Applicable Status List Sub-Group 1 -->
 
+            <!-- Starts: Applicable Status List Sub-Group 2 -->
             <div class="checkbox-subgroup">
                 <ng-container *ngFor="let status of statusList; let idx = index">
                     <ng-container *ngIf="idx >= (statusList.length / 2)">
@@ -199,13 +216,15 @@
                     </ng-container>
                 </ng-container>
             </div>
+            <!-- Ends: Applicable Status List Sub-Group 2 -->
         </div>
 
+        <!-- Starts: Add New Status -->
         <div>
             <mat-form-field>
                 <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" />
             </mat-form-field>
-            <br *ngIf="isMobile()"/>
+            <br *ngIf="htmlRenderer.isMobile()"/>
             <button
                 type="button"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
@@ -216,9 +235,12 @@
                 Add Complaint Status
             </button>
         </div>
+        <!-- Ends: Add New Status -->
     </div>
     <br />
+    <!-- Ends: Applicable Status List -->
 
+    <!-- Starts: Default Status -->
     <div class="flex-box">
         <div class="field-title" style="margin-right: 5%;">Default Status :</div>
         <mat-form-field>
@@ -231,13 +253,14 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <br />
-    <br />
-    <br *ngIf="!isMobile()"/>
-    <div style="border-bottom: 1px solid #C4C4C4"></div>
+    <!-- Ends: Default Status -->
+</div>
+<!-- Ends: Add Complaint Type -->
 
+<ng-container *ngIf="pageName == 'addCompalintType' && !isLoading">
+    <div style="border-bottom: 1px solid #C4C4C4"></div>
     <!-- Starts: Bottom Buttons -->
-    <div class="bottom-btns">
+    <div class="bottom-btns" style="margin-right: 2rem;">
         <button
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -256,8 +279,7 @@
         </button>
     </div>
     <!-- Ends: Bottom Buttons -->
-</div>
-<!-- Ends: Add Complaint Type -->
+</ng-container>
 
 <!-- Starts: Spinner -->
 <ng-container *ngIf="isLoading">

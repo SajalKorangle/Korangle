@@ -39,7 +39,7 @@
 }
 
 .search-field {
-    flex-basis: 63%;
+    flex-basis: 90%;
     border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
@@ -47,7 +47,7 @@
 }
 
 .seach-btn {
-    flex-basis: 7%;
+    flex-basis: 10%;
     border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
@@ -59,9 +59,15 @@
 }
     /* Ends: Search Bar */
 
-.checkbox-grp {
+.flex-box {
     display: flex;
     align-items: center;
+}
+
+.example-viewport {
+    height: 20vh;
+    width: 100%;
+    font-size: 14px;
 }
 /* Ends: Assign Employee Section */
 

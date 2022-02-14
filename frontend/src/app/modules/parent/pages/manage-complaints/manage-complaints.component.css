@@ -44,7 +44,7 @@ thead tr th {
 }
 
 .example-viewport {
-    height: 70vh;
+    height: 65vh;
     width: 100%;
 }
 
@@ -218,7 +218,9 @@ thead tr th {
         padding-right: 1rem;
     }
 
-    /* Starts: Search Bar */
+    /* Starts: List of Complaints */
+
+        /* Starts: Search Bar */
    .search-bar {
        height: 20px;
    }
@@ -234,12 +236,15 @@ thead tr th {
    .material-icons {
        font-size: 15px;
    }
-   /* Ends: Search Bar */
+       /* Ends: Search Bar */
 
    .table-container {
        margin-left: 0rem;
    }
 
+    /* Ends: List of Complaints */
+
+    /* Starts: Send New Complaint Section */
    .send-new-common-section {
        display: block;
    }
@@ -284,5 +289,6 @@ thead tr th {
        align-items: flex-end;
        word-wrap: break-word;
    }
+   /* Ends: Send Complaint Section */
 }
 /* Ends: Media Query - Mobile Phone */

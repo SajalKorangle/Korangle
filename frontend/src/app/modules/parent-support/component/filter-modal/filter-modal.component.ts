@@ -17,10 +17,12 @@ export class FilterModalComponent implements OnInit {
 
     checkBox: boolean;
 
+    /* Details of Start Date */
     startDateType: string = "Select Start Date";
     sDate: string = "";
     sDays: number = 0;
 
+    /* Details of Ends Date */
     endDateType: string = "Select End Date";
     eDate: string = "";
     eDays: number = 0;
@@ -65,7 +67,7 @@ export class FilterModalComponent implements OnInit {
                 });
             }  // Ends: Initialize status list
 
-            /* Initialize age */
+            /* Initialize Date Information */
             if (this.filter["startDateType"]) {
 
                 this.startDateType = this.filter["startDateType"];
@@ -87,7 +89,7 @@ export class FilterModalComponent implements OnInit {
                     default:
                         this.eDate = this.filter["endDate"];
                 }
-            }  // Ends: Initialize age
+            }  // Ends: Initialize Date Information
         }
     }
 

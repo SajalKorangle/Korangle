@@ -20,7 +20,6 @@ export class FormatTableModalComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
     }
 
     /* Cancel Clicked */

@@ -1,6 +1,7 @@
 import { ManageAllComplaintsComponent } from './manage-all-complaints.component';
 import { Query } from '@services/generic/query';
 
+
 export class ManageAllComplaintsServiceAdapter {
     vm: ManageAllComplaintsComponent;
 
@@ -10,10 +11,6 @@ export class ManageAllComplaintsServiceAdapter {
     initializeAdapter(vm: ManageAllComplaintsComponent): void {
         this.vm = vm;
     }  // Ends: initializeAdapter()
-
-    // setProgress(progress) {
-    //     this.vm.setProgress(progress);
-    // }
 
     /* Initialize Data */
     async initializeData() {
@@ -82,52 +79,72 @@ export class ManageAllComplaintsServiceAdapter {
             employeePermissionQoery,   // 5
         ]);
 
-
         this.vm.initializeStatusList(statusList);
-        this.vm.initializeComplaintTypeList(complaintTypeList);
         this.vm.initializeEmployeeList(employeeList);
         this.vm.initializeStudentFullProfileList(studentList, studentSectionList);
+        this.vm.initializeComplaintTypeList(complaintTypeList);
         this.vm.checkUserPermission(employeePermissionObject);
         this.vm.isLoading = false;
     }  // Ends: initializeData()
 
-    /* Initialize Complaint Data */
-    async initializeComplaintData() {
+    async initializeComplaintDataAdmin() {
         this.vm.isLoading = true;
 
-        /* Get Assigned Complaint Type */
-        const employeeComplaintTypeQuery = new Query()
-            .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })
-            .getObjectList({ parent_support_app: 'EmployeeComplaintType' });
-
-        let employeeComplaintTypeList = [];
-        [
-            employeeComplaintTypeList,   // 0
-        ] = await Promise.all([
-            employeeComplaintTypeQuery,   // 0
-        ]);
-
-
-        this.vm.schoolComplaintTypeIdList = [];
-        employeeComplaintTypeList.forEach((employeeComplaintType) => {
-            this.vm.schoolComplaintTypeIdList.push(employeeComplaintType.parentSchoolComplaintType)
-        });
-        console.log("SchoolComplaintType: ", this.vm.schoolComplaintTypeIdList);
-
-
-        /* Get Assigned Complaints */
         let complaint_filter = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
-
-        if (!this.vm.userPermission) {
-            complaint_filter["parentSchoolComplaintType__in"] = this.vm.schoolComplaintTypeIdList;
-        }
 
         const complaintQuery = new Query()
             .filter(complaint_filter)
             .orderBy("-dateSent")
             .paginate(Math.max(0, this.vm.startNumber - 1), this.vm.endNumber)
+            .getObjectList({ parent_support_app: 'Complaint' });
+
+
+        let complaintList = [];
+        [
+            complaintList,   // 0
+        ] = await Promise.all([
+            complaintQuery,   // 0
+        ]);
+
+
+        this.vm.initializeComplaintList(complaintList);
+        this.vm.isLoading = false;
+    }
+
+    /* Initialize Complaint Data */
+    async initializeComplaintDataEmployee() {
+        this.vm.isLoading = true;
+
+        /* Get Assigned EmployeeComplaint */
+        const employeeComplaintQuery = new Query()
+            .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })
+            .paginate(Math.max(0, this.vm.startNumber - 1), this.vm.endNumber)
+            .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+
+        let employeeComplaintList = [];
+        [
+            employeeComplaintList,   // 0
+        ] = await Promise.all([
+            employeeComplaintQuery,   // 0
+        ]);
+
+        let complaintIdList = [];
+        employeeComplaintList.forEach((employeeComplaint) => {
+            complaintIdList.push(employeeComplaint.parentComplaint);
+        });
+
+
+        /* Get Assigned Complaints */
+        let complaint_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            id__in: complaintIdList,
+        };
+
+        const complaintQuery = new Query()
+            .filter(complaint_filter)
+            .orderBy("-dateSent")
             .getObjectList({ parent_support_app: 'Complaint' });
 
 
@@ -176,7 +193,6 @@ export class ManageAllComplaintsServiceAdapter {
             commentQuery,   // 0
         ]);
 
-        console.log("Comment List: ", commentList);
         commentList.forEach((comment) => {
             comment["parentEmployee"] = this.vm.getEmployee(comment["parentEmployee"]);
             comment["parentStudent"] = this.vm.getParentStudent(comment["parentStudent"]);
@@ -202,7 +218,6 @@ export class ManageAllComplaintsServiceAdapter {
             statusComplaintTypeQuery,   // 0
         ]);
 
-        console.log("Status Complaint List: ", statusComplaintTypeList);
         let applicableStatusList = [];
         statusComplaintTypeList.forEach((statusComplaintType) => {
             let status = this.vm.getStatus(statusComplaintType.parentSchoolComplaintStatus);
@@ -212,6 +227,23 @@ export class ManageAllComplaintsServiceAdapter {
         this.vm.complaintList[idx]["applicableStatusList"] = applicableStatusList;
         this.vm.isLoading = false;
     }  // Ends: getStatusCompalintType()
+
+    /* Get Employee-Complaint */
+    async getEmployeeCompalint(complaintId, idx) {
+
+        const employeeComplaintQuery = new Query()
+            .filter({ parentComplaint: complaintId })
+            .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+
+        let employeeComplaintList = [];
+        [
+            employeeComplaintList,   // 0
+        ] = await Promise.all([
+            employeeComplaintQuery,   // 0
+        ]);
+
+        this.vm.initializeEmployeeComplaintList(employeeComplaintList, idx);
+    }  // Ends: getEmployeeCompalint()
 
     /* Update Status */
     async updateStatus() {
@@ -227,9 +259,9 @@ export class ManageAllComplaintsServiceAdapter {
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         const complaint = await new Query().updateObject({parent_support_app: 'Complaint'}, complaintObject);
-        console.log("Complaint: ", complaint);
 
         this.vm.openedComplaint["parentSchoolComplaintStatus"] = this.vm.defaultStatus;
+        alert("Status updated successfully.");
         this.vm.isLoading = false;
     }  // Ends: updateStatus()
 
@@ -244,7 +276,6 @@ export class ManageAllComplaintsServiceAdapter {
         commentObject["parentComplaint"] = this.vm.openedComplaint.id;
 
         const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
-        console.log("Comment: ", comment);
 
         let employeeId = comment["parentEmployee"];
         comment["parentEmployee"] = this.vm.getEmployee(employeeId);
@@ -263,6 +294,8 @@ export class ManageAllComplaintsServiceAdapter {
 
         await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'Complaint'});
         this.vm.complaintList.splice(this.vm.openedComplaintIdx, 1);
+        alert("Complaint deleted successfully.");
+        this.vm.pageName = "showTables";
     }  // Ends: deleteComplaint()
 
     /* Load Complaints */
@@ -274,23 +307,50 @@ export class ManageAllComplaintsServiceAdapter {
 
         /* Status Id Check */
         let statusList = [];
+        let isStatusNull = false;
         this.vm.filterStatusList.forEach((status) => {
             if (status.selected) {
                 statusList.push(status.id);
+                if (status.id) {
+                    statusList.push(status.id);
+                } else {
+                    isStatusNull = true;
+                }
             }
         });
-        if (statusList.length) {
+        if (isStatusNull) {
+            let parentSchoolStatusList = [];
+
+            parentSchoolStatusList.push({"parentSchoolComplaintStatus__isnull": true});
+            if (statusList.length) {
+                parentSchoolStatusList.push({"parentSchoolComplaintStatus__in": statusList});
+            }
+            filterData["__or__parentSchoolComplaintStatus"] = parentSchoolStatusList;
+        } else if (statusList.length) {
             filterData["parentSchoolComplaintStatus__in"] = statusList;
         }
 
         /* Complaint Type Id Check */
         let complaintTypeList = [];
+        let isComplaintTypeNull = false;
         this.vm.filterComplaintTypeList.forEach((complaintType) => {
             if (complaintType.selected) {
-                complaintTypeList.push(complaintType.id);
+                if (complaintType.id) {
+                    complaintTypeList.push(complaintType.id);
+                } else {
+                    isComplaintTypeNull = true;
+                }
             }
         });
-        if (complaintTypeList.length) {
+        if (isComplaintTypeNull) {
+            let parentSchoolComplaintTypeList = [];
+
+            parentSchoolComplaintTypeList.push({"parentSchoolComplaintType__isnull": true});
+            if (complaintTypeList.length) {
+                parentSchoolComplaintTypeList.push({"parentSchoolComplaintType__in": complaintTypeList});
+            }
+            filterData["__or__parentSchoolComplaintType"] = parentSchoolComplaintTypeList;
+        } else if (complaintTypeList.length) {
             filterData["parentSchoolComplaintType__in"] = complaintTypeList;
         }
 
@@ -305,12 +365,26 @@ export class ManageAllComplaintsServiceAdapter {
 
         /* User Permission Check */
         if (!this.vm.userPermission) {
-            filterData["parentSchoolComplaintType__in"] = this.vm.schoolComplaintTypeIdList;
+            /* Get Assigned Complaint */
+            const employeeComplaintQuery = new Query()
+                .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })
+                .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+
+            let employeeComplaintList = [];
+            [
+                employeeComplaintList,   // 0
+            ] = await Promise.all([
+                employeeComplaintQuery,   // 0
+            ]);
+
+            let complaintIdList = [];
+            employeeComplaintList.forEach((employeeComplaint) => {
+                complaintIdList.push(employeeComplaint.parentComplaint);
+            });
+            filterData["id_in"] = complaintIdList;
         }
 
         this.vm.isProgress = true;
-        this.vm.progress = 0;
-
         console.log("Filter Data: ", filterData);
 
         const complaintQuery = new Query()
@@ -327,7 +401,23 @@ export class ManageAllComplaintsServiceAdapter {
             complaintQuery,   // 0
         ]);
 
-        console.log("Filtered Status List: ", this.vm.filterStatusList);
         this.vm.initializeComplaintList(complaintList);
     }  // Ends: loadComplaints()
+
+    async addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx) {
+
+        let employeeComplaintList = [];
+        newlyAssignedEmployeeList.forEach((newlyAssignedEmployee) => {
+            let employeeComplaint = {};
+            employeeComplaint["parentEmployee"] = newlyAssignedEmployee["id"];
+            employeeComplaint["parentComplaint"] = complaint["id"];
+
+            employeeComplaintList.push(employeeComplaint);
+        });
+
+
+        const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaint'}, employeeComplaintList);
+        alert("Employees assigned successfully.");
+        this.vm.initializeEmployeeComplaintList(response, idx);
+    }
 }

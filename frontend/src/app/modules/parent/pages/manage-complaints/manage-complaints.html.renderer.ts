@@ -4,8 +4,7 @@ export class ManageComplaintsHtmlRenderer {
 
     vm: ManageComplaintsComponent;
 
-    constructor() {
-    }
+    constructor() { }
 
     /* Initialize Renderer */
     initializeRenderer(vm: ManageComplaintsComponent): void {
@@ -28,7 +27,7 @@ export class ManageComplaintsHtmlRenderer {
         /* Get Minute */
         let minutes = newDate.getMinutes();
         let minutesString = "";
-        if(minutes < 10) {
+        if (minutes < 10) {
             minutesString = "0" + minutes;
         } else {
             minutesString = "" + minutes;
@@ -37,7 +36,7 @@ export class ManageComplaintsHtmlRenderer {
         /* Get Day */
         let day = newDate.getDate();
         let dayString = "";
-        if(day < 10) {
+        if (day < 10) {
             dayString = "0" + day;
         } else {
             dayString = "" + day;
@@ -49,7 +48,7 @@ export class ManageComplaintsHtmlRenderer {
         /* Get Month */
         let month = newDate.getMonth() + 1;
         let monthString = "";
-        if(month < 10) {
+        if (month < 10) {
             monthString = "0" + month;
         } else {
             monthString = "" + month;
@@ -67,7 +66,7 @@ export class ManageComplaintsHtmlRenderer {
         /* Get Day */
         let day = newDate.getDate();
         let dayString = "";
-        if(day < 10) {
+        if (day < 10) {
             dayString = "0" + day;
         } else {
             dayString = "" + day;
@@ -79,7 +78,7 @@ export class ManageComplaintsHtmlRenderer {
         /* Get Month */
         let month = newDate.getMonth() + 1;
         let monthString = "";
-        if(month < 10) {
+        if (month < 10) {
             monthString = "0" + month;
         } else {
             monthString = "" + month;
@@ -90,11 +89,11 @@ export class ManageComplaintsHtmlRenderer {
 
         let today: any = new Date();
         let dateDiff: any = Math.round(Math.abs(today - newDate) / (1000 * 60 * 60 * 24));
-        if(dateDiff == 0) {
+        if (dateDiff == 0) {
             dateInfo = "Today";
-        } else if(dateDiff == 1) {
+        } else if (dateDiff == 1) {
             dateInfo = "Yesterday";
-        } else if(dateDiff <= 3) {
+        } else if (dateDiff <= 3) {
             dateInfo = "" + (dateDiff) + " days ago";
         }
         return dateInfo;
@@ -102,7 +101,7 @@ export class ManageComplaintsHtmlRenderer {
 
     /* Get Author of Comment */
     getAuthorComment(comment) {
-        if(comment.parentEmployee["id"]) {
+        if (comment.parentEmployee["id"]) {
             return comment.parentEmployee.name;
         }
         return comment.parentStudent.fathersName;

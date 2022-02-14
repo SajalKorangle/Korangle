@@ -1,19 +1,7 @@
-<div *ngIf="!isLoading" class="card-content table-responsive">
+<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilters.length > 0 || columnFilters.length > 0) ? '75vh' : '90vh'}">
     <b>Define custom rows and columns or choose from saved tables</b>
-    <!-- Starts: Print && Download Buttons Section -->
-    <ng-container *ngIf="!htmlRenderer.checkMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
-        <button
-            id="print-list"
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
-            style="padding: 12px 15px; margin-left: 5%;"
-            matTooltip="Print the following table"
-            tooltip-position="left"
-            (click)="printTable()"
-        >
-            Print<i class="material-icons" style="margin-left: 17px">print</i>
-        </button>
-
+    <!-- Starts: Print && Download Buttons Section (Mobile Browser) -->
+    <ng-container *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
         <button
             type="button"
             id="download"
@@ -31,7 +19,7 @@
     <br /><br /><b>Table Format</b><br />
     <!--Starts: Generated Tables List -->
     <div class="table-List">
-        <mat-form-field style="margin-right: 30px">
+        <mat-form-field class="table-names">
             <mat-select placeholder="{{tableFormatTitle ? tableFormatTitle : 'Not Selected'}}" style="width: 100%">
                 <mat-option (click)="addNewTableClicked()" style="width: 100%">
                     Create New Table
@@ -43,12 +31,52 @@
                 </ng-container>
             </mat-select>
         </mat-form-field>
-        <i *ngIf="tableFormatTitle" (click)="deleteTable()" class="material-icons delete-icon"> delete_forever </i>
+
+        <div class="print-download-button">
+            <!-- Starts: Print && Download Buttons Section (Desktop) -->
+            <ng-container *ngIf="!htmlRenderer.checkMobile() && !htmlRenderer.isMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
+                <button
+                    id="print-list"
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
+                    style="padding: 12px 15px;"
+                    matTooltip="Print the following table"
+                    tooltip-position="left"
+                    (click)="printTable()"
+                >
+                    Print<i class="material-icons" style="margin-left: 17px">print</i>
+                </button>
+
+                <button
+                    type="button"
+                    id="download"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-left: 5%;"
+                    matTooltip="Download the following table"
+                    tooltip-position="left"
+                    (click)="downloadList()"
+                >
+                    Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
+                </button>
+            </ng-container>
+            <!--  Ends: Print && Download Buttons Section -->
+        </div>
     </div>
     <!-- Ends: Generated Tables List -->
 
+    <!--Starts: Change Table Name -->
+    <div class="change-table-name" *ngIf="tableFormatTitle">
+        <mat-form-field class="inputField">
+            <input matInput type="text" [(ngModel)]="tableFormatTitle" required />
+        </mat-form-field>
+
+        <i (click)="openDeleteTableModal()" matTooltip="Delete table" tooltip-position="left" class="material-icons delete-icon"> delete_forever </i>
+    </div>
+    <br />
+    <!--Ends: Change Table Name -->
+
     <!-- Starts: Table -->
-    <ng-container *ngIf="!isLoading">
+    <ng-container>
         <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
             <table class="table">
                 <!-- Starts: Table Header -->

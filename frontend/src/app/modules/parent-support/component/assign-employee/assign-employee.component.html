@@ -2,7 +2,7 @@
     <!-- Starts: Header -->
     <div class="header">
         <div class="title">Parent Support >> Assign Employee</div>
-        <div><i class="material-icons close-btn">highlight_off</i></div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
     </div>
     <br />
     <!-- Ends: Header -->
@@ -12,22 +12,61 @@
         <div class="field-title">Address to :</div>
         <br />
 
+        <!-- Starts: Search Bar -->
         <div class="search-bar">
-            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="seachString" (ngModelChange)="seachString = $event">
+            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; seachChanged()">
             <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
         </div>
+        <!-- Ends: Search Bar -->
 
-        <br />
-        <div class="checkbox-grp">
-            <mat-checkbox
-                [(ngModel)]="helloCheckBox"
-                (click)="$event.stopPropagation()"
-                style="flex-basis: 30%;"
-            >
-                Hello
-            </mat-checkbox>
-            <div class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline;">Renotify</div>
+        <!-- Starts: List of Searched Employees -->
+        <div *ngIf="searchedEmployeeList.length > 0" class="flex-box">
+            <div style="flex-basis: 70%;">
+                <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                    <ng-container *ngFor="let employee of searchedEmployeeList">
+                        <mat-option (click)="initializeEmployeeData(employee)">
+                            {{ employee.name }}
+                        </mat-option>
+                    </ng-container>
+                </cdk-virtual-scroll-viewport>
+            </div>
         </div>
+        <br />
+        <!-- Ends: List of Searched Employees -->
+
+        <!-- Starts: List of Already Assigned Employees -->
+        <ng-container *ngIf="selectedEmployeeList.length">
+            <b>Already Assigned Employees</b><br />
+            <ng-container *ngFor="let employee of selectedEmployeeList; let idx = index">
+                <div class="flex-box">
+                    <div style="flex-basis: 50%;">{{ employee.name }}</div>
+                    <div
+                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                        style="text-decoration: underline; font-weight: 400; font-size: 12px; cursor: pointer;"
+                        (click)="renotifyClicked(employee)"
+                    >
+                        Renotify
+                    </div>
+                </div>
+            </ng-container>
+            <br />
+        </ng-container>
+        <!-- Ends: List of Already Assigned Employees -->
+
+        <!-- Starts: List of Newly Added Employees -->
+        <ng-container *ngIf="newlyAssignedEmployeeList.length">
+            <b>Newly Assigned Employees</b><br />
+            <ng-container *ngFor="let employee of newlyAssignedEmployeeList; let idx = index">
+                <mat-checkbox
+                    [(ngModel)]="employee.selected"
+                    (click)="$event.stopPropagation();"
+                >
+                    {{ employee.name }}
+                </mat-checkbox>
+                <br />
+            </ng-container>
+        </ng-container>
+        <!-- Ends: List of Newly Added Employees -->
     </div>
     <br />
     <!-- Ends: Assign Employees -->
@@ -39,13 +78,16 @@
         type="button"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
         style="padding: 7px 17px;"
+        (click)="saveClicked()"
     >
         Save
     </button>
     <button
         type="button"
         class="btn cancel-btn"
-        style="padding: 7px 17px;"
+        style="padding: 5.5px 15.5px;"
+        [ngStyle]="setCancelBtnStyle()"
+        (click)="closeClicked()"
     >
         Cancel
     </button>

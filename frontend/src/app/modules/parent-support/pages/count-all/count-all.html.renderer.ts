@@ -5,8 +5,7 @@ export class CountAllHtmlRenderer {
 
     vm: CountAllComponent;
 
-    constructor() {
-    }
+    constructor() { }
 
     /* Initialize Renderer */
     initializeRenderer(vm: CountAllComponent): void {

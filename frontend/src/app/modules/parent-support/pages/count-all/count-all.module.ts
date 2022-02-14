@@ -6,6 +6,7 @@ import { CountAllComponent } from "./count-all.component";
 import { LocalComponentsModule } from '@modules/parent-support/component/local-components.module';
 import { FilterModalComponent } from '@modules/parent-support/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/parent-support/component/format-table-modal/format-table-modal.component';
+import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 @NgModule({
     declarations: [CountAllComponent],
@@ -14,6 +15,6 @@ import { FormatTableModalComponent } from '@modules/parent-support/component/for
     exports: [],
     providers: [],
     bootstrap: [CountAllComponent],
-    entryComponents: [FilterModalComponent, FormatTableModalComponent],
+    entryComponents: [FilterModalComponent, FormatTableModalComponent, DeleteTableModalComponent],
 })
 export class CountAllModule { }

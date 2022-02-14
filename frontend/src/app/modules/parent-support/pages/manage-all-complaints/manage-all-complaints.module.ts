@@ -5,6 +5,7 @@ import { ComponentsModule } from "../../../../components/components.module";
 import { ManageAllComplaintsComponent } from "./manage-all-complaints.component";
 import { LocalComponentsModule } from '@modules/parent-support/component/local-components.module';
 import { AssignEmployeeComponent } from '@modules/parent-support/component/assign-employee/assign-employee.component';
+import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 @NgModule({
     declarations: [ManageAllComplaintsComponent],
@@ -13,6 +14,6 @@ import { AssignEmployeeComponent } from '@modules/parent-support/component/assig
     exports: [],
     providers: [],
     bootstrap: [ManageAllComplaintsComponent],
-    entryComponents: [AssignEmployeeComponent],
+    entryComponents: [AssignEmployeeComponent, DeleteTableModalComponent],
 })
 export class ManageAllComplaintsModule { }

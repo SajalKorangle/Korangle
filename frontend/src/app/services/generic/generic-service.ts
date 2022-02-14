@@ -157,9 +157,11 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     subject_app: 'StudentSubject';
     examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
-    parent_support_app: 'SchoolComplaintType' | 'SchoolComplaintStatus' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'CountAllParentSupport';
+    parent_support_app: 'SchoolComplaintType' | 'SchoolComplaintStatus' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'EmployeeComplaint' | 'CountAllParentSupport';
     employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
     team_app: 'Module' | 'Task';
+    notification_app: 'Notification';
+    user_app: 'User';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

@@ -52,13 +52,13 @@ export class CountAllServiceAdapter {
         this.vm.initializecomplaintTypeList(complaintTypeList);
         this.vm.initializeStatusList(statusList);
         this.vm.complaintList = complaintList;
-        console.log("Complaint List: ", this.vm.complaintList);
         this.vm.isLoading = false;
     }  // Ends: initializeData()
 
     /* Save Table */
     async saveTable() {
         this.vm.isLoading = true;
+
         let tableDataObject = {};
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
@@ -92,6 +92,7 @@ export class CountAllServiceAdapter {
     /* Update Table */
     async updatetable(operation = "") {
         this.vm.isLoading = true;
+
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
@@ -118,7 +119,7 @@ export class CountAllServiceAdapter {
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
         this.vm.tableList[this.vm.tableActiveIdx] = response;
 
-        if(operation == "createNew") {
+        if (operation == "createNew") {
             this.vm.initializeTableDetails();
         }
 
@@ -130,11 +131,18 @@ export class CountAllServiceAdapter {
     async deleteTable() {
         this.vm.isLoading = true;
 
+        let confirmation = window.confirm("Do you really want to delete this table?");
+        if (!confirmation) {
+            this.vm.isLoading = false;
+            return;
+        }
+
         let tableData = {
             id: this.vm.tableActiveId,
         };
         new Query().filter(tableData).deleteObjectList({parent_support_app: 'CountAllParentSupport'});
 
+        alert("Table deleted successfully.");
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();
         this.vm.isLoading = false;

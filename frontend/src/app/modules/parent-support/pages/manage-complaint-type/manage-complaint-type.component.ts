@@ -8,6 +8,7 @@ import { ManageComplaintTypeServiceAdapter } from './manage-complaint-type.servi
 import { ManageComplaintTypeHtmlRenderer } from './manage-complaint-type.html.renderer';
 
 import { MatDialog } from '@angular/material';
+import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 
 @Component({
@@ -21,10 +22,6 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     name: string;
     pageName: string = "showTables";
-
-    helloCheckBox: boolean;
-
-    maxAge: number;
 
     addStatusName: string = "";
     statusList: any = [];
@@ -55,7 +52,6 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
 
         this.serviceAdapter = new ManageComplaintTypeServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -92,25 +88,23 @@ export class ManageComplaintTypeComponent implements OnInit {
     initializecomplaintTypeList(complaintTypeList) {
         complaintTypeList.forEach((complaintType) => {
             complaintType["addressEmployeeList"] = [];
-
-            let id = complaintType["parentSchoolComplaintStatusDefault"];
-            complaintType["parentSchoolComplaintStatusDefault"] = this.getStatusFromId(id);
+            complaintType["parentSchoolComplaintStatusDefault"] = this.getStatusFromId(complaintType["parentSchoolComplaintStatusDefault"]);
             this.complaintTypeList.push(complaintType);
         });
 
-        for (let i = 0; i < this.complaintTypeList.length; i++) {
-            this.serviceAdapter.getEmployeeCompalintType(this.complaintTypeList[i].id, i);
+        for (let idx = 0; idx < this.complaintTypeList.length; idx++) {
+            this.serviceAdapter.getEmployeeCompalintType(this.complaintTypeList[idx].id, idx);
         }
-        console.log("Complaint Type List: ", this.complaintTypeList);
     }  // Ends: initializecomplaintTypeList()
 
     /* Initialize Status List */
     initializeStatusList(statusList) {
+        this.statusList = [];
+
         statusList.forEach((status) => {
             status["selected"] = false;
             this.statusList.push(status);
         });
-        console.log("Status List: ", this.statusList);
     }  // Ends: initializeStatusList()
 
     /* Initialize Employee List */
@@ -165,9 +159,9 @@ export class ManageComplaintTypeComponent implements OnInit {
         employeeComplaintTypeList.forEach((employeeComplaintType) => {
             let employee = this.getEmployeeFromId(employeeComplaintType.parentEmployee);
             employee["selected"] = true;
+
             this.complaintTypeList[idx]["addressEmployeeList"].push(employee);
         });
-        console.log("complaintType Employee: ", this.complaintTypeList[idx]["addressEmployeeList"]);
     }  // Ends: initializeEmployeeComplaintType()
 
     /* Get Searched Employee List */
@@ -182,7 +176,6 @@ export class ManageComplaintTypeComponent implements OnInit {
                 this.searchedEmployeeList.push(employee);
             }
         });
-        console.log("Searched Employee List: ", this.searchedEmployeeList);
     }  // Ends: searchEmployee()
 
     /* Debouncing */
@@ -206,7 +199,6 @@ export class ManageComplaintTypeComponent implements OnInit {
 
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
-            console.log("Data: ", data);
             if (data && data["statusName"]) {
                 this.addStatusName = data["statusName"];
                 this.addStatusClick();
@@ -225,7 +217,6 @@ export class ManageComplaintTypeComponent implements OnInit {
 
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
-            console.log("Data: ", data);
             if (data && data["operation"]) {
                 if (data["operation"] == "delete") {
                     this.deleteStatus(status, idx);
@@ -287,6 +278,7 @@ export class ManageComplaintTypeComponent implements OnInit {
             if (this.defaultStatus == status.name) {
                 this.defaultStatus = "Not Selected";
             }
+
             let idx = this.getApplicableStatusId(status.id);
             if (idx != -1) {
                 this.applicableStatusList.splice(idx, 1);
@@ -370,13 +362,33 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Delete Complaint Type */
     deleteComplaintType(complaintType, idx) {
-        this.serviceAdapter.deleteCompalintType(complaintType);
-        this.complaintTypeList.splice(idx, 1);
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: complaintType.name,
+            }
+        });
+
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.serviceAdapter.deleteCompalintType(complaintType, idx);
+            }
+        });
     }  // Ends: deleteComplaintType()
 
     /* Delete Status */
     deleteStatus(status, idx) {
-        this.serviceAdapter.deleteStatus(status);
-        this.statusList.splice(idx, 1);
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: status.name,
+            }
+        });
+
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.serviceAdapter.deleteStatus(status, idx);
+            }
+        });
     }  // Ends: deleteStatus()
 }

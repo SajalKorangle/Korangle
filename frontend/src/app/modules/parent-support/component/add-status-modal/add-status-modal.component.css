@@ -1,7 +1,7 @@
 /* Starts: Modal Container */
 .add-status-modal-container {
-    height: 31vh;
-    width: 30vw;
+    height: 30vh;
+    width: 50vw;
 }
 /* Ends: Modal Container */
 
@@ -30,7 +30,6 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 2rem;
-    border-bottom: 1px solid #C4C4C4;
 }
 
 .delete-btn {

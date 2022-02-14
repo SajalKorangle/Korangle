@@ -13,6 +13,7 @@ import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
 import { FilterModalComponent } from '@modules/parent-support/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/parent-support/component/format-table-modal/format-table-modal.component';
+import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 @Component({
     selector: 'app-count-all',
@@ -50,7 +51,6 @@ export class CountAllComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
 
         this.serviceAdapter = new CountAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -62,23 +62,42 @@ export class CountAllComponent implements OnInit {
 
     /* Initialize Complaint Type List */
     initializecomplaintTypeList(complaintTypeList) {
+
+        let nullComplaintType = {
+            id: null,
+            defaultText: '',
+            name: 'Not Selected',
+            parentSchoolComplaintStatusDefault: null,
+            parentSchool: null,
+            selected: false,
+        };
+
         this.complaintTypeList = [];
+        this.complaintTypeList.push(nullComplaintType);
+
         complaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = false;
             this.complaintTypeList.push(complaintType);
         });
 
-        console.log("Complaint Type List: ", this.complaintTypeList);
     }  // Ends: initializecomplaintTypeList()
 
     /* Initialize Status List */
     initializeStatusList(statusList) {
+        let nullStatus = {
+            id: null,
+            name: 'Not Applicable',
+            parentSchool: null,
+            selected: false,
+        };
+
         this.statusList = [];
+        this.statusList.push(nullStatus);
+
         statusList.forEach((status) => {
             status["selected"] = false;
             this.statusList.push(status);
         });
-        console.log("Status List: ", this.statusList);
     }  // Ends: initializeStatusList()
 
     /* Initialize Table Details */
@@ -261,7 +280,6 @@ export class CountAllComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
                 this.isTableUpdated = true;
-                console.log("Data: ", data.filtersData);
                 let filter = data.filtersData;
 
                 if (this.whereToAdd == 'row') {    /* Add Row Filter */
@@ -292,7 +310,6 @@ export class CountAllComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
                 this.isTableUpdated = true;
-                console.log("Data: ", data.filtersData);
                 let filtersData = data.filtersData;
 
                 if (filtersData["operation"] == "update") {    /* Update Filter */
@@ -362,7 +379,6 @@ export class CountAllComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.name) {
                 this.tableFormatTitle = data.name;
-                console.log("Data: ", data);
                 this.serviceAdapter.saveTable();
             }
         });
@@ -390,6 +406,22 @@ export class CountAllComponent implements OnInit {
             }
         });
     }  // Ends: saveAsClicked()
+
+    /* Open Delete Table Dialog */
+    openDeleteTableModal(): void {
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: this.tableFormatTitle,
+            }
+        });
+
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.deleteTable();
+            }
+        });
+    }  // Ends: openDeleteTableModal()
 
     /* Delete Table */
     deleteTable() {
