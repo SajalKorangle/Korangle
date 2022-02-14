@@ -95,9 +95,6 @@ class Employee(models.Model):
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
 
-    class Permissions(BasePermission):
-        RelationsToSchool = ['parentSchool__id']
-
     class Meta:
         db_table = 'employee'
         unique_together = ('parentSchool', 'mobileNumber')
