@@ -1,6 +1,7 @@
 import { UpdateProfileComponent } from './update-profile.component';
 import { toInteger } from 'lodash';
 import { CommonFunctions } from '@modules/common/common-functions';
+import { Query } from '@services/generic/query';
 
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent;
@@ -21,11 +22,14 @@ export class UpdateProfileServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }),
+
+            new Query().getObjectList({school_app: 'Session'}),
         ]).then(
             (value) => {
                 this.vm.studentParameterList = value[0].map((x) => ({ ...x, filterValues: JSON.parse(x.filterValues) }));
                 // this.vm.studentParameterValueList = value[1];
                 this.vm.busStopList = value[1];
+                this.vm.sessionList = value[2];
                 this.vm.isLoading = false;
             },
             (error) => {

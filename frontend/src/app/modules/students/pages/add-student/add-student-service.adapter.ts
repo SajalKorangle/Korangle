@@ -327,7 +327,7 @@ export class AddStudentServiceAdapter {
                 ]).then(
                     (valueTwo) => {
                         alert('Student admitted successfully');
-
+                
                         this.vm.initializeVariable();
 
                         CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);

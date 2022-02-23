@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
+import { UpdateProfileHtmlRenderer } from './update-profile.html.renderer';
 
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
@@ -38,6 +39,7 @@ export class UpdateProfileComponent implements OnInit {
 
     classList: any;
     sectionList: any;
+    sessionList: any = [];
 
     studentList: any;
     studentSectionList: any;
@@ -48,6 +50,7 @@ export class UpdateProfileComponent implements OnInit {
     deleteList: any[] = [];
     profileImage = null;
 
+    htmlRenderer: UpdateProfileHtmlRenderer;
     serviceAdapter: UpdateProfileServiceAdapter;
 
     commonFunctions: CommonFunctions;
@@ -62,6 +65,9 @@ export class UpdateProfileComponent implements OnInit {
         this.serviceAdapter.initializeData();
         this.deleteList = [];
         this.profileImage = this.NULL_CONSTANT;
+
+        this.htmlRenderer = new UpdateProfileHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
     handleDetailsFromParentStudentFilter(value): void {

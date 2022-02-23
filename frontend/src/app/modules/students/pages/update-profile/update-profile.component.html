@@ -190,7 +190,7 @@
                         (ngModelChange)="currentStudent.admissionSession = $event"
                     >
                         <mat-option [value]="0">None</mat-option>
-                        <mat-option [value]="user.activeSchool.currentSessionDbId">{{ user.getSchoolCurrentSessionName() }}</mat-option>
+                        <mat-option [value]="user.activeSchool.currentSessionDbId">{{ htmlRenderer.getSchoolCurrentSessionName() }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -600,7 +600,7 @@
         </button>
         <div class="clearfix"></div>
     </ng-container>
-    <!-- 
+    <!--
     <ng-container *ngIf="selectedClass && !selectedStudent">
         <br/>No Students in this class
     </ng-container> -->

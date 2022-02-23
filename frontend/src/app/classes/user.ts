@@ -108,27 +108,6 @@ export class User {
         this.initializeTask();
     }
 
-    getSchoolCurrentSessionName(): string {
-        if (this.activeSchool.currentSessionDbId == 1) {
-            return 'Session 2017-18';
-        } else if (this.activeSchool.currentSessionDbId == 2) {
-            return 'Session 2018-19';
-        } else if (this.activeSchool.currentSessionDbId == 3) {
-            return 'Session 2019-20';
-        } else if (this.activeSchool.currentSessionDbId == 4) {
-            return 'Session 2020-21';
-        } else if (this.activeSchool.currentSessionDbId == 5) {
-            return 'Session 2021-22';
-        } else if (this.activeSchool.currentSessionDbId == 6) {
-            return 'Session 2022-23';
-        } else if (this.activeSchool.currentSessionDbId == 7) {
-            return 'Session 2023-24';
-        } else if (this.activeSchool.currentSessionDbId == 8) {
-            return 'Session 2024-25';
-        }
-        return '';
-    }
-
     // This function will be called after
     // 1. clicking of back button
     // 2. clicking of refresh button
