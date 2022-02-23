@@ -119,6 +119,12 @@ export class User {
             return 'Session 2020-21';
         } else if (this.activeSchool.currentSessionDbId == 5) {
             return 'Session 2021-22';
+        } else if (this.activeSchool.currentSessionDbId == 6) {
+            return 'Session 2022-23';
+        } else if (this.activeSchool.currentSessionDbId == 7) {
+            return 'Session 2023-24';
+        } else if (this.activeSchool.currentSessionDbId == 8) {
+            return 'Session 2024-25';
         }
         return '';
     }
