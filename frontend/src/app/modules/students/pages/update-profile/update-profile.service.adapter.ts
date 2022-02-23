@@ -143,7 +143,7 @@ export class UpdateProfileServiceAdapter {
             x.parentStudent = this.vm.selectedStudent.id;
         });
         this.vm.studentParameterList.forEach((parameter) => {
-            if (this.vm.checkCustomFieldChanged(parameter)) {
+            if (this.vm.htmlRenderer.checkCustomFieldChanged(parameter)) {
                 let temp_obj = this.vm.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
                 if (temp_obj) {
                     const data = { ...temp_obj };
