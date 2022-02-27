@@ -88,7 +88,7 @@ export class FilterModalComponent implements OnInit {
                 if (category.includes("OBC")) {
                     this.obcSelected = true;
                 }
-                if (category.includes("GEN")) {
+                if (category.includes("Gen.")) {
                     this.generalSelected = true;
                 }
                 if (category.includes("NONE")) {
@@ -306,7 +306,7 @@ export class FilterModalComponent implements OnInit {
             category.push("OBC");
         }
         if (this.generalSelected) {
-            category.push("GEN");
+            category.push("Gen.");
         }
         if (this.noneCategory) {
             category.push("NONE");
