@@ -47,8 +47,6 @@ export class CountAllComponent implements OnInit {
     backendData: CountAllBackendData;
     htmlRenderer: CountAllHtmlRenderer;
 
-    tempCount: number = 0;
-
     constructor(
         public genericService: GenericService,
         public excelService: ExcelService,
@@ -114,7 +112,6 @@ export class CountAllComponent implements OnInit {
             studentFullProfile['selectDocument'] = false;
             studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
-        console.log("Student List: ", this.studentFullProfileList);
     }  // Ends: initializeStudentFullProfileList()
 
     /* Update Row Data After Column Drag */
@@ -281,7 +278,6 @@ export class CountAllComponent implements OnInit {
             }
         });  // Ends: Logic
 
-        console.log("Filter Data: ", filtersData);
         let returnData = {};
         returnData["answer"] = answer;
         returnData["totalCount"] = totalCount;
