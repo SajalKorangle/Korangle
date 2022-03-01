@@ -15,7 +15,7 @@ export class FormatTableModalComponent implements OnInit {
         public dialogRef: MatDialogRef<FormatTableModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
-        // this.name = data.formatName;
+        this.name = data.formatName;
         this.tableList = data.tableList;
     }
 
@@ -56,10 +56,6 @@ export class FormatTableModalComponent implements OnInit {
         this.dialogRef.close();
     }  // Ends: cancleClick()
 
-    checkTableNameUniqueNess() {
-        return false;
-    }
-
     /* Save Button Clicked */
     saveClick(): void {
         if (!this.name) {
@@ -71,10 +67,6 @@ export class FormatTableModalComponent implements OnInit {
             return;
         }
 
-        if (this.checkTableNameUniqueNess()) {
-
-        } else {
-            this.dialogRef.close({name: this.name});
-        }
+        this.dialogRef.close({name: this.name});
     }  // Ends: saveClick()
 }

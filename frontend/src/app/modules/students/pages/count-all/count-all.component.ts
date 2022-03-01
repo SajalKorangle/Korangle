@@ -667,7 +667,7 @@ export class CountAllComponent implements OnInit {
     openSaveFormatDialog(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                // formatName: this.tableFormatTitle,
+                formatName: "",
                 tableList: this.tableList,
             }
         });
@@ -699,7 +699,7 @@ export class CountAllComponent implements OnInit {
     saveAsClicked(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                // formatName: "",
+                formatName: this.tableFormatTitle,
                 tableList: this.tableList,
             }
         });
