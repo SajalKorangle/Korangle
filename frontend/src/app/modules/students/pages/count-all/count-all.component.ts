@@ -11,6 +11,8 @@ import { CountAllBackendData } from './count-all.backend.data';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
 import { FilterModalComponent } from '@modules/students/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/students/component/format-table-modal/format-table-modal.component';
+import { ShowStudentListModalComponent } from '@modules/students/component/show-student-list-modal/show-student-list-modal.component';
+import { DeleteTableModalComponent } from '@modules/students/component/delete-table-modal/delete-table-modal.component';
 
 import { MatDialog } from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -29,6 +31,7 @@ export class CountAllComponent implements OnInit {
     NULL_CONSTANT = null;
 
     isTableEditing: boolean = false;
+    isTableUpdated: boolean = false;
     tableActiveId: number = 0;
     tableActiveIdx: number = 0;
 
@@ -96,9 +99,6 @@ export class CountAllComponent implements OnInit {
             }
             return true;
         });
-        if (!sectionObject) {
-            console.log('Error: should have section object');
-        }
         return sectionObject;
     }  // Ends: getSectionObject()
 
@@ -114,12 +114,195 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: initializeStudentFullProfileList()
 
+    getFilterParameterIdx(filterValues, filter) {
+        let filterIdx = -1;
+        for (let idx = 0; idx < filterValues.length; idx++) {
+            if (filterValues[idx].name == filter.name) {
+                filterIdx = idx;
+            }
+        }
+
+        return filterIdx;
+    }
+
+    /* Update Table Data */
+    updateTableData(tableRows, tableCols) {
+
+        let studentParameterList = this.getFilteredStudentParameterList();
+
+        /* Update the column-headers */
+        for (let i = 0; i < tableCols.length; i++) {
+            tableCols[i].totalCount = 0;
+
+            /* Update Custom Parameters */
+            let newStudentParameterList = [];
+            let idx1 = 0, idx2 = 0, len1 = tableCols[i].studentParameterList.length, len2 = studentParameterList.length;
+
+            /* Starts: Merge Two studentParameterList */
+            while (idx1 < len1 && idx2 < len2) {
+                if (tableCols[i].studentParameterList[idx1].id == studentParameterList[idx2].id) {
+
+                    let filterValueList = [];
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+
+                    studentParameter.filterValues.forEach((filter) => {
+                        let filterParameterIdx = this.getFilterParameterIdx(tableCols[i].studentParameterList[idx1].filterValues, filter);
+
+                        if (filterParameterIdx == -1) {
+                            filterValueList.push(filter);
+                        } else {
+                            filterValueList.push(tableCols[i].studentParameterList[idx1].filterValues[filterParameterIdx]);
+                        }
+                    });
+
+                    studentParameter.filterValues = filterValueList;
+                    newStudentParameterList.push(studentParameter);
+                    idx1++;
+                    idx2++;
+                } else if (tableCols[i].studentParameterList[idx1].id > studentParameterList[idx2].id) {
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                    newStudentParameterList.push(studentParameter);
+                    idx2++;
+                } else {
+                    idx1++;
+                }
+            }
+
+            while (idx2 < len2) {
+                let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                newStudentParameterList.push(studentParameter);
+                idx2++;
+            }
+            /* Ends: Merge Two studentParameterList */
+
+            tableCols[i].studentParameterList = newStudentParameterList;
+
+            this.studentFullProfileList.forEach((student) => {
+                let check = this.checkFilters(student, tableCols[i]);
+                if (check) {
+                    tableCols[i].totalCount++;
+                }
+            });
+        }
+
+        /* Update the rows */
+        for (let i = 0; i < tableRows.length; i++) {
+            // initializing the result.
+            if (!tableRows[i]["studentList"]) {
+                tableRows[i]["studentList"] = [];
+                for (let j = 0; j < tableCols.length; j++) {
+                    tableRows[i]["answer"][j] = 0;
+                    tableRows[i]["studentList"].push([]);
+                }
+            } else {
+                for (let j = 0; j < tableCols.length; j++) {
+                    tableRows[i]["answer"][j] = 0;
+                    tableRows[i]["studentList"][j] = [];
+                }
+            }
+
+            tableRows[i].totalCount = 0;
+
+            /* Update Custom Parameters */
+            let newStudentParameterList = [];
+            let idx1 = 0, idx2 = 0, len1 = tableRows[i].studentParameterList.length, len2 = studentParameterList.length;
+
+            /* Starts: Merge Two studentParameterList */
+            while (idx1 < len1 && idx2 < len2) {
+                if (tableRows[i].studentParameterList[idx1].id == studentParameterList[idx2].id) {
+
+                    let filterValueList = [];
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+
+                    studentParameter.filterValues.forEach((filter) => {
+                        let filterParameterIdx = this.getFilterParameterIdx(tableRows[i].studentParameterList[idx1].filterValues, filter);
+
+                        if (filterParameterIdx == -1) {
+                            filterValueList.push(filter);
+                        } else {
+                            filterValueList.push(tableRows[i].studentParameterList[idx1].filterValues[filterParameterIdx]);
+                        }
+                    });
+
+                    studentParameter.filterValues = filterValueList;
+                    newStudentParameterList.push(studentParameter);
+                    idx1++;
+                    idx2++;
+                } else if (tableRows[i].studentParameterList[idx1].id > studentParameterList[idx2].id) {
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                    newStudentParameterList.push(studentParameter);
+                    idx2++;
+                } else {
+                    idx1++;
+                }
+            }
+
+            while (idx2 < len2) {
+                let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                newStudentParameterList.push(studentParameter);
+                idx2++;
+            }
+            /* Starts: Merge Two studentParameterList */
+
+            tableRows[i].studentParameterList = newStudentParameterList;
+
+            // Logic:  first check student with row, and then with column.
+            this.studentFullProfileList.forEach((student) => {
+                let check = this.checkFilters(student, tableRows[i]);
+                if (check) {
+                    tableRows[i].totalCount++;
+                    for (let j = 0; j < tableCols.length; j++) {
+                        check = this.checkFilters(student, tableCols[j]);
+                        if (check) {
+                            tableRows[i]["answer"][j] += 1;
+                            tableRows[i]["studentList"][j].push(student);
+                        }
+                    }
+                }
+            });
+        }
+    }  // Ends: updateTableData()
+
+    /* Initialize Table List */
+    initializeTableList(tableList) {
+        for (let idx = 0; idx < tableList.length; idx++) {
+            let table = tableList[idx];
+            let tableRows = [];
+            let tableCols = [];
+
+            Object.entries(table["cols"]).forEach(([key, value]) => {
+                tableCols.push(value);
+            });
+
+            Object.entries(table["rows"]).forEach(([key, value]) => {
+                tableRows.push(value);
+            });
+
+            this.updateTableData(tableRows, tableCols);
+        }
+
+        this.tableList = tableList;
+        this.serviceAdapter.updateTableList();
+    }  // Ends: initializeTableList()
+
+    /* Initialize Table Details */
+    initializeTableDetails() {
+        this.isTableUpdated = false;
+        this.isTableEditing = false;
+        this.tableActiveId = 0;
+        this.tableActiveIdx = 0;
+        this.tableFormatTitle = "";
+        this.columnFilters = [];
+        this.rowFilters = [];
+    }  // Ends: initializeTableDetails()
+
     /* Update Row Data After Column Drag */
     updateRowFiltersAfterColumnDrag(): void {
         for (let i = 0; i < this.rowFilters.length; i++) {
             // initializing the result.
             for (let j = 0; j < this.columnFilters.length; j++) {
                 this.rowFilters[i]["answer"][j] = 0;
+                this.rowFilters[i]["studentList"][j] = [];
             }
 
             // Logic:  first check student with row, and then with column.
@@ -130,6 +313,7 @@ export class CountAllComponent implements OnInit {
                         check = this.checkFilters(student, this.columnFilters[j]);
                         if (check) {
                             this.rowFilters[i]["answer"][j] += 1;
+                            this.rowFilters[i]["studentList"][j].push(student);
                         }
                     }
                 }
@@ -139,11 +323,13 @@ export class CountAllComponent implements OnInit {
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
+        this.isTableUpdated = true;
         moveItemInArray(this.rowFilters, event.previousIndex, event.currentIndex);
     }
 
     /* Will be Called After Dragging of a Column */
     dropColumn(event: CdkDragDrop<string[]>): void {
+        this.isTableUpdated = true;
         moveItemInArray(this.columnFilters, event.previousIndex, event.currentIndex);
         this.updateRowFiltersAfterColumnDrag();
     }
@@ -175,12 +361,28 @@ export class CountAllComponent implements OnInit {
                 ? Math.floor((new Date(filtersData[filter][0]).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
                 : null;
 
-                if (age) {
-                    if (age > filtersData[filter][2] || age < filtersData[filter][1]) {
+                /* Min-Age check */
+                if (filtersData[filter][1] != null && !isNaN(filtersData[filter][1])) {
+                    if (!age) {
+                        check = false;
+                        break;
+                    } else if (age < filtersData[filter][1]) {
                         check = false;
                         break;
                     }
                 }
+
+                /* Max-Age check */
+                if (filtersData[filter][2] != null && !isNaN(filtersData[filter][2])) {
+                    if (!age) {
+                        check = false;
+                        break;
+                    } else if (age > filtersData[filter][2]) {
+                        check = false;
+                        break;
+                    }
+                }
+
             } else if (filter == "category") {  /* Category Check */
                 let category = student.category ? student.category : "NONE";
 
@@ -259,8 +461,10 @@ export class CountAllComponent implements OnInit {
         // initializing the result.
         let totalCount = 0;
         let answer = [];
+        let studentList = [];
         for (let i = 0; i < this.columnFilters.length; i++) {
             answer.push(0);
+            studentList.push([]);
         }
 
         // Logic:  first check student with row, and then with column.
@@ -273,6 +477,7 @@ export class CountAllComponent implements OnInit {
                     check = this.checkFilters(student, columnFilterData);
                     if (check) {
                         answer[i] += 1;
+                        studentList[i].push(student);
                     }
                 }
             }
@@ -280,6 +485,7 @@ export class CountAllComponent implements OnInit {
 
         let returnData = {};
         returnData["answer"] = answer;
+        returnData["studentList"] = studentList;
         returnData["totalCount"] = totalCount;
         return returnData;
     }  // Ends: getTableDataRow()
@@ -291,6 +497,7 @@ export class CountAllComponent implements OnInit {
         let totalCount = 0;
         for (let i = 0; i < this.rowFilters.length; i++) {
             this.rowFilters[i].answer.push(0);
+            this.rowFilters[i].studentList.push([]);
         }
 
         // Logic:  first check student with column, and then with row.
@@ -303,6 +510,7 @@ export class CountAllComponent implements OnInit {
                     check = this.checkFilters(student, rowFilterData);
                     if (check) {
                         this.rowFilters[i].answer[this.rowFilters[i].answer.length - 1] += 1;
+                        this.rowFilters[i].studentList[this.rowFilters[i].studentList.length - 1].push(student);
                     }
                 }
             }
@@ -317,6 +525,7 @@ export class CountAllComponent implements OnInit {
         let totalCount = 0;
         for (let i = 0; i < this.rowFilters.length; i++) {
             this.rowFilters[i].answer[index] = 0;
+            this.rowFilters[i].studentList[index] = [];
         }
 
         // Logic:  first check student with column, and then with row.
@@ -329,6 +538,7 @@ export class CountAllComponent implements OnInit {
                     check = this.checkFilters(student, rowFilterData);
                     if (check) {
                         this.rowFilters[i].answer[index] += 1;
+                        this.rowFilters[i].studentList[index].push(student);
                     }
                 }
             }
@@ -337,14 +547,14 @@ export class CountAllComponent implements OnInit {
     }  // Ends: getUpdatedTableDataColumn()
 
     getFilteredStudentParameterList(): any {
-        return this.studentParameterList.filter((x) => x.parameterType === 'FILTER');
+        return this.studentParameterList.filter((x) => x.parameterType === 'FILTER').sort((a, b) => a.id - b.id);
     }
 
     /* Open Filter Modal */
     openDialog(): void {
         const dialogRef = this.dialog.open(FilterModalComponent, {
             data: {
-                classSectionList: this.classSectionList,
+                classSectionList: CommonFunctions.getInstance().deepCopy(this.classSectionList),
                 studentParameterList: CommonFunctions.getInstance().deepCopy(this.getFilteredStudentParameterList()),
             }
         });
@@ -352,11 +562,13 @@ export class CountAllComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
+                this.isTableUpdated = true;
                 let filtersData = data.filtersData;
                 if (this.whereToAdd === 'row') {  /* Row Filter */
                     let returnData = this.getTableDataRow(filtersData);
                     filtersData["answer"] = returnData.answer;
                     filtersData["totalCount"] = returnData.totalCount;
+                    filtersData["studentList"] = returnData.studentList;
                     this.rowFilters.push(filtersData);
                 } else if (this.whereToAdd === 'col') {  /* Column Filter */
                     filtersData["totalCount"] = this.getTableDataColumn(filtersData);
@@ -376,7 +588,7 @@ export class CountAllComponent implements OnInit {
     openChangeDialog(filter): void {
         const dialogRef = this.dialog.open(FilterModalComponent, {
             data: {
-                classSectionList: this.classSectionList,
+                classSectionList: CommonFunctions.getInstance().deepCopy(this.classSectionList),
                 studentParameterList: CommonFunctions.getInstance().deepCopy(this.getFilteredStudentParameterList()),
                 filter: filter,
             }
@@ -385,6 +597,7 @@ export class CountAllComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
+                this.isTableUpdated = true;
                 let filtersData = data.filtersData;
 
                 if (filtersData["operation"] == "update") {    /* Update Filter */
@@ -401,6 +614,7 @@ export class CountAllComponent implements OnInit {
                         let returnData = this.getTableDataRow(filtersData);
                         filtersData["answer"] = returnData.answer;
                         filtersData["totalCount"] = returnData.totalCount;
+                        filtersData["studentList"] = returnData.studentList;
                         this.rowFilters[index] = filtersData;
                     } else if (this.whereToAdd === 'col') {    /* Update Column */
                         let index = 0;
@@ -435,6 +649,7 @@ export class CountAllComponent implements OnInit {
                         this.columnFilters.splice(index, 1);
                         for (let i = 0; i < this.rowFilters.length; i++) {
                             this.rowFilters[i]["answer"].splice(index, 1);
+                            this.rowFilters[i]["studentList"].splice(index, 1);
                         }
                     }
                 }
@@ -452,7 +667,8 @@ export class CountAllComponent implements OnInit {
     openSaveFormatDialog(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                formatName: this.tableFormatTitle,
+                // formatName: this.tableFormatTitle,
+                tableList: this.tableList,
             }
         });
 
@@ -465,7 +681,17 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: openSaveFormatDialog()
 
+    /* Open Table Format Name Dialog */
+    openShowStudentListDialog(studentList): void {
+        const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
+            data: {
+                studentList: studentList,
+            }
+        });
+    }  // Ends: openSaveFormatDialog()
+
     updateChangesClicked(): void {
+        this.isTableUpdated = true;
         this.serviceAdapter.updatetable();
     }
 
@@ -473,7 +699,8 @@ export class CountAllComponent implements OnInit {
     saveAsClicked(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                formatName: "",
+                // formatName: "",
+                tableList: this.tableList,
             }
         });
 
@@ -564,16 +791,40 @@ export class CountAllComponent implements OnInit {
         return this.getTextWidthColumn(textContent);
     }  // Ends: getTextWidthRow()
 
-    initializeTableDetails() {
-        this.isTableEditing = false;
-        this.tableActiveId = 0;
-        this.tableActiveIdx = 0;
-        this.tableFormatTitle = "";
-        this.columnFilters = [];
-        this.rowFilters = [];
-    }
+    /* Open Delete Table Dialog */
+    openDeleteTableModal(): void {
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: this.tableFormatTitle,
+            }
+        });
 
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.deleteTable();
+            }
+        });
+    }  // Ends: openDeleteTableModal()
+
+    /* Delete Table */
     deleteTable() {
         this.serviceAdapter.deleteTable();
-    }
+        alert("Table deleted successfully.");
+    }  // Ends: deleteTable()
+
+    /* Create New Table */
+    addNewTableClicked() {
+        if(this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                let operation = "createNew";
+                this.serviceAdapter.updatetable(operation);
+            } else {
+                this.initializeTableDetails();
+            }
+        } else {
+            this.initializeTableDetails();
+        }
+    }  // Ends: addNewTableClicked()
 }

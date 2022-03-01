@@ -1,6 +1,6 @@
 /* Starts: Modal Container */
 .format-table-modal-container {
-    height: 30vh;
+    height: 23vh;
     width: 50vw;
 }
 /* Ends: Modal Container */
@@ -10,18 +10,23 @@
     float: right;
 }
 
-.delete-btn {
-    color: #FF1717;    /* Red */
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.cancel-btn {
     background-color: white;
     outline: none;
     border: none;
     text-decoration: underline;
     box-shadow: none;
+    text-transform: capitalize !important;
 }
 
-.bottom-btns .btn {
-    font-weight: 500;
-    font-size: 12px;
+.delete-btn {
+    text-transform: capitalize !important;
+    padding: 7px 17px;
 }
 /* Ends: Bottom Btns */
 
@@ -29,9 +34,9 @@
 @media only screen and (max-width: 992px) {
     /* Starts: Modal Container */
     .format-table-modal-container {
-        height: 30vh;
-        width: 100vw;
-        font-size: 10px;
+        height: 25vh;
+        width: 100%;
+        font-size: 12px;
         margin: 0;
         padding: 0;
     }

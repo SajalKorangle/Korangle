@@ -15,9 +15,9 @@ export class FilterModalComponent implements OnInit {
     name: string = "";
 
     /* Age Check */
-    minAge: number = 0;
-    maxAge: number = 1000;
-    asOnDate = new Date();
+    minAge: number;
+    maxAge: number;
+    asOnDate;
 
     /* Category Options */
     scSelected: boolean = false;
@@ -100,8 +100,8 @@ export class FilterModalComponent implements OnInit {
             if (this.filter["age"]) {
                 let age = this.filter["age"];
                 this.asOnDate = age[0];
-                this.minAge = age.length > 1 ? age[1] : 0;
-                this.maxAge = age.length > 2 ? age[2] : 1000;
+                this.minAge = age[1];
+                this.maxAge = age[2];
             }   //  Ends: Initialize age
 
             /* Initialize gender */
@@ -159,7 +159,13 @@ export class FilterModalComponent implements OnInit {
                     this.noTC = true;
                 }
             }   //  Ends: Initialize TC
+            
         }  // Ends: Initialize Default Value of Filters
+        else {
+            let today = new Date();
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            this.asOnDate = today.toJSON().slice(0, 10);
+        }
     }
 
     ngOnInit() {
@@ -252,6 +258,20 @@ export class FilterModalComponent implements OnInit {
             return;
         }
 
+        if (this.asOnDate) {
+            if (this.minAge != null && !isNaN(this.minAge) && this.maxAge != null && !isNaN(this.maxAge) && this.minAge > this.maxAge) {
+                alert("min-age should be less than or equal to max-age.");
+                return;
+            }
+        }
+
+        if ((this.minAge != null && !isNaN(this.minAge)) || (this.maxAge != null && !isNaN(this.maxAge))) {
+            if (!this.asOnDate) {
+                alert("Please choose a date from the age section.");
+                return;
+            }
+        }
+
         let filtersData = {};
 
         /* Class-Section */
@@ -276,22 +296,42 @@ export class FilterModalComponent implements OnInit {
         let age = [];
         if (this.asOnDate) {
             age.push(this.asOnDate);
-        } else {
-            let today = new Date();
-            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-            age.push(today.toJSON().slice(0, 10));
+
+            if (this.minAge != null && !isNaN(this.minAge)) {
+                age.push(this.minAge);
+            } else {
+                age.push(null);
+            }
+
+            if (this.maxAge != null && !isNaN(this.maxAge)) {
+                age.push(this.maxAge);
+            } else {
+                age.push(null);
+            }
+
+            filtersData["age"] = age;
         }
-        if (this.minAge != null && !isNaN(this.minAge)) {
-            age.push(Math.max(this.minAge, 0));
-        } else {
-            age.push(0);
-        }
-        if (this.maxAge != null && !isNaN(this.maxAge)) {
-            age.push(Math.max(this.maxAge, 0));
-        } else {
-            age.push(1000);
-        }
-        filtersData["age"] = age;
+        // else {
+        //     let today = new Date();
+        //     today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+        //     age.push(today.toJSON().slice(0, 10));
+        //     console.log("As On Date: ", today.toJSON().slice(0, 10));
+        //
+        //     age.push(null);
+        // }
+        // if (this.minAge != null && !isNaN(this.minAge)) {
+        //     // age.push(Math.max(this.minAge, 0));
+        //     age.push(this.minAge);
+        // } else {
+        //     // age.push(0);
+        //     age.push(null);
+        // }
+        // if (this.maxAge != null && !isNaN(this.maxAge)) {
+        //     age.push(Math.max(this.maxAge, 0));
+        // } else {
+        //     age.push(1000);
+        // }
+        // filtersData["age"] = age;
         /* Ends: Age */
 
         /* Category */

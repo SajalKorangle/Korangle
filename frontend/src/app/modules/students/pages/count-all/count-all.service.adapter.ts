@@ -81,9 +81,6 @@ export class CountAllServiceAdapter {
                 });
                 this.vm.backendData.tcList = value[4];
 
-                /* Initialize Table List */
-                this.vm.tableList = value[5];
-
                 /* Initialize Student Full Profile List */
                 let studentFullProfileList = [];
                 for (let i = 0; i < value[7].length; i++) {
@@ -155,6 +152,10 @@ export class CountAllServiceAdapter {
                 }
                 this.vm.initializeStudentFullProfileList(studentFullProfileList);
 
+                /* Initialize Table List */
+                value[5].sort((a, b) => a.id - b.id);
+                this.vm.initializeTableList(value[5]);
+
                 this.vm.isLoading = false;
             },
             (error) => {
@@ -164,25 +165,8 @@ export class CountAllServiceAdapter {
     }  // Ends: initializeData()
 
     /* Update Table List */
-    updateTableList(): void {
-
-        this.vm.isLoading = true;
-
-        const count_all_table_filter = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
-
-        Promise.all([
-            new Query().filter(count_all_table_filter).getObjectList({student_app: 'CountAllTable'}),    // 0
-        ]).then(
-            (value) => {
-                this.vm.tableList = value[0];
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+    async updateTableList() {
+        await new Query().updateObjectList({student_app: 'CountAllTable'}, this.vm.tableList);
     }  // Ends: updateTableList()
 
     /* Save Table */
@@ -211,14 +195,15 @@ export class CountAllServiceAdapter {
         /* Create An Object */
         const response = await new Query().createObject({student_app: 'CountAllTable'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableList.length);
-        this.updateTableList();
+        this.vm.tableList.push(response);
 
+        this.vm.isTableUpdated = false;
         this.vm.isLoading = false;
         alert("Table saved successfully.");
     }  // Ends: saveTable()
 
     /* Update Table */
-    async updatetable() {
+    async updatetable(operation = "") {
         this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
@@ -244,7 +229,11 @@ export class CountAllServiceAdapter {
         /* Update An Object */
         const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
-        this.updateTableList();
+        this.vm.tableList[this.vm.tableActiveIdx] = response;
+
+        if (operation == "createNew") {
+            this.vm.initializeTableDetails();
+        }
 
         this.vm.isLoading = false;
         alert("Table updated successfully.");
@@ -256,7 +245,8 @@ export class CountAllServiceAdapter {
         let tableData = {
             id: this.vm.tableActiveId,
         };
-        const response = new Query().filter(tableData).deleteObjectList({student_app: 'CountAllTable'});
+
+        new Query().filter(tableData).deleteObjectList({student_app: 'CountAllTable'});
 
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();

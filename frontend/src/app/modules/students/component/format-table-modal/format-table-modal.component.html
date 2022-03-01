@@ -3,10 +3,11 @@
     <div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
 
     <!-- Starts: Format Name -->
-    <br /><b>Format Name - </b>
+    <br /><b>Format Name : </b>
     <mat-form-field class="inputField" style="margin-left: 10%;">
-        <input matInput type="text" [(ngModel)]="name" required />
+        <input matInput type="text" placeholder="Table Name" [ngModel]="name" (ngModelChange)="name = $event; nameChanged()" required />
     </mat-form-field>
+    <p *ngIf="!isUnique" style="color: red;">Table name should be unique.</p>
     <!-- Ends: Format Name -->
 </mat-dialog-content>
 

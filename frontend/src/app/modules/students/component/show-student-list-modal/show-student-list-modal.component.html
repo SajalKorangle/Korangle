@@ -1,0 +1,37 @@
+<mat-dialog-content class="show-student-list-modal-container">
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">Count All >> Filtered Student List</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <div>
+        <div class="column-detail text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-bottom: 2rem;">
+            <div class="student-name">
+                Student Name
+            </div>
+            <div class="student-class">
+                Class
+            </div>
+            <div class="student-section">
+                Section
+            </div>
+        </div>
+
+        <ng-container *ngFor="let student of studentList">
+            <div class="column-detail" style="font-size: 12px;">
+                <div class="student-name">
+                    {{ student.name }}
+                </div>
+                <div class="student-class">
+                    {{ student.className }}
+                </div>
+                <div class="student-section">
+                    {{ student.sectionName }}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>
