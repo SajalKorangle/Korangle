@@ -159,7 +159,7 @@ export class FilterModalComponent implements OnInit {
                     this.noTC = true;
                 }
             }   //  Ends: Initialize TC
-            
+
         }  // Ends: Initialize Default Value of Filters
         else {
             let today = new Date();
@@ -311,27 +311,6 @@ export class FilterModalComponent implements OnInit {
 
             filtersData["age"] = age;
         }
-        // else {
-        //     let today = new Date();
-        //     today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-        //     age.push(today.toJSON().slice(0, 10));
-        //     console.log("As On Date: ", today.toJSON().slice(0, 10));
-        //
-        //     age.push(null);
-        // }
-        // if (this.minAge != null && !isNaN(this.minAge)) {
-        //     // age.push(Math.max(this.minAge, 0));
-        //     age.push(this.minAge);
-        // } else {
-        //     // age.push(0);
-        //     age.push(null);
-        // }
-        // if (this.maxAge != null && !isNaN(this.maxAge)) {
-        //     age.push(Math.max(this.maxAge, 0));
-        // } else {
-        //     age.push(1000);
-        // }
-        // filtersData["age"] = age;
         /* Ends: Age */
 
         /* Category */
