@@ -9,7 +9,7 @@ import { DataStorage } from '../../../../classes/data-storage';
 })
 export class ShowStudentListModalComponent implements OnInit {
     user: any;
-    studentList: any = []
+    studentList: any = [];
 
     constructor(
         public dialogRef: MatDialogRef<ShowStudentListModalComponent>,

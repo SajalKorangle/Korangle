@@ -815,7 +815,7 @@ export class CountAllComponent implements OnInit {
 
     /* Create New Table */
     addNewTableClicked() {
-        if(this.isTableUpdated) {
+        if (this.isTableUpdated) {
             let conformation = confirm("Do you want to update your changes?");
             if (conformation) {
                 let operation = "createNew";
