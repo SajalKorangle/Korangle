@@ -60,6 +60,10 @@ export class User {
                 path: 'create_school',
                 title: 'Create School',
             },
+            {
+                path: 'login_activity',
+                title: 'Login Activity',
+            },
         ],
     };
 

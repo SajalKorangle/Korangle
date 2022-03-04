@@ -15,7 +15,32 @@ export class AuthenticationOldService {
     constructor(private http: HttpClient) {}
 
     loginUserDetails(username: any, password: any): Promise<any> {
-        const body = { username: username, password: password };
+        
+        const agent = window.navigator.userAgent.toLowerCase()
+        var device = "";
+        switch (true) {
+            case agent.indexOf('edge') > -1:
+            device = 'edge';
+            break;
+            case agent.indexOf('opr') > -1 && !!(<any>window).opr:
+            device = 'opera';
+            break;
+            case agent.indexOf('chrome') > -1 && !!(<any>window).chrome:
+            device = 'chrome';
+            break;
+            case agent.indexOf('trident') > -1:
+            device = 'ie';
+            break;
+            case agent.indexOf('firefox') > -1:
+            device = 'firefox';
+            break;
+            case agent.indexOf('safari') > -1:
+            device = 'safari';
+            break;
+            default:
+            device = 'other';
+        }
+        const body = { username: username, password: password, device_name:device };
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http
             .post(this.loginUserDetailsUrl, body, { headers: this.headers })

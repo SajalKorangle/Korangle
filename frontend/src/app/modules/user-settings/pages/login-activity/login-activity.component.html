@@ -1,0 +1,39 @@
+<div class="card-content">
+    <ng-container *ngIf="!isLoading">
+
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="getLoginList()"
+        >
+            Refresh
+        </button>
+
+        <div *ngIf="confirmed && loginList.length>0">
+
+            <table >
+                <tr>
+                    <th>Device</th>
+                    <th>Last Active</th>
+                    <th>Last Login</th>
+                    <th></th>
+                </tr>
+                <tr *ngFor="let instance of loginList ">
+                    <td>{{ instance.device_name }}</td>
+                    <td>{{ instance.last_active }}</td>
+                    <td>{{ instance.login_date }}</td>
+                    <td><button class="btn btn-{{ user.activeSchool.primaryThemeColor }} logout-btn" (click)="logoutInstance(instance)">Logout</button></td>
+                </tr>
+            </table>
+        </div>
+
+        <div *ngIf="confirmed && loginList.length===0" style="margin: 16px;">
+            No other login instances
+        </div>
+
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
