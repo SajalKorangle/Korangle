@@ -235,6 +235,7 @@ export class CountAllServiceAdapter {
             this.vm.initializeTableDetails();
         }
 
+        this.vm.isTableUpdated = false;
         this.vm.isLoading = false;
         alert("Table updated successfully.");
     }  // Ends: updatetable()

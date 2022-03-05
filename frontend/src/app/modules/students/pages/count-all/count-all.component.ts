@@ -114,6 +114,7 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: initializeStudentFullProfileList()
 
+    /* Get the index of custom filter */
     getFilterParameterIdx(filterValues, filter) {
         let filterIdx = -1;
         for (let idx = 0; idx < filterValues.length; idx++) {
@@ -123,7 +124,7 @@ export class CountAllComponent implements OnInit {
         }
 
         return filterIdx;
-    }
+    }  // Ends: getFilterParameterIdx()
 
     /* Update Table Data */
     updateTableData(tableRows, tableCols) {
@@ -132,7 +133,6 @@ export class CountAllComponent implements OnInit {
 
         /* Update the column-headers */
         for (let i = 0; i < tableCols.length; i++) {
-            tableCols[i].totalCount = 0;
 
             /* Update Custom Parameters */
             let newStudentParameterList = [];
@@ -176,32 +176,10 @@ export class CountAllComponent implements OnInit {
             /* Ends: Merge Two studentParameterList */
 
             tableCols[i].studentParameterList = newStudentParameterList;
-
-            this.studentFullProfileList.forEach((student) => {
-                let check = this.checkFilters(student, tableCols[i]);
-                if (check) {
-                    tableCols[i].totalCount++;
-                }
-            });
         }
 
         /* Update the rows */
         for (let i = 0; i < tableRows.length; i++) {
-            // initializing the result.
-            if (!tableRows[i]["studentList"]) {
-                tableRows[i]["studentList"] = [];
-                for (let j = 0; j < tableCols.length; j++) {
-                    tableRows[i]["answer"][j] = 0;
-                    tableRows[i]["studentList"].push([]);
-                }
-            } else {
-                for (let j = 0; j < tableCols.length; j++) {
-                    tableRows[i]["answer"][j] = 0;
-                    tableRows[i]["studentList"][j] = [];
-                }
-            }
-
-            tableRows[i].totalCount = 0;
 
             /* Update Custom Parameters */
             let newStudentParameterList = [];
@@ -245,21 +223,6 @@ export class CountAllComponent implements OnInit {
             /* Starts: Merge Two studentParameterList */
 
             tableRows[i].studentParameterList = newStudentParameterList;
-
-            // Logic:  first check student with row, and then with column.
-            this.studentFullProfileList.forEach((student) => {
-                let check = this.checkFilters(student, tableRows[i]);
-                if (check) {
-                    tableRows[i].totalCount++;
-                    for (let j = 0; j < tableCols.length; j++) {
-                        check = this.checkFilters(student, tableCols[j]);
-                        if (check) {
-                            tableRows[i]["answer"][j] += 1;
-                            tableRows[i]["studentList"][j].push(student);
-                        }
-                    }
-                }
-            });
         }
     }  // Ends: updateTableData()
 
@@ -283,6 +246,7 @@ export class CountAllComponent implements OnInit {
 
         this.tableList = tableList;
         this.serviceAdapter.updateTableList();
+        console.log("Table: ", tableList);
     }  // Ends: initializeTableList()
 
     /* Initialize Table Details */
@@ -296,31 +260,6 @@ export class CountAllComponent implements OnInit {
         this.rowFilters = [];
     }  // Ends: initializeTableDetails()
 
-    /* Update Row Data After Column Drag */
-    updateRowFiltersAfterColumnDrag(): void {
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            // initializing the result.
-            for (let j = 0; j < this.columnFilters.length; j++) {
-                this.rowFilters[i]["answer"][j] = 0;
-                this.rowFilters[i]["studentList"][j] = [];
-            }
-
-            // Logic:  first check student with row, and then with column.
-            this.studentFullProfileList.forEach((student) => {
-                let check = this.checkFilters(student, this.rowFilters[i]);
-                if (check) {
-                    for (let j = 0; j < this.columnFilters.length; j++) {
-                        check = this.checkFilters(student, this.columnFilters[j]);
-                        if (check) {
-                            this.rowFilters[i]["answer"][j] += 1;
-                            this.rowFilters[i]["studentList"][j].push(student);
-                        }
-                    }
-                }
-            });
-        }
-    }  // Ends: updateRowFiltersAfterColumnDrag()
-
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
         this.isTableUpdated = true;
@@ -331,7 +270,7 @@ export class CountAllComponent implements OnInit {
     dropColumn(event: CdkDragDrop<string[]>): void {
         this.isTableUpdated = true;
         moveItemInArray(this.columnFilters, event.previousIndex, event.currentIndex);
-        this.updateRowFiltersAfterColumnDrag();
+        // this.updateRowFiltersAfterColumnDrag();
     }
 
     /* Get Value of Custom Parameter */
@@ -343,7 +282,7 @@ export class CountAllComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    }
+    }  // Ends: getParameterValue()
 
     /* Check Applied set of Filters on a Student */
     checkFilters(student, filtersData): any {
@@ -455,100 +394,26 @@ export class CountAllComponent implements OnInit {
         return check;
     }  // Ends: checkFilters()
 
-    /* Get Table Date From Newly Added Row */
-    getTableDataRow(filtersData): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        let answer = [];
-        let studentList = [];
-        for (let i = 0; i < this.columnFilters.length; i++) {
-            answer.push(0);
-            studentList.push([]);
-        }
-
-        // Logic:  first check student with row, and then with column.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.columnFilters.length; i++) {
-                    let columnFilterData = this.columnFilters[i];
-                    check = this.checkFilters(student, columnFilterData);
-                    if (check) {
-                        answer[i] += 1;
-                        studentList[i].push(student);
-                    }
-                }
-            }
-        });  // Ends: Logic
-
-        let returnData = {};
-        returnData["answer"] = answer;
-        returnData["studentList"] = studentList;
-        returnData["totalCount"] = totalCount;
-        return returnData;
-    }  // Ends: getTableDataRow()
-
-    /* Get Table Date From Newly Added Column */
-    getTableDataColumn(filtersData): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            this.rowFilters[i].answer.push(0);
-            this.rowFilters[i].studentList.push([]);
-        }
-
-        // Logic:  first check student with column, and then with row.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.rowFilters.length; i++) {
-                    let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(student, rowFilterData);
-                    if (check) {
-                        this.rowFilters[i].answer[this.rowFilters[i].answer.length - 1] += 1;
-                        this.rowFilters[i].studentList[this.rowFilters[i].studentList.length - 1].push(student);
-                    }
-                }
-            }
-        });   // Ends: Logic
-        return totalCount;
-    }  // Ends: getTableDataColumn()
-
-    /* Get Updated Table Date */
-    getUpdatedTableDataColumn(filtersData, index): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            this.rowFilters[i].answer[index] = 0;
-            this.rowFilters[i].studentList[index] = [];
-        }
-
-        // Logic:  first check student with column, and then with row.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.rowFilters.length; i++) {
-                    let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(student, rowFilterData);
-                    if (check) {
-                        this.rowFilters[i].answer[index] += 1;
-                        this.rowFilters[i].studentList[index].push(student);
-                    }
-                }
-            }
-        });   // Ends: Logic
-        return totalCount;
-    }  // Ends: getUpdatedTableDataColumn()
-
+    /* Get Filtered Student Parameter List */
     getFilteredStudentParameterList(): any {
         return this.studentParameterList.filter((x) => x.parameterType === 'FILTER').sort((a, b) => a.id - b.id);
-    }
+    }  // Ends: getFilteredStudentParameterList()
+
+    /* Get Filtered Student List */
+    getFilteredStudentList(rowFilter, columnFilter) {
+        let studentList = [];
+        this.studentFullProfileList.forEach((student) => {
+            let check = this.checkFilters(student, rowFilter);
+            if (check) {
+                check = this.checkFilters(student, columnFilter);
+                if (check) {
+                    studentList.push(student);
+                }
+            }
+        });
+
+        return studentList;
+    }  // Ends: getFilteredStudentList()
 
     /* Open Filter Modal */
     openDialog(): void {
@@ -565,21 +430,10 @@ export class CountAllComponent implements OnInit {
                 this.isTableUpdated = true;
                 let filtersData = data.filtersData;
                 if (this.whereToAdd === 'row') {  /* Row Filter */
-                    let returnData = this.getTableDataRow(filtersData);
-                    filtersData["answer"] = returnData.answer;
-                    filtersData["totalCount"] = returnData.totalCount;
-                    filtersData["studentList"] = returnData.studentList;
                     this.rowFilters.push(filtersData);
                 } else if (this.whereToAdd === 'col') {  /* Column Filter */
-                    filtersData["totalCount"] = this.getTableDataColumn(filtersData);
                     this.columnFilters.push(filtersData);
                 }
-            } else {
-                this.classSectionList.forEach((classs) => {
-                    classs.sectionList.forEach((section) => {
-                        section.selected = false;
-                    });
-                });
             }
         });
     }  // Ends: openDialog()
@@ -610,11 +464,6 @@ export class CountAllComponent implements OnInit {
                                 break;
                             }
                         }
-
-                        let returnData = this.getTableDataRow(filtersData);
-                        filtersData["answer"] = returnData.answer;
-                        filtersData["totalCount"] = returnData.totalCount;
-                        filtersData["studentList"] = returnData.studentList;
                         this.rowFilters[index] = filtersData;
                     } else if (this.whereToAdd === 'col') {    /* Update Column */
                         let index = 0;
@@ -624,7 +473,6 @@ export class CountAllComponent implements OnInit {
                                 break;
                             }
                         }
-                        filtersData["totalCount"] = this.getUpdatedTableDataColumn(filtersData, index);
                         this.columnFilters[index] = filtersData;
                     }
                 } else if (filtersData["operation"] == "delete") {    /* Delete Filter */
@@ -647,18 +495,8 @@ export class CountAllComponent implements OnInit {
                             }
                         }
                         this.columnFilters.splice(index, 1);
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            this.rowFilters[i]["answer"].splice(index, 1);
-                            this.rowFilters[i]["studentList"].splice(index, 1);
-                        }
                     }
                 }
-            } else {
-                this.classSectionList.forEach((classs) => {
-                    classs.sectionList.forEach((section) => {
-                        section.selected = false;
-                    });
-                });
             }
         });   // Dialog Closed.
     }  // Ends: openChangeDialog()
@@ -682,10 +520,10 @@ export class CountAllComponent implements OnInit {
     }  // Ends: openSaveFormatDialog()
 
     /* Open Table Format Name Dialog */
-    openShowStudentListDialog(studentList): void {
+    openShowStudentListDialog(rowFilter, columnFilter): void {
         const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
             data: {
-                studentList: studentList,
+                studentList: this.getFilteredStudentList(rowFilter, columnFilter),
             }
         });
     }  // Ends: openSaveFormatDialog()

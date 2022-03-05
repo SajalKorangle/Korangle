@@ -85,7 +85,7 @@
                         <th class="minWidth"></th>
                         <th *ngFor="let filter of columnFilters" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
                             <span (click)="whereToAdd = 'col'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                                {{ filter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(filter) }}</span>)
                             </span>
                             <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
                         </th>
@@ -100,16 +100,16 @@
 
                 <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
-                    <tr class="example-box" *ngFor="let filter of rowFilters" cdkDragLockAxis="y" cdkDrag>
+                    <tr class="example-box" *ngFor="let rowFilter of rowFilters" cdkDragLockAxis="y" cdkDrag>
                         <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             <i class="material-icons menu-icon" style="float: left" cdkDragHandle>menu</i>
-                            <span (click)="whereToAdd = 'row'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                            <span (click)="whereToAdd = 'row'; openChangeDialog(rowFilter)" style="cursor: pointer">
+                                {{ rowFilter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(rowFilter) }}</span>)
                             </span>
                         </th>
-                        <ng-container *ngFor="let ans of filter.answer; let idx = index">
-                            <td class="minWidth" style="cursor: pointer" (click)="openShowStudentListDialog(filter.studentList[idx])">
-                                {{ans}}
+                        <ng-container *ngFor="let columnFilter of columnFilters; let idx = index">
+                            <td class="minWidth" style="cursor: pointer" (click)="openShowStudentListDialog(rowFilter, columnFilter)">
+                                {{ htmlRenderer.getIntersectionCount(rowFilter, columnFilter) }}
                             </td>
                         </ng-container>
                         <td class="minWidth">-</td>

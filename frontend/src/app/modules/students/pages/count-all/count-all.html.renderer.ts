@@ -33,6 +33,35 @@ export class CountAllHtmlRenderer {
         this.vm.rowFilters = tableRows;
     }  // Ends: tableOpenClicked()
 
+    /* Get total count of a filter */
+    getFilterTotalCount(filter) {
+        let count = 0;
+        this.vm.studentFullProfileList.forEach((student) => {
+            let check = this.vm.checkFilters(student, filter);
+            if (check) {
+                count++;
+            }
+        });
+
+        return count;
+    }  // Ends: getFilterTotalCount()
+
+    /* Get total count of intersection of two filters */
+    getIntersectionCount(rowFilter, columnFilter) {
+        let count = 0;
+        this.vm.studentFullProfileList.forEach((student) => {
+            let check = this.vm.checkFilters(student, rowFilter);
+            if (check) {
+                check = this.vm.checkFilters(student, columnFilter);
+                if (check) {
+                    count++;
+                }
+            }
+        });
+
+        return count;
+    }  // Ends: getIntersectionCount()
+
     /* For mobile-browser */
     isMobile(): boolean {
         if (window.innerWidth > 991) {
