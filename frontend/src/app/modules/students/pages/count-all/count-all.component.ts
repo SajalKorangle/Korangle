@@ -9,10 +9,10 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllBackendData } from './count-all.backend.data';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
-import { FilterModalComponent } from '@modules/students/component/filter-modal/filter-modal.component';
-import { FormatTableModalComponent } from '@modules/students/component/format-table-modal/format-table-modal.component';
-import { ShowStudentListModalComponent } from '@modules/students/component/show-student-list-modal/show-student-list-modal.component';
-import { DeleteTableModalComponent } from '@modules/students/component/delete-table-modal/delete-table-modal.component';
+import { FilterModalComponent } from '@modules/students/pages/count-all/component/filter-modal/filter-modal.component';
+import { FormatTableModalComponent } from '@modules/students/pages/count-all/component/format-table-modal/format-table-modal.component';
+import { ShowStudentListModalComponent } from '@modules/students/pages/count-all/component/show-student-list-modal/show-student-list-modal.component';
+import { DeleteTableModalComponent } from '@modules/students/pages/count-all/component/delete-table-modal/delete-table-modal.component';
 
 import { MatDialog } from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -246,7 +246,6 @@ export class CountAllComponent implements OnInit {
 
         this.tableList = tableList;
         this.serviceAdapter.updateTableList();
-        console.log("Table: ", tableList);
     }  // Ends: initializeTableList()
 
     /* Initialize Table Details */

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DataStorage } from '../../../../classes/data-storage';
+import { DataStorage } from '@classes/data-storage';
 
 @Component({
     selector: 'app-show-student-list-modal',
