@@ -30,7 +30,8 @@
                     <td>{{ instance.device_name }}</td>
                     <td>{{ instance.last_active }}</td>
                     <td>{{ instance.login_date }}</td>
-                    <td><button class="btn btn-{{ user.activeSchool.primaryThemeColor }} logout-btn" (click)="logoutInstance(instance)">Logout</button></td>
+                    <td *ngIf="currID===instance.id">Current Device</td>
+                    <td *ngIf="currID!==instance.id"><button class="btn btn-{{ user.activeSchool.primaryThemeColor }} logout-btn" (click)="logoutInstance(instance)">Logout</button></td>
                 </tr>
             </table>
         </div>

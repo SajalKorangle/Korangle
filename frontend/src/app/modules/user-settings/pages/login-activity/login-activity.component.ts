@@ -16,6 +16,9 @@ export class LoginActivityComponent {
     /* List of logins on multiple devices */
     loginList = [];
 
+    /* Current device login's id*/
+    currID = -1;
+
     isLoading = false;
 
     constructor(private genericService: GenericService) {}
@@ -34,7 +37,6 @@ export class LoginActivityComponent {
         const token = localStorage.getItem('schoolJWT');
         const loginDataQuery = new Query()
             .filter({})
-            .exclude({ token : token })
             .getObjectList({ authentication_app: 'DeviceList' });
 
         let loginData = [];
@@ -47,7 +49,16 @@ export class LoginActivityComponent {
         loginData.sort(function(a: any, b: any) {
             return a.last_active > b.last_active ? -1 : 1;
           });
-
+        
+        let i = 0;
+        loginData.forEach(login => {
+            if(login.token === token){
+                this.currID = login.id;
+            }
+            i = i + 1;
+            return login;
+        });
+        
         this.loginList = loginData;
     }
 
