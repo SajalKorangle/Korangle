@@ -41,7 +41,6 @@ export class AuthenticationOldService {
             device = 'other';
         }
         /* fetching browser name ends */
-        
         const body = { username: username, password: password, device_name: device };
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http

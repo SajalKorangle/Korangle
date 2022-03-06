@@ -31,9 +31,10 @@ export class LoginActivityComponent {
 
     /* Function to fetch login data ( logged in devices ) */
     async getLoginList() {
-
+        const token = localStorage.getItem('schoolJWT');
         const loginDataQuery = new Query()
-            .filter({ /* condition to exclude current device */ })
+            .filter({})
+            .exclude({ token : token })
             .getObjectList({ authentication_app: 'DeviceList' });
 
         let loginData = [];
@@ -63,7 +64,7 @@ export class LoginActivityComponent {
         ] = await Promise.all([
             deleteResponsePromise,
         ]);
-        if(deleteResponse===1){
+        if ( deleteResponse === 1) {
             const index = this.loginList.indexOf(instance);
             if (index > -1) {
                 this.loginList.splice(index, 1);
