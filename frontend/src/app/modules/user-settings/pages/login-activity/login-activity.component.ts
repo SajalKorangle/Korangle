@@ -49,16 +49,14 @@ export class LoginActivityComponent {
         loginData.sort(function(a: any, b: any) {
             return a.last_active > b.last_active ? -1 : 1;
           });
-        
         let i = 0;
         loginData.forEach(login => {
-            if(login.token === token){
+            if ( login.token === token ) {
                 this.currID = login.id;
             }
             i = i + 1;
             return login;
         });
-        
         this.loginList = loginData;
     }
 
