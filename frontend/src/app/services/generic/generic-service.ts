@@ -159,6 +159,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
     team_app: 'Module' | 'Task';
+    authentication_app: 'DeviceList';
 }
 
 // APP_MODEL_STRUCTURE_INTERFACE

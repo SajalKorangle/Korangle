@@ -15,8 +15,8 @@ export class AuthenticationOldService {
     constructor(private http: HttpClient) {}
 
     loginUserDetails(username: any, password: any): Promise<any> {
-        
-        const agent = window.navigator.userAgent.toLowerCase()
+        /* To get the browser name */
+        const agent = window.navigator.userAgent.toLowerCase();
         var device = "";
         switch (true) {
             case agent.indexOf('edge') > -1:
@@ -40,7 +40,9 @@ export class AuthenticationOldService {
             default:
             device = 'other';
         }
-        const body = { username: username, password: password, device_name:device };
+        /* fetching browser name ends */
+        
+        const body = { username: username, password: password, device_name: device };
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http
             .post(this.loginUserDetailsUrl, body, { headers: this.headers })

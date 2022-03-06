@@ -1,6 +1,7 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
-
+        
+        <!-- Refresh Button -->
         <button
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -9,8 +10,10 @@
             Refresh
         </button>
 
-        <div *ngIf="confirmed && loginList.length>0">
-
+        <!-- Device Section -->
+        <div *ngIf="loginList.length>0">
+            
+            <!-- Device Table -->
             <table >
                 <tr>
                     <th>Device</th>
@@ -27,7 +30,8 @@
             </table>
         </div>
 
-        <div *ngIf="confirmed && loginList.length===0" style="margin: 16px;">
+        <!-- No other logins found message -->
+        <div *ngIf="loginList.length===0" style="margin: 16px;">
             No other login instances
         </div>
 

@@ -61,8 +61,8 @@ export class User {
                 title: 'Create School',
             },
             {
-                path: 'login_activity',
-                title: 'Login Activity',
+                path: 'view_devices',
+                title: 'View Devices',
             },
         ],
     };

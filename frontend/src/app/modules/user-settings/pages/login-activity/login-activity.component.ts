@@ -13,10 +13,7 @@ import { Query } from '@services/generic/query';
 export class LoginActivityComponent {
     user;
 
-    password: any;
-
-    confirmed: boolean;
-
+    /* List of logins on multiple devices */
     loginList = [];
 
     isLoading = false;
@@ -26,17 +23,14 @@ export class LoginActivityComponent {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        this.confirmed = false;
-
         this.loginList = [];
 
         this.getLoginList();
 
     }
 
+    /* Function to fetch login data ( logged in devices ) */
     async getLoginList() {
-
-        this.confirmed = true;
 
         const loginDataQuery = new Query()
             .filter({ /* condition to exclude current device */ })
@@ -49,35 +43,31 @@ export class LoginActivityComponent {
             loginDataQuery,
         ]);
 
-        loginData.sort(function(a:any,b:any){
-            return a.last_active>b.last_active?-1:1;
+        loginData.sort(function(a: any, b: any) {
+            return a.last_active > b.last_active ? -1 : 1;
           });
 
         this.loginList = loginData;
-        
     }
 
-    async logoutInstance(instance:any) {
-
-        this.confirmed = true;
+    /* Function to delete a login instance */
+    async logoutInstance(instance: any) {
 
         const deleteResponsePromise = new Query()
-            .filter({ id:instance.id })
+            .filter({ id: instance.id })
             .deleteObjectList({ authentication_app: 'DeviceList' });
 
-        let deleteResponse = [];
+        let deleteResponse = -1;
         [
             deleteResponse,
         ] = await Promise.all([
             deleteResponsePromise,
         ]);
-
-        console.log(deleteResponse)
-        
-        const index = this.loginList.indexOf(instance);
-        if (index > -1) {
-            this.loginList.splice(index, 1);
+        if(deleteResponse===1){
+            const index = this.loginList.indexOf(instance);
+            if (index > -1) {
+                this.loginList.splice(index, 1);
+            }
         }
     }
-    
 }
