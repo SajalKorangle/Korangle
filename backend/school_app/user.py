@@ -190,6 +190,7 @@ class AuthenticationHandler():
         if 'token' in response.data:
             user = User.objects.filter(username=username)
 
+            # Saving device login 
             newJWTEntry = DeviceList(token = response.data['token'], user_id = user[0], device_name = device_name)
             newJWTEntry.save()
 

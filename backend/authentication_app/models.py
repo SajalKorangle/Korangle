@@ -15,7 +15,7 @@ class OTP(models.Model):
     )
     action = models.CharField(max_length=20, choices=ACTION, null=True)
 
-# Create your models here.
+# Model for Device logins
 class DeviceList(models.Model):
     token = models.TextField(null=True, verbose_name='token')
     last_active = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='last active')
