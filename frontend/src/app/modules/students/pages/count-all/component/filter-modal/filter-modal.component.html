@@ -4,6 +4,7 @@
     <mat-form-field class="inputField" style="margin-left: 10%;">
         <input matInput required type="text" [(ngModel)]="name" />
     </mat-form-field>
+    <p *ngIf="!isNameProvided && !name" style="color: red;">Filter name is necessary.</p>
     <!-- Ends: Name Field -->
 
     <!-- Starts: Class-Section Drop Down -->

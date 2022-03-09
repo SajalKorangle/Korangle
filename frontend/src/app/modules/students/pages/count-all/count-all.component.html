@@ -25,7 +25,7 @@
                     Create New Table
                 </mat-option>
                 <ng-container *ngFor="let table of tableList; let idx = index">
-                    <mat-option (click)="htmlRenderer.tableOpenClicked(table, idx)" style="width: 100%">
+                    <mat-option (click)="openTableClicked(table, idx)" style="width: 100%">
                         {{ table.formatName }}
                     </mat-option>
                 </ng-container>

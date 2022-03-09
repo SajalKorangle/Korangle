@@ -156,6 +156,7 @@ export class CountAllComponent implements OnInit {
                     });
 
                     studentParameter.filterValues = filterValueList;
+                    studentParameter.showNone = tableCols[i].studentParameterList[idx1].showNone;
                     newStudentParameterList.push(studentParameter);
                     idx1++;
                     idx2++;
@@ -203,6 +204,7 @@ export class CountAllComponent implements OnInit {
                     });
 
                     studentParameter.filterValues = filterValueList;
+                    studentParameter.showNone = tableRows[i].studentParameterList[idx1].showNone;
                     newStudentParameterList.push(studentParameter);
                     idx1++;
                     idx2++;
@@ -240,7 +242,7 @@ export class CountAllComponent implements OnInit {
             Object.entries(table["rows"]).forEach(([key, value]) => {
                 tableRows.push(value);
             });
-
+            let temp = CommonFunctions.getInstance().deepCopy(table);
             this.updateTableData(tableRows, tableCols);
         }
 
@@ -536,7 +538,7 @@ export class CountAllComponent implements OnInit {
     saveAsClicked(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                formatName: this.tableFormatTitle,
+                formatName: "",
                 tableList: this.tableList,
             }
         });
@@ -564,8 +566,8 @@ export class CountAllComponent implements OnInit {
     getFilterInfo(filter: any): any {
         let filterInfo = [];
         filterInfo.push(filter.name);
-        filter.answer.forEach((ans: number) => {
-            filterInfo.push(ans);
+        this.columnFilters.forEach((columnFilter) => {
+            filterInfo.push(this.htmlRenderer.getIntersectionCount(filter, columnFilter));
         });
         return filterInfo;
     }  // Ends: getFilterInfo()
@@ -582,7 +584,7 @@ export class CountAllComponent implements OnInit {
         this.excelService.downloadFile(template, fileName);
     }  // Ends: downloadList()
 
-    printStudentList(): void {
+    printTable(): void {
         // alert('Functionality needs to be implemented once again');
         let template: any = [];
         this.rowFilters.forEach((rowFilter) => {
@@ -658,10 +660,26 @@ export class CountAllComponent implements OnInit {
                 let operation = "createNew";
                 this.serviceAdapter.updatetable(operation);
             } else {
-                this.initializeTableDetails();
+                this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx);
             }
         } else {
             this.initializeTableDetails();
         }
     }  // Ends: addNewTableClicked()
+
+    /* Open Clicked Table */
+    openTableClicked(table, idx) {
+        if (this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                this.serviceAdapter.updatetable(table, idx);
+            } else {
+                this.isTableUpdated = false;
+                this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx, table, idx);
+            }
+        } else {
+            this.isTableUpdated = false;
+            this.htmlRenderer.tableOpenClicked(table, idx);
+        }
+    }  // Ends: openTableClicked()
 }

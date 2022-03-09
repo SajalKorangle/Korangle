@@ -203,7 +203,7 @@ export class CountAllServiceAdapter {
     }  // Ends: saveTable()
 
     /* Update Table */
-    async updatetable(operation = "") {
+    async updatetable(operation = "", table = null, idx = null) {
         this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
@@ -228,11 +228,14 @@ export class CountAllServiceAdapter {
 
         /* Update An Object */
         const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
-        this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
         this.vm.tableList[this.vm.tableActiveIdx] = response;
+        this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
 
         if (operation == "createNew") {
             this.vm.initializeTableDetails();
+        }
+        if (table) {
+            this.vm.htmlRenderer.tableOpenClicked(table, idx);
         }
 
         this.vm.isTableUpdated = false;
@@ -240,6 +243,7 @@ export class CountAllServiceAdapter {
         alert("Table updated successfully.");
     }  // Ends: updatetable()
 
+    /* Delete Table */
     async deleteTable() {
         this.vm.isLoading = true;
 
@@ -252,5 +256,21 @@ export class CountAllServiceAdapter {
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();
         this.vm.isLoading = false;
-    }
+    }  // Ends: deleteTable()
+
+    /* Restore Old Table */
+    async restoreOldtable(tableActiveId, tableActiveIdx, table = null, idx = null) {
+        Promise.all([
+            new Query().filter({id: tableActiveId}).getObject({student_app: 'CountAllTable'}),   // 0
+        ]).then(
+            (value) => {
+                this.vm.tableList[tableActiveIdx] = value[0];
+                if (table) {
+                    this.vm.htmlRenderer.tableOpenClicked(table, idx);
+                } else {
+                    this.vm.initializeTableDetails();
+                }
+            }
+        );
+    }  // Ends: restoreOldtable()
 }

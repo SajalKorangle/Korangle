@@ -13,6 +13,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Row Name */
     name: string = "";
+    isNameProvided: boolean = true;
 
     /* Age Check */
     minAge: number;
@@ -254,9 +255,11 @@ export class FilterModalComponent implements OnInit {
     /* Apply Button Clicked */
     applyClick(): void {
         if (!this.name) {
+            this.isNameProvided = false;
             alert("Please enter the name.");
             return;
         }
+        this.isNameProvided = true;
 
         if (this.asOnDate) {
             if (this.minAge != null && !isNaN(this.minAge) && this.maxAge != null && !isNaN(this.maxAge) && this.minAge > this.maxAge) {
