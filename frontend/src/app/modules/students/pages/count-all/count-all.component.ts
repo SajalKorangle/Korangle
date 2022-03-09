@@ -253,7 +253,7 @@ export class CountAllComponent implements OnInit {
     initializeTableDetails() {
         this.isTableUpdated = false;
         this.isTableEditing = false;
-        this.tableActiveId = 0;
+        this.tableActiveId = null;
         this.tableActiveIdx = 0;
         this.tableFormatTitle = "";
         this.columnFilters = [];
@@ -529,7 +529,13 @@ export class CountAllComponent implements OnInit {
     }  // Ends: openSaveFormatDialog()
 
     updateChangesClicked(): void {
-        this.isTableUpdated = true;
+
+        if (!this.tableFormatTitle) {
+            alert("Please enter the table name.");
+            return;
+        }
+
+        this.isTableUpdated = false;
         this.serviceAdapter.updatetable();
     }
 
