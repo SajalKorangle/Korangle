@@ -242,7 +242,6 @@ export class CountAllComponent implements OnInit {
             Object.entries(table["rows"]).forEach(([key, value]) => {
                 tableRows.push(value);
             });
-            let temp = CommonFunctions.getInstance().deepCopy(table);
             this.updateTableData(tableRows, tableCols);
         }
 
