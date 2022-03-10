@@ -663,8 +663,10 @@ export class CountAllComponent implements OnInit {
             let conformation = confirm("Do you want to update your changes?");
             if (conformation) {
                 let operation = "createNew";
+                this.isTableUpdated = false;
                 this.serviceAdapter.updatetable(operation);
             } else {
+                this.isTableUpdated = false;
                 this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx);
             }
         } else {
@@ -677,14 +679,14 @@ export class CountAllComponent implements OnInit {
         if (this.isTableUpdated) {
             let conformation = confirm("Do you want to update your changes?");
             if (conformation) {
-                this.serviceAdapter.updatetable(table, idx);
+                let operation = "";
+                this.serviceAdapter.updatetable(operation, table, idx);
             } else {
-                this.isTableUpdated = false;
                 this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx, table, idx);
             }
         } else {
-            this.isTableUpdated = false;
             this.htmlRenderer.tableOpenClicked(table, idx);
         }
+        this.isTableUpdated = false;
     }  // Ends: openTableClicked()
 }
