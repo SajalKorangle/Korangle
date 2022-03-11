@@ -49,8 +49,8 @@ const routes: Routes = [
         data: { moduleName: 'parent' },
     },
     {
-        path: 'manage_complaints',
-        loadChildren: 'app/modules/parent/pages/manage-complaints/manage-complaints.module#ManageComplaintsModule',
+        path: 'raise_complaint',
+        loadChildren: 'app/modules/parent/pages/raise-complaint/raise-complaint.module#RaiseComplaintModule',
         data: { moduleName: 'parent' },
     },
     {

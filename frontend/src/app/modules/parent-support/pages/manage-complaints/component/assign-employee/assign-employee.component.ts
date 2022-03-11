@@ -3,7 +3,7 @@ import { DataStorage } from "@classes/data-storage";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { AssignEmployeeServiceAdapter } from './assign-employee.service.adapter';
-import { CommonFunctions } from "../../../../classes/common-functions";
+import { CommonFunctions } from "@classes/common-functions";
 
 
 @Component({
@@ -114,7 +114,7 @@ export class AssignEmployeeComponent implements OnInit {
          };
     }  // Ends: debounce()
 
-    seachChanged = this.debounce(() => this.searchEmployee());
+    searchChanged = this.debounce(() => this.searchEmployee());
 
     /* Check Existence of Employee */
     checkEmployeeExist(employeeId) {

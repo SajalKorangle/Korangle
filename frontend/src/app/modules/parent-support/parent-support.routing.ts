@@ -12,8 +12,8 @@ const routes: Routes = [
         data: { moduleName: 'parent-support' },
     },
     {
-        path: 'manage_all_complaints',
-        loadChildren: 'app/modules/parent-support/pages/manage-all-complaints/manage-all-complaints.module#ManageAllComplaintsModule',
+        path: 'manage_complaints',
+        loadChildren: 'app/modules/parent-support/pages/manage-complaints/manage-complaints.module#ManageComplaintsModule',
         data: { moduleName: 'parent-support' },
     },
     {

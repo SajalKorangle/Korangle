@@ -11,8 +11,8 @@ import { PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT } from '../../../../print/print-ro
 
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
-import { FilterModalComponent } from '@modules/parent-support/component/filter-modal/filter-modal.component';
-import { FormatTableModalComponent } from '@modules/parent-support/component/format-table-modal/format-table-modal.component';
+import { FilterModalComponent } from '@modules/parent-support/pages/count-all/component/filter-modal/filter-modal.component';
+import { FormatTableModalComponent } from '@modules/parent-support/pages/count-all/component/format-table-modal/format-table-modal.component';
 import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 @Component({

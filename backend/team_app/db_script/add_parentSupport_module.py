@@ -10,8 +10,8 @@ def add_parentSupport_module(apps, schema_editor):
     manage_complaint_type = Task(path = 'manage_complaint_type', parentModule = module_object, title = 'Manage Complaint Type', orderNumber = 1, parentBoard = None)
     manage_complaint_type.save()
 
-    manage_all_complaints = Task(path = 'manage_all_complaints', parentModule = module_object, title = 'Manage All Complaints', orderNumber = 2, parentBoard = None)
-    manage_all_complaints.save()
+    manage_complaints = Task(path = 'manage_complaints', parentModule = module_object, title = 'Manage Complaints', orderNumber = 2, parentBoard = None)
+    manage_complaints.save()
 
     count_all = Task(path = 'count_all', parentModule = module_object, title = 'Count All', orderNumber = 3, parentBoard = None)
     count_all.save()
@@ -26,7 +26,7 @@ def add_parentSupport_module(apps, schema_editor):
         employee.save()
 
         employee = EmployeePermission()
-        employee.parentTask = manage_all_complaints
+        employee.parentTask = manage_complaints
         employee.parentEmployee = employee_permission.parentEmployee
         employee.save()
 

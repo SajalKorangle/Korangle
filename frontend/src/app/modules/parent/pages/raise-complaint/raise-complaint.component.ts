@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
-import { ManageComplaintsServiceAdapter } from './manage-complaints.service.adapter';
-import { ManageComplaintsHtmlRenderer } from './manage-complaints.html.renderer';
+import { RaiseComplaintServiceAdapter } from './raise-complaint.service.adapter';
+import { RaiseComplaintHtmlRenderer } from './raise-complaint.html.renderer';
 import { DeleteModalComponent } from '@modules/parent/component/delete-modal/delete-modal.component';
 
 import { MatDialog } from '@angular/material';
 
 
 @Component({
-    selector: 'app-manage-complaints',
-    templateUrl: './manage-complaints.component.html',
-    styleUrls: ['./manage-complaints.component.css']
+    selector: 'app-raise-complaint',
+    templateUrl: './raise-complaint.component.html',
+    styleUrls: ['./raise-complaint.component.css']
 })
-export class ManageComplaintsComponent implements OnInit {
+export class RaiseComplaintComponent implements OnInit {
     user: any;
     isLoading: boolean = false;
     NULL_CONSTANT: any = null;
@@ -48,8 +48,8 @@ export class ManageComplaintsComponent implements OnInit {
     commentMessage: string = "";
     commentList: any = [];
 
-    serviceAdapter: ManageComplaintsServiceAdapter;
-    htmlRenderer: ManageComplaintsHtmlRenderer;
+    serviceAdapter: RaiseComplaintServiceAdapter;
+    htmlRenderer: RaiseComplaintHtmlRenderer;
 
     constructor(
         public dialog: MatDialog,
@@ -58,11 +58,11 @@ export class ManageComplaintsComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.serviceAdapter = new ManageComplaintsServiceAdapter();
+        this.serviceAdapter = new RaiseComplaintServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
-        this.htmlRenderer = new ManageComplaintsHtmlRenderer();
+        this.htmlRenderer = new RaiseComplaintHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
     }
 

@@ -108,15 +108,20 @@ def notify_parents_on_complaint(sender, instance, created, **kwargs):
         # 1. Using mobileNumber.
         mobileNumber = str(instance.parentStudent.mobileNumber)
         user = User.objects.filter(username = mobileNumber)
+
+        # If the complaint is raised by parent, he/she should not get notified.
         if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
             user = user[0]
             content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
             parentSchool = instance.parentStudent.parentSchool
             createNotification(content, user, parentSchool)
 
+
         # 2. Using secondMobileNumber.
         secondMobileNumber = str(instance.parentStudent.secondMobileNumber)
         user = User.objects.filter(username = secondMobileNumber)
+
+        # If the complaint is raised by parent, he/she should not get notified.
         if (len(user) > 0) and (senderEmployeeMobileNumber != secondMobileNumber):
             user = user[0]
             content = instance.parentEmployee.name + " has raised your complaint titled as " + instance.title + "."
@@ -127,6 +132,7 @@ def notify_parents_on_complaint(sender, instance, created, **kwargs):
 class Comment(models.Model):
 
     # If sender is employee.
+    # parentEmployee would be null if the comment is posted by the parent.
     parentEmployee = models.ForeignKey(Employee, on_delete = models.SET_NULL, null = True)
 
     # We will fetch father's name && contact number from his child.
@@ -165,6 +171,8 @@ def notify_on_comment(sender, instance, created, **kwargs):
         for employee_complaint in EmployeeComplaint.objects.filter(parentComplaint = instance.parentComplaint):
             mobileNumber = str(employee_complaint.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
+
+            # All complaint-authorities should get notified except who has answered to that complaint.
             if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
                 user = user[0]
                 content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
@@ -194,6 +202,7 @@ def notify_on_comment(sender, instance, created, **kwargs):
                 createNotification(content, user, parentSchool)
 
 
+# StatusComplaintType database is used to store applicable-status-list of a complaintType.
 class StatusComplaintType(models.Model):
 
     # Parent Status

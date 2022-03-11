@@ -1,14 +1,14 @@
-import { ManageAllComplaintsComponent } from './manage-all-complaints.component';
+import { ManageComplaintsComponent } from './manage-complaints.component';
 import { Query } from '@services/generic/query';
 
 
-export class ManageAllComplaintsServiceAdapter {
-    vm: ManageAllComplaintsComponent;
+export class ManageComplaintsServiceAdapter {
+    vm: ManageComplaintsComponent;
 
     constructor() { }
 
     /* Initialize Adapter */
-    initializeAdapter(vm: ManageAllComplaintsComponent): void {
+    initializeAdapter(vm: ManageComplaintsComponent): void {
         this.vm = vm;
     }  // Ends: initializeAdapter()
 
@@ -381,7 +381,9 @@ export class ManageAllComplaintsServiceAdapter {
             employeeComplaintList.forEach((employeeComplaint) => {
                 complaintIdList.push(employeeComplaint.parentComplaint);
             });
-            filterData["id_in"] = complaintIdList;
+            if (complaintIdList.length) {
+                filterData["id_in"] = complaintIdList;
+            }
         }
 
         this.vm.isProgress = true;

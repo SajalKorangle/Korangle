@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ManageComplaintsComponent } from "./manage-complaints.component";
+import { RaiseComplaintComponent } from "./raise-complaint.component";
 
 const routes: Routes = [
     {
         path: '',
-        component: ManageComplaintsComponent ,
+        component: RaiseComplaintComponent ,
     }
 ];
 
@@ -20,4 +20,4 @@ const routes: Routes = [
         RouterModule,
     ],
 })
-export class ManageComplaintsRouting { }
+export class RaiseComplaintRouting { }

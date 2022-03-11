@@ -3,20 +3,20 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { MatDialog } from '@angular/material';
 
-import { AssignEmployeeComponent } from '@modules/parent-support/component/assign-employee/assign-employee.component';
-import { ManageAllComplaintsServiceAdapter } from './manage-all-complaints.service.adapter';
-import { ManageAllComplaintsHtmlRenderer } from './manage-all-complaints.html.renderer';
+import { AssignEmployeeComponent } from '@modules/parent-support/pages/manage-complaints/component/assign-employee/assign-employee.component';
+import { ManageComplaintsServiceAdapter } from './manage-complaints.service.adapter';
+import { ManageComplaintsHtmlRenderer } from './manage-complaints.html.renderer';
 import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 import { CommonFunctions } from "../../../../classes/common-functions";
 
 
 @Component({
-    selector: 'app-manage-all-complaints',
-    templateUrl: './manage-all-complaints.component.html',
-    styleUrls: ['./manage-all-complaints.component.css']
+    selector: 'app-manage-complaints',
+    templateUrl: './manage-complaints.component.html',
+    styleUrls: ['./manage-complaints.component.css']
 })
-export class ManageAllComplaintsComponent implements OnInit {
+export class ManageComplaintsComponent implements OnInit {
     user: any;
     isLoading: boolean = true;
     NULL_CONSTANT: any = null;
@@ -57,8 +57,8 @@ export class ManageAllComplaintsComponent implements OnInit {
     commentMessage: string = "";
     commentList: any = [];
 
-    serviceAdapter: ManageAllComplaintsServiceAdapter;
-    htmlRenderer: ManageAllComplaintsHtmlRenderer;
+    serviceAdapter: ManageComplaintsServiceAdapter;
+    htmlRenderer: ManageComplaintsHtmlRenderer;
 
 
     constructor(
@@ -68,10 +68,10 @@ export class ManageAllComplaintsComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.htmlRenderer = new ManageAllComplaintsHtmlRenderer();
+        this.htmlRenderer = new ManageComplaintsHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
-        this.serviceAdapter = new ManageAllComplaintsServiceAdapter();
+        this.serviceAdapter = new ManageComplaintsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }

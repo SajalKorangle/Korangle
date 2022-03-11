@@ -181,9 +181,9 @@ export class School {
                 id: this.studentList[0].id,
                 taskList: [
                     {
-                        title: 'Manage complaints',
-                        path: 'manage_complaints',
-                        icon: 'event',
+                        title: 'Raise complaint',
+                        path: 'raise_complaint',
+                        icon: 'question_answer',
                     },
                 ],
             });

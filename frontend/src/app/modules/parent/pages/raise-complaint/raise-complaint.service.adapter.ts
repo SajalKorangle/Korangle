@@ -1,13 +1,13 @@
-import { ManageComplaintsComponent } from './manage-complaints.component';
+import { RaiseComplaintComponent } from './raise-complaint.component';
 import { Query } from '@services/generic/query';
 
-export class ManageComplaintsServiceAdapter {
-    vm: ManageComplaintsComponent;
+export class RaiseComplaintServiceAdapter {
+    vm: RaiseComplaintComponent;
 
     constructor() { }
 
     /* Initialize Adapter */
-    initializeAdapter(vm: ManageComplaintsComponent): void {
+    initializeAdapter(vm: RaiseComplaintComponent): void {
         this.vm = vm;
     }  // Ends: initializeAdapter()
 

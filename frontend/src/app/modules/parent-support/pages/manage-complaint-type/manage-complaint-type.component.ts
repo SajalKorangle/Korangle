@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonFunctions } from "../../../../classes/common-functions";
 import { DataStorage } from "@classes/data-storage";
 
-import { AddStatusModalComponent } from '@modules/parent-support/component/add-status-modal/add-status-modal.component';
+import { AddStatusModalComponent } from '@modules/parent-support/pages/manage-complaint-type/component/add-status-modal/add-status-modal.component';
 import { ManageComplaintTypeServiceAdapter } from './manage-complaint-type.service.adapter';
 import { ManageComplaintTypeHtmlRenderer } from './manage-complaint-type.html.renderer';
 
