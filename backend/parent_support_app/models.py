@@ -163,17 +163,12 @@ def notify_on_comment(sender, instance, created, **kwargs):
     commentList = Comment.objects.filter(parentComplaint = instance.parentComplaint)
     if created and len(commentList) > 1:
 
-        senderEmployeeMobileNumber = ""
-        if instance.parentEmployee:
-            senderEmployeeMobileNumber = str(instance.parentEmployee.mobileNumber)
-
-
-        for employee_complaint in EmployeeComplaint.objects.filter(parentComplaint = instance.parentComplaint):
+        for employee_complaint in EmployeeComplaint.objects.filter(parentComplaint = instance.parentComplaint).exclude(parentEmployee = instance.parentEmployee):
             mobileNumber = str(employee_complaint.parentEmployee.mobileNumber)
             user = User.objects.filter(username = mobileNumber)
 
             # All complaint-authorities should get notified except who has answered to that complaint.
-            if (len(user) > 0) and (senderEmployeeMobileNumber != mobileNumber):
+            if len(user) > 0:
                 user = user[0]
                 content = "A new comment has been added to the complaint titled as " + instance.parentComplaint.title + "."
                 parentSchool = instance.parentStudent.parentSchool
