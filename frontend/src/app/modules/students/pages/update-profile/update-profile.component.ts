@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
+import { UpdateProfileHtmlRenderer } from './update-profile.html.renderer';
 
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
@@ -38,6 +39,7 @@ export class UpdateProfileComponent implements OnInit {
 
     classList: any;
     sectionList: any;
+    sessionList: any = [];
 
     studentList: any;
     studentSectionList: any;
@@ -48,6 +50,7 @@ export class UpdateProfileComponent implements OnInit {
     deleteList: any[] = [];
     profileImage = null;
 
+    htmlRenderer: UpdateProfileHtmlRenderer;
     serviceAdapter: UpdateProfileServiceAdapter;
 
     commonFunctions: CommonFunctions;
@@ -62,6 +65,9 @@ export class UpdateProfileComponent implements OnInit {
         this.serviceAdapter.initializeData();
         this.deleteList = [];
         this.profileImage = this.NULL_CONSTANT;
+
+        this.htmlRenderer = new UpdateProfileHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
     handleDetailsFromParentStudentFilter(value): void {
@@ -75,14 +81,6 @@ export class UpdateProfileComponent implements OnInit {
         this.serviceAdapter.getStudentProfile(this.selectedStudent.id);
     }
 
-    getParameterValue = (parameter) => {
-        try {
-            return this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id).value;
-        } catch {
-            return this.NULL_CONSTANT;
-        }
-    }
-
     updateParameterValue = (parameter, value) => {
         let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
         if (!item) {
@@ -91,20 +89,6 @@ export class UpdateProfileComponent implements OnInit {
         } else {
             item.value = value;
         }
-    }
-
-    checkCustomFieldChanged = (parameter) => {
-        const item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
-        const old_item = this.studentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
-        if (!item && old_item) {
-            return true;
-        }
-        if (old_item) {
-            if (old_item.value === this.NULL_CONSTANT) {
-                return item && (!old_item || item.document_value != old_item.document_value);
-            }
-        }
-        return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
     }
 
     getBusStopName(busStopDbId: any) {
@@ -119,39 +103,6 @@ export class UpdateProfileComponent implements OnInit {
             });
         }
         return stopName;
-    }
-
-    getClassName(): any {
-        return this.classList.find((classs) => {
-            return this.selectedStudentSection.parentClass == classs.id;
-        }).name;
-    }
-
-    getSectionName(): any {
-        return this.sectionList.find((section) => {
-            return this.selectedStudentSection.parentDivision == section.id;
-        }).name;
-    }
-
-    checkFieldChanged(selectedValue, currentValue): boolean {
-        if (selectedValue !== currentValue && !(selectedValue == null && currentValue === '')) {
-            return true;
-        }
-        return false;
-    }
-
-    checkLength(value: any) {
-        if (value && value.toString().length > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    checkRight(value: any, rightValue: number) {
-        if (value && value.toString().length === rightValue) {
-            return true;
-        }
-        return false;
     }
 
     cropImage(file: File, aspectRatio: any): Promise<Blob> {
@@ -258,40 +209,6 @@ export class UpdateProfileComponent implements OnInit {
             };
             image.onerror = reject;
         });
-    }
-
-    isMobile(): boolean {
-        if (window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }
-
-    getParameterDocumentType(parameter) {
-        try {
-            let document_value = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id)
-                .document_value;
-            if (document_value) {
-                let document_name = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id)
-                    .document_name;
-                let urlList = [];
-                if (document_name) {
-                    urlList = document_name.split('.');
-                } else {
-                    urlList = document_value.split('.');
-                }
-                let type = urlList[urlList.length - 1];
-                if (type == 'pdf') {
-                    return 'pdf';
-                } else {
-                    return 'img';
-                }
-            } else {
-                return 'none';
-            }
-        } catch {
-            return 'none';
-        }
     }
 
     getParameterDocumentValue(parameter) {
@@ -477,8 +394,8 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     openFilePreviewDialog(parameter): void {
-        if (this.getParameterDocumentType(parameter) != 'none') {
-            let type = this.getParameterDocumentType(parameter);
+        if (this.htmlRenderer.getParameterDocumentType(parameter) != 'none') {
+            let type = this.htmlRenderer.getParameterDocumentType(parameter);
             let file = this.getParameterDocumentValue(parameter);
             let dummyImageList = [];
             if (type == 'img') {
@@ -490,23 +407,11 @@ export class UpdateProfileComponent implements OnInit {
                 maxHeight: '100vh',
                 height: '100%',
                 width: '100%',
-                data: { imageList: dummyImageList, file: file, index: 0, type: 1, fileType: type, isMobile: this.isMobile() },
+                data: { imageList: dummyImageList, file: file, index: 0, type: 1, fileType: type, isMobile: this.htmlRenderer.isMobile() },
             });
             dialogRef.afterClosed().subscribe((result) => {
                 console.log('The dialog was closed');
             });
-        }
-    }
-
-    getIcon(parameter: any) {
-        let src = '/assets/img/';
-        switch (this.getParameterDocumentType(parameter)) {
-            case 'none':
-                return src + 'nofile.png';
-            case 'img':
-                return src + 'img.png';
-            case 'pdf':
-                return src + 'pdf.png';
         }
     }
 
