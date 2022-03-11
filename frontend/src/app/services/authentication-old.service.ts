@@ -15,33 +15,23 @@ export class AuthenticationOldService {
     constructor(private http: HttpClient) {}
 
     loginUserDetails(username: any, password: any): Promise<any> {
-        /* To get the browser name */
+        /* Starts: Getting device name */
         const agent = window.navigator.userAgent.toLowerCase();
-        var device = "";
-        switch (true) {
-            case agent.indexOf('edge') > -1:
-            device = 'edge';
-            break;
-            case agent.indexOf('opr') > -1 && !!(<any>window).opr:
-            device = 'opera';
-            break;
-            case agent.indexOf('chrome') > -1 && !!(<any>window).chrome:
-            device = 'chrome';
-            break;
-            case agent.indexOf('trident') > -1:
-            device = 'ie';
-            break;
-            case agent.indexOf('firefox') > -1:
-            device = 'firefox';
-            break;
-            case agent.indexOf('safari') > -1:
-            device = 'safari';
-            break;
-            default:
-            device = 'other';
+        var device_name = '';
+        if (agent.match('android')) {
+            device_name = 'android-web';
         }
-        /* fetching browser name ends */
-        const body = { username: username, password: password, device_name: device };
+        else if (agent.match('windows')) {
+            device_name = 'windows-web';
+        }
+        else if (agent.match('mac')) {
+            device_name = 'mac-web';
+        }
+        else {
+            device_name = 'other-web';
+        }
+        /* Ends: Getting device name */
+        const body = { username: username, password: password, device_name: device_name };
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http
             .post(this.loginUserDetailsUrl, body, { headers: this.headers })

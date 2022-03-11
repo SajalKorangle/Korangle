@@ -1,38 +1,25 @@
-import { Component, Input } from '@angular/core';
+import { ViewDevicesComponent } from './view-devices.component';
 
-import { DataStorage } from '../../../../classes/data-storage';
-import { GenericService } from '@services/generic/generic-service';
 import { Query } from '@services/generic/query';
 
-@Component({
-    selector: 'login-activity',
-    templateUrl: './login-activity.component.html',
-    styleUrls: ['./login-activity.component.css'],
-    providers: [GenericService],
-})
-export class LoginActivityComponent {
-    user;
+export class ViewDevicesServiceAdapter {
+    vm: ViewDevicesComponent;
 
-    /* List of logins on multiple devices */
-    loginList = [];
+    constructor() {}
 
-    /* Current device login's id*/
-    currID = -1;
-
-    isLoading = false;
-
-    constructor(private genericService: GenericService) {}
-
-    ngOnInit(): void {
-        this.user = DataStorage.getInstance().getUser();
-
-        this.loginList = [];
-
-        this.getLoginList();
-
+    initializeAdapter(vm: ViewDevicesComponent): void {
+        this.vm = vm;
     }
 
-    /* Function to fetch login data ( logged in devices ) */
+    public initializeData(): void {
+
+        this.vm.isLoading = true;
+        this.getLoginList().then(() => {
+            this.vm.isLoading = false;
+        } );
+    }
+
+    /* Starts: Function to fetch login data ( logged in devices ) */
     async getLoginList() {
         const token = localStorage.getItem('schoolJWT');
         const loginDataQuery = new Query()
@@ -52,15 +39,16 @@ export class LoginActivityComponent {
         let i = 0;
         loginData.forEach(login => {
             if ( login.token === token ) {
-                this.currID = login.id;
+                this.vm.currID = login.id;
             }
             i = i + 1;
             return login;
         });
-        this.loginList = loginData;
+        this.vm.loginList = loginData;
     }
+    /* Ends: Function to fetch login data ( logged in devices ) */
 
-    /* Function to delete a login instance */
+    /* Starts: Function to delete a login instance */
     async logoutInstance(instance: any) {
 
         const deleteResponsePromise = new Query()
@@ -74,10 +62,11 @@ export class LoginActivityComponent {
             deleteResponsePromise,
         ]);
         if ( deleteResponse === 1) {
-            const index = this.loginList.indexOf(instance);
+            const index = this.vm.loginList.indexOf(instance);
             if (index > -1) {
-                this.loginList.splice(index, 1);
+                this.vm.loginList.splice(index, 1);
             }
         }
     }
+    /* Ends: Function to delete a login instance */
 }

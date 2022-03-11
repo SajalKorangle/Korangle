@@ -12,6 +12,7 @@ import { Constants } from '../../classes/constants';
 import { CommonFunctions } from './../../classes/common-functions';
 import { NotificationService } from '../../services/modules/notification/notification.service';
 import { unregisterForNotification } from '../../classes/common.js';
+import { Query } from '@services/generic/query';
 
 declare const $: any;
 
@@ -126,7 +127,19 @@ export class SidebarComponent implements OnInit {
         return value.split(' ')[0];
     }
 
-    logout() {
+    async logout() {
+
+        const deleteResponsePromise = new Query()
+            .filter({ token: this.user.jwt })
+            .deleteObjectList({ authentication_app: 'DeviceList' });
+
+        let deleteResponse = -1;
+        [
+            deleteResponse,
+        ] = await Promise.all([
+            deleteResponsePromise,
+        ]);
+
         unregisterForNotification({
             jwt: this.user.jwt,
             url:

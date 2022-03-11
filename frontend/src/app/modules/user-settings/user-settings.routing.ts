@@ -32,7 +32,7 @@ const routes: Routes = [
     },
     {
         path: 'view_devices',
-        loadChildren: 'app/modules/user-settings/pages/login-activity/login-activity.module#LoginActivityModule',
+        loadChildren: 'app/modules/user-settings/pages/view-devices/view-devices.module#ViewDevicesModule',
         data: { moduleName: 'user-settings' },
     },
     {

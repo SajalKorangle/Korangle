@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LoginActivityComponent } from './login-activity.component';
+import { ViewDevicesComponent } from './view-devices.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: LoginActivityComponent,
+        component: ViewDevicesComponent,
     },
 ];
 
@@ -15,4 +15,4 @@ const routes: Routes = [
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class LoginActivityRoutingModule {}
+export class ViewDevicesRoutingModule {}
