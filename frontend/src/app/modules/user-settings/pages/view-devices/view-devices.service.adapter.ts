@@ -38,6 +38,9 @@ export class ViewDevicesServiceAdapter {
           });
         let i = 0;
         loginData.forEach(login => {
+            login.last_active = this.formatDateTime(login.last_active);
+            login.login_date = this.formatDateTime(login.login_date);
+            login.loading = false;
             if ( login.token === token ) {
                 this.vm.currID = login.id;
             }
@@ -50,6 +53,10 @@ export class ViewDevicesServiceAdapter {
 
     /* Starts: Function to delete a login instance */
     async logoutInstance(instance: any) {
+
+        let idx = this.vm.loginList.indexOf(instance);
+
+        this.vm.loginList[idx].loading = true;
 
         const deleteResponsePromise = new Query()
             .filter({ id: instance.id })
@@ -69,4 +76,26 @@ export class ViewDevicesServiceAdapter {
         }
     }
     /* Ends: Function to delete a login instance */
+
+    /* Starts: Function to format date */
+    formatDateTime(datetime: string) : string {
+        var year = datetime.substring(0, 4);
+        var month = datetime.substring(5, 7);
+        var day = datetime.substring(8, 10);
+        var hour = parseInt(datetime.substring(11, 13));
+        var min = parseInt(datetime.substring(14, 16));
+
+        hour = hour + 5;
+        min = min + 30;
+
+        var temp = Math.floor(min / 60);
+
+        min = min - temp * 60;
+        hour = hour + temp;
+
+        const formatedDateTime = hour + ":" + min + ", " + day + "-" + month + "-" + year;
+
+        return formatedDateTime;
+    }
+    /* Ends: Function to format date */
 }

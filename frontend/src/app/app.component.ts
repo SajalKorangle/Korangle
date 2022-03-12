@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
         DataStorage.getInstance().setUser(this.user);
         if (this.user.checkAuthentication()) {
             this.authenticationService.getUserDetails(this.user.jwt).then((data) => {
+                console.log(data);
                 if (data === 'failed') {
                     console.log('authentication failed');
                     this.user.isAuthenticated = false;

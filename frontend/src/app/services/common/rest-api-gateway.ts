@@ -13,6 +13,8 @@ const MAX_URL_LENGTH = 2048;
 export class RestApiGateway {
     reportError = reportError;
 
+    user;
+
     constructor(private http: HttpClient) { }
 
     public getToken(): any {
@@ -36,11 +38,23 @@ export class RestApiGateway {
 
     public returnResponse(response: any, url: any = null, prompt: string = null): any {
         const jsonResponse = response.response;
+        console.log("yo");
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;
             else return jsonResponse.message;
         } else if (jsonResponse.status === 'fail') {
             this.reportError(ERROR_SOURCES[0], url, `failed api response: = ${JSON.stringify(response)}`, prompt, false, location.href);
+            /* Starts: Checking if failure is due to revoked token ( access denied), if true then logging out user  */
+            this.user = DataStorage.getInstance().getUser();
+            if (response['token_revoked'] && this.user.checkAuthentication()) {
+                localStorage.removeItem('schoolJWT');
+                this.user.jwt = '';
+                this.user.isAuthenticated = false;
+                this.user.emptyUserDetails();
+                alert(jsonResponse.message);
+                return null;
+            }
+            /* Ends: Checking if failure is due to revoked token ( access denied)  */
             alert(jsonResponse.message);
             throw new Error();
         } else {

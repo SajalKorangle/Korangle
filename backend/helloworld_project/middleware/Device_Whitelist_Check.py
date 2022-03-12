@@ -1,7 +1,10 @@
 from rest_framework.response import Response
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
+from sqlalchemy import true
 from authentication_app.models import DeviceList
 import datetime
+
+from common.common_functions import get_error_response
 
 class DeviceWhitelistCheck:
 
@@ -18,11 +21,14 @@ class DeviceWhitelistCheck:
             jwtEntry = DeviceList.objects.filter(token = userToken)
 
             if len(jwtEntry)>=1 :
-                jwtEntry[0].last_active_date = datetime.datetime.now().date()
+                jwtEntry[0].last_active = datetime.datetime.now()
                 jwtEntry[0].save()
                 response = self.get_response(request)
             else :
-                return HttpResponseForbidden()
+                #return get_error_response("yoo!")
+                return JsonResponse({'token_revoked':True, 'fail':'Permission Denied, login again to access the account', 'response':get_error_response('Permission Denied, login again to access the account')})
+                #return HttpResponseForbidden()
+                #return JsonResponse({'response': { 'status':'fail', 'message':"Permission Denied, login again to access the account"}})
         else :
             response = self.get_response(request)
 

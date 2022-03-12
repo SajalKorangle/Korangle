@@ -52,5 +52,4 @@ export class ViewDevicesComponent {
         this.serviceAdapter.logoutInstance(instance);
     }
 
-    
 }
