@@ -32,8 +32,8 @@ export class CountAllComponent implements OnInit {
 
     isTableEditing: boolean = false;
     isTableUpdated: boolean = false;
-    tableActiveId: number = 0;
-    tableActiveIdx: number = 0;
+    tableActiveId: number = null;
+    tableActiveIdx: number = null;
 
     tableFormatTitle: string = "";     // Table Name
     whereToAdd: string = "";    // Row  or  Column
@@ -177,6 +177,30 @@ export class CountAllComponent implements OnInit {
             /* Ends: Merge Two studentParameterList */
 
             tableCols[i].studentParameterList = newStudentParameterList;
+
+            /* Initialize category */
+            if (tableCols[i]["category"]) {
+                let category = tableCols[i]["category"];
+                let newCategory = [];
+
+                if (category.includes("SC")) {
+                    newCategory.push("SC");
+                }
+                if (category.includes("ST")) {
+                    newCategory.push("ST");
+                }
+                if (category.includes("OBC")) {
+                    newCategory.push("OBC");
+                }
+                if (category.includes("GEN")) {
+                    newCategory.push("Gen.");
+                }
+                if (category.includes("NONE")) {
+                    newCategory.push("NONE");
+                }
+
+                tableCols[i]["category"] = newCategory;
+            }   //  Ends: Initialize category
         }
 
         /* Update the rows */
@@ -225,6 +249,30 @@ export class CountAllComponent implements OnInit {
             /* Starts: Merge Two studentParameterList */
 
             tableRows[i].studentParameterList = newStudentParameterList;
+
+            /* Initialize category */
+            if (tableRows[i]["category"]) {
+                let category = tableRows[i]["category"];
+                let newCategory = [];
+
+                if (category.includes("SC")) {
+                    newCategory.push("SC");
+                }
+                if (category.includes("ST")) {
+                    newCategory.push("ST");
+                }
+                if (category.includes("OBC")) {
+                    newCategory.push("OBC");
+                }
+                if (category.includes("GEN") || category.includes("Gen.")) {
+                    newCategory.push("Gen.");
+                }
+                if (category.includes("NONE")) {
+                    newCategory.push("NONE");
+                }
+
+                tableRows[i]["category"] = newCategory;
+            }   //  Ends: Initialize category
         }
     }  // Ends: updateTableData()
 
@@ -254,7 +302,7 @@ export class CountAllComponent implements OnInit {
         this.isTableUpdated = false;
         this.isTableEditing = false;
         this.tableActiveId = null;
-        this.tableActiveIdx = 0;
+        this.tableActiveIdx = null;
         this.tableFormatTitle = "";
         this.columnFilters = [];
         this.rowFilters = [];
@@ -302,7 +350,7 @@ export class CountAllComponent implements OnInit {
 
                 /* Min-Age check */
                 if (filtersData[filter][1] != null && !isNaN(filtersData[filter][1])) {
-                    if (!age) {
+                    if (age == null || age == undefined) {
                         check = false;
                         break;
                     } else if (age < filtersData[filter][1]) {
@@ -313,7 +361,7 @@ export class CountAllComponent implements OnInit {
 
                 /* Max-Age check */
                 if (filtersData[filter][2] != null && !isNaN(filtersData[filter][2])) {
-                    if (!age) {
+                    if (age == null || age == undefined) {
                         check = false;
                         break;
                     } else if (age > filtersData[filter][2]) {
@@ -526,12 +574,34 @@ export class CountAllComponent implements OnInit {
                 studentList: this.getFilteredStudentList(rowFilter, columnFilter),
             }
         });
-    }  // Ends: openSaveFormatDialog()
+    }  // Ends: openShowStudentListDialog()
+
+    /* Check Table Name Uniqueness */
+    checkTableName() {
+        let tempUniqueCount = 0;
+
+        for (let idx = 0; idx < this.tableList.length; idx++) {
+            if (this.tableList[idx].formatName == this.tableFormatTitle && idx != this.tableActiveIdx) {
+                tempUniqueCount++;
+            }
+        }
+
+        if (tempUniqueCount > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }  // Ends: checkTableName()
 
     updateChangesClicked(): void {
 
         if (!this.tableFormatTitle) {
             alert("Please enter the table name.");
+            return;
+        }
+
+        if (!this.checkTableName()) {
+            alert("Table name must be unique.");
             return;
         }
 
@@ -562,7 +632,9 @@ export class CountAllComponent implements OnInit {
         let headerValues = [];
         headerValues.push('');
         this.columnFilters.forEach((columnFilter) => {
-            headerValues.push(columnFilter.name);
+            let filterTotalCount = this.htmlRenderer.getFilterTotalCount(columnFilter);
+            let filterName = columnFilter.name + " (" + filterTotalCount + ")";
+            headerValues.push(filterName);
         });
         return headerValues;
     }  // Ends: getHeaderValues()
@@ -570,7 +642,10 @@ export class CountAllComponent implements OnInit {
     /* Get Filter Information */
     getFilterInfo(filter: any): any {
         let filterInfo = [];
-        filterInfo.push(filter.name);
+
+        let filterTotalCount = this.htmlRenderer.getFilterTotalCount(filter);
+        let filterName = filter.name + " (" + filterTotalCount + ")";
+        filterInfo.push(filterName);
         this.columnFilters.forEach((columnFilter) => {
             filterInfo.push(this.htmlRenderer.getIntersectionCount(filter, columnFilter));
         });
@@ -659,6 +734,31 @@ export class CountAllComponent implements OnInit {
 
     /* Create New Table */
     addNewTableClicked() {
+
+        if (!this.isTableEditing && (this.rowFilters.length + this.columnFilters.length) > 0) {
+            let conformation = confirm("Do you want to save the current table?");
+            if (conformation) {
+                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                    data: {
+                        formatName: "",
+                        tableList: this.tableList,
+                    }
+                });
+
+                // OnClosing of Modal.
+                dialogRef.afterClosed().subscribe((data) => {
+                    if (data && data.name) {
+                        this.tableFormatTitle = data.name;
+                        this.serviceAdapter.saveTable("initializeTableDetails");
+                    }
+                });
+            } else {
+                this.initializeTableDetails();
+            }
+            this.isTableUpdated = false;
+            return;
+        }
+
         if (this.isTableUpdated) {
             let conformation = confirm("Do you want to update your changes?");
             if (conformation) {
@@ -676,6 +776,31 @@ export class CountAllComponent implements OnInit {
 
     /* Open Clicked Table */
     openTableClicked(table, idx) {
+
+        if (!this.isTableEditing && (this.rowFilters.length + this.columnFilters.length) > 0) {
+            let conformation = confirm("Do you want to save the current table?");
+            if (conformation) {
+                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                    data: {
+                        formatName: "",
+                        tableList: this.tableList,
+                    }
+                });
+
+                // OnClosing of Modal.
+                dialogRef.afterClosed().subscribe((data) => {
+                    if (data && data.name) {
+                        this.tableFormatTitle = data.name;
+                        this.serviceAdapter.saveTable("openTable", table, idx);
+                    }
+                });
+            } else {
+                this.htmlRenderer.tableOpenClicked(table, idx);
+            }
+            this.isTableUpdated = false;
+            return;
+        }
+
         if (this.isTableUpdated) {
             let conformation = confirm("Do you want to update your changes?");
             if (conformation) {

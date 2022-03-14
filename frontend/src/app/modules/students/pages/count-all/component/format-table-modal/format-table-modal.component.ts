@@ -19,19 +19,9 @@ export class FormatTableModalComponent implements OnInit {
         this.tableList = data.tableList;
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
-    /* Debouncing */
-    debounce(func, timeout = 100) {
-        let timer;
-        return (...args) => {
-        clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
-         };
-    }  // Ends: debounce()
-
-    /* Apply Filters */
+    /* Check Table Name Uniqueness */
     checkTableName() {
         let tempUniqueCount = 0;
 
@@ -47,9 +37,7 @@ export class FormatTableModalComponent implements OnInit {
         } else {
             this.isUnique = true;
         }
-    }  // Ends: applyFilters()
-
-    nameChanged = this.debounce(() => this.checkTableName());
+    }  // Ends: checkTableName()
 
     /* Cancel Clicked */
     cancelClick(): void {
@@ -63,7 +51,9 @@ export class FormatTableModalComponent implements OnInit {
             return;
         }
 
+        this.checkTableName();
         if (!this.isUnique) {
+            alert("Table name must be unique.");
             return;
         }
 

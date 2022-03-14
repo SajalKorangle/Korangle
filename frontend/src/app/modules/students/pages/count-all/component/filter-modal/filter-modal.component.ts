@@ -100,7 +100,9 @@ export class FilterModalComponent implements OnInit {
             /* Initialize age */
             if (this.filter["age"]) {
                 let age = this.filter["age"];
-                this.asOnDate = age[0];
+
+                let newDate = new Date(age[0]);
+                this.asOnDate = newDate.toJSON().slice(0, 10);
                 this.minAge = age[1];
                 this.maxAge = age[2];
             }   //  Ends: Initialize age
@@ -169,8 +171,7 @@ export class FilterModalComponent implements OnInit {
         }
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
     /* Check Mobile - maxidth (991) */
     isMobile(): boolean {

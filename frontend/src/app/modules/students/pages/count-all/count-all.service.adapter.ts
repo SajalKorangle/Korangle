@@ -170,7 +170,7 @@ export class CountAllServiceAdapter {
     }  // Ends: updateTableList()
 
     /* Save Table */
-    async saveTable() {
+    async saveTable(operation = "", table = null, idx = null) {
         this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["formatName"] = this.vm.tableFormatTitle;
@@ -196,6 +196,13 @@ export class CountAllServiceAdapter {
         const response = await new Query().createObject({student_app: 'CountAllTable'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableList.length);
         this.vm.tableList.push(response);
+
+        if (operation == "initializeTableDetails") {
+            this.vm.initializeTableDetails();
+        }
+        if (operation == "openTable") {
+            this.vm.htmlRenderer.tableOpenClicked(table, idx);
+        }
 
         this.vm.isTableUpdated = false;
         this.vm.isLoading = false;

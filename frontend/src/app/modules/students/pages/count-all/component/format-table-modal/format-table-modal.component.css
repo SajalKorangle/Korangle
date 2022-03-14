@@ -1,6 +1,6 @@
 /* Starts: Modal Container */
 .format-table-modal-container {
-    height: 23vh;
+    height: 30vh;
     width: 30vw;
 }
 /* Ends: Modal Container */
@@ -29,7 +29,7 @@
 @media only screen and (max-width: 992px) {
     /* Starts: Modal Container */
     .format-table-modal-container {
-        height: 25vh;
+        height: 30vh;
         width: 100%;
         font-size: 12px;
         margin: 0;
