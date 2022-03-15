@@ -12,10 +12,13 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -43,6 +46,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -59,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     Snackbar snackbar;
     SwipeRefreshLayout mySwipeRefreshLayout;
 
-    String websiteNotFound = "Not able to connect with Korangle!\nContact +91 - 7999951154";
+    String websiteNotFound = "Not able to connect with Korangle!\nContact +91 - 6261617172";
     String notInternetConnection = "No Internet Connection!\n Swipe down to refresh";
     String slowOrNoInternetConnection = "Slow or No Internet Connection!!\n Swipe down to retry";
     public static final String TEL_PREFIX = "tel:";
@@ -297,6 +301,10 @@ public class MainActivity extends AppCompatActivity {
 
             webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
         } else { volleyFace.checkingUpdates(); }
+        /*if(BuildConfig.DEBUG) {
+            webapp_url="https://test.korangle.com";
+        }
+        volleyFace.checkingUpdates();*/
     }
 
     private String resJSON2String(String filename_res){
@@ -368,12 +376,20 @@ public class MainActivity extends AppCompatActivity {
 
             // Check that the response is a good one
             if (resultCode == Activity.RESULT_OK) {
-                if (data == null || data.getDataString() == null) {
+                if (data == null || data.getDataString() == null) { // Getting data from camera
                     // If there is not data, then we may have taken a photo
-                    if (mCameraPhotoPath != null) {
-                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // for android 11 and above
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                        String path = MediaStore.Images.Media.insertImage(getContentResolver(), photo, "Title", null);
+                        results = new Uri[]{Uri.parse(path)};
+                    } else { // for android 10 and till Lollipop.
+                        if (mCameraPhotoPath != null) {
+                            results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                        }
                     }
-                } else {
+                } else { // Getting data from file chooser
                     String dataString = data.getDataString();
                     if (dataString != null) {
                         results = new Uri[]{Uri.parse(dataString)};
