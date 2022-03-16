@@ -35,10 +35,19 @@ public class CustomWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        int substringCut = 24;
+        if (BuildConfig.DEBUG) {
+            substringCut = 25;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String resourceUrl = request.getUrl().toString();
             if (resourceUrl.startsWith(mainActivity.webapp_url)) {
-                String filePath = mainActivity.getFilesDir().getAbsolutePath() + "/korangle/" + resourceUrl.substring(24);
+                String filePath = null;
+                try {
+                    filePath = mainActivity.getFilesDir().getCanonicalPath() + "/korangle/" + resourceUrl.substring(substringCut);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 String fileExtension = WebviewResourceMappingHelper.getInstance().getFileExt(filePath);
                 String mimeType = WebviewResourceMappingHelper.getInstance().getMimeType(fileExtension);
                 try {

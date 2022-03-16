@@ -104,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(BuildConfig.DEBUG) {
+            webapp_url="https://test.korangle.com";
+        }
+
         // Check App updates
         // Creates instance of the manager.
         mAppUpdateManager = AppUpdateManagerFactory.create(this);
@@ -288,23 +292,7 @@ public class MainActivity extends AppCompatActivity {
         // progressBarView.setVisibility(ProgressBar.VISIBLE);
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
-        if (BuildConfig.DEBUG) {
-            String url = "http://";
-            try {
-                JSONObject jsonObject = new JSONObject(resJSON2String("korangle/debug_ip.json"));
-                url += jsonObject.getString("IP");
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(),
-                        "JSON Deserialization ERROR",
-                        Toast.LENGTH_LONG).show();
-            }
-
-            webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
-        } else { volleyFace.checkingUpdates(); }
-        /*if(BuildConfig.DEBUG) {
-            webapp_url="https://test.korangle.com";
-        }
-        volleyFace.checkingUpdates();*/
+        volleyFace.checkingUpdates();
     }
 
     private String resJSON2String(String filename_res){
