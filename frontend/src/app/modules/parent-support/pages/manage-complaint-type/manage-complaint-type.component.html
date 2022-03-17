@@ -124,7 +124,7 @@
     <div class="flex-box">
         <div class="field-title">Type Name : </div>
         <mat-form-field>
-            <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" />
+            <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
         </mat-form-field>
     </div>
     <br />
@@ -222,8 +222,10 @@
         <!-- Starts: Add New Status -->
         <div>
             <mat-form-field>
-                <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 10px; line-height: 12px;" />
+                <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
             </mat-form-field>
+            <span *ngIf="!htmlRenderer.isMobile() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</span>
+            <div *ngIf="htmlRenderer.isMobile() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
             <br *ngIf="htmlRenderer.isMobile()"/>
             <button
                 type="button"

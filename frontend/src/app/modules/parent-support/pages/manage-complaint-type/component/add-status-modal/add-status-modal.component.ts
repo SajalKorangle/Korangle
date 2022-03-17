@@ -12,22 +12,36 @@ export class AddStatusModalComponent implements OnInit {
 
     operation: string = "";  /* Add New  OR  Update  OR  Delete */
 
+    statusId: number = null;
     statusName: string = "";
+    statusList: any = [];
 
     constructor(
         public dialogRef: MatDialogRef<AddStatusModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.operation = data.operation;
+        this.statusList = data.statusList;
 
         /* Initialize Data */
         if (this.operation == "Edit") {
             this.statusName = data.statusName;
+            this.statusId = data.statusId;
         }
     }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+    }
+
+    checkUniqueness() {
+        let answer = true;
+        this.statusList.forEach((status) => {
+            if (status.name == this.statusName && status.id != this.statusId) {
+                answer = false;
+            }
+        });
+        return answer;
     }
 
     /* Close Modal */
@@ -39,6 +53,11 @@ export class AddStatusModalComponent implements OnInit {
     saveClicked() {
         if (!this.statusName) {
             alert("Please enter status name.");
+            return;
+        }
+
+        if (!this.checkUniqueness()) {
+            alert("Status name must be unique.");
             return;
         }
 

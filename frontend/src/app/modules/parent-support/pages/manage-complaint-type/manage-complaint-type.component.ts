@@ -194,6 +194,7 @@ export class ManageComplaintTypeComponent implements OnInit {
         const dialogRef = this.dialog.open(AddStatusModalComponent, {
             data: {
                 operation: "Add",
+                statusList: this.statusList,
             }
         });
 
@@ -212,6 +213,8 @@ export class ManageComplaintTypeComponent implements OnInit {
             data: {
                 operation: "Edit",
                 statusName: status.name,
+                statusList: this.statusList,
+                statusId: status.id,
             }
         });
 
@@ -234,6 +237,12 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Add New Status */
     addStatusClick() {
+
+        if (!this.htmlRenderer.checkUniqueness()) {
+            alert("Status name must be unique.");
+            return;
+        }
+
         if (this.addStatusName) {
             this.serviceAdapter.addStatus();
         }

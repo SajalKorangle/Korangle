@@ -51,10 +51,12 @@ tbody tr:last-child td {
 }
 
 .defaultText {
+    height: 100px;
+    width: 200px;
     opacity: 0.6;
     font-weight: 400;
-    font-size: 10px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 16px;
     border: 0.4px solid rgba(0, 0, 0, 0.7);
     box-sizing: border-box;
     border-radius: 2px;
@@ -64,7 +66,7 @@ tbody tr:last-child td {
 .search-bar {
     display: flex;
     height: 25px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .search-field {
@@ -127,6 +129,10 @@ tbody tr:last-child td {
     .card-content {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .defaultText {
+        width: 100px;
     }
 
     /* Starts: Search Bar */

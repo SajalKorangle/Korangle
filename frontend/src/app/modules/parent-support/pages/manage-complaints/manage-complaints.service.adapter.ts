@@ -52,7 +52,7 @@ export class ManageComplaintsServiceAdapter {
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .getObjectList({ employee_app: 'Employee' });
 
-        const employeePermissionQoery = new Query()
+        const employeePermissionQuery = new Query()
             .filter(employee_permission_filter)
             .getObject({ employee_app: 'EmployeePermission' });
 
@@ -76,7 +76,7 @@ export class ManageComplaintsServiceAdapter {
             complaintTypeQuery,   // 2
             statusQuery,   // 3
             employeeQuery,   // 4
-            employeePermissionQoery,   // 5
+            employeePermissionQuery,   // 5
         ]);
 
         this.vm.initializeStatusList(statusList);
@@ -167,7 +167,7 @@ export class ManageComplaintsServiceAdapter {
             if (moduleList[i].path == "parent_support") {
                 let taskList = moduleList[i].taskList;
                 for (let j = 0; j < taskList.length; j++) {
-                    if (taskList[j].path == "manage_all_complaints") {
+                    if (taskList[j].path == "manage_complaints") {
                         return taskList[j].dbId;
                     }
                 }

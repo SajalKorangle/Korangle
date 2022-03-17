@@ -10,9 +10,12 @@
 
     <!-- Starts: Input Name Field -->
     <div class="inputField">
-        <mat-form-field>
-            <input matInput placeholder="Status Name" required type="text" [(ngModel)]="statusName" />
-        </mat-form-field>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Status Name" required type="text" [(ngModel)]="statusName" />
+            </mat-form-field>
+            <div *ngIf="statusName && !checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
+        </div>
         <div *ngIf="operation == 'Edit'"><i class="material-icons delete-btn" (click)="deleteClick()">delete_forever</i></div>
     </div>
     <!-- Ends: Input Name Field -->

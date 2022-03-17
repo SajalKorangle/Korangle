@@ -37,6 +37,16 @@ export class ManageComplaintTypeHtmlRenderer {
         return style;
     }  // Ends: setCancelBtnStyle()
 
+    checkUniqueness() {
+        let answer = true;
+        this.vm.statusList.forEach((status) => {
+            if (status.name == this.vm.addStatusName) {
+                answer = false;
+            }
+        });
+        return answer;
+    }
+
      /* For mobile-browser */
     isMobile(): boolean {
         if (window.innerWidth > 991) {
