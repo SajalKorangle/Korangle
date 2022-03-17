@@ -129,3 +129,4 @@ export class Query extends QueryGeneratorMixin {
     }
 
 }
+
