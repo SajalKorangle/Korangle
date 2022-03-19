@@ -70,13 +70,14 @@ export class ManageComplaintTypeServiceAdapter {
         this.vm.isLoading = true;
 
         let statusObject = {};
-        statusObject["name"] = this.vm.addStatusName;
+        statusObject["name"] = this.vm.addStatusName.toString().trim();
         statusObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         const response = await new Query().createObject({parent_support_app: 'SchoolComplaintStatus'}, statusObject);
         response["selected"] = false;
         this.vm.statusList.push(response);
 
+        this.vm.addStatusName = "";
         this.vm.isLoading = false;
         alert("Status added successfully.");
     }  // Ends: addStatus()

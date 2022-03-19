@@ -40,7 +40,7 @@ export class ManageComplaintTypeHtmlRenderer {
     checkUniqueness() {
         let answer = true;
         this.vm.statusList.forEach((status) => {
-            if (status.name == this.vm.addStatusName) {
+            if (status.name.toString().trim() == this.vm.addStatusName.toString().trim()) {
                 answer = false;
             }
         });

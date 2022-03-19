@@ -37,7 +37,7 @@ export class AddStatusModalComponent implements OnInit {
     checkUniqueness() {
         let answer = true;
         this.statusList.forEach((status) => {
-            if (status.name == this.statusName && status.id != this.statusId) {
+            if (status.name.toString().trim() == this.statusName.toString().trim() && status.id != this.statusId) {
                 answer = false;
             }
         });
@@ -51,7 +51,7 @@ export class AddStatusModalComponent implements OnInit {
 
     /* Save Modal */
     saveClicked() {
-        if (!this.statusName) {
+        if (!this.statusName.toString().trim()) {
             alert("Please enter status name.");
             return;
         }
