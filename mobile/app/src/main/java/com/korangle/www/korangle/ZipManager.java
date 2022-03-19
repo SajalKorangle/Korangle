@@ -62,6 +62,22 @@ public class ZipManager {
                 if (ze.isDirectory()) {
                     dirChecker(_targetLocation + ze.getName());
                 } else {
+
+                    // Nothing to do with actual logic starts
+                    // Checking due to Zip Path Traversal Vulnerability
+                    try {
+                        File f = new File(_targetLocation, ze.getName());
+                        String canonicalPath = f.getCanonicalPath();
+                        if (!canonicalPath.startsWith(_targetLocation)) {
+                            throw new Exception(String.format("Found Zip Path Traversal Vulnerability with %s", canonicalPath));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    // Nothing to do with actual logic ends
+
+                    // Now Finishing Unzipping
                     FileOutputStream fout = new FileOutputStream(_targetLocation + ze.getName());
                     // BufferedInputStream in = new BufferedInputStream(zin);
                     BufferedOutputStream out = new BufferedOutputStream(fout);
