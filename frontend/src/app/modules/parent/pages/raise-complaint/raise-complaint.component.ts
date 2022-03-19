@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 import { RaiseComplaintServiceAdapter } from './raise-complaint.service.adapter';
@@ -80,7 +80,6 @@ export class RaiseComplaintComponent implements OnInit {
 
     constructor(
         public dialog: MatDialog,
-        public cdRef: ChangeDetectorRef,
     ) { }
 
     ngOnInit() {

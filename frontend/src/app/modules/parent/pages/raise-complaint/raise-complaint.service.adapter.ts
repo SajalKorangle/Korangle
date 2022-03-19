@@ -114,8 +114,6 @@ export class RaiseComplaintServiceAdapter {
         this.vm.complaintList[idx]["commentList"] = commentComplaintList;
         /* Ends: Initialize Complaint Comment Data */
 
-        console.log("Comment List: ", commentComplaintList);
-        // this.vm.cdRef.detectChanges();
         this.vm.isLoading = false;
     }  // Ends: getCommentComplaint()
 
@@ -143,9 +141,6 @@ export class RaiseComplaintServiceAdapter {
 
         this.vm.complaintList[idx]["applicableStatusList"] = applicableStatusList;
         this.vm.isLoading = false;
-
-        console.log("Applicable Status List: ", applicableStatusList);
-        // this.vm.cdRef.detectChanges();
     }  // Ends: getStatusCompalintType()
 
     /* Update Status of a Complaint */
@@ -286,7 +281,7 @@ export class RaiseComplaintServiceAdapter {
         let refreshedComplaint = {};
         const complaint = await new Query().filter({id: this.vm.openedComplaint["id"]}).getObject({parent_support_app: 'Complaint'});
 
-        
+
         refreshedComplaint["dateSent"] = complaint["dateSent"];
         refreshedComplaint["id"] = complaint["id"];
         refreshedComplaint["employeeComplaintList"] = [];
