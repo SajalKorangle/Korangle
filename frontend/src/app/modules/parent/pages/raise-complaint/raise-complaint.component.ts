@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 import { RaiseComplaintServiceAdapter } from './raise-complaint.service.adapter';
@@ -48,11 +48,39 @@ export class RaiseComplaintComponent implements OnInit {
     commentMessage: string = "";
     commentList: any = [];
 
+    nullStudent = {
+        dbId: null,
+        fathersName: '',
+        name: '',
+        mobileNumber: null,
+    };
+
+    nullComplaintType = {
+        id: null,
+        defaultText: '',
+        name: 'Select Complaint Type',
+        parentSchoolComplaintStatusDefault: null,
+        parentSchool: null,
+    };
+
+    nullStatus = {
+        id: null,
+        name: '',
+        parentSchool: null,
+    };
+
+    nullEmployee = {
+        id: null,
+        name: null,
+        mobileNumber: "",
+    };
+
     serviceAdapter: RaiseComplaintServiceAdapter;
     htmlRenderer: RaiseComplaintHtmlRenderer;
 
     constructor(
         public dialog: MatDialog,
+        public cdRef: ChangeDetectorRef,
     ) { }
 
     ngOnInit() {
@@ -86,7 +114,7 @@ export class RaiseComplaintComponent implements OnInit {
 
             let complaint = {};
 
-            complaint["parentSchoolComplaintType"] = this.getParentComplaint(complaintObject["parentSchoolComplaintType"]);
+            complaint["parentSchoolComplaintType"] = this.getParentComplaintType(complaintObject["parentSchoolComplaintType"]);
             complaint["id"] = complaintObject["id"];
             complaint["dateSent"] = complaintObject["dateSent"];
             complaint["parentEmployee"] = this.getEmployee(complaintObject["parentEmployee"]);
@@ -173,15 +201,8 @@ export class RaiseComplaintComponent implements OnInit {
     /* Get Parent Student */
     getParentStudent(parentStudent) {
 
-        let nullStudent = {
-            dbId: null,
-            fathersName: '',
-            name: '',
-            mobileNumber: null,
-        };
-
         if (!parentStudent) {
-            return nullStudent;
+            return this.nullStudent;
         }
 
         for (let i = 0; i < this.studentList.length; i++) {
@@ -189,22 +210,14 @@ export class RaiseComplaintComponent implements OnInit {
                 return this.studentList[i];
             }
         }
-        return nullStudent;
+        return this.nullStudent;
     }  // Ends: getParentStudent()
 
     /* Get Parent Complaint */
-    getParentComplaint(parentSchoolComplaintType) {
-
-        let nullComplaintType = {
-            id: null,
-            defaultText: '',
-            name: '',
-            parentSchoolComplaintStatusDefault: null,
-            parentSchool: null,
-        };
+    getParentComplaintType(parentSchoolComplaintType) {
 
         if (!parentSchoolComplaintType) {
-            return nullComplaintType;
+            return this.nullComplaintType;
         }
 
         for (let i = 0; i < this.complaintTypeList.length; i++) {
@@ -212,19 +225,14 @@ export class RaiseComplaintComponent implements OnInit {
                 return this.complaintTypeList[i];
             }
         }
-        return nullComplaintType;
-    }  // Ends: getParentComplaint()
+        return this.nullComplaintType;
+    }  // Ends: getParentComplaintType()
 
     /* Get Status */
     getStatus(id) {
-        let nullStatus = {
-            id: null,
-            name: '',
-            parentSchool: null,
-        };
 
         if (!id) {
-            return nullStatus;
+            return this.nullStatus;
         }
 
         for (let i = 0; i < this.statusList.length; i++) {
@@ -232,19 +240,14 @@ export class RaiseComplaintComponent implements OnInit {
                 return this.statusList[i];
             }
         }
-        return nullStatus;
+        return this.nullStatus;
     }  // Ends: getStatus()
 
     /* Get Employee */
     getEmployee(id) {
-        let nullEmployee = {
-            id: null,
-            name: null,
-            mobileNumber: "",
-        };
 
         if (!id) {
-            return nullEmployee;
+            return this.nullEmployee;
         }
 
         for (let i = 0; i < this.employeeList.length; i++) {
@@ -252,7 +255,7 @@ export class RaiseComplaintComponent implements OnInit {
                 return this.employeeList[i];
             }
         }
-        return nullEmployee;
+        return this.nullEmployee;
     }  // Ends: getEmployee()
 
     /* Debouncing */

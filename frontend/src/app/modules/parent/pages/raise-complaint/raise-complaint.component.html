@@ -375,6 +375,9 @@
         <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Complaint Type : </div>
         <mat-form-field>
             <mat-select placeholder="{{ complaintTypeName }}" style="width: 100%">
+                <mat-option (click)="complaintTypeName = nullComplaintType.name; complaintType = nullComplaintType; complaintTypeDefaultText = nullComplaintType.defaultText;">
+                    Cancel Selection
+                </mat-option>
                 <ng-container *ngFor="let complaintTypeObject of complaintTypeList">
                     <mat-option (click)="complaintTypeName = complaintTypeObject.name; complaintType = complaintTypeObject; complaintTypeDefaultText = complaintTypeObject.defaultText;">
                         {{ complaintTypeObject.name }}

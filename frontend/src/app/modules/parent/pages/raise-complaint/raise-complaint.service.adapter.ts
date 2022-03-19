@@ -114,6 +114,8 @@ export class RaiseComplaintServiceAdapter {
         this.vm.complaintList[idx]["commentList"] = commentComplaintList;
         /* Ends: Initialize Complaint Comment Data */
 
+        console.log("Comment List: ", commentComplaintList);
+        // this.vm.cdRef.detectChanges();
         this.vm.isLoading = false;
     }  // Ends: getCommentComplaint()
 
@@ -141,6 +143,9 @@ export class RaiseComplaintServiceAdapter {
 
         this.vm.complaintList[idx]["applicableStatusList"] = applicableStatusList;
         this.vm.isLoading = false;
+
+        console.log("Applicable Status List: ", applicableStatusList);
+        // this.vm.cdRef.detectChanges();
     }  // Ends: getStatusCompalintType()
 
     /* Update Status of a Complaint */
@@ -278,14 +283,58 @@ export class RaiseComplaintServiceAdapter {
 
         this.vm.isLoading = true;
 
-        /* Starts: Load Comments && Status */
-        let idx = this.vm.openedComplaintIdx;
-        this.getCommentComplaint(this.vm.openedComplaint["id"], idx);
-        if (this.vm.openedComplaint["parentSchoolComplaintType"]["id"]) {
-            this.getStatusCompalintType(this.vm.openedComplaint["parentSchoolComplaintType"].id, idx);
-        }
-        /* Ends: Load Comments && Status */
+        let refreshedComplaint = {};
+        const complaint = await new Query().filter({id: this.vm.openedComplaint["id"]}).getObject({parent_support_app: 'Complaint'});
 
+        
+        refreshedComplaint["dateSent"] = complaint["dateSent"];
+        refreshedComplaint["id"] = complaint["id"];
+        refreshedComplaint["employeeComplaintList"] = [];
+        refreshedComplaint["applicableStatusList"] = [];
+        refreshedComplaint["commentList"] = [];
+        refreshedComplaint["parentEmployee"] = this.vm.getEmployee(complaint["parentEmployee"]);
+        refreshedComplaint["parentSchoolComplaintStatus"] = this.vm.getStatus(complaint["parentSchoolComplaintStatus"]);
+        refreshedComplaint["parentSchoolComplaintType"] = this.vm.getParentComplaintType(complaint["parentSchoolComplaintType"]);
+        refreshedComplaint["parentStudent"] = this.vm.getParentStudent(complaint["parentStudent"]);
+        refreshedComplaint["title"] = complaint["title"];
+
+
+        /* Starts: refresh commentList */
+        let commentComplaintList = await new Query()
+            .filter({ parentComplaint: this.vm.openedComplaint["id"] })
+            .getObjectList({ parent_support_app: 'Comment' });
+
+
+        commentComplaintList.forEach((comment) => {
+            comment["parentEmployee"] = this.vm.getEmployee(comment["parentEmployee"]);
+            comment["parentStudent"] = this.vm.getParentStudent(comment["parentStudent"]);
+        });
+
+        refreshedComplaint["commentList"] = commentComplaintList;
+        /* Ends: refresh commentList */
+
+
+        /* Starts: refresh applicable-statusList */
+        if (refreshedComplaint["parentSchoolComplaintType"]["id"]) {
+            let statusComplaintTypeList = await new Query()
+                .filter({ parentSchoolComplaintType: this.vm.openedComplaint["parentSchoolComplaintType"].id })
+                .getObjectList({ parent_support_app: 'StatusComplaintType' });
+
+
+            let applicableStatusList = [];
+            statusComplaintTypeList.forEach((statusComplaintType) => {
+                let status = this.vm.getStatus(statusComplaintType.parentSchoolComplaintStatus);
+                applicableStatusList.push(status);
+            });
+
+            refreshedComplaint["applicableStatusList"] = applicableStatusList;
+        }
+        /* Ends: refresh applicable-statusList */
+
+        this.vm.openedComplaint = refreshedComplaint;
+        this.vm.complaintList[this.vm.openedComplaintIdx] = refreshedComplaint;
+        this.vm.pageName = "list-of-complaints";
+        this.vm.openComplaint(this.vm.openedComplaint, this.vm.openedComplaintIdx);
         this.vm.isLoading = false;
     }  // Ends: refreshComplaint()
 
