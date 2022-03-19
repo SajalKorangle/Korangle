@@ -193,7 +193,7 @@
 <div *ngIf="!isLoading && pageName == 'showComplaint'" class="card-content">
 
     <!-- Starts: Back Button -->
-    <div (click)="pageName = 'showTables';" style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;">
+    <div (click)="pageName = 'showTables'; startProgressBar();" style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;">
         <span class="material-icons" style="font-size: 12px; text-align: center;">arrow_back_ios</span>
     </div>
     <br />
@@ -390,6 +390,7 @@
     <!-- Ends: Comment Section -->
 </div>
 <!-- Ends: Open Complaint -->
+
 
 <!-- Starts: Load More -->
 <div style="padding: 0rem 3rem 2rem 3rem;">

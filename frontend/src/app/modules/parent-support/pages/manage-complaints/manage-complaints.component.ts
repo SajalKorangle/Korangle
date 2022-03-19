@@ -84,6 +84,7 @@ export class ManageComplaintsComponent implements OnInit {
         } else {
             this.progress++;
         }
+        console.log("Progress: ", this.progress);
     }  // Ends: setProgressInterval()
 
     /* Starts Progress Bar */
@@ -273,7 +274,7 @@ export class ManageComplaintsComponent implements OnInit {
             this.isLoadMore = false;
         }
         this.searchedComplaintList = this.complaintList;
-        this.startProgressBar();
+        this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
 
     /* Initialize Student Full Profile list */
@@ -453,6 +454,7 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Open Filter Modal */
     openAssignEmployeeDialog(complaint, idx): void {
+        clearInterval(this.progressInterval);
         const dialogRef = this.dialog.open(AssignEmployeeComponent, {
             data: {
                 employeeList: CommonFunctions.getInstance().deepCopy(this.employeeList),
@@ -469,6 +471,7 @@ export class ManageComplaintsComponent implements OnInit {
                     this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
                 }
             }
+            this.startProgressBar();
         });
     }  // Ends: openAssignEmployeeDialog()
 
@@ -484,6 +487,7 @@ export class ManageComplaintsComponent implements OnInit {
         if (!this.defaultStatusTitle) {
             this.defaultStatusTitle = "Not Applicable";
         }
+        clearInterval(this.progressInterval);
     }  // Ends: openComplaint()
 
     updateStatus(status) {
