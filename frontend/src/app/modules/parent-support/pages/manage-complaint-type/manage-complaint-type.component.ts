@@ -237,17 +237,6 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Add New Status */
     addStatusClick() {
-
-        if (!this.addStatusName.toString().trim()) {
-            alert("Please enter the status name.");
-            return;
-        }
-
-        if (!this.htmlRenderer.checkUniqueness()) {
-            alert("Status name must be unique.");
-            return;
-        }
-
         this.serviceAdapter.addStatus();
     }  // Ends: addStatusClick()
 

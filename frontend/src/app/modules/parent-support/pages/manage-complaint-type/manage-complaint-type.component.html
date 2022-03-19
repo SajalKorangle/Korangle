@@ -227,15 +227,30 @@
             <span *ngIf="!htmlRenderer.isMobile() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</span>
             <div *ngIf="htmlRenderer.isMobile() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
             <br *ngIf="htmlRenderer.isMobile()"/>
-            <button
-                type="button"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
-                matTooltip="Add New Complaint Status"
-                tooltip-position="left"
-                (click)="addStatusClick()"
-            >
-                Add Complaint Status
-            </button>
+
+            <ng-container *ngIf="!addStatusName.toString().trim() || !htmlRenderer.checkUniqueness()">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
+                    matTooltip="Add New Complaint Status"
+                    tooltip-position="left"
+                    disabled
+                >
+                    Add Complaint Status
+                </button>
+            </ng-container>
+
+            <ng-container *ngIf="addStatusName.toString().trim() && htmlRenderer.checkUniqueness()">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
+                    matTooltip="Add New Complaint Status"
+                    tooltip-position="left"
+                    (click)="addStatusClick()"
+                >
+                    Add Complaint Status
+                </button>
+            </ng-container>
         </div>
         <!-- Ends: Add New Status -->
     </div>
