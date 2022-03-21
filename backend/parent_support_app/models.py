@@ -129,6 +129,18 @@ def notify_parents_on_complaint(sender, instance, created, **kwargs):
             createNotification(content, user, parentSchool)
 
 
+@receiver(post_save, sender = Complaint)
+def assign_employee_on_complaint(sender, instance, created, **kwargs):
+
+    if created and instance.parentSchoolComplaintType:
+        # Assign all employees whose parentSchoolComplaintType = instance.parentSchoolComplaintType.
+        for employee_complaintType in EmployeeComplaintType.objects.filter(parentSchoolComplaintType = instance.parentSchoolComplaintType):
+            employee_complaint = EmployeeComplaint()
+            employee_complaint.parentEmployee = employee_complaintType.parentEmployee
+            employee_complaint.parentComplaint = instance
+            employee_complaint.save()
+
+
 class Comment(models.Model):
 
     # If sender is employee.

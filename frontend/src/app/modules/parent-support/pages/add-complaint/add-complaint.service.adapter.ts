@@ -62,23 +62,7 @@ export class AddComplaintServiceAdapter {
     async addComplaint() {
         this.vm.isLoading = true;
 
-        /* Starts: Get Assigned Employees */
-        let employeeComplaintTypeList = [];
-        if (this.vm.complaintType["id"]) {
-
-            const employeeComplaintTypeQuery = new Query()
-                .filter({ parentSchoolComplaintType: this.vm.complaintType["id"] })
-                .getObjectList({ parent_support_app: 'EmployeeComplaintType' });
-
-
-            [
-                employeeComplaintTypeList,   // 0
-            ] = await Promise.all([
-                employeeComplaintTypeQuery,   // 0
-            ]);
-        }
-        /* Ends: Get Assigned Employees */
-
+        /* Starts: Prepare Complaint Object */
         let complaintObject = {};
         complaintObject["parentEmployee"] = this.vm.user.activeSchool.employeeId;
 
@@ -93,21 +77,13 @@ export class AddComplaintServiceAdapter {
         complaintObject["parentStudent"] = this.vm.selectedStudent.dbId;
         complaintObject["title"] = this.vm.complaintTitle;
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
+        /* Ends: Prepare Complaint Object */
 
+        /* Starts: Add it to database */
         const complaint = await new Query().createObject({parent_support_app: 'Complaint'}, complaintObject);
+        /* Ends: Add it to database */
 
-        let employeeComplaintList = [];
-        employeeComplaintTypeList.forEach((employeeComplaintType) => {
-            let employeeComplaint = {};
-
-            employeeComplaint["parentEmployee"] = employeeComplaintType["parentEmployee"];
-            employeeComplaint["parentComplaint"] = complaint.id;
-            employeeComplaintList.push(employeeComplaint);
-        });
-        if (employeeComplaintList.length) {
-            this.assignEmployeeComplaint(employeeComplaintList);
-        }
-
+        /* Starts: Create && Add Comment Object */
         if (this.vm.comment) {
             let commentObject = {};
             commentObject["parentEmployee"] = this.vm.NULL_CONSTANT;
@@ -117,10 +93,14 @@ export class AddComplaintServiceAdapter {
 
             const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
         }
+        /* Ends: Create && Add Comment Object */
 
+        /* Starts: Initialize Data */
         this.vm.comment = "";
         this.vm.initializeComplaintData();
         alert("Complaint added successfully.");
         this.vm.isLoading = false;
+        /* Ends: Initialize Data */
+
     }  // Ends: addComplaint()
 }
