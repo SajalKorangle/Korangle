@@ -148,12 +148,12 @@ public class VolleyFace {
                                 // printRecursive(mainActivity.getFilesDir(), 0);
 
                                 FileOutputStream outputStream;
-                                outputStream = new FileOutputStream(mainActivity.getFilesDir().getAbsolutePath()+"/korangle.zip");
+                                outputStream = new FileOutputStream(mainActivity.getFilesDir().getCanonicalPath()+"/korangle.zip");
                                 outputStream.write(response);
                                 outputStream.close();
 
                                 mainActivity.progressMessageView.setText("Installing Updates");
-                                zipManager.unzip(mainActivity.getFilesDir().getAbsolutePath()+"/korangle.zip",mainActivity.getFilesDir().getAbsolutePath()+"/" );
+                                zipManager.unzip(mainActivity.getFilesDir().getCanonicalPath()+"/korangle.zip",mainActivity.getFilesDir().getCanonicalPath()+"/" );
 
                                 mainActivity.progressMessageView.setText("Opening app");
                                 mainActivity.webview.loadUrl(mainActivity.webapp_url + "/index.html");

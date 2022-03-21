@@ -10,6 +10,7 @@
     "test": "ng test --code-coverage --no-watch",
     "e2e": "ng e2e --port=4200",
     "post-build": "node ./build/post-build.js",
+    "post-build-staging": "node ./build/post-build-staging.js",
     "build:stats": "ng build --stats-json",
     "build-production:stats": "ng build --prod --build-optimizer --stats-json",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
