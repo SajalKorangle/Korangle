@@ -576,23 +576,6 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: openShowStudentListDialog()
 
-    /* Check Table Name Uniqueness */
-    checkTableName() {
-        let tempUniqueCount = 0;
-
-        for (let idx = 0; idx < this.tableList.length; idx++) {
-            if (this.tableList[idx].formatName == this.tableFormatTitle && idx != this.tableActiveIdx) {
-                tempUniqueCount++;
-            }
-        }
-
-        if (tempUniqueCount > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }  // Ends: checkTableName()
-
     updateChangesClicked(): void {
 
         if (!this.tableFormatTitle) {
@@ -600,7 +583,7 @@ export class CountAllComponent implements OnInit {
             return;
         }
 
-        if (!this.checkTableName()) {
+        if (!this.htmlRenderer.checkTableName()) {
             alert("Table name must be unique.");
             return;
         }

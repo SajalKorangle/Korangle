@@ -24,16 +24,32 @@
         >
             Cancel
         </button>
-        <button
-            type="button"
-            class="btn btn-warning"
-            style="padding: 7px 17px;"
-            matTooltip="Save Table"
-            tooltip-position="left"
-            (click) = "saveClick()"
-        >
-            Save
-        </button>
+
+        <ng-container *ngIf="name && isUnique">
+            <button
+                type="button"
+                class="btn btn-warning"
+                style="padding: 7px 17px;"
+                matTooltip="Save Table"
+                tooltip-position="left"
+                (click) = "saveClick()"
+            >
+                Save
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="!name || !isUnique">
+            <button
+                type="button"
+                class="btn btn-warning"
+                style="padding: 7px 17px;"
+                matTooltip="Save Table"
+                tooltip-position="left"
+                disabled
+            >
+                Save
+            </button>
+        </ng-container>
     </div>
 </ng-container>
 <!-- Ends: Bottom Buttons -->

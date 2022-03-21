@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { isMobile } from '@classes/common';
 
 @Component({
     selector: 'app-filter-modal',
@@ -173,22 +174,19 @@ export class FilterModalComponent implements OnInit {
 
     ngOnInit() { }
 
-    /* Check Mobile - maxidth (991) */
-    isMobile(): boolean {
+    /* Check Width - maxidth (575) */
+    /* It is being used to style the page based on width.
+     For a very small device, some "<br />" needs to removed. */
+    checkWidth(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
         return true;
     }
 
-    /* Check Width - maxidth (575) */
-    /* It is being used to style the page based on width.
-     For a very small device, some "<br />" needs to removed. */
-    checkWidth(): boolean {
-        if (window.innerWidth > 575) {
-            return false;
-        }
-        return true;
+    /* For mobile-application */
+    checkMobile(): boolean {
+        return isMobile();
     }
 
     /* Unselect All Classes */

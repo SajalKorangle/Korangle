@@ -66,12 +66,16 @@
 
     <!--Starts: Change Table Name -->
     <div class="change-table-name" *ngIf="tableActiveId">
-        <mat-form-field class="inputField">
-            <input matInput type="text" [(ngModel)]="tableFormatTitle" required />
-        </mat-form-field>
+        <div>
+            <mat-form-field class="inputField">
+                <input matInput type="text" [(ngModel)]="tableFormatTitle" required />
+            </mat-form-field>
+            <span *ngIf="(!htmlRenderer.isMobile() && !htmlRenderer.checkMobile()) && !htmlRenderer.checkTableName()" style="color: red">Table name must be unique.</span>
+        </div>
 
         <i (click)="openDeleteTableModal()" matTooltip="Delete table" tooltip-position="left" class="material-icons delete-icon"> delete_forever </i>
     </div>
+    <span *ngIf="(htmlRenderer.isMobile() || htmlRenderer.checkMobile()) && !htmlRenderer.checkTableName()" style="color: red">Table name must be unique.</span>
     <br />
     <!--Ends: Change Table Name -->
 
@@ -132,7 +136,7 @@
 </div>
 
 <ng-container *ngIf="!isLoading">
-    <div *ngIf="!htmlRenderer.isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+    <div *ngIf="!htmlRenderer.isMobile() || !htmlRenderer.checkMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
 
     <!-- Starts: Save Button -->
     <ng-container *ngIf="!isTableEditing">
@@ -149,13 +153,25 @@
 
     <!-- Starts: Update Changes  &&  Save As Buttons Section -->
     <ng-container *ngIf="isTableEditing">
-        <button type="button"
-            (click)="updateChangesClicked()"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
-        >
-            Update Changes
-        </button>
+        <ng-container *ngIf="!htmlRenderer.checkTableName()">
+            <button type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+                disabled
+            >
+                Update Changes
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="htmlRenderer.checkTableName()">
+            <button type="button"
+                (click)="updateChangesClicked()"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+            >
+                Update Changes
+            </button>
+        </ng-container>
 
         <button type="button"
             (click)="saveAsClicked()"

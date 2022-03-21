@@ -43,12 +43,12 @@
         <ng-container>
             <!-- Starts: Age -->
             <br /><b>Age</b><br />
-            <input type="number" style="width: 60px; margin-right: 5px" [(ngModel)]="minAge" />
+            <input type="number" style="width: 70px; margin-right: 5px" [(ngModel)]="minAge" />
             <span style="margin-right: 5px">&lt;= Age &lt;=</span>
-            <input type="number" style="width: 60px" [(ngModel)]="maxAge" />
-            <br *ngIf="checkWidth()" />
-            <br *ngIf="checkWidth()" />
-            <span *ngIf="!checkWidth()">&nbsp; &nbsp;</span>as on date &nbsp;&nbsp;
+            <input type="number" style="width: 70px" [(ngModel)]="maxAge" />
+            <br *ngIf="checkWidth() || checkMobile()" />
+            <br *ngIf="checkWidth() || checkMobile()" />
+            <span *ngIf="!checkWidth() || !checkMobile()">&nbsp; &nbsp;</span>as on date &nbsp;&nbsp;
             <mat-form-field style="width: 130px">
                 <input matInput type="date" placeholder="Choose a date"
                     (ngModelChange)="asOnDate = $event"
@@ -218,16 +218,32 @@
         >
             Delete
         </button>
-        <button
-            type="button"
-            class="btn btn-warning"
-            style="padding: 7px 17px;"
-            matTooltip="Apply Filters"
-            tooltip-position="left"
-            (click) = "applyClick()"
-        >
-            Apply
-        </button>
+
+        <ng-container *ngIf="name">
+            <button
+                type="button"
+                class="btn btn-warning"
+                style="padding: 7px 17px;"
+                matTooltip="Apply Filters"
+                tooltip-position="left"
+                (click) = "applyClick()"
+            >
+                Apply
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="!name">
+            <button
+                type="button"
+                class="btn btn-warning"
+                style="padding: 7px 17px;"
+                matTooltip="Apply Filters"
+                tooltip-position="left"
+                disabled
+            >
+                Apply
+            </button>
+        </ng-container>
     </div>
     <!-- Ends: Bottom Buttons -->
 </mat-dialog-content>
